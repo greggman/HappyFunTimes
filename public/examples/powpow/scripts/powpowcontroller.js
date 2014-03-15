@@ -30,7 +30,7 @@
  */
 "use strict";
 
-var main = function(GameClient, AudioManager, Ships) {
+var main = function(GameClient, AudioManager, Cookies, Ships) {
 
   var g_name = "";
   var g_turn = 0;
@@ -74,35 +74,6 @@ var main = function(GameClient, AudioManager, Ships) {
       s += arguments[ii].toString();
     }
     logTo("console", s);
-  }
-
-  function createCookie(name, value, days) {
-    var expires = "";
-    if (days) {
-      var date = new Date();
-      date.setTime(Date.now() + (days * 24 * 60 * 60 * 1000));
-      expires = "; expires=" + date.toGMTString();
-    }
-    document.cookie = name + "=" + value + expires + "; path=/";
-  }
-
-  function readCookie(name) {
-    var nameEQ = name + "=";
-    var ca = document.cookie.split(';');
-    for(var i = 0; i < ca.length; ++i) {
-      var c = ca[i];
-      while (c.charAt(0)==' ') {
-        c = c.substring(1,c.length);
-      }
-      if (c.indexOf(nameEQ) == 0) {
-        return c.substring(nameEQ.length, c.length);
-      }
-    }
-    return null;
-  }
-
-  function eraseCookie(name) {
-    createCookie(name, "", -1);
   }
 
   function showConnected() {
@@ -510,7 +481,7 @@ var main = function(GameClient, AudioManager, Ships) {
 
   function finishSendName(event) {
     g_name = $('input').value.replace(/[<>]/g, '');
-    createCookie("name", g_name, 90);
+    Cookies.createCookie("name", g_name, 90);
     sendName(event);
     $('msg').style.display = "block";
     $('input').style.display = "none";
@@ -551,7 +522,7 @@ var main = function(GameClient, AudioManager, Ships) {
   Ships.setShipSize(70);
 
   // Get the name user set before.
-  g_name = readCookie("name");
+  g_name = Cookies.readCookie("name");
   if (!g_name) {
     g_name = "";
   }
@@ -604,6 +575,7 @@ var main = function(GameClient, AudioManager, Ships) {
 requirejs(
   [ '../../../scripts/gameclient',
     '../../scripts/audio',
+    '../../scripts/cookies',
     'ships',
   ],
   main

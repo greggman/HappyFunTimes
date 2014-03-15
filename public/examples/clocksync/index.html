@@ -1,0 +1,65 @@
+<!doctype html>
+<html>
+<head>
+<meta name="viewport" content="user-scalable=no, width=device-width, height=device-height">
+<title>ClockSync</title>
+<style>
+html, body {
+  width: 100%;
+  height: 100%;
+  border: 0px;
+  padding: 0px;
+  margin: 0px;
+  background-color: black; /* blue; */
+  font-family: sans-serif;
+}
+.instruction {
+  color: rgba(255,255,255,0.7);
+}
+#top {
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  gz-index: 4;
+  width: 100%;
+  height: 100%;
+}
+#clock {
+  position: absolute;
+  top: 0px;
+  right: 0px;
+  font-family: monospace;
+  z-index: 1999;
+  color: white;
+}
+#log {
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  width: 100%;
+  height: 100%;
+  color: white;
+  font-family: monospace;
+  z-index: 2000;
+}
+</style>
+<link rel="stylesheet" media="all and (max-device-width: 1024px) and (orientation:portrait)"  href="/examples/powpow/css/tablet-portrait.css">
+<link rel="stylesheet" media="all and (max-device-width: 1024px) and (orientation:landscape)" href="/examples/powpow/css/tablet-landscape.css">
+<link rel="stylesheet" media="all and (max-device-width: 900px) and (orientation:portrait)"   href="/examples/powpow/css/phone-portrait.css">
+<link rel="stylesheet" media="all and (max-device-width: 900px) and (orientation:landscape)"  href="/examples/powpow/css/phone-landscape.css">
+<link rel="stylesheet" media="all and (min-device-width: 1025px)"                             href="/examples/powpow/css/monitor.css">
+<script src="/socket.io/socket.io.js"></script>
+<script data-main="scripts/clocksynccontroller.js" src="../scripts/require.js"></script>
+</head>
+<body>
+<div id="top">
+  <div id="log">
+  </div>
+  <div id="clock">
+                <canvas id="mark" class="canvas" width="150" height="150"></canvas>
+  </div>
+</div>
+</body>
+</html>
+
+
