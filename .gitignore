@@ -1,2 +1,14 @@
 node_modules
-
+.DS_Store
+*~
+*.swp
+*.bat
+*.bak
+temp
+.mayaSwatches
+.git
+.svn
+.hg
+*.pyc
+*.orig
+.project
