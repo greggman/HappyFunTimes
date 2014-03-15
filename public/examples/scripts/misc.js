@@ -32,42 +32,63 @@
 
 define(function() {
   /**
-   * Processes and Draws all the entities.
-   * An entity is currently losely defined as any object that has
-   * a process and a draw function.
+   * Copies properties from obj to dst recursively.
+   * @param {!Object} obj Object with new settings.
+   * @param {!Object} dst Object to receive new settings.
    */
-  var EntitySystem = function () {
-    this.entities_ = {};
-    this.numEntities_ = 0;
-    this.nextId_ = 1;
-    this.removeEntities_ = [];
-  }
-
-  EntitySystem.prototype.addEntity = function(entity) {
-    var id = this.nextId_++;
-    entity.id = id;
-    this.entities_[id] = entity;
-    ++this.numEntities_;
-  };
-
-  EntitySystem.prototype.deleteEntity = function(entity) {
-    this.deleteEntityById(entity.id);
-  };
-
-  EntitySystem.prototype.deleteEntityById = function(id) {
-    this.removeEntities_.push(id);
-  };
-
-  EntitySystem.prototype.processEntities = function(elapsedTime) {
-    for (var id in this.entities_) {
-      this.entities_[id].process(elapsedTime);
-    }
-    while (this.removeEntities_.length) {
-      delete this.entities_[this.removeEntities_.pop()];
-      --this.numEntities_;
+  var copyProperties = function(obj, dst) {
+    for (var name in obj) {
+      var value = obj[name];
+      if (value instanceof Array) {
+        var newDst = dst[name];
+        if (!newDst) {
+          newDst = [];
+          dst[name] = newDst;
+        }
+        copyProperties(value, newDst);
+      } else if (typeof value == 'object') {
+        var newDst = dst[name];
+        if (!newDst) {
+          newDst = {};
+          dst[name] = newDst;
+        }
+        copyProperties(value, newDst);
+      } else {
+        dst[name] = value;
+      }
     }
   };
 
-  return EntitySystem;
+  return {
+    applyUrlSettings: function(obj, opt_argumentName) {
+      var argumentName = opt_argumentName || 'settings';
+      try {
+        var s = window.location.href;
+        var q = s.indexOf("?");
+        var e = s.indexOf("#");
+        if (e < 0) {
+          e = s.length;
+        }
+        var query = s.substring(q + 1, e);
+        var pairs = query.split("&");
+        for (var ii = 0; ii < pairs.length; ++ii) {
+          var keyValue = pairs[ii].split("=");
+          var key = keyValue[0];
+          var value = decodeURIComponent(keyValue[1]);
+          switch (key) {
+          case argumentName:
+            var settings = eval("(" + value + ")");
+            copyProperties(settings, obj);
+            break;
+          }
+        }
+      } catch (e) {
+        console.error(e);
+        console.error("settings:", settings);
+        return;
+      }
+    },
+  };
 });
+
 

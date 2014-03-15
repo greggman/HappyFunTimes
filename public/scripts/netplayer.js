@@ -28,46 +28,54 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+
 "use strict";
 
+// TODO: replace console stuff
+
 define(function() {
+
   /**
-   * Processes and Draws all the entities.
-   * An entity is currently losely defined as any object that has
-   * a process and a draw function.
+   * Manages a player across the net.
+   *
+   * @constructor
+   *
+   * @param {!GameServer} server
+   * @param {number} id
+   * @param {string} name
    */
-  var EntitySystem = function () {
-    this.entities_ = {};
-    this.numEntities_ = 0;
-    this.nextId_ = 1;
-    this.removeEntities_ = [];
-  }
-
-  EntitySystem.prototype.addEntity = function(entity) {
-    var id = this.nextId_++;
-    entity.id = id;
-    this.entities_[id] = entity;
-    ++this.numEntities_;
+  var NetPlayer = function(server, id) {
+    this.server = server;
+    this.id = id;
+    this.eventHandlers = { };
   };
 
-  EntitySystem.prototype.deleteEntity = function(entity) {
-    this.deleteEntityById(entity.id);
+  /**
+   * Sends a message to this player.
+   *
+   * @param msg
+   */
+  NetPlayer.prototype.send = function(msg) {
+    this.server.sendCmd("client", this.id, msg);
   };
 
-  EntitySystem.prototype.deleteEntityById = function(id) {
-    this.removeEntities_.push(id);
+  NetPlayer.prototype.addEventListener = function(eventType, handler) {
+    this.eventHandlers[eventType] = handler;
   };
 
-  EntitySystem.prototype.processEntities = function(elapsedTime) {
-    for (var id in this.entities_) {
-      this.entities_[id].process(elapsedTime);
+  NetPlayer.prototype.removeEventHandler = function(eventType) {
+    this.eventHandlers[eventType] = undefined;
+  };
+
+  NetPlayer.prototype.sendEvent_ = function(eventType, args) {
+    var fn = this.eventHandlers[eventType];
+    if (fn) {
+      fn.apply(this, args);
+    } else {
+      console.error("Unknown Event: " + eventType);
     }
-    while (this.removeEntities_.length) {
-      delete this.entities_[this.removeEntities_.pop()];
-      --this.numEntities_;
-    }
   };
 
-  return EntitySystem;
+  return NetPlayer;
 });
 

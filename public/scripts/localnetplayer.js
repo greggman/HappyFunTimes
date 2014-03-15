@@ -28,46 +28,55 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+
 "use strict";
 
 define(function() {
   /**
-   * Processes and Draws all the entities.
-   * An entity is currently losely defined as any object that has
-   * a process and a draw function.
+   * Shell class for offline use.
+   *
+   * @constructor
+   *
+   * You can use this class as a substitute for NetPlayer when
+   * offline. It just provides no-ops for NetPlayer functions.
+   *
+   * Example:
+   *   var server = new GameServer();
+   *   if (offline) {
+   *     // We're testing locally so just manually create //
+   *     players.
+   *
+   *     var player1 = new MyPlayer(new LocalNetPlayer());
+   *     var player2 = new MyPlayer(new LocalNetPlayer());
+   *     addPlayer(player1);
+   *     addPlayer(player2);
+   *
+   *   } else {
+   *     // We're online so create players as they connect.
+   *
+   *     server.addEventListener(
+   *         'playerconnect',
+   *         function(netPlayer) {
+   *           addPlayer(new MyPlayer(netPlayer));
+   *         });
    */
-  var EntitySystem = function () {
-    this.entities_ = {};
-    this.numEntities_ = 0;
-    this.nextId_ = 1;
-    this.removeEntities_ = [];
-  }
-
-  EntitySystem.prototype.addEntity = function(entity) {
-    var id = this.nextId_++;
-    entity.id = id;
-    this.entities_[id] = entity;
-    ++this.numEntities_;
-  };
-
-  EntitySystem.prototype.deleteEntity = function(entity) {
-    this.deleteEntityById(entity.id);
-  };
-
-  EntitySystem.prototype.deleteEntityById = function(id) {
-    this.removeEntities_.push(id);
-  };
-
-  EntitySystem.prototype.processEntities = function(elapsedTime) {
-    for (var id in this.entities_) {
-      this.entities_[id].process(elapsedTime);
+  var LocalNetPlayer = (function() {
+    var _count = 0;
+    return function() {
+      this.id = ++_count;
     }
-    while (this.removeEntities_.length) {
-      delete this.entities_[this.removeEntities_.pop()];
-      --this.numEntities_;
-    }
+  }());
+
+  LocalNetPlayer.prototype.addEventListener = function() {
   };
 
-  return EntitySystem;
+  LocalNetPlayer.prototype.removeEventListener = function() {
+  };
+
+  LocalNetPlayer.prototype.send = function() {
+  };
+
+  return LocalNetPlayer;
 });
+
 

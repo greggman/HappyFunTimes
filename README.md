@@ -230,6 +230,15 @@ Notes
     That said if there's anything easy and performant you'd like to suggest
     submit a pull request.
 
+*   What about cheating?
+
+    Again, this is meant for games where everyone is in the same room watching
+    the same display. If someone is off in the corner trying to hack the game
+    through the net maybe you shouldn't have invited them to your party.
+
+    That said if there's anything easy and performant you'd like to suggest
+    submit a pull request.
+
 *   Does it work on Windows and Linux?
 
     I've only run this on OSX so far. I suspect it works on both.

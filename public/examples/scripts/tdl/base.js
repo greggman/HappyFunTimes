@@ -294,9 +294,11 @@ tdl.writeScriptTag_ = function(src) {
   if (typeof doc != 'undefined' &&
       !tdl.dependencies_.written[src]) {
     tdl.dependencies_.written[src] = true;
-    var html = '<script type="text/javascript" src="' +
-               src + '"></' + 'script>'
-    doc.write(html);
+    var node = doc.createElement('script');
+    node.type = 'text/javascript';
+    node.charset = 'utf-8';
+    node.src = src;
+    doc.head.appendChild(node);
   }
 };
 

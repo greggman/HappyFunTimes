@@ -31,65 +31,69 @@
 
 "use strict";
 
-var createClock = (function(online, opt_syncRateSeconds) {
+define(["./io"], function(IO) {
+  return {
+    createClock: (function(online, opt_syncRateSeconds) {
 
-  var getLocalTime = function() {
-	return (new Date()).getTime() * 0.001;
+      var getLocalTime = function() {
+        return (new Date()).getTime() * 0.001;
+      };
+
+      /**
+       * A clock that gets the local current time in seconds.
+       * @private
+       */
+      var LocalClock = function() {
+      };
+
+      /**
+       * Gets the current time in seconds.
+       */
+      LocalClock.prototype.getTime = function() {
+        return getLocalTime();
+      };
+
+      /**
+       * A clock that gets the current time in seconds attempting to
+       * keep the clock synced to the server.
+       * @constructor
+       */
+      var SyncedClock = function(opt_syncRateSeconds) {
+        this.url = window.location.href;
+        this.syncRateMS = (opt_syncRateSeconds || 10) * 1000;
+        this.timeOffset = 0;
+        this.syncToServer();
+      };
+
+      SyncedClock.prototype.syncToServer = function() {
+        var that = this;
+        var sendTime = getLocalTime();
+        IO.sendJSON(this.url, {cmd: 'time'}, function(obj, exception) {
+          if (exception) {
+            //g_services.logger.error("syncToServer: " + exception);
+          } else {
+            var receiveTime = getLocalTime();
+            var duration = receiveTime - sendTime;
+            var serverTime = obj.time + duration * 0.5;
+            that.timeOffset = serverTime - receiveTime;
+            //g_services.logger.log("duration: ", duration, " timeOff:", that.timeOffset);
+          }
+          setTimeout(function() {
+              that.syncToServer();
+            }, that.syncRateMS);
+        });
+      };
+
+      /**
+       * Gets the current time in seconds.
+       * @private
+       */
+      SyncedClock.prototype.getTime = function() {
+        return getLocalTime() + this.timeOffset;
+      };
+
+      return online ? new SyncedClock(opt_syncRateSeconds) : new LocalClock();
+    }),
   };
-
-  /**
-   * A clock that gets the local current time in seconds.
-   * @private
-   */
-  var LocalClock = function() {
-  };
-
-  /**
-   * Gets the current time in seconds.
-   */
-  LocalClock.prototype.getTime = function() {
-	return getLocalTime();
-  };
-
-  /**
-   * A clock that gets the current time in seconds attempting to
-   * keep the clock synced to the server.
-   * @constructor
-   */
-  var SyncedClock = function(opt_syncRateSeconds) {
-	this.url = window.location.href;
-	this.syncRateMS = (opt_syncRateSeconds || 30) * 1000;
-	this.timeOffset = 0;
-	this.syncToServer();
-  };
-
-  SyncedClock.prototype.syncToServer = function() {
-	var that = this;
-	var sendTime = getLocalTime();
-	sendJSON(this.url, {cmd: 'time'}, function(obj, exception) {
-	  if (exception) {
-		g_services.logger.error("syncToServer: " + exception);
-	  } else {
-		var receiveTime = getLocalTime();
-		var duration = receiveTime - sendTime;
-		var serverTime = obj.time + duration * 0.5;
-		that.timeOffset = serverTime - receiveTime;
-		g_services.logger.log("duration: ", duration, " timeOff:", that.timeOffset);
-	  }
-	  setTimeout(function() {
-		  that.syncToServer();
-		}, that.syncRateMS);
-	});
-  };
-
-  /**
-   * Gets the current time in seconds.
-   * @private
-   */
-  SyncedClock.prototype.getTime = function() {
-	return getLocalTime() + this.timeOffset;
-  };
-
-  return online ? new SyncedClock(opt_syncRateSeconds) : new LocalClock();
 });
 
