@@ -31,67 +31,75 @@
 
 "use strict";
 
-define(['./virtualsocket'], function(VirtualSocket) {
-  var GameClient = function() {
-    var g_socket;
-    var g_sendQueue = [];
-    var eventListeners = {};
+define(function() {
+  var SocketIOClient = function() {
+    console.log("Using direct Socket.io");
+    var _socket;
 
-    this.addEventListener = function(eventType, listener) {
-      eventListeners[eventType] = listener;
-    };
-
-    this.removeEventListener = function(eventType) {
-      eventListeners[eventType] = undefined;
-    };
-
-    var sendEvent_ = function(eventType, args) {
-      var fn = eventListeners[eventType];
-      if (fn) {
-        fn.apply(this, args);
-      }
-    }.bind(this);
-
-    var connected_ = function() {
-      for (var ii = 0; ii < g_sendQueue.length; ++ii) {
-        g_socket.send(g_sendQueue[ii]);
-      }
-      g_sendQueue = [];
-      console.log("connected");
-      sendEvent_('connect');
-    }.bind(this);
-
-    var disconnected_ = function() {
-      console.log("disconnected");
-      sendEvent_('disconnect');
-    }.bind(this);
-
-    var processMessage_ = function(msg) {
-      sendEvent_(msg.cmd, [msg]);
-    }.bind(this);
-
-    var connect_ = function() {
-      g_sendQueue = [];
-      g_socket = new VirtualSocket();
-      g_socket.on('connect', connected_.bind(this));
-      g_socket.on('message', processMessage_.bind(this));
-      g_socket.on('disconnect', disconnected_.bind(this));
-    }.bind(this);
-
-    this.sendCmd = function(data) {
-      var msg = {
-        cmd: "update",
-        data: data
+    if (!window.io) {
+      console.log("no socket io");
+      _socket = {
+        send: function() { }
       };
-      if (g_socket.readyState == WebSocket.CONNECTING) {
-        g_sendQueue.push(msg);
-      } else {
-        g_socket.send(msg);
+      return;
+    }
+
+    var url = "http://" + window.location.host;
+    console.log("connecting to: " + url);
+    _socket = io.connect(url);
+
+    this.__defineGetter__("readyState", function() {
+      return _socket.readyState;
+    });
+
+    this.on = function(eventName, fn) {
+      _socket.on(eventName, fn);
+    };
+
+    this.send = function(msg) {
+      _socket.emit('message', msg);
+    };
+  };
+
+  var WebSocketClient = function() {
+    console.log("Using direct WebSocket");
+    var _socket;
+
+    var url = "ws://" + window.location.host;
+    console.log("connecting to: " + url);
+    _socket = new WebSocket(url);
+
+    this.__defineGetter__("readyState", function() {
+      return _socket.readyState;
+    });
+
+    this.on = function(eventName, fn) {
+      switch (eventName) {
+      case 'connect':
+        _socket.onopen = fn;
+        break;
+      case 'disconnect':
+        _socket.onclose = fn;
+        break;
+      case 'error':
+        _socket.onerror = fn;
+        break;
+      case 'message':
+        _socket.onmessage = function(event) {
+          fn(JSON.parse(event.data));
+        };
+        break;
       }
     };
 
-    connect_();
+    this.send = function(msg) {
+      if (_socket.readyState == WebSocket.OPEN) {
+        _socket.send(JSON.stringify(msg));
+      }
+    };
   };
-  return GameClient;
+
+  //return SocketIOClient;
+  return WebSocketClient;
 });
 

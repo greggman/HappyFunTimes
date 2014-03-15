@@ -52,8 +52,8 @@ var args = require('minimist')(process.argv.slice(2));
 
 if (args.h || args.help) {
   sys.print(
-		"--help: this message\n" +
-		"--port: port. Default 8080\n");
+      "--help: this message\n" +
+      "--port: port. Default 8080\n");
   process.exit(0);
 }
 
@@ -118,44 +118,44 @@ var server = http.createServer(function(req, res) {
       }
     });
   } else {
-	sendRequestedFile(req, res);
+    sendRequestedFile(req, res);
   }
 });
 
 var sendRequestedFile = function(req, res) {
   var filePath = querystring.unescape(url.parse(req.url).pathname);
   if (filePath == "/") {
-	filePath = "/index.html";
+    filePath = "/index.html";
   }
   var cwd = process.cwd();
   var fullPath = path.normalize(path.join(cwd, g.baseDir, filePath));
   debug("path: " + fullPath);
   if (cwd != fullPath.substring(0, cwd.length)) {
-	sys.print("forbidden: " + fullPath + "\n");
-	return send403(res);
+    sys.print("forbidden: " + fullPath + "\n");
+    return send403(res);
   }
   var mimeType = mime.lookup(fullPath);
   if (mimeType) {
-	fs.readFile(fullPath, function(err, data){
-	  if (err) {
-		sys.print("unknown file: " + fullPath + "\n");
-		return send404(res);
-	  }
-	  if (startsWith(mimeType, "text")) {
-		res.writeHead(200, {
-		  'Content-Type': mimeType + "; charset=utf-8"
-		});
-		res.write(data, "utf8");
-	  } else {
-		res.writeHead(200, {
-		  'Content-Type': mimeType,
-		  'Content-Length': data.length});
-		res.write(data);
-	  }
-	  res.end();
-	});
+    fs.readFile(fullPath, function(err, data){
+      if (err) {
+        sys.print("unknown file: " + fullPath + "\n");
+        return send404(res);
+      }
+      if (startsWith(mimeType, "text")) {
+        res.writeHead(200, {
+          'Content-Type': mimeType + "; charset=utf-8"
+        });
+        res.write(data, "utf8");
+      } else {
+        res.writeHead(200, {
+          'Content-Type': mimeType,
+          'Content-Length': data.length});
+        res.write(data);
+      }
+      res.end();
+    });
   } else {
-	send404(res);
+    send404(res);
   }
 };
 
@@ -172,7 +172,7 @@ var send403 = function(res) {
 };
 
 var rs = require('./relayserver.js');
-rs.init(server);
+var relayServer = new rs.RelayServer(server);
 server.listen(g.port);
 sys.print("Listening on port: " + g.port + "\n");
 

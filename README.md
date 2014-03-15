@@ -169,6 +169,20 @@ This lets you make games that support more than the typical 4 players.
 
         </script>
 
+*   There is also a synchronized clock across machines.
+
+    Use it as follows.
+
+        var online = true;
+        var clock = SyncedClock.createClock(online);
+
+        ...
+
+        var timeInSeconds = clock.getTime();
+
+    If online is false when the clock is created it will create a clock
+    that returns the local time.
+
 
 Running the Examples
 --------------------

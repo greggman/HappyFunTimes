@@ -33,7 +33,11 @@
 
 // TODO: replace tdl.log stuff
 
-define(['./netplayer'], function(NetPlayer) {
+define(
+  [ './virtualsocket',
+    './netplayer',
+  ], function(VirtualSocket, NetPlayer) {
+
   var GameServer = function() {
     var _connected = false;
     var _socket;
@@ -122,19 +126,8 @@ define(['./netplayer'], function(NetPlayer) {
     };
 
     var connect_ = function() {
-      if (!window.io)
-      {
-        console.log("no socket io");
-        _socket = {
-          send: function() { }
-        };
-        return;
-      }
-
-      var url = "http://" + window.location.host;
-      console.log("connecting to: " + url);
+      _socket = new VirtualSocket();
       _sendQueue = [];
-      _socket = io.connect(url);
       _socket.on('connect', connected_.bind(this));
       _socket.on('message', processMessage_.bind(this));
       _socket.on('disconnect', disconnected_.bind(this));
@@ -143,7 +136,7 @@ define(['./netplayer'], function(NetPlayer) {
     var connected_ = function() {
       _connected = true;
       for (var ii = 0; ii < _sendQueue.length; ++ii) {
-        _socket.emit('message', _sendQueue[ii]);
+        _socket.send(_sendQueue[ii]);
       }
       _sendQueue = [];
       sendEvent_('connect');
@@ -165,7 +158,7 @@ define(['./netplayer'], function(NetPlayer) {
       if (_connected == WebSocket.CONNECTING) {
         _sendQueue.push(msg);
       } else {
-        _socket.emit('message', msg);
+        _socket.send(msg);
       }
     }.bind(this);
 
