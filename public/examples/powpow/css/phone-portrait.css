@@ -1,0 +1,18 @@
+.instruction {
+  font-weight: bold;
+  font-family: Arial Bold, arial, helvetica bold, helvetica, san-serif;
+  font-size: 20px;
+  margin: 15px;
+  color: yellow;
+}
+#text {
+  color: white;
+  font-size: 20px;
+  padding: 5px;
+}
+#input {
+  font-size: 20px;
+  font-family: Arial Bold, arial, helvetica bold, helvetica, san-serif;
+}
+
+

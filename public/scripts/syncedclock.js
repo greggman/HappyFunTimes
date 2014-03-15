@@ -1,0 +1,94 @@
+/*
+ * Copyright 2014, Gregg Tavares.
+ * All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are
+ * met:
+ *
+ *     * Redistributions of source code must retain the above copyright
+ * notice, this list of conditions and the following disclaimer.
+ *     * Redistributions in binary form must reproduce the above
+ * copyright notice, this list of conditions and the following disclaimer
+ * in the documentation and/or other materials provided with the
+ * distribution.
+ *     * Neither the name of Gregg Tavares. nor the names of its
+ * contributors may be used to endorse or promote products derived from
+ * this software without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+ * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+ * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+ * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+ * OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+ * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+ * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+ * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+ * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+ * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ */
+
+"use strict";
+
+var createClock = (function(online, opt_syncRateSeconds) {
+
+  var getLocalTime = function() {
+	return (new Date()).getTime() * 0.001;
+  };
+
+  /**
+   * A clock that gets the local current time in seconds.
+   * @private
+   */
+  var LocalClock = function() {
+  };
+
+  /**
+   * Gets the current time in seconds.
+   */
+  LocalClock.prototype.getTime = function() {
+	return getLocalTime();
+  };
+
+  /**
+   * A clock that gets the current time in seconds attempting to
+   * keep the clock synced to the server.
+   * @constructor
+   */
+  var SyncedClock = function(opt_syncRateSeconds) {
+	this.url = window.location.href;
+	this.syncRateMS = (opt_syncRateSeconds || 30) * 1000;
+	this.timeOffset = 0;
+	this.syncToServer();
+  };
+
+  SyncedClock.prototype.syncToServer = function() {
+	var that = this;
+	var sendTime = getLocalTime();
+	tdl.io.sendJSON(this.url, {cmd: 'time'}, function(obj, exception) {
+	  if (exception) {
+		console.error("syncToServer: " + exception);
+	  } else {
+		var receiveTime = getLocalTime();
+		var duration = receiveTime - sendTime;
+		var serverTime = obj.time + duration * 0.5;
+		that.timeOffset = serverTime - receiveTime;
+	  }
+	  setTimeout(function() {
+		  that.syncToServer();
+		}, that.syncRateMS);
+	});
+  };
+
+  /**
+   * Gets the current time in seconds.
+   * @private
+   */
+  SyncedClock.prototype.getTime = function() {
+	return getLocalTime() + this.timeOffset;
+  };
+
+  return online ? new SyncedClock(opt_syncRateSeconds) : new LocalClock();
+}());
+
