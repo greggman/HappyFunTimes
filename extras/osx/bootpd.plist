@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>NetBoot</key>
+	<dict/>
+	<key>Subnets</key>
+	<array>
+		<dict>
+			<key>allocate</key>
+			<true/>
+			<key>dhcp_domain_name</key>
+			<string>no-dns-available.example.com</string>
+			<key>dhcp_domain_name_server</key>
+			<array>
+				<string>169.254.194.171</string>
+			</array>
+			<key>dhcp_router</key>
+			<string>169.254.194.171</string>
+			<key>lease_max</key>
+			<integer>3600</integer>
+			<key>name</key>
+			<string>NotSure Theres a point</string>
+			<key>net_address</key>
+			<string>169.254.0.0</string>
+			<key>net_mask</key>
+			<string>255.255.0.0</string>
+			<key>net_range</key>
+			<array>
+				<string>169.254.194.2</string>
+				<string>169.254.194.170</string>
+			</array>
+			<key>selected_port_name</key>
+			<string>en0</string>
+			<key>uuid</key>
+			<string>C4C27FEF-00D6-4D81-881D-6E2BE632D0C4</string>
+		</dict>
+	</array>
+	<key>allow</key>
+	<array/>
+	<key>bootp_enabled</key>
+	<false/>
+	<key>deny</key>
+	<array/>
+	<key>detect_other_dhcp_server</key>
+	<false/>
+	<key>dhcp_enabled</key>
+	<true/>
+	<key>old_netboot_enabled</key>
+	<false/>
+	<key>relay_enabled</key>
+	<false/>
+	<key>relay_ip_list</key>
+	<array/>
+</dict>
+</plist>
