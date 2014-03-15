@@ -52,7 +52,6 @@ var sendJSON = function(url, jsonObject, callback) {
           success = false;
         }
       }
-      loadInfo.finish();
       callback(json, success ? null : 'could not load: ' + url);
     }
   };

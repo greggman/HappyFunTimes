@@ -2,7 +2,7 @@
 
 // To play a sound, simply call audio.playSound(id), where id is
 // one of the keys of the g_sound_files array, e.g. "damage".
-var AudioManager = function() {
+var AudioManager = function(sounds) {
   var g_context;
   var g_audioMgr;
   var g_soundBank = {};
@@ -15,12 +15,12 @@ var AudioManager = function() {
     req.open("GET", filename, true);
     req.responseType = "arraybuffer";
     req.onload = function() {
-	  g_context.decodeAudioData(req.response, function onSuccess(decodedBuffer) {
-		// Decoding was successful, do something useful with the audio buffer
-		that.buffer = decodedBuffer;
-	  }, function onFailure() {
-		 console.error("failed to decoding audio buffer: " + filename);
-	  });
+      g_context.decodeAudioData(req.response, function onSuccess(decodedBuffer) {
+        // Decoding was successful, do something useful with the audio buffer
+        that.buffer = decodedBuffer;
+      }, function onFailure() {
+         console.error("failed to decoding audio buffer: " + filename);
+      });
     }
     req.addEventListener("error", function(e) {
       console.error("failed to load:", filename, " : ", e.target.status);
@@ -95,14 +95,25 @@ var AudioManager = function() {
         }
     }
 
-  this.init = function(sounds) {
+  this.playSound = function(name) {
+    if (!g_canPlay)
+      return;
+    var sound = g_soundBank[name];
+    if (!sound) {
+      console.error("audio: '" + name + "' not known.");
+      return;
+    }
+    sound.play();
+  };
+
+  function init(sounds) {
     var a = new Audio()
     g_canPlay = a.canPlayType("audio/ogg") || a.canPlayType("audio/mp3");
     if (!g_canPlay)
       return;
 
     var create;
-	var webAudioAPI = window.AudioContext || window.webkitAudioContext || window.mozAudioContext;
+    var webAudioAPI = window.AudioContext || window.webkitAudioContext || window.mozAudioContext;
     if (webAudioAPI) {
       tdl.log("Using Web Audio API");
       g_context = new webAudioAPI();
@@ -117,16 +128,5 @@ var AudioManager = function() {
       g_soundBank[sound] = new create(sound, data.filename, data.samples);
     }
   };
-
-  this.playSound = function(name) {
-    if (!g_canPlay)
-      return;
-    var sound = g_soundBank[name];
-    if (!sound) {
-      console.error("audio: '" + name + "' not known.");
-      return;
-    }
-    sound.play();
-  };
-
+  init(sounds);
 };

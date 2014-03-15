@@ -68,9 +68,9 @@ NetPlayer.prototype.removeEventHandler = function(eventType) {
 NetPlayer.prototype.sendEvent_ = function(eventType, args) {
   var fn = this.eventHandlers[eventType];
   if (fn) {
-	fn.apply(this, args);
+    fn.apply(this, args);
   } else {
-	console.error("Unknown Event: " + eventType);
+    console.error("Unknown Event: " + eventType);
   }
 };
 
@@ -97,15 +97,15 @@ NetPlayer.prototype.sendEvent_ = function(eventType, args) {
  *     // We're online so create players as they connect.
  *
  *     server.addEventListener(
- *  	   'playerconnect',
- *  	   function(netPlayer) {
- *  	     addPlayer(new MyPlayer(netPlayer));
- *  	   });
+ *         'playerconnect',
+ *         function(netPlayer) {
+ *           addPlayer(new MyPlayer(netPlayer));
+ *         });
  */
 var LocalNetPlayer = (function() {
   var _count = 0;
   return function() {
-	this.id = ++_count;
+    this.id = ++_count;
   }
 }());
 
@@ -131,43 +131,43 @@ var GameServer = function() {
   var _eventListeners = {};
 
   this.addEventListener = function(eventType, listener) {
-	_eventListeners[eventType] = listener;
+    _eventListeners[eventType] = listener;
   };
 
   this.removeEventListener = function(eventType) {
-	_eventListeners[eventType] = undefined;
+    _eventListeners[eventType] = undefined;
   };
 
   var sendEvent_ = function(eventType, args) {
-	var fn = _eventListeners[eventType];
-	if (fn) {
-	  fn.apply(this, args);
-	}
+    var fn = _eventListeners[eventType];
+    if (fn) {
+      fn.apply(this, args);
+    }
   }.bind(this);
 
   var startPlayer_ = function(msg) {
-	var id = msg.id;
-	var name = msg.name;
+    var id = msg.id;
+    var name = msg.name;
 
-	// Ignore if we already have a player with this id.
-	if (_players[id]) {
-	  return;
-	}
+    // Ignore if we already have a player with this id.
+    if (_players[id]) {
+      return;
+    }
 
-	// Make up a name if no name given.
-	if (!name) {
-	  name = "Player" + (++_totalPlayerCount);
-	}
+    // Make up a name if no name given.
+    if (!name) {
+      name = "Player" + (++_totalPlayerCount);
+    }
 
-	var player = new NetPlayer(this, id);
-	_players[id] = player;
-	++_numPlayers;
-	sendEvent_('playerconnect', [player, name]);
+    var player = new NetPlayer(this, id);
+    _players[id] = player;
+    ++_numPlayers;
+    sendEvent_('playerconnect', [player, name]);
   }.bind(this);
 
   var getPlayer_ = function(id) {
-	var player = _players[id];
-	return player;
+    var player = _players[id];
+    return player;
   }.bind(this);
 
   var updatePlayer_ = function(msg) {
@@ -178,37 +178,37 @@ var GameServer = function() {
   }.bind(this);
 
   var removePlayer_ = function(msg) {
-	var id = msg.id;
-	if (_players[id]) {
-	  sendEvent_('playerdisconnect', [_players[id]]);
-	  delete _players[id];
-	  --_numPlayers;
-	}
+    var id = msg.id;
+    if (_players[id]) {
+      sendEvent_('playerdisconnect', [_players[id]]);
+      delete _players[id];
+      --_numPlayers;
+    }
   }.bind(this);
 
   var messageHandlers = {
-	start: startPlayer_,
-	update: updatePlayer_,
-	remove: removePlayer_,
+    start: startPlayer_,
+    update: updatePlayer_,
+    remove: removePlayer_,
   };
 
   var processMessage_ = function(msg) {
-	var fn = messageHandlers[msg.cmd];
-	if (fn) {
-	  fn(msg);
-	} else {
-	  console.error("Unknown Message: " + msg.cmd);
-	}
+    var fn = messageHandlers[msg.cmd];
+    if (fn) {
+      fn(msg);
+    } else {
+      console.error("Unknown Message: " + msg.cmd);
+    }
   }.bind(this);
 
   this.isConnected = function() {
-	return _connected;
+    return _connected;
   };
 
   var connect_ = function() {
     if (!window.io)
     {
-      tdl.log("no socket io");
+      console.log("no socket io");
       _socket = {
         send: function() { }
       };
@@ -216,7 +216,7 @@ var GameServer = function() {
     }
 
     var url = "http://" + window.location.host;
-    tdl.log("connecting to: " + url);
+    console.log("connecting to: " + url);
     _sendQueue = [];
     _socket = io.connect(url);
     _socket.on('connect', connected_.bind(this));
@@ -230,12 +230,12 @@ var GameServer = function() {
       _socket.emit('message', _sendQueue[ii]);
     }
     _sendQueue = [];
-	sendEvent_('connect');
+    sendEvent_('connect');
   }.bind(this);
 
   var disconnected_ = function() {
     _connected = false;
-	sendEvent_('disconnect');
+    sendEvent_('disconnect');
     while (_numPlayers > 0) {
       for (var id in _players) {
         removePlayer_(id);
@@ -246,26 +246,24 @@ var GameServer = function() {
   }.bind(this);
 
   var send_ = function(msg) {
-	if (_connected == WebSocket.CONNECTING) {
-	  _sendQueue.push(msg);
-	} else {
-	  _socket.emit('message', msg);
-	}
+    if (_connected == WebSocket.CONNECTING) {
+      _sendQueue.push(msg);
+    } else {
+      _socket.emit('message', msg);
+    }
   }.bind(this);
 
   this.sendCmd = function(cmd, id, data) {
-	var msg = {
-	  cmd: cmd,
-	  id: id,
-	  data: data
-	};
-	send_(msg);
+    var msg = {
+      cmd: cmd,
+      id: id,
+      data: data
+    };
+    send_(msg);
   };
 
-  this.init = function() {
-	connect_();
-	this.sendCmd("server");
-  };
+  connect_();
+  this.sendCmd("server");
 };
 
 

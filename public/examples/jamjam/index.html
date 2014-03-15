@@ -135,7 +135,25 @@ html, body {
   background-color: black;
   color: white;
   text-align: center;
-  z-index: 1000
+  z-index: 1000;
+}
+#clock {
+  position: absolute;
+  top: 0px;
+  right: 0px;
+  font-family: monospace;
+  z-index: 1999;
+  color: white;
+}
+#log {
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  width: 100%;
+  height: 100%;
+  color: white;
+  font-family: monospace;
+  z-index: 2000;
 }
 </style>
 <link rel="stylesheet" media="all and (max-device-width: 1024px) and (orientation:portrait)"  href="/examples/powpow/css/tablet-portrait.css">
@@ -144,9 +162,11 @@ html, body {
 <link rel="stylesheet" media="all and (max-device-width: 900px) and (orientation:landscape)"  href="/examples/powpow/css/phone-landscape.css">
 <link rel="stylesheet" media="all and (min-device-width: 1025px)"                             href="/examples/powpow/css/monitor.css">
 <script type="text/javascript" src="/socket.io/socket.io.js"></script>
-<script type="text/javascript" src="scripts/ships.js"></script>
 <script type="text/javascript" src="../scripts/tdl/base.js"></script>
 <script type="text/javascript" src="../../scripts/gameclient.js"></script>
+<script type="text/javascript" src="../../scripts/io.js"></script>
+<script type="text/javascript" src="../../scripts/syncedclock.js"></script>
+<script type="text/javascript" src="../scripts/logger.js"></script>
 <script type="text/javascript" src="../scripts/audio.js"></script>
 <script>
 tdl.require('tdl.log');
@@ -173,6 +193,7 @@ var g_playerColor = "black";
 var g_playerStyle;
 var g_client;
 var g_audioManager;
+var g_services = {};
 
 function $(id) {
   return document.getElementById(id);
@@ -269,14 +290,14 @@ function handleSetColorMsg(msg) {
   var xOff = canvas.width / 2;
   var yOff = canvas.height / 2;
   var ctx = canvas.getContext("2d");
-  var styleName = ships.styles[msg.style];
-  for (var yy = -2; yy <= 2; ++yy) {
-    for (var xx = -2; xx <=2; ++xx) {
-      ships.drawShip(ctx, xx + xOff, yy + yOff, Math.PI, "#000");
-    }
-  }
-  ships[styleName](ctx, xOff, yOff, Math.PI, msg.color);
-  $("ship").src = canvas.toDataURL();
+//  var styleName = ships.styles[msg.style];
+//  for (var yy = -2; yy <= 2; ++yy) {
+//    for (var xx = -2; xx <=2; ++xx) {
+//      ships.drawShip(ctx, xx + xOff, yy + yOff, Math.PI, "#000");
+//    }
+//  }
+//  ships[styleName](ctx, xOff, yOff, Math.PI, msg.color);
+//  $("ship").src = canvas.toDataURL();
   //e.style.backgroundImage = "url(" + canvas.toDataURL() + ")";
 }
 
@@ -645,7 +666,6 @@ function reloadPage() {
 
 function main() {
   g_client = new GameClient();
-  g_client.init();
 
   g_client.addEventListener('setColor', handleSetColorMsg);
   g_client.addEventListener('setName', handleSetNameMsg);
@@ -657,19 +677,17 @@ function main() {
   g_client.addEventListener('connect', showConnected);
   g_client.addEventListener('disconnect', showDisconnected);
 
-  g_audioManager = new AudioManager();
-  g_audioManager.init({
+  var sounds = {
     explosion: {
-      filename: "assets/explosion.ogg",
+      filename: "assets/boom.ogg",
       samples: 1,
     },
     launching: {
-      filename: "assets/launching.ogg",
+      filename: "assets/beep.ogg",
       samples: 1,
     }
-  });
-
-  ships.setShipSize(70);
+  };
+  g_audioManager = new AudioManager(sounds);
 
   // Get the name user set before.
   g_name = readCookie("name");
@@ -678,6 +696,11 @@ function main() {
   }
   // Note: If the name is "" server will send a name
   sendName();
+
+  var clock = createClock(true);
+  g_services.clock = clock;
+  var logger = new HTMLLogger($("log"));
+  g_services.logger = logger;
 
   var haveTouch = 'ontouchstart' in document
 
@@ -719,12 +742,37 @@ function main() {
   $('input').addEventListener("change", finishSendName, false);
   $('input').addEventListener("blur", finishSendName, false);
   $('reload').addEventListener("click", reloadPage, false);
+
+  var clockElement = $("clock");
+  var clockNode = document.createTextNode("");
+  clockElement.appendChild(clockNode);
+
+  var element = $("surface");
+  var canvas = $("mark");
+  var ctx = canvas.getContext("2d");
+
+  var lastState = 0;
+  var render = function() {
+	var time = clock.getTime();
+	var eighthSecondTicks = Math.floor(time * 8);
+	var newState = (eighthSecondTicks % 8) == 0;
+	if (newState != lastState) {
+	  element.style.backgroundColor = newState ? 'yellow' : 'black';
+	  ctx.fillStyle = newState ? 'red' : 'gray';
+	  ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+	  lastState = newState;
+	}
+
+	clockNode.nodeValue = time.toFixed(2) + " " + (Math.floor(time) % 100);
+
+    requestAnimationFrame(render);
+  };
+  render();
 }
 </script>
 </head>
 <body>
 <div id="surface">
-  <img id="ship" src="assets/waiting.png" />
   <div id="status"></div>
   <div id="console"></div>
 </div>
@@ -740,12 +788,12 @@ function main() {
         <tr>
           <td width="50%">
         <div id="tcmove" class="move">
-          <div class="instruction">Drag Left/Right here to Steer</div>
+          <div class="instruction"></div>
         </div>
           </td>
           <td width="50%">
         <div id="tcfire" class="fire">
-          <div class="instruction">Press here to Fire</div>
+          <div class="instruction"></div>
         </div>
           </td>
         </tr>
@@ -781,6 +829,11 @@ function main() {
   <div id="disconnected">
     <div class="instruction">Disconnected</div>
     <div class="instruction" id="reload">click to reload</div>
+  </div>
+  <div id="log">
+  </div>
+  <div id="clock">
+                <canvas id="mark" class="canvas" width="150" height="150"></canvas>
   </div>
 </div>
 </body>

@@ -677,7 +677,6 @@ function reloadPage() {
 
 function main() {
   g_client = new GameClient();
-  g_client.init();
 
   g_client.addEventListener('setColor', handleSetColorMsg);
   g_client.addEventListener('setName', handleSetNameMsg);
@@ -689,8 +688,7 @@ function main() {
   g_client.addEventListener('connect', showConnected);
   g_client.addEventListener('disconnect', showDisconnected);
 
-  g_audioManager = new AudioManager();
-  g_audioManager.init({
+  var sounds = {
     explosion: {
       filename: "assets/explosion.ogg",
       samples: 1,
@@ -699,7 +697,8 @@ function main() {
       filename: "assets/launching.ogg",
       samples: 1,
     }
-  });
+  };
+  g_audioManager = new AudioManager(sounds);
 
   ships.setShipSize(70);
 

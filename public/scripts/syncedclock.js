@@ -66,14 +66,15 @@ var createClock = (function(online, opt_syncRateSeconds) {
   SyncedClock.prototype.syncToServer = function() {
 	var that = this;
 	var sendTime = getLocalTime();
-	tdl.io.sendJSON(this.url, {cmd: 'time'}, function(obj, exception) {
+	sendJSON(this.url, {cmd: 'time'}, function(obj, exception) {
 	  if (exception) {
-		console.error("syncToServer: " + exception);
+		g_services.logger.error("syncToServer: " + exception);
 	  } else {
 		var receiveTime = getLocalTime();
 		var duration = receiveTime - sendTime;
 		var serverTime = obj.time + duration * 0.5;
 		that.timeOffset = serverTime - receiveTime;
+		g_services.logger.log("duration: ", duration, " timeOff:", that.timeOffset);
 	  }
 	  setTimeout(function() {
 		  that.syncToServer();
@@ -90,5 +91,5 @@ var createClock = (function(online, opt_syncRateSeconds) {
   };
 
   return online ? new SyncedClock(opt_syncRateSeconds) : new LocalClock();
-}());
+});
 

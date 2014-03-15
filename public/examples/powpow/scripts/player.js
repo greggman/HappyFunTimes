@@ -25,16 +25,16 @@ var Player = (function() {
   this.color = ships.makeColor(g_playerCount + g_startCount);
 
   if (netPlayer) {
-	netPlayer.addEventListener('turn', Player.prototype.handleTurnMsg.bind(this));
-	netPlayer.addEventListener('target', Player.prototype.handleTargetMsg.bind(this));
-	netPlayer.addEventListener('fire', Player.prototype.handleFireMsg.bind(this));
-	netPlayer.addEventListener('name', Player.prototype.handleNameMsg.bind(this));
-	netPlayer.addEventListener('busy', Player.prototype.handleBusyMsg.bind(this));
-	this.send({
-	  cmd: 'setColor',
-	  color: this.color.canvasColor,
-	  style: this.color.style,
-	});
+    netPlayer.addEventListener('turn', Player.prototype.handleTurnMsg.bind(this));
+    netPlayer.addEventListener('target', Player.prototype.handleTargetMsg.bind(this));
+    netPlayer.addEventListener('fire', Player.prototype.handleFireMsg.bind(this));
+    netPlayer.addEventListener('name', Player.prototype.handleNameMsg.bind(this));
+    netPlayer.addEventListener('busy', Player.prototype.handleBusyMsg.bind(this));
+    this.send({
+      cmd: 'setColor',
+      color: this.color.canvasColor,
+      style: this.color.style,
+    });
   }
 
   var g = this.services.globals;
@@ -97,7 +97,7 @@ Player.prototype.shoot = function() {
 
   this.services.audioManager.playSound('fire');
   var shot = new Shot(
-	this.services,
+    this.services,
     this.position[0] + -Math.sin(this.direction) * 15,
     this.position[1] +  Math.cos(this.direction) * 15,
     this.direction, this);
@@ -142,8 +142,9 @@ Player.prototype.handleTargetMsg = function(msg) {
 
 Player.prototype.handleFireMsg = function(msg) {
   this.fire = msg.fire;
-  if (this.fire == 0)
-	this.shootTimer = 0;
+  if (this.fire == 0) {
+    this.shootTimer = 0;
+  }
 };
 
 Player.prototype.handleNameMsg = function(msg) {

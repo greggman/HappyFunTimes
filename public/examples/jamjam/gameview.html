@@ -108,12 +108,12 @@ html, body {
 <!--
 <script data-main="scripts/main.js" src="scripts/require.js"></script>
 -->
-<script type="text/javascript" src="/socket.io/socket.io.js"></script>
-<script type="text/javascript" src="../../scripts/gameserver.js"></script>
-<script type="text/javascript" src="../../scripts/syncedclock.js"></script>
-<script type="text/javascript" src="scripts/entitysystem.js"></script>
-<script type="text/javascript" src="../scripts/tdl/base.js"></script>
-<script type="text/javascript" src="../scripts/audio.js"></script>
+<script src="/socket.io/socket.io.js"></script>
+<script src="../../scripts/gameserver.js"></script>
+<script src="../../scripts/syncedclock.js"></script>
+<script src="scripts/entitysystem.js"></script>
+<script src="../scripts/tdl/base.js"></script>
+<script src="../scripts/audio.js"></script>
 <script>
 tdl.require('tdl/misc');
 
@@ -159,12 +159,12 @@ function startPlayer(netPlayer, name) {
 
 function removePlayer(netPlayer) {
   for (var ii = 0; ii < g_players.length; ++ii) {
-	var player = g_players[ii];
-	if (player.netPlayer === netPlayer) {
-	  g_players.splice(ii, 1);
-	  player.removeFromGame();
-	  return;
-	}
+    var player = g_players[ii];
+    if (player.netPlayer === netPlayer) {
+      g_players.splice(ii, 1);
+      player.removeFromGame();
+      return;
+    }
   }
 }
 
@@ -190,11 +190,8 @@ function main() {
   server.addEventListener('disconnect', showDisconnected);
   server.addEventListener('playerconnect', startPlayer);
   server.addEventListener('playerdisconnect', removePlayer);
-  server.init();
 
-  var audioManager = new AudioManager();
-  g_services.audioManager = audioManager;
-  audioManager.init({
+  var sounds = {
     fire: {
       filename: "assets/fire.ogg",
       samples: 8,
@@ -207,7 +204,10 @@ function main() {
       filename: "assets/hitshield.ogg",
       samples: 6,
     },
-  });
+  };
+
+  var audioManager = new AudioManager(sounds);
+  g_services.audioManager = audioManager;
   var entitySys = new EntitySystem();
   g_services.entitySystem = entitySys;
 
@@ -221,12 +221,12 @@ function main() {
 
   function render() {
     var now = (new Date()).getTime() * 0.001;
-    var elapsedTime = Math.min(now - then, 1 / 10);	// don't advance more then a 1/10 of a second;
+    var elapsedTime = Math.min(now - then, 1 / 10);    // don't advance more then a 1/10 of a second;
     then = now;
 
     renderer.resize();
-	globals.width = g_canvas.width;
-	globals.height = g_canvas.height;
+    globals.width = g_canvas.width;
+    globals.height = g_canvas.height;
 
     entitySys.processEntities(elapsedTime);
 
@@ -246,22 +246,22 @@ function startLocalPlayers() {
 
   function handleKeyDown(keyCode, state) {
     switch(keyCode) {
-	case 37: // left
+    case 37: // left
       if (!g_left) {
         g_left = true;
-		player1.handleTurnMsg({turn: -1});
+        player1.handleTurnMsg({turn: -1});
       }
       break;
     case 39: // right
       if (!g_right) {
         g_right = true;
-		player1.handleTurnMsg({turn: 1});
+        player1.handleTurnMsg({turn: 1});
       }
       break;
     case 90: // z
       if (!g_fire) {
         g_fire = true;
-		player1.handleFireMsg({fire:1});
+        player1.handleFireMsg({fire:1});
       }
       break;
     }
@@ -271,11 +271,11 @@ function startLocalPlayers() {
     switch(keyCode) {
     case 37: // left
       g_left = false;
-	  player1.handleTurnMsg({turn: (g_right) ? 1 : 0});
+      player1.handleTurnMsg({turn: (g_right) ? 1 : 0});
       break;
     case 39: // right
       g_right = false;
-	  player1.handleTurnMsg({turn: (g_left) ? -1 : 0});
+      player1.handleTurnMsg({turn: (g_left) ? -1 : 0});
       break;
     case 90: // z
       g_fire = false;
