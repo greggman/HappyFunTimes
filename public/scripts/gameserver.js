@@ -94,7 +94,7 @@ define(
       var player = getPlayer_(msg.id);
       if (!player)
         return;
-      player.sendEvent_(msg.data.cmd, [msg.data]);
+      player.sendEvent_(msg.data.cmd, [msg.data.data]); // FIX: Seems like gameserver should not know how to deal with this.
     }.bind(this);
 
     var removePlayer_ = function(msg) {
@@ -162,6 +162,8 @@ define(
       }
     }.bind(this);
 
+    // This sends a command to the 'relayserver'. The relaysever uses 'cmd' to figure out what to do
+    // and 'id' to figure out which client this is for. 'data' will be delieved to that client.
     this.sendCmd = function(cmd, id, data) {
       var msg = {
         cmd: cmd,

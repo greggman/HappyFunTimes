@@ -63,8 +63,7 @@ define(['./2d', './ships', './shot'], function(M2D, Ships, Shot) {
         netPlayer.addEventListener('fire', Player.prototype.handleFireMsg.bind(this));
         netPlayer.addEventListener('name', Player.prototype.handleNameMsg.bind(this));
         netPlayer.addEventListener('busy', Player.prototype.handleBusyMsg.bind(this));
-        this.send({
-          cmd: 'setColor',
+        this.sendCmd('setColor', {
           color: this.color.canvasColor,
           style: this.color.style,
         });
@@ -182,8 +181,7 @@ define(['./2d', './ships', './shot'], function(M2D, Ships, Shot) {
 
   Player.prototype.handleNameMsg = function(msg) {
     if (!msg.name) {
-      this.send({
-        cmd: 'setName',
+      this.sendCmd('setName', {
         name: this.playerName
       });
     } else {
@@ -218,17 +216,15 @@ define(['./2d', './ships', './shot'], function(M2D, Ships, Shot) {
     g_metaQueuePlayer.accum.count += 1;
   };
 
-  Player.prototype.send = function(cmd) {
-    this.netPlayer.send(cmd);
+  Player.prototype.sendCmd = function(cmd, data) {
+    this.netPlayer.sendCmd(cmd, data);
   };
 
   Player.prototype.countdown = function() {
     this.timer = 3;
     this.setState('countdown');
     if (this.showPlaceInQueue) {
-      this.send({
-        cmd: 'launch'
-      });
+      this.sendCmd('launch');
     }
   };
 
@@ -329,14 +325,12 @@ define(['./2d', './ships', './shot'], function(M2D, Ships, Shot) {
     this.timer = 2;
     this.setState('die');
     this.removeFromActive();
-    this.send({
-      cmd: 'die',
+    this.sendCmd('die', {
       killer: killer.playerName,
       crash: crash
     });
     if (!crash) {
-      killer.send({
-        cmd: 'kill',
+      killer.sendCmd('kill', {
         killed: this.playerName
       });
     }

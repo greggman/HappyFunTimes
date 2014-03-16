@@ -122,8 +122,7 @@ define(["./PListManager"], function(PListManager) {
 
   QueueManager.prototype.sendPlaceInQueue = function(player) {
     if (player.showPlaceInQueue) {
-      player.send({
-        cmd: 'queue',
+      player.sendCmd('queue', {
         count: player.placeInQueue
       });
     }

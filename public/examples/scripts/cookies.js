@@ -30,7 +30,7 @@
  */
 "use strict";
 
-defined(function() {
+define(function() {
   var createCookie = function(name, value, days) {
     var expires = "";
     if (days) {

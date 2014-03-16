@@ -79,8 +79,7 @@ var main = function(GameServer) {
     if (goal.hit(this.position)) {
       // This will generate a 'scored' event on the client (player's smartphone)
       // that corresponds to this player.
-      this.netPlayer.send({
-        cmd: 'scored',
+      this.netPlayer.sendCmd('scored', {
         points: 5 + randInt(6), // 5 to 10 points
       });
       goal.pickGoal();

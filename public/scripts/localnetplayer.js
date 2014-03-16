@@ -73,7 +73,7 @@ define(function() {
   LocalNetPlayer.prototype.removeEventListener = function() {
   };
 
-  LocalNetPlayer.prototype.send = function() {
+  LocalNetPlayer.prototype.sendCmd = function() {
   };
 
   return LocalNetPlayer;

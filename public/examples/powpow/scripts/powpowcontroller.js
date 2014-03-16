@@ -207,8 +207,7 @@ var main = function(GameClient, AudioManager, Cookies, Ships) {
         if (!g_left) {
           g_left = 1;
           g_right = 0;
-          g_client.sendCmd({
-              cmd: 'turn',
+          g_client.sendCmd('turn', {
               turn: -1
           });
         }
@@ -216,8 +215,7 @@ var main = function(GameClient, AudioManager, Cookies, Ships) {
         if (!g_right) {
           g_left = 0;
           g_right = 1;
-          g_client.sendCmd({
-              cmd: 'turn',
+          g_client.sendCmd('turn', {
               turn: 1
           });
         }
@@ -225,8 +223,7 @@ var main = function(GameClient, AudioManager, Cookies, Ships) {
         if (g_right || g_left) {
           g_left = 0;
           g_right = 0;
-          g_client.sendCmd({
-              cmd: 'turn',
+          g_client.sendCmd('turn', {
               turn: 0
           });
         }
@@ -240,9 +237,8 @@ var main = function(GameClient, AudioManager, Cookies, Ships) {
     if (g_right || g_left) {
       g_left = 0;
       g_right = 0;
-      g_client.sendCmd({
-          cmd: 'turn',
-          turn: 0
+      g_client.sendCmd('turn', {
+         turn: 0
       });
     }
     //debugTouch("end", event);
@@ -256,8 +252,7 @@ var main = function(GameClient, AudioManager, Cookies, Ships) {
     event.preventDefault();
     if (!g_fire) {
       g_fire = true;
-      g_client.sendCmd({
-          cmd: 'fire',
+      g_client.sendCmd('fire', {
           fire: 1
       });
     }
@@ -274,8 +269,7 @@ var main = function(GameClient, AudioManager, Cookies, Ships) {
     event.preventDefault();
     if (g_fire) {
       g_fire = false;
-      g_client.sendCmd({
-          cmd: 'fire',
+      g_client.sendCmd('fire', {
           fire: 0
       });
     }
@@ -317,8 +311,7 @@ var main = function(GameClient, AudioManager, Cookies, Ships) {
     var dx = x - centerX;
     var dy = y - centerY;
     var direction = Math.atan2(dy, dx);
-    g_client.sendCmd({
-        cmd: 'target',
+    g_client.sendCmd('target', {
         target: (direction + Math.PI / 2 * 3) % (Math.PI * 2)
     });
 
@@ -361,12 +354,10 @@ var main = function(GameClient, AudioManager, Cookies, Ships) {
     var now = (new Date()).getTime();
 
     if (now - g_startTime < 200) {
-      g_client.sendCmd({
-          cmd: 'fire',
+      g_client.sendCmd('fire', {
           fire: 1
       });
-      g_client.sendCmd({
-          cmd: 'fire',
+      g_client.sendCmd('fire', {
           fire: 0
       });
     }
@@ -381,8 +372,7 @@ var main = function(GameClient, AudioManager, Cookies, Ships) {
     case 37: // left
       if (!g_left) {
         g_left = true;
-        g_client.sendCmd({
-            cmd: 'turn',
+        g_client.sendCmd('turn', {
             turn: -1
         });
       }
@@ -390,8 +380,7 @@ var main = function(GameClient, AudioManager, Cookies, Ships) {
     case 39: // right
       if (!g_right) {
         g_right = true;
-        g_client.sendCmd({
-            cmd: 'turn',
+        g_client.sendCmd('turn', {
             turn: 1
         });
       }
@@ -399,8 +388,7 @@ var main = function(GameClient, AudioManager, Cookies, Ships) {
     case 90: // z
       if (!g_fire) {
         g_fire = true;
-        g_client.sendCmd({
-            cmd: 'fire',
+        g_client.sendCmd('fire', {
             fire: 1
         });
       }
@@ -412,22 +400,19 @@ var main = function(GameClient, AudioManager, Cookies, Ships) {
     switch(keyCode) {
     case 37: // left
       g_left = false;
-      g_client.sendCmd({
-          cmd: 'turn',
+      g_client.sendCmd('turn', {
           turn: (g_right) ? 1 : 0
       });
       break;
     case 39: // right
       g_right = false;
-      g_client.sendCmd({
-          cmd: 'turn',
+      g_client.sendCmd('turn', {
           turn: (g_left) ? -1 : 0
       });
       break;
     case 90: // z
       g_fire = false;
-      g_client.sendCmd({
-          cmd: 'fire',
+      g_client.sendCmd('fire', {
           fire: 0
       });
       break;
@@ -465,15 +450,13 @@ var main = function(GameClient, AudioManager, Cookies, Ships) {
     $('msg').style.color = "#FFF";
     $('input').style.display = "block";
     $('input').focus();
-    g_client.sendCmd({
-        cmd: 'busy',
+    g_client.sendCmd('busy', {
         busy: true
     });
   }
 
   function sendName() {
-    g_client.sendCmd({
-        cmd: 'name',
+    g_client.sendCmd('name', {
         name: g_name
     });
     $('msg').innerHTML = g_name;
@@ -485,8 +468,7 @@ var main = function(GameClient, AudioManager, Cookies, Ships) {
     sendName(event);
     $('msg').style.display = "block";
     $('input').style.display = "none";
-    g_client.sendCmd({
-        cmd: 'busy',
+    g_client.sendCmd('busy', {
         busy: false
     });
   }

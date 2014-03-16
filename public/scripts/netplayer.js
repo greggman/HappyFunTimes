@@ -55,8 +55,8 @@ define(function() {
    *
    * @param msg
    */
-  NetPlayer.prototype.send = function(msg) {
-    this.server.sendCmd("client", this.id, msg);
+  NetPlayer.prototype.sendCmd = function(cmd, msg) {
+    this.server.sendCmd("client", this.id, {cmd: cmd, data: msg});
   };
 
   NetPlayer.prototype.addEventListener = function(eventType, handler) {

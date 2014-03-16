@@ -83,6 +83,7 @@ var WSServer = function(server) {
       }
       if (eventName == 'message') {
         this.client.on(eventName, function(data, flags) {
+          debug("rcvd: " + data);
           fn(JSON.parse(data));
         });
       } else {

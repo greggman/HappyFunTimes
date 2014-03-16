@@ -54,8 +54,7 @@ var main = function(input, GameClient) {
   // This will generate a 'move' event in the corresponding
   // NetPlayer object in the game.
   var sendMoveCmd = function(position) {
-    client.sendCmd({
-      cmd: 'move',
+    client.sendCmd('move', {
       x: position.x,
       y: position.y,
     });
@@ -67,8 +66,7 @@ var main = function(input, GameClient) {
   //
   // This will generate a 'color' event in the corresponding
   // NetPlayer object in the game.
-  client.sendCmd({
-    cmd: 'color',
+  client.sendCmd('color', {
     color: color,
   });
   inputElem.style.backgroundColor = color;
