@@ -32,18 +32,22 @@
 using UnityEngine;
 using DeJson;
 using MiniJSON;
-using System.Collections.Generic;
 using System;
+using System.Collections.Generic;
 using WebSocketSharp;
 
 namespace HappyFunTimes {
 
 public class GameServer {
-    public GameServer() {
+
+    public GameServer(GameObject gameObject) {
+        m_gameObject = gameObject;
         m_players = new Dictionary<int, NetPlayer>();
         m_sendQueue = new List<String>();
         m_deserializer = new Deserializer();
         MessageCmdData.RegisterTypes(m_deserializer);
+
+        m_eventProcessor = m_gameObject.AddComponent<EventProcessor>();
     }
 
     public void Init(string url = "ws://localhost:8080") {
@@ -57,13 +61,19 @@ public class GameServer {
 
             m_socket.Connect ();
         }
+
     }
 
     public void Close() {
         if (m_connected) {
             m_connected = false;
             m_socket.Close();
+            m_socket = null;
         }
+    }
+
+    public void QueueEvent(EventProcessor.EventMsg msg) {
+        m_eventProcessor.QueueEvent(msg);
     }
 
     public event EventHandler<PlayerConnectMessageArgs> OnPlayerConnect;
@@ -77,6 +87,8 @@ public class GameServer {
     private Dictionary<int, NetPlayer> m_players;
     private List<String> m_sendQueue;
     private Deserializer m_deserializer;
+    private GameObject m_gameObject;
+    private EventProcessor m_eventProcessor;
 
     public class MessageToClient {
         public string cmd;  // command 'server', 'update'

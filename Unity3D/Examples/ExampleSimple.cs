@@ -104,9 +104,6 @@ public class ExampleSimple : MonoBehaviour {
             // We can't spawn game objects except during Start/Update
             if (m_gameObject == null) {
                 m_gameObject = (GameObject)Instantiate(m_exampleSimple.prefabToSpawn, Vector3.zero, Quaternion.identity);
-            } else {
-                m_gameObject.renderer.material.color = m_color;
-                m_gameObject.transform.localPosition = m_position;
             }
         }
 
@@ -117,15 +114,15 @@ public class ExampleSimple : MonoBehaviour {
 
         private void OnColor(MessageColor data) {
             m_color = Style.ParseCSSColor(data.color);
+            m_gameObject.renderer.material.color = m_color;
         }
 
         private void OnMove(MessageMove data) {
             m_position.x = data.x;
             m_position.z = m_exampleSimple.areaHeight - data.y - 1;  // because in 2D down is positive.
 
-            if (m_gameObject) {
-                m_gameObject.transform.localPosition = m_position;
-            }
+            m_gameObject.transform.localPosition = m_position;
+
             if (m_exampleSimple.HitGoal(m_position)) {
                 m_netPlayer.SendCmd(new MessageScored(m_exampleSimple.m_rand.Next(5, 15)));
             }
@@ -167,7 +164,7 @@ public class ExampleSimple : MonoBehaviour {
         m_players = new List<Player>();
         m_goal = new Goal(this);
 
-        m_server = new GameServer();
+        m_server = new GameServer(gameObject);
         m_server.Init();
 
         m_server.OnPlayerConnect += StartNewPlayer;

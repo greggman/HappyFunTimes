@@ -41,12 +41,27 @@ public class NetPlayer {
 
     private class CmdConverter<T> where T : MessageCmdData
     {
+        private class CmdEventMsg<T> : EventProcessor.EventMsg where T : MessageCmdData {
+            public CmdEventMsg(TypedCmdEventHandler<T> handler, MessageCmdData data) {
+                m_handler = handler;
+                m_data = data;
+            }
+
+            public override void Execute() {
+                m_handler((T)m_data);
+            }
+
+            private TypedCmdEventHandler<T> m_handler;
+            private MessageCmdData m_data;
+        }
+
         public CmdConverter(TypedCmdEventHandler<T> handler) {
             m_handler = handler;
         }
 
-        public void Callback(MessageCmdData data) {
-            m_handler((T)data);
+        public void Callback(GameServer server, MessageCmdData data) {
+            CmdEventMsg<T> msg = new CmdEventMsg<T>(m_handler, data);
+            server.QueueEvent(msg);
         }
 
         TypedCmdEventHandler<T> m_handler;
@@ -67,7 +82,7 @@ public class NetPlayer {
         m_handlers[name] = converter.Callback;
     }
 
-    private delegate void CmdEventHandler(MessageCmdData cmdData);
+    private delegate void CmdEventHandler(GameServer server, MessageCmdData cmdData);
 
     public void SendCmd(MessageCmdData data) { // Make it Ob's name is the message.
         string name = MessageCmdDataNameDB.GetCmdName(data.GetType());
@@ -81,7 +96,7 @@ public class NetPlayer {
             Debug.LogError("unhandled NetPlayer cmd: " + cmd.cmd);
             return;
         }
-        handler(cmd.data);
+        handler(m_server, cmd.data);
     }
 
     private GameServer m_server;
