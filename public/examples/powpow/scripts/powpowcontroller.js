@@ -456,7 +456,7 @@ var main = function(GameClient, AudioManager, Cookies, Ships) {
   }
 
   function sendName() {
-    g_client.sendCmd('name', {
+    g_client.sendCmd('setName', {
         name: g_name
     });
     $('msg').innerHTML = g_name;

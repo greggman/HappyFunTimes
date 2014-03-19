@@ -61,7 +61,7 @@ define(['./2d', './ships', './shot'], function(M2D, Ships, Shot) {
         netPlayer.addEventListener('turn', Player.prototype.handleTurnMsg.bind(this));
         netPlayer.addEventListener('target', Player.prototype.handleTargetMsg.bind(this));
         netPlayer.addEventListener('fire', Player.prototype.handleFireMsg.bind(this));
-        netPlayer.addEventListener('name', Player.prototype.handleNameMsg.bind(this));
+        netPlayer.addEventListener('setName', Player.prototype.handleNameMsg.bind(this));
         netPlayer.addEventListener('busy', Player.prototype.handleBusyMsg.bind(this));
         this.sendCmd('setColor', {
           color: this.color.canvasColor,

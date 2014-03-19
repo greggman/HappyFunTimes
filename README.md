@@ -24,10 +24,12 @@ This lets you make games that support more than the typical 4 players.
 
     `gameserver.js` provides a library that runs in the game that tracks players joining or
     leaving the game and lets the game receive input from those players and
-    send messages to them.
+    send messages to them. (There's a Unity version of this library)
 
     `gameclient.js` provides a library that lets smartphones connect to the game and
-    send and receive messages.
+    send and receive messages. (There is NO Unity version of this library as the whole
+    point is anyone with a smartphone should be able to play immediately, no need to
+    install anything).
 
     `server.js` is a node.js based webserver. At a basic level all it does is relay
     messages to and from the smartphones and the game.
@@ -183,25 +185,30 @@ This lets you make games that support more than the typical 4 players.
     If online is false when the clock is created it will create a clock
     that returns the local time.
 
+    **NOTE: The synced clock is not working on iOS yet**
+
 
 Running the Examples
 --------------------
 
 *   Clone to repo
 *   Install node. I was using 0.10.26
-*   type `npd install` which will install needed node modules
+*   type `npm install` which will install needed node modules locally
 *   type `node server/server.js` which will start the server.
 
-Open a browser window and go to `http://localhost:8080/` and choose a game server
+Open a browser window and go to `http://localhost:8080/` and choose a game
 In other window (preferable a window, not a tab), go to `http://localhost:8080` and
-choose the corresponding client. If you want open more clients.
+choose the corresponding controller.
 
-If you other computers or smartphones on the same network look up the ip address of
+If you have other computers or smartphones on the same network look up the ip address of
 the machine running the game (see `ifconfig` on OSX/Linux or `ipconfig` on Windows) then
 go to `http://ipaddress:8080` from those machines. For example on my home network it was
 `http://192.168.1.12:8080`
 
-Note: There is no reason the machine running the server needs to be the same as the
+You can simulate other machines joining the game but opening more windows (preferred)
+or tabs in your browser.
+
+Note: There is no reason the machine running the relayserver needs to be the same as the
 machine running the game. Also, if the machine is accessable from the internet
 you don't need to be on the same network. Of course there will be far more lag over
 the internet or especially over cellular networks but depending on the game that
@@ -232,6 +239,16 @@ Here's a terse version of the steps needed
     sudo /usr/libexec/bootpd -d -i en0
     sudo node dns-server.js
     sudo node server/server.js --port 80
+
+Note: iOS and OSX have this "feature" where when when they connect to a new network
+they'll check if they can [access some page at apple.com](http://www.apple.com/library/test/success.html)).
+If they can nothing special happens. If they can NOT access the page but instead get a
+different page they assume there is some kind of login screen, called a [Captive Portal](http://en.wikipedia.org/wiki/Captive_portal).
+In that case they launch a custom WebView and show the page.
+
+Unfortunately the steps above to not seem to trigger this behavior. It would be nice
+if we could figure out how to trigger it so uses on machines that support this feature
+could get taken directly to the games.
 
 Notes
 -----
