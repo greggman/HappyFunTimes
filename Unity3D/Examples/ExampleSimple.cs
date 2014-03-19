@@ -61,13 +61,13 @@ public class ExampleSimple : MonoBehaviour {
         // by CmdName.
         [CmdName("color")]
         public class MessageColor : MessageCmdData {
-            public string color;    // in CSS format rgb(r,g,b)
+            public string color = "";    // in CSS format rgb(r,g,b)
         };
 
         [CmdName("move")]
         public class MessageMove : MessageCmdData {
-            public int x;
-            public int y;
+            public int x = 0;
+            public int y = 0;
         };
 
         // NOTE: This message is only sent, never received
@@ -86,7 +86,7 @@ public class ExampleSimple : MonoBehaviour {
         public Player(NetPlayer netPlayer, ExampleSimple exampleSimple) {
             m_netPlayer = netPlayer;
             m_exampleSimple = exampleSimple;
-            m_gameObject = null;
+            m_gameObject = (GameObject)Instantiate(m_exampleSimple.prefabToSpawn, Vector3.zero, Quaternion.identity);
             m_position = new Vector3(m_exampleSimple.m_rand.Next(m_exampleSimple.areaWidth), 0, m_exampleSimple.m_rand.Next(m_exampleSimple.areaHeight));
             m_color = new Color(0.0f, 1.0f, 0.0f);
 
@@ -101,10 +101,6 @@ public class ExampleSimple : MonoBehaviour {
         }
 
         public void Update() {
-            // We can't spawn game objects except during Start/Update
-            if (m_gameObject == null) {
-                m_gameObject = (GameObject)Instantiate(m_exampleSimple.prefabToSpawn, Vector3.zero, Quaternion.identity);
-            }
         }
 
         // Check if this Player is associated with a particular NetPlayer.

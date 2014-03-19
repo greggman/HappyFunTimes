@@ -41,7 +41,8 @@ public class NetPlayer {
 
     private class CmdConverter<T> where T : MessageCmdData
     {
-        private class CmdEventMsg<T> : EventProcessor.EventMsg where T : MessageCmdData {
+        //private class CmdEventMsg<T> : EventProcessor.EventMsg where T : MessageCmdData {
+        private class CmdEventMsg : EventProcessor.EventMsg {
             public CmdEventMsg(TypedCmdEventHandler<T> handler, MessageCmdData data) {
                 m_handler = handler;
                 m_data = data;
@@ -60,11 +61,26 @@ public class NetPlayer {
         }
 
         public void Callback(GameServer server, MessageCmdData data) {
-            CmdEventMsg<T> msg = new CmdEventMsg<T>(m_handler, data);
+            CmdEventMsg msg = new CmdEventMsg(m_handler, data);
             server.QueueEvent(msg);
         }
 
         TypedCmdEventHandler<T> m_handler;
+    }
+
+    // Used to queue events before there are any handlers.
+    private class SendCmdEventMsg : EventProcessor.EventMsg {
+        public SendCmdEventMsg(NetPlayer netPlayer, MessageCmd cmd) {
+            m_netPlayer = netPlayer;
+            m_cmd = cmd;
+        }
+
+        public override void Execute() {
+            m_netPlayer.SendEvent(m_cmd);
+        }
+
+        private NetPlayer m_netPlayer;
+        private MessageCmd m_cmd;
     }
 
     public NetPlayer(GameServer server, int id) {
@@ -91,6 +107,18 @@ public class NetPlayer {
     }
 
     public void SendEvent(MessageCmd cmd) {
+        // If there are no handlers registered then the object using this NetPlayer
+        // has not been instantiated yet. The issue is the GameSever makes a NetPlayer.
+        // It then has to queue an event to start that player so that it can be started
+        // on another thread. But, befor that event has triggered other messages might
+        // come through. So, if there are no handlers then we add an event to run the
+        // command later. It's the same queue that will birth the object that needs the
+        // message.
+        if (m_handlers.Count == 0) {
+            m_server.QueueEvent(new SendCmdEventMsg(this, cmd));
+            return;
+        }
+
         CmdEventHandler handler;
         if (!m_handlers.TryGetValue(cmd.cmd, out handler)) {
             Debug.LogError("unhandled NetPlayer cmd: " + cmd.cmd);
