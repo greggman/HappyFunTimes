@@ -36,6 +36,7 @@ var main = function(GameServer) {
   var canvas = document.getElementById("playfield");
   var ctx = canvas.getContext("2d");
   var itemSize = 15;
+  var players = [];
 
   var randInt = function(range) {
     return Math.floor(Math.random() * range);
@@ -69,8 +70,20 @@ var main = function(GameServer) {
     this.position = pickRandomPosition();
     this.color = "green";
 
+    netPlayer.addEventListener('disconnect', Player.prototype.disconnect.bind(this));
     netPlayer.addEventListener('move', Player.prototype.movePlayer.bind(this));
     netPlayer.addEventListener('color', Player.prototype.setColor.bind(this));
+  };
+
+  // The player disconnected.
+  Player.prototype.disconnect = function() {
+    for (var ii = 0; ii < players.length; ++ii) {
+      var player = players[ii];
+      if (player === this) {
+        players.splice(ii, 1);
+        return;
+      }
+    }
   };
 
   Player.prototype.movePlayer = function(cmd) {
@@ -91,7 +104,6 @@ var main = function(GameServer) {
   };
 
   var server = new GameServer();
-  var players = [];
   var goal = new Goal();
 
   server.addEventListener('connect', function() {
@@ -105,17 +117,6 @@ var main = function(GameServer) {
   // A new player has arrived.
   server.addEventListener('playerconnect', function(netPlayer, name) {
     players.push(new Player(netPlayer, name));
-  });
-
-  // A player disconnected.
-  server.addEventListener('playerdisconnect', function(netPlayer) {
-    for (var ii = 0; ii < players.length; ++ii) {
-      var player = players[ii];
-      if (player.netPlayer === netPlayer) {
-        players.splice(ii, 1);
-        return;
-      }
-    }
   });
 
   var drawItem = function(position, color) {
