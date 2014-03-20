@@ -310,27 +310,27 @@ no instructions would be needed except "Connect your phone to Wifi [HappyFunTime
 Folder structure
 ----------------
 
-   +-server   // code for node based relayserver
-   |
-   +-public   // the folder served by the relayserver
-   | |
-   | +-scripts  // The HappyFunTime JavaScript Library
-   | |
-   | +-examples  // the examples
-   |   |
-   |   +-scripts  // libraries shared by the examples, not part of HappyFunTimes
-   |   |
-   |   +-<example> // each example
-   |     |
-   |     +-scripts  // scripts specific to this example
-   |     |
-   |     +-assets   // assets for the specific example
-   |
-   +-Unity3D  // Unity3D lib
-     |
-     +-Examples  // Unity3D examples
-     |
-     +-Extras    // Other files the examples need but that aren't part of HappyFunTimes
+    +-server   // code for node based relayserver
+    |
+    +-public   // the folder served by the relayserver
+    | |
+    | +-scripts  // The HappyFunTime JavaScript Library
+    | |
+    | +-examples  // the examples
+    |   |
+    |   +-scripts  // libraries shared by the examples, not part of HappyFunTimes
+    |   |
+    |   +-<example> // each example
+    |     |
+    |     +-scripts  // scripts specific to this example
+    |     |
+    |     +-assets   // assets for the specific example
+    |
+    +-Unity3D  // Unity3D lib
+      |
+      +-Examples  // Unity3D examples
+      |
+      +-Extras    // Other files the examples need but that aren't part of HappyFunTimes
 
 Notes
 -----
