@@ -165,7 +165,7 @@ define(["./PListManager"], function(PListManager) {
       this.timer_ -= elapsedTime;
     } else {
       if (this.queue_.length > 0 &&
-          g_activePlayers.length + this.launching_.length < this.services.globals.maxActivePlayers) {
+          this.services.playerManager.getNumActivePlayers() + this.launching_.length < this.services.globals.maxActivePlayers) {
         var player = this.queue_.shift()
         player.countdown();
         this.launching_.push(player);

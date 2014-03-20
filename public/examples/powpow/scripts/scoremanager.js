@@ -44,15 +44,14 @@ define(["./PListManager"], function(PListManager) {
   }
 
   ScoreManager.prototype.calculateScores = function() {
-    this.orderedPlayers_ = [];
+    var orderedPlayers = [];
     var maxScore = 0;
-    for (var ii = 0; ii < g_players.length; ++ii) {
-      var player = g_players[ii];
-      this.orderedPlayers_.push(player);
+    this.services.playerManager.forEachPlayer(function(player) {
+      orderedPlayers.push(player);
       maxScore = Math.max(maxScore, player.score);
-    }
+    });
 
-    this.orderedPlayers_.sort(function(a, b) {
+    orderedPlayers.sort(function(a, b) {
       if (a.score > b.score)
         return -1;
       else if (a.score < b.score)
@@ -63,8 +62,9 @@ define(["./PListManager"], function(PListManager) {
         return 1;
     });
 
-    if (this.orderedPlayers_.length > this.maxScores_)
-      this.orderedPlayers_.length = this.maxScores_;
+    if (orderedPlayers.length > this.maxScores_) {
+      orderedPlayers.length = this.maxScores_;
+    }
 
     var numDigits = maxScore.toString().length;
     if (numDigits < this.zeros_.length) {
@@ -74,6 +74,8 @@ define(["./PListManager"], function(PListManager) {
         this.zeros_ += "0";
       }
     }
+
+    this.orderedPlayers_ = orderedPlayers;
   };
 
   ScoreManager.prototype.drawScores = function() {

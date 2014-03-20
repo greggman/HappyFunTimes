@@ -32,9 +32,7 @@
 
 tdl.require('tdl.webgl');
 
-var g_activePlayers = [];  // players currently playing (not in queue)
 var g_metaQueuePlayer;
-var g_players = [];  // all players
 var g_shotsById = {};
 var g_updateStatus = false;
 var g_loaded;
@@ -63,7 +61,7 @@ var main = function(
     Misc,
     CanvasRenderer,
     WebGLRenderer,
-    Player,
+    PlayerManager,
     MetaQueuePlayer,
     QueueManager,
     ScoreManager,
@@ -140,26 +138,7 @@ var main = function(
       var x = Math.random() * g_canvas.width;
       var y = Math.random() * g_canvas.height;
       var direction = Math.random() * Math.PI * 2;
-      var player = new Player(g_services, x, y, direction, name, netPlayer);
-      if (g_players.length == 0) {
-        g_services.audioManager.playSound('play');
-      }
-      g_players.push(player);
-      return player;
-    }
-
-    function removePlayer(netPlayer) {
-      for (var ii = 0; ii < g_players.length; ++ii) {
-        var player = g_players[ii];
-        if (player.netPlayer === netPlayer) {
-          g_players.splice(ii, 1);
-          player.removeFromGame();
-          if (g_players.length == 0) {
-            g_services.audioManager.playSound('gameover');
-          }
-          return;
-        }
-      }
+      return playerManager.createPlayer(x, y, direction, name, netPlayer);
     }
 
     function showConnected() {
@@ -209,7 +188,6 @@ var main = function(
     server.addEventListener('connect', showConnected);
     server.addEventListener('disconnect', showDisconnected);
     server.addEventListener('playerconnect', startPlayer);
-    server.addEventListener('playerdisconnect', removePlayer);
 
     var sounds = {
       fire: {
@@ -241,6 +219,8 @@ var main = function(
     g_services.audioManager = audioManager;
     var entitySys = new EntitySystem();
     g_services.entitySystem = entitySys;
+    var playerManager = new PlayerManager(g_services);
+    g_services.playerManager = playerManager;
     var scoreMgr = new ScoreManager(g_services, $("highscore"));
     g_services.scoreManager = scoreMgr;
     var queueMgr = new QueueManager(g_services, $("queue"));
@@ -272,9 +252,7 @@ var main = function(
       renderer.begin(elapsedTime);
 
       g_metaQueuePlayer.draw(renderer);
-      for (var ii = 0; ii < g_activePlayers.length; ++ii) {
-        g_activePlayers[ii].draw(renderer);
-      }
+      playerManager.draw(renderer);
       for (var shotId in g_shotsById) {
         g_shotsById[shotId].draw(renderer);
       }
@@ -382,7 +360,7 @@ requirejs(
     '../../scripts/misc',
     'canvasrenderer',
     'webglrenderer',
-    'player',
+    'playermanager',
     'metaplayer',
     'queuemanager',
     'scoremanager',

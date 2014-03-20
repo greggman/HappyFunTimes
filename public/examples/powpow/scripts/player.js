@@ -58,6 +58,7 @@ define(['./2d', './ships', './shot'], function(M2D, Ships, Shot) {
       this.color = Ships.makeColor(g_playerCount + g_startCount);
 
       if (netPlayer) {
+        netPlayer.addEventListener('disconnect', Player.prototype.handleDisconnect.bind(this));
         netPlayer.addEventListener('turn', Player.prototype.handleTurnMsg.bind(this));
         netPlayer.addEventListener('target', Player.prototype.handleTargetMsg.bind(this));
         netPlayer.addEventListener('fire', Player.prototype.handleFireMsg.bind(this));
@@ -96,11 +97,11 @@ define(['./2d', './ships', './shot'], function(M2D, Ships, Shot) {
       if (isMetaQueuePlayer) {
         this.setState('fly');
       } else {
-        if (g.haveServer || g_activePlayers.length >= 2) {
+        if (g.haveServer || this.services.playerManager.getNumActivePlayers >= 2) {
           this.addToQueue();
         } else {
           this.setState('fly');
-          g_activePlayers.push(this);
+          this.services.playerManager.addToActive(this);
         }
       }
     };
@@ -145,12 +146,7 @@ define(['./2d', './ships', './shot'], function(M2D, Ships, Shot) {
   };
 
   Player.prototype.removeFromActive = function() {
-    for (var ii = 0; ii < g_activePlayers.length; ++ii) {
-      if (g_activePlayers[ii].id == this.id) {
-        g_activePlayers.splice(ii, 1);
-        return;
-      }
-    }
+    this.services.playerManager.removeFromActive(this);
   };
 
   Player.prototype.removeFromGame = function() {
@@ -160,7 +156,12 @@ define(['./2d', './ships', './shot'], function(M2D, Ships, Shot) {
       this.removeShot(this.shots[0]);
     }
     this.services.entitySystem.deleteEntity(this);
-  }
+    this.services.playerManager.removePlayer(this);
+  };
+
+  Player.prototype.handleDisconnect = function() {
+    this.removeFromGame();
+  };
 
   Player.prototype.handleTurnMsg = function(msg) {
     this.turn = msg.turn;
@@ -237,7 +238,7 @@ define(['./2d', './ships', './shot'], function(M2D, Ships, Shot) {
 
       this.timer = this.launchDuration;
       this.setState('launch');
-      g_activePlayers.push(this);
+      this.services.playerManager.addToActive(this);
       this.services.queueManager.removeFromQueue(this);
       this.services.audioManager.playSound('launch');
     }
@@ -295,19 +296,19 @@ define(['./2d', './ships', './shot'], function(M2D, Ships, Shot) {
     // TODO(gman): try to optimize this. Player 1 should check
     // 2, 3, 4.  2 against 3, 4,  3 against 4.
     var hit = null;
-    for (var ii = 0; ii < g_activePlayers.length; ++ii) {
-      var player = g_activePlayers[ii];
+    var self = this;
+    this.services.playerManager.forEachActivePlayer(function(player) {
       // If we are not ourself and we are not the ghost
-      if (player.id != this.id) {
-        if (player.collide(this.position[0], this.position[1], 5)) {
-          player.die(this, this, true);
+      if (player.id != self.id) {
+        if (player.collide(self.position[0], self.position[1], 5)) {
+          player.die(self, self, true);
           hit = player;
         }
       }
-    }
+    });
     // If we collided with someone
     if (hit && this.invincibilityTimer <= 0) {
-      this.die(player, player, true);
+      this.die(hit, hit, true);
     }
   };
 

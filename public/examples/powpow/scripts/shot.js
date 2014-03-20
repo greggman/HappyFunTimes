@@ -66,17 +66,17 @@ define(['./2d'], function(M2D) {
       M2D.updatePosWithWrap(this.position, dx, dy, this.services.globals.width, this.services.globals.height);
 
       var hit = false;
-      for (var ii = 0; ii < g_activePlayers.length; ++ii) {
-        var player = g_activePlayers[ii];
-        if (player.id != this.owner.id) {
-          if (player.collide(this.position[0], this.position[1], 3)) {
+      var self = this;
+      this.services.playerManager.forEachActivePlayer(function(player) {
+        if (player.id != self.owner.id) {
+          if (player.collide(self.position[0], self.position[1], 3)) {
             hit = true;
-            if (player.die(this.owner, this, false)) {
-              ++this.owner.score;
+            if (player.die(self.owner, self, false)) {
+              ++self.owner.score;
             }
           }
         }
-      }
+      });
       if (hit) {
         this.remove();
       }

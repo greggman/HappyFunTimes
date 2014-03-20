@@ -99,8 +99,9 @@ define(
 
     var removePlayer_ = function(msg) {
       var id = msg.id;
-      if (_players[id]) {
-        sendEvent_('playerdisconnect', [_players[id]]);
+      var player = _players[id];
+      if (player) {
+        player.sendEvent_('disconnect', []);
         delete _players[id];
         --_numPlayers;
       }
