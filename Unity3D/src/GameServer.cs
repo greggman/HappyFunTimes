@@ -77,7 +77,6 @@ public class GameServer {
     }
 
     public event EventHandler<PlayerConnectMessageArgs> OnPlayerConnect;
-    public event EventHandler<PlayerDisconnectMessageArgs> OnPlayerDisconnect;
     public event EventHandler<EventArgs> OnConnect;
     public event EventHandler<EventArgs> OnDisconnect;
 
@@ -199,9 +198,7 @@ public class GameServer {
             return;
         }
         m_eventProcessor.QueueEvent(delegate() {
-            // UGH! This is not thread safe because someone might add handler to OnPlayerConnect
-            // Odds or low though.
-            OnPlayerDisconnect.Emit(this, new PlayerDisconnectMessageArgs(player));
+            player.Disconnect();
         });
         m_players.Remove(id);
     }

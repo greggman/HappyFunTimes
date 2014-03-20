@@ -100,6 +100,12 @@ public class NetPlayer {
         handler(m_server, cmd.data);
     }
 
+    public void Disconnect() {
+        OnDisconnect(this, new EventArgs());
+    }
+
+    public event EventHandler<EventArgs> OnDisconnect;
+
     private GameServer m_server;
     private int m_id;
     private Dictionary<string, CmdEventHandler> m_handlers;  // handlers by command name
