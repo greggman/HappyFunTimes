@@ -9,9 +9,6 @@ namespace HappyFunTimesExample {
 
 public class ExampleSimple : MonoBehaviour {
 
-    public int areaWidth = 300;  // matches JavaScript
-    public int areaHeight = 300;
-
     public GameObject prefabToSpawnForPlayer;
 
     // Use this for initialization
@@ -27,13 +24,14 @@ public class ExampleSimple : MonoBehaviour {
     }
 
     void StartNewPlayer(object sender, PlayerConnectMessageArgs e) {
-        Vector3 position = new Vector3(m_rand.Next(areaWidth), 0, m_rand.Next(areaHeight));
+        ExampleSimpleGameSettings settings = ExampleSimpleGameSettings.settings();
+        Vector3 position = new Vector3(m_rand.Next(settings.areaWidth), 0, m_rand.Next(settings.areaHeight));
         // Spawn a new player then add a script to it.
         GameObject gameObject = (GameObject)Instantiate(prefabToSpawnForPlayer, position, Quaternion.identity);
         // Add the ExampleSimplePlayer script to this object. Note: We could possible add this to the prefab.
         // Not sure which is best.
         ExampleSimplePlayer player = gameObject.AddComponent<ExampleSimplePlayer>();
-        player.Init(e.netPlayer, this);
+        player.Init(e.netPlayer);
     }
 
     void Connected(object sender, EventArgs e) {

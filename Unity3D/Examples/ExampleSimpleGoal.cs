@@ -19,11 +19,9 @@ class ExampleSimpleGoal : MonoBehaviour {
     }
 
     private void PickPosition() {
-        // Not sure what the best way to communicate globals is
-        int areaWidth = 300;
-        int areaHeight = 300;
-        m_position.x = m_rand.Next(areaWidth);
-        m_position.z = m_rand.Next(areaHeight);
+        ExampleSimpleGameSettings settings = ExampleSimpleGameSettings.settings();
+        m_position.x = m_rand.Next(settings.areaWidth);
+        m_position.z = m_rand.Next(settings.areaHeight);
         gameObject.transform.localPosition = m_position;
     }
 

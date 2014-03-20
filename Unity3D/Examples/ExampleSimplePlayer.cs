@@ -10,14 +10,13 @@ namespace HappyFunTimesExample {
 class ExampleSimplePlayer : MonoBehaviour {
     // Classes based on MessageCmdData are automatically registered for deserialization
     // by CmdName.
-// FIX: Can these be private?
     [CmdName("color")]
-    public class MessageColor : MessageCmdData {
+    private class MessageColor : MessageCmdData {
         public string color = "";    // in CSS format rgb(r,g,b)
     };
 
     [CmdName("move")]
-    public class MessageMove : MessageCmdData {
+    private class MessageMove : MessageCmdData {
         public int x = 0;
         public int y = 0;
     };
@@ -27,7 +26,7 @@ class ExampleSimplePlayer : MonoBehaviour {
     // If you do receive one you'll get an error unless you
     // add a no parameter constructor.
     [CmdName("scored")]
-    public class MessageScored : MessageCmdData {
+    private class MessageScored : MessageCmdData {
         public MessageScored(int _points) {
             points = _points;
         }
@@ -35,12 +34,12 @@ class ExampleSimplePlayer : MonoBehaviour {
         public int points;
     }
 
-    public void Init(NetPlayer netPlayer, ExampleSimple exampleSimple) {
+    public void Init(NetPlayer netPlayer) {
         m_netPlayer = netPlayer;
-        m_exampleSimple = exampleSimple;
     }
 
     void Start() {
+        m_rand = new System.Random();
         m_position = gameObject.transform.localPosition;
         m_color = new Color(0.0f, 1.0f, 0.0f);
 
@@ -55,10 +54,10 @@ class ExampleSimplePlayer : MonoBehaviour {
 
     public void OnTriggerEnter(Collider other) {
         // Because of physics layers we can only collide with the goal
-        m_netPlayer.SendCmd(new MessageScored(m_exampleSimple.m_rand.Next(5, 15)));
+        m_netPlayer.SendCmd(new MessageScored(m_rand.Next(5, 15)));
     }
 
-    void Remove(object sender, EventArgs e) {
+    private void Remove(object sender, EventArgs e) {
         Destroy(gameObject);
     }
 
@@ -68,14 +67,15 @@ class ExampleSimplePlayer : MonoBehaviour {
     }
 
     private void OnMove(MessageMove data) {
+        ExampleSimpleGameSettings settings = ExampleSimpleGameSettings.settings();
         m_position.x = data.x;
-        m_position.z = m_exampleSimple.areaHeight - data.y - 1;  // because in 2D down is positive.
+        m_position.z = settings.areaHeight - data.y - 1;  // because in 2D down is positive.
 
         gameObject.transform.localPosition = m_position;
     }
 
+    private System.Random m_rand;
     private NetPlayer m_netPlayer;
-    private ExampleSimple m_exampleSimple;
     private Vector3 m_position;
     private Color m_color;
 }
