@@ -7,7 +7,6 @@ O give each game an id so one relayserver can run multiple games
   O generated id means can handle multiple instances BUT, need way to pick instance.
 O separate sample game code from lib
 O remove window everywhere
-O make it sendCmd on both client and server
 O write docs
 O make sample games
   O platformer
@@ -28,11 +27,15 @@ O figure out why iOS is not syncing clock. Try other computers
 O make index.html that lists examples
 O fix server to re-direct foo to foo/
 O fix server to load index.html from foo/
-O seperate cmd from data.
+O change message about relayserver to just game? (add code to know when game is connected)
 O make game retry, once a second, to connect server
   O JS
   O Unity
+O abstract out Unity3D parts of C#
+x see if I can use closure instead of class
 
+x make it sendCmd on both client and server
+x seperate cmd from data.
 x add clock
 x change audio to g_audioSys
 x Pass in audio system?

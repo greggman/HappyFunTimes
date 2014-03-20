@@ -72,8 +72,8 @@ public class GameServer {
         }
     }
 
-    public void QueueEvent(EventProcessor.EventMsg msg) {
-        m_eventProcessor.QueueEvent(msg);
+    public void QueueEvent(Action action) {
+        m_eventProcessor.QueueEvent(action);
     }
 
     public event EventHandler<PlayerConnectMessageArgs> OnPlayerConnect;
@@ -106,36 +106,6 @@ public class GameServer {
         public string cmd;
         public int id;
         public System.Object data;
-    }
-
-    // Needed to respond to StartPlayer event on correct thread.
-    private class StartPlayerEventMsg : EventProcessor.EventMsg {
-        public StartPlayerEventMsg(GameServer server, NetPlayer netPlayer) {
-            m_server = server;
-            m_netPlayer = netPlayer;
-        }
-
-        public override void Execute() {
-            m_server.EmitStartPlayerEvent(m_netPlayer);
-        }
-
-        private GameServer m_server;
-        private NetPlayer m_netPlayer;
-    }
-
-    // Needed to respond to RemovePlayer event on correct thread.
-    private class RemovePlayerEventMsg : EventProcessor.EventMsg {
-        public RemovePlayerEventMsg(GameServer server, NetPlayer netPlayer) {
-            m_server = server;
-            m_netPlayer = netPlayer;
-        }
-
-        public override void Execute() {
-            m_server.EmitRemovePlayerEvent(m_netPlayer);
-        }
-
-        private GameServer m_server;
-        private NetPlayer m_netPlayer;
     }
 
     private void SocketOpened(object sender, System.EventArgs e) {
@@ -196,18 +166,6 @@ public class GameServer {
         m_connected = false;
     }
 
-    public void EmitStartPlayerEvent(NetPlayer netPlayer) {
-        // UGH! This is not thread safe because someone might add handler to OnPlayerConnect
-        // Odds or low though.
-        OnPlayerConnect.Emit(this, new PlayerConnectMessageArgs(netPlayer));
-    }
-
-    public void EmitRemovePlayerEvent(NetPlayer netPlayer) {
-        // UGH! This is not thread safe because someone might add handler to OnPlayerConnect
-        // Odds or low though.
-        OnPlayerDisconnect.Emit(this, new PlayerDisconnectMessageArgs(netPlayer));
-    }
-
     private void StartPlayer(int id, string name) {
         if (m_players.ContainsKey(id)) {
             return;
@@ -220,7 +178,11 @@ public class GameServer {
         NetPlayer player = new NetPlayer(this, id);
         m_players[id] = player;
 
-        m_eventProcessor.QueueEvent(new StartPlayerEventMsg(this, player));
+        m_eventProcessor.QueueEvent(delegate() {
+            // UGH! This is not thread safe because someone might add handler to OnPlayerConnect
+            // Odds or low though.
+            OnPlayerConnect.Emit(this, new PlayerConnectMessageArgs(player));
+        });
     }
 
     private void UpdatePlayer(int id, MessageCmd cmd) {
@@ -236,7 +198,11 @@ public class GameServer {
         if (!m_players.TryGetValue(id, out player)) {
             return;
         }
-        m_eventProcessor.QueueEvent(new RemovePlayerEventMsg(this, player));
+        m_eventProcessor.QueueEvent(delegate() {
+            // UGH! This is not thread safe because someone might add handler to OnPlayerConnect
+            // Odds or low though.
+            OnPlayerDisconnect.Emit(this, new PlayerDisconnectMessageArgs(player));
+        });
         m_players.Remove(id);
     }
 

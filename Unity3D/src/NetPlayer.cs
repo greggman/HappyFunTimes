@@ -41,46 +41,17 @@ public class NetPlayer {
 
     private class CmdConverter<T> where T : MessageCmdData
     {
-        //private class CmdEventMsg<T> : EventProcessor.EventMsg where T : MessageCmdData {
-        private class CmdEventMsg : EventProcessor.EventMsg {
-            public CmdEventMsg(TypedCmdEventHandler<T> handler, MessageCmdData data) {
-                m_handler = handler;
-                m_data = data;
-            }
-
-            public override void Execute() {
-                m_handler((T)m_data);
-            }
-
-            private TypedCmdEventHandler<T> m_handler;
-            private MessageCmdData m_data;
-        }
-
         public CmdConverter(TypedCmdEventHandler<T> handler) {
             m_handler = handler;
         }
 
         public void Callback(GameServer server, MessageCmdData data) {
-            CmdEventMsg msg = new CmdEventMsg(m_handler, data);
-            server.QueueEvent(msg);
+            server.QueueEvent(delegate() {
+                m_handler((T)data);
+            });
         }
 
         TypedCmdEventHandler<T> m_handler;
-    }
-
-    // Used to queue events before there are any handlers.
-    private class SendCmdEventMsg : EventProcessor.EventMsg {
-        public SendCmdEventMsg(NetPlayer netPlayer, MessageCmd cmd) {
-            m_netPlayer = netPlayer;
-            m_cmd = cmd;
-        }
-
-        public override void Execute() {
-            m_netPlayer.SendEvent(m_cmd);
-        }
-
-        private NetPlayer m_netPlayer;
-        private MessageCmd m_cmd;
     }
 
     public NetPlayer(GameServer server, int id) {
@@ -115,7 +86,9 @@ public class NetPlayer {
         // command later. It's the same queue that will birth the object that needs the
         // message.
         if (m_handlers.Count == 0) {
-            m_server.QueueEvent(new SendCmdEventMsg(this, cmd));
+            m_server.QueueEvent(delegate() {
+                SendEvent(cmd);
+            });
             return;
         }
 
