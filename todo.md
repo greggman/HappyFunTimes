@@ -5,7 +5,6 @@ O separate css
 O give each game an id so one relayserver can run multiple games
   O hard coded id means one instance of each game
   O generated id means can handle multiple instances BUT, need way to pick instance.
-O separate sample game code from lib
 O remove window everywhere
 O write docs
 O make sample games
@@ -24,7 +23,7 @@ O make sounds work iOS
 O make hitshield in mp3
 O make tick for clocksync ogg/mp3
 O figure out why iOS is not syncing clock. Try other computers
-O make index.html that lists examples
+O make public/index.html that lists examples
 O fix server to re-direct foo to foo/
 O fix server to load index.html from foo/
 O change message about relayserver to just game? (add code to know when game is connected)
@@ -32,8 +31,10 @@ O make game retry, once a second, to connect server
   O JS
   O Unity
 O abstract out Unity3D parts of C#
-x see if I can use closure instead of class
 
+x separate sample game code from lib
+x change JS so NetPlayer has disconnect event
+x see if I can use closure instead of class
 x make it sendCmd on both client and server
 x seperate cmd from data.
 x add clock

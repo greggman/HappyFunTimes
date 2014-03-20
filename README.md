@@ -18,7 +18,25 @@ This lets you make games that support more than the typical 4 players.
 
     This makes it easy to bang out a game
 
-*   The architechture is simple.
+*   For controllers the sky is the limit.
+
+    Ideas
+
+    *   Have a one button game. The user touches there screen.
+
+    *   Make virtual DPads
+
+    *   Make virutal paddle controllers (think Pong)
+
+    *   Have users choose answers to question like Jeopardy
+
+    *   Access the camera, send selfies to the game.
+
+    *   Use the device orientation API and rotate something in game to match
+
+    *   Make a rhythm band where each device becomes an instrument.
+
+*   The API is simple to use.
 
     Basically there are 2 libraries and a websocket webserver.
 
@@ -37,9 +55,45 @@ This lets you make games that support more than the typical 4 players.
     Once connected, anytime a player (smartphone) connects to the game the game
     will get a 'playerconnect' event and passed a NetPlayer object. After that
     any message the player's smartphone sends generates a corresponding event
-    on the game. Conversely, any message the game sends to a NetPlayer object
-    generates a corresponding event on the smartphone that corresponds to
+    in the game on that NetPlayer. Conversely, any message the game sends to a
+    NetPlayer object generates a corresponding event on the smartphone that corresponds to
     that NetPlayer.
+
+    You can think of it this way. In the game (the code displaying the game on a large screen)
+
+        When a player connect `gameserver` will generate an event. `playerconnected`. So
+
+            gameServer.addEventListener('playerconnect', someFunctionToMakeANewPlayer);
+
+            var someFunctionToMakeAPlayer = function(netplayer) {
+              // Generate a new player and remember net Player.
+              ...
+            };
+
+
+        The users's webpage (smartphone) can send any command it wants by calling `gameClient.sendCmd`. Example
+
+            gameClient.sendMsg('move', { x: 10, y: 20} );
+
+        Back in the game, the corresponding `netplayer` will get an event.
+
+            netPlayer.addEventListener('move, someFunctionToHandleMove);
+
+            var someFunctionToHandleMove = function(data) {
+               console.log("You got a move event: " + data.x + "," + data.y);
+            }
+
+        Conversely you can send messages back to the user's display by sending commands on the `netplayer`
+
+            netPlayer.sendCmd('scored', { points: 200; });
+
+        That player's `gameclient` will get that event
+
+            gameclient.addEventHandler('scored', someFunctionToHandleScoring);
+
+            var someFunctionToHandleScoring = function(data) {
+               console.log("You scored " + data.points + " points!");
+            }
 
     A simple client looks like this
 
@@ -90,6 +144,8 @@ This lets you make games that support more than the typical 4 players.
         </div>
         <script src="gameserver.js"></script>
         <script>
+        var players = [];
+
         var Goal = function() {
             this.pickGoal();
             this.radiusSquared = 15 * 15;
@@ -118,11 +174,19 @@ This lets you make games that support more than the typical 4 players.
           container.appendChild(this.element);
           this.updatePosition();
 
+          netPlayer.addEventListener('disconnect', Player.prototype.disconnect.bind(this));
           netPlayer.addEventListener('move', Player.prototype.movePlayer.bind(this));
         };
 
-        Player.prototype.remove = function() {
+        Player.prototype.disconnect = function() {
           this.container.removeChild(this.element);
+          for (var ii = 0; ii < players.length; ++ii) {
+            var player = players[ii];
+            if (player === this) {
+              players.splice(ii, 1);
+              return;
+            }
+          }
         };
 
         Player.prototype.updatePosition = function() {
@@ -130,8 +194,7 @@ This lets you make games that support more than the typical 4 players.
           this.style.top  = this.y + "px";
           if (hitGoal()) {
             pickGoal();
-            this.netPlayer.send({
-              cmd: 'die',
+            this.netPlayer.sendCmd('die', {
               points: 10,
             });
           }
@@ -143,7 +206,6 @@ This lets you make games that support more than the typical 4 players.
         };
 
         var server = new GameServer();
-        var players = [];
         var goal = new Goal();
 
         server.addEventListener('connected', function() {
@@ -157,17 +219,6 @@ This lets you make games that support more than the typical 4 players.
         server.addEventListener('playerconnected', function(netPlayer, name) {
           players.push(new Player(netPlayer, name));
         };
-
-        server.addEventLisnter('playerdisconnected', function(netPlayer) {
-          for (var ii = 0; ii < g_players.length; ++ii) {
-            var player = g_players[ii];
-            if (player.netPlayer === netPlayer) {
-              player.remove();
-              g_players.splice(ii, 1);
-              return;
-            }
-          }
-        });
 
         </script>
 
@@ -187,12 +238,17 @@ This lets you make games that support more than the typical 4 players.
 
     **NOTE: The synced clock is not working on iOS yet**
 
+Unity Version
+-------------
+
+See [Unity Docs](unitydocs.md)
 
 Running the Examples
 --------------------
 
 *   Clone to repo
-*   Install node. I was using 0.10.26
+*   Install [node.js](http://nodejs.org). I was using 0.10.26
+*   cd into the root of the repo you cloned (eg. `cd HappyFunTimes`)
 *   type `npm install` which will install needed node modules locally
 *   type `node server/server.js` which will start the server.
 
@@ -250,6 +306,31 @@ Unfortunately the steps above do not seem to trigger this behavior. It would be 
 if we could figure out how to trigger it so uses on machines that support this feature
 could get taken directly to the games right when they connect to the network. That way
 no instructions would be needed except "Connect your phone to Wifi [HappyFunTimes]"
+
+Folder structure
+----------------
+
+   +-server   // code for node based relayserver
+   |
+   +-public   // the folder served by the relayserver
+   | |
+   | +-scripts  // The HappyFunTime JavaScript Library
+   | |
+   | +-examples  // the examples
+   |   |
+   |   +-scripts  // libraries shared by the examples, not part of HappyFunTimes
+   |   |
+   |   +-<example> // each example
+   |     |
+   |     +-scripts  // scripts specific to this example
+   |     |
+   |     +-assets   // assets for the specific example
+   |
+   +-Unity3D  // Unity3D lib
+     |
+     +-Examples  // Unity3D examples
+     |
+     +-Extras    // Other files the examples need but that aren't part of HappyFunTimes
 
 Notes
 -----
