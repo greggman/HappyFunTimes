@@ -246,9 +246,10 @@ If they can nothing special happens. If they can NOT access the page but instead
 different page they assume there is some kind of login screen, called a [Captive Portal](http://en.wikipedia.org/wiki/Captive_portal).
 In that case they launch a custom WebView and show the page.
 
-Unfortunately the steps above to not seem to trigger this behavior. It would be nice
+Unfortunately the steps above do not seem to trigger this behavior. It would be nice
 if we could figure out how to trigger it so uses on machines that support this feature
-could get taken directly to the games.
+could get taken directly to the games right when they connect to the network. That way
+no instructions would be needed except "Connect your phone to Wifi [HappyFunTimes]"
 
 Notes
 -----
@@ -275,6 +276,10 @@ Notes
     I've only run this on OSX so far. I suspect it works on both.
 
 *   Why not WebRTC?
+
+    WebRTC would possibly allow the phones to talk directly the game rather than through
+    the relayserver. The relayserver would need to setup a rendevous between the 2 machines
+    but after that the conncetion should be peer to peer.... Or so I'm lead to believe.
 
     Feel free to submit a pull request ;-)
 
