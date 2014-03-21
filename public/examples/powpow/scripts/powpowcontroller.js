@@ -30,7 +30,7 @@
  */
 "use strict";
 
-var main = function(GameClient, AudioManager, Cookies, Ships) {
+var main = function(GameClient, AudioManager, Cookies, Input, Ships) {
 
   var g_name = "";
   var g_turn = 0;
@@ -281,30 +281,6 @@ var main = function(GameClient, AudioManager, Cookies, Ships) {
     //debugTouch("cancel", event);
   }
 
-  /**
-   * Returns the absolute position of an element for certain browsers.
-   * @param {HTML Element} element The element to get a position for.
-   * @return {Object} An object containing x and y as the absolute position
-   *     of the given element.
-   */
-  var getAbsolutePosition = function(element) {
-    var r = { x: element.offsetLeft, y: element.offsetTop };
-    if (element.offsetParent) {
-      var tmp = getAbsolutePosition(element.offsetParent);
-      r.x += tmp.x;
-      r.y += tmp.y;
-    }
-    return r;
-  };
-
-  var getRelativeCoordinates = function(reference, event) {
-    // Use absolute coordinates
-    var pos = getAbsolutePosition(reference);
-    x = event.pageX - pos.x;
-    y = event.pageY - pos.y;
-    return { x: x, y: y };
-  };
-
   function updateTarget(element, x, y) {
     var centerX = element.clientWidth / 2;
     var centerY = element.clientHeight / 2;
@@ -338,14 +314,14 @@ var main = function(GameClient, AudioManager, Cookies, Ships) {
 
   function singleTouchStart(event) {
     event.preventDefault();
-    var m = getRelativeCoordinates(event.target, event.touches[0]);
+    var m = Input.getRelativeCoordinates(event.target, event.touches[0]);
     updateTarget(event.target, m.x, m.y);
     g_startTime = (new Date()).getTime();
   }
 
   function singleTouchMove(event) {
     event.preventDefault();
-    var m = getRelativeCoordinates(event.target, event.touches[0]);
+    var m = Input.getRelativeCoordinates(event.target, event.touches[0]);
     updateTarget(event.target, m.x, m.y);
   }
 
@@ -558,6 +534,7 @@ requirejs(
   [ '../../../scripts/gameclient',
     '../../scripts/audio',
     '../../scripts/cookies',
+    '../../scripts/input',
     'ships',
   ],
   main
