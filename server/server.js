@@ -32,9 +32,10 @@
 "use strict";
 
 var g = {
-    port: 8080,
-    screenshotCount: 0,
-    baseDir: "public",
+  port: 8080,
+  screenshotCount: 0,
+  baseDir: "public",
+  cwd: process.cwd(),
 };
 
 var http = require('http');
@@ -47,8 +48,6 @@ var util = require('util');
 var mime = require('mime');
 var querystring = require('querystring');
 var args = require('minimist')(process.argv.slice(2));
-
-//sys.print(util.inspect(args));
 
 if (args.h || args.help) {
   sys.print(
@@ -82,6 +81,11 @@ function sendJSONResponse(res, object) {
 function startsWith(str, start) {
   return (str.length >= start.length &&
           str.substr(0, start.length) == start);
+}
+
+function endsWith(str, end) {
+  return (str.length >= end.length &&
+          str.substring(str.length - end.length) == end);
 }
 
 function saveScreenshotFromDataURL(dataURL) {
@@ -122,15 +126,50 @@ var server = http.createServer(function(req, res) {
   }
 });
 
+var isFolder = (function() {
+  // Keep a cache of all paths because fs.statSync is sync
+  // this should never be that big because we're only serving
+  // a few files and are not online.... hopefully.
+  var fileDB = { };
+  return function(path) {
+    var dir = fileDB[path];
+    if (dir === undefined) {
+      var stats;
+      try {
+        stats = fs.statSync(path);
+        dir = stats.isDirectory();
+      } catch (e) {
+        dir = false;
+      }
+      fileDB[path] = dir;
+    }
+    return dir;
+  };
+}());
+
 var sendRequestedFile = function(req, res) {
   var filePath = querystring.unescape(url.parse(req.url).pathname);
-  if (filePath == "/") {
-    filePath = "/index.html";
+  var fullPath = path.normalize(path.join(g.cwd, g.baseDir, filePath));
+  // I'm sure these checks are techincally wrong but it doesn't matter for our purposes AFAICT.
+  var isQuery = filePath.indexOf('?') >= 0;
+  var isAnchor = filePath.indexOf('#') >= 0;
+  if (!isQuery && !isAnchor) {
+    // Add "/" if it's a folder.
+    if (!endsWith(filePath, "/") && isFolder(fullPath)) {
+      filePath += "/";
+      res.writeHead(302, {
+        'Location': filePath
+      });
+      res.end();
+      return;
+    }
+    // Add index.html if ends with "/"
+    if (endsWith(fullPath, "/")) {
+      fullPath += "index.html";
+    }
   }
-  var cwd = process.cwd();
-  var fullPath = path.normalize(path.join(cwd, g.baseDir, filePath));
   debug("path: " + fullPath);
-  if (cwd != fullPath.substring(0, cwd.length)) {
+  if (g.cwd != fullPath.substring(0, g.cwd.length)) {
     sys.print("forbidden: " + fullPath + "\n");
     return send403(res);
   }

@@ -69,28 +69,32 @@
     Currently the C# version of the library is Unity3d specific. Should be easy to abstract that out
     so it can be used in C# in general
 
-*   centralize getRelative
-*   make hitshield in mp3
+*   use express (the node server?)
+
+    Is that overkill
+
 *   make tick for clocksync ogg/mp3
-*   fix server to re-direct foo to foo/
-*   fix server to load index.html from foo/
 *   change message about relayserver to just game? (add code to know when game is connected)
 
 Done
 ----
 
-x remove cross dependencies
-x separate sample game code from lib
-x change JS so NetPlayer has disconnect event
-x see if I can use closure instead of class
-x make it sendCmd on both client and server
-x seperate cmd from data.
-x add clock
-x change audio to g_audioSys
-x Pass in audio system?
-x Pass in entity system?
-x make a dependency injector
-x make client side net code.
-x use strict everywhere
-x make haveserver settable from url
+*   fix server to re-direct foo to foo/
+*   fix server to load index.html from foo/
+*   make hitshield in mp3
+*   centralize getRelative
+*   remove cross dependencies
+*   separate sample game code from lib
+*   change JS so NetPlayer has disconnect event
+*   see if I can use closure instead of class
+*   make it sendCmd on both client and server
+*   seperate cmd from data.
+*   add clock
+*   change audio to g_audioSys
+*   Pass in audio system?
+*   Pass in entity system?
+*   make a dependency injector
+*   make client side net code.
+*   use strict everywhere
+*   make haveserver settable from url
 
