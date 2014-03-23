@@ -110,6 +110,10 @@ var WSServer = function(server) {
       }
       eventHandlers[eventName] = fn;
     };
+
+    this.close = function() {
+      this.client.close();
+    };
   };
 
   this.on = function(eventName, fn) {
@@ -187,6 +191,11 @@ Player.prototype.sendToGame = function(msg) {
   }
 };
 
+Player.prototype.disconnect = function() {
+  this.client.on('message', undefined);
+  this.client.on('disconnect', undefined);
+  this.client.close();
+};
 
 var Game = function(gameId, relayServer) {
   this.gameId = gameId;
@@ -226,6 +235,13 @@ Game.prototype.send = function(msg) {
   }
 };
 
+Game.prototype.forEachPlayer = function(fn) {
+  for (var id in this.players) {
+    var player = this.players[id];
+    fn(player);
+  };
+};
+
 Game.prototype.assignClient = function(client) {
   if (this.client) {
     console.error("this game already has a client!");
@@ -242,10 +258,9 @@ Game.prototype.assignClient = function(client) {
   }.bind(this);
 
   var broadcast = function(message) {
-    for (var id in this.players) {
-      var player = this.players[id];
+    this.forEachPlayer(function(player) {
       player.send(message);
-    };
+    });
   }.bind(this);
 
   var messageHandlers = {
@@ -266,21 +281,24 @@ Game.prototype.assignClient = function(client) {
   }.bind(this);
 
   var onDisconnect = function() {
-    this.relayServer.removeGame(this.gameId);
     this.client = undefined;
+    this.relayServer.removeGame(this.gameId);
+    this.forEachPlayer(function(player) {
+      this.removePlayer(player);
+      player.disconnect();
+    }.bind(this));
   }.bind(this);
 
   client.on('message', onMessage);
   client.on('disconnect', onDisconnect);
 
   // start each player
-  for (var id in this.players) {
-    var player = this.players[id];
+  this.forEachPlayer(function(player) {
     this.client.send({
       cmd: 'start',
       id: player.id,
-    });
-  };
+    }.bind(this));
+  });
 
   this.sendQueue.forEach(function(msg) {
     this.client.send(msg);

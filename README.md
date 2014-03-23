@@ -99,7 +99,8 @@ This lets you make games that support more than the typical 4 players.
 
         <script src="gameclient.js"></script>
         <script>
-        var client = new GameClient();
+        var gameName = "simple";
+        var client = new GameClient(gameName);
 
         client.addEventListener('connected', function() {
           console.log("you've connected to the relayserver");
@@ -205,7 +206,8 @@ This lets you make games that support more than the typical 4 players.
           this.y = cmd.y;
         };
 
-        var server = new GameServer();
+        var gameName = "simple";
+        var server = new GameServer(gameName);
         var goal = new Goal();
 
         server.addEventListener('connected', function() {

@@ -2,7 +2,6 @@
 
     When this was first written single touch android phones were common.
 
-*   prefix HappyFunTime stuff
 *   Get nice designs for games. Particlar controllers
 *   separate css
 *   Figure out
@@ -51,16 +50,6 @@
 *   abstract name stuff
 
     Powpow lets you name your player. Should this be in every game? Turned into a library?
-
-*   make sounds work iOS.
-
-    Sounds on iOS need a user gesture to start. They are working on my iPad but not my iPhone.
-    Should make the audiosystem handle this?
-
-*   figure out why iOS is not syncing clock. Try other computers
-
-    I know the sync clock stuff works as I used it for the WebGL Aquarium but it's not
-    working in my iOS machines.
 
 *   make game retry, once a second, to connect server
 
@@ -113,4 +102,7 @@ Done
 *   make client side net code.
 *   use strict everywhere
 *   make haveserver settable from url
+*   make sounds work iOS.
+*   figure out why iOS is not syncing clock. Try other computers
+
 
