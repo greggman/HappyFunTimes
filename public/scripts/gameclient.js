@@ -32,7 +32,7 @@
 "use strict";
 
 define(['./virtualsocket'], function(VirtualSocket) {
-  var GameClient = function() {
+  var GameClient = function(gameId) {
     var g_socket;
     var g_sendQueue = [];
     var eventListeners = {};
@@ -70,7 +70,7 @@ define(['./virtualsocket'], function(VirtualSocket) {
       sendEvent_(msg.cmd, [msg.data]); // FIX: no need for this array?
     }.bind(this);
 
-    var connect_ = function() {
+    var connect_ = function(gameId) {
       g_sendQueue = [];
       g_socket = new VirtualSocket();
       g_socket.on('connect', connected_.bind(this));
@@ -78,22 +78,27 @@ define(['./virtualsocket'], function(VirtualSocket) {
       g_socket.on('disconnect', disconnected_.bind(this));
     }.bind(this);
 
-    this.sendCmd = function(cmd, data) {
+    var sendCmdLowLevel = function(cmd, data) {
       var msg = {
-        cmd: "update",
-        data: {
-          cmd: cmd,
-          data: data,
-        },
+        cmd: cmd,
+        data: data,
       };
       if (g_socket.readyState == WebSocket.CONNECTING) {
         g_sendQueue.push(msg);
       } else {
         g_socket.send(msg);
       }
+    }.bind(this);
+
+    this.sendCmd = function(cmd, data) {
+      sendCmdLowLevel('update', {
+        cmd: cmd,
+        data: data,
+      });
     };
 
-    connect_();
+    connect_(gameId);
+    sendCmdLowLevel('join', { gameId: gameId });
   };
   return GameClient;
 });

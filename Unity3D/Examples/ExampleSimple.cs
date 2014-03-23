@@ -15,7 +15,8 @@ public class ExampleSimple : MonoBehaviour {
     void Start () {
         m_rand = new System.Random();
 
-        m_server = new GameServer(gameObject);
+        string gameName = "simple";
+        m_server = new GameServer(gameName, gameObject);
         m_server.Init();
 
         m_server.OnPlayerConnect += StartNewPlayer;

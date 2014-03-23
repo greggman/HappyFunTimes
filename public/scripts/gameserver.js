@@ -38,7 +38,10 @@ define(
     './netplayer',
   ], function(VirtualSocket, NetPlayer) {
 
-  var GameServer = function() {
+  /**
+   *
+   */
+  var GameServer = function(gameId) {
     var _connected = false;
     var _socket;
     // Used in case the game tries to send messages to the server before it's connected.
@@ -175,7 +178,7 @@ define(
     };
 
     connect_();
-    this.sendCmd("server");
+    this.sendCmd("server", -1, {gameId: gameId});
   };
 
   return GameServer;

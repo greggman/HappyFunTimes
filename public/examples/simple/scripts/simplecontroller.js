@@ -35,7 +35,8 @@ var main = function(input, GameClient) {
   var score = 0;
   var statusElem = document.getElementById("status");
   var inputElem = document.getElementById("input");
-  var client = new GameClient();
+  var gameName = "simple"
+  var client = new GameClient(gameName);
 
   var randInt = function(range) {
     return Math.floor(Math.random() * range);

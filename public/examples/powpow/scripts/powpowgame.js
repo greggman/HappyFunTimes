@@ -183,7 +183,8 @@ var main = function(
     g_services.globals = globals;
     g_services.renderer = renderer;
 
-    var server = new GameServer();
+    var gameName = "powpow";
+    var server = new GameServer(gameName);
     g_services.server = server;
     server.addEventListener('connect', showConnected);
     server.addEventListener('disconnect', showDisconnected);

@@ -24,7 +24,7 @@
  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
  * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
- * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ * THEORY OF2 LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
@@ -42,13 +42,22 @@ var SocketIOServer = function(server) {
 
   var SIOClient = function(client) {
     this.client = client;
+    var eventHandlers = { };
 
     this.send = function(msg) {
       this.client.emit('message', msg);
     };
 
     this.on = function(eventName, fn) {
-      this.client.on(eventName, fn);
+      if (!eventHandler[eventName]) {
+        this.client.on(eventName, function() {
+          var fn = eventHandlers[eventName];
+          if (fn) {
+            fn.apply(this, arguments);
+          }
+        }.bind(this));
+      }
+      eventHandler[eventName] = fn;
     };
   };
 
@@ -72,23 +81,34 @@ var WSServer = function(server) {
 
   var WSClient = function(client) {
     this.client = client;
+    var eventHandlers = { };
 
     this.send = function(msg) {
-      this.client.send(JSON.stringify(msg));
+      var str = JSON.stringify(msg);
+      this.client.send(str);
     };
 
     this.on = function(eventName, fn) {
       if (eventName == 'disconnect') {
         eventName = 'close';
       }
-      if (eventName == 'message') {
-        this.client.on(eventName, function(data, flags) {
-          debug("rcvd: " + data);
-          fn(JSON.parse(data));
-        });
-      } else {
-        this.client.on(eventName, fn);
+
+      if (!eventHandlers[eventName]) {
+        this.client.on(eventName, function() {
+          var fn = eventHandlers[eventName];
+          if (fn) {
+            fn.apply(this, arguments);
+          }
+        }.bind(this));
       }
+
+      if (eventName == 'message') {
+        var origFn = fn;
+        fn = function(data, flags) {
+          origFn(JSON.parse(data));
+        };
+      }
+      eventHandlers[eventName] = fn;
     };
   };
 
@@ -102,77 +122,184 @@ var WSServer = function(server) {
       wss.on(eventName, fn);  // does this case exist?
     }
   };
+};
 
+var Player = function(client, relayServer, id) {
+  this.game;
+  this.client = client;
+  this.relayServer = relayServer;
+  this.id = id;
+
+  var addPlayerToGame = function(data) {
+    var game = this.relayServer.addPlayerToGame(this, data.gameId);
+    this.game = game;
+  }.bind(this);
+
+  var assignAsServerForGame = function(data) {
+    // Seems like player should stop existing at this point?
+    //this.client('onmessage', undefined);
+    //this.client('ondisconnect', undefined);
+    this.relayServer.assignAsClientForGame(data.gameId, this.client);
+  }.bind(this);
+
+  var passMessageFromPlayerToGame = function(data) {
+    this.game.send({
+      cmd: 'update',
+      id: this.id,
+      data: data,
+    });
+  }.bind(this);
+
+  var messageHandlers = {
+    'join':   addPlayerToGame,
+    'server': assignAsServerForGame,
+    'update': passMessageFromPlayerToGame,
+  };
+
+  var onMessage = function(message) {
+    var cmd = message.cmd;
+    var handler = messageHandlers[cmd];
+    if (!handler) {
+      console.error("unknown player message: " + cmd);
+      return;
+    }
+
+    handler(message.data);
+  }.bind(this);
+
+  var onDisconnect = function() {
+    if (this.game) {
+      this.game.removePlayer(this);
+    }
+  }.bind(this);
+
+  client.on('message', onMessage);
+  client.on('disconnect', onDisconnect);
+};
+
+Player.prototype.send = function(msg) {
+  this.client.send(msg);
+};
+
+Player.prototype.sendToGame = function(msg) {
+  if (this.game) {
+    this.game.send(msg);
+  }
+};
+
+
+var Game = function(gameId, relayServer) {
+  this.gameId = gameId;
+  this.relayServer = relayServer;
+  this.players = {};
+  this.sendQueue = [];
+};
+
+Game.prototype.addPlayer = function(player) {
+  var id = player.id;
+  if (this.players[id]) {
+    console.error("player " + id + " is already member of game " + this.gameId);
+    return;
+  }
+  this.players[id] = player;
+  this.send({cmd: 'start', id: id});
+};
+
+Game.prototype.removePlayer = function(player) {
+  var id = player.id;
+  if (!this.players[id]) {
+    console.error("player " + id + " is not a member of game " + this.gameId);
+    return;
+  }
+  delete this.players[player.id];
+  this.send({
+    cmd: 'remove',
+    id: id,
+  });
+};
+
+Game.prototype.send = function(msg) {
+  if (this.client) {
+    this.client.send(msg);
+  } else {
+    this.sendQueue.push(msg);
+  }
+};
+
+Game.prototype.assignClient = function(client) {
+  if (this.client) {
+    console.error("this game already has a client!");
+  }
+  this.client = client;
+
+  var sendMessageToPlayer = function(id, message) {
+    var player = this.players[id];
+    if (!player) {
+      console.error("no player " + id + " for game " + this.gameId);
+      return;
+    }
+    player.send(message);
+  }.bind(this);
+
+  var broadcast = function(message) {
+    for (var id in this.players) {
+      var player = this.players[id];
+      player.send(message);
+    };
+  }.bind(this);
+
+  var messageHandlers = {
+    'client': sendMessageToPlayer,
+    'broadcast': broadcast,
+  };
+
+  var onMessage = function(message) {
+    var cmd = message.cmd;
+    var id = message.id;
+    var handler = messageHandlers[cmd];
+    if (!handler) {
+      console.error("unknown game message: " + cmd);
+      return;
+    }
+
+    handler(id, message.data);
+  }.bind(this);
+
+  var onDisconnect = function() {
+    this.relayServer.removeGame(this.gameId);
+    this.client = undefined;
+  }.bind(this);
+
+  client.on('message', onMessage);
+  client.on('disconnect', onDisconnect);
+
+  // start each player
+  for (var id in this.players) {
+    var player = this.players[id];
+    this.client.send({
+      cmd: 'start',
+      id: player.id,
+    });
+  };
+
+  this.sendQueue.forEach(function(msg) {
+    this.client.send(msg);
+  }.bind(this));
+  this.sendQueue = [];
 };
 
 var RelayServer = function(server) {
 
   var g_nextSessionId = 1;
-  var g_clients = {};
-  var g_numClients = 0;
-  var g_servers = {};
-  var g_numServers = 0;
-
-  var broadcast = function(message) {
-    for (var id in g_clients) {
-      g_clients[id].send(message);
-    }
-  };
-
-  var addClient = function(client) {
-    client.sessionId = g_nextSessionId++;
-    debug("connection: cid:" + client.sessionId + "\n");
-    g_clients[client.sessionId] = client;
-    ++g_numClients;
-    debug("add: num clients: " + g_numClients);
-  };
-
-  var removeClient = function(client) {
-    delete g_clients[client.sessionId];
-    if (g_numClients) {
-      --g_numClients;
-      debug("remove: num clients: " + g_numClients);
-      if (g_numClients == 0) {
-        debug("all clients disconnected");
-      }
-    }
-  }
-
-  var addServer = function(client) {
-    if (!g_servers[client.sessionId]) {
-      g_servers[client.sessionId] = client;
-      ++g_numServers;
-      debug("add: num servers: " + g_numServers);
-      return true;
-    }
-    return false
-  }
-
-  var removeServer = function(client) {
-    if (!g_servers[client.sessionId]) {
-      return false;
-    }
-    delete g_servers[client.sessionId];
-    --g_numServers;
-    debug("remove num servers: " + g_numServers);
-    if (g_numServers == 0) {
-      debug("all servers disconnected");
-    }
-    return true;
-  }
-
-  var sendMsgToServer = function(msg) {
-    if (!g_numServers) {
-      debug("no servers!");
-      return;
-    }
-    for (var id in g_servers) {
-      var server = g_servers[id];
-      server.send(msg);
-    }
-  };
+  var g_games = {};
+  var g_numGames = 0;
 
   // --- messages to relay server ---
+  //
+  // join  :
+  //   desc: joins a particle game
+  //   args:
+  //      gameId: name of game
   //
   // server:
   //   desc: identifies this session as a server
@@ -203,69 +330,48 @@ var RelayServer = function(server) {
   //      id: id of player to remove.
   //
 
-  // -- messages to player --
-  //
-
-  var processMessage = function(client, message) {
-    switch (message.cmd) {
-      case 'server':
-        removeClient(client);
-        addServer(client);
-        g_servers[client.sessionId] = client;
-        break;
-      case 'client': {
-        var client = g_clients[message.id];
-        if (client) {
-          client.send(message.data);
-        } else {
-          debug("no client: " + message.id);
-        }
-        break;
-      }
-      case 'broadcast': {
-        message.cmd = 'update';
-        for (var id in g_clients) {
-          debug("sending to: " + id);
-          g_clients[id].send(message);
-        }
-        break;
-      }
-      case 'update':
-        message.id = client.sessionId;
-        sendMsgToServer(message);
-        break;
-      default:
-        debug("unkonwn message: " + message.cmd);
-        break;
+  var getGame = function(gameId) {
+    if (!gameId) {
+      console.error("no game id!")
+      return;
     }
-  };
+    var game = g_games[gameId];
+    if (!game) {
+      game = new Game(gameId, this);
+      g_games[gameId] = game;
+      ++g_numGames;
+      debug("added game: " + gameId + ", num games = " + g_numGames);
+    }
+    return game;
+  }.bind(this);
+
+  this.addPlayerToGame = function(player, gameId) {
+    var game = getGame(gameId);
+    game.addPlayer(player);
+    return game;
+  }.bind(this);
+
+  this.removeGame = function(gameId) {
+    if (!g_games[gameId]) {
+      console.error("no game '" + gameId + "' to remove")
+      return;
+    }
+    --g_numGames;
+    debug("removed game: " + gameId + ", num games = " + g_numGames);
+    delete g_games[gameId];
+  }.bind(this);
+
+  this.assignAsClientForGame = function(gameId, client) {
+    var game = getGame(gameId);
+    game.assignClient(client, this)
+  }.bind(this);
 
   //var io = new SocketIOServer(server);
   var io = new WSServer(server);
 
   io.on('connection', function(client){
-      addClient(client);
-
-      sendMsgToServer({
-          cmd: 'start',
-          id: client.sessionId,
-      });
-
-      client.on('message', function(message){
-          debug("cid:" + client.sessionId + " msg:" + message);
-          processMessage(client, message);
-      });
-
-      client.on('disconnect', function(){
-          if (!removeServer(client)){
-              sendMsgToServer({
-                  cmd: 'remove',
-                  id: client.sessionId,
-              });
-              removeClient(client);
-          }
-      });
-  });
+      new Player(client, this, ++g_nextSessionId);
+  }.bind(this));
 
 };
 

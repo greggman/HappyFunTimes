@@ -8,15 +8,6 @@
 *   Figure out
 
 *   make public/index.html that lists games/examples
-*   give each game an id so one relayserver can run multiple games
-
-    * hard coded id means one instance of each game
-    * generated id means can handle multiple instances BUT, need way to pick instance?
-
-    * relayserver needs to create a new player when switching games. Probably handled
-      automatically as leaving the other game's controller panel will kill the connection.
-
-    * controller could have a menu button to go back to game selection screen?
 
 *   remove window everywhere?
 
@@ -87,9 +78,23 @@
 
 *   make tick for clocksync ogg/mp3
 
+*   Make controllers have button to go back to games
+
+*   Figure out what to do when game disconnects.
+
+    Currently the relayserver's version of the game still exists and all the players are still connected.
+    So, their input gets queue, if a game starts again it will get bad input. Should probably disconnect
+    players.
+
 Done
 ----
 
+*   give each game an id so one relayserver can run multiple games
+    * hard coded id means one instance of each game
+    * generated id means can handle multiple instances BUT, need way to pick instance?
+    * relayserver needs to create a new player when switching games. Probably handled
+      automatically as leaving the other game's controller panel will kill the connection.
+    * controller could have a menu button to go back to game selection screen?
 *   fix server to re-direct foo to foo/
 *   fix server to load index.html from foo/
 *   make hitshield in mp3

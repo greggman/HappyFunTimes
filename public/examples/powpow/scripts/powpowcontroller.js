@@ -453,7 +453,8 @@ var main = function(GameClient, AudioManager, Cookies, Input, Ships) {
     window.location.reload();
   }
 
-  g_client = new GameClient();
+  var gameName = "powpow";
+  g_client = new GameClient(gameName);
 
   g_client.addEventListener('setColor', handleSetColorMsg);
   g_client.addEventListener('setName', handleSetNameMsg);
