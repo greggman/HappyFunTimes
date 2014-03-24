@@ -61,39 +61,38 @@ This lets you make games that support more than the typical 4 players.
 
     You can think of it this way. In the game (the code displaying the game on a large screen)
 
-        When a player connect `gameserver` will generate an event. `playerconnected`. So
+    When a player connects `gameserver` will generate an event. `playerconnected`. So
 
-            gameServer.addEventListener('playerconnect', someFunctionToMakeANewPlayer);
+        gameServer.addEventListener('playerconnect', someFunctionToMakeANewPlayer);
 
-            var someFunctionToMakeAPlayer = function(netplayer) {
-              // Generate a new player and remember net Player.
-              ...
-            };
+        var someFunctionToMakeAPlayer = function(netplayer) {
+          // Generate a new player and remember netplayer.
+          ...
+        };
 
+    The users's webpage (smartphone) can send any command it wants by calling `gameClient.sendCmd`. Example
 
-        The users's webpage (smartphone) can send any command it wants by calling `gameClient.sendCmd`. Example
+        gameClient.sendMsg('move', { x: 10, y: 20 });
 
-            gameClient.sendMsg('move', { x: 10, y: 20} );
+    Back in the game, the corresponding `netplayer` will get an event.
 
-        Back in the game, the corresponding `netplayer` will get an event.
+        netPlayer.addEventListener('move, someFunctionToHandleMove);
 
-            netPlayer.addEventListener('move, someFunctionToHandleMove);
+        var someFunctionToHandleMove = function(data) {
+           console.log("You got a move event: " + data.x + "," + data.y);
+        }
 
-            var someFunctionToHandleMove = function(data) {
-               console.log("You got a move event: " + data.x + "," + data.y);
-            }
+    Conversely you can send messages back to the user's display by sending commands on the `netplayer`
 
-        Conversely you can send messages back to the user's display by sending commands on the `netplayer`
+        netPlayer.sendCmd('scored', { points: 200; });
 
-            netPlayer.sendCmd('scored', { points: 200; });
+    That player's `gameclient` will get that event
 
-        That player's `gameclient` will get that event
+        gameclient.addEventHandler('scored', someFunctionToHandleScoring);
 
-            gameclient.addEventHandler('scored', someFunctionToHandleScoring);
-
-            var someFunctionToHandleScoring = function(data) {
-               console.log("You scored " + data.points + " points!");
-            }
+        var someFunctionToHandleScoring = function(data) {
+           console.log("You scored " + data.points + " points!");
+        }
 
     A simple client looks like this
 
@@ -238,8 +237,6 @@ This lets you make games that support more than the typical 4 players.
     If online is false when the clock is created it will create a clock
     that returns the local time.
 
-    **NOTE: The synced clock is not working on iOS yet**
-
 Unity Version
 -------------
 
@@ -276,7 +273,7 @@ Making It Simple For Players To Get Started
 -------------------------------------------
 
 Asking players to connect to a local network and then type in some obscure URL like
-`http://169.234.174.30` is arguably too many steps.
+`http://169.234.174.30:8080` is arguably too many steps.
 
 One solution is to make the computer running the relayserver a WiFi hotspot. On OSX this is
 as simple as picking **Create Network...** from the WiFi menu. After that you run a DHCP
@@ -305,7 +302,7 @@ different page they assume there is some kind of login screen, called a [Captive
 In that case they launch a custom WebView and show the page.
 
 Unfortunately the steps above do not seem to trigger this behavior. It would be nice
-if we could figure out how to trigger it so uses on machines that support this feature
+if we could figure out how to trigger it so users on machines that support this feature
 could get taken directly to the games right when they connect to the network. That way
 no instructions would be needed except "Connect your phone to Wifi [HappyFunTimes]"
 
@@ -333,6 +330,8 @@ Folder structure
       +-Examples  // Unity3D examples
       |
       +-Extras    // Other files the examples need but that aren't part of HappyFunTimes
+      |
+      +-src       // The HappyFunTimes library for Unity3D
 
 Notes
 -----
@@ -356,7 +355,12 @@ Notes
 
 *   Does it work on Windows and Linux?
 
-    I've only run this on OSX so far. I suspect it works on both.
+    The clients of course run in any modern browser. The game also run in
+    whatever environment you've created them for. Most of the samples here
+    are HTML and so should run in any modern browser on any platform.
+
+    As for the relayserver I've only run it on OSX so far. I suspect it works
+    fine in both Windows and Linux
 
 *   Why not WebRTC?
 

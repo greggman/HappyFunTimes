@@ -11,8 +11,9 @@ define(function() {
     var g_canPlay = false;
     var g_canPlayOgg;
     var g_canPlayMp3;
+    var g_createFn;
 
-    function WebAudioSound(name, filename, samples) {
+    function WebAudioSound(name, filename, samples, opt_callback) {
       this.name = name;
       var that = this;
       var req = new XMLHttpRequest();
@@ -22,6 +23,9 @@ define(function() {
         g_context.decodeAudioData(req.response, function onSuccess(decodedBuffer) {
           // Decoding was successful, do something useful with the audio buffer
           that.buffer = decodedBuffer;
+          if (opt_callback) {
+            opt_callback();
+          }
         }, function onFailure() {
            console.error("failed to decoding audio buffer: " + filename);
         });
@@ -41,9 +45,10 @@ define(function() {
       src.buffer = this.buffer;
       src.connect(g_context.destination);
       src.start(0);
+window.ggg = src;
     };
 
-    function AudioTagSound(name, filename, samples) {
+    function AudioTagSound(name, filename, samples, opt_callback) {
       this.waiting_on_load = samples;
       this.samples = samples;
       this.name = name;
@@ -54,6 +59,9 @@ define(function() {
         var that = this;
         audio.addEventListener("canplaythrough", function() {
           that.waiting_on_load--;
+          if (opt_callback) {
+            opt_callback();
+          }
         }, false);
         audio.src = filename;
         //audio.onerror = handleError(filename, audio);
@@ -78,26 +86,11 @@ define(function() {
       b.load();
     };
 
-      function handleError(filename, audio) {
-          return function(e) {
-            console.error("can't load ", filename);
-            /*
-            if (filename.substr(filename.length - 4) == ".ogg") {
-              filename = filename.substr(0, filename.length - 4) + ".mp3";
-              console.log("trying ", filename);
-              audio.src = filename;
-              audio.onerror = handleError(filename, audio);
-              audio.load();
-            } else if (filename.substr(filename.length - 4) == ".mp3") {
-              filename = filename.substr(0, filename.length - 4) + ".wav";
-              console.log("trying ", filename);
-              audio.src = filename;
-              audio.onerror = handleError(filename, audio);
-              audio.load();
-            }
-            */
-          }
+    var handleError = function(filename, audio) {
+      return function(e) {
+        console.error("can't load ", filename);
       }
+    };
 
     this.playSound = function(name) {
       if (!g_canPlay)
@@ -108,7 +101,7 @@ define(function() {
         return;
       }
       sound.play();
-    };
+    }.bind(this);
 
     // on iOS and possibly other devices you can't play any
     // sounds in the browser unless you first play a sound
@@ -153,7 +146,17 @@ define(function() {
       }
     };
 
-    function init(sounds) {
+    this.loadSound = function(soundName, filename, samples, opt_callback) {
+      var ext = filename.substring(filename.length - 3);
+      if (ext == 'ogg' && !g_canPlayOgg) {
+        filename = changeExt(filename, "mp3");
+      } else if (ext == 'mp3' && !g_canPlayMp3) {
+        filename = changeExt(filename, "ogg");
+      }
+      g_soundBank[soundName] = new g_createFn(soundName, filename, samples, opt_callback);
+    }.bind(this);
+
+    this.init = function(sounds) {
       var a = new Audio()
       g_canPlayOgg = a.canPlayType("audio/ogg");
       g_canPlayMp3 = a.canPlayType("audio/mp3");
@@ -161,37 +164,32 @@ define(function() {
       if (!g_canPlay)
         return;
 
-      var create;
       var webAudioAPI = window.AudioContext || window.webkitAudioContext || window.mozAudioContext;
       if (webAudioAPI) {
         console.log("Using Web Audio API");
         g_context = new webAudioAPI();
-        create = WebAudioSound;
+        g_createFn = WebAudioSound;
       } else {
         console.log("Using Audio Tag");
-        create = AudioTagSound;
+        g_createFn = AudioTagSound;
       }
 
       var changeExt = function(filename, ext) {
         return filename.substring(0, filename.length - 3) + ext;
       };
 
-      for (var sound in sounds) {
-        var data = sounds[sound];
-        var ext = data.filename.substring(data.filename.length - 3);
-        if (ext == 'ogg' && !g_canPlayOgg) {
-          data.filename = changeExt(data.filename, "mp3");
-        } else if (ext == 'mp3' && !g_canPlayMp3) {
-          data.filename = changeExt(data.filename, "ogg");
+      if (sounds) {
+        for (var sound in sounds) {
+          var data = sounds[sound];
+          this.loadSound(sound, data.filename, data.samples)
         }
-        g_soundBank[sound] = new create(sound, data.filename, data.samples);
       }
 
       if (webAudioAPI) {
         setupGesture();
       }
-    };
-    init(sounds);
+    }.bind(this);
+    this.init(sounds);
   };
 
   return AudioManager;

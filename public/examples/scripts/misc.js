@@ -88,6 +88,10 @@ define(function() {
         return;
       }
     },
+
+    randInt: function(value) {
+      return Math.floor(Math.random() * value);
+    },
   };
 });
 

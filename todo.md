@@ -30,23 +30,6 @@
 
         Not sure this is a fun idea.
 
-*   relayserver should tell clients when game connects/disconnects?
-
-    Currently the clients know if the relay server disconnected but it clients don't
-    know if the game is connected to the relayserver.
-
-    Is this needed? This is really only relevent if you expect the game to crash
-    and even if you do expect it to crash you'd need to make the clients recover
-    correctly.
-
-    It seems unlikely in the general case the game would be started after people connect
-    to the game server. Maybe the relayserver should disconnect all players if
-    the game disconnects?
-
-    *   In simple example, change message about relayserver so there's 3 states
-
-        disconnected/connected to relay server (waiting for game)/connected to game
-
 *   abstract name stuff
 
     Powpow lets you name your player. Should this be in every game? Turned into a library?
@@ -65,19 +48,20 @@
 
     Is that overkill
 
+*   Remove local log stuff
+
+*   put $ in misc
+
 *   make tick for clocksync ogg/mp3
 
 *   Make controllers have button to go back to games
 
-*   Figure out what to do when game disconnects.
-
-    Currently the relayserver's version of the game still exists and all the players are still connected.
-    So, their input gets queue, if a game starts again it will get bad input. Should probably disconnect
-    players.
 
 Done
 ----
 
+*   Figure out what to do when game disconnects.
+*   relayserver should tell clients when game connects/disconnects?
 *   give each game an id so one relayserver can run multiple games
     * hard coded id means one instance of each game
     * generated id means can handle multiple instances BUT, need way to pick instance?
