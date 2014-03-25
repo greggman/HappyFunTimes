@@ -164,7 +164,7 @@ var sendRequestedFile = function(req, res) {
       return;
     }
     // Add index.html if ends with "/"
-    if (endsWith(fullPath, "/")) {
+    if (endsWith(fullPath, "/") || endsWith(fullPath, "\\")) {
       fullPath += "index.html";
     }
   }
