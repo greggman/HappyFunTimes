@@ -1,14 +1,10 @@
 Windows Instructions
 ====================
-
-Download and Install GitHub on Windows from http://windows.github.com/
-Installing might require you to reboot
-
-Clone the github repo from http://github.com/greggman/HappyFunTimes
-(assuming you know how to do this)
+Clone the github repo from http://github.com/greggman/HappyFunTimes to your machine.
+(I assuming you know how to do this. If not [this might help](http://windows.github.com/))
 
 Download and Install Node.JS from http://node.js.org
-On the start menu pick “node.js command prompt” (or search for it on Win7/8?)
+On the start menu pick "node.js command prompt" (or search for it on Win7/8?)
 
 cd to the folder you cloned the repo into (for example I cloned my into `z:\temp\happyfuntimes` so
 
