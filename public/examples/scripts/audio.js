@@ -13,6 +13,10 @@ define(function() {
     var g_canPlayMp3;
     var g_createFn;
 
+    var changeExt = function(filename, ext) {
+      return filename.substring(0, filename.length - 3) + ext;
+    };
+
     function WebAudioSound(name, filename, samples, opt_callback) {
       this.name = name;
       var that = this;
@@ -45,7 +49,6 @@ define(function() {
       src.buffer = this.buffer;
       src.connect(g_context.destination);
       src.start(0);
-window.ggg = src;
     };
 
     function AudioTagSound(name, filename, samples, opt_callback) {
@@ -173,10 +176,6 @@ window.ggg = src;
         console.log("Using Audio Tag");
         g_createFn = AudioTagSound;
       }
-
-      var changeExt = function(filename, ext) {
-        return filename.substring(0, filename.length - 3) + ext;
-      };
 
       if (sounds) {
         for (var sound in sounds) {
