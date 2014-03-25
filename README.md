@@ -269,6 +269,11 @@ you don't need to be on the same network. Of course there will be far more lag o
 the internet or especially over cellular networks but depending on the game that
 might be ok.
 
+Windows docs
+------------
+
+[Some Windows docs here](windows.md)
+
 Making It Simple For Players To Get Started
 -------------------------------------------
 
