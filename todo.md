@@ -2,9 +2,18 @@
 
     When this was first written single touch android phones were common.
 
-*   Get nice designs for games. Particlar controllers
+*   redesign powpow controls
+
+    Rowen suggested that because ship is on center of screen people
+    expect to touch there to control it. Should I move the ship?
+    Change it so it controls from the center? Show <- -> buttons
+    and a [Fire] button with the ship somewhere else?
+
+*   fix simple controls and game so they use full area?
+
+*   Get nice designs for games. Particularly controllers
+
 *   separate css
-*   Figure out
 
 *   make public/index.html that lists games/examples
 
