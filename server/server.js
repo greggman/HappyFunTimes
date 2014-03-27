@@ -56,7 +56,9 @@ if (args.h || args.help) {
   process.exit(0);
 }
 
-if (args.port) { g.port = args.port; }
+for (var prop in args) {
+  g[prop] = args[prop];
+}
 
 function postHandler(request, callback) {
   var query_ = { };
