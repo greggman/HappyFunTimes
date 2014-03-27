@@ -41,7 +41,7 @@ define(
   /**
    *
    */
-  var GameServer = function(gameId) {
+  var GameServer = function(options) {
     var _connected = false;
     var _socket;
     // Used in case the game tries to send messages to the server before it's connected.
@@ -178,7 +178,7 @@ define(
     };
 
     connect_();
-    this.sendCmd("server", -1, {gameId: gameId});
+    this.sendCmd("server", -1, options);
   };
 
   return GameServer;

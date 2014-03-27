@@ -41,7 +41,6 @@ define(function() {
    * offline. It just provides no-ops for NetPlayer functions.
    *
    * Example:
-   *   var server = new GameServer();
    *   if (offline) {
    *     // We're testing locally so just manually create //
    *     players.
@@ -53,7 +52,7 @@ define(function() {
    *
    *   } else {
    *     // We're online so create players as they connect.
-   *
+   *     var server = new GameServer(...);
    *     server.addEventListener(
    *         'playerconnect',
    *         function(netPlayer) {

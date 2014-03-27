@@ -103,8 +103,9 @@ var main = function(GameServer) {
     this.color = cmd.color;
   };
 
-  var gameName = "simple";
-  var server = new GameServer(gameName);
+  var server = new GameServer({
+    gameId: "simple",
+  });
   var goal = new Goal();
 
   server.addEventListener('connect', function() {

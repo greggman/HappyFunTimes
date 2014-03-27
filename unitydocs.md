@@ -16,8 +16,9 @@ call init. You can pass init an optional websocket URL. The default is "ws://loc
 which means it assume the relayserver us running on the same machine as the game and
 is running on the default port.
 
-    string gameName = "mygame";
-    m_server = new GameServer(gameObject, gameName);
+    GameServer.Options options = new GameServer.Options();
+    options.gameId = "simple";
+    m_server = new GameServer(options, gameObject);
     m_server.Init();
 
 Attach 3 events

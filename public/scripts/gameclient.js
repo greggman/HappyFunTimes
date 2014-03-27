@@ -32,7 +32,7 @@
 "use strict";
 
 define(['./virtualsocket'], function(VirtualSocket) {
-  var GameClient = function(gameId) {
+  var GameClient = function(options) {
     var g_socket;
     var g_sendQueue = [];
     var eventListeners = {};
@@ -70,7 +70,7 @@ define(['./virtualsocket'], function(VirtualSocket) {
       sendEvent_(msg.cmd, [msg.data]); // FIX: no need for this array?
     }.bind(this);
 
-    var connect_ = function(gameId) {
+    var connect_ = function() {
       g_sendQueue = [];
       g_socket = new VirtualSocket();
       g_socket.on('connect', connected_.bind(this));
@@ -97,8 +97,8 @@ define(['./virtualsocket'], function(VirtualSocket) {
       });
     };
 
-    connect_(gameId);
-    sendCmdLowLevel('join', { gameId: gameId });
+    connect_();
+    sendCmdLowLevel('join', options);
   };
   return GameClient;
 });

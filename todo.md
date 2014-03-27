@@ -11,6 +11,11 @@
 
 *   fix simple controls and game so they use full area?
 
+*   Add timeout to server.
+
+    If no input from player for more than N seconds disconnect player.
+    Let game choose timeout
+
 *   Get nice designs for games. Particularly controllers
 
 *   separate css

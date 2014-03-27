@@ -183,8 +183,9 @@ var main = function(
     g_services.globals = globals;
     g_services.renderer = renderer;
 
-    var gameName = "powpow";
-    var server = new GameServer(gameName);
+    var server = new GameServer({
+      gameId: "powpow",
+    });
     g_services.server = server;
     server.addEventListener('connect', showConnected);
     server.addEventListener('disconnect', showDisconnected);

@@ -62,8 +62,9 @@ console.log("loaded:" + data.filename);
     window.location.reload();
   }
 
-  var gameName = "jamjam";
-  g_client = new GameClient(gameName);
+  g_client = new GameClient({
+    gameId: "jamjam",
+  });
 
   g_client.addEventListener('setInstrument', handleSetInstrument);
 

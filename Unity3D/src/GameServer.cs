@@ -40,8 +40,12 @@ namespace HappyFunTimes {
 
 public class GameServer {
 
-    public GameServer(string gameId, GameObject gameObject) {
-        m_gameId = gameId;
+    public class Options {
+        public string gameId;
+    };
+
+    public GameServer(Options options, GameObject gameObject) {
+        m_options = options;
         m_gameObject = gameObject;
         m_players = new Dictionary<int, NetPlayer>();
         m_sendQueue = new List<String>();
@@ -81,7 +85,7 @@ public class GameServer {
     public event EventHandler<EventArgs> OnConnect;
     public event EventHandler<EventArgs> OnDisconnect;
 
-    private string m_gameId;
+    private Options m_options;
     private bool m_connected = false;
     private int m_totalPlayerCount = 0;
     private WebSocket m_socket;
@@ -121,7 +125,7 @@ public class GameServer {
         m_sendQueue.Clear();
 
         // Inform the relayserver we're a server
-        m_socket.Send("{\"cmd\":\"server\",\"id\":-1,\"data\":{\"gameId\":\"" + m_gameId + "\"}}");
+        SendCmd("server", -1, m_options);
 
         OnConnect.Emit(this, new EventArgs());
     }
@@ -144,16 +148,12 @@ public class GameServer {
         if ( e!= null && e.Type == Opcode.Text) {
             try {
                 MessageToClient m = m_deserializer.Deserialize<MessageToClient>(e.Data);
-Debug.Log("rcvd: " + e.Data);
                 // TODO: make this a dict to callback
                 if (m.cmd.Equals("start")) {
-Debug.Log("start");
                     StartPlayer(m.id, "");
                 } else if (m.cmd.Equals("remove")) {
-Debug.Log("remove");
                     RemovePlayer(m.id);
                 } else if (m.cmd.Equals("update")) {
-Debug.Log("update");
                     UpdatePlayer(m.id, m.data);
                 } else {
                     Debug.LogError("unknown client message: " + m.cmd);
@@ -182,7 +182,6 @@ Debug.Log("update");
 
         NetPlayer player = new NetPlayer(this, id);
         m_players[id] = player;
-Debug.Log("new Player: " + id);
         m_eventProcessor.QueueEvent(delegate() {
             // UGH! This is not thread safe because someone might add handler to OnPlayerConnect
             // Odds or low though.
@@ -195,7 +194,6 @@ Debug.Log("new Player: " + id);
         if (!m_players.TryGetValue(id, out player)) {
             return;
         }
-Debug.Log("msg to player: " + id);
         player.SendEvent(cmd);
     }
 
