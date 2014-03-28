@@ -104,29 +104,47 @@ function saveScreenshotFromDataURL(dataURL) {
   }
 }
 
-var server = http.createServer(function(req, res) {
-  debug("req: " + req.method);
-  // your normal server code
-  if (req.method == "POST") {
-    postHandler(req, function(query) {
-      debug("query: " + query.cmd);
-      switch (query.cmd) {
-      case 'time':
-        sendJSONResponse(res, { time: (new Date()).getTime() * 0.001 });
-        break;
-      case 'screenshot':
-        saveScreenshotFromDataURL(query.dataURL);
-        sendJSONResponse(res, { ok: true });
-        break;
-      default:
-        send404(res);
-        break;
-      }
-    });
-  } else {
-    sendRequestedFile(req, res);
-  }
-});
+var handleTimeRequest = function(query, res) {
+  sendJSONResponse(res, { time: (new Date()).getTime() * 0.001 });
+};
+
+var handleScreenshotRequest = function(query, res) {
+  saveScreenshotFromDataURL(query.dataURL);
+  sendJSONResponse(res, { ok: true });
+};
+
+var handleListRunningGamesRequest = function(query, res) {
+  var games = relayServer.getGames();
+  sendJSONResponse(res, games);
+};
+
+var server = http.createServer(function() {
+
+  var postCmdHandlers = {
+    time: handleTimeRequest,
+    screenshot: handleScreenshotRequest,
+    listRunningGames: handleListRunningGamesRequest,
+  };
+
+  return function(req, res) {
+    debug("req: " + req.method);
+    // your normal server code
+    if (req.method == "POST") {
+      postHandler(req, function(query) {
+        var cmd = query.cmd;
+        debug("query: " + cmd);
+        var handler = postCmdHandlers[cmd];
+        if (!handler) {
+          send404(res);
+          return;
+        }
+        handler(query, res);
+      });
+    } else {
+      sendRequestedFile(req, res);
+    }
+  };
+}());
 
 var isFolder = (function() {
   // Keep a cache of all paths because fs.statSync is sync

@@ -1,4 +1,3 @@
-<!--
 /*
  * Copyright 2014, Gregg Tavares.
  * All rights reserved.
@@ -29,21 +28,42 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
--->
-<!DOCTYPE html>
-<html>
-<head>
-<title>HappyFunTimes Example Games</title>
-</head>
-<body>
-<h1>HappyFunTimes Example Games</h1>
-<div class="game"    style="display: none;" id="simple"><a href="examples/simple/index.html">Simple</a></div>
-<div class="game"    style="display: none;" id="clocksync"><a href="examples/clocksync/index.html">Clocksync</a></div>
-<div class="game"    style="display: none;" id="powpow"><a href="examples/powpow/index.html">PowPow</a></div>
-<div class="game"    style="display: none;" id="jamjam"><a href="examples/jamjam/index.html">JamJam</a></div>
-<div class="game"    style="display: none;" id="jumpjump"><a href="examples/jumpjump/index.html">JumpJump</a></div>
-<div class="nogames" style="display: none;" id="nogames">No games currently running</div>
-</body>
-<script data-main="showgames.js" src="examples/scripts/require.js"></script>
-</html>
+
+"use strict";
+
+var main = function(IO) {
+  var games = document.querySelectorAll(".game");
+  var noGames = document.getElementById("nogames");
+
+  var getGames = function() {
+    IO.sendJSON(window.location.href, {cmd: 'listRunningGames'}, function (obj, exception) {
+      if (exception) {
+        setTimeout(getGames, 1000);
+        return;
+      }
+      var runningGames = { };
+      for (var ii = 0; ii < obj.length; ++ii) {
+        var game = obj[ii];
+        runningGames[game.gameId] = true;
+      }
+      for (var ii = 0; ii < games.length; ++ii) {
+        var game = games[ii];
+        var gameId = game.id;
+        game.style.display = runningGames[gameId] ? "block" : "none";
+      }
+      noGames.style.display = obj.length ? "none" : "block";
+
+      setTimeout(getGames, 5000);
+    });
+  };
+  getGames();
+};
+
+// Start the main app logic.
+requirejs(
+  [ 'scripts/io',
+  ],
+  main
+);
+
 

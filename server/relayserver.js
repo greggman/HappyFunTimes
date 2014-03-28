@@ -201,7 +201,12 @@ var Game = function(gameId, relayServer) {
   this.gameId = gameId;
   this.relayServer = relayServer;
   this.players = {};
+  this.numPlayers = 0;
   this.sendQueue = [];
+};
+
+Game.prototype.getNumPlayers = function() {
+  return this.numPlayers;
 };
 
 Game.prototype.addPlayer = function(player) {
@@ -210,6 +215,7 @@ Game.prototype.addPlayer = function(player) {
     console.error("player " + id + " is already member of game " + this.gameId);
     return;
   }
+  ++this.numPlayers;
   this.players[id] = player;
   this.send({cmd: 'start', id: id});
 };
@@ -220,6 +226,7 @@ Game.prototype.removePlayer = function(player) {
     console.error("player " + id + " is not a member of game " + this.gameId);
     return;
   }
+  --this.numPlayers;
   delete this.players[player.id];
   this.send({
     cmd: 'remove',
@@ -362,6 +369,18 @@ var RelayServer = function(server) {
     }
     return game;
   }.bind(this);
+
+  this.getGames = function() {
+    var gameList = [];
+    for (var id in g_games) {
+      var game = g_games[id];
+      gameList.push({
+        gameId: id,
+        numPlayers: game.getNumPlayers(),
+      });
+    }
+    return gameList;
+  };
 
   this.addPlayerToGame = function(player, gameId) {
     var game = getGame(gameId);
