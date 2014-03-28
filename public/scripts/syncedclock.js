@@ -35,9 +35,15 @@ define(["./io"], function(IO) {
   return {
     createClock: (function(online, opt_syncRateSeconds) {
 
-      var getLocalTime = function() {
+      var lrClock = function() {
         return (new Date()).getTime() * 0.001;
       };
+
+      var hrClock = function() {
+        return window.performance.now() * 0.001;
+      };
+
+      var getLocalTime = (window.performance && window.performance.now) ? hrClock : lrClock;
 
       /**
        * A clock that gets the local current time in seconds.

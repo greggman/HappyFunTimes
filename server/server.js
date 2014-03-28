@@ -48,6 +48,7 @@ var util = require('util');
 var mime = require('mime');
 var querystring = require('querystring');
 var args = require('minimist')(process.argv.slice(2));
+var highResClock = require('./highresclock');
 
 if (args.h || args.help) {
   sys.print(
@@ -105,7 +106,7 @@ function saveScreenshotFromDataURL(dataURL) {
 }
 
 var handleTimeRequest = function(query, res) {
-  sendJSONResponse(res, { time: (new Date()).getTime() * 0.001 });
+  sendJSONResponse(res, { time: highResClock.getTime() });
 };
 
 var handleScreenshotRequest = function(query, res) {
