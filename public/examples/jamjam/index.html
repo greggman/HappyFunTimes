@@ -3,231 +3,78 @@
 <head>
 <meta name="viewport" content="user-scalable=no, width=device-width, height=device-height">
 <title>JamJam Controls</title>
-<style>
-html, body {
-  width: 100%;
-  height: 100%;
-  border: 0px;
-  padding: 0px;
-  margin: 0px;
-  background-color: black; /* blue; */
-  font-family: sans-serif;
-}
-.instruction {
-  color: rgba(255,255,255,0.7);
-}
-#surface {
-  width: 100%;
-  height: 100%;
-  gbackground-color: green;
-  gbackground-image: url(assets/waiting.png);
-}
-#status {
-  gbackground-color: red;
-  width: 100%;
-  height: 300px;
-  overflow: auto;
-}
-#touchControls {
-  position: absolute;
-  top: 0px;
-  left: 0px;
-  z-index: 2;
-  width: 100%;
-  height: 100%;
-}
-#singleTouchControls {
-  position: absolute;
-  top: 0px;
-  left: 0px;
-  z-index: 3;
-  width: 100%;
-  height: 100%;
-  display: none;
-}
-#stcontrol {
-  background: url(assets/arrows.png) no-repeat center;
-}
-#singleTouchControls .canvas {
-  position relative;
-  z-index: 4;
-  border: 2px solid yellow;
-}
-#controlArea {
-  position: relative;
-  height: 90%;
-}
-#shipArea {
-  position: absolute;
-  top: 0px;
-  left: 0px;
-  border: 1px solid cyan;
-  z-index: 500;
-}
-#ship {
-  position: absolute;
-  left: 25%;
-  top: 25%;
-  width: 50%;
-  height: auto;
-}
-#controls {
-  position: absolute;
-  top: 0px;
-  left: 0px;
-  border: 1px solid yellow;
-}
-#keyControls {
-  position: absolute;
-  top: 0px;
-  left: 0px;
-  z-index: 3;
-  width: 100%;
-  height: 100%;
-  display: none;
-}
-.move {
-  float: left;
-  width: 50%;
-  height: 100%;
-  vertical-align: middle;
-  color: rgba(255, 255, 255, 0.5); /* black; */
-  gbackground-color: rgba(255, 255, 255, 0.2);
-  display: table-cell;
-}
-#tcmove.move, #tcfire.fire {
-  width: 100%
-}
-.fire {
-  float: right;
-  width: 50%;
-  height: 100%;
-  vertical-align: middle;
-  color: rgba(255, 255, 255, 0.75); /* white; */
-  gbackground-color: rgba(0, 0, 0, 0.2);
-}
-#singleTouchControls .stmove {
-  width: 100%;
-  height: 100%;
-}
-#top {
-  position: absolute;
-  top: 0px;
-  left: 0px;
-  gz-index: 4;
-  width: 100%;
-  height: 100%;
-}
-#text {
-  height: 10%;
-  background-color: blue;
-}
-#input {
-  display: none;
-}
-#disconnected {
-  position: absolute;
-  top: 0px;
-  left: 0px;
-  width: 100%;
-  height: 100%;
-  display: none;
-  background-color: black;
-  color: white;
-  text-align: center;
-  z-index: 1000;
-}
-#clock {
-  position: absolute;
-  top: 0px;
-  right: 0px;
-  font-family: monospace;
-  z-index: 1999;
-  color: white;
-}
-#log {
-  position: absolute;
-  top: 0px;
-  left: 0px;
-  width: 100%;
-  height: 100%;
-  color: white;
-  font-family: monospace;
-  z-index: 2000;
-}
-</style>
-<link rel="stylesheet" media="all and (max-device-width: 1024px) and (orientation:portrait)"  href="/examples/powpow/css/tablet-portrait.css">
-<link rel="stylesheet" media="all and (max-device-width: 1024px) and (orientation:landscape)" href="/examples/powpow/css/tablet-landscape.css">
-<link rel="stylesheet" media="all and (max-device-width: 900px) and (orientation:portrait)"   href="/examples/powpow/css/phone-portrait.css">
-<link rel="stylesheet" media="all and (max-device-width: 900px) and (orientation:landscape)"  href="/examples/powpow/css/phone-landscape.css">
-<link rel="stylesheet" media="all and (min-device-width: 1025px)"                             href="/examples/powpow/css/monitor.css">
 <script data-main="scripts/jamjamcontroller.js" src="../scripts/require.js"></script>
 </head>
 <body>
-<div id="surface">
-  <div id="status"></div>
+<style>
+* {
+    box-sizing: border-box;
+   -moz-box-sizing: border-box;
+   -moz-user-select: none;
+   -webkit-user-select: none;
+   -o-user-select: none;
+   user-select: none;
+}
+html, body {
+    height: 100%;
+    background-color: orange;
+}
+#container {
+    height: 100%;
+    display: flex;
+    display: -webkit-flex;
+    justify-content: center;
+    align-content: center;
+    align-items: center;
+    -webkit-justify-content: center;
+    -webkit-align-content: center;
+    -webkit-align-items: center;
+    min-height: auto;
+}
+td {
+    background-color: #ddd;
+    color: #ddd;
+    border: 3px solid #444;
+    border-radius: 10px;
+    width: 64px;
+    height: 64px;
+    text-align: center;
+    font-size: xx-large;
+    font-family: Helvetica, Arial, sans-serif;
+    font-weight: bold;
+}
+.noteOn {
+    background-color: #fff;
+    color: black;
+    border: 6px solid black;
+}
+.notePlay {
+    background-color: #f00;
+}
+.notePass {
+    border: 3px solid #fff;
+}
+table {
+    border-spacing: 10px;
+}
+#debug {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    z-index: 10;
+}
+</style>
+<div id="container">
+
+</div>
+<div id="debug">
+  <pre id="status">d</pre>
   <div id="console"></div>
 </div>
-<div id="top">
-  <div id="text">
-    <div id="msg">msg</div>
-    <input type="text" id="input" />
-  </div>
-  <div id="controlArea">
-    <div id="touchControls">
-      <!-- FUCK U CSS ... 2 hours fucking with you you suck! -->
-      <table border="0" cellpadding="0" cellspacing="0" width="100%" height="100%">
-        <tr>
-          <td width="50%">
-        <div id="tcmove" class="move">
-          <div class="instruction"></div>
-        </div>
-          </td>
-          <td width="50%">
-        <div id="tcfire" class="fire">
-          <div class="instruction"></div>
-        </div>
-          </td>
-        </tr>
-      </table>
-    </div>
-    <div id="singleTouchControls">
-      <div class="stmove">
-        <table border="0" cellpadding="0" cellspacing="0" width="100%" height="100%">
-        <tr height="10px">
-          <td>
-            <div class="instruction">Press to Steer, Tap to Fire</div>
-          </td>
-        </tr>
-        <tr>
-          <td valign="middle" align="center" id="stcontrol">
-              <center>
-                <canvas class="canvas" width="150" height="150"></canvas>
-              <center>
-          </td>
-        </tr>
-        </table>
-      </div>
-    </div>
-    <div id="keyControls">
-      <div class="move">
-        <div class="instruction">Press Cursor Keys to Steer</div>
-      </div>
-      <div class="fire">
-        <div class="instruction">Press Z to Fire</div>
-      </div>
-    </div>
-  </div>
   <div id="disconnected">
     <div class="instruction">Disconnected</div>
     <div class="instruction" id="reload">click to reload</div>
   </div>
-  <div id="log">
-  </div>
-  <div id="clock">
-                <canvas id="mark" class="canvas" width="150" height="150"></canvas>
-  </div>
-</div>
 </body>
 </html>
 

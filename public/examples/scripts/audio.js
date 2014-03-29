@@ -11,6 +11,8 @@ define(function() {
     var g_canPlay = false;
     var g_canPlayOgg;
     var g_canPlayMp3;
+    var g_canPlayWav;
+    var g_canPlayAif;
     var g_createFn;
 
     var changeExt = function(filename, ext) {
@@ -40,7 +42,7 @@ define(function() {
       req.send();
     }
 
-    WebAudioSound.prototype.play = function() {
+    WebAudioSound.prototype.play = function(when) {
       if (!this.buffer) {
         console.log(this.name, " not loaded");
         return;
@@ -48,7 +50,7 @@ define(function() {
       var src = g_context.createBufferSource();
       src.buffer = this.buffer;
       src.connect(g_context.destination);
-      src.start(0);
+      src.start(when);
     };
 
     function AudioTagSound(name, filename, samples, opt_callback) {
@@ -73,7 +75,7 @@ define(function() {
       }
     };
 
-    AudioTagSound.prototype.play = function() {
+    AudioTagSound.prototype.play = function(when) {
       if (this.waiting_on_load > 0) {
         console.log(this.name, " not loaded");
         return;
@@ -83,6 +85,7 @@ define(function() {
       // console.log(this.name, ":", this.play_idx, ":", a.src);
       var b = new Audio();
       b.src = a.src;
+      // TODO: use when
       b.addEventListener("canplaythrough", function() {
         b.play();
         }, false);
@@ -95,7 +98,7 @@ define(function() {
       }
     };
 
-    this.playSound = function(name) {
+    this.playSound = function(name, when) {
       if (!g_canPlay)
         return;
       var sound = g_soundBank[name];
@@ -103,7 +106,11 @@ define(function() {
         console.error("audio: '" + name + "' not known.");
         return;
       }
-      sound.play();
+      sound.play(when);
+    }.bind(this);
+
+    this.getTime = function() {
+      return g_context ? g_context.currentTime : Date.now() * 0.001;
     }.bind(this);
 
     // on iOS and possibly other devices you can't play any
@@ -163,6 +170,8 @@ define(function() {
       var a = new Audio()
       g_canPlayOgg = a.canPlayType("audio/ogg");
       g_canPlayMp3 = a.canPlayType("audio/mp3");
+      g_canPlayWav = a.canPlayType("audio/wav");
+      g_canPlayAif = a.canPlayType("audio/aif") || a.canPlayType("audio/aiff");
       g_canPlay = g_canPlayOgg || g_canPlayMp3;
       if (!g_canPlay)
         return;
@@ -171,6 +180,7 @@ define(function() {
       if (webAudioAPI) {
         console.log("Using Web Audio API");
         g_context = new webAudioAPI();
+window.a = g_context;
         g_createFn = WebAudioSound;
       } else {
         console.log("Using Audio Tag");

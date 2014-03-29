@@ -63,8 +63,12 @@ define(function() {
     this.eventHandlers[eventType] = handler;
   };
 
-  NetPlayer.prototype.removeEventHandler = function(eventType) {
+  NetPlayer.prototype.removeEventListener = function(eventType) {
     this.eventHandlers[eventType] = undefined;
+  };
+
+  NetPlayer.prototype.removeAllListeners = function() {
+    this.eventHanders = { };
   };
 
   NetPlayer.prototype.sendEvent_ = function(eventType, args) {

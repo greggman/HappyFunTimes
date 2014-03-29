@@ -30,16 +30,28 @@
  */
 "use strict";
 
-var main = function(GameClient, SyncedClock, AudioManager, Cookies, Input) {
+var main = function(
+    GameClient,
+    SyncedClock,
+    AudioManager,
+    Cookies,
+    Grid,
+    Input) {
   var g_client;
   var g_audioManager;
   var g_clock;
-  var g_bpm = 100;
+  var g_grid;
   var g_instrument;
+
+  var globals = {
+    bpm: 120,
+    loopLength: 16,
+  };
 
   function $(id) {
     return document.getElementById(id);
   }
+
 
   function showConnected() {
     $("disconnected").style.display = "none";
@@ -62,29 +74,144 @@ console.log("loaded:" + data.filename);
     window.location.reload();
   }
 
-  g_client = new GameClient({
-    gameId: "jamjam",
+  g_grid = new Grid({columns: 4, rows: 4, container: $("container")});
+
+  var rhythmButtons = [];
+  g_grid.forEach(function(cell) {
+    rhythmButtons.push(cell.getElement());
   });
 
-  g_client.addEventListener('setInstrument', handleSetInstrument);
+  var tracks = [
+    {
+      rhythm: [1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0],
+    },
+  ];
 
-  g_client.addEventListener('connect', showConnected);
-  g_client.addEventListener('disconnect', showDisconnected);
+  var addClass = function(element, className) {
+    var classes = element.className.split(" ");
+    if (classes.indexOf(className) < 0) {
+      classes.push(className);
+    }
+    element.className = classes.join(" ");
+  };
 
-  g_audioManager = new AudioManager();
-  g_clock = SyncedClock.createClock(true);
+  var removeClass = function(element, className) {
+    var classes = element.className.split(" ");
+    var index = classes.indexOf(className);
+    if (index >= 0) {
+      classes.splice(index, 1);
+    }
+    element.className = classes.join(" ");
+  };
 
-  var then = g_clock.getTime();
-  function process() {
-    var now = g_clock.getTime();
+  var addOrRemoveClass = function(element, className, add) {
+    if (add) {
+      addClass(element, className);
+    } else {
+      removeClass(element, className);
+    }
+  };
 
-    // insert notes
+  var setDisplayForNote = function(trackIndex, rhythmIndex) {
+    var elem = rhythmButtons[rhythmIndex];
+    var rhythm = tracks[trackIndex].rhythm;
+    addOrRemoveClass(elem, "noteOn", rhythm[rhythmIndex]);
+  };
 
-    then = now;
+  var initButtons = function() {
+    var rhythm = tracks[0].rhythm;
+    var trackIndex = 0;
+    for (var rhythmIndex = 0; rhythmIndex < globals.loopLength; ++rhythmIndex) {
+      var elem = rhythmButtons[rhythmIndex];
+      elem.innerHTML = "&#x25C9";
+      setDisplayForNote(0, rhythmIndex);
+      elem.addEventListener('click', function(trackIndex, rhythmIndex) {
+        return function(e) {
+          var rhythm = tracks[trackIndex].rhythm;
+          rhythm[rhythmIndex] = !rhythm[rhythmIndex];
+          setDisplayForNote(trackIndex, rhythmIndex);
+        };
+      }(trackIndex, rhythmIndex));
+    }
+  };
+  initButtons();
 
-  }
+  var drawNote = function(trackIndex, rhythmIndex) {
+    var rhythm = tracks[trackIndex].rhythm;
+    var on = rhythm[rhythmIndex];
+    addClass(rhythmButtons[rhythmIndex], on ? "notePlay" : "notePass");
+    var prev = (globals.loopLength + rhythmIndex - 1) % globals.loopLength;
+    var oldOn = rhythm[prev];
+    removeClass(rhythmButtons[prev], "notePlay");
+    removeClass(rhythmButtons[prev], "notePass");
+  };
 
-  setInterval(process, 500);
+  // This isn't called until the clock is synced at least once.
+  var start = function() {
+
+    g_client = new GameClient({
+      gameId: "jamjam",
+    });
+
+    g_client.addEventListener('setInstrument', handleSetInstrument);
+
+    g_client.addEventListener('connect', showConnected);
+    g_client.addEventListener('disconnect', showDisconnected);
+
+    g_audioManager = new AudioManager();
+
+    var startTime = g_clock.getTime();
+
+    var playNote = function(track, noteTime) {
+      g_audioManager.playSound(g_instrument, noteTime);
+    };
+
+    var secondsPerBeat = 60 / globals.bpm;
+    var secondsPerQuarterBeat = secondsPerBeat / 4;
+    var lastQueuedQuarterBeat = Math.floor(startTime / secondsPerQuarterBeat);
+    var lastDisplayedQuarterBeat = lastQueuedQuarterBeat;
+
+    var status = document.getElementById("status").firstChild;
+
+    function process() {
+      var currentTime = g_clock.getTime();
+      var currentQuarterBeat = Math.floor(currentTime / secondsPerQuarterBeat);
+
+var beat = Math.floor(currentQuarterBeat / 4) % 4;
+status.nodeValue =
+  "\n ct: " + currentTime.toFixed(2).substr(-5) +
+  "\nacd: " + ((currentTime - startTime) - g_audioManager.getTime()).toFixed(5) +
+  "\ncqb: " + currentQuarterBeat.toString().substr(-4) +
+  "\n rt: " + currentQuarterBeat % globals.loopLength +
+  "\n bt: " + beat + ((beat % 2) == 0 ? " ****" : "");
+
+      var quarterBeatToQueue = currentQuarterBeat + 2;
+      while (lastQueuedQuarterBeat < quarterBeatToQueue) {
+        ++lastQueuedQuarterBeat;
+        var timeForBeat = lastQueuedQuarterBeat * secondsPerQuarterBeat;
+        var contextPlayTime = timeForBeat - startTime;
+        var rhythmIndex = lastQueuedQuarterBeat % globals.loopLength;
+
+        for (var ii = 0; ii < tracks.length; ++ii) {
+          var track = tracks[ii];
+          var rhythm = track.rhythm;
+          if (rhythm[rhythmIndex]) {
+            playNote(track, contextPlayTime);
+          }
+        }
+      }
+
+      if (lastDisplayedQuarterBeat != currentQuarterBeat) {
+        lastDisplayedQuarterBeat = currentQuarterBeat;
+        drawNote(0, currentQuarterBeat % globals.loopLength);
+      }
+
+      setTimeout(process, 100);
+    }
+    process();
+  };
+
+  g_clock = SyncedClock.createClock(true, undefined, start);
 };
 
 // Start the main app logic.
@@ -93,6 +220,7 @@ requirejs(
     '../../../scripts/syncedclock',
     '../../scripts/audio',
     '../../scripts/cookies',
+    '../../scripts/grid',
     '../../scripts/input',
   ],
   main

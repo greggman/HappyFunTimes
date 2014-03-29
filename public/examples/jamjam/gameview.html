@@ -35,16 +35,26 @@
 <head>
 <title>JamJam</title>
 <style>
+* {
+    box-sizing: border-box;
+   -moz-box-sizing: border-box;
+   -moz-user-select: none;
+   -webkit-user-select: none;
+   -o-user-select: none;
+   user-select: none;
+}
 html, body {
   width: 100%;
   height: 100%;
+  background-color: #28F;
   border: 0px;
   padding: 0px;
   margin: 0px;
-  background-color: purple; //black;
-  font-family: sans-serif;
+  font-family: Helvetica, Arial, sans-serif;
   color: white;
-  font-size: 20px;
+  font-size: 50px;
+  font-weight: bolder;
+  text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
 }
 #url {
   height: 5%;
@@ -52,45 +62,21 @@ html, body {
   text-align: center;
 }
 #outer {
-  width: 100%;
+  display: flex;
+  display: -webkit-flex;
   height: 100%;
-}
-#main {
-  float: left;
-  width: 85%;
-  height: 100%;
-}
-#canvas {
-  width: 100%;
-  height: 95%;
-  background-color: black;
-  gbackground-image: url(assets/background.jpg);
-  gbackground-size: 100%;
+  justify-content: center;
+  align-content: center;
+  align-items: center;
+  -webkit-justify-content: center;
+  -webkit-align-content: center;
+  -webkit-align-items: center;
+  min-height: auto;
 }
 #status {
   float: right;
   width: 15%;
   background-color: red;
-  height: 100%;
-}
-#highscore, #queue {
-  white-space: nowrap;
-  overflow: hidden;
-  height: 100%;
-  background-color: #008;
-}
-#highscores-outer {
-  width: 100%;
-  height: 50%;
-  background-color: blue;
-}
-#queue-outer {
-  width: 100%;
-  height: 50%;
-  background-color: blue;
-}
-#queue-canvas {
-  width: 100%;
   height: 100%;
 }
 #disconnected {
@@ -109,11 +95,7 @@ html, body {
 </head>
 <body>
 <div id="outer">
-  <div id="main">
-    <div id="url">test</div>
-    <div id="grid">
-    </div>
-  </div>
+<div>People Jamming: <span id="numPeople">0</span></div>
 </div>
 <div id="disconnected">
   <div class="instruction">Disconnected</div>

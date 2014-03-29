@@ -304,8 +304,8 @@ Game.prototype.assignClient = function(client) {
     this.client.send({
       cmd: 'start',
       id: player.id,
-    }.bind(this));
-  });
+    });
+  }.bind(this));
 
   this.sendQueue.forEach(function(msg) {
     this.client.send(msg);
