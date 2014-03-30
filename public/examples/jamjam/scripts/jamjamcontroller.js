@@ -195,27 +195,34 @@ console.log("loaded:" + data.filename);
     var lastQueuedQuarterBeat = Math.floor(startTime / secondsPerQuarterBeat);
     var lastDisplayedQuarterBeat = lastQueuedQuarterBeat;
 
-    var status = $("status").firstChild;
+    if (globals.debug) {
+      var status = $("status").firstChild;
+      var debugCSS = Misc.findCSSStyleRule("#debug");
+      debugCSS.style.display = "block";
+    }
 
     function process() {
       var currentTime = g_clock.getTime();
       var currentQuarterBeat = Math.floor(currentTime / secondsPerQuarterBeat);
+      var audioClockTime = g_audioManager.getTime();
 
-var beat = Math.floor(currentQuarterBeat / 4) % 4;
-var clockDiff = (currentTime - startTime) - g_audioManager.getTime();
-status.nodeValue =
-  "\n ct: " + currentTime.toFixed(2).substr(-5) +
-  "\nacd: " + clockDiff.toFixed(5) +
-  "\ncqb: " + currentQuarterBeat.toString().substr(-4) +
-  "\n rt: " + currentQuarterBeat % globals.loopLength +
-  "\n bt: " + beat + ((beat % 2) == 0 ? " ****" : "");
-
+      if (globals.debug) {
+        var beat = Math.floor(currentQuarterBeat / 4) % 4;
+        var clockDiff = (currentTime - startTime) - audioClockTime;
+        status.nodeValue =
+          "\n ct: " + currentTime.toFixed(2).substr(-5) +
+          "\nacd: " + clockDiff.toFixed(5) +
+          "\ncqb: " + currentQuarterBeat.toString().substr(-4) +
+          "\n rt: " + currentQuarterBeat % globals.loopLength +
+          "\n bt: " + beat + ((beat % 2) == 0 ? " ****" : "");
+      }
 
       var quarterBeatToQueue = currentQuarterBeat + 2;
       while (lastQueuedQuarterBeat < quarterBeatToQueue) {
         ++lastQueuedQuarterBeat;
         var timeForBeat = lastQueuedQuarterBeat * secondsPerQuarterBeat;
-        var contextPlayTime = timeForBeat - startTime - clockDiff;
+        var contextPlayTime = contextPlayTime = audioClockTime + timeUntilBeat;
+        var timeUntilBeat = timeForBeat - currentTime;
         var rhythmIndex = lastQueuedQuarterBeat % globals.loopLength;
 
         for (var ii = 0; ii < tracks.length; ++ii) {

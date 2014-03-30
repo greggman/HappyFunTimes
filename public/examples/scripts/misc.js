@@ -101,8 +101,22 @@ define(function() {
     return "rgb(" + colors.join(",") + ")";
   };
 
+  var findCSSStyleRule = function(selector) {
+    for (var ii = 0; ii < document.styleSheets.length; ++ii) {
+      var styleSheet = document.styleSheets[ii];
+      var rules = styleSheet.cssRules || styleSheet.rules;
+      for (var rr = 0; rr < rules.length; ++rr) {
+        var rule = rules[rr];
+        if (rule.selectorText == selector) {
+          return rule;
+        }
+      }
+    }
+  };
+
   return {
     applyUrlSettings: applyUrlSettings,
+    findCSSStyleRule: findCSSStyleRule,
     randInt: randInt,
     randCSSColor: randCSSColor,
   };

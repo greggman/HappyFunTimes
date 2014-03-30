@@ -185,7 +185,12 @@ Player.prototype.setTracks = function(data) {
 };
 
 Player.prototype.setNote = function(data) {
-  this.tracks[data.t].rhythm[data.r] = data.n;
+  if (this.tracks) {
+    var track = this.tracks[data.t];
+    if (track) {
+      track.rhythm[data.r] = data.n;
+    }
+  }
 };
 
 Player.prototype.chooseInstrument = function() {
@@ -202,11 +207,15 @@ Player.prototype.disconnect = function() {
 };
 
 Player.prototype.drawNotes = function(trackIndex, rhythmIndex) {
-  var track = this.tracks[trackIndex];
-  var on = track.rhythm[rhythmIndex];
-  if (this.elemState != on) {
-    this.elem.style.border = on ? "5px solid white" : "1px solid black";
-    this.elemState = on;
+  if (this.tracks) {
+    var track = this.tracks[trackIndex];
+    if (track) {
+      var on = track.rhythm[rhythmIndex];
+      if (this.elemState != on) {
+        this.elem.style.border = on ? "5px solid white" : "1px solid black";
+        this.elemState = on;
+      }
+    }
   }
 };
 
@@ -294,18 +303,24 @@ var main = function(
   var secondsPerQuarterBeat = secondsPerBeat / 4;
   var lastDisplayedQuarterBeat = 0;
 
-  var status = $("status").firstChild;
+  if (globals.debug) {
+    var status = $("status").firstChild;
+    var debugCSS = Misc.findCSSStyleRule("#debug");
+    debugCSS.style.display = "block";
+  }
 
   function process() {
     var currentTime = clock.getTime();
     var currentQuarterBeat = Math.floor(currentTime / secondsPerQuarterBeat);
 
-    var beat = Math.floor(currentQuarterBeat / 4) % 4;
-    status.nodeValue =
-    "\n ct: " + currentTime.toFixed(2).substr(-5) +
-    "\ncqb: " + currentQuarterBeat.toString().substr(-4) +
-    "\n rt: " + currentQuarterBeat % globals.loopLength +
-    "\n bt: " + beat + ((beat % 2) == 0 ? " ****" : "");
+    if (globals.debug) {
+      var beat = Math.floor(currentQuarterBeat / 4) % 4;
+      status.nodeValue =
+      "\n ct: " + currentTime.toFixed(2).substr(-5) +
+      "\ncqb: " + currentQuarterBeat.toString().substr(-4) +
+      "\n rt: " + currentQuarterBeat % globals.loopLength +
+      "\n bt: " + beat + ((beat % 2) == 0 ? " ****" : "");
+    }
 
     if (lastDisplayedQuarterBeat != currentQuarterBeat) {
       lastDisplayedQuarterBeat = currentQuarterBeat;
