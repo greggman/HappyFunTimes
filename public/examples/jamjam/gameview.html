@@ -51,10 +51,7 @@ html, body {
   padding: 0px;
   margin: 0px;
   font-family: Helvetica, Arial, sans-serif;
-  color: white;
-  font-size: 50px;
-  font-weight: bolder;
-  text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
+  overflow: none;
 }
 #url {
   height: 5%;
@@ -62,6 +59,10 @@ html, body {
   text-align: center;
 }
 #outer {
+  color: white;
+  font-size: 50px;
+  font-weight: bolder;
+  text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
   display: flex;
   display: -webkit-flex;
   height: 100%;
@@ -73,11 +74,14 @@ html, body {
   -webkit-align-items: center;
   min-height: auto;
 }
+#debug {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    z-index: 10;
+}
 #status {
-  float: right;
-  width: 15%;
-  background-color: red;
-  height: 100%;
+    font-size: small;
 }
 #disconnected {
   position: absolute;
@@ -96,6 +100,10 @@ html, body {
 <body>
 <div id="outer">
 <div>People Jamming: <span id="numPeople">0</span></div>
+</div>
+<div id="debug">
+  <pre id="status">d</pre>
+  <div id="console"></div>
 </div>
 <div id="disconnected">
   <div class="instruction">Disconnected</div>

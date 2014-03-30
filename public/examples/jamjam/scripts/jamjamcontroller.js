@@ -36,7 +36,8 @@ var main = function(
     AudioManager,
     Cookies,
     Grid,
-    Input) {
+    Input,
+    Misc) {
   var g_client;
   var g_audioManager;
   var g_clock;
@@ -52,14 +53,6 @@ var main = function(
     return document.getElementById(id);
   }
 
-
-  function showConnected() {
-    $("disconnected").style.display = "none";
-  }
-
-  function showDisconnected() {
-    $("disconnected").style.display = "block";
-  }
 
   function handleSetInstrument(data) {
 console.log("setins: " + data.filename);
@@ -118,6 +111,8 @@ console.log("loaded:" + data.filename);
     addOrRemoveClass(elem, "noteOn", rhythm[rhythmIndex]);
   };
 
+  var sendNote;
+
   var initButtons = function() {
     var rhythm = tracks[0].rhythm;
     var trackIndex = 0;
@@ -129,6 +124,7 @@ console.log("loaded:" + data.filename);
         return function(e) {
           var rhythm = tracks[trackIndex].rhythm;
           rhythm[rhythmIndex] = !rhythm[rhythmIndex];
+          sendNote(trackIndex, rhythmIndex, rhythm[rhythmIndex]);
           setDisplayForNote(trackIndex, rhythmIndex);
         };
       }(trackIndex, rhythmIndex));
@@ -149,14 +145,42 @@ console.log("loaded:" + data.filename);
   // This isn't called until the clock is synced at least once.
   var start = function() {
 
+    var stop = false;
+
     g_client = new GameClient({
       gameId: "jamjam",
     });
+
+    function showConnected() {
+      $("disconnected").style.display = "none";
+    }
+
+    function showDisconnected() {
+      stop = true;
+      $("disconnected").style.display = "block";
+    }
 
     g_client.addEventListener('setInstrument', handleSetInstrument);
 
     g_client.addEventListener('connect', showConnected);
     g_client.addEventListener('disconnect', showDisconnected);
+
+    var color = Misc.randCSSColor();
+    g_client.sendCmd('setColor', { color: color });
+    document.body.style.backgroundColor = color;
+
+    var sendTracks = function() {
+      g_client.sendCmd('tracks', { tracks: tracks });
+    };
+    sendTracks();
+
+    sendNote = function(trackIndex, rhythmIndex, on) {
+      g_client.sendCmd('note', {
+        t: trackIndex,
+        r: rhythmIndex,
+        n: on,
+      });
+    };
 
     g_audioManager = new AudioManager();
 
@@ -171,7 +195,7 @@ console.log("loaded:" + data.filename);
     var lastQueuedQuarterBeat = Math.floor(startTime / secondsPerQuarterBeat);
     var lastDisplayedQuarterBeat = lastQueuedQuarterBeat;
 
-    var status = document.getElementById("status").firstChild;
+    var status = $("status").firstChild;
 
     function process() {
       var currentTime = g_clock.getTime();
@@ -206,7 +230,9 @@ status.nodeValue =
         drawNote(0, currentQuarterBeat % globals.loopLength);
       }
 
-      setTimeout(process, 100);
+      if (!stop) {
+       setTimeout(process, 100);
+      }
     }
     process();
   };
@@ -222,6 +248,7 @@ requirejs(
     '../../scripts/cookies',
     '../../scripts/grid',
     '../../scripts/input',
+    '../../scripts/misc',
   ],
   main
 );

@@ -30,6 +30,10 @@
  */
 "use strict";
 
+function $(id) {
+  return document.getElementById(id);
+}
+
 var InstrumentManager = (function() {
 
   var soundFiles = [
@@ -145,25 +149,43 @@ var InstrumentManager = (function() {
   };
 }());
 
-var updateNumPlayers = (function() {
-  var g_numPlayers = 0;
-  var numElem = document.getElementById("numPeople").firstChild
-
-  return function(delta) {
-    g_numPlayers += delta;
-    numElem.nodeValue = g_numPlayers;
-  }
-}());
-
 var Player = function(services, netPlayer) {
   this.services = services;
   this.netPlayer = netPlayer;
-  updateNumPlayers(1);
+  this.tracks = [];
+  this.elem = document.createElement("div");
+  this.elemState = -1;
+  var elem = this.elem;
+  var s = elem.style;
+  s.width = "32px";
+  s.height = "32px";
+  s.border = "1px solid black";
+  s.position = "absolute";
+  s.left = services.misc.randInt(window.innerWidth - 32) + "px";
+  s.top = services.misc.randInt(window.innerHeight - 32) + "px";
+  s.zIndex = 5;
+  document.body.appendChild(elem);
 
   netPlayer.addEventListener('disconnect', Player.prototype.disconnect.bind(this));
   netPlayer.addEventListener('newInstrument', Player.prototype.chooseInstrument.bind(this));
+  netPlayer.addEventListener('setColor', Player.prototype.setColor.bind(this));
+  netPlayer.addEventListener('tracks', Player.prototype.setTracks.bind(this));
+  netPlayer.addEventListener('note', Player.prototype.setNote.bind(this));
 
   this.chooseInstrument();
+};
+
+Player.prototype.setColor = function(data) {
+  this.color = data.color;
+  this.elem.style.backgroundColor = this.color;
+};
+
+Player.prototype.setTracks = function(data) {
+  this.tracks = data.tracks;
+};
+
+Player.prototype.setNote = function(data) {
+  this.tracks[data.t].rhythm[data.r] = data.n;
 };
 
 Player.prototype.chooseInstrument = function() {
@@ -174,8 +196,46 @@ Player.prototype.chooseInstrument = function() {
 }
 
 Player.prototype.disconnect = function() {
-  updateNumPlayers(-1);
   this.netPlayer.removeAllListeners();
+  this.services.playerManager.removePlayer(this);
+  this.elem.parentNode.removeChild(this.elem);
+};
+
+Player.prototype.drawNotes = function(trackIndex, rhythmIndex) {
+  var track = this.tracks[trackIndex];
+  var on = track.rhythm[rhythmIndex];
+  if (this.elemState != on) {
+    this.elem.style.border = on ? "5px solid white" : "1px solid black";
+    this.elemState = on;
+  }
+};
+
+var PlayerManager = function(services) {
+  this.services = services;
+  this.players = [];
+  this.numElem = $("numPeople").firstChild;
+};
+
+PlayerManager.prototype.updatePlayers = function() {
+  this.numElem.nodeValue = this.players.length;
+};
+
+PlayerManager.prototype.startPlayer = function(netPlayer) {
+  var player = new Player(this.services, netPlayer);
+  this.players.push(player);
+  this.updatePlayers();
+};
+
+PlayerManager.prototype.removePlayer = function(player) {
+  this.players.splice(this.players.indexOf(player), 1);
+  this.updatePlayers();
+};
+
+PlayerManager.prototype.drawNotes = function(trackIndex, rhythmIndex) {
+  for (var ii = 0; ii < this.players.length; ++ii) {
+    var player = this.players[ii];
+    player.drawNotes(trackIndex, rhythmIndex);
+  }
 };
 
 var main = function(
@@ -186,17 +246,19 @@ var main = function(
 
   var g_debug = false;
   var g_services = {};
+  var g_playerManager = new PlayerManager(g_services);
+  g_services.playerManager = g_playerManager;
+  g_services.misc = Misc;
+  var stop = false;
 
   // You can set these from the URL with
   // http://path/gameview.html?settings={name:value,name:value}
   var globals = {
     port: 8080,
     haveServer: true,
+    bpm: 120,
+    loopLength: 16,
   };
-
-  function $(id) {
-    return document.getElementById(id);
-  }
 
   function startPlayer(netPlayer, name) {
     return new Player(g_services, netPlayer);
@@ -220,7 +282,7 @@ var main = function(
   g_services.server = server;
   server.addEventListener('connect', showConnected);
   server.addEventListener('disconnect', showDisconnected);
-  server.addEventListener('playerconnect', startPlayer);
+  server.addEventListener('playerconnect', g_playerManager.startPlayer.bind(g_playerManager));
 
   var clock = SyncedClock.createClock(true);
   g_services.clock = clock;
@@ -228,6 +290,33 @@ var main = function(
   var instrumentManager = new InstrumentManager(Misc);
   g_services.instrumentManager = instrumentManager;
 
+  var secondsPerBeat = 60 / globals.bpm;
+  var secondsPerQuarterBeat = secondsPerBeat / 4;
+  var lastDisplayedQuarterBeat = 0;
+
+  var status = $("status").firstChild;
+
+  function process() {
+    var currentTime = clock.getTime();
+    var currentQuarterBeat = Math.floor(currentTime / secondsPerQuarterBeat);
+
+    var beat = Math.floor(currentQuarterBeat / 4) % 4;
+    status.nodeValue =
+    "\n ct: " + currentTime.toFixed(2).substr(-5) +
+    "\ncqb: " + currentQuarterBeat.toString().substr(-4) +
+    "\n rt: " + currentQuarterBeat % globals.loopLength +
+    "\n bt: " + beat + ((beat % 2) == 0 ? " ****" : "");
+
+    if (lastDisplayedQuarterBeat != currentQuarterBeat) {
+      lastDisplayedQuarterBeat = currentQuarterBeat;
+      g_playerManager.drawNotes(0, currentQuarterBeat % globals.loopLength);
+    }
+
+    if (!stop) {
+     setTimeout(process, 100);
+    }
+  }
+  process();
 
   //var sounds = {
   //  fire: {

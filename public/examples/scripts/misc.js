@@ -59,39 +59,52 @@ define(function() {
     }
   };
 
-  return {
-    applyUrlSettings: function(obj, opt_argumentName) {
-      var argumentName = opt_argumentName || 'settings';
-      try {
-        var s = window.location.href;
-        var q = s.indexOf("?");
-        var e = s.indexOf("#");
-        if (e < 0) {
-          e = s.length;
-        }
-        var query = s.substring(q + 1, e);
-        var pairs = query.split("&");
-        for (var ii = 0; ii < pairs.length; ++ii) {
-          var keyValue = pairs[ii].split("=");
-          var key = keyValue[0];
-          var value = decodeURIComponent(keyValue[1]);
-          switch (key) {
-          case argumentName:
-            var settings = eval("(" + value + ")");
-            copyProperties(settings, obj);
-            break;
-          }
-        }
-      } catch (e) {
-        console.error(e);
-        console.error("settings:", settings);
-        return;
+  var applyUrlSettings = function(obj, opt_argumentName) {
+    var argumentName = opt_argumentName || 'settings';
+    try {
+      var s = window.location.href;
+      var q = s.indexOf("?");
+      var e = s.indexOf("#");
+      if (e < 0) {
+        e = s.length;
       }
-    },
+      var query = s.substring(q + 1, e);
+      var pairs = query.split("&");
+      for (var ii = 0; ii < pairs.length; ++ii) {
+        var keyValue = pairs[ii].split("=");
+        var key = keyValue[0];
+        var value = decodeURIComponent(keyValue[1]);
+        switch (key) {
+        case argumentName:
+          var settings = eval("(" + value + ")");
+          copyProperties(settings, obj);
+          break;
+        }
+      }
+    } catch (e) {
+      console.error(e);
+      console.error("settings:", settings);
+      return;
+    }
+  };
 
-    randInt: function(value) {
-      return Math.floor(Math.random() * value);
-    },
+  var randInt = function(value) {
+    return Math.floor(Math.random() * value);
+  };
+
+  var randCSSColor = function() {
+    var strong = randInt(3);
+    var colors = [];
+    for (var ii = 0; ii < 3; ++ii) {
+      colors.push(randInt(128) + (ii == strong ? 128 : 64));
+    }
+    return "rgb(" + colors.join(",") + ")";
+  };
+
+  return {
+    applyUrlSettings: applyUrlSettings,
+    randInt: randInt,
+    randCSSColor: randCSSColor,
   };
 });
 
