@@ -13,10 +13,10 @@
 			<string>no-dns-available.example.com</string>
 			<key>dhcp_domain_name_server</key>
 			<array>
-				<string>169.254.194.171</string>
+				<string>169.254.127.82</string>
 			</array>
 			<key>dhcp_router</key>
-			<string>169.254.194.171</string>
+			<string>169.254.127.82</string>
 			<key>lease_max</key>
 			<integer>3600</integer>
 			<key>name</key>

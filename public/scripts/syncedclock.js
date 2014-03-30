@@ -35,6 +35,15 @@ define(["./io"], function(IO) {
   return {
     createClock: (function(online, opt_syncRateSeconds, opt_callback) {
 
+      if (!window.performance) {
+        window.performance = {};
+      }
+      if (!window.performance.now) {
+        window.performance.now = function() {
+          return Date.now();
+        };
+      }
+
       var lrClock = function() {
         return (new Date()).getTime() * 0.001;
       };

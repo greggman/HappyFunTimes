@@ -202,18 +202,20 @@ console.log("loaded:" + data.filename);
       var currentQuarterBeat = Math.floor(currentTime / secondsPerQuarterBeat);
 
 var beat = Math.floor(currentQuarterBeat / 4) % 4;
+var clockDiff = (currentTime - startTime) - g_audioManager.getTime();
 status.nodeValue =
   "\n ct: " + currentTime.toFixed(2).substr(-5) +
-  "\nacd: " + ((currentTime - startTime) - g_audioManager.getTime()).toFixed(5) +
+  "\nacd: " + clockDiff.toFixed(5) +
   "\ncqb: " + currentQuarterBeat.toString().substr(-4) +
   "\n rt: " + currentQuarterBeat % globals.loopLength +
   "\n bt: " + beat + ((beat % 2) == 0 ? " ****" : "");
+
 
       var quarterBeatToQueue = currentQuarterBeat + 2;
       while (lastQueuedQuarterBeat < quarterBeatToQueue) {
         ++lastQueuedQuarterBeat;
         var timeForBeat = lastQueuedQuarterBeat * secondsPerQuarterBeat;
-        var contextPlayTime = timeForBeat - startTime;
+        var contextPlayTime = timeForBeat - startTime - clockDiff;
         var rhythmIndex = lastQueuedQuarterBeat % globals.loopLength;
 
         for (var ii = 0; ii < tracks.length; ++ii) {
