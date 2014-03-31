@@ -34,72 +34,16 @@
 <html>
 <head>
 <title>JamJam</title>
+<link rel="stylesheet" href="../css/samples.css">
 <style>
-* {
-    box-sizing: border-box;
-   -moz-box-sizing: border-box;
-   -moz-user-select: none;
-   -webkit-user-select: none;
-   -o-user-select: none;
-   user-select: none;
-}
 html, body {
-  width: 100%;
-  height: 100%;
   background-color: #28F;
-  border: 0px;
-  padding: 0px;
-  margin: 0px;
-  font-family: Helvetica, Arial, sans-serif;
-  overflow: none;
-}
-#url {
-  height: 5%;
-  background-color: #008;
-  text-align: center;
-}
-#outer {
-  color: white;
-  font-size: 50px;
-  font-weight: bolder;
-  text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
-  display: flex;
-  display: -webkit-flex;
-  height: 100%;
-  justify-content: center;
-  align-content: center;
-  align-items: center;
-  -webkit-justify-content: center;
-  -webkit-align-content: center;
-  -webkit-align-items: center;
-  min-height: auto;
-}
-#debug {
-    position: absolute;
-    top: 0px;
-    left: 0px;
-    z-index: 10;
-    display: none;
-}
-#status {
-    font-size: small;
-}
-#disconnected {
-  position: absolute;
-  top: 0px;
-  left: 0px;
-  width: 100%;
-  height: 100%;
-  display: none;
-  background-color: red;
-  text-align: center;
-  z-index: 1000
 }
 </style>
 <script data-main="scripts/jamjamgame.js" src="../scripts/require.js"></script>
 </head>
 <body>
-<div id="outer">
+<div id="outer" class="fullcenter">
 <div>People Jamming: <span id="numPeople">0</span></div>
 </div>
 <div id="debug">
@@ -107,8 +51,10 @@ html, body {
   <div id="console"></div>
 </div>
 <div id="disconnected">
-  <div class="instruction">Disconnected</div>
-  <div id="reload">...lost connection to server (T_T)...</div>
+  <div class="fullcenter">
+    <div class="instruction">Disconnected</div>
+    <div id="reload">...lost connection to server (T_T)...</div>
+  </div>
 </div>
 </body>
 </html>

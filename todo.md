@@ -70,6 +70,8 @@
 
 *   Make controllers have button to go back to games
 
+*   Make disconnect centered/sized and clickable.
+
 
 Done
 ----

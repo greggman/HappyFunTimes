@@ -2,35 +2,12 @@
 <html>
 <head>
 <meta name="viewport" content="user-scalable=no, width=device-width, height=device-height">
-<title>JamJam Controls</title>
-<script data-main="scripts/jamjamcontroller.js" src="../scripts/require.js"></script>
-</head>
-<body>
+<link rel="stylesheet" href="../css/samples.css">
 <style>
-* {
-    box-sizing: border-box;
-   -moz-box-sizing: border-box;
-   -moz-user-select: none;
-   -webkit-user-select: none;
-   -o-user-select: none;
-   user-select: none;
-}
 html, body {
-    height: 100%;
     background-color: orange;
-    margin: 0px;
 }
 #container {
-    height: 100%;
-    display: flex;
-    display: -webkit-flex;
-    justify-content: center;
-    align-content: center;
-    align-items: center;
-    -webkit-justify-content: center;
-    -webkit-align-content: center;
-    -webkit-align-items: center;
-    min-height: auto;
 }
 td {
     background-color: #ddd;
@@ -58,36 +35,24 @@ td {
 table {
     border-spacing: 10px;
 }
-#debug {
-    position: absolute;
-    top: 0px;
-    left: 0px;
-    z-index: 10;
-    display: none;
-}
-#disconnected {
-  position: absolute;
-  top: 0px;
-  left: 0px;
-  width: 100%;
-  height: 100%;
-  display: none;
-  background-color: red;
-  text-align: center;
-  z-index: 1000
-}
 </style>
-<div id="container">
+<title>JamJam Controls</title>
+<script data-main="scripts/jamjamcontroller.js" src="../scripts/require.js"></script>
+</head>
+<body>
+<div id="container" class="fullcenter">
 
 </div>
 <div id="debug">
   <pre id="status">d</pre>
   <div id="console"></div>
 </div>
-  <div id="disconnected">
+<div id="disconnected">
+  <div class="fullcenter">
     <div class="instruction">Disconnected</div>
     <div class="instruction" id="reload">click to reload</div>
   </div>
+</div>
 </body>
 </html>
 
