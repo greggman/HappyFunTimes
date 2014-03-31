@@ -38,8 +38,6 @@ var main = function(GameClient, AudioManager, Cookies, Input, Ships) {
   var g_left = false;
   var g_right = false;
   var g_fire = false;
-  var g_keyState = {};
-  var g_oldKeyState = {};
   var g_dirTouchStart = 0;
   var g_numTouches = 0;
   var g_ctx = 0;
@@ -395,32 +393,6 @@ var main = function(GameClient, AudioManager, Cookies, Input, Ships) {
     }
   }
 
-  function updateKey(keyCode, state) {
-    g_keyState[keyCode] = state;
-    if (g_oldKeyState != g_keyState) {
-      g_oldKeyState = state;
-      if (state) {
-        handleKeyDown(keyCode);
-      } else {
-        handleKeyUp(keyCode);
-      }
-    }
-  }
-
-  function keyUp(event) {
-    //logTo("status", "keyUp: " + event.keyCode);
-    var s = $("status");
-    s.scrollTop = s.scrollHeight;
-    updateKey(event.keyCode, false);
-  }
-
-  function keyDown(event) {
-    //logTo("status", "keyDown: " + event.keyCode);
-    var s = $("status");
-    s.scrollTop = s.scrollHeight;
-    updateKey(event.keyCode, true);
-  }
-
   function enterName(event) {
     $('msg').style.display = "none";
     $('msg').style.color = "#FFF";
@@ -522,9 +494,10 @@ var main = function(GameClient, AudioManager, Cookies, Input, Ships) {
     var touchControls = $("touchControls");
     keyControls.style.display = "block";
     touchControls.style.display = "none";
-    window.addEventListener("keyup", keyUp, false);
-    window.addEventListener("keydown", keyDown, false);
   }
+
+  Input.setupControllerKeys(handleKeyDown, handleKeyUp);
+
   $('msg').addEventListener("click", enterName, false);
   $('input').addEventListener("change", finishSendName, false);
   $('input').addEventListener("blur", finishSendName, false);
