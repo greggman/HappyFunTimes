@@ -39,10 +39,21 @@
 html, body {
   background-color: #28F;
 }
+#visual {
+  position: absolute;
+  left: 0px;
+  top: 0px;
+}
+#outer {
+  z-index: 2;
+}
 </style>
 <script data-main="scripts/jamjamgame.js" src="../scripts/require.js"></script>
 </head>
 <body>
+<div id="visual" class="fullsize">
+<canvas id="canvas" class="fullsize"></canvas>
+</div>
 <div id="outer" class="fullcenter">
 <div>People Jamming: <span id="numPeople">0</span></div>
 </div>

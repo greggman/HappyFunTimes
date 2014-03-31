@@ -28,16 +28,39 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+"use strict";
 
-"use script";
+define(function() {
 
-var Player = function(services, netPlayer, name) {
-  this.services = services;
-  this.netPlayer = netPlayer;
-  this.name = name;
-};
+  var WebGLRenderer = function(services, canvas) {
+    this.services = services;
+    this.gl = canvas.getContext("experimental-webgl");
+    if (!this.gl) {
+      return;
+    }
+    this.resize();
+  };
 
-Player.prototype.process(elapsedTime) {
+  WebGLRenderer.prototype.resize = function() {
+    var canvas = this.gl.canvas;
+    if (canvas.width != canvas.clientWidth ||
+        canvas.height != canvas.clientHeight) {
+      canvas.width = canvas.clientWidth;
+      canvas.height = canvas.clientHeight;
+    }
+  };
 
-};
+  WebGLRenderer.prototype.canRender = function() {
+    return !!this.gl;
+  };
 
+  WebGLRenderer.prototype.render = function(elapsedTime) {
+    this.resize();
+    var gl = this.gl;
+    gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
+    //gl.clearColor(Math.random(), Math.random(), Math.random(), 1);
+    //gl.clear(gl.COLOR_BUFFER_BIT);
+  };
+
+  return WebGLRenderer;
+});

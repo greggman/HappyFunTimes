@@ -251,7 +251,9 @@ var main = function(
     GameServer,
     SyncedClock,
     AudioManager,
-    Misc) {
+    Misc,
+    CanvasRenderer,
+    WebGLRenderer) {
 
   var g_debug = false;
   var g_services = {};
@@ -299,6 +301,14 @@ var main = function(
   var instrumentManager = new InstrumentManager(Misc);
   g_services.instrumentManager = instrumentManager;
 
+//  var canvas = $("canvas");
+//  var renderer = new WebGLRenderer(g_services, canvas);
+//  if (!renderer.canRender()) {
+//    renderer = new CanvasRenderer(g_services, canvas);
+//  }
+  var renderer = new CanvasRenderer(g_services, canvas);
+  g_services.renderer = renderer;
+
   var secondsPerBeat = 60 / globals.bpm;
   var secondsPerQuarterBeat = secondsPerBeat / 4;
   var lastDisplayedQuarterBeat = 0;
@@ -332,6 +342,17 @@ var main = function(
     }
   }
   process();
+
+  var then = clock.getTime();
+  function render() {
+    var now = clock.getTime();
+    var elapsedTime = now - then;
+    then = now;
+
+    renderer.render(elapsedTime);
+    requestAnimationFrame(render);
+  }
+  render();
 
   //var sounds = {
   //  fire: {
@@ -369,6 +390,8 @@ requirejs(
     '../../../scripts/syncedclock',
     '../../scripts/audio',
     '../../scripts/misc',
+    './canvasrenderer',
+    './webglrenderer',
   ],
   main
 );
