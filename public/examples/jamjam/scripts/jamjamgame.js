@@ -153,18 +153,20 @@ var Player = function(services, netPlayer) {
   this.services = services;
   this.netPlayer = netPlayer;
   this.tracks = [];
-  this.elem = document.createElement("div");
-  this.elemState = -1;
-  var elem = this.elem;
-  var s = elem.style;
-  s.width = "32px";
-  s.height = "32px";
-  s.border = "1px solid black";
-  s.position = "absolute";
-  s.left = services.misc.randInt(window.innerWidth - 32) + "px";
-  s.top = services.misc.randInt(window.innerHeight - 32) + "px";
-  s.zIndex = 5;
-  document.body.appendChild(elem);
+  this.position = [services.misc.randInt(200), services.misc.randInt(200)];
+  //this.elem = document.createElement("div");
+  //this.elemState = -1;
+
+  //var elem = this.elem;
+  //var s = elem.style;
+  //s.width = "32px";
+  //s.height = "32px";
+  //s.border = "1px solid black";
+  //s.position = "absolute";
+  //s.left = services.misc.randInt(window.innerWidth - 32) + "px";
+  //s.top = services.misc.randInt(window.innerHeight - 32) + "px";
+  //s.zIndex = 5;
+  //document.body.appendChild(elem);
 
   netPlayer.addEventListener('disconnect', Player.prototype.disconnect.bind(this));
   netPlayer.addEventListener('newInstrument', Player.prototype.chooseInstrument.bind(this));
@@ -177,7 +179,10 @@ var Player = function(services, netPlayer) {
 
 Player.prototype.setColor = function(data) {
   this.color = data.color;
-  this.elem.style.backgroundColor = this.color;
+  this.glColor = this.services.cssParse.parseCSSColor(data.color, true);
+  if (this.elem) {
+    this.elem.style.backgroundColor = this.color;
+  }
 };
 
 Player.prototype.setTracks = function(data) {
@@ -203,7 +208,9 @@ Player.prototype.chooseInstrument = function() {
 Player.prototype.disconnect = function() {
   this.netPlayer.removeAllListeners();
   this.services.playerManager.removePlayer(this);
-  this.elem.parentNode.removeChild(this.elem);
+  if (this.elem) {
+    this.elem.parentNode.removeChild(this.elem);
+  }
 };
 
 Player.prototype.drawNotes = function(trackIndex, rhythmIndex) {
@@ -211,9 +218,41 @@ Player.prototype.drawNotes = function(trackIndex, rhythmIndex) {
     var track = this.tracks[trackIndex];
     if (track) {
       var on = track.rhythm[rhythmIndex];
-      if (this.elemState != on) {
+      if (this.elem && this.elemState != on) {
         this.elem.style.border = on ? "5px solid white" : "1px solid black";
         this.elemState = on;
+      }
+      if (on) {
+        var gridSize = this.services.globals.gridSize;
+        var renderer = this.services.renderer;
+        var width = renderer.canvas.width;
+        var height = renderer.canvas.height;
+        var gridWidth = Math.floor(width / gridSize);
+        var gridHeight = Math.floor(height / gridSize);
+        var offX = (width  - (gridWidth  * gridSize)) / 2;
+        var offY = (height - (gridHeight * gridSize)) / 2;
+        switch (rhythmIndex % 4) {
+        case 0:
+          ++this.position[0];
+          break;
+        case 1:
+          ++this.position[1];
+          break;
+        case 2:
+          --this.position[0];
+          break;
+        case 3:
+          --this.position[1];
+          break;
+        }
+
+        this.position[0] = (this.position[0] + gridWidth ) % gridWidth;
+        this.position[1] = (this.position[1] + gridHeight) % gridHeight;
+
+        this.services.renderer.drawCircle(
+          [offX + this.position[0] * gridSize, offY + this.position[1] * gridSize],
+          gridSize,
+          this.glColor);
       }
     }
   }
@@ -247,141 +286,175 @@ PlayerManager.prototype.drawNotes = function(trackIndex, rhythmIndex) {
   }
 };
 
+// This shit with 'load' and 'start' is because of some conflict or
+// other between tdl and require.js >:(
+
+// I think basically require.js runs before 'load' whereas
+// tdl does not. So, tdl was not loaded yet.
+var g_loaded;
+var g_run;
+
+var start = function() {
+  if (g_loaded && g_run) {
+    g_run();
+  }
+};
+
+window.addEventListener('load', function() {
+  g_loaded = true;
+  start();
+});
+
 var main = function(
     GameServer,
     SyncedClock,
     AudioManager,
+    CSSParse,
     Misc,
     CanvasRenderer,
     WebGLRenderer) {
 
-  var g_debug = false;
-  var g_services = {};
-  var g_playerManager = new PlayerManager(g_services);
-  g_services.playerManager = g_playerManager;
-  g_services.misc = Misc;
-  var stop = false;
+  g_run = function() {
 
-  // You can set these from the URL with
-  // http://path/gameview.html?settings={name:value,name:value}
-  var globals = {
-    port: 8080,
-    haveServer: true,
-    bpm: 120,
-    loopLength: 16,
-  };
+    var g_debug = false;
+    var g_services = {};
+    var g_playerManager = new PlayerManager(g_services);
+    g_services.playerManager = g_playerManager;
+    g_services.cssParse = CSSParse;
+    g_services.misc = Misc;
+    var stop = false;
 
-  function startPlayer(netPlayer, name) {
-    return new Player(g_services, netPlayer);
-  }
+    // You can set these from the URL with
+    // http://path/gameview.html?settings={name:value,name:value}
+    var globals = {
+      port: 8080,
+      haveServer: true,
+      bpm: 120,
+      loopLength: 16,
+      force2d: false,
+      debug: false,
+      gridSize: 32,
+    };
 
-  function showConnected() {
-    $('disconnected').style.display = "none";
-  }
+    function startPlayer(netPlayer, name) {
+      return new Player(g_services, netPlayer);
+    }
 
-  function showDisconnected() {
-    $('disconnected').style.display = "block";
-  }
+    function showConnected() {
+      $('disconnected').style.display = "none";
+    }
 
-  Misc.applyUrlSettings(globals);
+    function showDisconnected() {
+      $('disconnected').style.display = "block";
+    }
 
-  g_services.globals = globals;
+    Misc.applyUrlSettings(globals);
 
-  var server = new GameServer({
-    gameId: "jamjam",
-  });
-  g_services.server = server;
-  server.addEventListener('connect', showConnected);
-  server.addEventListener('disconnect', showDisconnected);
-  server.addEventListener('playerconnect', g_playerManager.startPlayer.bind(g_playerManager));
+    g_services.globals = globals;
 
-  var clock = SyncedClock.createClock(true);
-  g_services.clock = clock;
+    var server = new GameServer({
+      gameId: "jamjam",
+    });
+    g_services.server = server;
+    server.addEventListener('connect', showConnected);
+    server.addEventListener('disconnect', showDisconnected);
+    server.addEventListener('playerconnect', g_playerManager.startPlayer.bind(g_playerManager));
 
-  var instrumentManager = new InstrumentManager(Misc);
-  g_services.instrumentManager = instrumentManager;
+    var clock = SyncedClock.createClock(true);
+    g_services.clock = clock;
 
-//  var canvas = $("canvas");
-//  var renderer = new WebGLRenderer(g_services, canvas);
-//  if (!renderer.canRender()) {
-//    renderer = new CanvasRenderer(g_services, canvas);
-//  }
-  var renderer = new CanvasRenderer(g_services, canvas);
-  g_services.renderer = renderer;
+    var instrumentManager = new InstrumentManager(Misc);
+    g_services.instrumentManager = instrumentManager;
 
-  var secondsPerBeat = 60 / globals.bpm;
-  var secondsPerQuarterBeat = secondsPerBeat / 4;
-  var lastDisplayedQuarterBeat = 0;
+    var canvas = $("canvas");
+    var renderer;
+    if (!globals.force2d || globals.force2D) {
+      renderer = new WebGLRenderer(g_services, canvas);
+    }
+    if (!renderer || !renderer.canRender()) {
+      renderer = new CanvasRenderer(g_services, canvas);
+    }
+    g_services.renderer = renderer;
 
-  if (globals.debug) {
-    var status = $("status").firstChild;
-    var debugCSS = Misc.findCSSStyleRule("#debug");
-    debugCSS.style.display = "block";
-  }
-
-  function process() {
-    var currentTime = clock.getTime();
-    var currentQuarterBeat = Math.floor(currentTime / secondsPerQuarterBeat);
+    var secondsPerBeat = 60 / globals.bpm;
+    var secondsPerQuarterBeat = secondsPerBeat / 4;
+    var lastDisplayedQuarterBeat = 0;
 
     if (globals.debug) {
-      var beat = Math.floor(currentQuarterBeat / 4) % 4;
-      status.nodeValue =
-      "\n ct: " + currentTime.toFixed(2).substr(-5) +
-      "\ncqb: " + currentQuarterBeat.toString().substr(-4) +
-      "\n rt: " + currentQuarterBeat % globals.loopLength +
-      "\n bt: " + beat + ((beat % 2) == 0 ? " ****" : "");
+      var status = $("status").firstChild;
+      var debugCSS = Misc.findCSSStyleRule("#debug");
+      debugCSS.style.display = "block";
     }
 
-    if (lastDisplayedQuarterBeat != currentQuarterBeat) {
-      lastDisplayedQuarterBeat = currentQuarterBeat;
-      g_playerManager.drawNotes(0, currentQuarterBeat % globals.loopLength);
+    function process() {
+      var currentTime = clock.getTime();
+      var currentQuarterBeat = Math.floor(currentTime / secondsPerQuarterBeat);
+
+      if (globals.debug) {
+        var beat = Math.floor(currentQuarterBeat / 4) % 4;
+        status.nodeValue =
+        "\n ct: " + currentTime.toFixed(2).substr(-5) +
+        "\ncqb: " + currentQuarterBeat.toString().substr(-4) +
+        "\n rt: " + currentQuarterBeat % globals.loopLength +
+        "\n bt: " + beat + ((beat % 2) == 0 ? " ****" : "");
+      }
+
+      if (lastDisplayedQuarterBeat != currentQuarterBeat) {
+        lastDisplayedQuarterBeat = currentQuarterBeat;
+        g_playerManager.drawNotes(0, currentQuarterBeat % globals.loopLength);
+      }
+
+      if (!stop) {
+       setTimeout(process, 100);
+      }
     }
+    process();
 
-    if (!stop) {
-     setTimeout(process, 100);
+    var then = clock.getTime();
+    function render() {
+      var now = clock.getTime();
+      var elapsedTime = now - then;
+      then = now;
+
+      //var x = Misc.randInt(150) + 500;
+      //var y = Misc.randInt(150) + 300;
+      //renderer.drawCircle([x, y], 40, [1,1,1,1]);
+      renderer.begin(elapsedTime);
+      renderer.end(elapsedTime);
+      requestAnimationFrame(render);
     }
-  }
-  process();
+    render();
 
-  var then = clock.getTime();
-  function render() {
-    var now = clock.getTime();
-    var elapsedTime = now - then;
-    then = now;
-
-    renderer.render(elapsedTime);
-    requestAnimationFrame(render);
-  }
-  render();
-
-  //var sounds = {
-  //  fire: {
-  //    filename: "assets/fire.ogg",
-  //    samples: 8,
-  //  },
-  //  explosion: {
-  //    filename: "assets/explosion.ogg",
-  //    samples: 6,
-  //  },
-  //  hitshield: {
-  //    filename: "assets/hitshield.ogg",
-  //    samples: 6,
-  //  },
-  //  launch: {
-  //    filename: "assets/launch.ogg",
-  //    samples: 2,
-  //  },
-  //  gameover: {
-  //    filename: "assets/gameover.ogg",
-  //    samples: 1,
-  //  },
-  //  play: {
-  //    filename: "assets/play.ogg",
-  //    samples: 1,
-  //  },
-  //};
-  //var audioManager = new AudioManager(sounds);
-  //g_services.audioManager = audioManager;
+    //var sounds = {
+    //  fire: {
+    //    filename: "assets/fire.ogg",
+    //    samples: 8,
+    //  },
+    //  explosion: {
+    //    filename: "assets/explosion.ogg",
+    //    samples: 6,
+    //  },
+    //  hitshield: {
+    //    filename: "assets/hitshield.ogg",
+    //    samples: 6,
+    //  },
+    //  launch: {
+    //    filename: "assets/launch.ogg",
+    //    samples: 2,
+    //  },
+    //  gameover: {
+    //    filename: "assets/gameover.ogg",
+    //    samples: 1,
+    //  },
+    //  play: {
+    //    filename: "assets/play.ogg",
+    //    samples: 1,
+    //  },
+    //};
+    //var audioManager = new AudioManager(sounds);
+    //g_services.audioManager = audioManager;
+  };
+  start();
 };
 
 // Start the main app logic.
@@ -389,6 +462,7 @@ requirejs(
   [ '../../../scripts/gameserver',
     '../../../scripts/syncedclock',
     '../../scripts/audio',
+    '../../scripts/cssparse',
     '../../scripts/misc',
     './canvasrenderer',
     './webglrenderer',

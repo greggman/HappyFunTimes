@@ -9,6 +9,16 @@
     Change it so it controls from the center? Show <- -> buttons
     and a [Fire] button with the ship somewhere else?
 
+*   Make reload work on all controllers.
+
+    * consider making reload to go /index.html for game selection?
+
+*   make disconnect handling shared?
+
+*   fix tdl vs require load issues.
+
+*   Remove sound from clock sync or fix it.
+
 *   fix simple controls and game so they use full area?
 
 *   Add timeout to server.

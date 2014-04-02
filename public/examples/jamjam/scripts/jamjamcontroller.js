@@ -47,6 +47,7 @@ var main = function(
   var globals = {
     bpm: 120,
     loopLength: 16,
+    debug: false,
   };
 
   function $(id) {
@@ -145,6 +146,7 @@ console.log("loaded:" + data.filename);
   // This isn't called until the clock is synced at least once.
   var start = function() {
 
+    Misc.applyUrlSettings(globals);
     var stop = false;
 
     g_client = new GameClient({
@@ -221,8 +223,8 @@ console.log("loaded:" + data.filename);
       while (lastQueuedQuarterBeat < quarterBeatToQueue) {
         ++lastQueuedQuarterBeat;
         var timeForBeat = lastQueuedQuarterBeat * secondsPerQuarterBeat;
-        var contextPlayTime = contextPlayTime = audioClockTime + timeUntilBeat;
         var timeUntilBeat = timeForBeat - currentTime;
+        var contextPlayTime = audioClockTime + timeUntilBeat;
         var rhythmIndex = lastQueuedQuarterBeat % globals.loopLength;
 
         for (var ii = 0; ii < tracks.length; ++ii) {
