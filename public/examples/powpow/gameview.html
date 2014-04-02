@@ -127,9 +127,7 @@ void main() {
 }
 </script>
 <script id="screenFragmentShader" type="whatever">
-#ifdef GL_ES
-precision highp float;
-#endif
+precision mediump float;
 uniform vec4 color;
 void main() {
   gl_FragColor = color;
@@ -149,9 +147,7 @@ void main() {
 }
 </script>
 <script id="twoToneFragmentShader" type="whatever">
-#ifdef GL_ES
-precision highp float;
-#endif
+precision mediump float;
 uniform vec4 color;
 varying float v_colorMult;
 void main() {
@@ -168,9 +164,7 @@ void main() {
 }
 </script>
 <script id="persistFragmentShader" type="whatever">
-#ifdef GL_ES
-precision highp float;
-#endif
+precision mediump float;
 uniform sampler2D newRender;
 uniform sampler2D oldRender;
 uniform float persistence;
@@ -199,9 +193,7 @@ void main() {
 }
 </script>
 <script id="mainFragmentShader" type="whatever">
-#ifdef GL_ES
-precision highp float;
-#endif
+precision mediump float;
 uniform sampler2D texture;
 varying vec2 v_texCoord;
 void main() {
