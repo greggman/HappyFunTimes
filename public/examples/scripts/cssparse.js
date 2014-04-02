@@ -201,66 +201,64 @@ define(function() {
     // rgba(r,g,b,a) rgba(255,0,0,1.0) rgba(0,255,0,1.0) rgba(255,0,255,1.0)
 
     var m;
+    var c;
     m = s_hexrrggbbRE.exec(s);
     if (m) {
-      return [
+      c = [
         parseInt(m[1], 16),
         parseInt(m[2], 16),
         parseInt(m[3], 16),
         255,
       ];
-    }
-
-    m = s_hexrgbRE.exec(s);
-    if (m) {
+    } else if (m = s_hexrgbRE.exec(s)) {
       var r = parseInt(m[1], 16);
       var g = parseInt(m[2], 16);
       var b = parseInt(m[3], 16);
-      return [
+      c = [
         r * 16 + r,
         g * 16 + g,
         b * 16 + b,
         255,
       ];
-    }
-
-    m = s_rgbRE.exec(s);
-    if (m) {
-      return [
+    } else if (m = s_rgbRE.exec(s)) {
+      c = [
         parseInt(m[1]),
         parseInt(m[2]),
         parseInt(m[3]),
         255,
       ];
-    }
-
-    m = s_rgbaRE.exec(s);
-    if (m) {
-      return [
+    } else if (m = s_rgbaRE.exec(s)) {
+      c = [
         parseInt(m[1]),
         parseInt(m[2]),
         parseInt(m[3]),
         Math.floor(parseFloat(m[4]) * 255),
       ];
-    }
-
-    m = s_nameRE.exec(s);
-    if (m) {
+    } else if(m = s_nameRE.exec(s)) {
       var name = m[1].toLowerCase();
       var color = s_colorData[name];
       if (color !== undefined) {
-        return [
-        (color >> 16) & 0xFF,
-        (color >>  8) & 0xFF,
-        (color >>  0) & 0xFF,
-        (color >> 24) & 0xFF,
+        c = [
+          (color >> 16) & 0xFF,
+          (color >>  8) & 0xFF,
+          (color >>  0) & 0xFF,
+          (color >> 24) & 0xFF,
         ];
       }
-      console.error("unknown color: " + name);
-      return;
     }
 
-    console.error("unsupported color format: " + s);
+    if (!c) {
+      console.error("unsupported color format: " + s);
+    }
+
+    if (opt_0to1) {
+      c[0] = c[0] / 255;
+      c[1] = c[1] / 255;
+      c[2] = c[2] / 255;
+      c[3] = c[3] / 255;
+    }
+
+    return c;
   };
 
   /*
