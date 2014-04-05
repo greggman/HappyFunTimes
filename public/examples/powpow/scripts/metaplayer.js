@@ -33,7 +33,7 @@
 
 // TODO: should this really be based on player?
 
-define(["./2d", "./player"], function(M2D, Player) {
+define(["../../scripts/2d", "./player"], function(M2D, Player) {
   /**
    * MetaQueuePlayer is a group controlled player when players are in queue
    * @constructor
