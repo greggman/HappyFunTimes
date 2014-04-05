@@ -134,15 +134,13 @@ define(['../../scripts//2d', './ships', './shot'], function(M2D, Ships, Shot) {
       this.position[0] + -Math.sin(this.direction) * 15,
       this.position[1] +  Math.cos(this.direction) * 15,
       this.direction, this);
-    g_shotsById[shot.id] = shot;
     this.shots.push(shot);
   };
 
   Player.prototype.removeShot = function(shot) {
     var ndx = this.shots.indexOf(shot);
     this.shots.splice(ndx, 1);
-    delete g_shotsById[shot.id];
-    this.services.entitySystem.deleteEntityById(shot.id);
+    shot.destroy();
   };
 
   Player.prototype.removeFromActive = function() {

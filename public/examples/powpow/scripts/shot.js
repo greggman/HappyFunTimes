@@ -50,10 +50,19 @@ define(['../../scripts/2d'], function(M2D) {
     };
 
     this.services.entitySystem.addEntity(this);
+    this.services.drawSystem.addEntity(this);
   }
 
   Shot.prototype.remove = function() {
-    this.owner.removeShot(this);
+    if (this.owner) {
+      this.owner.removeShot(this);
+      this.owner = undefined;
+    }
+  };
+
+  Shot.prototype.destroy = function() {
+    this.services.entitySystem.deleteEntity(this);
+    this.services.drawSystem.deleteEntity(this);
   };
 
   Shot.prototype.process = function(elapsedTime) {

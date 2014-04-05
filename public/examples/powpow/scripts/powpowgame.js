@@ -33,7 +33,6 @@
 tdl.require('tdl.webgl');
 
 var g_metaQueuePlayer;
-var g_shotsById = {};
 var g_updateStatus = false;
 var g_loaded;
 var g_run;
@@ -221,6 +220,8 @@ var main = function(
     g_services.audioManager = audioManager;
     var entitySys = new EntitySystem();
     g_services.entitySystem = entitySys;
+    var drawSystem = new EntitySystem("draw");
+    g_services.drawSystem = drawSystem;
     var playerManager = new PlayerManager(g_services);
     g_services.playerManager = playerManager;
     var scoreMgr = new ScoreManager(g_services, $("highscore"));
@@ -255,9 +256,7 @@ var main = function(
 
       g_metaQueuePlayer.draw(renderer);
       playerManager.draw(renderer);
-      for (var shotId in g_shotsById) {
-        g_shotsById[shotId].draw(renderer);
-      }
+      drawSystem.processEntities(renderer);
 
       //g_queueMgr.draw();
       scoreMgr.draw(renderer);
