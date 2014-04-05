@@ -22,7 +22,7 @@ This lets you make games that support more than the typical 4 players.
 
     Ideas
 
-    *   Have a one button game. The user touches there screen.
+    *   Have a one button game. The user touches their screen.
 
     *   Make virtual DPads
 
@@ -38,13 +38,13 @@ This lets you make games that support more than the typical 4 players.
 
 *   The API is simple to use.
 
-    Basically there are 2 libraries and a websocket webserver.
+    Basically there are 2 libraries and a webserver.
 
     `gameserver.js` provides a library that runs in the game that tracks players joining or
-    leaving the game and lets the game receive input from those players and
+    leaving the game. It lets the game receive input from those players and
     send messages to them. (There's a Unity version of this library)
 
-    `gameclient.js` provides a library that lets smartphones connect to the game and
+    `gameclient.js` provides a library that lets smartphones (browsers) connect to the game and
     send and receive messages. (There is NO Unity version of this library as the whole
     point is anyone with a smartphone should be able to play immediately, no need to
     install anything).
@@ -53,7 +53,7 @@ This lets you make games that support more than the typical 4 players.
     messages to and from the smartphones and the game.
 
     Once connected, anytime a player (smartphone) connects to the game the game
-    will get a 'playerconnect' event and passed a NetPlayer object. After that
+    will get a `playerconnect` event and passed a NetPlayer object. After that
     any message the player's smartphone sends generates a corresponding event
     in the game on that NetPlayer. Conversely, any message the game sends to a
     NetPlayer object generates a corresponding event on the smartphone that corresponds to
@@ -76,149 +76,214 @@ This lets you make games that support more than the typical 4 players.
 
     Back in the game, the corresponding `netplayer` will get an event.
 
-        netPlayer.addEventListener('move, someFunctionToHandleMove);
-
         var someFunctionToHandleMove = function(data) {
            console.log("You got a move event: " + data.x + "," + data.y);
-        }
+        };
+
+        netPlayer.addEventListener('move', someFunctionToHandleMove);
 
     Conversely you can send messages back to the user's display by sending commands on the `netplayer`
 
-        netPlayer.sendCmd('scored', { points: 200; });
+        netPlayer.sendCmd('scored', { points: 200 });
 
     That player's `gameclient` will get that event
 
-        gameclient.addEventHandler('scored', someFunctionToHandleScoring);
-
         var someFunctionToHandleScoring = function(data) {
            console.log("You scored " + data.points + " points!");
-        }
+        };
 
-    A simple client looks like this
+        gameclient.addEventHandler('scored', someFunctionToHandleScoring);
 
+    A simple client might look like this
+
+        <h1 id="status">status</h1>
+        <div id="input" style="width: 300px; height: 300px; border: 1px solid black;"></div>
+        <script src="utils/input.js"></script>
         <script src="gameclient.js"></script>
         <script>
-        var client = new GameClient({gameId: "simple"});
+        var score = 0;
+        var statusElem = document.getElementById("status");
+        var inputElem = document.getElementById("input");
+        var client = new GameClient({ gameId: "simple" });
 
-        client.addEventListener('connected', function() {
-          console.log("you've connected to the relayserver");
+        var randInt = function(range) {
+          return Math.floor(Math.random() * range);
         };
 
-        client.addEventListener('disconnected', function() {
-          console.log("you were disconnected from the relayserver");
+        client.addEventListener('connect', function() {
+          statusElem.innerHTML = "you've connected to the relayserver";
+        });
+
+        client.addEventListener('disconnect', function() {
+          statusElem.innerHTML = "you were disconnected from the relayserver";
+        });
+
+        // Sends a move command to the game.
+        //
+        // This will generate a 'move' event in the corresponding
+        // NetPlayer object in the game.
+        var sendMoveCmd = function(position) {
+          client.sendCmd('move', {
+            x: position.x,
+            y: position.y,
+          });
         };
+
+        // Pick a random color
+        var color =  'rgb(' + randInt(256) + "," + randInt(256) + "," + randInt(256) + ")";
+        // Send the color to the game.
+        //
+        // This will generate a 'color' event in the corresponding
+        // NetPlayer object in the game.
+        client.sendCmd('color', {
+          color: color,
+        });
+        inputElem.style.backgroundColor = color;
 
         // Send a message to the game when the screen is touched
-        window.addEventListener('touchmove', function(event) {
-          client.sendCmd({
-            cmd: 'move',
-            x: event.touches[0].pageX,
-            y: event.touches[0].pageY,
-          });
+        inputElem.addEventListener('touchmove', function(event) {
+          sendMoveCmd(input.getRelativeCoordinates(event.target, event.touches[0]));
+          event.preventDefault();
         });
 
+        inputElem.addEventListener('mousemove', function(event) {
+          sendMoveCmd(input.getRelativeCoordinates(event.target, event));
+        });
+
+        // Update our score when the game tells us.
         client.addEventListener('scored', function(cmd) {
-          console.log("You scored: " + cmd.points);
+          score += cmd.points;
+          statusElem.innerHTML = "You scored: " + cmd.points + " total: " + score;
         });
-
         </script>
 
-    A simple game looks like this
+    A simple game would be something like this
 
         <style>
         #playfield {
           position: relative;
-          width: 300px;
-          height: 300px;
+          width: 332px;
+          height: 332px;
           border: 1px solid black;
         }
-        .player {
+        .visual {
           position: absolute;
-          width: 15px;
-          height: 15px;
-          color: red;
+          width: 32px;
+          height: 32px;
+          border: 1px solid black;
+          border-radius: 16px;
+        }
         }
         </style>
-        <div id="playfield">
-        </div>
+        <h1 id="status"></h1>
+        <div id="playfield"></div>
         <script src="gameserver.js"></script>
         <script>
-        var players = [];
+        var statusElem = document.getElementById("status");
+        var container = document.getElementById("playfield");
+        var itemSize = 16;
+        var playfieldWidth = 300;
+        var playfieldHeight = 300;
 
-        var Goal = function() {
-            this.pickGoal();
-            this.radiusSquared = 15 * 15;
+        var randInt = function(range) {
+          return Math.floor(Math.random() * range);
+        };
+
+        var pickRandomPosition = function() {
+          return {
+            x: randInt(playfieldWidth),
+            y: randInt(playfieldHeight),
+          };
+        };
+
+        var Visual = function(container) {
+          this.element = document.createElement('div');
+          this.element.className = "visual";
+          container.appendChild(this.element);
+        };
+
+        Visual.prototype.setColor = function(color) {
+          this.element.style.backgroundColor = color;
+        };
+
+        Visual.prototype.updatePosition = function(position) {
+          this.element.style.left = position.x + "px";
+          this.element.style.top  = position.y + "px";
+        };
+
+        Visual.prototype.remove = function() {
+          this.element.parentNode.removeChild(this.element);
+        };
+
+        var Goal = function(container) {
+          this.visual = new Visual(container);
+          this.visual.setColor("red");
+          this.pickGoal();
+          this.radiusesSquared = itemSize * 2 * itemSize;
         };
 
         Goal.prototype.pickGoal = function() {
-          this.x = Math.random() * 300;
-          this.y = Math.random() * 300;
+          this.position = pickRandomPosition();
+          this.visual.updatePosition(this.position);
         };
 
-        Goal.prototype.hit = function(x, y) {
-          var dx = x - this.x;
-          var dy = y - this.y;
-          return dx * dx + dy * dy < this.radiusSquared;
+        Goal.prototype.hit = function(otherPosition) {
+          var dx = otherPosition.x - this.position.x;
+          var dy = otherPosition.y - this.position.y;
+          return dx * dx + dy * dy < this.radiusesSquared;
         };
 
         var Player = function(netPlayer, name, container) {
           this.netPlayer = netPlayer;
           this.name = name;
-          this.container = container;
-          this.x = 0;
-          this.y = 0;
-
-          this.element = document.createElement('div');
-          this.element.class = "player";
-          container.appendChild(this.element);
-          this.updatePosition();
+          this.visual = new Visual(container);
+          this.position = pickRandomPosition();
+          this.visual.updatePosition(this.position);
 
           netPlayer.addEventListener('disconnect', Player.prototype.disconnect.bind(this));
           netPlayer.addEventListener('move', Player.prototype.movePlayer.bind(this));
+          netPlayer.addEventListener('color', Player.prototype.setColor.bind(this));
         };
 
+        // The player disconnected.
         Player.prototype.disconnect = function() {
-          this.container.removeChild(this.element);
-          for (var ii = 0; ii < players.length; ++ii) {
-            var player = players[ii];
-            if (player === this) {
-              players.splice(ii, 1);
-              return;
-            }
-          }
-        };
-
-        Player.prototype.updatePosition = function() {
-          this.style.left = this.x + "px";
-          this.style.top  = this.y + "px";
-          if (hitGoal()) {
-            pickGoal();
-            this.netPlayer.sendCmd('die', {
-              points: 10,
-            });
-          }
+          this.netPlayer.removeAllListeners();
+          this.visual.remove();
         };
 
         Player.prototype.movePlayer = function(cmd) {
-          this.x = cmd.x;
-          this.y = cmd.y;
+          this.position.x = cmd.x;
+          this.position.y = cmd.y;
+          this.visual.updatePosition(this.position);
+          if (goal.hit(this.position)) {
+            // This will generate a 'scored' event on the client (player's smartphone)
+            // that corresponds to this player.
+            this.netPlayer.sendCmd('scored', {
+              points: 5 + randInt(6), // 5 to 10 points
+            });
+            goal.pickGoal();
+          }
         };
 
-        var server = new GameServer({gameId: "simple"});
-        var goal = new Goal();
-
-        server.addEventListener('connected', function() {
-          console.log("you've connected to the relayserver");
+        Player.prototype.setColor = function(cmd) {
+          this.visual.setColor(cmd.color);
         };
 
-        server.addEventListener('disconnected', function() {
-          console.log("you were disconnected from the relayserver");
-        };
+        var server = new GameServer({ gameId: "simple" });
+        var goal = new Goal(container);
 
-        server.addEventListener('playerconnected', function(netPlayer, name) {
-          players.push(new Player(netPlayer, name));
-        };
+        server.addEventListener('connect', function() {
+          statusElem.innerHTML ="you've connected to the relayserver";
+        });
 
+        server.addEventListener('disconnect', function() {
+          statusElem.innerHTML = "you were disconnected from the relayserver";
+        });
+
+        // A new player has arrived.
+        server.addEventListener('playerconnect', function(netPlayer, name) {
+          new Player(netPlayer, name, container);
+        });
         </script>
 
 *   There is also a synchronized clock across machines.
@@ -243,28 +308,29 @@ See [Unity Docs](unitydocs.md)
 Running the Examples
 --------------------
 
-*   Clone to repo
+*   Clone the repo
 *   Install [node.js](http://nodejs.org). I was using 0.10.26
+*   Open a shell/terminal/command prompt
 *   cd into the root of the repo you cloned (eg. `cd HappyFunTimes`)
 *   type `npm install` which will install needed node modules locally
 *   type `node server/server.js` which will start the server.
 
-Open a browser window and go to `http://localhost:8080/` and choose a game
-In other window (preferable a window, not a tab), go to `http://localhost:8080` and
-choose the corresponding controller.
+Open a browser window and go to `http://localhost:8080/examples/<nameofgame>/gameview.html`
+In other window (preferably a window, not a tab), go to `http://localhost:8080` and
+choose the game.
 
 If you have other computers or smartphones on the same network look up the ip address of
-the machine running the game (see `ifconfig` on OSX/Linux or `ipconfig` on Windows) then
-go to `http://ipaddress:8080` from those machines. For example on my home network it was
-`http://192.168.1.12:8080`
+the machine running the game (see `ifconfig` on OSX/Linux, the Network Preferneces on OSX,
+or `ipconfig` on Windows) then go to `http://ipaddress:8080` from those machines.
+For example on my home network it was `http://192.168.1.12:8080`
 
-You can simulate other machines joining the game but opening more windows (preferred)
+You can simulate other machines joining the game but opening more windows
 or tabs in your browser.
 
 Note: There is no reason the machine running the relayserver needs to be the same as the
 machine running the game. Also, if the machine is accessable from the internet
 you don't need to be on the same network. Of course there will be far more lag over
-the internet or especially over cellular networks but depending on the game that
+the internet or especially over cellular networks but depending on the type of game that
 might be ok.
 
 Windows docs
@@ -278,10 +344,20 @@ Making It Simple For Players To Get Started
 Asking players to connect to a local network and then type in some obscure URL like
 `http://169.234.174.30:8080` is arguably too many steps.
 
-One solution is to make the computer running the relayserver a WiFi hotspot. On OSX this is
-as simple as picking **Create Network...** from the WiFi menu. After that you run a DHCP
-server and a DNS server. The DHCP server tells machines connecting to your network that
-you're who they should ask for DNS. The DNS server redirects all traffic to your machine.
+One solution. Use a QR code. Unfortunately iOS doesn't have a built in reader.
+
+Another solution. Use a URL shortener. Not sure if `http://goo.gl/D3BfG4` is better or
+worse than `http://169.234.174.30:8080`
+
+The best solution is probably to setup a network router that redirects all traffic
+to the relaysever. That way users can connect to your router and going to any webpage
+will take them to the game. **This is easier than it sounds**.
+
+I'm still working on the best solution but for example on OSX
+you can pick **Create Network...** from the WiFi menu. After that you run a DHCP
+server (build into OSX) and a DNS server (which I've provided in the extras folder).
+The DHCP server tells machines connecting to your network that
+your machine is who they should ask for DNS. The DNS server redirects all traffic to your machine.
 
 Once setup you can tell players to connect their phone to your network and then go to
 any webpage and it will come up.
@@ -358,12 +434,12 @@ Notes
 
 *   Does it work on Windows and Linux?
 
-    The clients of course run in any modern browser. The game also run in
+    The clients of course run in any modern browser. The game also runs in
     whatever environment you've created them for. Most of the samples here
     are HTML and so should run in any modern browser on any platform.
 
-    As for the relayserver I've only run it on OSX so far. I suspect it works
-    fine in both Windows and Linux
+    As for the relayserver I've only run it on OSX, Linux and Windows with
+    no problems.
 
 *   Why not WebRTC?
 

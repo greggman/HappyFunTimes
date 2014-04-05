@@ -1,3 +1,7 @@
+*   move main loop to lib.
+*   move elaspedTime to global
+*   rename entitysystem.deleteEntity to removeEntity
+
 *   remove android single touch from powpow
 
     When this was first written single touch android phones were common.
@@ -40,7 +44,9 @@
 *   make sample games
 
     *   platformer
-    *   rythym
+    *   8way shooter
+    *   unity character controller
+    *   rougelike
     *   quiz
 
         send question Q + 4 answers, display on phone and on game. On game show counts
@@ -86,6 +92,8 @@
 Done
 ----
 
+*   make examples
+    *   rythym
 *   Figure out what to do when game disconnects.
 *   relayserver should tell clients when game connects/disconnects?
 *   give each game an id so one relayserver can run multiple games
