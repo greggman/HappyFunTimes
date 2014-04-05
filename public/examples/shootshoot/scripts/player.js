@@ -30,7 +30,7 @@
  */
 "use strict";
 
-define(['./2d', './shot'], function(M2D, Shot) {
+define(['../../scripts/2d', './shot'], function(M2D, Shot) {
   /**
    * Player represnt a player in the game.
    * @constructor

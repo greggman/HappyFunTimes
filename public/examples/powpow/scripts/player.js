@@ -32,7 +32,7 @@
 
 tdl.require('tdl.math');
 
-define(['./2d', './ships', './shot'], function(M2D, Ships, Shot) {
+define(['../../scripts//2d', './ships', './shot'], function(M2D, Ships, Shot) {
   /**
    * Player represnt a player in the game.
    * @constructor

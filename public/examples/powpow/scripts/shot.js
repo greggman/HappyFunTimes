@@ -30,7 +30,7 @@
  */
 "use strict";
 
-define(['./2d'], function(M2D) {
+define(['../../scripts/2d'], function(M2D) {
   /**
    * A shot.
    * @constructor
