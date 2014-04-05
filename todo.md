@@ -1,6 +1,7 @@
 *   move main loop to lib.
 *   move elaspedTime to global
 *   rename entitysystem.deleteEntity to removeEntity
+*   make entitysystem shared.
 
 *   remove android single touch from powpow
 

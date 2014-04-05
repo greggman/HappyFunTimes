@@ -38,10 +38,10 @@ var main = function(
     GameServer,
     LocalNetPlayer,
     AudioManager,
+    EntitySystem,
     Input,
     Misc,
     Speedup,
-    EntitySystem,
     PlayerManager) {
 
   var g_debug = false;
@@ -179,10 +179,10 @@ requirejs(
   [ '../../../scripts/gameserver',
     '../../../scripts/localnetplayer',
     '../../scripts/audio',
+    '../../scripts/entitysystem',
     '../../scripts/input',
     '../../scripts/misc',
     '../../scripts/speedup',
-    './entitysystem',
     './playermanager',
   ],
   main

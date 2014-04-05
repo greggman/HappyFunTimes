@@ -58,14 +58,14 @@ var main = function(
     GameServer,
     LocalNetPlayer,
     AudioManager,
+    EntitySystem,
     Misc,
     CanvasRenderer,
     WebGLRenderer,
     PlayerManager,
     MetaQueuePlayer,
     QueueManager,
-    ScoreManager,
-    EntitySystem) {
+    ScoreManager) {
 
   g_run = function() {
     var g_canvas;
@@ -359,6 +359,7 @@ requirejs(
   [ '../../../scripts/gameserver',
     '../../../scripts/localnetplayer',
     '../../scripts/audio',
+    '../../scripts/entitysystem',
     '../../scripts/misc',
     'canvasrenderer',
     'webglrenderer',
@@ -366,7 +367,6 @@ requirejs(
     'metaplayer',
     'queuemanager',
     'scoremanager',
-    'entitysystem',
   ],
   main
 );
