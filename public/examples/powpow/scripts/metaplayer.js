@@ -46,7 +46,7 @@ define(["./2d", "./player"], function(M2D, Player) {
   };
   tdl.base.inherit(MetaQueuePlayer, Player);
 
-  MetaQueuePlayer.prototype.send = function() {
+  MetaQueuePlayer.prototype.sendCmd = function() {
     // do nothing.
   };
 

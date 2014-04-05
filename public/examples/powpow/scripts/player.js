@@ -97,7 +97,7 @@ define(['./2d', './ships', './shot'], function(M2D, Ships, Shot) {
       if (isMetaQueuePlayer) {
         this.setState('fly');
       } else {
-        if (g.haveServer || this.services.playerManager.getNumActivePlayers >= 2) {
+        if (g.haveServer || this.services.playerManager.getNumActivePlayers() >= 2) {
           this.addToQueue();
         } else {
           this.setState('fly');
