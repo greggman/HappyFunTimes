@@ -41,13 +41,28 @@ define(
   // called with pad id (0 left, 1 right) and direction
   // where
   //
-  //    0     -1 = no touch
-  //  7 | 1
+  //    2     -1 = no touch
+  //  3 | 1
   //   \|/
-  // 6--+--2
+  // 4--+--0
   //   /|\
-  //  5 | 3
-  //    4
+  //  5 | 7
+  //    6
+  //
+  // Note: this matches trig functions you can do this
+  //
+  //     var angle = dir * Math.PI / 4;
+  //     var dx    = Math.cos(angle);
+  //     var dy    = Math.sin(angle);
+  //
+  // for +y up (ie, normal for 3d)
+  //
+  // In 2d you'd probably want
+  //
+  //     var angle =  dir * Math.PI / 4;
+  //     var dx    =  Math.cos(angle);
+  //     var dy    = -Math.sin(angle);
+  //
   var setupVirtualDPads = function(container, callback) {
     //var ctx = $("c").getContext("2d");
     //ctx.canvas.width = ctx.canvas.clientWidth;
@@ -91,28 +106,8 @@ define(
     ];
 
     var computeDir = function(x, y) {
-      //         PI
-      //          |
-      // -.5 PI --+-- .5 PI
-      //          |
-      //          0
-      var angle = Math.atan2(x, y);
-      //          0,2PI
-      //           |
-      //   0.5PI --+-- 1.5 PI
-      //           |
-      //           PI
-      angle += Math.PI;
-
-      //
-      //
-      //
-      //
-      //
-      angle += Math.PI / 8;
-      angle %= Math.PI * 2;
-
-      return (8 - Math.floor(angle / (Math.PI / 4))) % 8;
+      var angle = Math.atan2(-y, x) + Math.PI * 2 + Math.PI / 8;
+      return (Math.floor(angle / (Math.PI / 4))) % 8;
     };
 
     var updatePad = function(pad, padId) {
@@ -202,14 +197,14 @@ define(
   //   });
   var dirSymbols = { };
   dirSymbols[-1] = String.fromCharCode(0x2751);
-  dirSymbols[ 0] = String.fromCharCode(0x2191);
-  dirSymbols[ 1] = String.fromCharCode(0x2197);
-  dirSymbols[ 2] = String.fromCharCode(0x2192);
-  dirSymbols[ 3] = String.fromCharCode(0x2198);
-  dirSymbols[ 4] = String.fromCharCode(0x2193);
-  dirSymbols[ 5] = String.fromCharCode(0x2199);
-  dirSymbols[ 6] = String.fromCharCode(0x2190);
-  dirSymbols[ 7] = String.fromCharCode(0x2196);
+  dirSymbols[ 0] = String.fromCharCode(0x2192); // right
+  dirSymbols[ 1] = String.fromCharCode(0x2197); // up-right
+  dirSymbols[ 2] = String.fromCharCode(0x2191); // up
+  dirSymbols[ 3] = String.fromCharCode(0x2196); // up-left
+  dirSymbols[ 4] = String.fromCharCode(0x2190); // left
+  dirSymbols[ 5] = String.fromCharCode(0x2199); // down-left
+  dirSymbols[ 6] = String.fromCharCode(0x2193); // down
+  dirSymbols[ 7] = String.fromCharCode(0x2198); // down-right
 
   return {
     dirSymbols: dirSymbols,

@@ -92,13 +92,28 @@ define(function() {
   // called with pad id (0 left, 1 right) and direction
   // where
   //
-  //    0     -1 = not pressed
-  //  7 | 1
+  //    2     -1 = not pressed
+  //  3 | 1
   //   \|/
-  // 6--+--2
+  // 4--+--0
   //   /|\
-  //  5 | 3
-  //    4
+  //  5 | 7
+  //    6
+  //
+  // Note: this matches trig functions you can do this
+  //
+  //     var angle = dir * Math.PI / 4;
+  //     var dx    = Math.cos(angle);
+  //     var dy    = Math.sin(angle);
+  //
+  // for +y up (ie, normal for 3d)
+  //
+  // In 2d you'd probably want
+  //
+  //     var angle =  dir * Math.PI / 4;
+  //     var dx    =  Math.cos(angle);
+  //     var dy    = -Math.sin(angle);
+  //
   var setupKeyboardDPadKeys = function(callback) {
     var g_dirBits = [0, 0];
     var g_excludeBits = [0, 0];
@@ -116,21 +131,21 @@ define(function() {
 
     var bitsToDir = [
       -1, // 0
-       6, // 1
-       2, // 2
-      -1, // 3
-       0, // 4
-       7, // 5
-       1, // 6
-      -1, // 7
-       4, // 8
-       5, // 9
-       3, // 10
-      -1, // 11
-      -1, // 12
-      -1, // 13
-      -1, // 14
-      -1, // 15
+       4, // 1      l
+       0, // 2     r
+      -1, // 3     rl
+       2, // 4    u
+       3, // 5    u l
+       1, // 6    ur
+      -1, // 7    url
+       6, // 8   d
+       5, // 9   d  l
+       7, // 10  d r
+      -1, // 11  d rl
+      -1, // 12  du
+      -1, // 13  du l
+      -1, // 14  dur
+      -1, // 15  durl
     ];
 
     var setBit = function(keyCode, value) {

@@ -1,0 +1,172 @@
+/*
+ * Copyright 2014, Gregg Tavares.
+ * All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are
+ * met:
+ *
+ *     * Redistributions of source code must retain the above copyright
+ * notice, this list of conditions and the following disclaimer.
+ *     * Redistributions in binary form must reproduce the above
+ * copyright notice, this list of conditions and the following disclaimer
+ * in the documentation and/or other materials provided with the
+ * distribution.
+ *     * Neither the name of Gregg Tavares. nor the names of its
+ * contributors may be used to endorse or promote products derived from
+ * this software without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+ * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+ * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+ * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+ * OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+ * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+ * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+ * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+ * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+ * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ */
+"use strict";
+
+define(['./2d', './shot'], function(M2D, Shot) {
+  /**
+   * Player represnt a player in the game.
+   * @constructor
+   */
+  var Player = (function() {
+
+    return function(services, x, y, name, netPlayer) {
+      this.services = services;
+
+      services.entitySystem.addEntity(this);
+      services.drawSystem.addEntity(this);
+
+      this.netPlayer = netPlayer;
+      this.position = [x, y];
+      this.color = services.misc.randCSSColor();
+
+      netPlayer.addEventListener('disconnect', Player.prototype.handleDisconnect.bind(this));
+      netPlayer.addEventListener('pad', Player.prototype.handlePadMsg.bind(this));
+      netPlayer.addEventListener('setName', Player.prototype.handleNameMsg.bind(this));
+      this.sendCmd('setColor', {
+        color: this.color,
+      });
+
+      this.playerName = name;
+      this.pads = [-1, -1];
+      this.score = 0;
+      this.shootTimer = 0;
+      this.shots = [];
+
+      this.setState('idle');
+    };
+  }());
+
+  Player.prototype.setState = function(state) {
+    this.state = state;
+    this.process = this["state_" + state];
+  }
+
+  Player.prototype.removeFromGame = function() {
+    this.services.entitySystem.deleteEntity(this);
+    this.services.drawSystem.deleteEntity(this);
+    this.services.playerManager.removePlayer(this);
+  };
+
+  Player.prototype.handleDisconnect = function() {
+    this.removeFromGame();
+  };
+
+  Player.prototype.handlePadMsg = function(msg) {
+    this.pads[msg.pad] = msg.dir;
+  };
+
+  Player.prototype.handleNameMsg = function(msg) {
+    if (!msg.name) {
+      this.sendCmd('setName', {
+        name: this.playerName
+      });
+    } else {
+      this.playerName = msg.name.replace(/[<>]/g, '');
+    }
+  };
+
+  Player.prototype.sendCmd = function(cmd, data) {
+    this.netPlayer.sendCmd(cmd, data);
+  };
+
+  Player.prototype.updatePosition = function(elapsedTime) {
+    var globals = this.services.globals;
+    var dir = this.pads[0];
+    if (dir >= 0) {
+      var angle = dir * Math.PI / 4;
+      this.position[0] += Math.cos(angle) * globals.playerMoveSpeed * elapsedTime;
+      this.position[1] -= Math.sin(angle) * globals.playerMoveSpeed * elapsedTime;
+      this.position[0] = Math.max(0, Math.min(globals.width, this.position[0]));
+      this.position[1] = Math.max(1, Math.min(globals.height, this.position[1]));
+    }
+  };
+
+  Player.prototype.state_idle = function(elapsedTime) {
+    this.checkShoot(elapsedTime);
+    if (this.pads[0] >= 0) {
+      this.setState('move');
+      return;
+    }
+  };
+
+  Player.prototype.state_move = function(elapsedTime) {
+    this.checkShoot(elapsedTime);
+    if (this.pads[0] < 0) {
+      this.setState('idle');
+      return;
+    }
+    this.updatePosition(elapsedTime);
+  };
+
+  Player.prototype.shoot = function(direction) {
+    var globals = this.services.globals;
+    if (this.shots.length >= globals.maxShotsPerPlayer) {
+      this.removeShot(this.shots[0]);
+    }
+
+    this.services.audioManager.playSound('fire');
+    var angle = direction * Math.PI / 4;
+    var shot = new Shot(
+      this.services,
+      this.position[0] + Math.cos(angle) * 15,
+      this.position[1] - Math.sin(angle) * 15,
+      angle, this);
+    this.shots.push(shot);
+  };
+
+  Player.prototype.removeShot = function(shot) {
+    var ndx = this.shots.indexOf(shot);
+    this.shots.splice(ndx, 1);
+    shot.destroy();
+  };
+
+  Player.prototype.checkShoot = function(elapsedTime) {
+    var globals = this.services.globals;
+    if (this.pads[1] >= 0) {
+      if (this.shootTimer <= 0) {
+        this.shoot(this.pads[1]);
+        this.shootTimer = globals.playerShotRate;
+      } else {
+        this.shootTimer -= elapsedTime;
+      }
+    } else {
+      this.shootTimer = 0;
+    }
+  };
+
+  Player.prototype.draw = function(ctx) {
+    ctx.fillStyle = this.color;
+    ctx.fillRect(this.position[0], this.position[1], 16, 16);
+  };
+
+  return Player;
+});
+

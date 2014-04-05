@@ -39,15 +39,11 @@ var main = function(
     Touch) {
   var g_client;
   var g_audioManager;
-  var g_clock;
-  var g_grid;
-  var g_instrument;
-  var g_left = false;
-  var g_right = false;
-  var g_fire = false;
 
   var globals = {
+    debug: false,
   };
+  Misc.applyUrlSettings(globals);
 
   function $(id) {
     return document.getElementById(id);
@@ -58,7 +54,7 @@ var main = function(
   }
 
   g_client = new GameClient({
-    gameId: "jumpjump",
+    gameId: "shootshoot",
   });
 
   function showConnected() {
@@ -87,64 +83,16 @@ var main = function(
 
   g_audioManager = new AudioManager();
 
-  function handleKeyDown(keyCode, state) {
-    switch(keyCode) {
-    case 37: // left
-      if (!g_left) {
-        g_left = true;
-        g_client.sendCmd('move', {
-            dir: -1
-        });
-      }
-      break;
-    case 39: // right
-      if (!g_right) {
-        g_right = true;
-        g_client.sendCmd('move', {
-            dir: 1
-        });
-      }
-      break;
-    case 90: // z
-      if (!g_jump) {
-        g_jump = true;
-        g_client.sendCmd('jump', {
-            jump: 1
-        });
-      }
-      break;
+  var sendPad = function(padId, dir) {
+    if (globals.debug) {
+      console.log("pad: " + padId + " dir: " + Touch.dirSymbols[dir] + " (" + dir + ")");
     }
-  }
+    g_client.sendCmd('pad', {pad: padId, dir: dir});
+  };
 
-  function handleKeyUp(keyCode, state) {
-    switch(keyCode) {
-    case 37: // left
-      g_left = false;
-      g_client.sendCmd('move', {
-          dir: (g_right) ? 1 : 0
-      });
-      break;
-    case 39: // right
-      g_right = false;
-      g_client.sendCmd('move', {
-          dir: (g_left) ? -1 : 0
-      });
-      break;
-    case 90: // z
-      g_jump = false;
-      g_client.sendCmd('jump', {
-          jump: 0
-      });
-      break;
-    }
-  }
-
-  Input.setupControllerKeys(handleKeyDown, handleKeyUp);
-
+  Input.setupKeyboardDPadKeys(sendPad);
   var container = $("container");
-  Touch.setupVirtualDPads(container, function(padId, dir) {
-    console.log("pad: " + padId + " dir: " + Touch.dirSymbols[dir]);
-  });
+  Touch.setupVirtualDPads(container, sendPad);
 
 
   if (globals.debug) {
