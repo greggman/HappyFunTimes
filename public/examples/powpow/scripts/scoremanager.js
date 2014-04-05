@@ -56,7 +56,7 @@ define(["./PListManager"], function(PListManager) {
         return -1;
       else if (a.score < b.score)
         return 1;
-      else if (a.id < b.id)
+      else if (a.playerName < b.playerName)
         return -1;
       else
         return 1;

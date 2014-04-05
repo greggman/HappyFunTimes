@@ -297,7 +297,7 @@ define(['../../scripts//2d', './ships', './shot'], function(M2D, Ships, Shot) {
     var self = this;
     this.services.playerManager.forEachActivePlayer(function(player) {
       // If we are not ourself and we are not the ghost
-      if (player.id != self.id) {
+      if (player !== self) {
         if (player.collide(self.position[0], self.position[1], 5)) {
           player.die(self, self, true);
           hit = player;

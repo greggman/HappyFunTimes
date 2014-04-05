@@ -36,6 +36,7 @@ define(['./player'], function(Player) {
     this.services = services;
     this.players = [];
     this.activePlayers = [];
+    this.removeFromActiveQueue = [];
   };
 
   PlayerManager.prototype.createPlayer = function(x, y, direction, name, netPlayer) {
@@ -69,21 +70,28 @@ define(['./player'], function(Player) {
     this.activePlayers.push(player);
   };
 
-  PlayerManager.prototype.removeFromActive = function(player) {
-    for (var ii = 0; ii < this.activePlayers.length; ++ii) {
-      if (this.activePlayers[ii].id == player.id) {
-        this.activePlayers.splice(ii, 1);
-        return;
+  PlayerManager.prototype.processRemoveFromActiveQueue = function() {
+    while (this.removeFromActiveQueue.length) {
+      var player = this.removeFromActiveQueue.pop();
+      var index = this.activePlayers.indexOf(player);
+      if (index >= 0) {
+        this.activePlayers.splice(index, 1);
       }
     }
   };
 
+  PlayerManager.prototype.removeFromActive = function(player) {
+    this.removeFromActiveQueue.push(player);
+  };
+
   PlayerManager.prototype.forEachPlayer = function(callback) {
     this.players.forEach(callback);
+    this.processRemoveFromActiveQueue();
   };
 
   PlayerManager.prototype.forEachActivePlayer = function(callback) {
     this.activePlayers.forEach(callback);
+    this.processRemoveFromActiveQueue();
   };
 
   // Should probably have a renderable object managed by a render manager or some shit like

@@ -143,20 +143,18 @@ define(["./PListManager"], function(PListManager) {
   };
 
   QueueManager.prototype.removeFromQueue = function(player) {
-    for (var ii = 0; ii < this.queue_.length; ++ii) {
-      if (this.queue_[ii].id == player.id) {
-        this.queue_.splice(ii, 1);
-        this.draw();
-        this.sendPlaces();
-        return;
-      }
+    var index = this.queue_.indexOf(player);
+    if (index >= 0) {
+      this.queue_.splice(index, 1);
+      this.draw();
+      this.sendPlaces();
+      return;
     }
-    for (var ii = 0; ii < this.launching_.length; ++ii) {
-      if (this.launching_[ii].id == player.id) {
-        this.launching_.splice(ii, 1);
-        this.draw();
-        return;
-      }
+    var index = this.launching_.indexOf(player);
+    if (index >= 0) {
+      this.launching_.splice(index, 1);
+      this.draw();
+      return;
     }
   };
 
