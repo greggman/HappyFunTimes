@@ -37,7 +37,7 @@ var Player = function(services, netPlayer, name) {
   this.name = name;
 };
 
-Player.prototype.process(elapsedTime) {
+Player.prototype.process() {
 
 };
 

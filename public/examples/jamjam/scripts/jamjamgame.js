@@ -413,14 +413,14 @@ var main = function(
     var then = clock.getTime();
     function render() {
       var now = clock.getTime();
-      var elapsedTime = now - then;
+      var globals.elapsedTime = now - then;
       then = now;
 
       //var x = Misc.randInt(150) + 500;
       //var y = Misc.randInt(150) + 300;
       //renderer.drawCircle([x, y], 40, [1,1,1,1]);
-      renderer.begin(elapsedTime);
-      renderer.end(elapsedTime);
+      renderer.begin();
+      renderer.end();
       requestAnimationFrame(render);
     }
     render();

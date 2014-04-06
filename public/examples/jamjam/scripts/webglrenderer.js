@@ -204,7 +204,7 @@ define(function() {
     return !!this.gl;
   };
 
-  WebGLRenderer.prototype.begin = function(elapsedTime) {
+  WebGLRenderer.prototype.begin = function() {
     this.resize();
     ++this.renderCount;
     this.screenDimensions[0] = 2 / this.canvas.width;
@@ -217,7 +217,7 @@ define(function() {
     gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT | gl.STENCIL_BUFFER_BIT);
   };
 
-  WebGLRenderer.prototype.end = function(elapsedTime) {
+  WebGLRenderer.prototype.end = function() {
     this.renderCircles();
 
     this.particleSystem.draw(this.projection, this.world, this.viewInverse);

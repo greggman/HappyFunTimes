@@ -46,7 +46,7 @@ define(function() {
     }
   };
 
-  CanvasRenderer.prototype.render = function(elapsedTime) {
+  CanvasRenderer.prototype.render = function() {
     this.resize();
     var ctx = this.ctx;
     //ctx.fillStyle = this.services.misc.randCSSColor();

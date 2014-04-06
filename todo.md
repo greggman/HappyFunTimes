@@ -1,5 +1,3 @@
-*   move main loop to lib.
-*   move elaspedTime to global
 
 *   remove android single touch from powpow
 
@@ -90,6 +88,13 @@
 
 Done
 ----
+
+*   move elaspedTime to global
+
+    I got tired of passing it around everywhere. Unity3D doesn't.
+    There are minuses for not passing it I suppose.
+    I might consider passing around a process context but for now
+    just made it a global (as in globals.elaspedTime)
 
 *   rename entitysystem.deleteEntity to removeEntity
 *   make entitysystem shared.
