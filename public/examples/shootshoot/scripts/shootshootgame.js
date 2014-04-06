@@ -154,14 +154,14 @@ var main = function(
   if (!globals.haveServer) {
     startLocalPlayers();
   }
-window.g = g_services;
+
   var then = Date.now() * 0.001;
   function render() {
     var now = Date.now() * 0.001;
-    var elapsedTime = now - then;
+    globals.elapsedTime = now - then;
     then = now;
 
-    g_entitySystem.processEntities(elapsedTime);
+    g_entitySystem.processEntities();
 
     resize(canvas);
 

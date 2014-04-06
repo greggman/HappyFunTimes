@@ -97,33 +97,33 @@ define(['../../scripts/2d', './shot'], function(M2D, Shot) {
     this.netPlayer.sendCmd(cmd, data);
   };
 
-  Player.prototype.updatePosition = function(elapsedTime) {
+  Player.prototype.updatePosition = function() {
     var globals = this.services.globals;
     var dir = this.pads[0];
     if (dir >= 0) {
       var angle = dir * Math.PI / 4;
-      this.position[0] += Math.cos(angle) * globals.playerMoveSpeed * elapsedTime;
-      this.position[1] -= Math.sin(angle) * globals.playerMoveSpeed * elapsedTime;
+      this.position[0] += Math.cos(angle) * globals.playerMoveSpeed * globals.elapsedTime;
+      this.position[1] -= Math.sin(angle) * globals.playerMoveSpeed * globals.elapsedTime;
       this.position[0] = Math.max(0, Math.min(globals.width, this.position[0]));
       this.position[1] = Math.max(1, Math.min(globals.height, this.position[1]));
     }
   };
 
-  Player.prototype.state_idle = function(elapsedTime) {
-    this.checkShoot(elapsedTime);
+  Player.prototype.state_idle = function() {
+    this.checkShoot();
     if (this.pads[0] >= 0) {
       this.setState('move');
       return;
     }
   };
 
-  Player.prototype.state_move = function(elapsedTime) {
-    this.checkShoot(elapsedTime);
+  Player.prototype.state_move = function() {
+    this.checkShoot();
     if (this.pads[0] < 0) {
       this.setState('idle');
       return;
     }
-    this.updatePosition(elapsedTime);
+    this.updatePosition();
   };
 
   Player.prototype.shoot = function(direction) {
@@ -148,14 +148,14 @@ define(['../../scripts/2d', './shot'], function(M2D, Shot) {
     shot.destroy();
   };
 
-  Player.prototype.checkShoot = function(elapsedTime) {
+  Player.prototype.checkShoot = function() {
     var globals = this.services.globals;
     if (this.pads[1] >= 0) {
       if (this.shootTimer <= 0) {
         this.shoot(this.pads[1]);
         this.shootTimer = globals.playerShotRate;
       } else {
-        this.shootTimer -= elapsedTime;
+        this.shootTimer -= globals.elapsedTime;
       }
     } else {
       this.shootTimer = 0;
