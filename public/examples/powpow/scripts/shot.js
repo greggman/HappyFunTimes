@@ -65,14 +65,15 @@ define(['../../scripts/2d'], function(M2D) {
     this.services.drawSystem.deleteEntity(this);
   };
 
-  Shot.prototype.process = function(elapsedTime) {
-    this.duration -= elapsedTime;
+  Shot.prototype.process = function() {
+    var globals = this.services.globals;
+    this.duration -= globals.elapsedTime;
     if (this.duration <= 0) {
       this.remove();
     } else {
-      var dx = -Math.sin(this.direction) * this.vel * elapsedTime;
-      var dy =  Math.cos(this.direction) * this.vel * elapsedTime;
-      M2D.updatePosWithWrap(this.position, dx, dy, this.services.globals.width, this.services.globals.height);
+      var dx = -Math.sin(this.direction) * this.vel * globals.elapsedTime;
+      var dy =  Math.cos(this.direction) * this.vel * globals.elapsedTime;
+      M2D.updatePosWithWrap(this.position, dx, dy, globals.width, globals.height);
 
       var hit = false;
       var self = this;

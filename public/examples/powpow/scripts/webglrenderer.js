@@ -43,9 +43,10 @@ tdl.require('tdl.textures');
 tdl.require('tdl.webgl');
 
 define(function() {
-  var WebGLRenderer = function(canvas, gl) {
+  var WebGLRenderer = function(services, canvas, gl) {
     var math = tdl.math;
     var fast = tdl.fast;
+    this.services = services;
     this.canvas = canvas;
 
     this.gl = gl;
@@ -392,7 +393,7 @@ define(function() {
     }
   };
 
-  WebGLRenderer.prototype.begin = function(elapsedTime) {
+  WebGLRenderer.prototype.begin = function() {
     ++this.renderCount;
     this.leadMarkInfo.on = false;
     this.ships = [];
@@ -410,7 +411,7 @@ define(function() {
     gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT | gl.STENCIL_BUFFER_BIT);
   };
 
-  WebGLRenderer.prototype.end = function(elapsedTime) {
+  WebGLRenderer.prototype.end = function() {
     this.renderShips();
     this.renderShields();
     this.renderShots();

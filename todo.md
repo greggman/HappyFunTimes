@@ -1,7 +1,5 @@
 *   move main loop to lib.
 *   move elaspedTime to global
-*   rename entitysystem.deleteEntity to removeEntity
-*   make entitysystem shared.
 
 *   remove android single touch from powpow
 
@@ -93,6 +91,8 @@
 Done
 ----
 
+*   rename entitysystem.deleteEntity to removeEntity
+*   make entitysystem shared.
 *   make examples
     *   rythym
 *   Figure out what to do when game disconnects.

@@ -177,7 +177,7 @@ var main = function(
     if (g_debug) {
       gl = tdl.webgl.makeDebugContext(gl, undefined, LogGLCall);
     }
-    var renderer = gl ? new WebGLRenderer(g_canvas, gl) : new CanvasRenderer(g_canvas);
+    var renderer = gl ? new WebGLRenderer(g_services, g_canvas, gl) : new CanvasRenderer(g_services, g_canvas);
 
     g_services.globals = globals;
     g_services.renderer = renderer;
@@ -216,7 +216,7 @@ var main = function(
         samples: 1,
       },
     };
-    var audioManager = new AudioManager(sounds);
+    var audioManager = new AudioManager(globals.audio ? sounds : {});
     g_services.audioManager = audioManager;
     var entitySys = new EntitySystem();
     g_services.entitySystem = entitySys;
@@ -241,26 +241,29 @@ var main = function(
 
     function render() {
       var now = (new Date()).getTime() * 0.001;
-      var elapsedTime = Math.min(now - then, 1 / 10);    // don't advance more then a 1/10 of a second;
+      globals.elapsedTime = Math.min(now - then, 1 / 10);    // don't advance more then a 1/10 of a second;
       then = now;
 
       renderer.resize();
       globals.width = g_canvas.width;
       globals.height = g_canvas.height;
 
-      queueMgr.process(elapsedTime);
-      entitySys.processEntities(elapsedTime);
+      queueMgr.process();
+      entitySys.processEntities();
       scoreMgr.update();
 
-      renderer.begin(elapsedTime);
+      renderer.begin();
 
       g_metaQueuePlayer.draw(renderer);
       playerManager.draw(renderer);
       drawSystem.processEntities(renderer);
+      drawSystem.forEachEntity(function(e) {
+        e.draw(renderer);
+      });
 
       //g_queueMgr.draw();
       scoreMgr.draw(renderer);
-      renderer.end(elapsedTime);
+      renderer.end();
 
       if (g_updateStatus) {
         g_updateStatus = false;

@@ -39,7 +39,7 @@ define(function() {
    * function.
    */
   function EntitySystem(opt_functionName) {
-    this.functionName = opt_functionName || "process";
+    this.functionName = opt_functionName || 'process';
     this.entities_ = [];
     this.removeEntities_ = [];
   }
@@ -66,6 +66,8 @@ define(function() {
     }
   };
 
+  // This seems kind of silly as you can just call forEachEntity
+  // though I'm not sure what's better.
   EntitySystem.prototype.processEntities = function() {
     for (var ii = 0; ii < this.entities_.length; ++ii) {
       var entity = this.entities_[ii];

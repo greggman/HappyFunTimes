@@ -158,9 +158,10 @@ define(["./PListManager"], function(PListManager) {
     }
   };
 
-  QueueManager.prototype.process = function(elapsedTime) {
+  QueueManager.prototype.process = function() {
+    var globals = this.services.globals;
     if (this.timer_ > 0) {
-      this.timer_ -= elapsedTime;
+      this.timer_ -= globals.elapsedTime;
     } else {
       if (this.queue_.length > 0 &&
           this.services.playerManager.getNumActivePlayers() + this.launching_.length < this.services.globals.maxActivePlayers) {

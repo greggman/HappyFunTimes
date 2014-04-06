@@ -32,7 +32,8 @@
 "use strict";
 
 define(["./ships"], function(Ships) {
-  var CanvasRenderer = function(canvas) {
+  var CanvasRenderer = function(services, canvas) {
+    this.services = services;
     this.canvas = canvas;
     this.ctx = canvas.getContext("2d");
     this.explosions = [];
@@ -69,13 +70,14 @@ define(["./ships"], function(Ships) {
     }
   };
 
-  CanvasRenderer.prototype.begin = function(elapsedTime) {
+  CanvasRenderer.prototype.begin = function() {
     ++this.renderCount;
     this.shieldCount = this.renderCount % this.shieldColors.length;
     this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
   };
 
-  CanvasRenderer.prototype.end = function(elapsedTime) {
+  CanvasRenderer.prototype.end = function() {
+    var globals = this.services.globals;
     var ctx = this.ctx;
     if (this.explosions.length > 0) {
       if (this.explosions[0].timer <= 0) {
@@ -84,7 +86,7 @@ define(["./ships"], function(Ships) {
     }
     for (var ii = 0; ii < this.explosions.length; ++ii) {
       var explosion = this.explosions[ii];
-      explosion.timer -= elapsedTime;
+      explosion.timer -= globals.elapsedTime;
       var l = Math.max(0, explosion.timer / 1);
       var radius = (1 - l) * 50 + 10;
       ctx.save();
@@ -102,7 +104,7 @@ define(["./ships"], function(Ships) {
     }
     for (var ii = 0; ii < this.shieldhits.length; ++ii) {
       var shieldhit = this.shieldhits[ii];
-      shieldhit.timer -= elapsedTime;
+      shieldhit.timer -= globals.elapsedTime;
       var l = Math.max(0, shieldhit.timer / 1);
       var radius = (1 - (shieldhit.timer / 1)) * 10 + 5;
       ctx.save();

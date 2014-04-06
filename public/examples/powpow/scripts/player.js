@@ -107,8 +107,9 @@ define(['../../scripts//2d', './ships', './shot'], function(M2D, Ships, Shot) {
     };
   }());
 
-  Player.prototype.timesUp = function(elapsedTime) {
-    this.timer -= elapsedTime;
+  Player.prototype.timesUp = function() {
+    var globals = this.services.globals;
+    this.timer -= globals.elapsedTime;
     return this.timer <= 0;
   };
 
@@ -194,8 +195,8 @@ define(['../../scripts//2d', './ships', './shot'], function(M2D, Ships, Shot) {
     this.busy = msg.busy;
   };
 
-  Player.prototype.state_queued = function(elapsedTime) {
-    this.updateDirection(elapsedTime);
+  Player.prototype.state_queued = function() {
+    this.updateDirection();
 
     // I'm not sure of an easy way to separate this.
     // I could make every player have a onQueued callback.
@@ -227,9 +228,9 @@ define(['../../scripts//2d', './ships', './shot'], function(M2D, Ships, Shot) {
     }
   };
 
-  Player.prototype.state_countdown = function(elapsedTime) {
-    this.updateDirection(elapsedTime);
-    if (this.timesUp(elapsedTime)) {
+  Player.prototype.state_countdown = function() {
+    this.updateDirection();
+    if (this.timesUp()) {
       this.position[0] = Math.random() * this.services.globals.width / 2;
       this.position[1] = Math.random() * this.services.globals.height;
       this.direction = Math.random() * Math.PI * 2;
@@ -242,17 +243,18 @@ define(['../../scripts//2d', './ships', './shot'], function(M2D, Ships, Shot) {
     }
   };
 
-  Player.prototype.state_launch = function(elapsedTime) {
-    this.updateDirection(elapsedTime);
-    if (this.timesUp(elapsedTime)) {
+  Player.prototype.state_launch = function() {
+    this.updateDirection();
+    if (this.timesUp()) {
       this.invincibilityTimer = this.services.globals.invincibilityDuration;
       this.setState('fly');
     }
   };
 
-  Player.prototype.updateDirection = function(elapsedTime) {
+  Player.prototype.updateDirection = function() {
+    var globals = this.services.globals;
     // turn player based on this.turn (-1, 0, 1)
-    this.direction += this.turnVel * this.turn * elapsedTime;
+    this.direction += this.turnVel * this.turn * globals.elapsedTime;
     this.direction = this.direction % (Math.PI * 2);
     // turn player based on target
     if (this.targetDir >= 0) {
@@ -268,23 +270,24 @@ define(['../../scripts//2d', './ships', './shot'], function(M2D, Ships, Shot) {
       delta = targetDir - this.direction;
       var turn = delta > 0 ? 1 : -1;
       var turnVel = Math.min(Math.abs(delta), this.turnVel);
-      this.direction += turnVel * turn * elapsedTime;
+      this.direction += turnVel * turn * globals.elapsedTime;
       this.direction = this.direction % (Math.PI * 2);
     }
   };
 
-  Player.prototype.state_fly = function(elapsedTime) {
-    this.updateDirection(elapsedTime);
-    var dx = -Math.sin(this.direction) * this.vel * elapsedTime;
-    var dy =  Math.cos(this.direction) * this.vel * elapsedTime;
+  Player.prototype.state_fly = function() {
+    var globals = this.services.globals;
+    this.updateDirection();
+    var dx = -Math.sin(this.direction) * this.vel * globals.elapsedTime;
+    var dy =  Math.cos(this.direction) * this.vel * globals.elapsedTime;
     M2D.updatePosWithWrap(this.position, dx, dy, this.services.globals.width, this.services.globals.height);
-    this.shootTimer = Math.max(this.shootTimer - elapsedTime, 0);
+    this.shootTimer = Math.max(this.shootTimer - globals.elapsedTime, 0);
     if (this.fire && this.shootTimer <= 0) {
       this.shoot();
       this.shootTimer = this.maxShots / this.shotDuration;
     }
     if (this.invincibilityTimer > 0) {
-      this.invincibilityTimer -= elapsedTime;
+      this.invincibilityTimer -= globals.elapsedTime;
     }
     this.checkCollisions();
   };
@@ -345,8 +348,8 @@ define(['../../scripts//2d', './ships', './shot'], function(M2D, Ships, Shot) {
   Player.prototype.onDie = function(killer) {
   };
 
-  Player.prototype.state_die = function(elapsedTime) {
-    if (this.timesUp(elapsedTime)) {
+  Player.prototype.state_die = function() {
+    if (this.timesUp()) {
       this.addToQueue();
     }
   };

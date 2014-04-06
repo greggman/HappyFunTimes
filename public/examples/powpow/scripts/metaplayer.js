@@ -101,11 +101,12 @@ define(["../../scripts/2d", "./player"], function(M2D, Player) {
     renderer.drawShip(this.position, this.direction, black);
   };
 
-  MetaQueuePlayer.prototype.state_fly = function(elapsedTime) {
+  MetaQueuePlayer.prototype.state_fly = function() {
+    var globals = this.services.globals;
     this.turn = 0;
     this.targetDir = [0, 0];
     this.fire = 0;
-    this.fade -= elapsedTime * this.fadeOutRate;
+    this.fade -= globals.elapsedTime * this.fadeOutRate;
 
     if (this.accum.turnCount) {
       this.turn = this.accum.turn / this.accum.turnCount;
@@ -123,12 +124,13 @@ define(["../../scripts/2d", "./player"], function(M2D, Player) {
       this.fade = 1;
     }
     this.accumClear();
-    Player.prototype.state_fly.call(this, elapsedTime);
+    Player.prototype.state_fly.call(this);
   };
 
-  MetaQueuePlayer.prototype.state_die = function(elapsedTime) {
-    this.fade -= elapsedTime * this.fadeOutRate;
-    if (this.timesUp(elapsedTime)) {
+  MetaQueuePlayer.prototype.state_die = function() {
+    var globals = this.services.globals;
+    this.fade -= globals.elapsedTime * this.fadeOutRate;
+    if (this.timesUp()) {
       this.position[0] = Math.random() * this.services.globals.width;
       this.position[1] = Math.random() * this.services.globals.height;
       this.direction = Math.random() * Math.PI * 2;
