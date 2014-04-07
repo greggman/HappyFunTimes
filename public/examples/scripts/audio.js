@@ -132,18 +132,19 @@ define(function() {
         div.style.overflow = "none";
         div.style.backgroundColor = "rgba(128,128,255, 0.5)";
         div.style.display = "flex";
+        div.style.textAlign = "center";
         div.style.alignItems = "center";
         div.style.justifyContent = "center";
         div.style.fontSize = "4em";
         div.style.color = "white";
-        div.innerText = "Tap to Start";
+        div.innerText = "Tap Twice To Start";
         var that = this;
         div.addEventListener('click', function() {
           ++count;
           if (count == 2) {
             // just playing any sound does not seem to work.
             var source = g_context.createOscillator();
-            source.frequency.value = 440;
+            source.frequency.value = 1;
             source.connect(g_context.destination);
             source.start(0);
             setTimeout(function() {
