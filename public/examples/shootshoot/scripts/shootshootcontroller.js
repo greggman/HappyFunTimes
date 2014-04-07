@@ -93,6 +93,9 @@ var main = function(
   Input.setupKeyboardDPadKeys(sendPad);
   var container = $("container");
   Touch.setupVirtualDPads(container, sendPad);
+  document.body.addEventListener('touchmove', function(e) {
+    e.preventDefault();
+  }, false);
 
 
   if (globals.debug) {

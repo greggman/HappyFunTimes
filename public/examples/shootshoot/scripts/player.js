@@ -50,9 +50,7 @@ define(['../../scripts/2d', './shot'], function(M2D, Shot) {
       netPlayer.addEventListener('disconnect', Player.prototype.handleDisconnect.bind(this));
       netPlayer.addEventListener('pad', Player.prototype.handlePadMsg.bind(this));
       netPlayer.addEventListener('setName', Player.prototype.handleNameMsg.bind(this));
-      this.sendCmd('setColor', {
-        color: this.color,
-      });
+      netPlayer.addEventListener('setColor', Player.prototype.handleSetColorMsg.bind(this));
 
       this.playerName = name;
       this.pads = [-1, -1];
@@ -91,6 +89,10 @@ define(['../../scripts/2d', './shot'], function(M2D, Shot) {
     } else {
       this.playerName = msg.name.replace(/[<>]/g, '');
     }
+  };
+
+  Player.prototype.handleSetColorMsg = function(msg) {
+    this.color = msg.color;
   };
 
   Player.prototype.sendCmd = function(cmd, data) {
