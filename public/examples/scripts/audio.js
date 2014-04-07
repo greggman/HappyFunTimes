@@ -181,7 +181,6 @@ define(function() {
       if (webAudioAPI) {
         console.log("Using Web Audio API");
         g_context = new webAudioAPI();
-window.a = g_context;
         g_createFn = WebAudioSound;
       } else {
         console.log("Using Audio Tag");
