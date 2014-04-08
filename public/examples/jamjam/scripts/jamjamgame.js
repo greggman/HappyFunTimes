@@ -413,7 +413,7 @@ var main = function(
     var then = clock.getTime();
     function render() {
       var now = clock.getTime();
-      var globals.elapsedTime = now - then;
+      globals.elapsedTime = now - then;
       then = now;
 
       //var x = Misc.randInt(150) + 500;

@@ -32,9 +32,16 @@ This lets you make games that support more than the typical 4 players.
 
     *   Access the camera, send selfies to the game.
 
+    *   Acesss the mic. Have each person use sounds to control something
+
     *   Use the device orientation API and rotate something in game to match
 
     *   Make a rhythm band where each device becomes an instrument.
+
+    *   Make a rhythm game like Parappa but each person is a different color
+        so that they each have to play their part at the right time
+
+
 
 *   The API is simple to use.
 

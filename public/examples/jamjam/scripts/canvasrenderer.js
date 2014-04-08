@@ -46,11 +46,14 @@ define(function() {
     }
   };
 
-  CanvasRenderer.prototype.render = function() {
+  CanvasRenderer.prototype.begin = function() {
     this.resize();
     var ctx = this.ctx;
     //ctx.fillStyle = this.services.misc.randCSSColor();
     //ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+  };
+
+  CanvasRenderer.prototype.end = function() {
   };
 
   return CanvasRenderer;
