@@ -1,4 +1,3 @@
-<!--
 /*
  * Copyright 2014, Gregg Tavares.
  * All rights reserved.
@@ -29,25 +28,70 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
--->
-<!DOCTYPE html>
-<html>
-<head>
-<title>HappyFunTimes Example Games</title>
-</head>
-<body>
-<h1>HappyFunTimes Example Games</h1>
-<div class="game"    style="display: none;" id="simple"><a href="examples/simple/index.html">Simple</a></div>
-<div class="game"    style="display: none;" id="supersimple"><a href="examples/simple/index.html">Super Simple</a></div>
-<div class="game"    style="display: none;" id="clocksync"><a href="examples/clocksync/index.html">Clocksync</a></div>
-<div class="game"    style="display: none;" id="powpow"><a href="examples/powpow/index.html">PowPow</a></div>
-<div class="game"    style="display: none;" id="jamjam"><a href="examples/jamjam/index.html">JamJam</a></div>
-<div class="game"    style="display: none;" id="jumpjump"><a href="examples/jumpjump/index.html">JumpJump</a></div>
-<div class="game"    style="display: none;" id="shootshoot"><a href="examples/shootshoot/index.html">ShootShoot</a></div>
-<div class="game"    style="display: none;" id="unitycharacterexample"><a href="examples/unitycharacterexample/index.html">Unity Character Example</a></div>
-<div class="game"    style="display: none;" id="orient"><a href="examples/deviceorientation/index.html">Orient</a></div>
-<div class="nogames" style="display: none;" id="nogames">No games currently running</div>
-</body>
-<script data-main="showgames.js" src="examples/scripts/require.js"></script>
-</html>
+"use strict";
+
+var main = function(GameClient) {
+
+  var g_name = "";
+  var g_client;
+
+  function $(id) {
+    return document.getElementById(id);
+  }
+
+  function logTo(id, str) {
+    var c = $(id);
+    var d = document.createElement("div");
+    d.appendChild(document.createTextNode(str));
+    c.appendChild(d);
+    while(d.children.length > 6) {
+      d.removeChild(d.firstChild);
+    }
+  }
+
+  function log() {
+    var s = ""
+    for (var ii = 0; ii < arguments.length; ++ii) {
+      s += arguments[ii].toString();
+    }
+    logTo("console", s);
+  }
+
+  function showConnected() {
+    $("disconnected").style.display = "none";
+  }
+
+  function showDisconnected() {
+    $("disconnected").style.display = "block";
+  }
+
+  g_client = new GameClient({
+    gameId: "orient",
+  });
+
+  g_client.addEventListener('connect', showConnected);
+  g_client.addEventListener('disconnect', showDisconnected);
+
+  var sendDeviceOrientation = function(eventData) {
+    g_client.sendCmd('orient', {
+      gamma: eventData.gamma,
+      beta: eventData.beta,
+      alpha: eventData.alpha,
+    });
+  };
+
+  if (!window.DeviceOrientationEvent) {
+    alert("Your device/browser does not support device orientation. Sorry");
+    return;
+  }
+
+  window.addEventListener('deviceorientation', sendDeviceOrientation, false);
+};
+
+// Start the main app logic.
+requirejs(
+  [ '../../../scripts/gameclient',
+  ],
+  main
+);
 

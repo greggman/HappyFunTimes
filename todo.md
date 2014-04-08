@@ -1,3 +1,13 @@
+*   make orientation example
+    *   use colors
+    *   random starting point
+    *   camera
+    *   shoot
+    *   explode
+    *   score
+
+*   make all games use 'name'. save in cookie. Have gameclient send it automatically?
+
 *   add touchmove preventdefault lib to all samples
 
 *   make dpad controller svg/image
@@ -33,6 +43,8 @@
 
 *   separate css
 
+*   short rhythm in cookie
+
 *   make public/index.html that lists games/examples
 
 *   remove window everywhere?
@@ -58,6 +70,8 @@
         a new player is added the current shape is subdivided.
 
         Not sure this is a fun idea.
+
+     *  Use device motion to play tennis like Wii (shake controller to return ball)
 
 *   abstract name stuff
 

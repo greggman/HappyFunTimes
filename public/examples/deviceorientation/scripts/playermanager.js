@@ -1,4 +1,3 @@
-<!--
 /*
  * Copyright 2014, Gregg Tavares.
  * All rights reserved.
@@ -29,25 +28,36 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
--->
-<!DOCTYPE html>
-<html>
-<head>
-<title>HappyFunTimes Example Games</title>
-</head>
-<body>
-<h1>HappyFunTimes Example Games</h1>
-<div class="game"    style="display: none;" id="simple"><a href="examples/simple/index.html">Simple</a></div>
-<div class="game"    style="display: none;" id="supersimple"><a href="examples/simple/index.html">Super Simple</a></div>
-<div class="game"    style="display: none;" id="clocksync"><a href="examples/clocksync/index.html">Clocksync</a></div>
-<div class="game"    style="display: none;" id="powpow"><a href="examples/powpow/index.html">PowPow</a></div>
-<div class="game"    style="display: none;" id="jamjam"><a href="examples/jamjam/index.html">JamJam</a></div>
-<div class="game"    style="display: none;" id="jumpjump"><a href="examples/jumpjump/index.html">JumpJump</a></div>
-<div class="game"    style="display: none;" id="shootshoot"><a href="examples/shootshoot/index.html">ShootShoot</a></div>
-<div class="game"    style="display: none;" id="unitycharacterexample"><a href="examples/unitycharacterexample/index.html">Unity Character Example</a></div>
-<div class="game"    style="display: none;" id="orient"><a href="examples/deviceorientation/index.html">Orient</a></div>
-<div class="nogames" style="display: none;" id="nogames">No games currently running</div>
-</body>
-<script data-main="showgames.js" src="examples/scripts/require.js"></script>
-</html>
+"use strict";
+
+define(['./player'], function(Player) {
+
+  var PlayerManager = function(services) {
+    this.services = services;
+    this.players = [];
+  };
+
+  PlayerManager.prototype.createPlayer = function(name, netPlayer) {
+    var player = new Player(this.services, name, netPlayer);
+    this.players.push(player);
+    return player;
+  }
+
+  PlayerManager.prototype.removePlayer = function(playerToRemove) {
+    var netPlayer = playerToRemove.netPlayer;
+    for (var ii = 0; ii < this.players.length; ++ii) {
+      var player = this.players[ii];
+      if (player.netPlayer === netPlayer) {
+        this.players.splice(ii, 1);
+        return;
+      }
+    }
+  };
+
+  PlayerManager.prototype.forEachPlayer = function(callback) {
+    this.players.forEach(callback);
+  };
+
+  return PlayerManager;
+});
 
