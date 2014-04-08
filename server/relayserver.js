@@ -133,6 +133,32 @@ var Player = function(client, relayServer, id) {
   this.client = client;
   this.relayServer = relayServer;
   this.id = id;
+  this.intervalId;
+  this.timeout = 5; // 5 seconds
+  this.timeoutCheckInterval = 2; // check every 2 seconds
+  this.waitingForPing = false;
+
+  var getTime = function() {
+    return Date.now() * 0.001;
+  };
+
+  var checkTimeout = function() {
+    // How much time has passed since last message
+    var now = getTime();
+    var elapsedTime = getTime() - this.timeOfLastMessageFromPlayer;
+    if (elapsedTime >= this.timeout) {
+      if (this.waitingForPing) {
+        // No ping from player. Kill this
+        this.game.removePlayer(this);
+        this.disconnect();
+      } else {
+        // send ping
+        this.waitingForPing = true;
+        this.send({cmd: '__ping__'});
+      }
+    }
+  }.bind(this);
+  this.intervalId = setInterval(checkTimeout, this.timeoutCheckInterval * 1000);
 
   var addPlayerToGame = function(data) {
     var game = this.relayServer.addPlayerToGame(this, data.gameId);
@@ -147,6 +173,7 @@ var Player = function(client, relayServer, id) {
   }.bind(this);
 
   var passMessageFromPlayerToGame = function(data) {
+    this.timeOfLastMessageFromPlayer = getTime();
     this.game.send({
       cmd: 'update',
       id: this.id,
@@ -154,10 +181,16 @@ var Player = function(client, relayServer, id) {
     });
   }.bind(this);
 
+  var pingAcknowledged = function(data) {
+    this.timeOfLastMessageFromPlayer = getTime();
+    this.waitingForPing = false;
+  }.bind(this);
+
   var messageHandlers = {
     'join':   addPlayerToGame,
     'server': assignAsServerForGame,
     'update': passMessageFromPlayerToGame,
+    'pong':   pingAcknowledged,
   };
 
   var onMessage = function(message) {
@@ -175,6 +208,7 @@ var Player = function(client, relayServer, id) {
     if (this.game) {
       this.game.removePlayer(this);
     }
+    this.disconnect();
   }.bind(this);
 
   client.on('message', onMessage);
@@ -182,7 +216,13 @@ var Player = function(client, relayServer, id) {
 };
 
 Player.prototype.send = function(msg) {
-  this.client.send(msg);
+  try {
+    this.client.send(msg);
+  } catch (e) {
+    console.error("error sending to client: " + e);
+    console.error("disconnecting");
+    this.disconnect();
+  }
 };
 
 Player.prototype.sendToGame = function(msg) {
@@ -192,9 +232,11 @@ Player.prototype.sendToGame = function(msg) {
 };
 
 Player.prototype.disconnect = function() {
+  clearInterval(this.intervalId);
   this.client.on('message', undefined);
   this.client.on('disconnect', undefined);
   this.client.close();
+
 };
 
 var Game = function(gameId, relayServer) {
