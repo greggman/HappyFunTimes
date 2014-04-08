@@ -37,8 +37,7 @@ using System.Text.RegularExpressions;
 
 namespace CSSParse {
 
-
-class Style {
+public class Style {
     static public Color ParseCSSColor(string s) {
         // I have no idea what all the color formats are. The ones here are
         // name:         red,              green,            purple
@@ -298,5 +297,5 @@ yellowgreen,ff9acd32";
         }
 */
 
-}  // namespace DeJson
+}  // namespace CSSParse
 

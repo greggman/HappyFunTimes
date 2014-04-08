@@ -38,6 +38,14 @@ var main = function(GameServer) {
   var itemSize = 15;
   var players = [];
 
+  var resizeCanvas = function() {
+    if (canvas.width != canvas.clientWidth ||
+        canvas.height != canvas.clientHeight) {
+      canvas.width = canvas.clientWidth;
+      canvas.height = canvas.clientHeight;
+    }
+  };
+
   var randInt = function(range) {
     return Math.floor(Math.random() * range);
   };
@@ -87,8 +95,8 @@ var main = function(GameServer) {
   };
 
   Player.prototype.movePlayer = function(cmd) {
-    this.position.x = cmd.x;
-    this.position.y = cmd.y;
+    this.position.x = Math.floor(cmd.x * canvas.clientWidth);
+    this.position.y = Math.floor(cmd.y * canvas.clientHeight);
     if (goal.hit(this.position)) {
       // This will generate a 'scored' event on the client (player's smartphone)
       // that corresponds to this player.
@@ -132,6 +140,7 @@ var main = function(GameServer) {
   var render = function() {
     ++frameCount;
 
+    resizeCanvas();
     ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
     players.forEach(function(player) {
       drawItem(player.position, player.color);

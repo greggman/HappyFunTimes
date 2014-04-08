@@ -79,15 +79,28 @@ public class MessageCmdData {
     public static void RegisterTypes(Deserializer deserializer) {
         MessageCmdDataCreator mcdc = new MessageCmdDataCreator();
 
-        Type[] types = System.Reflection.Assembly.GetExecutingAssembly().GetTypes();
+        // Should we go through all assemblies? For now just the one above
+        // and the UnityScript and CSharp ones?
+        AppDomain domain = System.Threading.Thread.GetDomain();
+        System.Reflection.Assembly[] assemblies = domain.GetAssemblies();
+        for (int i = 0; i < assemblies.Length; ++i) {
+            System.Reflection.Assembly assembly = assemblies[i];
+            if (assembly.FullName.Contains("-UnityScript") ||
+                assembly.FullName.Contains("-CSharp")) {
+                RegisterTypes(mcdc, assembly.GetTypes());
+            }
+        }
+
+        deserializer.RegisterCreator(mcdc);
+    }
+
+    private static void RegisterTypes(MessageCmdDataCreator mcdc, Type[] types) {
         foreach (Type type in types) {
             if (type.IsSubclassOf(typeof(MessageCmdData))) {
                 MessageCmdDataNameDB.RegisterTypeCommandName(type);
                 mcdc.RegisterCreator(type);
             }
         }
-
-        deserializer.RegisterCreator(mcdc);
     }
 
 }

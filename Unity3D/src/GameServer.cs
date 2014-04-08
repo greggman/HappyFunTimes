@@ -55,7 +55,11 @@ public class GameServer {
         m_eventProcessor = m_gameObject.AddComponent<EventProcessor>();
     }
 
-    public void Init(string url = "ws://localhost:8080") {
+    public void Init() {
+        Init("ws://localhost:8080");
+    }
+
+    public void Init(string url/* = "ws://localhost:8080" */) {
 
         if (m_socket == null) {
             m_socket = new WebSocket(url);

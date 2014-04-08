@@ -55,10 +55,10 @@ var main = function(input, GameClient) {
   //
   // This will generate a 'move' event in the corresponding
   // NetPlayer object in the game.
-  var sendMoveCmd = function(position) {
+  var sendMoveCmd = function(position, target) {
     client.sendCmd('move', {
-      x: position.x,
-      y: position.y,
+      x: position.x / target.clientWidth,
+      y: position.y / target.clientHeight,
     });
   };
 
@@ -75,12 +75,13 @@ var main = function(input, GameClient) {
 
   // Send a message to the game when the screen is touched
   inputElem.addEventListener('touchmove', function(event) {
-    sendMoveCmd(input.getRelativeCoordinates(event.target, event.touches[0]));
+    var position = input.getRelativeCoordinates(event.target, event.touches[0]);
+    sendMoveCmd(event.target);
     event.preventDefault();
   });
 
   inputElem.addEventListener('mousemove', function(event) {
-    sendMoveCmd(input.getRelativeCoordinates(event.target, event));
+    sendMoveCmd(input.getRelativeCoordinates(event.target, event), event.target);
   });
 
   // Update our score when the game tells us.

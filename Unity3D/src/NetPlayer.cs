@@ -38,6 +38,7 @@ namespace HappyFunTimes {
 public class NetPlayer {
 
     public delegate void TypedCmdEventHandler<T>(T eventArgs) where T : MessageCmdData;
+    public delegate void UntypedCmdEventHandler(Dictionary<string, object> data);
 
     private class CmdConverter<T> where T : MessageCmdData
     {

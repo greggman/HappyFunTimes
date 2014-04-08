@@ -17,8 +17,8 @@ class ExampleSimplePlayer : MonoBehaviour {
 
     [CmdName("move")]
     private class MessageMove : MessageCmdData {
-        public int x = 0;
-        public int y = 0;
+        public float x = 0;
+        public float y = 0;
     };
 
     // NOTE: This message is only sent, never received
@@ -42,7 +42,6 @@ class ExampleSimplePlayer : MonoBehaviour {
         m_rand = new System.Random();
         m_position = gameObject.transform.localPosition;
         m_color = new Color(0.0f, 1.0f, 0.0f);
-
         m_netPlayer.OnDisconnect += Remove;
         // Setup events for the different messages.
         m_netPlayer.RegisterCmdHandler<MessageColor>(OnColor);
@@ -62,14 +61,14 @@ class ExampleSimplePlayer : MonoBehaviour {
     }
 
     private void OnColor(MessageColor data) {
-        m_color = Style.ParseCSSColor(data.color);
+        m_color = CSSParse.Style.ParseCSSColor(data.color);
         gameObject.renderer.material.color = m_color;
     }
 
     private void OnMove(MessageMove data) {
         ExampleSimpleGameSettings settings = ExampleSimpleGameSettings.settings();
-        m_position.x = data.x;
-        m_position.z = settings.areaHeight - data.y - 1;  // because in 2D down is positive.
+        m_position.x = data.x * settings.areaWidth;
+        m_position.z = settings.areaHeight - (data.y * settings.areaHeight) - 1;  // because in 2D down is positive.
 
         gameObject.transform.localPosition = m_position;
     }

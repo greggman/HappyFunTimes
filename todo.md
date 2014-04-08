@@ -1,3 +1,10 @@
+*   add touchmove preventdefault lib to all samples
+
+*   make dpad controller svg/image
+
+*   decide best dead-space etc for dpad
+
+*   make shootshoot controller show a simple to rotate if in portrate mode
 
 *   remove android single touch from powpow
 
@@ -21,11 +28,6 @@
 *   Remove sound from clock sync or fix it.
 
 *   fix simple controls and game so they use full area?
-
-*   Add timeout to server.
-
-    If no input from player for more than N seconds disconnect player.
-    Let game choose timeout
 
 *   Get nice designs for games. Particularly controllers
 
@@ -88,6 +90,16 @@
 
 Done
 ----
+
+*   Add timeout to server.
+
+    If no input from player for more than N seconds disconnect player.
+    Let game choose timeout
+
+    *   Issue is conncetion is not lost if network is disconnected.
+
+    *   Maybe this. timeout 5 seconds. If timeout send 'ping'. 1 more second
+        and kill connection
 
 *   move elaspedTime to global
 

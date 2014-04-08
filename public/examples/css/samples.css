@@ -42,6 +42,15 @@ html, body {
   font-weight: bolder;
   text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
 }
+#status {
+    position: absolute;
+    padding: 1em;
+    background-color: rgba(0,0,0,0.5);
+    border-radius: 1em;
+    z-index: 5;
+    color: white;
+    margin: 5px;
+}
 #debug {
     position: absolute;
     top: 0px;
@@ -65,4 +74,6 @@ html, body {
   font-size: 48pt;
   font-weight: bold;
 }
-
+.instruction {
+  font-size: xx-large;
+}

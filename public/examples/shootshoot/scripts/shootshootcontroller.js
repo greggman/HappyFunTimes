@@ -62,7 +62,6 @@ var main = function(
   }
 
   function showDisconnected() {
-    stop = true;
     $("disconnected").style.display = "block";
   }
 
