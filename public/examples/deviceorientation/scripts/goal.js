@@ -32,78 +32,62 @@
 
 define(['../../scripts/three.min'], function(ThreeFoo) {
 
-  var g_meshes = [];
-  var getShotMesh = function(services) {
-    if (g_meshes.length == 0) {
-      var material = new THREE.MeshBasicMaterial({color: 0xFF0000});
-      var mesh = new THREE.Mesh(services.geometry.shotMesh, material);
-      g_meshes.push(mesh);
-    }
-    return g_meshes.pop();
-  };
-
-  var putShotMesh = function(mesh) {
-    g_meshes.push(mesh);
-  };
-
   /**
-   * A shot.
+   * The Goal.
    * @constructor
    */
-  function Shot(services, position, direction, owner) {
+  function Goal(services) {
     var globals = services.globals;
     this.services = services;
-    this.owner = owner;
-    this.duration = owner.shotDuration;
-    this.direction = direction;
-    this.drawCount = 0;
 
     this.services.entitySystem.addEntity(this);
 
-    this.root = getShotMesh(this.services);
+    this.material = new THREE.MeshPhongMaterial({
+      ambient: 0x808080,
+      color: 0x8080FF,
+      specular: 0xFFFFFF,
+      shininess: 30,
+      shading: THREE.FlatShading,
+    });
+    this.root = new THREE.Mesh(services.geometry.goalMesh, this.material);
     this.services.scene.add(this.root);
-    this.root.position.copy(position);
+
+    this.pickNewPosition();
   }
 
-  Shot.prototype.remove = function() {
-    if (this.owner) {
-      this.owner.removeShot(this);
-      this.owner = undefined;
-    }
+  Goal.prototype.pickNewPosition = function() {
+    var globals = this.services.globals;
+    this.root.position.x = (Math.random() * 2 - 1) * globals.areaSize;
+    this.root.position.y = (Math.random() * 2 - 1) * globals.areaSize;
+    this.root.position.z = (Math.random() * 2 - 1) * globals.areaSize;
   };
 
-  Shot.prototype.destroy = function() {
+  Goal.prototype.hit = function(position, radius) {
+    var radiusSq = radius * radius;
+    var dx = position.x - this.root.position.x;
+    var dy = position.y - this.root.position.y;
+    var dz = position.z - this.root.position.z;
+    var distSq = dx * dx + dy * dy + dz * dz;
+    return distSq < radiusSq;
+  };
+
+  Goal.prototype.remove = function() {
+  };
+
+  Goal.prototype.destroy = function() {
     this.services.entitySystem.deleteEntity(this);
     this.services.scene.remove(this.root);
-    putShotMesh(this.root);
   };
 
-  Shot.prototype.process = function() {
+  Goal.prototype.process = function() {
     var globals = this.services.globals;
-    ++this.drawCount;
-    this.duration -= globals.elapsedTime;
-    if (this.duration <= 0) {
-      this.remove();
-      return;
-    }
-
-    this.root.rotation.x += globals.elapsedTime * 1.1;
-    this.root.rotation.z += globals.elapsedTime * 1.31;
-
-    this.root.position.x += this.direction.x * globals.shotVelocity * globals.elapsedTime;
-    this.root.position.y += this.direction.y * globals.shotVelocity * globals.elapsedTime;
-    this.root.position.z += this.direction.z * globals.shotVelocity * globals.elapsedTime;
-
-    this.root.material.color.setHex(((this.drawCount >> 1) % 2) ? 0xFFFFFF : 0xFF0000);
-    this.root.material.needsUpdate;
-
-    var goal = this.services.goal;
-    if (goal.hit(this.root.position, globals.goalSize)) {
-      goal.pickNewPosition();
-      this.owner.scored();
-    }
+    this.material.color.setHSL(globals.time % 1, 1, 0.5);
+    this.material.needsUpdate = true;
+    this.root.rotation.x += globals.elapsedTime * 4.1;
+    this.root.rotation.z += globals.elapsedTime * 3.31;
   };
 
-  return Shot;
+  return Goal;
 });
+
 

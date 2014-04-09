@@ -36,6 +36,7 @@ var main = function(
     EntitySystem,
     ThreeFoo,
     Misc,
+    Goal,
     PlayerManager) {
 
   var g_canvas;
@@ -46,13 +47,17 @@ var main = function(
   // You can set these from the URL with
   // http://path/gameview.html?settings={name:value,name:value}
   var globals = {
+    audio: true,
+    showCorners: false,
     maxShots: 2,
-    shotDuration: 3,
-    shotVelocity: 300,
+    shotDuration: 5,
+    shotInterval: 1,
+    shotVelocity: 400,
+    goalSize: 40,
     port: 8080,
     haveServer: true,
-    width: 100,
-    height: 100,
+    areaSize: 300,
+    time: 0,
   };
 
   // g_debug = true;
@@ -81,15 +86,61 @@ var main = function(
   g_canvas = $("canvas");
   var renderer = new THREE.WebGLRenderer({canvas: g_canvas});
   g_services.renderer = renderer;
-  var camera = new THREE.PerspectiveCamera(70, g_canvas.clientWidth / g_canvas.clientHeight, 1, 1000);
+  var camera = new THREE.PerspectiveCamera(70, g_canvas.clientWidth / g_canvas.clientHeight, 1, 2000);
   g_services.camera = camera;
-  camera.position.z = 400;
+  camera.position.z = 800;
 
   var scene = new THREE.Scene();
   g_services.scene = scene;
   var geometry = {};
   g_services.geometry = geometry;
-  geometry.cube = new THREE.BoxGeometry(200, 200, 200);
+  geometry.playerMesh = new THREE.CylinderGeometry(
+    0, 20, 40, 4, 1, false);
+  geometry.shotMesh = new THREE.BoxGeometry(10, 10, 10);
+  geometry.goalMesh = new THREE.SphereGeometry(globals.goalSize, 16, 8);
+
+  var light1 = new THREE.DirectionalLight(0xE0E0FF, 1);
+  light1.position.set(200, 500, 200);
+  scene.add(light1);
+  var light1 = new THREE.DirectionalLight(0xFFE0E0, 0.5);
+  light1.position.set(-200, -500, -200);
+  scene.add(light1);
+
+//  var sphere = new THREE.SphereGeometry(50, 16, 8);
+//  var material = new THREE.MeshPhongMaterial({
+//    ambient: 0x030303,
+//    color: 0x0000FF,
+//    specular: 0xFFFFFF,
+//    shininess: 30,
+//    shading: THREE.FlatShading,
+//  });
+//  var mesh = new THREE.Mesh(sphere, material);
+//  scene.add(mesh);
+
+  if (globals.showCorners) {
+    var geo = new THREE.BoxGeometry(5, 5, 5);
+    var material = new THREE.MeshPhongMaterial({
+      ambient: 0x808080,
+      color: 0xFFFFFFFF,
+      specular: 0xFFFFFF,
+      shininess: 30,
+      shading: THREE.FlatShading,
+    });
+    var addMesh = function(x, y, z) {
+      var mesh = new THREE.Mesh(geo, material);
+      mesh.position.set(x, y, z);
+      scene.add(mesh);
+    };
+    addMesh(-globals.areaSize, -globals.areaSize, -globals.areaSize);
+    addMesh( globals.areaSize, -globals.areaSize, -globals.areaSize);
+    addMesh(-globals.areaSize,  globals.areaSize, -globals.areaSize);
+    addMesh( globals.areaSize,  globals.areaSize, -globals.areaSize);
+    addMesh(-globals.areaSize, -globals.areaSize,  globals.areaSize);
+    addMesh( globals.areaSize, -globals.areaSize,  globals.areaSize);
+    addMesh(-globals.areaSize,  globals.areaSize,  globals.areaSize);
+    addMesh( globals.areaSize,  globals.areaSize,  globals.areaSize);
+  }
+
 
   g_services.globals = globals;
   g_services.renderer = renderer;
@@ -123,11 +174,14 @@ var main = function(
   var playerManager = new PlayerManager(g_services);
   g_services.playerManager = playerManager;
 
+  g_services.goal = new Goal(g_services);
+
   var then = (new Date()).getTime() * 0.001;
   render();
   function render() {
     var now = (new Date()).getTime() * 0.001;
     globals.elapsedTime = Math.min(now - then, 1 / 10);    // don't advance more then a 1/10 of a second;
+    globals.time += globals.elapsedTime;
     then = now;
 
     if (g_canvas.width != g_canvas.clientWidth &&
@@ -140,6 +194,9 @@ var main = function(
     entitySys.processEntities();
     renderer.render(scene, camera);
 
+//    mesh.rotation.x += globals.elapsedTime * 0.2;
+//    mesh.rotation.z += globals.elapsedTime * 0.31;
+
     requestAnimationFrame(render, g_canvas);
   }
 };
@@ -151,6 +208,7 @@ requirejs(
     '../../scripts/entitysystem',
     '../../scripts/three.min',
     '../../scripts/misc',
+    'goal',
     'playermanager',
   ],
   main

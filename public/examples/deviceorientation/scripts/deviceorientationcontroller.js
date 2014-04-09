@@ -30,7 +30,7 @@
  */
 "use strict";
 
-var main = function(GameClient) {
+var main = function(GameClient, Misc) {
 
   var g_name = "";
   var g_client;
@@ -65,12 +65,21 @@ var main = function(GameClient) {
     $("disconnected").style.display = "block";
   }
 
+  function onScored(data) {
+
+  };
+
   g_client = new GameClient({
     gameId: "orient",
   });
 
   g_client.addEventListener('connect', showConnected);
   g_client.addEventListener('disconnect', showDisconnected);
+  g_client.addEventListener('scored', onScored);
+
+  var color = Misc.randCSSColor();
+  g_client.sendCmd('setColor', { color: color });
+  document.body.style.backgroundColor = color;
 
   var sendDeviceOrientation = function(eventData) {
     g_client.sendCmd('orient', {
@@ -91,6 +100,7 @@ var main = function(GameClient) {
 // Start the main app logic.
 requirejs(
   [ '../../../scripts/gameclient',
+    '../../scripts/misc',
   ],
   main
 );

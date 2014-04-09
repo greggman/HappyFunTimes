@@ -6,6 +6,8 @@
     *   explode
     *   score
 
+*   send no caching header? or at least optionally
+
 *   make all games use 'name'. save in cookie. Have gameclient send it automatically?
 
 *   add touchmove preventdefault lib to all samples

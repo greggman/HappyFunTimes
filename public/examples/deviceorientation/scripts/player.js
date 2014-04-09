@@ -30,7 +30,10 @@
  */
 "use strict";
 
-define(['../../scripts//2d', './shot'], function(M2D, Ships, Shot) {
+define(
+  [ '../../scripts/cssparse',
+    './shot',
+  ], function(CSSParse, Shot) {
   /**
    * Player represnt a player in the game.
    * @constructor
@@ -40,15 +43,30 @@ define(['../../scripts//2d', './shot'], function(M2D, Ships, Shot) {
     return function(services, name, netPlayer) {
       this.services = services;
       this.renderer = services.renderer;
+      var globals = services.globals;
 
       services.entitySystem.addEntity(this);
       this.netPlayer = netPlayer;
-      this.material = new THREE.MeshBasicMaterial({ color: 0x44AA44 });
-      this.mesh = new THREE.Mesh(services.geometry.cube, this.material);
-      services.scene.add(this.mesh);
+      this.material = new THREE.MeshPhongMaterial({
+        ambient: 0x808080,
+        color: 0x8080FF,
+        specular: 0xFFFFFF,
+        shininess: 30,
+        shading: THREE.FlatShading,
+      });
+      this.mesh = new THREE.Mesh(services.geometry.playerMesh, this.material);
+      this.root = new THREE.Object3D();
+      this.mid = new THREE.Object3D();
+
+      this.pickNewPosition();
+
+      this.mid.add(this.mesh);
+      this.root.add(this.mid);
+      services.scene.add(this.root);
 
       netPlayer.addEventListener('disconnect', Player.prototype.handleDisconnect.bind(this));
       netPlayer.addEventListener('orient', Player.prototype.handleOrient.bind(this));
+      netPlayer.addEventListener('setColor', Player.prototype.handleSetColor.bind(this));
 
       var g = this.services.globals;
 
@@ -60,10 +78,18 @@ define(['../../scripts//2d', './shot'], function(M2D, Ships, Shot) {
       this.score = 0;
       this.timer = 0;
       this.invincibilityTimer = 0;
+      this.lookAt = new THREE.Vector3(0,0,0);
 
       this.setState('fire');
     };
   }());
+
+  Player.prototype.pickNewPosition = function() {
+    var globals = this.services.globals;
+    this.root.position.x = (Math.random() * 2 - 1) * globals.areaSize;
+    this.root.position.y = (Math.random() * 2 - 1) * globals.areaSize;
+    this.root.position.z = (Math.random() * 2 - 1) * globals.areaSize;
+  };
 
   Player.prototype.timesUp = function() {
     var globals = this.services.globals;
@@ -76,17 +102,24 @@ define(['../../scripts//2d', './shot'], function(M2D, Ships, Shot) {
     this.process = this["state_" + state];
   }
 
+  Player.prototype.scored = function() {
+    this.sendCmd('scored', { points: 1 });
+    this.pickNewPosition();
+  };
+
   Player.prototype.shoot = function() {
     if (this.shots.length >= this.maxShots) {
       this.removeShot(this.shots[0]);
     }
 
     this.services.audioManager.playSound('fire');
+    var mat = this.mesh.matrixWorld.elements;
+    var direction = new THREE.Vector3(mat[4], mat[5], mat[6]);
     var shot = new Shot(
       this.services,
-      this.position[0] + -Math.sin(this.direction) * 15,
-      this.position[1] +  Math.cos(this.direction) * 15,
-      this.direction, this);
+      this.root.position,
+      direction,
+      this);
     this.shots.push(shot);
   };
 
@@ -97,11 +130,10 @@ define(['../../scripts//2d', './shot'], function(M2D, Ships, Shot) {
   };
 
   Player.prototype.removeFromGame = function() {
-    this.services.queueManager.removeFromQueue(this);
     while (this.shots.length) {
       this.removeShot(this.shots[0]);
     }
-    this.sevices.scene.remove(this.mesh);
+    this.services.scene.remove(this.root);
     this.services.entitySystem.deleteEntity(this);
     this.services.playerManager.removePlayer(this);
   };
@@ -112,15 +144,15 @@ define(['../../scripts//2d', './shot'], function(M2D, Ships, Shot) {
 
   Player.prototype.handleOrient = function(msg) {
     this.mesh.rotation.z = msg.gamma * -Math.PI / 180;
-    this.mesh.rotation.x = msg.beta * Math.PI / 180;
+    this.mid.rotation.x  = msg.beta  *  Math.PI / 180;
+    this.root.rotation.y = msg.alpha *  Math.PI / 180;
+
     this.targetDir = -1;
   };
 
-  Player.prototype.handleFireMsg = function(msg) {
-    this.fire = msg.fire;
-    if (this.fire == 0) {
-      this.shootTimer = 0;
-    }
+  Player.prototype.handleSetColor = function(msg) {
+    var color = CSSParse.parseCSSColor(msg.color, true);
+    this.material.color.setRGB(color[0], color[1], color[2]);
   };
 
   Player.prototype.sendCmd = function(cmd, data) {
@@ -128,6 +160,12 @@ define(['../../scripts//2d', './shot'], function(M2D, Ships, Shot) {
   };
 
   Player.prototype.state_fire = function() {
+    var globals = this.services.globals;
+    this.shootTimer += globals.elapsedTime;
+    if (this.shootTimer >= globals.shotInterval) {
+      this.shootTimer = 0;
+      this.shoot();
+    }
   };
 
   return Player;
