@@ -51,8 +51,9 @@ define(['../../scripts/2d', './shot'], function(M2D, Shot) {
       netPlayer.addEventListener('pad', Player.prototype.handlePadMsg.bind(this));
       netPlayer.addEventListener('setName', Player.prototype.handleNameMsg.bind(this));
       netPlayer.addEventListener('setColor', Player.prototype.handleSetColorMsg.bind(this));
+      netPlayer.addEventListener('busy', Player.prototype.handleBusyMsg.bind(this));
 
-      this.playerName = name;
+      this.name = name;
       this.pads = [-1, -1];
       this.score = 0;
       this.shootTimer = 0;
@@ -77,6 +78,14 @@ define(['../../scripts/2d', './shot'], function(M2D, Shot) {
     this.removeFromGame();
   };
 
+  Player.prototype.handleBusyMsg = function(msg) {
+    // The busy message is send by PlayerNameHandler when the user is editing their name.
+    // msg.busy = true means they are entering their name. false = they are not.
+    // This can be used to make the player invicible for a moment remove then from play etc.
+    // Of course that can be used to cheat by editing the name just before getting hit
+    // So it's up the game to decide what if anything to do.
+  };
+
   Player.prototype.handlePadMsg = function(msg) {
     this.pads[msg.pad] = msg.dir;
   };
@@ -84,10 +93,10 @@ define(['../../scripts/2d', './shot'], function(M2D, Shot) {
   Player.prototype.handleNameMsg = function(msg) {
     if (!msg.name) {
       this.sendCmd('setName', {
-        name: this.playerName
+        name: this.name
       });
     } else {
-      this.playerName = msg.name.replace(/[<>]/g, '');
+      this.name = msg.name.replace(/[<>]/g, '');
     }
   };
 
@@ -167,6 +176,7 @@ define(['../../scripts/2d', './shot'], function(M2D, Shot) {
   Player.prototype.draw = function(ctx) {
     ctx.fillStyle = this.color;
     ctx.fillRect(this.position[0], this.position[1], 16, 16);
+    ctx.fillText(this.name, this.position[0] + 10, this.position[1] - 8);
   };
 
   return Player;

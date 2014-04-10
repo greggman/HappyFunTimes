@@ -1,4 +1,3 @@
-<!--
 /*
  * Copyright 2014, Gregg Tavares.
  * All rights reserved.
@@ -29,57 +28,20 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
--->
-<!DOCTYPE html>
-<html>
-<head>
-  <meta charset="utf-8">
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+"use strict";
 
-  <meta name="HandheldFriendly" content="True">
-  <meta name="MobileOptimized" content="320">
-  <meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0, maximum-scale=1, user-scalable=no, minimal-ui">
-  <meta name="format-detection" content="telephone=no" />
-  <title>ShootShoot Controls</title>
-  <link rel="stylesheet" href="../css/samples.css">
-<script data-main="scripts/shootshootcontroller.js" src="../scripts/require.js"></script>
-<script>
-requirejs.config({
-  shim: {
-        '../../scripts/hand-1.3.7': {
-            //These script dependencies should be loaded before loading
-            //hand.js
-            deps: [],
-            //Once loaded, use the global 'HANDJS' as the
-            //module value.
-            exports: 'HANDJ',
-        },
-    },
+define(function() {
+
+  // When the device re-orients, at least on iOS, the page is scrolled down :(
+  window.addEventListener('orientationchange', function() {
+    window.scrollTo(0, 0);
+  }, false);
+
+  // Prevents the browser from sliding the page when the user slides their finger.
+  // At least on iOS.
+  document.body.addEventListener('touchmove', function(e) {
+    e.preventDefault();
+  }, false);
+
 });
-</script>
-</head>
-<body>
-<div id="container">
-  <div id="header">
-    <input type="text" id="name" />
-    <div id="menu"><img src="../css/gear-icon.svg"></div>
-  </div>
-  <div id="content">
-    <canvas class="fullsize" id="c"></canvas>
-    <div id="disconnected">
-      <div class="fullcenter">
-        <div class="instruction">Disconnected</div>
-        <div class="instruction" id="reload">click to reload</div>
-      </div>
-    </div>
-    <div id="debug">
-      <pre id="status">d</pre>
-      <div id="console"></div>
-    </div>
-  </div>
-</div>
-</body>
-</html>
-
 

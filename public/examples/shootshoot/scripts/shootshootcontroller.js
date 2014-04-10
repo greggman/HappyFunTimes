@@ -36,6 +36,8 @@ var main = function(
     Cookies,
     Input,
     Misc,
+    MobileHacks,
+    PlayerNameHandler,
     Touch) {
   var g_client;
   var g_audioManager;
@@ -76,6 +78,8 @@ var main = function(
   g_client.addEventListener('connect', showConnected);
   g_client.addEventListener('disconnect', showDisconnected);
 
+  var playerNameHandler = new PlayerNameHandler(g_client, $("name"));
+
   var color = Misc.randCSSColor();
   g_client.sendCmd('setColor', { color: color });
   document.body.style.backgroundColor = color;
@@ -92,10 +96,6 @@ var main = function(
   Input.setupKeyboardDPadKeys(sendPad);
   var container = $("container");
   Touch.setupVirtualDPads(container, sendPad);
-  document.body.addEventListener('touchmove', function(e) {
-    e.preventDefault();
-  }, false);
-
 
   if (globals.debug) {
     var status = $("status").firstChild;
@@ -111,6 +111,8 @@ requirejs(
     '../../scripts/cookies',
     '../../scripts/input',
     '../../scripts/misc',
+    '../../scripts/mobilehacks',
+    '../../scripts/playername',
     '../../scripts/touch',
   ],
   main
