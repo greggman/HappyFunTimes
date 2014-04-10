@@ -1,10 +1,9 @@
-*   make orientation example
-    *   use colors
-    *   random starting point
-    *   camera
-    *   shoot
-    *   explode
-    *   score
+*   make all samples share a header and CSS layout
+*   make all samples have a name at the top and a drop down gear menu
+*   make all samples disconnect correctly
+*   make all samples handle the sound starting
+    *   without overlay
+    *   and without sometimes not working
 
 *   send no caching header? or at least optionally
 
@@ -106,6 +105,12 @@
 
 Done
 ----
+
+*   make orientation example
+    *   use colors
+    *   random starting point
+    *   camera
+    *   shoot
 
 *   Add timeout to server.
 
