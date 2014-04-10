@@ -122,26 +122,12 @@ define(function() {
       var needUserGesture = iOS;
       if (needUserGesture) {
         var count = 0;
-        var div = document.createElement('div');
-        div.style.position = "absolute";
-        div.style.left = "0px";
-        div.style.top = "0px";
-        div.style.width = window.innerWidth + "px";
-        div.style.height = window.innerHeight + "px";
-        div.style.zIndex = 10000000;
-        div.style.overflow = "none";
-        div.style.backgroundColor = "rgba(128,128,255, 0.5)";
-        div.style.display = "flex";
-        div.style.textAlign = "center";
-        div.style.alignItems = "center";
-        div.style.justifyContent = "center";
-        div.style.fontSize = "4em";
-        div.style.color = "white";
-        div.innerText = "Tap Twice To Start";
+        var elem = window;
         var that = this;
-        div.addEventListener('click', function() {
+        var eventName = 'touchstart';
+        var playSoundToStartAudio = function() {
           ++count;
-          if (count == 2) {
+          if (count == 1) {
             // just playing any sound does not seem to work.
             var source = g_context.createOscillator();
             source.frequency.value = 1;
@@ -150,10 +136,11 @@ define(function() {
             setTimeout(function() {
               source.disconnect();
             }, 100);
-            div.parentNode.removeChild(div);
+            elem.removeEventListener(eventName, playSoundToStartAudio, false);
           }
-        });
-        document.body.appendChild(div);
+        }
+
+        elem.addEventListener(eventName, playSoundToStartAudio, false);
       }
     };
 
