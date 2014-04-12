@@ -129,6 +129,20 @@ html, body {
   margin-left: 0.5em;
   margin-right: 0.5em;
 }
+.instruction {
+  font-size: xx-large;
+  font-weight: bold;
+}
+/* phone landscape */
+@media only screen and (min-device-width : 320px) and (max-device-width: 568px) and (orientation: landscape) {
+    #name {
+        font-size: large;
+    }
+    .instruction {
+        font-size: x-large;
+    }
+}
+
 #outer {
   position: absolute;
   left: 0px;
@@ -195,7 +209,4 @@ html, body {
   font-size: xx-large;
   font-weight: bold;
 }
-.instruction {
-  font-size: xx-large;
-  font-weight: bold;
-}
+

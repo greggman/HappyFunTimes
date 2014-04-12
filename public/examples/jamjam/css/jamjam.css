@@ -10,6 +10,17 @@ td {
     font-family: Helvetica, Arial, sans-serif;
     font-weight: bold;
 }
+/* phone landscape */
+@media only screen and (min-device-width : 320px) and (max-device-width: 568px) and (orientation: landscape) {
+    td {
+        font-size: large;
+        width: 40px;
+        height: 40px;
+        border-radius: 7px;
+        border-size: 2px;
+    }
+}
+
 .noteOn {
     background-color: #fff;
     color: black;
