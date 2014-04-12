@@ -32,9 +32,22 @@
 
 define(function() {
 
+  var fixHeightHack = function() {
+    // Also fix all fucked up sizing
+    var elements = document.querySelectorAll(".fixheight");
+    for (var ii = 0; ii < elements.length; ++ii) {
+      var element = elements[ii];
+      var parent = element.parentNode;
+      if (parseInt(element.style.height) != parent.clientHeight) {
+        element.style.height = parent.clientHeight + "px";
+      }
+    }
+  };
+
   // When the device re-orients, at least on iOS, the page is scrolled down :(
   window.addEventListener('orientationchange', function() {
     window.scrollTo(0, 0);
+    fixHeightHack();
   }, false);
 
   // Prevents the browser from sliding the page when the user slides their finger.
@@ -43,5 +56,8 @@ define(function() {
     e.preventDefault();
   }, false);
 
+  return {
+    fixHeightHack: fixHeightHack,
+  };
 });
 
