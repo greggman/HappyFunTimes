@@ -1,155 +1,27 @@
-html, body {
-  width: 100%;
-  height: 100%;
-  border: 0px;
-  padding: 0px;
-  margin: 0px;
-  background-color: black; /* blue; */
-  font-family: sans-serif;
+td {
+    background-color: #ddd;
+    color: #ddd;
+    border: 3px solid #444;
+    border-radius: 10px;
+    width: 64px;
+    height: 64px;
+    text-align: center;
+    font-size: xx-large;
+    font-family: Helvetica, Arial, sans-serif;
+    font-weight: bold;
 }
-.instruction {
-  color: rgba(255,255,255,0.7);
+.noteOn {
+    background-color: #fff;
+    color: black;
+    border: 6px solid black;
 }
-* {
-  box-sizing: border-box;
+.notePlay {
+    background-color: #f00;
 }
-#surface {
-  width: 100%;
-  height: 100%;
-  gbackground-color: green;
-  gbackground-image: url(assets/waiting.png);
+.notePass {
+    border: 3px solid #fff;
 }
-#status {
-  gbackground-color: red;
-  width: 100%;
-  height: 300px;
-  overflow: auto;
-}
-#touchControls {
-  position: absolute;
-  top: 0px;
-  left: 0px;
-  z-index: 2;
-  width: 100%;
-  height: 100%;
-}
-#singleTouchControls {
-  position: absolute;
-  top: 0px;
-  left: 0px;
-  z-index: 3;
-  width: 100%;
-  height: 100%;
-  display: none;
-}
-#stcontrol {
-  background: url(assets/arrows.png) no-repeat center;
-}
-#singleTouchControls .canvas {
-  position relative;
-  z-index: 4;
-  border: 2px solid yellow;
-}
-#controlArea {
-  position: relative;
-  height: 90%;
-}
-#shipArea {
-  position: absolute;
-  top: 0px;
-  left: 0px;
-  border: 1px solid cyan;
-  z-index: 500;
-}
-#ship {
-  position: absolute;
-  left: 25%;
-  top: 25%;
-  width: 50%;
-  height: auto;
-}
-#controls {
-  position: absolute;
-  top: 0px;
-  left: 0px;
-  border: 1px solid yellow;
-}
-#keyControls {
-  position: absolute;
-  top: 0px;
-  left: 0px;
-  z-index: 3;
-  width: 100%;
-  height: 100%;
-  display: none;
-}
-.move {
-  float: left;
-  width: 50%;
-  height: 100%;
-  vertical-align: middle;
-  color: rgba(255, 255, 255, 0.5); /* black; */
-  gbackground-color: rgba(255, 255, 255, 0.2);
-  display: table-cell;
-}
-#tcmove.move, #tcfire.fire {
-  width: 100%
-}
-.fire {
-  float: right;
-  width: 50%;
-  height: 100%;
-  vertical-align: middle;
-  color: rgba(255, 255, 255, 0.75); /* white; */
-  gbackground-color: rgba(0, 0, 0, 0.2);
-}
-#singleTouchControls .stmove {
-  width: 100%;
-  height: 100%;
-}
-#top {
-  position: absolute;
-  top: 0px;
-  left: 0px;
-  gz-index: 4;
-  width: 100%;
-  height: 100%;
-}
-#text {
-  height: 10%;
-  background-color: blue;
-}
-#input {
-  display: none;
-}
-#disconnected {
-  position: absolute;
-  top: 0px;
-  left: 0px;
-  width: 100%;
-  height: 100%;
-  display: none;
-  background-color: black;
-  color: white;
-  text-align: center;
-  z-index: 1000;
-}
-#clock {
-  position: absolute;
-  top: 0px;
-  right: 0px;
-  font-family: monospace;
-  z-index: 1999;
-  color: white;
-}
-#log {
-  position: absolute;
-  top: 0px;
-  left: 0px;
-  width: 100%;
-  height: 100%;
-  color: white;
-  font-family: monospace;
-  z-index: 2000;
+table {
+    border-spacing: 10px;
 }
 

@@ -35,9 +35,12 @@ var main = function(
     SyncedClock,
     AudioManager,
     Cookies,
+    ExampleUI,
     Grid,
     Input,
-    Misc) {
+    Misc,
+    MobileHacks,
+    PlayerNameHandler) {
   var g_client;
   var g_audioManager;
   var g_clock;
@@ -50,16 +53,15 @@ var main = function(
     debug: false,
   };
 
+
   function $(id) {
     return document.getElementById(id);
   }
 
 
   function handleSetInstrument(data) {
-console.log("setins: " + data.filename);
     g_audioManager.loadSound(data.filename, data.filename, 1, function() {
       g_instrument = data.filename;
-console.log("loaded:" + data.filename);
       g_audioManager.playSound(g_instrument);
     });
   }
@@ -68,7 +70,7 @@ console.log("loaded:" + data.filename);
     window.location.reload();
   }
 
-  g_grid = new Grid({columns: 4, rows: 4, container: $("container")});
+  g_grid = new Grid({columns: 4, rows: 4, container: $("sequence")});
 
   var rhythmButtons = [];
   g_grid.forEach(function(cell) {
@@ -146,26 +148,23 @@ console.log("loaded:" + data.filename);
   // This isn't called until the clock is synced at least once.
   var start = function() {
 
+    globals.disconnectFn = function() {
+      // stop playing if we get disconnected.
+      g_instrument = undefined;
+    };
+
     Misc.applyUrlSettings(globals);
+    MobileHacks.fixHeightHack();
     var stop = false;
 
     g_client = new GameClient({
       gameId: "jamjam",
     });
 
-    function showConnected() {
-      $("disconnected").style.display = "none";
-    }
-
-    function showDisconnected() {
-      stop = true;
-      $("disconnected").style.display = "block";
-    }
-
     g_client.addEventListener('setInstrument', handleSetInstrument);
 
-    g_client.addEventListener('connect', showConnected);
-    g_client.addEventListener('disconnect', showDisconnected);
+    var playerNameHandler = new PlayerNameHandler(g_client, $("name"));
+    ExampleUI.setupStandardControllerUI(g_client, globals);
 
     var color = Misc.randCSSColor();
     g_client.sendCmd('setColor', { color: color });
@@ -189,7 +188,9 @@ console.log("loaded:" + data.filename);
     var startTime = g_clock.getTime();
 
     var playNote = function(track, noteTime) {
-      g_audioManager.playSound(g_instrument, noteTime);
+      if (g_instrument) {
+        g_audioManager.playSound(g_instrument, noteTime);
+      }
     };
 
     var secondsPerBeat = 60 / globals.bpm;
@@ -238,7 +239,9 @@ console.log("loaded:" + data.filename);
 
       if (lastDisplayedQuarterBeat != currentQuarterBeat) {
         lastDisplayedQuarterBeat = currentQuarterBeat;
-        drawNote(0, currentQuarterBeat % globals.loopLength);
+        if (g_instrument) {
+          drawNote(0, currentQuarterBeat % globals.loopLength);
+        }
       }
 
       if (!stop) {
@@ -257,9 +260,12 @@ requirejs(
     '../../../scripts/syncedclock',
     '../../scripts/audio',
     '../../scripts/cookies',
+    '../../scripts/exampleui',
     '../../scripts/grid',
     '../../scripts/input',
     '../../scripts/misc',
+    '../../scripts/mobilehacks',
+    '../../scripts/playername',
   ],
   main
 );

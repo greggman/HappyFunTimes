@@ -65,10 +65,12 @@ define(
 
     client.addEventListener('disconnect', function() {
       disconnected.style.display = "block";
+      if (options.disconnectFn) {
+        options.disconnectFn();
+      }
     });
 
     $("reload").addEventListener('click', function() {
-console.log("reload!");
       window.location.reload();
     });
 
