@@ -110,8 +110,9 @@ class Builder(object):
 
   def Process(self):
     files = [
-      "public/examples/shootshoot/controller.html",
+      "public/examples/deviceorientation/controller.html",
       "public/examples/jamjam/controller.html",
+      "public/examples/shootshoot/controller.html",
     ]
     for file in files:
       outname = os.path.join(os.path.dirname(file), "index.html")

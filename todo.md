@@ -1,3 +1,5 @@
+*   figure out why deviceorientation message is low
+*
 *   make all samples share a header and CSS layout
 *   make all samples have a name at the top and a drop down gear menu
 *   make all samples disconnect correctly

@@ -56,6 +56,14 @@ requirejs.config({
             //module value.
             exports: 'HANDJ',
         },
+        '../../scripts/three.min.js': {
+            //These script dependencies should be loaded before loading
+            //three.js
+            deps: [],
+            //Once loaded, use the global 'HANDJS' as the
+            //module value.
+            exports: 'THREE',
+        },
     },
 });
 </script>

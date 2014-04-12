@@ -30,39 +30,23 @@
  */
 "use strict";
 
-var main = function(GameClient, Misc) {
+var main = function(
+    GameClient,
+    ExampleUI,
+    Misc,
+    MobileHacks,
+    PlayerNameHandler) {
 
   var g_name = "";
   var g_client;
 
+  var globals = {
+  };
+  Misc.applyUrlSettings(globals);
+  MobileHacks.fixHeightHack();
+
   function $(id) {
     return document.getElementById(id);
-  }
-
-  function logTo(id, str) {
-    var c = $(id);
-    var d = document.createElement("div");
-    d.appendChild(document.createTextNode(str));
-    c.appendChild(d);
-    while(d.children.length > 6) {
-      d.removeChild(d.firstChild);
-    }
-  }
-
-  function log() {
-    var s = ""
-    for (var ii = 0; ii < arguments.length; ++ii) {
-      s += arguments[ii].toString();
-    }
-    logTo("console", s);
-  }
-
-  function showConnected() {
-    $("disconnected").style.display = "none";
-  }
-
-  function showDisconnected() {
-    $("disconnected").style.display = "block";
   }
 
   function onScored(data) {
@@ -73,9 +57,10 @@ var main = function(GameClient, Misc) {
     gameId: "orient",
   });
 
-  g_client.addEventListener('connect', showConnected);
-  g_client.addEventListener('disconnect', showDisconnected);
   g_client.addEventListener('scored', onScored);
+
+  var playerNameHandler = new PlayerNameHandler(g_client, $("name"));
+  ExampleUI.setupStandardControllerUI(g_client, globals);
 
   var color = Misc.randCSSColor();
   g_client.sendCmd('setColor', { color: color });
@@ -100,7 +85,10 @@ var main = function(GameClient, Misc) {
 // Start the main app logic.
 requirejs(
   [ '../../../scripts/gameclient',
+    '../../scripts/exampleui',
     '../../scripts/misc',
+    '../../scripts/mobilehacks',
+    '../../scripts/playername',
   ],
   main
 );
