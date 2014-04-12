@@ -120,6 +120,6 @@ define(function() {
     ConsoleLogger: ConsoleLogger,
     HTMLLogger: HTMLLogger,
   };
-}());
+});
 
 
