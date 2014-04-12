@@ -43,6 +43,7 @@
   <meta name="format-detection" content="telephone=no" />
   <title>ShootShoot Controls</title>
   <link rel="stylesheet" href="../css/samples.css">
+  <link rel="stylesheet" href="css/shootshoot.css">
 <script data-main="scripts/shootshootcontroller.js" src="../scripts/require.js"></script>
 <script>
 requirejs.config({
@@ -63,20 +64,32 @@ requirejs.config({
 <div id="container">
   <div id="header">
     <input type="text" id="name" />
-    <div id="menu"><img src="../css/gear-icon.svg"></div>
+    <div id="menu"><img src="../assets/gear-icon.svg"></div>
   </div>
   <div id="content">
-    <canvas class="fullsize" id="c"></canvas>
+    <div id="dpads" class="fixheight">
+      <div id="dpadleft"></div>
+      <div id="dpadright"></div>
+    </div>
+    <div id="dpadinput">
+    </div>
     <div id="disconnected">
       <div class="fullcenter">
         <div class="instruction">Disconnected</div>
-        <div class="instruction" id="reload">click to reload</div>
+        <div class="button" id="reload"><div>Restart</div></div>
       </div>
     </div>
     <div id="debug">
       <pre id="status">d</pre>
       <div id="console"></div>
     </div>
+  </div>
+</div>
+<div id="settings">
+  <div class="fullcenter">
+    <div id="restart" class="button"><div>Restart</div></div>
+    <div id="exit"    class="button"><div>Main Menu</div></div>
+    <div id="back"    class="button"><div>Back</div></div>
   </div>
 </div>
 </body>

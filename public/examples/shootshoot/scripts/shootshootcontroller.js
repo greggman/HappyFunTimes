@@ -34,6 +34,8 @@ var main = function(
     GameClient,
     AudioManager,
     Cookies,
+    DPad,
+    ExampleUI,
     Input,
     Misc,
     MobileHacks,
@@ -46,6 +48,7 @@ var main = function(
     debug: false,
   };
   Misc.applyUrlSettings(globals);
+  MobileHacks.fixHeightHack();
 
   function $(id) {
     return document.getElementById(id);
@@ -59,14 +62,6 @@ var main = function(
     gameId: "shootshoot",
   });
 
-  function showConnected() {
-    $("disconnected").style.display = "none";
-  }
-
-  function showDisconnected() {
-    $("disconnected").style.display = "block";
-  }
-
   function handleScore() {
   };
 
@@ -75,8 +70,6 @@ var main = function(
 
   g_client.addEventListener('score', handleScore);
   g_client.addEventListener('die', handleDeath);
-  g_client.addEventListener('connect', showConnected);
-  g_client.addEventListener('disconnect', showDisconnected);
 
   var playerNameHandler = new PlayerNameHandler(g_client, $("name"));
 
@@ -86,22 +79,42 @@ var main = function(
 
   g_audioManager = new AudioManager();
 
-  var sendPad = function(padId, dir) {
+  var dpadSize = 100;
+  var dpads = [
+    new DPad({size: dpadSize, element: $("dpadleft")}),
+    new DPad({size: dpadSize, element: $("dpadright")}),
+  ];
+
+  var sendPad = function(e) {
     if (globals.debug) {
-      console.log("pad: " + padId + " dir: " + Touch.dirSymbols[dir] + " (" + dir + ")");
+      console.log("pad: " + e.pad + " dir: " + e.info.symbol + " (" + e.info.direction + ")");
     }
-    g_client.sendCmd('pad', {pad: padId, dir: dir});
+    dpads[e.pad].draw(e.info);
+    g_client.sendCmd('pad', {pad: e.pad, dir: e.info.direction});
   };
 
-  Input.setupKeyboardDPadKeys(sendPad);
-  var container = $("container");
-  Touch.setupVirtualDPads(container, sendPad);
+  ExampleUI.setupStandardControllerUI(g_client, globals);
 
-  if (globals.debug) {
-    var status = $("status").firstChild;
-    var debugCSS = Misc.findCSSStyleRule("#debug");
-    debugCSS.style.display = "block";
-  }
+  Input.setupKeyboardDPadKeys(sendPad);
+  var container = $("dpadinput");
+  Touch.setupVirtualDPads({
+    inputElement: container,
+    callback: sendPad,
+    fixedCenter: true,
+    pads: [
+      {
+        referenceElement: $("dpadleft"),
+        offsetX: dpadSize / 2,
+        offsetY: dpadSize / 2,
+      },
+      {
+        referenceElement: $("dpadright"),
+        offsetX: dpadSize / 2,
+        offsetY: dpadSize / 2,
+      },
+    ],
+  });
+
 };
 
 // Start the main app logic.
@@ -109,6 +122,8 @@ requirejs(
   [ '../../../scripts/gameclient',
     '../../scripts/audio',
     '../../scripts/cookies',
+    '../../scripts/dpad',
+    '../../scripts/exampleui',
     '../../scripts/input',
     '../../scripts/misc',
     '../../scripts/mobilehacks',

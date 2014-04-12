@@ -112,8 +112,8 @@ var main = function(
     var player1 = g_playerManager.startPlayer(new LocalNetPlayer(), "Player1");
     var player2 = g_playerManager.startPlayer(new LocalNetPlayer(), "Player2");
 
-    Input.setupKeyboardDPadKeys(function(padId, dir) {
-      player1.handlePadMsg({pad: padId, dir: dir});
+    Input.setupKeyboardDPadKeys(function(e) {
+      player1.handlePadMsg({pad: e.pad, dir: e.info.direction});
     });
   }
 

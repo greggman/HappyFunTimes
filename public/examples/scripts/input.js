@@ -31,6 +31,43 @@
 "use strict";
 
 define(function() {
+  // Provides a map from direction to various info.
+  //
+  // Example:
+  //
+  //   Input.setupKeyboardDPadsKeys(container, function(event) {
+  //     console.log("dir: " + event.info.symbol]);
+  //   });
+  var RIGHT = 0x1;
+  var LEFT = 0x2;
+  var UP = 0x4;
+  var DOWN = 0x8;
+
+  var dirInfo = { };
+  dirInfo[-1] = { direction: -1, dx:  0, dy:  0, bits: 0           , symbol: String.fromCharCode(0x2751), };
+  dirInfo[ 0] = { direction:  0, dx:  1, dy:  0, bits: RIGHT       , symbol: String.fromCharCode(0x2192), }; // right
+  dirInfo[ 1] = { direction:  1, dx:  1, dy:  1, bits: UP | RIGHT  , symbol: String.fromCharCode(0x2197), }; // up-right
+  dirInfo[ 2] = { direction:  2, dx:  0, dy:  1, bits: UP          , symbol: String.fromCharCode(0x2191), }; // up
+  dirInfo[ 3] = { direction:  3, dx: -1, dy:  1, bits: UP | LEFT   , symbol: String.fromCharCode(0x2196), }; // up-left
+  dirInfo[ 4] = { direction:  4, dx: -1, dy:  0, bits: LEFT        , symbol: String.fromCharCode(0x2190), }; // left
+  dirInfo[ 5] = { direction:  5, dx: -1, dy: -1, bits: DOWN | LEFT , symbol: String.fromCharCode(0x2199), }; // down-left
+  dirInfo[ 6] = { direction:  6, dx:  0, dy: -1, bits: DOWN        , symbol: String.fromCharCode(0x2193), }; // down
+  dirInfo[ 7] = { direction:  7, dx:  1, dy: -1, bits: DOWN | RIGHT, symbol: String.fromCharCode(0x2198), }; // down-right
+
+  var createDirectionEventInfo = function(padId) {
+    return {
+      pad: padId,
+      info: undefined,
+    };
+  };
+
+  var emitDirectionEvent = function(padId, direction, eventInfo, callback) {
+    var info = dirInfo[direction];
+    eventInfo.pad = padId;
+    eventInfo.info = info;
+    callback(eventInfo);
+  };
+
   var getRelativeCoordinates = (function(window, undefined) {
     /**
      * Returns the absolute position of an element for certain browsers.
@@ -118,6 +155,7 @@ define(function() {
     var g_dirBits = [0, 0];
     var g_excludeBits = [0, 0];
     var g_dir = [-1, -1];
+    var g_eventInfos = [createDirectionEventInfo(0), createDirectionEventInfo(1)];
 
     var keyToBit = { };
     keyToBit[37] = { bit: 1, pad: 1, exclude: 2, mask: 0x3 }; // left (cursor left)
@@ -170,7 +208,7 @@ define(function() {
           // If the dir has changed.
           if (dir != g_dir[pad]) {
             g_dir[pad] = dir;
-            callback(pad, dir);
+            emitDirectionEvent(pad, dir, g_eventInfos[pad], callback);
           }
         }
       }
@@ -188,9 +226,11 @@ define(function() {
   };
 
   return {
+    createDirectionEventInfo: createDirectionEventInfo,
+    emitDirectionEvent: emitDirectionEvent,
     getRelativeCoordinates: getRelativeCoordinates,
     setupControllerKeys: setupControllerKeys,
     setupKeyboardDPadKeys: setupKeyboardDPadKeys,
   };
-}());
+});
 

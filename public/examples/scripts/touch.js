@@ -32,14 +32,19 @@
 
 define(
   [ './hand-1.3.7',
-  ], function(HandJS) {
+    './input'
+  ], function(HandJS, Input) {
+
   // Simulates 2 virtual dpads using touch events
   // Assumes left half of container is left dpad
   // and right half is right.
   //
   // For each change in direction callback will be
-  // called with pad id (0 left, 1 right) and direction
-  // where
+  // called with an event info where
+  //
+  // pad = (0 left, 1 right)
+  // direction =
+  //
   //
   //    2     -1 = no touch
   //  3 | 1
@@ -48,6 +53,10 @@ define(
   //   /|\
   //  5 | 7
   //    6
+  //
+  // dx   = -1, 0, 1
+  // dy   = -1, 0, 1
+  // bits = 1 for right, 2 for left, 4 for up, 8 for down
   //
   // Note: this matches trig functions you can do this
   //
@@ -63,10 +72,23 @@ define(
   //     var dx    =  Math.cos(angle);
   //     var dy    = -Math.sin(angle);
   //
-  var setupVirtualDPads = function(container, callback) {
-    //var ctx = $("c").getContext("2d");
-    //ctx.canvas.width = ctx.canvas.clientWidth;
-    //ctx.canvas.height = ctx.canvas.clientHeight;
+
+  // options:
+  //
+  // inputElement: element used to capture input (for example window, body,)
+  // callback: callback to pass event
+  // fixedCenter: true = center stays the same place, false = each time finger touches a new center is picked
+  // deadSpaceRadius: size of dead area in center of pad.
+  // pads: Array
+  //   referenceElement: element that is reference for position of pad
+  //   offsetX: offset from left of reference element to center of pad
+  //   offsetY: offset from top of reference element to center of pad
+
+  var setupVirtualDPads = function(options) {
+    var callback = options.callback;
+    var container = options.inputElement;
+    options.deadSpaceRadius = options.deadSpaceRadius || 10;
+    var deadSpaceRadiusSq = options.deadSpaceRadius * options.deadSpaceRadius;
 
     var Vector2 = function(x, y) {
       this.reset(x, y);
@@ -89,7 +111,7 @@ define(
       return this;
     };
 
-    var makePad = function() {
+    var makePad = function(padId) {
       return {
         pointerId: -1,                      // touch id
         pointerPos: new Vector2(0, 0),      // current position
@@ -97,12 +119,13 @@ define(
         vector: new Vector2(0, 0),          // vector from start to current position
         dir: -1,                            // octant
         lastDir: 0,                         // previous octant
+        event: Input.createDirectionEventInfo(padId),
       };
     };
 
     var pads = [
-      makePad(),
-      makePad(),
+      makePad(0),
+      makePad(1),
     ];
 
     var computeDir = function(x, y) {
@@ -110,63 +133,66 @@ define(
       return (Math.floor(angle / (Math.PI / 4))) % 8;
     };
 
+    var callCallback = function(padId, dir) {
+      var pad = pads[padId];
+      Input.emitDirectionEvent(padId, dir, pad.event, callback);
+    };
+
     var updatePad = function(pad, padId) {
       var newDir = -1;
       if (pad.pointerId >= 0) {
-        newDir = computeDir(pad.vector.x, pad.vector.y);
-        pad.lastDir = newDir;
+        var distSq = pad.vector.x * pad.vector.x + pad.vector.y * pad.vector.y;
+        if (distSq > deadSpaceRadiusSq) {
+          newDir = computeDir(pad.vector.x, pad.vector.y);
+          pad.lastDir = newDir;
+        }
       }
       if (pad.dir != newDir) {
         pad.dir = newDir;
-        callback(padId, newDir);
+        callCallback(padId, newDir);
       }
     };
 
     var checkStart = function(padId, e) {
       var pad = pads[padId];
       if (pad.pointerId < 0) {
+        var padOptions = options.pads[padId];
         pad.pointerId = e.pointerId;
-        pad.pointerStartPos.reset(e.clientX, e.clientY);
-        pad.pointerPos.copyFrom(pad.pointerStartPos);
-        pad.vector.reset(0, 0);
-        // This needs work!
-
-        // The problem is this code assumes
-        // the place the user touches is the
-        // center of the joypad
-        //
-        // The problem with that design is
-        // if the user lifts his finger
-        // and places it back down again
-        // he assume's he'll get the same
-        // result but with this code
-        // he won't because the new touch
-        // becomes the new center.
-
-
-        pad.dir = pad.lastDir;
-        callback(padId, pad.lastDir);
+        var relPos = Input.getRelativeCoordinates(padOptions.referenceElement, e);
+        var x = relPos.x - padOptions.offsetX;
+        var y = relPos.y - padOptions.offsetY;
+        if (options.fixedCenter) {
+          pad.pointerStartPos.reset(0, 0);
+          pad.pointerPos.reset(x, y);
+          pad.vector.reset(x, y);
+          updatePad(pad, padId);
+        } else {
+          pad.pointerStartPos.reset(x, y);
+          pad.pointerPos.copyFrom(pad.pointerStartPos);
+          pad.vector.reset(0, 0);
+          pad.dir = pad.lastDir;
+          callCallback(padId, pad.lastDir);
+        }
       }
     };
 
     var onPointerDown = function(e) {
-      checkStart(e.clientX < e.target.clientWidth / 2 ? 0 : 1, e);
+      var relPos = Input.getRelativeCoordinates(options.inputElement, e);
+      checkStart(relPos.x < options.inputElement.clientWidth / 2 ? 0 : 1, e);
     };
 
     var onPointerMove = function(e) {
       for (var ii = 0; ii < pads.length; ++ii) {
         var pad = pads[ii];
         if (pad.pointerId == e.pointerId) {
-          pad.pointerPos.reset(e.clientX, e.clientY);
+          var padOptions = options.pads[ii];
+          var relPos = Input.getRelativeCoordinates(padOptions.referenceElement, e);
+          var x = relPos.x - padOptions.offsetX;
+          var y = relPos.y - padOptions.offsetY;
+          pad.pointerPos.reset(x, y);
           pad.vector.copyFrom(pad.pointerPos);
           pad.vector.minusEq(pad.pointerStartPos);
           updatePad(pad, ii);
-
-          //ctx.clearRect(0,0,ctx.canvas.width,ctx.canvas.height);
-          //ctx.beginPath();
-          //ctx.moveTo(pad.pointerStartPos.x, pad.pointerStartPos.y);
-          //ctx.lineTo(pad.pointerPos.x, pad.pointerPos.y);
-          //ctx.stroke();
         }
       }
     };
@@ -188,28 +214,9 @@ define(
     container.addEventListener('pointerout', onPointerUp, false);
   };
 
-  // Provides a map from direction to unicode arrows.
-  //
-  // Example:
-  //
-  //   Touch,setupVirtualDPads(container, function(padId, dir) {
-  //     console.log("dir: " + Touch.dirSymbols[dir]);
-  //   });
-  var dirSymbols = { };
-  dirSymbols[-1] = String.fromCharCode(0x2751);
-  dirSymbols[ 0] = String.fromCharCode(0x2192); // right
-  dirSymbols[ 1] = String.fromCharCode(0x2197); // up-right
-  dirSymbols[ 2] = String.fromCharCode(0x2191); // up
-  dirSymbols[ 3] = String.fromCharCode(0x2196); // up-left
-  dirSymbols[ 4] = String.fromCharCode(0x2190); // left
-  dirSymbols[ 5] = String.fromCharCode(0x2199); // down-left
-  dirSymbols[ 6] = String.fromCharCode(0x2193); // down
-  dirSymbols[ 7] = String.fromCharCode(0x2198); // down-right
-
   return {
-    dirSymbols: dirSymbols,
     setupVirtualDPads: setupVirtualDPads,
   };
-}());
+});
 
 

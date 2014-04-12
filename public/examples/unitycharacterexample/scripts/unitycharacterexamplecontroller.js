@@ -82,11 +82,11 @@ var main = function(
 
   g_audioManager = new AudioManager();
 
-  var sendPad = function(padId, dir) {
+  var sendPad = function(e) {
     if (globals.debug) {
-      console.log("pad: " + padId + " dir: " + Touch.dirSymbols[dir] + " (" + dir + ")");
+      console.log("pad: " + e.pad + " dir: " + e.info.symbol + " (" + e.info.direction + ")");
     }
-    g_client.sendCmd('pad', {pad: padId, dir: dir});
+    g_client.sendCmd('pad', {pad: e.pad, dir: e.info.direction});
   };
 
   Input.setupKeyboardDPadKeys(sendPad);
