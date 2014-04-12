@@ -35,8 +35,6 @@
 // so I put them here.
 define(['./cookies'], function(Cookies) {
 
-  var playerRE = /^Player\d+$/i;
-
   var PlayerNameHandler = function(client, element) {
     var name = Cookies.readCookie("name") || "";
 
@@ -65,12 +63,14 @@ define(['./cookies'], function(Cookies) {
     }.bind(this);
 
     var finishEnteringName = function() {
-      name = element.value.replace(/[<>]/g, '');
-      // Only set the cookie if the name isn't "Player\d+"
-      if (!playerRE.test(name)) {
+      var newName = element.value.replace(/[<>]/g, '');
+      if (newName.length == 0) {
+        element.value = name;
+      } else if (newName != name) {
+        name = newName;
         Cookies.createCookie("name", name, 90);
+        sendName();
       }
-      sendName();
       sendBusy(false);
     }.bind(this);
 
