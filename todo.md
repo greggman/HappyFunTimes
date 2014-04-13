@@ -1,5 +1,6 @@
+*   add set name to menu
 *   figure out why deviceorientation message is low
-*
+*   make powpow use handjs
 *   make all samples share a header and CSS layout
 *   make all samples have a name at the top and a drop down gear menu
 *   make all samples disconnect correctly
@@ -55,11 +56,14 @@
     might be a good idea to wrap js with (function(window, undefined) { to make sure
     all references to globals are missing
 
+*   consolidate assets
+
 *   make sample games
 
     *   platformer
     *   8way shooter
     *   unity character controller
+    *   johann sabastian bach
     *   rougelike
     *   quiz
 

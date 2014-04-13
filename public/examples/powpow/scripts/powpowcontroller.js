@@ -30,7 +30,16 @@
  */
 "use strict";
 
-var main = function(GameClient, AudioManager, Cookies, Input, Ships) {
+var main = function(
+    GameClient,
+    AudioManager,
+    Cookies,
+    ExampleUI,
+    Misc,
+    Input,
+    MobileHacks,
+    PlayerNameHandler,
+    Ships) {
 
   var g_name = "";
   var g_turn = 0;
@@ -51,68 +60,68 @@ var main = function(GameClient, AudioManager, Cookies, Input, Ships) {
   var g_playerStyle;
   var g_client;
   var g_audioManager;
+  var g_clearMsgTimeoutId;
+
+  var globals = {
+    messageDuration: 5,
+  };
+  Misc.applyUrlSettings(globals);
+  MobileHacks.fixHeightHack();
 
   function $(id) {
     return document.getElementById(id);
   }
 
-  function logTo(id, str) {
-    var c = $(id);
-    var d = document.createElement("div");
-    d.appendChild(document.createTextNode(str));
-    c.appendChild(d);
-    while(d.children.length > 6) {
-      d.removeChild(d.firstChild);
+  var msgElem = $("msg");
+  var colorElem = $("surface");
+
+  var clearMessage = function() {
+    g_clearMsgTimeoutId = undefined;
+    msgElem.innerHTML = "";
+  };
+
+  var setClearMessageTimeout = function() {
+    if (g_clearMsgTimeoutId !== undefined) {
+      clearTimeout(g_clearMsgTimeoutId);
     }
-  }
+    g_clearMsgTimeoutId = setTimeout(clearMessage, globals.messageDuration * 1000);
+  };
 
-  function log() {
-    var s = ""
-    for (var ii = 0; ii < arguments.length; ++ii) {
-      s += arguments[ii].toString();
-    }
-    logTo("console", s);
-  }
+  var setMessage = function(color, msg) {
+    msgElem.innerHTML = msg;
+    msgElem.style.color = color;
+    setClearMessageTimeout();
+  };
 
-  function showConnected() {
-    $("disconnected").style.display = "none";
-  }
-
-  function showDisconnected() {
-    $("disconnected").style.display = "block";
-  }
-
+  var process;
   var g_states = {
     launch: function() {
       --g_count;
-      var e = $("surface");
       if (g_count > 0) {
-        e.style.backgroundColor = (g_count % 2) ? "#0f0" : "#fff";
+        colorElem.style.backgroundColor = (g_count % 2) ? "#0f0" : "#fff";
         setTimeout(process, 100);
       } else {
-        e.style.backgroundColor = g_playerColor;
+        colorElem.style.backgroundColor = g_playerColor;
       }
     },
 
     die: function() {
       --g_count;
-      var e = $("surface");
       if (g_count > 0) {
-        e.style.backgroundColor = (g_count % 2) ? "#f00" : "#ff0";
+        colorElem.style.backgroundColor = (g_count % 2) ? "#f00" : "#ff0";
         setTimeout(process, 100);
       } else {
-        e.style.backgroundColor = g_playerColor;
+        colorElem.style.backgroundColor = g_playerColor;
       }
     }
   };
 
-  function process() {
+  process = function() {
     g_states[g_state]();
   };
 
+
   function handleSetColorMsg(msg) {
-    //var e = $("surface");
-    //e.style.backgroundColor = msg.color;
     var canvas = document.createElement("canvas");
     canvas.width = 150;
     canvas.height = 150;
@@ -130,22 +139,13 @@ var main = function(GameClient, AudioManager, Cookies, Input, Ships) {
     //e.style.backgroundImage = "url(" + canvas.toDataURL() + ")";
   }
 
-  function handleSetNameMsg(msg) {
-    g_name = msg.name;
-    $('msg').innerHTML = "Name: " + g_name + " -- click to edit";
-    $('msg').style.color = '#FFF';
-    $('input').value = g_name;
-  }
-
   function handleKillMsg(msg) {
-    $('msg').innerHTML = 'Killed ' + msg.killed;
-    $('msg').style.color = '#0FF';
+    setMessage('#0FF', 'Killed ' + msg.killed);
   }
 
   function handleDieMsg(msg) {
     g_audioManager.playSound('explosion');
-    $('msg').innerHTML = (msg.crash ? 'Crashed into ' : 'Killed by ') + msg.killer;
-    $('msg').style.color = '#F00';
+    setMessage('#F00', (msg.crash ? 'Crashed into ' : 'Killed by ') + msg.killer);
     g_state = "die";
     g_count = 20;
     setTimeout(process, 100);
@@ -153,17 +153,15 @@ var main = function(GameClient, AudioManager, Cookies, Input, Ships) {
 
   function handleLaunchMsg(msg) {
     g_audioManager.playSound('launching');
-    $('msg').innerHTML = 'Launch!';
-    $('msg').style.color = '#FF0';
+    setMessage('#FF0', 'Launch!');
     g_state = "launch";
     g_count = 30;
     setTimeout(process, 100);
   }
 
   function handleQueueMsg(msg) {
-    $('msg').innerHTML = msg.count > 0 ?
-        (msg.count.toString() + " ahead of you") : "Next Up";
-    $('msg').style.color = '#FFF';
+    setMessage('#FFF', msg.count > 0 ?
+        (msg.count.toString() + " ahead of you") : "Next Up");
   }
 
   function debugTouch(label, event) {
@@ -393,51 +391,18 @@ var main = function(GameClient, AudioManager, Cookies, Input, Ships) {
     }
   }
 
-  function enterName(event) {
-    $('msg').style.display = "none";
-    $('msg').style.color = "#FFF";
-    $('input').style.display = "block";
-    $('input').focus();
-    g_client.sendCmd('busy', {
-        busy: true
-    });
-  }
-
-  function sendName() {
-    g_client.sendCmd('setName', {
-        name: g_name
-    });
-    $('msg').innerHTML = g_name;
-  }
-
-  function finishSendName(event) {
-    g_name = $('input').value.replace(/[<>]/g, '');
-    Cookies.createCookie("name", g_name, 90);
-    sendName(event);
-    $('msg').style.display = "block";
-    $('input').style.display = "none";
-    g_client.sendCmd('busy', {
-        busy: false
-    });
-  }
-
-  function reloadPage() {
-    window.location.reload();
-  }
-
   g_client = new GameClient({
     gameId: "powpow",
   });
 
   g_client.addEventListener('setColor', handleSetColorMsg);
-  g_client.addEventListener('setName', handleSetNameMsg);
   g_client.addEventListener('kill', handleKillMsg);
   g_client.addEventListener('die', handleDieMsg);
   g_client.addEventListener('launch', handleLaunchMsg);
   g_client.addEventListener('queue', handleQueueMsg);
 
-  g_client.addEventListener('connect', showConnected);
-  g_client.addEventListener('disconnect', showDisconnected);
+  var playerNameHandler = new PlayerNameHandler(g_client, $("name"));
+  ExampleUI.setupStandardControllerUI(g_client, globals);
 
   var sounds = {
     explosion: {
@@ -453,17 +418,8 @@ var main = function(GameClient, AudioManager, Cookies, Input, Ships) {
 
   Ships.setShipSize(70);
 
-  // Get the name user set before.
-  g_name = Cookies.readCookie("name");
-  if (!g_name) {
-    g_name = "";
-  }
-  // Note: If the name is "" server will send a name
-  sendName();
-
   var haveTouch = 'ontouchstart' in document
 
-  var surface = $("top");
   if (haveTouch) {
     if (navigator.userAgent.indexOf("Android") >= 0 && !window.opera) {
       var singleTouchControls = $("singleTouchControls");
@@ -497,11 +453,6 @@ var main = function(GameClient, AudioManager, Cookies, Input, Ships) {
   }
 
   Input.setupControllerKeys(handleKeyDown, handleKeyUp);
-
-  $('msg').addEventListener("click", enterName, false);
-  $('input').addEventListener("change", finishSendName, false);
-  $('input').addEventListener("blur", finishSendName, false);
-  $('reload').addEventListener("click", reloadPage, false);
 };
 
 // Start the main app logic.
@@ -509,7 +460,11 @@ requirejs(
   [ '../../../scripts/gameclient',
     '../../scripts/audio',
     '../../scripts/cookies',
+    '../../scripts/exampleui',
+    '../../scripts/misc',
     '../../scripts/input',
+    '../../scripts/mobilehacks',
+    '../../scripts/playername',
     'ships',
   ],
   main

@@ -112,6 +112,7 @@ class Builder(object):
     files = [
       "public/examples/deviceorientation/controller.html",
       "public/examples/jamjam/controller.html",
+      "public/examples/powpow/controller.html",
       "public/examples/shootshoot/controller.html",
     ]
     for file in files:

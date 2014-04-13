@@ -1,0 +1,55 @@
+  <div id="surface" class="fullcenter fixheight">
+    <div id="msg"></div>
+    <img id="ship" src="assets/waiting.png" />
+    <!--
+    <div id="status"></div>
+    <div id="console"></div>
+    -->
+  </div>
+  <div id="controlArea" class="fixheight">
+    <div id="touchControls">
+      <!-- FUCK U CSS ... 2 hours fucking with you you suck! -->
+      <table border="0" cellpadding="0" cellspacing="0" width="100%" height="100%">
+        <tr>
+          <td width="50%">
+        <div id="tcmove" class="move">
+          <div class="instruction">Drag Left/Right here to Steer</div>
+        </div>
+          </td>
+          <td width="50%">
+        <div id="tcfire" class="fire">
+          <div class="instruction">Press here to Fire</div>
+        </div>
+          </td>
+        </tr>
+      </table>
+    </div>
+    <div id="singleTouchControls">
+      <div class="stmove">
+        <table border="0" cellpadding="0" cellspacing="0" width="100%" height="100%">
+        <tr height="10px">
+          <td>
+            <div class="instruction">Press to Steer, Tap to Fire</div>
+          </td>
+        </tr>
+        <tr>
+          <td valign="middle" align="center" id="stcontrol">
+              <center>
+                <canvas class="canvas" width="150" height="150"></canvas>
+              <center>
+          </td>
+        </tr>
+        </table>
+      </div>
+    </div>
+    <div id="keyControls">
+      <div class="move">
+        <div class="instruction">Press Cursor Keys to Steer</div>
+      </div>
+      <div class="fire">
+        <div class="instruction">Press Z to Fire</div>
+      </div>
+    </div>
+  </div>
+
+
