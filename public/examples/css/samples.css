@@ -193,13 +193,13 @@ html, body {
 
   display: none;
 }
-.button {
+.menubutton {
   border-radius: 1em;
   background: linear-gradient(to bottom, #f2f6f8 0%,#d8e1e7 88%,#b5c6d0 91%,#e0eff9 100%);
   width: 80%;
   margin: 0.2em;
 }
-.button div {
+.menubutton div {
   width: 100%;
   padding-left: 0.5em;
   height: 2em;
