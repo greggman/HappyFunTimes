@@ -75,6 +75,7 @@ var main = function(
     // You can set these from the URL with
     // http://path/gameview.html?settings={name:value,name:value}
     var globals = {
+      audio: true,
       maxActivePlayers: 6,
       playerVelocity: 200,
       playerTurnVelocity: Math.PI * 0.5,
