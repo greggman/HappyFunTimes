@@ -149,9 +149,10 @@ var InstrumentManager = (function() {
   };
 }());
 
-var Player = function(services, netPlayer) {
+var Player = function(services, netPlayer, name) {
   this.services = services;
   this.netPlayer = netPlayer;
+  this.name = name;
   this.tracks = [];
   this.position = [services.misc.randInt(200), services.misc.randInt(200)];
   //this.elem = document.createElement("div");
@@ -171,6 +172,8 @@ var Player = function(services, netPlayer) {
   netPlayer.addEventListener('disconnect', Player.prototype.disconnect.bind(this));
   netPlayer.addEventListener('newInstrument', Player.prototype.chooseInstrument.bind(this));
   netPlayer.addEventListener('setColor', Player.prototype.setColor.bind(this));
+  netPlayer.addEventListener('busy', Player.prototype.handleBusyMsg.bind(this));
+  netPlayer.addEventListener('setName', Player.prototype.handleNameMsg.bind(this));
   netPlayer.addEventListener('tracks', Player.prototype.setTracks.bind(this));
   netPlayer.addEventListener('note', Player.prototype.setNote.bind(this));
 
@@ -198,12 +201,30 @@ Player.prototype.setNote = function(data) {
   }
 };
 
+Player.prototype.handleNameMsg = function(msg) {
+  if (!msg.name) {
+    this.sendCmd('setName', {
+      name: this.name
+    });
+  } else {
+    this.name = msg.name.replace(/[<>]/g, '');
+  }
+};
+
+Player.prototype.handleBusyMsg = function(msg) {
+  // ignore this for now
+};
+
 Player.prototype.chooseInstrument = function() {
   var instrument = this.services.instrumentManager.getNextInstrument();
-  this.netPlayer.sendCmd('setInstrument', {
+  this.sendCmd('setInstrument', {
     filename: instrument,
   });
-}
+};
+
+Player.prototype.sendCmd = function(cmd, data) {
+  this.netPlayer.sendCmd(cmd, data);
+};
 
 Player.prototype.disconnect = function() {
   this.netPlayer.removeAllListeners();
@@ -268,8 +289,8 @@ PlayerManager.prototype.updatePlayers = function() {
   this.numElem.nodeValue = this.players.length;
 };
 
-PlayerManager.prototype.startPlayer = function(netPlayer) {
-  var player = new Player(this.services, netPlayer);
+PlayerManager.prototype.startPlayer = function(netPlayer, name) {
+  var player = new Player(this.services, netPlayer, name);
   this.players.push(player);
   this.updatePlayers();
 };
