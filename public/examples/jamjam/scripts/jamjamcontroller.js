@@ -39,8 +39,7 @@ var main = function(
     Grid,
     Input,
     Misc,
-    MobileHacks,
-    PlayerNameHandler) {
+    MobileHacks) {
   var g_client;
   var g_audioManager;
   var g_clock;
@@ -163,7 +162,6 @@ var main = function(
 
     g_client.addEventListener('setInstrument', handleSetInstrument);
 
-    var playerNameHandler = new PlayerNameHandler(g_client, $("name"));
     ExampleUI.setupStandardControllerUI(g_client, globals);
 
     var color = Misc.randCSSColor();
@@ -265,7 +263,6 @@ requirejs(
     '../../scripts/input',
     '../../scripts/misc',
     '../../scripts/mobilehacks',
-    '../../scripts/playername',
   ],
   main
 );

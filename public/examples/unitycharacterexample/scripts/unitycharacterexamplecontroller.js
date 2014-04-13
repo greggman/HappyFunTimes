@@ -39,7 +39,6 @@ var main = function(
     Input,
     Misc,
     MobileHacks,
-    PlayerNameHandler,
     Touch) {
   var g_client;
   var g_audioManager;
@@ -87,7 +86,6 @@ var main = function(
     g_client.sendCmd('pad', {pad: e.pad, dir: e.info.direction});
   };
 
-  var playerNameHandler = new PlayerNameHandler(g_client, $("name"));
   ExampleUI.setupStandardControllerUI(g_client, globals);
 
   Input.setupKeyboardDPadKeys(sendPad);
@@ -122,7 +120,6 @@ requirejs(
     '../../scripts/input',
     '../../scripts/misc',
     '../../scripts/mobilehacks',
-    '../../scripts/playername',
     '../../scripts/touch',
   ],
   main

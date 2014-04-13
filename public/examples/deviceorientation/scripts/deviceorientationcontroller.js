@@ -34,8 +34,7 @@ var main = function(
     GameClient,
     ExampleUI,
     Misc,
-    MobileHacks,
-    PlayerNameHandler) {
+    MobileHacks) {
 
   var g_name = "";
   var g_client;
@@ -59,7 +58,6 @@ var main = function(
 
   g_client.addEventListener('scored', onScored);
 
-  var playerNameHandler = new PlayerNameHandler(g_client, $("name"));
   ExampleUI.setupStandardControllerUI(g_client, globals);
 
   var color = Misc.randCSSColor();
@@ -88,7 +86,6 @@ requirejs(
     '../../scripts/exampleui',
     '../../scripts/misc',
     '../../scripts/mobilehacks',
-    '../../scripts/playername',
   ],
   main
 );

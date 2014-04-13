@@ -38,7 +38,6 @@ var main = function(
     Misc,
     Input,
     MobileHacks,
-    PlayerNameHandler,
     Ships) {
 
   var g_name = "";
@@ -401,7 +400,6 @@ var main = function(
   g_client.addEventListener('launch', handleLaunchMsg);
   g_client.addEventListener('queue', handleQueueMsg);
 
-  var playerNameHandler = new PlayerNameHandler(g_client, $("name"));
   ExampleUI.setupStandardControllerUI(g_client, globals);
 
   var sounds = {
@@ -464,7 +462,6 @@ requirejs(
     '../../scripts/misc',
     '../../scripts/input',
     '../../scripts/mobilehacks',
-    '../../scripts/playername',
     'ships',
   ],
   main

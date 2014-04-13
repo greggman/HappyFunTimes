@@ -31,7 +31,7 @@
 "use strict";
 
 define(
-  ['./misc'], function(Misc) {
+  ['./misc', './playername'], function(Misc, PlayerNameHandler) {
 
   var $ = function(id) {
     return document.getElementById(id);
@@ -41,6 +41,8 @@ define(
     var menu = $("menu");
     var settings = $("settings");
     var disconnected = $("disconnected");
+
+    var playerNameHandler = new PlayerNameHandler(client, $("name"));
 
     menu.addEventListener('click', function() {
       settings.style.display = "block";
