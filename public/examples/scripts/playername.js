@@ -42,6 +42,11 @@ define(['./cookies'], function(Cookies) {
       element.value = name;
     }.bind(this);
 
+    var handleSetNameMsg = function(msg) {
+      name = msg.name;
+      setName();
+    };
+
     var sendName = function() {
       client.sendCmd('setName', {
           name: name,
@@ -75,7 +80,7 @@ define(['./cookies'], function(Cookies) {
     }.bind(this);
 
     // If the user's name is "" the game may send a name.
-    client.addEventListener('setName', setName);
+    client.addEventListener('setName', handleSetNameMsg);
 
     element.addEventListener('click', startEnteringName, false);
     element.addEventListener('change', finishEnteringName, false);
