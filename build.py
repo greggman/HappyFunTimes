@@ -114,6 +114,7 @@ class Builder(object):
       "public/examples/jamjam/controller.html",
       "public/examples/powpow/controller.html",
       "public/examples/shootshoot/controller.html",
+      "public/examples/unitycharacterexample/controller.html",
     ]
     for file in files:
       outname = os.path.join(os.path.dirname(file), "index.html")

@@ -33,41 +33,17 @@
 <!DOCTYPE html>
 <html>
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="user-scalable=no, width=device-width, height=device-height">
-<title>Unity Character Example Controls</title>
-<link rel="stylesheet" href="../css/samples.css">
-<style>
-html, body {
-    background-color: purple;
-}
-#container {
-    position: absolute;
-}
-.button {
-    background-color: #fff;
-    color: #000;
-    border: 3px solid #444;
-    border-radius: 10px;
-    width: 64px;
-    height: 64px;
-    text-align: center;
-    font-size: xx-large;
-    font-family: Helvetica, Arial, sans-serif;
-    font-weight: bold;
-    bottom: 10px;
-    position: absolute;
-}
-#left {
-  left: 10px;
-}
-#right {
-  left: 80px;
-}
-#up {
-  right: 10px;
-}
-</style>
+  <meta charset="utf-8">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0, maximum-scale=1, user-scalable=no, minimal-ui">
+  <meta name="format-detection" content="telephone=no" />
+  <title>unitycharacterexample Controls</title>
+  <link rel="stylesheet" href="../css/samples.css">
+  <link rel="stylesheet" href="css/unitycharacterexample.css">
 <script data-main="scripts/unitycharacterexamplecontroller.js" src="../scripts/require.js"></script>
 <script>
 requirejs.config({
@@ -80,20 +56,51 @@ requirejs.config({
             //module value.
             exports: 'HANDJ',
         },
+        '../../scripts/three.min.js': {
+            //These script dependencies should be loaded before loading
+            //three.js
+            deps: [],
+            //Once loaded, use the global 'HANDJS' as the
+            //module value.
+            exports: 'THREE',
+        },
     },
 });
 </script>
 </head>
 <body>
-<div id="container" class="fullsize"><canvas class="fullsize" id="c"></canvas></div>
-<div id="debug">
-  <pre id="status">d</pre>
-  <div id="console"></div>
+<div id="container">
+  <div id="header">
+    <input type="text" id="name" />
+    <div id="menu"><img src="../assets/gear-icon.svg"></div>
+  </div>
+  <div id="content">
+    <!-- this is inserted into index.html by build.py -->
+    <div id="dpads" class="fixheight">
+      <div id="dpadleft"></div>
+      <div id="dpadright"></div>
+    </div>
+    <div id="dpadinput">
+    </div>
+
+
+    <div id="disconnected">
+      <div class="fullcenter">
+        <div class="instruction">Disconnected</div>
+        <div class="button" id="reload"><div>Restart</div></div>
+      </div>
+    </div>
+    <div id="debug">
+      <pre id="status">d</pre>
+      <div id="console"></div>
+    </div>
+  </div>
 </div>
-<div id="disconnected">
+<div id="settings">
   <div class="fullcenter">
-    <div class="instruction">Disconnected</div>
-    <div class="instruction" id="reload">click to reload</div>
+    <div id="restart" class="button"><div>Restart</div></div>
+    <div id="exit"    class="button"><div>Main Menu</div></div>
+    <div id="back"    class="button"><div>Back</div></div>
   </div>
 </div>
 </body>

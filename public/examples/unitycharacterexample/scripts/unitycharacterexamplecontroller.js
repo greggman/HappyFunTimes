@@ -34,8 +34,12 @@ var main = function(
     GameClient,
     AudioManager,
     Cookies,
+    DPad,
+    ExampleUI,
     Input,
     Misc,
+    MobileHacks,
+    PlayerNameHandler,
     Touch) {
   var g_client;
   var g_audioManager;
@@ -44,26 +48,15 @@ var main = function(
     debug: false,
   };
   Misc.applyUrlSettings(globals);
+  MobileHacks.fixHeightHack();
 
   function $(id) {
     return document.getElementById(id);
   }
 
-  function reloadPage() {
-    window.location.reload();
-  }
-
   g_client = new GameClient({
     gameId: "unitycharacterexample",
   });
-
-  function showConnected() {
-    $("disconnected").style.display = "none";
-  }
-
-  function showDisconnected() {
-    $("disconnected").style.display = "block";
-  }
 
   function handleScore() {
   };
@@ -73,8 +66,6 @@ var main = function(
 
   g_client.addEventListener('score', handleScore);
   g_client.addEventListener('die', handleDeath);
-  g_client.addEventListener('connect', showConnected);
-  g_client.addEventListener('disconnect', showDisconnected);
 
   var color = Misc.randCSSColor();
   g_client.sendCmd('setColor', { color: color });
@@ -82,23 +73,43 @@ var main = function(
 
   g_audioManager = new AudioManager();
 
+  var dpadSize = 100;
+  var dpads = [
+    new DPad({size: dpadSize, element: $("dpadleft")}),
+    new DPad({size: dpadSize, element: $("dpadright")}),
+  ];
+
   var sendPad = function(e) {
     if (globals.debug) {
       console.log("pad: " + e.pad + " dir: " + e.info.symbol + " (" + e.info.direction + ")");
     }
+    dpads[e.pad].draw(e.info);
     g_client.sendCmd('pad', {pad: e.pad, dir: e.info.direction});
   };
 
+  var playerNameHandler = new PlayerNameHandler(g_client, $("name"));
+  ExampleUI.setupStandardControllerUI(g_client, globals);
+
   Input.setupKeyboardDPadKeys(sendPad);
-  var container = $("container");
-  Touch.setupVirtualDPads(container, sendPad);
+  var container = $("dpadinput");
+  Touch.setupVirtualDPads({
+    inputElement: container,
+    callback: sendPad,
+    fixedCenter: true,
+    pads: [
+      {
+        referenceElement: $("dpadleft"),
+        offsetX: dpadSize / 2,
+        offsetY: dpadSize / 2,
+      },
+      {
+        referenceElement: $("dpadright"),
+        offsetX: dpadSize / 2,
+        offsetY: dpadSize / 2,
+      },
+    ],
+  });
 
-
-  if (globals.debug) {
-    var status = $("status").firstChild;
-    var debugCSS = Misc.findCSSStyleRule("#debug");
-    debugCSS.style.display = "block";
-  }
 };
 
 // Start the main app logic.
@@ -106,8 +117,12 @@ requirejs(
   [ '../../../scripts/gameclient',
     '../../scripts/audio',
     '../../scripts/cookies',
+    '../../scripts/dpad',
+    '../../scripts/exampleui',
     '../../scripts/input',
     '../../scripts/misc',
+    '../../scripts/mobilehacks',
+    '../../scripts/playername',
     '../../scripts/touch',
   ],
   main

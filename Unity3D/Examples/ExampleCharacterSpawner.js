@@ -3,6 +3,7 @@ public var prefabToSpawnForPlayer : GameObject;
 
 private var m_rand : System.Random;
 private var m_server : HappyFunTimes.GameServer;
+private var m_count : int = 0;
 
 // Use this for initialization
 function Start () {
@@ -28,7 +29,7 @@ function StartNewPlayer(sender, e : HappyFunTimes.PlayerConnectMessageArgs) {
     var gameObject : GameObject = Instantiate(prefabToSpawnForPlayer, position, Quaternion.identity);
     // Get the Example3rdPersonController script to this object.
     var player : Example3rdPersonController = gameObject.GetComponent(Example3rdPersonController);
-    player.Init(e.netPlayer);
+    player.Init(e.netPlayer, "Player" + (++m_count));
 }
 
 function Connected(sender, e : System.EventArgs) {

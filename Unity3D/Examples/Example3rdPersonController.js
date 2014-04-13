@@ -15,6 +15,7 @@ public var landAnimationSpeed : float = 1.0;
 
 private var _animation : Animation;
 private var _netPlayer : HappyFunTimes.NetPlayer;
+private var _playerName : String;
 
 private var _padEmu : DPadEmuJS = new DPadEmuJS();
 
@@ -93,40 +94,68 @@ private var lastGroundedTime = 0.0;
 
 private var isControllable = true;
 
-function Init(netPlayer : HappyFunTimes.NetPlayer) {
-  _netPlayer = netPlayer;
-  _padEmu = new DPadEmuJS();
+function Init(netPlayer : HappyFunTimes.NetPlayer, name : String) {
+	_netPlayer = netPlayer;
+	_padEmu = new DPadEmuJS();
+	_playerName = name;
+	gameObject.name = "Player-" + name;
 }
 
 @HappyFunTimes.CmdName("pad")
 class MessagePad extends HappyFunTimes.MessageCmdData {
-  var pad : int;
-  var dir : int;
+	var pad : int;
+	var dir : int;
 };
 
 @HappyFunTimes.CmdName("setColor")
 class MessageSetColor extends HappyFunTimes.MessageCmdData {
-  var color : String;
+	var color : String;
+};
+
+@HappyFunTimes.CmdName("setName")
+class MessageSetName extends HappyFunTimes.MessageCmdData {
+	var name : String;
+};
+
+@HappyFunTimes.CmdName("busy")
+class MessageBusy extends HappyFunTimes.MessageCmdData {
+	var busy : boolean;
 };
 
 function Start () {
-  _netPlayer.OnDisconnect += Remove;
-  _netPlayer.RegisterCmdHandler(OnPad);
-  _netPlayer.RegisterCmdHandler(OnSetColor);
+	_netPlayer.OnDisconnect += Remove;
+	_netPlayer.RegisterCmdHandler(OnPad);
+	_netPlayer.RegisterCmdHandler(OnSetColor);
+	_netPlayer.RegisterCmdHandler(OnSetName);
+	_netPlayer.RegisterCmdHandler(OnBusy);
 }
 
 function Remove() {
-  Destroy(gameObject);
+	Destroy(gameObject);
 }
 
 function OnPad(data : MessagePad) {
-  _padEmu.Update(data.pad, data.dir);
+	_padEmu.Update(data.pad, data.dir);
 }
 
 function OnSetColor(data : MessageSetColor) {
-  Debug.Log("color: " + data.color);
+	Debug.Log("color: " + data.color);
 }
 
+function OnSetName(data : MessageSetName) {
+	if (data.name.length > 0) {
+		_playerName = data.name;
+		gameObject.name = "Player-" + _playerName;
+	} else {
+		var msg = new MessageSetName();
+		msg.name = _playerName;
+		_netPlayer.SendCmd(msg);
+	}
+}
+
+function OnBusy(data : MessageBusy) {
+	// handle busy message if we care.
+}
 
 function Awake ()
 {
