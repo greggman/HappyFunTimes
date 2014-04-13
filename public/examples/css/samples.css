@@ -111,16 +111,20 @@ html, body {
   position: relative;
 }
 /* left header area */
-#name {
+#nameform {
   flex: 1 1 auto;
   -webkit-flex: 1 1 auto;
 
   margin: 0.5em;
-  font-size: x-large;
-  font-weight: bold;
-  color: #444;
-  background-color: rgba(0,0,0,0);
-  border: none;
+}
+#name
+{
+    width: 100%;
+    background-color: rgba(0,0,0,0);
+    font-size: x-large;
+    font-weight: bold;
+    color: #444;
+    border: none;
 }
 /* right header area */
 #menu {

@@ -67,7 +67,9 @@ define(['./cookies'], function(Cookies) {
       sendBusy(true);
     }.bind(this);
 
-    var finishEnteringName = function() {
+    var finishEnteringName = function(e) {
+      e.preventDefault();
+      element.blur();
       var newName = element.value.replace(/[<>]/g, '');
       if (newName.length == 0) {
         element.value = name;
@@ -89,6 +91,11 @@ define(['./cookies'], function(Cookies) {
     element.addEventListener('click', startEnteringName, false);
     element.addEventListener('change', finishEnteringName, false);
     element.addEventListener('blue', startEnteringName, false);
+
+    if (element.form) {
+      element.form.addEventListener('submit', finishEnteringName, false);
+    }
+
     setName();
     sendName();
   };
