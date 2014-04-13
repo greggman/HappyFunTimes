@@ -54,10 +54,6 @@ var main = function(
     return document.getElementById(id);
   }
 
-  function reloadPage() {
-    window.location.reload();
-  }
-
   g_client = new GameClient({
     gameId: "shootshoot",
   });
@@ -93,6 +89,7 @@ var main = function(
     g_client.sendCmd('pad', {pad: e.pad, dir: e.info.direction});
   };
 
+  var playerNameHandler = new PlayerNameHandler(g_client, $("name"));
   ExampleUI.setupStandardControllerUI(g_client, globals);
 
   Input.setupKeyboardDPadKeys(sendPad);
