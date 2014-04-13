@@ -79,6 +79,10 @@ define(['./cookies'], function(Cookies) {
       sendBusy(false);
     }.bind(this);
 
+    this.startNameEntry = function() {
+      element.focus();
+    }.bind(this);
+
     // If the user's name is "" the game may send a name.
     client.addEventListener('setName', handleSetNameMsg);
 

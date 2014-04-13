@@ -47,6 +47,10 @@ define(
     menu.addEventListener('click', function() {
       settings.style.display = "block";
     }, false);
+    $("setname").addEventListener('click', function() {
+      settings.style.display = "none";
+      playerNameHandler.startNameEntry();
+    }, false);
     $("restart").addEventListener('click', function() {
       window.location.reload();
     }, false);
