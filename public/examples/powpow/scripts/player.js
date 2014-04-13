@@ -86,7 +86,7 @@ define(['../../scripts//2d', './ships', './shot'], function(M2D, Ships, Shot) {
       this.score = 0;
       this.timer = 0;
       this.launchDuration = 0.5;
-      this.showPlaceInQueue = false;
+      this.showPlaceInQueue = true;
       this.invincibilityTimer = 0;
 
       // If true the player is entering their name.
@@ -180,15 +180,16 @@ define(['../../scripts//2d', './ships', './shot'], function(M2D, Ships, Shot) {
   };
 
   Player.prototype.handleNameMsg = function(msg) {
-    if (!msg.name) {
+    var newName = msg.name.replace(/[<>]/g, '');
+    if (!newName) {
       this.sendCmd('setName', {
         name: this.playerName
       });
     } else {
-      this.showPlaceInQueue = true;
-      this.playerName = msg.name.replace(/[<>]/g, '');
-      g_updateStatus = true;
+      this.playerName = newName;
     }
+    this.showPlaceInQueue = true;
+    g_updateStatus = true;
   };
 
   Player.prototype.handleBusyMsg = function(msg) {
@@ -336,7 +337,7 @@ define(['../../scripts//2d', './ships', './shot'], function(M2D, Ships, Shot) {
         killed: this.playerName
       });
     }
-    this.showPlaceInQueue = true;
+    this.showPlaceInQueue = false;
     this.renderer.startExplosion(
         this.position,
         this.direction,
