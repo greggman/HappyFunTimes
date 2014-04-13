@@ -4,7 +4,7 @@ define(function() {
 
   // To play a sound, simply call audio.playSound(id), where id is
   // one of the keys of the g_sound_files array, e.g. "damage".
-  var AudioManager = function(sounds, log) {
+  var AudioManager = function(sounds, options) {
     var g_context;
     var g_audioMgr;
     var g_soundBank = {};
@@ -18,6 +18,14 @@ define(function() {
     var changeExt = function(filename, ext) {
       return filename.substring(0, filename.length - 3) + ext;
     };
+
+    this.needUserGesture = (function() {
+      var iOS = ( navigator.userAgent.match(/(iPad|iPhone|iPod)/g) ? true : false );
+      var needUserGesture = iOS;
+      return function() {
+        return needUserGesture;
+      };
+    }());
 
     function WebAudioSound(name, filename, samples, opt_callback) {
       this.name = name;
@@ -118,31 +126,39 @@ define(function() {
     // in response to a user gesture. So, make something
     // to respond to a user gesture.
     var setupGesture = function() {
-      var iOS = ( navigator.userAgent.match(/(iPad|iPhone|iPod)/g) ? true : false );
-      var needUserGesture = iOS;
-      if (needUserGesture) {
+      if (this.needUserGesture()) {
         var count = 0;
         var elem = window;
         var that = this;
-        var eventName = 'touchstart';
+        var eventNames = ['touchstart', 'mousedown'];
         var playSoundToStartAudio = function() {
           ++count;
           if (count == 1) {
             // just playing any sound does not seem to work.
             var source = g_context.createOscillator();
+            var gain = g_context.createGain();
             source.frequency.value = 1;
-            source.connect(g_context.destination);
+            source.connect(gain);
+            gain.gain.value = 0;
+            gain.connect(g_context.destination);
             source.start(0);
             setTimeout(function() {
               source.disconnect();
             }, 100);
-            elem.removeEventListener(eventName, playSoundToStartAudio, false);
+            for (var ii = 0; ii < eventNames.length; ++ii) {
+              elem.removeEventListener(eventNames[ii], playSoundToStartAudio, false);
+            }
+            if (options.startedOnTouchCallback) {
+              options.startedOnTouchCallback();
+            }
           }
         }
 
-        elem.addEventListener(eventName, playSoundToStartAudio, false);
+        for (var ii = 0; ii < eventNames.length; ++ii) {
+          elem.addEventListener(eventNames[ii], playSoundToStartAudio, false);
+        }
       }
-    };
+    }.bind(this);
 
     this.loadSound = function(soundName, filename, samples, opt_callback) {
       var ext = filename.substring(filename.length - 3);

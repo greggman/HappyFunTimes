@@ -181,7 +181,16 @@ var main = function(
       });
     };
 
-    g_audioManager = new AudioManager();
+    function removeTapToStart() {
+      $("waitfortouch").style.display = "none";
+    }
+
+    g_audioManager = new AudioManager(undefined, {
+      startedOnTouchCallback: removeTapToStart,
+    });
+    if (g_audioManager.needUserGesture()) {
+      $("waitfortouch").style.display = "block";
+    }
 
     var startTime = g_clock.getTime();
 
