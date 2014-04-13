@@ -109,21 +109,23 @@ class Builder(object):
 
 
   def Process(self):
-    files = [
-      "public/examples/deviceorientation/controller.html",
-      "public/examples/jamjam/controller.html",
-      "public/examples/powpow/controller.html",
-      "public/examples/shootshoot/controller.html",
-      "public/examples/unitycharacterexample/controller.html",
+    example_names = [
+      "DeviceOrientation",
+      "JamJam",
+      "JumpJump",
+      "PowPow",
+      "ShootShoot",
+      "UnityCharacterExample",
     ]
-    for file in files:
-      outname = os.path.join(os.path.dirname(file), "index.html")
-      name = os.path.splitext(os.path.basename(os.path.dirname(file)))[0]
+    for name in example_names:
+      filebasename = name.lower()
+      filename = os.path.join("public", "examples", filebasename, "controller.html")
+      outname = os.path.join(os.path.dirname(filename), "index.html")
       extra = {
-        'name': name,  # TODO: make CamelCase if possible
-        'filebasename': name,
+        'name': name,
+        'filebasename': filebasename,
       }
-      self.ApplyTemplateToFile("templates/controller.index.html", file, outname, extra)
+      self.ApplyTemplateToFile("templates/controller.index.html", filename, outname, extra)
 
     # generate public/index.html
     #//toc = ['<li><a href="%s">%s</a></li>' % (a["dst_file_name"], a["title"]) for a in self.articles]
