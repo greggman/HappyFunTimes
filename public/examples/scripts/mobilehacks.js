@@ -44,11 +44,14 @@ define(function() {
     }
   };
 
-  // When the device re-orients, at least on iOS, the page is scrolled down :(
-  window.addEventListener('orientationchange', function() {
+  var fixupAfterSizeChange = function() {
     window.scrollTo(0, 0);
     fixHeightHack();
-  }, false);
+  };
+
+  // When the device re-orients, at least on iOS, the page is scrolled down :(
+  window.addEventListener('orientationchange', fixupAfterSizeChange, false);
+  window.addEventListener('resize', fixupAfterSizeChange, false);
 
   // Prevents the browser from sliding the page when the user slides their finger.
   // At least on iOS.
