@@ -1,24 +1,13 @@
-*   add set name to menu
 *   figure out why deviceorientation message is low
 *   make powpow use handjs
-*   make all samples share a header and CSS layout
-*   make all samples have a name at the top and a drop down gear menu
-*   make all samples disconnect correctly
-*   make all samples handle the sound starting
-    *   without overlay
-    *   and without sometimes not working
 
 *   send no caching header? or at least optionally
 
-*   make all games use 'name'. save in cookie. Have gameclient send it automatically?
-
 *   add touchmove preventdefault lib to all samples
-
-*   make dpad controller svg/image
 
 *   decide best dead-space etc for dpad
 
-*   make shootshoot controller show a simple to rotate if in portrate mode
+*   make powpow/unitycharacter/shootshoot controller show a simple to rotate if in portrate mode
 
 *   remove android single touch from powpow
 
@@ -31,25 +20,17 @@
     Change it so it controls from the center? Show <- -> buttons
     and a [Fire] button with the ship somewhere else?
 
-*   Make reload work on all controllers.
-
-    * consider making reload to go /index.html for game selection?
-
 *   make disconnect handling shared?
 
 *   fix tdl vs require load issues.
 
 *   Remove sound from clock sync or fix it.
 
-*   fix simple controls and game so they use full area?
-
 *   Get nice designs for games. Particularly controllers
 
-*   separate css
+*   store rhythm in cookie?
 
-*   short rhythm in cookie
-
-*   make public/index.html that lists games/examples
+*   make public/index.html template generated?
 
 *   remove window everywhere?
 
@@ -80,15 +61,6 @@
 
      *  Use device motion to play tennis like Wii (shake controller to return ball)
 
-*   abstract name stuff
-
-    Powpow lets you name your player. Should this be in every game? Turned into a library?
-
-*   make game retry, once a second, to connect server
-
-    *   JS
-    *   Unity
-
 *   abstract out Unity3D parts of C#
 
     Currently the C# version of the library is Unity3d specific. Should be easy to abstract that out
@@ -104,14 +76,39 @@
 
 *   make tick for clocksync ogg/mp3
 
-*   Make controllers have button to go back to games
-
-*   Make disconnect centered/sized and clickable.
-
 
 Done
 ----
 
+*   Make disconnect centered/sized and clickable.
+
+*   Make controllers have button to go back to games
+
+*   abstract name stuff
+
+    Powpow lets you name your player. Should this be in every game? Turned into a library?
+
+*   make public/index.html that lists games/examples
+
+*   separate css
+
+*   fix simple controls and game so they use full area?
+
+*   Make reload work on all controllers.
+
+    * consider making reload to go /index.html for game selection?
+
+*   make dpad controller renderer
+
+*   make all games use 'name'. save in cookie. Have gameclient send it automatically?
+
+*   make all samples handle the sound starting
+    *   without overlay
+    *   and without sometimes not working
+*   make all samples disconnect correctly
+*   make all samples have a name at the top and a drop down gear menu
+*   add set name to menu
+*   make all samples share a header and CSS layout
 *   make orientation example
     *   use colors
     *   random starting point
