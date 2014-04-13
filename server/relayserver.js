@@ -174,7 +174,7 @@ var Player = function(client, relayServer, id) {
 
   var passMessageFromPlayerToGame = function(data) {
     this.timeOfLastMessageFromPlayer = getTime();
-    this.game.send({
+    this.game.send(this, {
       cmd: 'update',
       id: this.id,
       data: data,
@@ -227,7 +227,7 @@ Player.prototype.send = function(msg) {
 
 Player.prototype.sendToGame = function(msg) {
   if (this.game) {
-    this.game.send(msg);
+    this.game.send(this, msg);
   }
 };
 
@@ -259,7 +259,7 @@ Game.prototype.addPlayer = function(player) {
   }
   ++this.numPlayers;
   this.players[id] = player;
-  this.send({cmd: 'start', id: id});
+  this.send(null, {cmd: 'start', id: id});
 };
 
 Game.prototype.removePlayer = function(player) {
@@ -268,19 +268,23 @@ Game.prototype.removePlayer = function(player) {
     console.error("player " + id + " is not a member of game " + this.gameId);
     return;
   }
+  // remove queued messages from this player
+  this.sendQueue = this.sendQueue.filter(function(msg) {
+    return msg.owner !== player;
+  });
   --this.numPlayers;
   delete this.players[player.id];
-  this.send({
+  this.send(null, {
     cmd: 'remove',
     id: id,
   });
 };
 
-Game.prototype.send = function(msg) {
+Game.prototype.send = function(owner, msg) {
   if (this.client) {
     this.client.send(msg);
   } else {
-    this.sendQueue.push(msg);
+    this.sendQueue.push({owner: owner, msg: msg});
   }
 };
 
@@ -349,8 +353,13 @@ Game.prototype.assignClient = function(client) {
     });
   }.bind(this));
 
+  // Not sure why I even have a sendQueue
+  // as the game should be running before anyone
+  // joins but it seems to be useful for debugging
+  // since contollers start and often immediately
+  // send a name and color cmd.
   this.sendQueue.forEach(function(msg) {
-    this.client.send(msg);
+    this.client.send(msg.msg);
   }.bind(this));
   this.sendQueue = [];
 };
