@@ -1,0 +1,330 @@
+/*
+ * Copyright 2014, Gregg Tavares.
+ * All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are
+ * met:
+ *
+ *     * Redistributions of source code must retain the above copyright
+ * notice, this list of conditions and the following disclaimer.
+ *     * Redistributions in binary form must reproduce the above
+ * copyright notice, this list of conditions and the following disclaimer
+ * in the documentation and/or other materials provided with the
+ * distribution.
+ *     * Neither the name of Gregg Tavares. nor the names of its
+ * contributors may be used to endorse or promote products derived from
+ * this software without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+ * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+ * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+ * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+ * OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+ * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+ * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+ * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+ * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+ * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ */
+"use strict";
+
+define(['../../scripts/2d'], function(M2D) {
+
+  var clamp = function(v, min, max) {
+    return Math.max(min, Math.min(max, v));
+  };
+
+  var clampPlusMinus = function(v, max) {
+    return clamp(v, -max, max);
+  };
+
+  var sign = function(v) {
+    return v < 0 ? -1 : (v > 0 ? 1 : 0);
+  };
+
+  /**
+   * Player represnt a player in the game.
+   * @constructor
+   */
+  var Player = (function() {
+
+    return function(services, x, y, width, height, direction, name, netPlayer) {
+      this.services = services;
+      this.renderer = services.renderer;
+
+      services.entitySystem.addEntity(this);
+      this.netPlayer = netPlayer;
+      this.position = [x, y];
+      this.velocity = [0, 0];
+      this.acceleration = [0, 0];
+      this.color = "green";
+      this.width = width;
+      this.height = height;
+      this.checkWallOffset = [
+        -this.width / 2,
+        this.width / 2 - 1,
+      ];
+
+
+      netPlayer.addEventListener('disconnect', Player.prototype.handleDisconnect.bind(this));
+      netPlayer.addEventListener('move', Player.prototype.handleMoveMsg.bind(this));
+      netPlayer.addEventListener('jump', Player.prototype.handleJumpMsg.bind(this));
+      netPlayer.addEventListener('setName', Player.prototype.handleNameMsg.bind(this));
+      netPlayer.addEventListener('setColor', Player.prototype.handleSetColorMsg.bind(this));
+
+      this.playerName = name;
+      this.direction = 0;         // direction player is pushing (-1, 0, 1)
+      this.facing = direction;    // direction player is facing (-1, 1)
+      this.score = 0;
+
+      this.setState('idle');
+      this.checkBounds();
+    };
+  }());
+
+  Player.prototype.setState = function(state) {
+    this.state = state;
+    var init = this["init_" + state];
+    if (init) {
+      init.call(this);
+    }
+    this.process = this["state_" + state];
+  }
+
+  Player.prototype.checkBounds = function() {
+    var levelManager = this.services.levelManager;
+    var level = levelManager.getLevel();
+
+    if (this.position[1] > level.width * level.tileHeight) {
+      debugger;
+    }
+  };
+
+//  Player.prototype.process = function() {
+//    this.checkBounds();
+//    this["state_" + this.state].call(this);
+//  };
+
+  Player.prototype.removeFromGame = function() {
+    this.services.entitySystem.removeEntity(this);
+    this.services.playerManager.removePlayer(this);
+  };
+
+  Player.prototype.handleDisconnect = function() {
+    this.removeFromGame();
+  };
+
+  Player.prototype.handleSetColorMsg = function(msg) {
+    this.color = msg.color;
+  };
+
+  Player.prototype.handleMoveMsg = function(msg) {
+    this.direction = msg.dir;
+    if (this.direction) {
+      this.facing = this.direction;
+    }
+  };
+
+  Player.prototype.handleJumpMsg = function(msg) {
+    this.jump = msg.jump;
+    if (this.jump == 0) {
+      this.jumpTimer = 0;
+    }
+  };
+
+  Player.prototype.handleNameMsg = function(msg) {
+    if (!msg.name) {
+      this.sendCmd('setName', {
+        name: this.playerName
+      });
+    } else {
+      this.playerName = msg.name.replace(/[<>]/g, '');
+    }
+  };
+
+  Player.prototype.sendCmd = function(cmd, data) {
+    this.netPlayer.sendCmd(cmd, data);
+  };
+
+  Player.prototype.updatePosition = function(axis) {
+    var axis = axis || 3;
+    var globals = this.services.globals;
+    if (axis & 1) {
+      this.position[0] += this.velocity[0] * globals.elapsedTime;
+    }
+    if (axis & 3) {
+      this.position[1] += this.velocity[1] * globals.elapsedTime;
+    }
+  };
+
+  Player.prototype.updateVelocity = function(axis) {
+    var axis = axis || 3;
+    var globals = this.services.globals;
+    if (axis & 1) {
+      this.velocity[0] += this.acceleration[0] * globals.elapsedTime * globals.elapsedTime;
+      this.velocity[0] = clampPlusMinus(this.velocity[0], globals.maxVelocity[0]);
+    }
+    if (axis & 2) {
+      this.velocity[1] += (this.acceleration[1] + globals.gravity) * globals.elapsedTime * globals.elapsedTime;
+      this.velocity[1] = clampPlusMinus(this.velocity[1], globals.maxVelocity[1]);
+    }
+  };
+
+  Player.prototype.updatePhysics = function(axis) {
+    this.updateVelocity(axis);
+    this.updatePosition(axis);
+  };
+
+  Player.prototype.init_idle = function() {
+    this.velocity[0] = 0;
+    this.velocity[1] = 0;
+    this.acceleration[0] = 0;
+    this.acceleration[1] = 0;
+  };
+
+  Player.prototype.state_idle = function() {
+    if (this.jump) {
+      this.setState('jump');
+      return;
+    } else if (this.direction) {
+      this.setState('move');
+      return;
+    }
+
+    this.checkFall();
+  };
+
+  Player.prototype.state_fall = function() {
+    var globals = this.services.globals;
+    this.acceleration[0] = this.direction * globals.moveAcceleration;
+    this.updatePhysics();
+    this.checkWall();
+    if (this.checkLand()) {
+      return;
+    }
+  };
+
+  Player.prototype.checkWall = function() {
+    var levelManager = this.services.levelManager;
+    var off = this.velocity[0] < 0 ? 0 : 1;
+    for (var ii = 0; ii < 2; ++ii) {
+      var xCheck = this.position[0] + this.checkWallOffset[off];
+      var tile = levelManager.getTileInfoByPixel(xCheck, this.position[1] - this.height / 4 - this.height / 2 * ii);
+      if (tile.collisions) {
+        var level = levelManager.getLevel();
+        this.velocity[0] = 0;
+        var distInTile = xCheck % level.tileWidth;
+        var xoff = off ? -distInTile : level.tileWidth - distInTile;
+        this.position[0] += xoff;
+      }
+    }
+  };
+
+  Player.prototype.checkFall = function() {
+    var levelManager = this.services.levelManager;
+    for (var ii = 0; ii < 2; ++ii) {
+      var tile = levelManager.getTileInfoByPixel(this.position[0] - this.width / 4 + this.width / 2 * ii, this.position[1]);
+      if (tile.collisions) {
+        return false;
+      }
+    }
+    this.setState('fall');
+    return true;
+  };
+
+  Player.prototype.checkUp = function() {
+    var levelManager = this.services.levelManager;
+    for (var ii = 0; ii < 2; ++ii) {
+      var tile = levelManager.getTileInfoByPixel(this.position[0] - this.width / 4 + this.width / 2 * ii, this.position[1] - this.height);
+      if (tile.collisions) {
+        var level = levelManager.getLevel();
+        this.velocity[1] = 0;
+        this.position[1] = (Math.floor(this.position[1] / level.tileHeight) + 1) * level.tileHeight;
+        return true;
+      }
+    }
+    return false;
+  };
+
+  Player.prototype.checkDown = function() {
+    var levelManager = this.services.levelManager;
+    for (var ii = 0; ii < 2; ++ii) {
+      var tile = levelManager.getTileInfoByPixel(this.position[0] - this.width / 4 + this.width / 2 * ii, this.position[1]);
+      if (tile.collisions) {
+        var level = levelManager.getLevel();
+        this.position[1] = Math.floor(this.position[1] / level.tileHeight) * level.tileHeight;
+        this.velocity[1] = 0;
+        this.setState('move');
+        return true;
+      }
+    }
+    return false;
+  };
+
+  Player.prototype.checkLand = function() {
+    if (this.velocity[1] > 0) {
+      this.checkDown();
+    } else {
+      this.checkUp();
+    }
+  };
+
+  Player.prototype.state_move = function() {
+    if (this.jump) {
+      this.setState('jump');
+      return;
+    }
+
+    if (!this.direction) {
+      this.setState('idle');
+      return;
+    }
+
+    var globals = this.services.globals;
+    this.acceleration[0] = this.direction * globals.moveAcceleration;
+    this.updatePhysics(1);
+    this.checkWall();
+    this.checkFall();
+  };
+
+  Player.prototype.init_jump = function(elaspedTime) {
+    var globals = this.services.globals;
+    this.jumpTimer = globals.jumpDuration;
+  };
+
+  Player.prototype.state_jump = function(elaspedTime) {
+    var globals = this.services.globals;
+    this.acceleration[0] = this.direction * globals.moveAcceleration;
+    this.velocity[1] = globals.jumpVelocity;
+    this.jumpTimer -= globals.elapsedTime;
+    this.updatePhysics();
+    this.checkLand();
+    this.checkWall();
+    if (this.jumpTimer <= 0 || !this.jump) {
+      this.setState('fall');
+    }
+  };
+
+  Player.prototype.draw = function(ctx) {
+    var globals = this.services.globals;
+    ctx.save();
+    ctx.translate(Math.floor(this.position[0]), Math.floor(this.position[1]));
+    ctx.fillStyle = this.color;
+    ctx.fillRect(-this.width / 2, -this.height, this.width, this.height);
+    if (globals.showState) {
+      ctx.fillStyle = (globals.frameCount & 4) ? "white" : "black";
+      ctx.fillRect(0, 0, 1, 1);
+    }
+    ctx.fillStyle = "black";
+    ctx.fillText(this.playerName, -this.width / 2,  -this.height - 10);
+    if (globals.showState) {
+      ctx.fillText(this.state, -this.width / 2,  -this.height - 20);
+    }
+    ctx.restore();
+  };
+
+  return Player;
+});
+
