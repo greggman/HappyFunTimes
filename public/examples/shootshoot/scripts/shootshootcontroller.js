@@ -33,7 +33,6 @@
 var main = function(
     GameClient,
     AudioManager,
-    Cookies,
     DPad,
     ExampleUI,
     Input,
@@ -114,7 +113,6 @@ var main = function(
 requirejs(
   [ '../../../scripts/gameclient',
     '../../scripts/audio',
-    '../../scripts/cookies',
     '../../scripts/dpad',
     '../../scripts/exampleui',
     '../../scripts/input',
