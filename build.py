@@ -123,7 +123,7 @@ class Builder(object):
       { "useTemplate": True,  "name": "ShootShoot",            "gameId": "shootshoot", },
       { "useTemplate": True,  "name": "UnityCharacterExample", "gameId": "unitycharcterexample", },
       { "useTemplate": True,  "name": "Simple",                "gameId": "simple", },
-      { "useTemplate": False, "name": "SuperSimple",           "gameId": "supersimple", },
+      { "useTemplate": True,  "name": "SuperSimple",           "gameId": "supersimple", },
       { "useTemplate": True,  "name": "ClockSync",             "gameId": "clocksync", },
     ]
     menuParts = []

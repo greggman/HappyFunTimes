@@ -31,11 +31,28 @@
 "use strict";
 
 // Require will call this with input and GameClient once input.js and gameclient.js have loaded
-var main = function(GameClient) {
+var main = function(
+    GameClient,
+    ExampleUI,
+    HandJS,
+    Input,
+    MobileHacks) {
+  // NOTE: Techincally MobileHacks and ExampleUI are not needed
+  //
+  // ExampleUI is included to make the sample appear inside a frame with a gear menu
+  //
+  // MobileHacks is included as it adds a few events to make mobile work better
+  //    for example preventing the browser from trying to scroll the page.
+  //
+  // HandJS provides pointermove and related events.
+  MobileHacks.fixHeightHack();
+
   var score = 0;
-  var statusElem = document.getElementById("status");
+  var statusElem = document.getElementById("gamestatus");
   var inputElem = document.getElementById("input");
   var client = new GameClient({ gameId: "supersimple" });
+
+  ExampleUI.setupStandardControllerUI(client, {});
 
   var randInt = function(range) {
     return Math.floor(Math.random() * range);
@@ -72,13 +89,9 @@ var main = function(GameClient) {
   inputElem.style.backgroundColor = color;
 
   // Send a message to the game when the screen is touched
-  inputElem.addEventListener('touchmove', function(event) {
-    sendMoveCmd(input.getRelativeCoordinates(event.target, event.touches[0]));
+  inputElem.addEventListener('pointermove', function(event) {
+    sendMoveCmd(Input.getRelativeCoordinates(event.target, event));
     event.preventDefault();
-  });
-
-  inputElem.addEventListener('mousemove', function(event) {
-    sendMoveCmd(input.getRelativeCoordinates(event.target, event));
   });
 
   // Update our score when the game tells us.
@@ -90,8 +103,11 @@ var main = function(GameClient) {
 
 // Start the main app logic.
 requirejs(
-  [ '../../scripts/input',
-    '../../../scripts/gameclient',
+  [ '../../../scripts/gameclient',
+    '../../scripts/exampleui',
+    '../../scripts/hand-1.3.7',
+    '../../scripts/input',
+    '../../scripts/mobilehacks',
   ],
   main
 );

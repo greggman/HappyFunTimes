@@ -30,7 +30,80 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 -->
-<h1 id="status">status</h1>
-<div id="input" style="width: 300px; height: 300px; border: 1px solid black;"></div>
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0, maximum-scale=1, user-scalable=no, minimal-ui">
+  <meta name="format-detection" content="telephone=no" />
+  <title>SuperSimple Controls</title>
+  <link rel="stylesheet" href="../css/samples.css">
+  <link rel="stylesheet" href="css/supersimple.css">
 <script data-main="scripts/supersimplecontroller.js" src="../scripts/require.js"></script>
+<script>
+requirejs.config({
+  shim: {
+        '../../scripts/hand-1.3.7': {
+            //These script dependencies should be loaded before loading
+            //hand.js
+            deps: [],
+            //Once loaded, use the global 'HANDJS' as the
+            //module value.
+            exports: 'HANDJ',
+        },
+        '../../scripts/three.min.js': {
+            //These script dependencies should be loaded before loading
+            //three.js
+            deps: [],
+            //Once loaded, use the global 'HANDJS' as the
+            //module value.
+            exports: 'THREE',
+        },
+    },
+});
+</script>
+</head>
+<body>
+<div id="container">
+  <div id="header">
+    <form id="nameform">
+      <input type="text" id="name" autocorrect="off" spellcheck="false" />
+    </form>
+    <div id="menu"><img src="../assets/gear-icon.svg"></div>
+  </div>
+  <div id="content">
+<div id="gamearea">
+  <h1 id="gamestatus">status</h1>
+  <div id="input"></div>
+  <div id="small">touch the square</div>
+</div>
+
+    <div id="disconnected">
+      <div class="fullcenter">
+        <div class="instruction">Disconnected</div>
+        <div class="menubutton" id="reload"><div>Restart</div></div>
+      </div>
+    </div>
+    <div id="debug">
+      <pre id="status">d</pre>
+      <div id="console"></div>
+    </div>
+  </div>
+</div>
+<div id="settings">
+  <div class="fullcenter">
+    <div id="setname" class="menubutton"><div>Set Name</div></div>
+    <div id="restart" class="menubutton"><div>Restart</div></div>
+    <div id="exit"    class="menubutton"><div>Main Menu</div></div>
+    <div id="back"    class="menubutton"><div>Back</div></div>
+  </div>
+</div>
+</body>
+</html>
+
 
