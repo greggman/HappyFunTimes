@@ -1,5 +1,7 @@
+*   make clock sync show a clock
 *   add some CSS animation foo for menu appearing, disappearing
 *   figure out why deviceorientation message is low
+*   figure out why everyone is player2
 *   make powpow use handjs
 *   put player name above character in unity.
 
@@ -31,8 +33,6 @@
 *   Get nice designs for games. Particularly controllers
 
 *   store rhythm in cookie?
-
-*   make public/index.html template generated?
 
 *   remove window everywhere?
 
@@ -81,6 +81,8 @@
 
 Done
 ----
+
+*   make public/index.html template generated?
 
 *   Make disconnect centered/sized and clickable.
 

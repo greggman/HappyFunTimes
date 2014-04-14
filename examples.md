@@ -1,7 +1,15 @@
 Examples
 ========
 
-First off some terms
+**Disclaimer:** These samples are only meant to show how to use HappyFunTimes. Specifically for
+controllers the class `GameClient`. For games the classes `GameServer` and `NetPlayer`.
+Everything else is just game jam quality example code. If you're going to make a real game
+please consider using an existing game framework or write your own. If these examples fit
+your needs then by all means feel free to use, clone, or modify them. My only point is they
+are not neccessily showing best practices for games in JavaScript.
+
+Some terms
+----------
 
 **controller** = The code running on the player's smartphone browser (or desktop/tablet browser)
 
@@ -9,17 +17,17 @@ First off some terms
 
 **relayserver** = A node based server that passes messages to and from contollers to games
 
-**GameServer** = An object running in the **game** that lets the game receive new players
-
 **GameClient** = An object running in the **controller** that lets the controller send and
 receive messages with the **game**
+
+**GameServer** = An object running in the **game** that lets the game receive new players
 
 **NetPlayer** = An object created by the **GameServer** anytime a new **controller** joins the game.
 It is passed to the game in a `playerconnected` event. It is used to send and receive messages from
 an individual **controller**.
 
 
-This is a few random notes on the examples.
+Here are a few random notes on the examples.
 
 Player Names
 ------------
