@@ -31,18 +31,33 @@
 "use strict";
 
 // Require will call this with input and GameClient once input.js and gameclient.js have loaded
-var main = function(input, GameClient) {
+var main = function(
+    GameClient,
+    ExampleUI,
+    HandJS,
+    Input,
+    Misc,
+    MobileHacks) {
+
+  var globals = {
+    debug: false,
+  };
+  Misc.applyUrlSettings(globals);
+  MobileHacks.fixHeightHack();
+
   var score = 0;
-  var statusElem = document.getElementById("status");
+  var statusElem = document.getElementById("gamestatus");
   var inputElem = document.getElementById("input");
   var client = new GameClient({
     gameId: "simple",
   });
+  ExampleUI.setupStandardControllerUI(client, globals);
 
   var randInt = function(range) {
     return Math.floor(Math.random() * range);
   };
 
+  // Note: ExampleUI handles these events for almost all the samples.
   client.addEventListener('connect', function() {
     statusElem.innerHTML = "you've connected to the relayserver";
   });
@@ -74,15 +89,15 @@ var main = function(input, GameClient) {
   inputElem.style.backgroundColor = color;
 
   // Send a message to the game when the screen is touched
-  inputElem.addEventListener('touchmove', function(event) {
-    var position = input.getRelativeCoordinates(event.target, event.touches[0]);
-    sendMoveCmd(event.target);
+  inputElem.addEventListener('pointermove', function(event) {
+    var position = Input.getRelativeCoordinates(event.target, event);
+    sendMoveCmd(position, event.target);
     event.preventDefault();
   });
 
-  inputElem.addEventListener('mousemove', function(event) {
-    sendMoveCmd(input.getRelativeCoordinates(event.target, event), event.target);
-  });
+//  inputElem.addEventListener('mousemove', function(event) {
+//    sendMoveCmd(Input.getRelativeCoordinates(event.target, event), event.target);
+//  });
 
   // Update our score when the game tells us.
   client.addEventListener('scored', function(cmd) {
@@ -93,8 +108,12 @@ var main = function(input, GameClient) {
 
 // Start the main app logic.
 requirejs(
-  [ '../../scripts/input',
-    '../../../scripts/gameclient',
+  [ '../../../scripts/gameclient',
+    '../../scripts/exampleui',
+    '../../scripts/hand-1.3.7',
+    '../../scripts/input',
+    '../../scripts/misc',
+    '../../scripts/mobilehacks',
   ],
   main
 );
