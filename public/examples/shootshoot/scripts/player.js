@@ -69,8 +69,8 @@ define(['../../scripts/2d', './shot'], function(M2D, Shot) {
   }
 
   Player.prototype.removeFromGame = function() {
-    this.services.entitySystem.deleteEntity(this);
-    this.services.drawSystem.deleteEntity(this);
+    this.services.entitySystem.removeEntity(this);
+    this.services.drawSystem.removeEntity(this);
     this.services.playerManager.removePlayer(this);
   };
 

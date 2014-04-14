@@ -48,7 +48,7 @@ define(function() {
     this.entities_.push(entity);
   };
 
-  EntitySystem.prototype.deleteEntity = function(entity) {
+  EntitySystem.prototype.removeEntity = function(entity) {
     this.removeEntities_.push(entity);
   };
 

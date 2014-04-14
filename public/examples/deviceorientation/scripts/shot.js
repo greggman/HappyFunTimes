@@ -73,7 +73,7 @@ define(['../../scripts/three.min'], function(ThreeFoo) {
   };
 
   Shot.prototype.destroy = function() {
-    this.services.entitySystem.deleteEntity(this);
+    this.services.entitySystem.removeEntity(this);
     this.services.scene.remove(this.root);
     putShotMesh(this.root);
   };

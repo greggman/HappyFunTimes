@@ -134,7 +134,7 @@ define(
       this.removeShot(this.shots[0]);
     }
     this.services.scene.remove(this.root);
-    this.services.entitySystem.deleteEntity(this);
+    this.services.entitySystem.removeEntity(this);
     this.services.playerManager.removePlayer(this);
   };
 

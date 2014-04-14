@@ -75,7 +75,7 @@ define(['../../scripts/three.min'], function(ThreeFoo) {
   };
 
   Goal.prototype.destroy = function() {
-    this.services.entitySystem.deleteEntity(this);
+    this.services.entitySystem.removeEntity(this);
     this.services.scene.remove(this.root);
   };
 

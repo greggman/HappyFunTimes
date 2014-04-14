@@ -1,5 +1,7 @@
+*   add some CSS animation foo for menu appearing, disappearing
 *   figure out why deviceorientation message is low
 *   make powpow use handjs
+*   put player name above character in unity.
 
 *   send no caching header? or at least optionally
 

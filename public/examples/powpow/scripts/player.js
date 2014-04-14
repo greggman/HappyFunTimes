@@ -154,7 +154,7 @@ define(['../../scripts/2d', './ships', './shot'], function(M2D, Ships, Shot) {
     while (this.shots.length) {
       this.removeShot(this.shots[0]);
     }
-    this.services.entitySystem.deleteEntity(this);
+    this.services.entitySystem.removeEntity(this);
     this.services.playerManager.removePlayer(this);
   };
 
