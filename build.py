@@ -124,7 +124,7 @@ class Builder(object):
       { "useTemplate": True,  "name": "UnityCharacterExample", "gameId": "unitycharcterexample", },
       { "useTemplate": False, "name": "Simple",                "gameId": "simple", },
       { "useTemplate": False, "name": "SuperSimple",           "gameId": "supersimple", },
-      { "useTemplate": False, "name": "ClockSync",             "gameId": "clocksync", },
+      { "useTemplate": True,  "name": "ClockSync",             "gameId": "clocksync", },
     ]
     menuParts = []
     for example in examples:

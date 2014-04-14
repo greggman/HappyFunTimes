@@ -31,13 +31,32 @@
 
 "use strict";
 
-var main = function(ClockSyncImpl) {
+var main = function(GameServer, ClockSyncImpl) {
+
+  var noop = function() {
+  };
+
+  var setupPlayer = function(netPlayer, name) {
+    // The only reason I connect these is so people don't ask about the 'no event' messages that might appear in the console
+    netPlayer.addEventListener('setName', noop);
+    netPlayer.addEventListener('setColor', noop);
+    netPlayer.addEventListener('disconnect', noop);
+  };
+
+  var server = new GameServer({
+    gameId: "clocksync",
+  });
+  server.addEventListener('connect', noop);
+  server.addEventListener('disconnect', noop);
+  server.addEventListener('playerconnect', setupPlayer);
+
   ClockSyncImpl(arguments);
 };
 
 // Start the main app logic.
 requirejs(
-  [ 'clocksyncimpl',
+  [ '../../../scripts/gameserver',
+    'clocksyncimpl',
   ],
   main
 );

@@ -1,4 +1,5 @@
 *   make clock sync show a clock
+*   make simple and supersimple use template
 *   add some CSS animation foo for menu appearing, disappearing
 *   figure out why deviceorientation message is low
 *   figure out why everyone is player2

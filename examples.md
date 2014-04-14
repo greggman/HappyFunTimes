@@ -4,7 +4,7 @@ Examples
 **Disclaimer:** These samples are only meant to show how to use HappyFunTimes. Specifically for
 controllers the class `GameClient`. For games the classes `GameServer` and `NetPlayer`.
 Everything else is just game jam quality example code. If you're going to make a real game
-please consider using an existing game framework or write your own. If these examples fit
+please consider using an existing game framework or writing your own. If these examples fit
 your needs then by all means feel free to use, clone, or modify them. My only point is they
 are not neccessily showing best practices for games in JavaScript.
 

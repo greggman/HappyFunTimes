@@ -66,7 +66,7 @@ define(
 
       g_audioManager = new AudioManager(sounds);
 
-      var clockElement = $("clock");
+      var clockElement = $("time");
       var clockNode = document.createTextNode("");
       clockElement.appendChild(clockNode);
 
@@ -79,17 +79,37 @@ define(
         var time = clock.getTime();
         var eighthSecondTicks = Math.floor(time * 8);
         var newState = (eighthSecondTicks % 8) == 0;
+
+
+        ctx.fillStyle = newState ? '#CCC' : '#AAA';
+        ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+        ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+        ctx.fillStyle = "#FFF";
+        ctx.save();
+        ctx.translate(ctx.canvas.width / 2, ctx.canvas.height / 2);
+        ctx.beginPath();
+        ctx.arc(0, 0, ctx.canvas.width / 2, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.fillStyle = newState ? '#FF0' : '#F00';
+        ctx.rotate(time * Math.PI * 2 % (Math.PI * 2));
+        ctx.beginPath();
+        ctx.moveTo(0, 0);
+        ctx.lineTo(-10, 0);
+        ctx.lineTo(0, -ctx.canvas.height / 2);
+        ctx.lineTo(10, 0);
+        ctx.lineTo(0, 0);
+        ctx.fill();
+        ctx.restore();
+
+
         if (newState != lastState) {
-          element.style.backgroundColor = newState ? 'yellow' : 'black';
-          ctx.fillStyle = newState ? 'red' : 'gray';
-          ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height);
           lastState = newState;
           if (newState) {
             g_audioManager.playSound('tick');
           }
         }
 
-        clockNode.nodeValue = time.toFixed(2) + " " + (Math.floor(time) % 100);
+        clockNode.nodeValue = (Math.floor(time) % 100);
 
         requestAnimationFrame(render);
       };

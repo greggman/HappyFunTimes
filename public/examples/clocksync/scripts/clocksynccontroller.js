@@ -31,13 +31,34 @@
 
 "use strict";
 
-var main = function(ClockSyncImpl) {
-  ClockSyncImpl(arguments);
+var main = function(
+    GameClient,
+    ExampleUI,
+    Misc,
+    MobileHacks,
+    ClockSyncImpl) {
+
+  var globals = {
+  };
+  Misc.applyUrlSettings(globals);
+  MobileHacks.fixHeightHack();
+
+  // NOTE: You don't actually need a gameclient to sync the clock
+  // but you can't tell the game has disconnected otherwise.
+  var client = new GameClient({
+    gameId: "clocksync",
+  });
+  ExampleUI.setupStandardControllerUI(client, {});
+  ClockSyncImpl();
 };
 
 // Start the main app logic.
 requirejs(
-  [ 'clocksyncimpl',
+  [ '../../../scripts/gameclient',
+    '../../scripts/exampleui',
+    '../../scripts/misc',
+    '../../scripts/mobilehacks',
+    'clocksyncimpl',
   ],
   main
 );
