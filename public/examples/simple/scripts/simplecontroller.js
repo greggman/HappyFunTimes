@@ -95,10 +95,6 @@ var main = function(
     event.preventDefault();
   });
 
-//  inputElem.addEventListener('mousemove', function(event) {
-//    sendMoveCmd(Input.getRelativeCoordinates(event.target, event), event.target);
-//  });
-
   // Update our score when the game tells us.
   client.addEventListener('scored', function(cmd) {
     score += cmd.points;
