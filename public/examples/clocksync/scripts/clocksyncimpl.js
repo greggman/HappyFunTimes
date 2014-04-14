@@ -93,11 +93,11 @@ define(
         ctx.fillStyle = newState ? '#FF0' : '#F00';
         ctx.rotate(time * Math.PI * 2 % (Math.PI * 2));
         ctx.beginPath();
-        ctx.moveTo(0, 0);
+        ctx.moveTo(0, 10);
         ctx.lineTo(-10, 0);
         ctx.lineTo(0, -ctx.canvas.height / 2);
         ctx.lineTo(10, 0);
-        ctx.lineTo(0, 0);
+        ctx.lineTo(0, 10);
         ctx.fill();
         ctx.restore();
 
@@ -109,7 +109,8 @@ define(
           }
         }
 
-        clockNode.nodeValue = (Math.floor(time) % 100);
+        var seconds = (Math.floor(time) % 60).toString();
+        clockNode.nodeValue = "0".substring(seconds.length - 1) + seconds;
 
         requestAnimationFrame(render);
       };
