@@ -41,8 +41,6 @@ var main = function(
     PlayerManager) {
 
   var g_canvas;
-  var g_debug = false;
-  var g_logGLCalls = false;
   var g_services = {};
 
   // You can set these from the URL with
@@ -60,10 +58,9 @@ var main = function(
     haveServer: true,
     areaSize: 300,
     time: 0,
+    clearColor: 0x000000,
   };
-
-  // g_debug = true;
-  // g_logGLCalls = true;
+  window.g = globals;
 
   function $(id) {
     return document.getElementById(id);
@@ -194,6 +191,7 @@ var main = function(
     }
 
     entitySys.processEntities();
+    renderer.setClearColor(globals.clearColor, 1);
     renderer.render(scene, camera);
 
     if (globals.showSphere) {
