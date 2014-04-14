@@ -50,8 +50,9 @@ var main = function(
     bpm: 120,
     loopLength: 16,
     debug: false,
+    rhythm: [1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0],
   };
-
+  Misc.applyUrlSettings(globals);
 
   function $(id) {
     return document.getElementById(id);
@@ -78,7 +79,7 @@ var main = function(
 
   var tracks = [
     {
-      rhythm: [1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0],
+      rhythm: globals.rhythm,
     },
   ];
 
@@ -152,7 +153,6 @@ var main = function(
       g_instrument = undefined;
     };
 
-    Misc.applyUrlSettings(globals);
     MobileHacks.fixHeightHack();
     var stop = false;
 
