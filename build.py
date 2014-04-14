@@ -86,9 +86,17 @@ class Builder(object):
     str = str % extra
     str = str.replace('__PERCENT__', '%')
 
+  def ApplyTemplate(self, template_path, params):
+    template = self.ReadFile(template_path)
+    return template % params
+
+  def ApplyTemplateToString(self, template_path, out_file_name, params):
+    template = self.ReadFile(template_path)
+    output = template % params
+    self.WriteFileIfChanged(out_file_name, output)
+
   def ApplyTemplateToFile(self, template_path, content_file_name, out_file_name, extra = {}):
     print "processing: ", content_file_name
-    template = self.ReadFile(template_path)
     (content, meta_data) = self.LoadFile(content_file_name)
     ##print meta_data
     meta_data['content'] = content
@@ -96,8 +104,7 @@ class Builder(object):
     meta_data['dst_file_name'] = out_file_name
     for key in extra:
       meta_data[key] = extra[key]
-    output = template % meta_data
-    self.WriteFileIfChanged(out_file_name, output)
+    self.ApplyTemplateToString(template_path, out_file_name, meta_data)
     self.articles.append(meta_data)
 
   def ApplyTemplateToFiles(self, template_path, files_spec):
@@ -107,31 +114,32 @@ class Builder(object):
       out_file_name = base_name + ".html"
       self.ApplyTemplateToFile(template_path, file_name, out_file_name, )
 
-
   def Process(self):
-    example_names = [
-      "DeviceOrientation",
-      "JamJam",
-      "JumpJump",
-      "PowPow",
-      "ShootShoot",
-      "UnityCharacterExample",
+    examples = [
+      { "useTemplate": True,  "name": "DeviceOrientation",     "gameId": "orient", },
+      { "useTemplate": True,  "name": "JamJam",                "gameId": "jamjam", },
+      { "useTemplate": True,  "name": "JumpJump",              "gameId": "jumpjump", },
+      { "useTemplate": True,  "name": "PowPow",                "gameId": "powpow", },
+      { "useTemplate": True,  "name": "ShootShoot",            "gameId": "shootshoot", },
+      { "useTemplate": True,  "name": "UnityCharacterExample", "gameId": "unitycharcterexample", },
+      { "useTemplate": False, "name": "Simple",                "gameId": "simple", },
+      { "useTemplate": False, "name": "SuperSimple",           "gameId": "supersimple", },
+      { "useTemplate": False, "name": "ClockSync",             "gameId": "clocksync", },
     ]
-    for name in example_names:
+    menuParts = []
+    for example in examples:
+      name = example["name"]
       filebasename = name.lower()
       filename = os.path.join("public", "examples", filebasename, "controller.html")
       outname = os.path.join(os.path.dirname(filename), "index.html")
-      extra = {
-        'name': name,
-        'filebasename': filebasename,
-      }
-      self.ApplyTemplateToFile("templates/controller.index.html", filename, outname, extra)
+      example["filebasename"] = filebasename
+      menuParts.append(self.ApplyTemplate("templates/menu.item.html", example))
+      if example["useTemplate"]:
+        self.ApplyTemplateToFile("templates/controller.index.html", filename, outname, example)
 
-    # generate public/index.html
-    #//toc = ['<li><a href="%s">%s</a></li>' % (a["dst_file_name"], a["title"]) for a in self.articles]
-    #//self.ApplyTemplateToFile("templates/lesson.template", "index.md", "index.html", {
-    #//    "table_of_contents": "<ul>" + "\n".join(toc) + "</ul>",
-    #//  })
+    self.ApplyTemplateToString("templates/menu.index.html", "public/index.html", {
+      "content": "\n".join(menuParts)
+    })
 
 def main (argv):
   parser = OptionParser()

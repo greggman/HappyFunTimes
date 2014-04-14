@@ -1,0 +1,147 @@
+/*
+ * Copyright 2014, Gregg Tavares.
+ * All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are
+ * met:
+ *
+ *     * Redistributions of source code must retain the above copyright
+ * notice, this list of conditions and the following disclaimer.
+ *     * Redistributions in binary form must reproduce the above
+ * copyright notice, this list of conditions and the following disclaimer
+ * in the documentation and/or other materials provided with the
+ * distribution.
+ *     * Neither the name of Gregg Tavares. nor the names of its
+ * contributors may be used to endorse or promote products derived from
+ * this software without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+ * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+ * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+ * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+ * OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+ * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+ * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+ * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+ * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+ * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ */
+
+/* set all elements to use border-box sizing. Yay! */
+* {
+    box-sizing: border-box;
+   -moz-box-sizing: border-box;
+}
+html, body {
+    width: 100%;
+    height: 100%;
+    border: 0px;
+    margin: 0px;
+    padding: 0px;
+    font-family: Helvetica, Arial, sans-serif;
+    font-size: x-large;
+    font-weight: bold;
+    background-color: #666;
+}
+h1 {
+    background: linear-gradient(to bottom, #f2f6f8 0%,#d8e1e7 88%,#b5c6d0 91%,#e0eff9 100%);
+    font-size: x-large;
+    padding: 0.5em;
+}
+#gamemenu {
+    text-align: center;
+}
+.game {
+    background-color: white;
+    margin-top: 1em;
+    -webkit-box-shadow: 0px 10px 15px 8px rgba(0,0,0,0.75);
+    box-shadow: 0px 10px 15px 8px rgba(0,0,0,0.75);
+
+    height: 150px;
+    overflow: hidden;
+}
+.game>a>div {
+    padding: 5px;
+    background: linear-gradient(to bottom, #f2f6f8 0%,#d8e1e7 88%,#b5c6d0 91%,#e0eff9 100%);
+}
+.game a, .game a:visited, .game a:hover {
+    text-decoration: none;
+    color: #444;
+}
+.game img {
+    max-height: 200px;
+    width: 320px;
+}
+
+#nogames {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    display: -webkit-flex;
+    flex-flow: column;
+    -webkit-flex-flow: column;
+    justify-content: center;
+    align-content: center;
+    align-items: center;
+    -webkit-justify-content: center;
+    -webkit-align-content: center;
+    -webkit-align-items: center;
+    min-height: auto;
+
+}
+
+/* Smartphones (portrait and landscape) ----------- */
+@media only screen and (min-device-width : 320px) and (max-device-width : 480px) {
+/* Styles */
+    .game {
+    }
+}
+
+/* Smartphones (landscape) ----------- */
+@media only screen and (min-width : 321px) {
+/* Styles */
+    .game {
+        width: 220px;
+        display: inline-block;
+        margin: 0.5em;
+    }
+    .game img {
+        width: 220px;
+    }
+}
+
+/* iPads (portrait and landscape) and bigger ----------- */
+@media only screen and (min-device-width : 768px) {
+/* Styles */
+    .game {
+        width: 320px;
+        display: inline-block;
+        margin: 0.5em;
+    }
+    .game img {
+        width: 320px;
+    }
+    h1 {
+        font-size: xx-large;
+        text-align: center;
+    }
+}
+
+/* Desktops and laptops ----------- */
+@media only screen and (min-device-width : 1224px) {
+/* Styles */
+    .game {
+        display: inline-block;
+        margin: 0.5em;
+        height: 210px;
+    }
+}
+
+/* iPhone 4 ----------- */
+@media
+only screen and (-webkit-min-device-pixel-ratio : 1.5),
+only screen and (min-device-pixel-ratio : 1.5) {
+/* Styles */
+}
