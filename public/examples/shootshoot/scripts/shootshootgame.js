@@ -39,6 +39,7 @@ var main = function(
     LocalNetPlayer,
     AudioManager,
     EntitySystem,
+    GameClock,
     Input,
     Misc,
     Speedup,
@@ -155,11 +156,9 @@ var main = function(
     startLocalPlayers();
   }
 
-  var then = Date.now() * 0.001;
+  var clock = new GameClock();
   function render() {
-    var now = Date.now() * 0.001;
-    globals.elapsedTime = now - then;
-    then = now;
+    globals.elapsedTime = clock.getElapsedTime();
 
     g_entitySystem.processEntities();
 
@@ -180,6 +179,7 @@ requirejs(
     '../../../scripts/localnetplayer',
     '../../scripts/audio',
     '../../scripts/entitysystem',
+    '../../scripts/gameclock',
     '../../scripts/input',
     '../../scripts/misc',
     '../../scripts/speedup',

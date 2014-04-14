@@ -331,6 +331,7 @@ var main = function(
     SyncedClock,
     AudioManager,
     CSSParse,
+    GameClock,
     Misc,
     CanvasRenderer,
     WebGLRenderer) {
@@ -431,11 +432,9 @@ var main = function(
     }
     process();
 
-    var then = clock.getTime();
+    var gameClock = new GameClock(clock);
     function render() {
-      var now = clock.getTime();
-      globals.elapsedTime = now - then;
-      then = now;
+      globals.elapsedTime = gameClock.getElapsedTime();
 
       //var x = Misc.randInt(150) + 500;
       //var y = Misc.randInt(150) + 300;
@@ -484,6 +483,7 @@ requirejs(
     '../../../scripts/syncedclock',
     '../../scripts/audio',
     '../../scripts/cssparse',
+    '../../scripts/gameclock',
     '../../scripts/misc',
     './canvasrenderer',
     './webglrenderer',

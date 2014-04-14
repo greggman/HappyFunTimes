@@ -58,6 +58,7 @@ var main = function(
     LocalNetPlayer,
     AudioManager,
     EntitySystem,
+    GameClock,
     Misc,
     CanvasRenderer,
     WebGLRenderer,
@@ -237,13 +238,10 @@ var main = function(
       startLocalPlayers();
     }
 
-    var then = (new Date()).getTime() * 0.001;
+    var clock = new GameClock();
     render();
-
     function render() {
-      var now = (new Date()).getTime() * 0.001;
-      globals.elapsedTime = Math.min(now - then, 1 / 10);    // don't advance more then a 1/10 of a second;
-      then = now;
+      globals.elapsedTime = clock.getElapsedTime();
 
       renderer.resize();
       globals.width = g_canvas.width;
@@ -363,6 +361,7 @@ requirejs(
     '../../../scripts/localnetplayer',
     '../../scripts/audio',
     '../../scripts/entitysystem',
+    '../../scripts/gameclock',
     '../../scripts/misc',
     'canvasrenderer',
     'webglrenderer',

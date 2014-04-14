@@ -34,6 +34,7 @@ var main = function(
     GameServer,
     AudioManager,
     EntitySystem,
+    GameClock,
     ThreeFoo,
     Misc,
     Goal,
@@ -49,6 +50,7 @@ var main = function(
   var globals = {
     audio: true,
     showCorners: false,
+    showSphere: false,
     maxShots: 2,
     shotDuration: 5,
     shotInterval: 1,
@@ -106,16 +108,18 @@ var main = function(
   light1.position.set(-200, -500, -200);
   scene.add(light1);
 
-//  var sphere = new THREE.SphereGeometry(50, 16, 8);
-//  var material = new THREE.MeshPhongMaterial({
-//    ambient: 0x030303,
-//    color: 0x0000FF,
-//    specular: 0xFFFFFF,
-//    shininess: 30,
-//    shading: THREE.FlatShading,
-//  });
-//  var mesh = new THREE.Mesh(sphere, material);
-//  scene.add(mesh);
+  if (globals.showSphere) {
+    var sphere = new THREE.SphereGeometry(50, 16, 8);
+    var material = new THREE.MeshPhongMaterial({
+      ambient: 0x030303,
+      color: 0x0000FF,
+      specular: 0xFFFFFF,
+      shininess: 30,
+      shading: THREE.FlatShading,
+    });
+    var sphereMesh = new THREE.Mesh(sphere, material);
+    scene.add(sphereMesh);
+  }
 
   if (globals.showCorners) {
     var geo = new THREE.BoxGeometry(5, 5, 5);
@@ -176,13 +180,11 @@ var main = function(
 
   g_services.goal = new Goal(g_services);
 
-  var then = (new Date()).getTime() * 0.001;
+  var clock = new GameClock();
   render();
   function render() {
-    var now = (new Date()).getTime() * 0.001;
-    globals.elapsedTime = Math.min(now - then, 1 / 10);    // don't advance more then a 1/10 of a second;
-    globals.time += globals.elapsedTime;
-    then = now;
+    globals.elapsedTime = clock.getElapsedTime();
+    globals.time = clock.gameTime;
 
     if (g_canvas.width != g_canvas.clientWidth &&
         g_canvas.height != g_canvas.clientHeight) {
@@ -194,8 +196,10 @@ var main = function(
     entitySys.processEntities();
     renderer.render(scene, camera);
 
-//    mesh.rotation.x += globals.elapsedTime * 0.2;
-//    mesh.rotation.z += globals.elapsedTime * 0.31;
+    if (globals.showSphere) {
+      sphereMesh.rotation.x += globals.elapsedTime * 0.2;
+      sphereMesh.rotation.z += globals.elapsedTime * 0.31;
+    }
 
     requestAnimationFrame(render, g_canvas);
   }
@@ -206,6 +210,7 @@ requirejs(
   [ '../../../scripts/gameserver',
     '../../scripts/audio',
     '../../scripts/entitysystem',
+    '../../scripts/gameclock',
     '../../scripts/three.min',
     '../../scripts/misc',
     'goal',
