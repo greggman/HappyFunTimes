@@ -64,6 +64,7 @@ define(['../../scripts/2d'], function(M2D) {
       this.animTimer = 0;
       this.width = width;
       this.height = height;
+      this.canJump = false;
       this.checkWallOffset = [
         -this.width / 2,
         this.width / 2 - 1,
@@ -102,6 +103,19 @@ define(['../../scripts/2d'], function(M2D) {
 
     if (this.position[1] > level.width * level.tileHeight) {
       debugger;
+    }
+  };
+
+  Player.prototype.checkJump = function() {
+    if (this.canJump) {
+      if (this.jump) {
+        this.canJump = false;
+        this.setState('jump');
+      }
+    } else {
+      if (!this.jump) {
+        this.canJump = true;
+      }
     }
   };
 
@@ -194,8 +208,7 @@ define(['../../scripts/2d'], function(M2D) {
   };
 
   Player.prototype.state_idle = function() {
-    if (this.jump) {
-      this.setState('jump');
+    if (this.checkJump()) {
       return;
     } else if (this.direction) {
       this.setState('move');
@@ -297,8 +310,7 @@ define(['../../scripts/2d'], function(M2D) {
   };
 
   Player.prototype.state_move = function() {
-    if (this.jump) {
-      this.setState('jump');
+    if (this.checkJump()) {
       return;
     }
 
