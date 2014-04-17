@@ -121,7 +121,7 @@ class Builder(object):
       { "useTemplate": True,  "name": "JumpJump",              "gameId": "jumpjump", },
       { "useTemplate": True,  "name": "PowPow",                "gameId": "powpow", },
       { "useTemplate": True,  "name": "ShootShoot",            "gameId": "shootshoot", },
-      { "useTemplate": True,  "name": "UnityCharacterExample", "gameId": "unitycharcterexample", },
+      { "useTemplate": True,  "name": "UnityCharacterExample", "gameId": "unitycharacterexample", },
       { "useTemplate": True,  "name": "Simple",                "gameId": "simple", },
       { "useTemplate": True,  "name": "SuperSimple",           "gameId": "supersimple", },
       { "useTemplate": True,  "name": "ClockSync",             "gameId": "clocksync", },
