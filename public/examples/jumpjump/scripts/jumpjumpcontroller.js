@@ -36,7 +36,8 @@ var main = function(
     ExampleUI,
     Input,
     Misc,
-    MobileHacks) {
+    MobileHacks,
+    Touch) {
   var g_client;
   var g_audioManager;
   var g_clock;
@@ -78,31 +79,65 @@ var main = function(
 
   ExampleUI.setupStandardControllerUI(g_client, globals);
 
+  var leftDown = function() {
+    if (!g_left) {
+      g_left = true;
+      g_client.sendCmd('move', {
+          dir: -1
+      });
+    }
+  };
+
+  var leftUp = function() {
+    g_left = false;
+    g_client.sendCmd('move', {
+        dir: (g_right) ? 1 : 0
+    });
+  };
+
+  var rightDown = function() {
+    if (!g_right) {
+      g_right = true;
+      g_client.sendCmd('move', {
+          dir: 1
+      });
+    }
+  };
+
+  var rightUp = function() {
+    g_right = false;
+    g_client.sendCmd('move', {
+        dir: (g_left) ? -1 : 0
+    });
+  };
+
+  var jumpDown = function() {
+    if (!g_jump) {
+      g_jump = true;
+      g_client.sendCmd('jump', {
+          jump: true,
+      });
+    }
+  };
+
+  var jumpUp = function() {
+    g_jump = false;
+    g_client.sendCmd('jump', {
+        jump: false,
+    });
+  };
+
+
   function handleKeyDown(keyCode, state) {
     switch(keyCode) {
     case 37: // left
-      if (!g_left) {
-        g_left = true;
-        g_client.sendCmd('move', {
-            dir: -1
-        });
-      }
+      leftDown();
       break;
     case 39: // right
-      if (!g_right) {
-        g_right = true;
-        g_client.sendCmd('move', {
-            dir: 1
-        });
-      }
+      rightDown();
       break;
     case 90: // z
-      if (!g_jump) {
-        g_jump = true;
-        g_client.sendCmd('jump', {
-            jump: 1
-        });
-      }
+      jumpDown();
       break;
     }
   }
@@ -110,27 +145,51 @@ var main = function(
   function handleKeyUp(keyCode, state) {
     switch(keyCode) {
     case 37: // left
-      g_left = false;
-      g_client.sendCmd('move', {
-          dir: (g_right) ? 1 : 0
-      });
+      leftUp();
       break;
     case 39: // right
-      g_right = false;
-      g_client.sendCmd('move', {
-          dir: (g_left) ? -1 : 0
-      });
+      rightUp();
       break;
     case 90: // z
-      g_jump = false;
-      g_client.sendCmd('jump', {
-          jump: 0
-      });
+      jumpUp();
       break;
     }
   }
 
   Input.setupControllerKeys(handleKeyDown, handleKeyUp);
+
+  var handleLeftTouch = function(e) {
+    if (e.pressed) {
+      leftDown();
+    } else {
+      leftUp();
+    }
+  };
+
+  var handleRightTouch = function(e) {
+    if (e.pressed) {
+      rightDown();
+    } else {
+      rightUp();
+    }
+  };
+
+  var handleUpTouch = function(e) {
+    if (e.pressed) {
+      jumpDown();
+    } else {
+      jumpUp();
+    }
+  };
+
+  Touch.setupButtons({
+    inputElement: $("buttons"),
+    buttons: [
+      { element: $("left"),  callback: handleLeftTouch,  },
+      { element: $("right"), callback: handleRightTouch, },
+      { element: $("up"),    callback: handleUpTouch,    },
+    ],
+  });
 };
 
 // Start the main app logic.
@@ -141,6 +200,7 @@ requirejs(
     '../../scripts/input',
     '../../scripts/misc',
     '../../scripts/mobilehacks',
+    '../../scripts/touch',
   ],
   main
 );

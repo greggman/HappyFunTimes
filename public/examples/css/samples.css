@@ -213,4 +213,23 @@ html, body {
   font-size: xx-large;
   font-weight: bold;
 }
+#hft-portrait {
+  display: none;
+}
+.hft-xlarge {
+  font-size: 150pt;
+  font-weight: bold;
+}
+@media only screen and (max-width : 320px) {
+  #hft-portrait {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    background-color: red;
+    color: white;
+    display: flex;
+    display: -webkit-flex;
+    z-index: 9999;
+  }
+}
 

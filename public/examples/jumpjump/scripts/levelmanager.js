@@ -104,13 +104,22 @@ define(function() {
     ctx.fillStyle = "lightblue";
     ctx.fillRect(0, 0, this.levelWidth, this.levelHeight);
 
-    for (var y = 0; y < this.height; ++y) {
-      for (var x = 0; x < this.width; ++x) {
-        var tile = this.tiles[y * this.width + x];
+    for (var ty = 0; ty < this.height; ++ty) {
+      for (var tx = 0; tx < this.width; ++tx) {
+        var tile = this.tiles[ty * this.width + tx];
         var info = levelManager.getTileInfo(tile);
-        if (info.color) {
-          ctx.fillStyle = info.color;
-          ctx.fillRect(x * this.tileWidth, y * this.tileHeight, this.tileWidth, this.tileHeight);
+        var x = tx * this.tileWidth;
+        var y = ty * this.tileHeight;
+        if (info) {
+          if (info.imgName) {
+            var imgInfo = levelManager.services.images[info.imgName];
+            var frames = imgInfo.colors[0];
+            var img = frames[0];
+            ctx.drawImage(img, x, y);
+          } else if (info.color) {
+            ctx.fillStyle = info.color;
+            ctx.fillRect(x, y, this.tileWidth, this.tileHeight);
+          }
         }
       }
     }
@@ -141,6 +150,7 @@ define(function() {
   var tileInfoWall = {
     collisions: true,
     color: "white",
+    imgName: "brick",
   };
 
   var tileInfoMap = {};

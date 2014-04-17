@@ -200,10 +200,13 @@ window.g = globals;
     }, false);
   };
 
+  // colorize: number of colors to make
+  // slizes: number = width of all slices, array = width of each consecutive slice
   var images = {
-    idle: { url: "assets/spr_idle.png" },
-    move: { url: "assets/spr_run.png" },
-    jump: { url: "assets/spr_jump.png", slices: [16, 17, 17, 18, 16, 16] },
+    idle:  { url: "assets/spr_idle.png", colorize: 32, slices: 16, },
+    move:  { url: "assets/spr_run.png",  colorize: 32, slices: 16, },
+    jump:  { url: "assets/spr_jump.png", colorize: 32, slices: [16, 17, 17, 18, 16, 16] },
+    brick: { url: "assets/bricks.png",   colorize:  1, slices: 16, },
   };
   g_services.images = images;
 window.s = g_services;
@@ -213,13 +216,13 @@ window.s = g_services;
     for (var name in images) {
       var image = images[name];
       image.colors = [];
-      for (var ii = 0; ii < 32; ++ii) {
-        var coloredImage = ImageProcess.adjustHSV(image.img, ii / 32, -(ii % 2) * 0.5, 0, duckBlueRange);
-        var numFrames = image.slices ? image.slices.length : image.img.width / 16;
+      for (var ii = 0; ii < image.colorize; ++ii) {
+        var coloredImage = ii ? ImageProcess.adjustHSV(image.img, ii / 32, -(ii % 2) * 0.5, 0, duckBlueRange) : image.img;
+        var numFrames = image.slices.length ? image.slices.length : image.img.width / image.slices;
         var frames = [];
         var x = 0;
         for (var jj = 0; jj < numFrames; ++jj) {
-          var width = image.slices ? image.slices[jj] : 16;
+          var width = image.slices.length ? image.slices[jj] : image.slices;
           var frame = ImageProcess.cropImage(coloredImage, x, 0, width, 16);
           frame = ImageProcess.scaleImage(frame, 32, 32);
           frames.push(frame);

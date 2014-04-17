@@ -32,8 +32,9 @@
 
 define(
   [ './hand-1.3.7',
-    './input'
-  ], function(HandJS, Input) {
+    './input',
+    './misc',
+  ], function(HandJS, Input, Misc) {
 
   // Simulates 2 virtual dpads using touch events
   // Assumes left half of container is left dpad
@@ -214,8 +215,93 @@ define(
     container.addEventListener('pointerout', onPointerUp, false);
   };
 
+  //
+  // options:
+  //  inputElement: element that receives all input. Should be above all buttons
+  //  buttons: Array of object where
+  //    element: element that represents area of buttton (need not be visible)
+  //    callback: function to call when button is pressed or released
+  //
+  var setupButtons = function(options) {
+    var buttonInfos = [];
+    var buttons = options.buttons;
+    var inputElement = options.inputElement;
+
+    for (var ii = 0; ii < buttons.length; ++ii) {
+      var button = buttons[ii];
+      var buttonInfo = {
+        pointerIds: {},   // Pointers currently in this button
+        numPointerIds: 0, // Number of pointers in this button
+      };
+      Misc.copyProperties(button, buttonInfo);
+      buttonInfos.push(buttonInfo);
+    }
+
+    var printButtonInfo = function(buttonInfo) {
+      console.log("button: " + buttonInfo.element.id + ", " + buttonInfo.numPointerIds);
+    };
+
+    var addPointerId = function(buttonInfo, pointerId) {
+      if (!buttonInfo.pointerIds[pointerId]) {
+        buttonInfo.pointerIds[pointerId] = true;
+        ++buttonInfo.numPointerIds;
+        buttonInfo.callback({pressed: true});
+      }
+    };
+
+    var removePointerId = function(buttonInfo, pointerId) {
+      if (buttonInfo.pointerIds[pointerId]) {
+        delete buttonInfo.pointerIds[pointerId];
+        --buttonInfo.numPointerIds;
+        if (buttonInfo.numPointerIds == 0) {
+          buttonInfo.callback({pressed: false});
+        } else if (buttonInfo.numPointerIds < 0) {
+          throw ("numPointerIds went negative: how did I get here!?");
+        }
+      }
+    };
+
+    var handleButtonDown = function(e, buttonInfo) {
+      addPointerId(buttonInfo, e.pointerId);
+    };
+
+    var handleButtonMove = function(e, buttonInfo) {
+      addPointerId(buttonInfo, e.pointerId);
+    };
+
+    var handleButtonOut = function(e, buttonInfo) {
+      removePointerId(buttonInfo, e.pointerId);
+    };
+
+    for (var ii = 0; ii < buttonInfos.length; ++ii) {
+      var buttonInfo = buttonInfos[ii];
+      var elem = buttonInfo.element;
+      elem.addEventListener('pointerdown', function(buttonInfo) {
+        return function(e) {
+          handleButtonDown(e, buttonInfo);
+        }
+      }(buttonInfo), false);
+      elem.addEventListener('pointermove', function(buttonInfo) {
+        return function(e) {
+          handleButtonMove(e, buttonInfo);
+        }
+      }(buttonInfo), false);
+      elem.addEventListener('pointerup', function(buttonInfo) {
+        return function(e) {
+          handleButtonOut(e, buttonInfo);
+        }
+      }(buttonInfo), false);
+      elem.addEventListener('pointerout', function(buttonInfo) {
+        return function(e) {
+          handleButtonOut(e, buttonInfo);
+        }
+      }(buttonInfo), false);
+    }
+  };
+
   return {
     setupVirtualDPads: setupVirtualDPads,
+    setupButtons: setupButtons,
   };
 });
 

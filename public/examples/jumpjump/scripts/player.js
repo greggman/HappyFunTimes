@@ -74,6 +74,7 @@ define(['../../scripts/2d'], function(M2D) {
       netPlayer.addEventListener('move', Player.prototype.handleMoveMsg.bind(this));
       netPlayer.addEventListener('jump', Player.prototype.handleJumpMsg.bind(this));
       netPlayer.addEventListener('setName', Player.prototype.handleNameMsg.bind(this));
+      netPlayer.addEventListener('busy', Player.prototype.handleBusyMsg.bind(this));
       netPlayer.addEventListener('setColor', Player.prototype.handleSetColorMsg.bind(this));
 
       this.playerName = name;
@@ -116,6 +117,10 @@ define(['../../scripts/2d'], function(M2D) {
 
   Player.prototype.handleDisconnect = function() {
     this.removeFromGame();
+  };
+
+  Player.prototype.handleBusyMsg = function(msg) {
+    // We ignore this message
   };
 
   Player.prototype.handleSetColorMsg = function(msg) {

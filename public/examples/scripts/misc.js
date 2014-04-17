@@ -128,6 +128,7 @@ define(function() {
         }
         copyProperties(value, newDst);
       } else if (value instanceof Object &&
+                 !(value instanceof Function) &&
                  !(value instanceof HTMLElement)) {
         var newDst = dst[name];
         if (!newDst) {

@@ -30,28 +30,34 @@
  */
 #buttons {
     position: absolute;
+
+    -moz-user-select: none;
+    -webkit-user-select: none;
+    -o-user-select: none;
+    user-select: none;
 }
 .button {
     background-color: #fff;
     color: #000;
     border: 3px solid #444;
     border-radius: 10px;
-    width: 64px;
-    height: 64px;
+    width: 128px;
+    height: 128px;
     text-align: center;
-    font-size: xx-large;
+    font-size: 80px;
     font-family: Helvetica, Arial, sans-serif;
     font-weight: bold;
-    bottom: 10px;
+    bottom: 20px;
     position: absolute;
 }
 #left {
-  left: 10px;
+  left: 20px;
 }
 #right {
-  left: 80px;
+  left: 170px;
 }
 #up {
-  right: 10px;
+  right: 20px;
 }
+
 
