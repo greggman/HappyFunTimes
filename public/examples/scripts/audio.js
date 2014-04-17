@@ -5,6 +5,7 @@ define(function() {
   // To play a sound, simply call audio.playSound(id), where id is
   // one of the keys of the g_sound_files array, e.g. "damage".
   var AudioManager = function(sounds, options) {
+    options = options || {};
     var g_context;
     var g_audioMgr;
     var g_soundBank = {};
