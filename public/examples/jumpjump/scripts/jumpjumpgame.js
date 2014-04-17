@@ -40,6 +40,8 @@ var main = function(
     AudioManager,
     EntitySystem,
     GameClock,
+    ImageLoader,
+    ImageProcess,
     Input,
     Misc,
     Speedup,
@@ -73,6 +75,10 @@ var main = function(
     jumpVelocity: -220,
     gravity: 40000,
     frameCount: 0,
+    idleAnimSpeed: 4,
+    moveAnimSpeed: 0.2,
+    jumpFirstFrameTime: 0.1,
+    fallTopAnimVelocity: 100,
   };
 window.g = globals;
 
@@ -157,11 +163,6 @@ window.g = globals;
     debugCSS.style.display = "block";
   }
 
-  // Add a 2 players if there is no communication
-  if (!globals.haveServer) {
-    startLocalPlayers();
-  }
-
   var resize = function(canvas) {
     if (canvas.width != canvas.clientWidth ||
         canvas.height != canvas.clientHeight) {
@@ -199,6 +200,45 @@ window.g = globals;
     }, false);
   };
 
+  var images = {
+    idle: { url: "assets/spr_idle.png" },
+    move: { url: "assets/spr_run.png" },
+    jump: { url: "assets/spr_jump.png", slices: [16, 17, 17, 18, 16, 16] },
+  };
+  g_services.images = images;
+window.s = g_services;
+  var processImages = function() {
+    // make 32 colors of duck. Maybe we should do this in WebGL and use a shader!?
+    var duckBlueRange = [180 / 360, 275 / 360];
+    for (var name in images) {
+      var image = images[name];
+      image.colors = [];
+      for (var ii = 0; ii < 32; ++ii) {
+        var coloredImage = ImageProcess.adjustHSV(image.img, ii / 32, -(ii % 2) * 0.5, 0, duckBlueRange);
+        var numFrames = image.slices ? image.slices.length : image.img.width / 16;
+        var frames = [];
+        var x = 0;
+        for (var jj = 0; jj < numFrames; ++jj) {
+          var width = image.slices ? image.slices[jj] : 16;
+          var frame = ImageProcess.cropImage(coloredImage, x, 0, width, 16);
+          frame = ImageProcess.scaleImage(frame, 32, 32);
+          frames.push(frame);
+          x += width;
+        }
+        image.colors[ii] = frames;
+      }
+    }
+
+    // Add a 2 players if there is no communication
+    if (!globals.haveServer) {
+      startLocalPlayers();
+    }
+
+    render();
+  };
+
+  ImageLoader.loadImages(images, processImages);
+
   var clock = new GameClock();
   function render() {
     globals.elapsedTime = clock.getElapsedTime();
@@ -214,7 +254,6 @@ window.g = globals;
 
     requestAnimationFrame(render);
   }
-  render();
 
   //var sounds = {
   //  fire: {
@@ -253,6 +292,8 @@ requirejs(
     '../../scripts/audio',
     '../../scripts/entitysystem',
     '../../scripts/gameclock',
+    '../../scripts/imageloader',
+    '../../scripts/imageprocess',
     '../../scripts/input',
     '../../scripts/misc',
     '../../scripts/speedup',

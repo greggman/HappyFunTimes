@@ -60,6 +60,8 @@ define(['../../scripts/2d'], function(M2D) {
       this.velocity = [0, 0];
       this.acceleration = [0, 0];
       this.color = "green";
+      this.colorIndex = Math.floor(Math.random() * 32);
+      this.animTimer = 0;
       this.width = width;
       this.height = height;
       this.checkWallOffset = [
@@ -160,8 +162,8 @@ define(['../../scripts/2d'], function(M2D) {
   };
 
   Player.prototype.updateVelocity = function(axis) {
-    var axis = axis || 3;
     var globals = this.services.globals;
+    var axis = axis || 3;
     if (axis & 1) {
       this.velocity[0] += this.acceleration[0] * globals.elapsedTime * globals.elapsedTime;
       this.velocity[0] = clampPlusMinus(this.velocity[0], globals.maxVelocity[0]);
@@ -182,6 +184,8 @@ define(['../../scripts/2d'], function(M2D) {
     this.velocity[1] = 0;
     this.acceleration[0] = 0;
     this.acceleration[1] = 0;
+    this.animTimer = 0;
+    this.anim = this.services.images.idle.colors[this.colorIndex];
   };
 
   Player.prototype.state_idle = function() {
@@ -192,8 +196,14 @@ define(['../../scripts/2d'], function(M2D) {
       this.setState('move');
       return;
     }
-
+    var globals = this.services.globals;
+    this.animTimer += globals.elapsedTime * globals.idleAnimSpeed;
     this.checkFall();
+  };
+
+  Player.prototype.init_fall = function() {
+    this.animTimer = 1;
+    this.anim = this.services.images.jump.colors[this.colorIndex];
   };
 
   Player.prototype.state_fall = function() {
@@ -203,6 +213,11 @@ define(['../../scripts/2d'], function(M2D) {
     this.checkWall();
     if (this.checkLand()) {
       return;
+    }
+    if (Math.abs(this.velocity[1]) < globals.fallTopAnimVelocity) {
+      this.animTimer = 2;
+    } else if (this.velocity[1] >= globals.fallTopAnimVelocity) {
+      this.animTimer = 3;
     }
   };
 
@@ -271,6 +286,11 @@ define(['../../scripts/2d'], function(M2D) {
     }
   };
 
+  Player.prototype.init_move = function() {
+    this.animTimer = 0;
+    this.anim = this.services.images.move.colors[this.colorIndex];
+  };
+
   Player.prototype.state_move = function() {
     if (this.jump) {
       this.setState('jump');
@@ -284,6 +304,7 @@ define(['../../scripts/2d'], function(M2D) {
 
     var globals = this.services.globals;
     this.acceleration[0] = this.direction * globals.moveAcceleration;
+    this.animTimer += globals.moveAnimSpeed * Math.abs(this.velocity[0]) * globals.elapsedTime;
     this.updatePhysics(1);
     this.checkWall();
     this.checkFall();
@@ -291,28 +312,52 @@ define(['../../scripts/2d'], function(M2D) {
 
   Player.prototype.init_jump = function(elaspedTime) {
     var globals = this.services.globals;
-    this.jumpTimer = globals.jumpDuration;
+    this.jumpTimer = 0;
+    this.animTimer = 0;
+    this.anim = this.services.images.jump.colors[this.colorIndex];
   };
 
   Player.prototype.state_jump = function(elaspedTime) {
     var globals = this.services.globals;
     this.acceleration[0] = this.direction * globals.moveAcceleration;
     this.velocity[1] = globals.jumpVelocity;
-    this.jumpTimer -= globals.elapsedTime;
+    this.jumpTimer += globals.elapsedTime;
     this.updatePhysics();
     this.checkLand();
     this.checkWall();
-    if (this.jumpTimer <= 0 || !this.jump) {
+    if (this.jumpTimer >= globals.jumpFirstFrameTime) {
+      this.animTimer = 1;
+    }
+    if (this.jumpTimer >= globals.jumpDuration || !this.jump) {
       this.setState('fall');
     }
   };
 
   Player.prototype.draw = function(ctx) {
     var globals = this.services.globals;
+    var images = this.services.images;
     ctx.save();
     ctx.translate(Math.floor(this.position[0]), Math.floor(this.position[1]));
+
     ctx.fillStyle = this.color;
-    ctx.fillRect(-this.width / 2, -this.height, this.width, this.height);
+//    ctx.fillRect(-this.width / 2, -this.height, this.width, this.height);
+
+    ctx.save();
+    var frameNumber = Math.floor(this.animTimer % this.anim.length);
+    var img = this.anim[frameNumber];
+window.p = this;
+window.f = frameNumber;
+    if (this.facing > 0) {
+      ctx.translate(-img.width /
+                     2, -img.height);
+    } else {
+      ctx.translate(img.width / 2, -img.height);
+      ctx.scale(this.facing, 1);
+    }
+    ctx.drawImage(img, 0, 0);
+    ctx.restore();
+
+//    ctx.fillRect(-this.width / 2, -this.height, this.width, this.height);
     if (globals.showState) {
       ctx.fillStyle = (globals.frameCount & 4) ? "white" : "black";
       ctx.fillRect(0, 0, 1, 1);
@@ -321,6 +366,7 @@ define(['../../scripts/2d'], function(M2D) {
     ctx.fillText(this.playerName, -this.width / 2,  -this.height - 10);
     if (globals.showState) {
       ctx.fillText(this.state, -this.width / 2,  -this.height - 20);
+      ctx.fillText(this.velocity[1].toFixed(2), -this.width / 2,  -this.height - 30);
     }
     ctx.restore();
   };
