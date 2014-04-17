@@ -251,6 +251,10 @@ Game.prototype.getNumPlayers = function() {
   return this.numPlayers;
 };
 
+Game.prototype.hasClient = function() {
+  return this.client !== undefined;
+};
+
 Game.prototype.addPlayer = function(player) {
   var id = player.id;
   if (this.players[id]) {
@@ -425,10 +429,12 @@ var RelayServer = function(server) {
     var gameList = [];
     for (var id in g_games) {
       var game = g_games[id];
-      gameList.push({
-        gameId: id,
-        numPlayers: game.getNumPlayers(),
-      });
+      if (game.hasClient()) {
+        gameList.push({
+          gameId: id,
+          numPlayers: game.getNumPlayers(),
+        });
+      }
     }
     return gameList;
   };
