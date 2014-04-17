@@ -114,11 +114,56 @@ define(function() {
     }
   };
 
+  var copyProperties = function(src, dst) {
+    for (var name in src) {
+      if (!src.hasOwnProperty(name)) {
+        continue;
+      }
+      var value = src[name];
+      if (value instanceof Array) {
+        var newDst = dst[name];
+        if (!newDst) {
+          newDst = [];
+          dst[name] = newDst;
+        }
+        copyProperties(value, newDst);
+      } else if (value instanceof Object &&
+                 !(value instanceof HTMLElement)) {
+        var newDst = dst[name];
+        if (!newDst) {
+          newDst = {};
+          dst[name] = newDst;
+        }
+        copyProperties(value, newDst);
+      } else {
+        dst[name] = value;
+      }
+    }
+  };
+
+  /**
+   * Returns the absolute position of an element for certain browsers.
+   * @param {HTML Element} element The element to get a position for.
+   * @return {Object} An object containing x and y as the absolute position
+   *   of the given element.
+   */
+  var getAbsolutePosition = function(element) {
+    var r = { x: element.offsetLeft, y: element.offsetTop };
+    if (element.offsetParent) {
+      var tmp = getAbsolutePosition(element.offsetParent);
+      r.x += tmp.x;
+      r.y += tmp.y;
+    }
+    return r;
+  };
+
   return {
     applyUrlSettings: applyUrlSettings,
     findCSSStyleRule: findCSSStyleRule,
+    getAbsolutePosition: getAbsolutePosition,
     randInt: randInt,
     randCSSColor: randCSSColor,
+    copyProperties: copyProperties,
   };
 });
 
