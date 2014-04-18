@@ -45,8 +45,8 @@ var main = function(
   var g_clock;
   var g_grid;
   var g_instrument;
-  var g_left = false;
-  var g_right = false;
+  var g_leftRight = 0;
+  var g_oldLeftRight = 0;
   var g_jump = false;
 
   var globals = {
@@ -91,115 +91,37 @@ var main = function(
 
     ExampleUI.setupStandardControllerUI(g_client, globals);
 
-    var leftDown = function() {
-      if (!g_left) {
-        g_left = true;
+    var handleLeftRight = function(pressed, bit) {
+      g_leftRight = (g_leftRight & ~bit) | (pressed ? bit : 0);
+      if (g_leftRight != g_oldLeftRight) {
+        g_oldLeftRight = g_leftRight;
         g_client.sendCmd('move', {
-            dir: -1
+            dir: (g_leftRight & 1) ? -1 : ((g_leftRight & 2) ? 1 : 0),
         });
       }
     };
 
-    var leftUp = function() {
-      g_left = false;
-      g_client.sendCmd('move', {
-          dir: (g_right) ? 1 : 0
-      });
-    };
-
-    var rightDown = function() {
-      if (!g_right) {
-        g_right = true;
-        g_client.sendCmd('move', {
-            dir: 1
-        });
-      }
-    };
-
-    var rightUp = function() {
-      g_right = false;
-      g_client.sendCmd('move', {
-          dir: (g_left) ? -1 : 0
-      });
-    };
-
-    var jumpDown = function() {
-      if (!g_jump) {
-        g_jump = true;
+    var handleJump = function(pressed) {
+      if (g_jump != pressed) {
+        g_jump = pressed;
         g_client.sendCmd('jump', {
-            jump: true,
+            jump: pressed,
         });
       }
     };
 
-    var jumpUp = function() {
-      g_jump = false;
-      g_client.sendCmd('jump', {
-          jump: false,
-      });
-    };
-
-
-    function handleKeyDown(keyCode, state) {
-      switch(keyCode) {
-      case 37: // left
-        leftDown();
-        break;
-      case 39: // right
-        rightDown();
-        break;
-      case 90: // z
-        jumpDown();
-        break;
-      }
-    }
-
-    function handleKeyUp(keyCode, state) {
-      switch(keyCode) {
-      case 37: // left
-        leftUp();
-        break;
-      case 39: // right
-        rightUp();
-        break;
-      case 90: // z
-        jumpUp();
-        break;
-      }
-    }
-
-    Input.setupControllerKeys(handleKeyDown, handleKeyUp);
-
-    var handleLeftTouch = function(e) {
-      if (e.pressed) {
-        leftDown();
-      } else {
-        leftUp();
-      }
-    };
-
-    var handleRightTouch = function(e) {
-      if (e.pressed) {
-        rightDown();
-      } else {
-        rightUp();
-      }
-    };
-
-    var handleUpTouch = function(e) {
-      if (e.pressed) {
-        jumpDown();
-      } else {
-        jumpUp();
-      }
-    };
+    var keys = { };
+    keys[Input.cursorKeys.kLeft]  = function(e) { handleLeftRight(e.pressed, 0x1); }
+    keys[Input.cursorKeys.kRight] = function(e) { handleLeftRight(e.pressed, 0x2); }
+    keys["Z".charCodeAt(0)]       = function(e) { handleJump(e.pressed);           }
+    Input.setupKeys(keys);
 
     Touch.setupButtons({
       inputElement: $("buttons"),
       buttons: [
-        { element: $("left"),  callback: handleLeftTouch,  },
-        { element: $("right"), callback: handleRightTouch, },
-        { element: $("up"),    callback: handleUpTouch,    },
+        { element: $("left"),  callback: function(e) { handleLeftRight(e.pressed, 0x1); }, },
+        { element: $("right"), callback: function(e) { handleLeftRight(e.pressed, 0x2); }, },
+        { element: $("up"),    callback: function(e) { handleJump(e.pressed);           }, },
       ],
     });
   };

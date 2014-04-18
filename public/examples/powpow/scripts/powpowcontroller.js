@@ -42,8 +42,8 @@ var main = function(
     Ships) {
 
   var g_name = "";
-  var g_left = false;
-  var g_right = false;
+  var g_leftRight = 0;
+  var g_oldLeftRight = 0;
   var g_fire = false;
   var g_state = ""
   var g_count;
@@ -154,81 +154,28 @@ var main = function(
         (msg.count.toString() + " ahead of you") : "Next Up");
   }
 
-  var leftDown = function() {
-    if (!g_left) {
-      g_left = true;
+  var sendTurn = function() {
+    if (g_leftRight != g_oldLeftRight) {
+      g_oldLeftRight = g_leftRight;
       g_client.sendCmd('turn', {
-          turn: -1
+          turn: (g_leftRight & 1) ? -1 : ((g_leftRight & 2) ? 1 : 0),
       });
     }
   };
 
-  var leftUp = function() {
-    g_left = false;
-    g_client.sendCmd('turn', {
-        turn: (g_right) ? 1 : 0
-    });
+  var handleLeftRight = function(pressed, bit) {
+    g_leftRight = (g_leftRight & ~bit) | (pressed ? bit : 0);
+    sendTurn();
   };
 
-  var rightDown = function() {
-    if (!g_right) {
-      g_right = true;
-      g_client.sendCmd('turn', {
-          turn: 1
-      });
-    }
-  };
-
-  var rightUp = function() {
-    g_right = false;
-    g_client.sendCmd('turn', {
-        turn: (g_left) ? -1 : 0
-    });
-  };
-
-  var fireDown = function() {
-    if (!g_fire) {
-      g_fire = true;
+  var handleFire = function(pressed) {
+    if (g_fire != pressed) {
+      g_fire = pressed;
       g_client.sendCmd('fire', {
-          fire: true,
+          fire: pressed,
       });
     }
   };
-
-  var fireUp = function() {
-    g_fire = false;
-    g_client.sendCmd('fire', {
-        fire: false,
-    });
-  };
-
-  function handleKeyDown(keyCode, state) {
-    switch(keyCode) {
-    case 37: // left
-      leftDown();
-      break;
-    case 39: // right
-      rightDown();
-      break;
-    case 90: // z
-      fireDown();
-      break;
-    }
-  }
-
-  function handleKeyUp(keyCode, state) {
-    switch(keyCode) {
-    case 37: // left
-      leftUp();
-      break;
-    case 39: // right
-      rightUp();
-      break;
-    case 90: // z
-      fireUp();
-      break;
-    }
-  }
 
   g_client = new GameClient({
     gameId: "powpow",
@@ -256,36 +203,12 @@ var main = function(
 
   Ships.setShipSize(60);
 
-  var handleLeftTouch = function(e) {
-    if (e.pressed) {
-      leftDown();
-    } else {
-      leftUp();
-    }
-  };
-
-  var handleRightTouch = function(e) {
-    if (e.pressed) {
-      rightDown();
-    } else {
-      rightUp();
-    }
-  };
-
-  var handleFireTouch = function(e) {
-    if (e.pressed) {
-      fireDown();
-    } else {
-      fireUp();
-    }
-  };
-
   Touch.setupButtons({
     inputElement: $("buttons"),
     buttons: [
-      { element: $("left"),  callback: handleLeftTouch,  },
-      { element: $("right"), callback: handleRightTouch, },
-      { element: $("fire"),  callback: handleFireTouch,    },
+      { element: $("left"),  callback: function(e) { handleLeftRight(e.pressed, 0x1); }, },
+      { element: $("right"), callback: function(e) { handleLeftRight(e.pressed, 0x2); }, },
+      { element: $("fire"),  callback: function(e) { handleFire(e.pressed);           }, },
     ],
   });
 
@@ -297,7 +220,11 @@ var main = function(
     //touchControls.style.display = "none";
   }
 
-  Input.setupControllerKeys(handleKeyDown, handleKeyUp);
+  var keys = { };
+  keys[Input.cursorKeys.kLeft]  = function(e) { handleLeftRight(e.pressed, 0x1); }
+  keys[Input.cursorKeys.kRight] = function(e) { handleLeftRight(e.pressed, 0x2); }
+  keys["Z".charCodeAt(0)]       = function(e) { handleFire(e.pressed);           }
+  Input.setupKeys(keys);
 };
 
 // Start the main app logic.

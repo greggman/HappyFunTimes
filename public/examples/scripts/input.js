@@ -31,6 +31,14 @@
 "use strict";
 
 define(['./misc'], function(Misc) {
+
+  var cursorKeys = {
+    kLeft: 37,
+    kRight: 39,
+    kUp: 38,
+    kDown: 40,
+  };
+
   // Provides a map from direction to various info.
   //
   // Example:
@@ -209,12 +217,34 @@ define(['./misc'], function(Misc) {
     setupControllerKeys(keyDown, keyUp);
   };
 
+  //
+  var setupKeys = function(keys) {
+
+    var handleKey = function(keyCode, state, pressed) {
+      var key = keys[keyCode];
+      if (key) {
+        key({keyCode: keyCode, pressed:pressed});
+      }
+    };
+
+    var handleKeyDown = function(keyCode, state) {
+      handleKey(keyCode, state, true);
+    };
+    var handleKeyUp = function(keyCode, state) {
+      handleKey(keyCode, state, false);
+    };
+
+    setupControllerKeys(handleKeyDown, handleKeyUp);
+  };
+
   return {
+    cursorKeys: cursorKeys,
     createDirectionEventInfo: createDirectionEventInfo,
     emitDirectionEvent: emitDirectionEvent,
     getRelativeCoordinates: getRelativeCoordinates,
     setupControllerKeys: setupControllerKeys,
     setupKeyboardDPadKeys: setupKeyboardDPadKeys,
+    setupKeys: setupKeys,
   };
 });
 
