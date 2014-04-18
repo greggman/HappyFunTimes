@@ -154,18 +154,14 @@ var main = function(
         (msg.count.toString() + " ahead of you") : "Next Up");
   }
 
-  var sendTurn = function() {
+  var handleLeftRight = function(pressed, bit) {
+    g_leftRight = (g_leftRight & ~bit) | (pressed ? bit : 0);
     if (g_leftRight != g_oldLeftRight) {
       g_oldLeftRight = g_leftRight;
       g_client.sendCmd('turn', {
           turn: (g_leftRight & 1) ? -1 : ((g_leftRight & 2) ? 1 : 0),
       });
     }
-  };
-
-  var handleLeftRight = function(pressed, bit) {
-    g_leftRight = (g_leftRight & ~bit) | (pressed ? bit : 0);
-    sendTurn();
   };
 
   var handleFire = function(pressed) {
