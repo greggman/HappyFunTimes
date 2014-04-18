@@ -34,6 +34,8 @@ var main = function(
     GameClient,
     AudioManager,
     ExampleUI,
+    ImageLoader,
+    ImageProcess,
     Input,
     Misc,
     MobileHacks,
@@ -57,139 +59,156 @@ var main = function(
     return document.getElementById(id);
   }
 
-  g_client = new GameClient({
-    gameId: "jumpjump",
-  });
+  var startClient = function() {
 
-  function handleScore() {
-  };
-
-  function handleDeath() {
-  };
-
-  g_client.addEventListener('score', handleScore);
-  g_client.addEventListener('die', handleDeath);
-
-  var color = Misc.randCSSColor();
-  g_client.sendCmd('setColor', { color: color });
-  document.body.style.backgroundColor = color;
-
-  var sounds = {};
-  g_audioManager = new AudioManager(sounds);
-
-  ExampleUI.setupStandardControllerUI(g_client, globals);
-
-  var leftDown = function() {
-    if (!g_left) {
-      g_left = true;
-      g_client.sendCmd('move', {
-          dir: -1
-      });
-    }
-  };
-
-  var leftUp = function() {
-    g_left = false;
-    g_client.sendCmd('move', {
-        dir: (g_right) ? 1 : 0
+    g_client = new GameClient({
+      gameId: "jumpjump",
     });
-  };
 
-  var rightDown = function() {
-    if (!g_right) {
-      g_right = true;
+    var handleScore = function() {
+    };
+
+    var handleDeath = function() {
+    };
+
+    var handleSetColor = function(msg) {
+      var canvas = $("avatar");
+      canvas.width = canvas.clientWidth;
+      canvas.height = canvas.clientHeight;
+      var ctx = canvas.getContext("2d");
+      var coloredImage = ImageProcess.adjustHSV(images.idle.img, msg.h, msg.s, msg.v, msg.range)
+      var frame = ImageProcess.cropImage(coloredImage, 0, 0, 16, 16);
+      var frame = ImageProcess.scaleImage(frame, 128, 128);
+      ctx.drawImage(frame, 0, 0);
+    };
+
+    g_client.addEventListener('score', handleScore);
+    g_client.addEventListener('die', handleDeath);
+    g_client.addEventListener('setColor', handleSetColor);
+
+    var sounds = {};
+    g_audioManager = new AudioManager(sounds);
+
+    ExampleUI.setupStandardControllerUI(g_client, globals);
+
+    var leftDown = function() {
+      if (!g_left) {
+        g_left = true;
+        g_client.sendCmd('move', {
+            dir: -1
+        });
+      }
+    };
+
+    var leftUp = function() {
+      g_left = false;
       g_client.sendCmd('move', {
-          dir: 1
+          dir: (g_right) ? 1 : 0
       });
-    }
-  };
+    };
 
-  var rightUp = function() {
-    g_right = false;
-    g_client.sendCmd('move', {
-        dir: (g_left) ? -1 : 0
-    });
-  };
+    var rightDown = function() {
+      if (!g_right) {
+        g_right = true;
+        g_client.sendCmd('move', {
+            dir: 1
+        });
+      }
+    };
 
-  var jumpDown = function() {
-    if (!g_jump) {
-      g_jump = true;
+    var rightUp = function() {
+      g_right = false;
+      g_client.sendCmd('move', {
+          dir: (g_left) ? -1 : 0
+      });
+    };
+
+    var jumpDown = function() {
+      if (!g_jump) {
+        g_jump = true;
+        g_client.sendCmd('jump', {
+            jump: true,
+        });
+      }
+    };
+
+    var jumpUp = function() {
+      g_jump = false;
       g_client.sendCmd('jump', {
-          jump: true,
+          jump: false,
       });
-    }
-  };
+    };
 
-  var jumpUp = function() {
-    g_jump = false;
-    g_client.sendCmd('jump', {
-        jump: false,
+
+    function handleKeyDown(keyCode, state) {
+      switch(keyCode) {
+      case 37: // left
+        leftDown();
+        break;
+      case 39: // right
+        rightDown();
+        break;
+      case 90: // z
+        jumpDown();
+        break;
+      }
+    }
+
+    function handleKeyUp(keyCode, state) {
+      switch(keyCode) {
+      case 37: // left
+        leftUp();
+        break;
+      case 39: // right
+        rightUp();
+        break;
+      case 90: // z
+        jumpUp();
+        break;
+      }
+    }
+
+    Input.setupControllerKeys(handleKeyDown, handleKeyUp);
+
+    var handleLeftTouch = function(e) {
+      if (e.pressed) {
+        leftDown();
+      } else {
+        leftUp();
+      }
+    };
+
+    var handleRightTouch = function(e) {
+      if (e.pressed) {
+        rightDown();
+      } else {
+        rightUp();
+      }
+    };
+
+    var handleUpTouch = function(e) {
+      if (e.pressed) {
+        jumpDown();
+      } else {
+        jumpUp();
+      }
+    };
+
+    Touch.setupButtons({
+      inputElement: $("buttons"),
+      buttons: [
+        { element: $("left"),  callback: handleLeftTouch,  },
+        { element: $("right"), callback: handleRightTouch, },
+        { element: $("up"),    callback: handleUpTouch,    },
+      ],
     });
   };
 
-
-  function handleKeyDown(keyCode, state) {
-    switch(keyCode) {
-    case 37: // left
-      leftDown();
-      break;
-    case 39: // right
-      rightDown();
-      break;
-    case 90: // z
-      jumpDown();
-      break;
-    }
-  }
-
-  function handleKeyUp(keyCode, state) {
-    switch(keyCode) {
-    case 37: // left
-      leftUp();
-      break;
-    case 39: // right
-      rightUp();
-      break;
-    case 90: // z
-      jumpUp();
-      break;
-    }
-  }
-
-  Input.setupControllerKeys(handleKeyDown, handleKeyUp);
-
-  var handleLeftTouch = function(e) {
-    if (e.pressed) {
-      leftDown();
-    } else {
-      leftUp();
-    }
+  var images = {
+    idle:  { url: "assets/spr_idle.png", },
   };
 
-  var handleRightTouch = function(e) {
-    if (e.pressed) {
-      rightDown();
-    } else {
-      rightUp();
-    }
-  };
-
-  var handleUpTouch = function(e) {
-    if (e.pressed) {
-      jumpDown();
-    } else {
-      jumpUp();
-    }
-  };
-
-  Touch.setupButtons({
-    inputElement: $("buttons"),
-    buttons: [
-      { element: $("left"),  callback: handleLeftTouch,  },
-      { element: $("right"), callback: handleRightTouch, },
-      { element: $("up"),    callback: handleUpTouch,    },
-    ],
-  });
+  ImageLoader.loadImages(images, startClient);
 };
 
 // Start the main app logic.
@@ -197,6 +216,8 @@ requirejs(
   [ '../../../scripts/gameclient',
     '../../scripts/audio',
     '../../scripts/exampleui',
+    '../../scripts/imageloader',
+    '../../scripts/imageprocess',
     '../../scripts/input',
     '../../scripts/misc',
     '../../scripts/mobilehacks',

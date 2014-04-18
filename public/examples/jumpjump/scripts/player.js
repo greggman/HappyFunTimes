@@ -50,6 +50,8 @@ define(['../../scripts/2d'], function(M2D) {
    */
   var Player = (function() {
 
+    var availableColors = [];
+
     return function(services, x, y, width, height, direction, name, netPlayer) {
       this.services = services;
       this.renderer = services.renderer;
@@ -59,8 +61,17 @@ define(['../../scripts/2d'], function(M2D) {
       this.position = [x, y];
       this.velocity = [0, 0];
       this.acceleration = [0, 0];
-      this.color = "green";
-      this.colorIndex = Math.floor(Math.random() * 32);
+      if (availableColors.length == 0) {
+        var colors = services.colors;
+        for (var ii = 0; ii < colors.length; ++ii) {
+          availableColors.push(colors[ii]);
+        }
+      }
+      this.color = availableColors[Math.floor(Math.random() * availableColors.length)];
+window.p = this;
+      netPlayer.sendCmd('setColor', this.color);
+      availableColors.splice(this.color, 1);
+      this.color.id;
       this.animTimer = 0;
       this.width = width;
       this.height = height;
@@ -70,13 +81,11 @@ define(['../../scripts/2d'], function(M2D) {
         this.width / 2 - 1,
       ];
 
-
       netPlayer.addEventListener('disconnect', Player.prototype.handleDisconnect.bind(this));
       netPlayer.addEventListener('move', Player.prototype.handleMoveMsg.bind(this));
       netPlayer.addEventListener('jump', Player.prototype.handleJumpMsg.bind(this));
       netPlayer.addEventListener('setName', Player.prototype.handleNameMsg.bind(this));
       netPlayer.addEventListener('busy', Player.prototype.handleBusyMsg.bind(this));
-      netPlayer.addEventListener('setColor', Player.prototype.handleSetColorMsg.bind(this));
 
       this.playerName = name;
       this.direction = 0;         // direction player is pushing (-1, 0, 1)
@@ -135,10 +144,6 @@ define(['../../scripts/2d'], function(M2D) {
 
   Player.prototype.handleBusyMsg = function(msg) {
     // We ignore this message
-  };
-
-  Player.prototype.handleSetColorMsg = function(msg) {
-    this.color = msg.color;
   };
 
   Player.prototype.handleMoveMsg = function(msg) {
@@ -204,7 +209,7 @@ define(['../../scripts/2d'], function(M2D) {
     this.acceleration[0] = 0;
     this.acceleration[1] = 0;
     this.animTimer = 0;
-    this.anim = this.services.images.idle.colors[this.colorIndex];
+    this.anim = this.services.images.idle.colors[this.color.id];
   };
 
   Player.prototype.state_idle = function() {
@@ -221,7 +226,7 @@ define(['../../scripts/2d'], function(M2D) {
 
   Player.prototype.init_fall = function() {
     this.animTimer = 1;
-    this.anim = this.services.images.jump.colors[this.colorIndex];
+    this.anim = this.services.images.jump.colors[this.color.id];
   };
 
   Player.prototype.state_fall = function() {
@@ -306,7 +311,7 @@ define(['../../scripts/2d'], function(M2D) {
 
   Player.prototype.init_move = function() {
     this.animTimer = 0;
-    this.anim = this.services.images.move.colors[this.colorIndex];
+    this.anim = this.services.images.move.colors[this.color.id];
   };
 
   Player.prototype.state_move = function() {
@@ -331,7 +336,7 @@ define(['../../scripts/2d'], function(M2D) {
     var globals = this.services.globals;
     this.jumpTimer = 0;
     this.animTimer = 0;
-    this.anim = this.services.images.jump.colors[this.colorIndex];
+    this.anim = this.services.images.jump.colors[this.color.id];
   };
 
   Player.prototype.state_jump = function(elaspedTime) {
@@ -356,7 +361,7 @@ define(['../../scripts/2d'], function(M2D) {
     ctx.save();
     ctx.translate(Math.floor(this.position[0]), Math.floor(this.position[1]));
 
-    ctx.fillStyle = this.color;
+//    ctx.fillStyle = this.color;
 //    ctx.fillRect(-this.width / 2, -this.height, this.width, this.height);
 
     ctx.save();

@@ -50,6 +50,7 @@ var main = function(
 
   var g_debug = false;
   var g_services = {};
+window.s = g_services;
 
   var g_entitySystem = new EntitySystem();
   g_services.entitySystem = g_entitySystem;
@@ -208,8 +209,9 @@ window.g = globals;
     jump:  { url: "assets/spr_jump.png", colorize: 32, slices: [16, 17, 17, 18, 16, 16] },
     brick: { url: "assets/bricks.png",   colorize:  1, slices: 16, },
   };
+  var colors = [];
   g_services.images = images;
-window.s = g_services;
+  g_services.colors = colors;
   var processImages = function() {
     // make 32 colors of duck. Maybe we should do this in WebGL and use a shader!?
     var duckBlueRange = [180 / 360, 275 / 360];
@@ -217,7 +219,18 @@ window.s = g_services;
       var image = images[name];
       image.colors = [];
       for (var ii = 0; ii < image.colorize; ++ii) {
-        var coloredImage = ii ? ImageProcess.adjustHSV(image.img, ii / 32, -(ii % 2) * 0.5, 0, duckBlueRange) : image.img;
+        var h = ii / 32;
+        var s = -(ii % 2) * 0.5;
+        var v = 0;
+        var range = duckBlueRange;
+        colors.push({
+          id: ii,
+          h: h,
+          s: s,
+          v: v,
+          range: range,
+        });
+        var coloredImage = ii ? ImageProcess.adjustHSV(image.img, h, s, v, range) : image.img;
         var numFrames = image.slices.length ? image.slices.length : image.img.width / image.slices;
         var frames = [];
         var x = 0;
