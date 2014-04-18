@@ -34,6 +34,7 @@ var main = function(
     GameClient,
     AudioManager,
     ExampleUI,
+    HandJS,
     Misc,
     Input,
     MobileHacks,
@@ -162,19 +163,6 @@ var main = function(
         (msg.count.toString() + " ahead of you") : "Next Up");
   }
 
-  function debugTouch(label, event) {
-    var allTouches = event.touches;
-    logTo("status", label);
-    for (var ii = 0; ii < allTouches.length; ++ii) {
-      var touch = allTouches[ii];
-      logTo("status", "  " + ii + ": " + touch.pageX + ", " + touch.pageY +
-            " cw: " + event.target.clientWidth +
-            " ch: " + event.target.clientHeight);
-    }
-    var s = $("status");
-    s.scrollTop = s.scrollHeight;
-  }
-
   function touchMoveStart(event) {
     event.preventDefault();
     var allTouches = event.touches;
@@ -184,8 +172,6 @@ var main = function(
       g_dirTouchStart = touch.pageX;
       break;
     }
-
-    //debugTouch("start", event);
   }
 
   function touchMoveMove(event) {
@@ -306,37 +292,6 @@ var main = function(
 
   };
 
-  function singleTouchStart(event) {
-    event.preventDefault();
-    var m = Input.getRelativeCoordinates(event.target, event.touches[0]);
-    updateTarget(event.target, m.x, m.y);
-    g_startTime = (new Date()).getTime();
-  }
-
-  function singleTouchMove(event) {
-    event.preventDefault();
-    var m = Input.getRelativeCoordinates(event.target, event.touches[0]);
-    updateTarget(event.target, m.x, m.y);
-  }
-
-  function singleTouchEnd(event) {
-    event.preventDefault();
-    var now = (new Date()).getTime();
-
-    if (now - g_startTime < 200) {
-      g_client.sendCmd('fire', {
-          fire: 1
-      });
-      g_client.sendCmd('fire', {
-          fire: 0
-      });
-    }
-  }
-
-  function singleTouchCancel(event) {
-    singleTouchEnd(event);
-  }
-
   function handleKeyDown(keyCode, state) {
     switch(keyCode) {
     case 37: // left
@@ -418,30 +373,16 @@ var main = function(
   var haveTouch = 'ontouchstart' in document
 
   if (haveTouch) {
-    if (navigator.userAgent.indexOf("Android") >= 0 && !window.opera) {
-      var singleTouchControls = $("singleTouchControls");
-      var touchControls = $("touchControls");
-      singleTouchControls.style.display = "block";
-      touchControls.style.display = "none";
-      var stcontrol = $("stcontrol");
-      stcontrol.addEventListener("touchstart", singleTouchStart, false);
-      stcontrol.addEventListener("touchmove", singleTouchMove, false);
-      stcontrol.addEventListener("touchend", singleTouchEnd, false);
-      stcontrol.addEventListener("touchcancel", singleTouchCancel, false);
-      g_canvas = document.getElementsByTagName("canvas")[0];
-      g_ctx = g_canvas.getContext("2d");
-    } else {
-      var tcmove = $("tcmove");
-      var tcfire = $("tcfire");
-      tcmove.addEventListener("touchstart", touchMoveStart, false);
-      tcmove.addEventListener("touchmove", touchMoveMove, false);
-      tcmove.addEventListener("touchend", touchMoveEnd, false);
-      tcmove.addEventListener("touchcancel", touchMoveCancel, false);
-      tcfire.addEventListener("touchstart", touchFireStart, false);
-      tcfire.addEventListener("touchmove", touchFireMove, false);
-      tcfire.addEventListener("touchend", touchFireEnd, false);
-      tcfire.addEventListener("touchcancel", touchFireCancel, false);
-    }
+    var tcmove = $("tcmove");
+    var tcfire = $("tcfire");
+    tcmove.addEventListener("touchstart", touchMoveStart, false);
+    tcmove.addEventListener("touchmove", touchMoveMove, false);
+    tcmove.addEventListener("touchend", touchMoveEnd, false);
+    tcmove.addEventListener("touchcancel", touchMoveCancel, false);
+    tcfire.addEventListener("touchstart", touchFireStart, false);
+    tcfire.addEventListener("touchmove", touchFireMove, false);
+    tcfire.addEventListener("touchend", touchFireEnd, false);
+    tcfire.addEventListener("touchcancel", touchFireCancel, false);
   } else {
     var keyControls = $("keyControls");
     var touchControls = $("touchControls");
@@ -457,6 +398,7 @@ requirejs(
   [ '../../../scripts/gameclient',
     '../../scripts/audio',
     '../../scripts/exampleui',
+    '../../scripts/hand-1.3.7',
     '../../scripts/misc',
     '../../scripts/input',
     '../../scripts/mobilehacks',
