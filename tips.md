@@ -163,5 +163,49 @@ Tips
     called Pointer events and they provided a polyfill for all browsers
     called HandJS that provides pointer events across browser.
 
+*   Add invisible divs for input if needed.
 
+    For games that have large input areas, like the Simple example, you may
+    need a large invisible div that covers the entire input area. For example
+    if you have
 
+        <div id="inputarea" class="fullsize fullcenter">
+           <div>Touch here</div>
+        </div>
+
+    And then you do something like
+
+        $("inputarea").addEventListener('pointermove', ...);
+
+    Whenever the mouse pointer or finger is over that inner `<div>Touch here</div>` you'll
+    stop getting pointermove events.
+
+    To fix it do something like
+
+        <div class="fullsize fullcenter">
+           <div>Touch here</div>
+        </div>
+        <div id="inputarea" class="fullsize fullcenter">
+           <div>Touch here</div>
+        </div>
+
+    And in CSS
+
+        #inputarea {
+           position: absolute;
+           left: 0px;
+           top: 0px;
+           z-index: 5;
+        }
+
+    This will make the inputarea be above the the first 2 nested divs and will receive
+    all of the events un-interrupted.
+
+*   Use CSS class `fixheight` and mobilehacks.js?
+
+    I'm embarrassed to say this but I can't for the life of me figure out CSS. I set something
+    to 100% height expecting it to become the same size as its container but for reasons I haven't
+    been able to internalize this often doesn't work. My current solution is to mark a the element
+    in question with `class="fixheight"` and then in JavaScript, search for all elements with
+    class `fixheight` and set their height to their parent's clientHeight. So far that's fixed
+    all the issues.

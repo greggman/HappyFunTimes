@@ -1,10 +1,20 @@
-*   make clock sync show a clock
-*   make simple and supersimple use template
+*   fix powpow que/score display
+*   stop sliding fingers from selecting stuff.
+*   make bird quack if you click him (consider random speed)
+*   test on iOS 6.x and iOS 7.0
+*   make disconnect have "main menu" if game is not running
+*   fix simple so div doesnt' mess up
+*   fix flex css (remove need for fixHeightHack)
 *   add some CSS animation foo for menu appearing, disappearing
 *   figure out why deviceorientation message is low
 *   figure out why everyone is player2
 *   make powpow use handjs
 *   put player name above character in unity.
+*   test older ios
+    *   consider making it warn if version not good enough
+*   test older android
+    *   consider making it warn if version not good enough
+*
 
 *   send no caching header? or at least optionally
 
@@ -79,9 +89,16 @@
 
 *   make tick for clocksync ogg/mp3
 
+*   handle ssl as well?
 
 Done
 ----
+
+*   show the bird
+
+*   make simple and supersimple use template
+
+*   make clock sync show a clock
 
 *   make public/index.html template generated?
 
@@ -95,7 +112,11 @@ Done
 
 *   make public/index.html that lists games/examples
 
-*   separate css
+*   separate css.
+
+    prefix all common CSS with HFT and/or surround common stuff with a id="hft" and
+    use selectors #hft #foo, etc. What I don't like about this is if the individual
+    game devines #foo it fails. So, should prefix all ids with #hft
 
 *   fix simple controls and game so they use full area?
 

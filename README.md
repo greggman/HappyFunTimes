@@ -1,6 +1,22 @@
 HappyFunTimes
 =============
 
+<!--
+nexus5v 690x1322
+inner 52, 128  584x1030
+
+nexus5 (horizontal)  1322x690
+inner 128,54 1030x584
+
+iphone5v 624x1260
+inner 70,195 480x851
+-->
+
+
+<div style="position: relative;">
+  <img src="images/nexus5-v.jpg" >
+
+
 HappyFunTimes is a library for making party games that are meant to be
 played with a bunch of people in the same room and 1 ideally large display.
 
