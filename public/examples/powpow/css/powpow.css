@@ -28,6 +28,56 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+html, body {
+    background-color: #008;
+}
+#buttons {
+    position: absolute;
+
+    -moz-user-select: none;
+    -webkit-user-select: none;
+    -o-user-select: none;
+    user-select: none;
+}
+.button {
+    background-color: #fff;
+    color: #000;
+    border: 3px solid #444;
+    border-radius: 10px;
+    width: 110px;
+    height: 110px;
+    text-align: center;
+    font-size: 70px;
+    font-family: Helvetica, Arial, sans-serif;
+    font-weight: bold;
+    bottom: 60px;
+    position: absolute;
+}
+#left {
+  left: 20px;
+}
+#right {
+  left: 140px;
+}
+#fire {
+  right: 20px;
+}
+#avatar {
+  position: absolute;
+  left: 50%;
+  bottom: 60px;
+  width: 128px;
+  height: 128px;
+}
+#msg {
+  position: absolute;
+  width: 100%;
+  left: 0px;
+  margin: 0.5em;
+  font-size: x-large;
+  font-weight: bold;
+}
+/*
 #surface {
   width: 100%;
   height: 100%;
@@ -94,7 +144,7 @@
   width: 50%;
   height: 100%;
   vertical-align: middle;
-  color: rgba(255, 255, 255, 0.5); /* black; */
+  color: rgba(255, 255, 255, 0.5);
   gbackground-color: rgba(255, 255, 255, 0.2);
   display: table-cell;
 }
@@ -106,11 +156,12 @@
   width: 50%;
   height: 100%;
   vertical-align: middle;
-  color: rgba(255, 255, 255, 0.75); /* white; */
+  color: rgba(255, 255, 255, 0.75);
   gbackground-color: rgba(0, 0, 0, 0.2);
 }
 #singleTouchControls .stmove {
   width: 100%;
   height: 100%;
 }
+*/
 

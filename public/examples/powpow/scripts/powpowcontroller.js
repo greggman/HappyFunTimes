@@ -38,24 +38,16 @@ var main = function(
     Misc,
     Input,
     MobileHacks,
+    Touch,
     Ships) {
 
   var g_name = "";
-  var g_turn = 0;
-  var g_oldTurn = 0;
   var g_left = false;
   var g_right = false;
   var g_fire = false;
-  var g_dirTouchStart = 0;
-  var g_numTouches = 0;
-  var g_ctx = 0;
-  var g_canvas;
-  var g_startX;
-  var g_startY;
-  var g_startTime;
   var g_state = ""
   var g_count;
-  var g_playerColor = "black";
+  var g_playerColor = "#00A";
   var g_playerStyle;
   var g_client;
   var g_audioManager;
@@ -72,7 +64,7 @@ var main = function(
   }
 
   var msgElem = $("msg");
-  var colorElem = $("surface");
+  var colorElem = $("buttons");
 
   var clearMessage = function() {
     g_clearMsgTimeoutId = undefined;
@@ -134,8 +126,7 @@ var main = function(
       }
     }
     Ships[styleName](ctx, xOff, yOff, Math.PI, msg.color);
-    $("ship").src = canvas.toDataURL();
-    //e.style.backgroundImage = "url(" + canvas.toDataURL() + ")";
+    $("avatar").src = canvas.toDataURL();
   }
 
   function handleKillMsg(msg) {
@@ -163,160 +154,64 @@ var main = function(
         (msg.count.toString() + " ahead of you") : "Next Up");
   }
 
-  function touchMoveStart(event) {
-    event.preventDefault();
-    var allTouches = event.touches;
-    for (var ii = 0; ii < allTouches.length; ++ii) {
-      ++g_numTouches;
-      var touch = allTouches[ii];
-      g_dirTouchStart = touch.pageX;
-      break;
-    }
-  }
-
-  function touchMoveMove(event) {
-    event.preventDefault();
-    //debugTouch("move", event);
-    var allTouches = event.touches;
-    for (var ii = 0; ii < allTouches.length; ++ii) {
-      var touch = allTouches[ii];
-      var dx = touch.pageX - g_dirTouchStart;
-      //logTo("status", dx)
-      var fudge = 10
-      if (dx < -fudge) {
-        if (!g_left) {
-          g_left = 1;
-          g_right = 0;
-          g_client.sendCmd('turn', {
-              turn: -1
-          });
-        }
-      } else if (dx > fudge) {
-        if (!g_right) {
-          g_left = 0;
-          g_right = 1;
-          g_client.sendCmd('turn', {
-              turn: 1
-          });
-        }
-      } else {
-        if (g_right || g_left) {
-          g_left = 0;
-          g_right = 0;
-          g_client.sendCmd('turn', {
-              turn: 0
-          });
-        }
-      }
-      break;
-    }
-  }
-
-  function touchMoveEnd(event) {
-    event.preventDefault();
-    if (g_right || g_left) {
-      g_left = 0;
-      g_right = 0;
+  var leftDown = function() {
+    if (!g_left) {
+      g_left = true;
       g_client.sendCmd('turn', {
-         turn: 0
+          turn: -1
       });
     }
-    //debugTouch("end", event);
-  }
+  };
 
-  function touchMoveCancel(event) {
-    touchMoveEnd(event)
-  }
+  var leftUp = function() {
+    g_left = false;
+    g_client.sendCmd('turn', {
+        turn: (g_right) ? 1 : 0
+    });
+  };
 
-  function touchFireStart(event) {
-    event.preventDefault();
+  var rightDown = function() {
+    if (!g_right) {
+      g_right = true;
+      g_client.sendCmd('turn', {
+          turn: 1
+      });
+    }
+  };
+
+  var rightUp = function() {
+    g_right = false;
+    g_client.sendCmd('turn', {
+        turn: (g_left) ? -1 : 0
+    });
+  };
+
+  var fireDown = function() {
     if (!g_fire) {
       g_fire = true;
       g_client.sendCmd('fire', {
-          fire: 1
+          fire: true,
       });
     }
+  };
 
-    //debugTouch("start", event);
-  }
-
-  function touchFireMove(event) {
-    event.preventDefault();
-    //debugTouch("move", event);
-  }
-
-  function touchFireEnd(event) {
-    event.preventDefault();
-    if (g_fire) {
-      g_fire = false;
-      g_client.sendCmd('fire', {
-          fire: 0
-      });
-    }
-    //debugTouch("end", event);
-  }
-
-  function touchFireCancel(event) {
-    touchFireEnd(event);
-    //debugTouch("cancel", event);
-  }
-
-  function updateTarget(element, x, y) {
-    var centerX = element.clientWidth / 2;
-    var centerY = element.clientHeight / 2;
-    var dx = x - centerX;
-    var dy = y - centerY;
-    var direction = Math.atan2(dy, dx);
-    g_client.sendCmd('target', {
-        target: (direction + Math.PI / 2 * 3) % (Math.PI * 2)
+  var fireUp = function() {
+    g_fire = false;
+    g_client.sendCmd('fire', {
+        fire: false,
     });
-
-    var ctx = g_ctx;
-    ctx.clearRect(0, 0, g_canvas.width, g_canvas.height);
-    ctx.save();
-    ctx.translate(g_canvas.width / 2, g_canvas.height / 2);
-    ctx.rotate(direction - Math.PI / 2);
-    ctx.fillStyle = "#FF0";
-    ctx.beginPath();
-    ctx.closePath();
-    ctx.moveTo(10, 0);
-    ctx.lineTo(10, 50);
-    ctx.lineTo(30, 50);
-    ctx.lineTo(0, 70);
-    ctx.lineTo(-30, 50);
-    ctx.lineTo(-10, 50);
-    ctx.lineTo(-10, 0);
-    ctx.closePath();
-    ctx.fill();
-    ctx.restore();
-
   };
 
   function handleKeyDown(keyCode, state) {
     switch(keyCode) {
     case 37: // left
-      if (!g_left) {
-        g_left = true;
-        g_client.sendCmd('turn', {
-            turn: -1
-        });
-      }
+      leftDown();
       break;
     case 39: // right
-      if (!g_right) {
-        g_right = true;
-        g_client.sendCmd('turn', {
-            turn: 1
-        });
-      }
+      rightDown();
       break;
     case 90: // z
-      if (!g_fire) {
-        g_fire = true;
-        g_client.sendCmd('fire', {
-            fire: 1
-        });
-      }
+      fireDown();
       break;
     }
   }
@@ -324,22 +219,13 @@ var main = function(
   function handleKeyUp(keyCode, state) {
     switch(keyCode) {
     case 37: // left
-      g_left = false;
-      g_client.sendCmd('turn', {
-          turn: (g_right) ? 1 : 0
-      });
+      leftUp();
       break;
     case 39: // right
-      g_right = false;
-      g_client.sendCmd('turn', {
-          turn: (g_left) ? -1 : 0
-      });
+      rightUp();
       break;
     case 90: // z
-      g_fire = false;
-      g_client.sendCmd('fire', {
-          fire: 0
-      });
+      fireUp();
       break;
     }
   }
@@ -368,26 +254,47 @@ var main = function(
   };
   g_audioManager = new AudioManager(sounds);
 
-  Ships.setShipSize(70);
+  Ships.setShipSize(60);
+
+  var handleLeftTouch = function(e) {
+    if (e.pressed) {
+      leftDown();
+    } else {
+      leftUp();
+    }
+  };
+
+  var handleRightTouch = function(e) {
+    if (e.pressed) {
+      rightDown();
+    } else {
+      rightUp();
+    }
+  };
+
+  var handleFireTouch = function(e) {
+    if (e.pressed) {
+      fireDown();
+    } else {
+      fireUp();
+    }
+  };
+
+  Touch.setupButtons({
+    inputElement: $("buttons"),
+    buttons: [
+      { element: $("left"),  callback: handleLeftTouch,  },
+      { element: $("right"), callback: handleRightTouch, },
+      { element: $("fire"),  callback: handleFireTouch,    },
+    ],
+  });
 
   var haveTouch = 'ontouchstart' in document
-
-  if (haveTouch) {
-    var tcmove = $("tcmove");
-    var tcfire = $("tcfire");
-    tcmove.addEventListener("touchstart", touchMoveStart, false);
-    tcmove.addEventListener("touchmove", touchMoveMove, false);
-    tcmove.addEventListener("touchend", touchMoveEnd, false);
-    tcmove.addEventListener("touchcancel", touchMoveCancel, false);
-    tcfire.addEventListener("touchstart", touchFireStart, false);
-    tcfire.addEventListener("touchmove", touchFireMove, false);
-    tcfire.addEventListener("touchend", touchFireEnd, false);
-    tcfire.addEventListener("touchcancel", touchFireCancel, false);
-  } else {
-    var keyControls = $("keyControls");
-    var touchControls = $("touchControls");
-    keyControls.style.display = "block";
-    touchControls.style.display = "none";
+  if (!haveTouch) {
+    //var keyControls = $("keyControls");
+    //var touchControls = $("touchControls");
+    //keyControls.style.display = "block";
+    //touchControls.style.display = "none";
   }
 
   Input.setupControllerKeys(handleKeyDown, handleKeyUp);
@@ -402,6 +309,7 @@ requirejs(
     '../../scripts/misc',
     '../../scripts/input',
     '../../scripts/mobilehacks',
+    '../../scripts/touch',
     'ships',
   ],
   main

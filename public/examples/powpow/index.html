@@ -77,51 +77,23 @@ requirejs.config({
     <div id="menu"><img src="../assets/gear-icon.svg"></div>
   </div>
   <div id="content">
-  <!-- this is inserted into index.html by build.py -->
-  <div id="surface" class="fullcenter fixheight">
-    <div id="msg"></div>
-    <img id="ship" src="assets/waiting.png" />
-    <!--
-    <div id="status"></div>
-    <div id="console"></div>
-    -->
-  </div>
-  <div id="controlArea" class="fixheight">
-    <div id="touchControls">
-      <!-- FUCK U CSS ... 2 hours fucking with you you suck! -->
-      <table border="0" cellpadding="0" cellspacing="0" width="100%" height="100%">
-        <tr>
-          <td width="50%">
-        <div id="tcmove" class="move">
-          <div class="instruction">Drag Left/Right here to Steer</div>
-        </div>
-          </td>
-          <td width="50%">
-        <div id="tcfire" class="fire">
-          <div class="instruction">Press here to Fire</div>
-        </div>
-          </td>
-        </tr>
-      </table>
+    <!-- this is inserted into index.html by build.py -->
+    <div id="buttons" class="fullsize">
+      <div class="button" id="left">◀</div>
+      <div class="button" id="right">▶</div>
+      <img id="avatar" src="assets/waiting.png" />
+      <div class="button" id="fire">&#x2731;</div>
     </div>
-    <div id="singleTouchControls">
-      <div class="stmove">
-        <table border="0" cellpadding="0" cellspacing="0" width="100%" height="100%">
-        <tr height="10px">
-          <td>
-            <div class="instruction">Press to Steer, Tap to Fire</div>
-          </td>
-        </tr>
-        <tr>
-          <td valign="middle" align="center" id="stcontrol">
-              <center>
-                <canvas class="canvas" width="150" height="150"></canvas>
-              <center>
-          </td>
-        </tr>
-        </table>
+    <div id="msg"></div>
+    <div id="hft-portrait" class="fullsize fullcenter">
+      <div class="instruction">
+        Turn the Screen
+      </div>
+      <div class="hft-xlarge">
+        &#x21ba;
       </div>
     </div>
+    <!--
     <div id="keyControls">
       <div class="move">
         <div class="instruction">Press Cursor Keys to Steer</div>
@@ -130,8 +102,7 @@ requirejs.config({
         <div class="instruction">Press Z to Fire</div>
       </div>
     </div>
-  </div>
-
+    -->
 
     <div id="disconnected">
       <div class="fullcenter">
