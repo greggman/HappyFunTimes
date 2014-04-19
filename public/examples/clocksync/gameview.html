@@ -69,16 +69,10 @@ requirejs.config({
 </script>
 </head>
 <body>
-<div id="container">
-  <div id="header">
-    <form id="nameform">
-      <input type="text" id="name" autocorrect="off" spellcheck="false" />
-    </form>
-    <div id="menu"><img src="../assets/gear-icon.svg"></div>
-  </div>
-  <div id="content">
+<div id="hft-container">
+  <div id="hft-content">
     <!-- this is inserted into index.html by build.py -->
-    <div id="top" class="fullcenter">
+    <div id="top" class="hft-fullcenter">
       <div id="log">
       </div>
       <div id="clock">
@@ -88,26 +82,6 @@ requirejs.config({
 
       </div>
     </div>
-
-
-    <div id="disconnected">
-      <div class="fullcenter">
-        <div class="instruction">Disconnected</div>
-        <div class="menubutton" id="reload"><div>Restart</div></div>
-      </div>
-    </div>
-    <div id="debug">
-      <pre id="status">d</pre>
-      <div id="console"></div>
-    </div>
-  </div>
-</div>
-<div id="settings">
-  <div class="fullcenter">
-    <div id="setname" class="menubutton"><div>Set Name</div></div>
-    <div id="restart" class="menubutton"><div>Restart</div></div>
-    <div id="exit"    class="menubutton"><div>Main Menu</div></div>
-    <div id="back"    class="menubutton"><div>Back</div></div>
   </div>
 </div>
 </body>

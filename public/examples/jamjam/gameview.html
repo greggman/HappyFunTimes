@@ -46,6 +46,13 @@ html, body {
 }
 #outer {
   z-index: 2;
+  position: absolute;
+  left: 0px;
+  top: 0px;
+  color: white;
+  font-size: 50px;
+  font-weight: bolder;
+  text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
 }
 </style>
 <script data-main="scripts/jamjamgame.js" src="../scripts/require.js"></script>
@@ -121,10 +128,10 @@ void main() {
 </script>
 </head>
 <body>
-<div id="visual" class="fullsize">
-<canvas id="canvas" class="fullsize"></canvas>
+<div id="visual" class="hft-fullsize">
+<canvas id="canvas" class="hft-fullsize"></canvas>
 </div>
-<div id="outer" class="fullcenter">
+<div id="outer" class="hft-fullcenter">
 <div>People Jamming: <span id="numPeople">0</span></div>
 </div>
 <div id="debug">
@@ -132,7 +139,7 @@ void main() {
   <div id="console"></div>
 </div>
 <div id="disconnected">
-  <div class="fullcenter">
+  <div class="hft-fullcenter">
     <div class="instruction">Disconnected</div>
     <div id="reload">...lost connection to server (T_T)...</div>
   </div>

@@ -173,6 +173,9 @@ var main = function(
     }
   };
 
+  Ships.setShipSize(60);
+  g_audioManager = new AudioManager(sounds);
+
   g_client = new GameClient({
     gameId: "powpow",
   });
@@ -195,9 +198,6 @@ var main = function(
       samples: 1,
     }
   };
-  g_audioManager = new AudioManager(sounds);
-
-  Ships.setShipSize(60);
 
   Touch.setupButtons({
     inputElement: $("buttons"),

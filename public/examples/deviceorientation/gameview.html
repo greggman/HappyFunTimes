@@ -54,22 +54,28 @@ html, body {
 }
 #outer {
   z-index: 4;
+  left: 0px;
+  top: 0px;
+  color: white;
+  font-size: 50px;
+  font-weight: bolder;
+  text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
 }
 </style>
 <script data-main="scripts/deviceorientationgame.js" src="../scripts/require.js"></script>
 </head>
 <body>
-<div id="visual" class="fullsize">
-<canvas id="canvas" class="fullsize"></canvas>
+<div id="visual" class="hft-fullsize">
+<canvas id="canvas" class="hft-fullsize"></canvas>
 </div>
-<div id="outer" class="fullcenter">
+<div id="outer" class="hft-fullcenter">
 </div>
 <div id="debug">
   <pre id="status">d</pre>
   <div id="console"></div>
 </div>
 <div id="disconnected">
-  <div class="fullcenter">
+  <div class="hft-fullcenter">
     <div class="instruction">Disconnected</div>
     <div id="reload">...lost connection to server (T_T)...</div>
   </div>

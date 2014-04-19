@@ -45,12 +45,12 @@ html, body {
   overflow: hidden;
 }
 /* class to make something full size */
-.fullsize {
+.hft-fullsize {
   width: 100%;
   height: 100%;
 }
 /* class to make a column based flexbox with everything centered */
-.fullcenter {
+.hft-fullcenter {
   width: 100%;
   height: 100%;
   display: flex;
@@ -66,7 +66,7 @@ html, body {
   min-height: auto;
 }
 /* the entire page */
-#container {
+#hft-container {
   width: 100%;
   height: 100%;
   gborder: 1px solid white;
@@ -85,7 +85,7 @@ html, body {
 }
 
 /* the top area */
-#header {
+#hft-header {
   background: linear-gradient(to bottom, #f2f6f8 0%,#d8e1e7 88%,#b5c6d0 91%,#e0eff9 100%);
   width: 100%;
   flex: 0 1 auto;
@@ -102,7 +102,7 @@ html, body {
   -webkit-align-items: center;
 }
 /* the bottom area */
-#content {
+#hft-content {
   width: 100%;
   height: 100%;
   flex: 1 1 auto;
@@ -111,13 +111,13 @@ html, body {
   position: relative;
 }
 /* left header area */
-#nameform {
+#hft-nameform {
   flex: 1 1 auto;
   -webkit-flex: 1 1 auto;
 
   margin: 0.5em;
 }
-#name
+#hft-name
 {
     width: 100%;
     background-color: rgba(0,0,0,0);
@@ -127,36 +127,26 @@ html, body {
     border: none;
 }
 /* right header area */
-#menu {
+#hft-menu {
   flex: 0 1 auto;
   -webkit-flex: 0 1 auto;
   margin-left: 0.5em;
   margin-right: 0.5em;
 }
-.instruction {
+.hft-instruction {
   font-size: xx-large;
   font-weight: bold;
 }
 /* phone landscape */
 @media only screen and (min-device-width : 320px) and (max-device-width: 568px) and (orientation: landscape) {
-    #name {
+    #hft-name {
         font-size: large;
     }
-    .instruction {
+    .hft-instruction {
         font-size: x-large;
     }
 }
-
-#outer {
-  position: absolute;
-  left: 0px;
-  top: 0px;
-  color: white;
-  font-size: 50px;
-  font-weight: bolder;
-  text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
-}
-#status {
+#hft-status {
   position: absolute;
   padding: 1em;
   background-color: rgba(0,0,0,0.5);
@@ -166,14 +156,14 @@ html, body {
   margin: 5px;
   font-size: small;
 }
-#debug {
+#hft-debug {
   position: absolute;
   top: 0px;
   left: 0px;
   z-index: 10;
   display: none;
 }
-#disconnected {
+#hft-disconnected {
   position: absolute;
   top: 0px;
   left: 0px;
@@ -186,7 +176,7 @@ html, body {
   font-size: 48pt;
   font-weight: bold;
 }
-#settings {
+#hft-settings {
   position: absolute;
   top: 0px;
   left: 0px;
@@ -197,13 +187,13 @@ html, body {
 
   display: none;
 }
-.menubutton {
+.hft-menubutton {
   border-radius: 1em;
   background: linear-gradient(to bottom, #f2f6f8 0%,#d8e1e7 88%,#b5c6d0 91%,#e0eff9 100%);
   width: 80%;
   margin: 0.2em;
 }
-.menubutton div {
+.hft-menubutton div {
   width: 100%;
   padding-left: 0.5em;
   height: 2em;

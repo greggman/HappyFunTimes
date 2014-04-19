@@ -69,23 +69,23 @@ requirejs.config({
 </script>
 </head>
 <body>
-<div id="container">
-  <div id="header">
-    <form id="nameform">
-      <input type="text" id="name" autocorrect="off" spellcheck="false" />
+<div id="hft-container">
+  <div id="hft-header">
+    <form id="hft-nameform">
+      <input type="text" id="hft-name" autocorrect="off" spellcheck="false" />
     </form>
-    <div id="menu"><img src="../assets/gear-icon.svg"></div>
+    <div id="hft-menu"><img src="../assets/gear-icon.svg"></div>
   </div>
-  <div id="content">
+  <div id="hft-content">
     <!-- this is inserted into index.html by build.py -->
-    <div id="buttons" class="fullsize">
+    <div id="buttons" class="hft-fullsize">
       <div class="button" id="left">◀</div>
       <div class="button" id="right">▶</div>
       <img id="avatar" src="assets/waiting.png" />
       <div class="button" id="fire">&#x2731;</div>
     </div>
     <div id="msg"></div>
-    <div id="hft-portrait" class="fullsize fullcenter">
+    <div id="hft-portrait" class="hft-fullsize hft-fullcenter">
       <div class="instruction">
         Turn the Screen
       </div>
@@ -104,24 +104,24 @@ requirejs.config({
     </div>
     -->
 
-    <div id="disconnected">
-      <div class="fullcenter">
-        <div class="instruction">Disconnected</div>
-        <div class="menubutton" id="reload"><div>Restart</div></div>
+    <div id="hft-disconnected">
+      <div class="hft-fullcenter">
+        <div class="hft-instruction">Disconnected</div>
+        <div class="hft-menubutton" id="hft-reload"><div>Restart</div></div>
       </div>
     </div>
-    <div id="debug">
-      <pre id="status">d</pre>
-      <div id="console"></div>
+    <div id="hft-debug">
+      <pre id="hft-status">d</pre>
+      <div id="hft-console"></div>
     </div>
   </div>
 </div>
-<div id="settings">
-  <div class="fullcenter">
-    <div id="setname" class="menubutton"><div>Set Name</div></div>
-    <div id="restart" class="menubutton"><div>Restart</div></div>
-    <div id="exit"    class="menubutton"><div>Main Menu</div></div>
-    <div id="back"    class="menubutton"><div>Back</div></div>
+<div id="hft-settings">
+  <div class="hft-fullcenter">
+    <div id="hft-setname" class="hft-menubutton"><div>Set Name</div></div>
+    <div id="hft-restart" class="hft-menubutton"><div>Restart</div></div>
+    <div id="hft-exit"    class="hft-menubutton"><div>Main Menu</div></div>
+    <div id="hft-back"    class="hft-menubutton"><div>Back</div></div>
   </div>
 </div>
 </body>

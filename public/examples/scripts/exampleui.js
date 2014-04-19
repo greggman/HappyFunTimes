@@ -38,26 +38,26 @@ define(
   };
 
   var setupStandardControllerUI = function(client, options) {
-    var menu = $("menu");
-    var settings = $("settings");
-    var disconnected = $("disconnected");
+    var menu = $("hft-menu");
+    var settings = $("hft-settings");
+    var disconnected = $("hft-disconnected");
 
-    var playerNameHandler = new PlayerNameHandler(client, $("name"));
+    var playerNameHandler = new PlayerNameHandler(client, $("hft-name"));
 
     menu.addEventListener('click', function() {
       settings.style.display = "block";
     }, false);
-    $("setname").addEventListener('click', function() {
+    $("hft-setname").addEventListener('click', function() {
       settings.style.display = "none";
       playerNameHandler.startNameEntry();
     }, false);
-    $("restart").addEventListener('click', function() {
+    $("hft-restart").addEventListener('click', function() {
       window.location.reload();
     }, false);
-    $("exit").addEventListener('click', function() {
-      window.location.href = window.location.origin;
+    $("hft-exit").addEventListener('click', function() {
+      window.location.href = "/";
     }, false);
-    $("back").addEventListener('click', function() {
+    $("hft-back").addEventListener('click', function() {
       settings.style.display = "none";
     });
 
@@ -76,13 +76,13 @@ define(
       }
     });
 
-    $("reload").addEventListener('click', function() {
+    $("hft-reload").addEventListener('click', function() {
       window.location.reload();
     });
 
     if (options.debug) {
-      var status = $("status").firstChild;
-      var debugCSS = Misc.findCSSStyleRule("#debug");
+      var status = $("hft-status").firstChild;
+      var debugCSS = Misc.findCSSStyleRule("#hft-debug");
       debugCSS.style.display = "block";
     }
   };

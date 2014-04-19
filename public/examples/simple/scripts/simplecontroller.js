@@ -47,7 +47,8 @@ var main = function(
 
   var score = 0;
   var statusElem = document.getElementById("gamestatus");
-  var inputElem = document.getElementById("input");
+  var inputElem = document.getElementById("inputarea");
+  var colorElem = document.getElementById("display");
   var client = new GameClient({
     gameId: "simple",
   });
@@ -86,7 +87,7 @@ var main = function(
   client.sendCmd('color', {
     color: color,
   });
-  inputElem.style.backgroundColor = color;
+  colorElem.style.backgroundColor = color;
 
   // Send a message to the game when the screen is touched
   inputElem.addEventListener('pointermove', function(event) {
