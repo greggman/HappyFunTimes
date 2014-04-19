@@ -1,3 +1,6 @@
+*   size dpads
+*   make powpow/unitycharacter/shootshoot controller show a simple to rotate if in portrate mode
+
 *   **Issue:** Anyone can go to the gameview.html for a game.
 
     Curretly the relayserver assumes a new game for the same gameId is legit. It kills
@@ -40,12 +43,6 @@
 *   make gameviews template based so we can make disconnect behavior common
 *   stop sliding fingers from selecting stuff.
 *   make bird quack if you click him (consider random speed)
-*   make disconnect have "main menu" if game is not running?
-
-    Maybe only option should be "Main Menu"? If I'm changing games I want them
-    to go to the main menu and pick a new game. If game crashes it can be picked
-    from the main menu.?
-
 *   fix flex css (remove need for fixHeightHack)
 *   add some CSS animation foo for menu appearing, disappearing
 *   figure out why deviceorientation message is low
@@ -58,29 +55,13 @@
 
 *   send no caching header? or at least optionally
 
-*   size dpads
-*   make powpow/unitycharacter/shootshoot controller show a simple to rotate if in portrate mode
-
 *   remove android single touch from powpow
 
     When this was first written single touch android phones were common.
 
-*   redesign powpow controls
-
-    Rowen suggested that because ship is on center of screen people
-    expect to touch there to control it. Should I move the ship?
-    Change it so it controls from the center? Show <- -> buttons
-    and a [Fire] button with the ship somewhere else?
-
-*   make disconnect handling shared?
-
 *   fix tdl vs require load issues.
 
-*   Remove sound from clock sync or fix it.
-
 *   Get nice designs for games. Particularly controllers
-
-*   store rhythm in cookie?
 
 *   remove window everywhere?
 
@@ -122,16 +103,58 @@
 
     Is that overkill
 
-*   Remove local log stuff
-
 *   put $ in misc
 
 *   make tick for clocksync ogg/mp3
 
-*   handle ssl as well?
+*   handle ssl as well for captive portal? I don't think I can :(
 
 Done
 ----
+
+*   store rhythm in cookie?
+
+*   redesign powpow controls
+
+    Rowen suggested that because ship is on center of screen people
+    expect to touch there to control it. Should I move the ship?
+    Change it so it controls from the center? Show <- -> buttons
+    and a [Fire] button with the ship somewhere else?
+
+*   make disconnect have "main menu" if game is not running?
+
+    Maybe only option should be "Main Menu"? If I'm changing games I want them
+    to go to the main menu and pick a new game. If game crashes it can be picked
+    from the main menu.?
+
+    For most situations it seems like it should go back to the main menu immediately.
+    What I don't like about that is it's abrupt. I suppose the player will be looking
+    at the game (TV), not the controller (smartphone). So if they see the game crash
+    or change they won't be startled to look down and see a list of games rather than
+    the controller they were viewing.
+
+    On the other hand, during development, it's nice to be able to click refresh on the
+    game and then refresh on the controllers. If the controllers automatically go to the
+    main menu that would suck. I suppose the contollers could check if the game is
+    still running and only go to the main menu if not. That would mean the workflow of
+    refresh the game, controllers auto-disconnect, re-fresh controllers would work. But,
+    anytime the game crashed a few moments later the controllers would go back to the
+    main menu. Is that okay or is that annoying for dev?
+
+    Should I even have a "disconnected" scren or should it just reload automatically if
+    the game is still running or go back to the main menu if not? That would probably
+    also make dev harder because the moment you refreshed the game all controllers
+    would auto connect. Often I have 2-5 controllers open and I just want one to connect?
+
+    Hmmm, the more I think about it the more auto-connecting seems good. I often want
+    all controllers to connect. I can close controllers I don't want to connect.
+
+    So, I'm thinking controllers gets disconnect message, it asks if game is still running,
+    if yes reload, if no then main menu.
+
+*   Remove sound from clock sync or fix it.
+
+*   Remove local log stuff
 
 *   Make games.html to make it easier to show off games. Generate it
 *   Remove connect msg from powwow
