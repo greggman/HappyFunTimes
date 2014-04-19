@@ -34,7 +34,7 @@ var main = function(
     GameClient,
     SyncedClock,
     AudioManager,
-    Cookies,
+    Cookie,
     ExampleUI,
     Grid,
     Input,
@@ -45,7 +45,7 @@ var main = function(
   var g_clock;
   var g_grid;
   var g_instrument;
-  var g_rhythmCookieName = "jamjam-rhythm";
+  var g_rhythmCookie = new Cookie("jamjam-rhythm");
 
   var globals = {
     bpm: 120,
@@ -56,9 +56,9 @@ var main = function(
 
   // I'm sure this is overkill
   (function() {
-    var savedRhythm = Cookies.readCookie(g_rhythmCookieName);
+    var savedRhythm = g_rhythmCookie.get();
     if (savedRhythm) {
-      {
+      try {
         savedRhythm = JSON.parse(savedRhythm);
         // I don't trust the cookie so
         if (savedRhythm.length && savedRhythm.length == 16) {
@@ -147,7 +147,7 @@ var main = function(
         return function(e) {
           var rhythm = tracks[trackIndex].rhythm;
           rhythm[rhythmIndex] = !rhythm[rhythmIndex];
-          Cookies.createCookie(g_rhythmCookieName, JSON.stringify(rhythm), 90);
+          g_rhythmCookie.set(JSON.stringify(rhythm), 90);
           sendNote(trackIndex, rhythmIndex, rhythm[rhythmIndex]);
           setDisplayForNote(trackIndex, rhythmIndex);
         };

@@ -33,10 +33,11 @@
 // Functions for dealing with the player's name. The name events are arguably
 // not part of the HappyFunTimes library but they are used in most of the samples
 // so I put them here.
-define(['./cookies'], function(Cookies) {
+define(['./cookies'], function(Cookie) {
 
   var PlayerNameHandler = function(client, element) {
-    var name = Cookies.readCookie("name") || "";
+    var nameCookie = new Cookie("name");
+    var name = nameCookie.get() || "";
 
     var setName = function() {
       element.value = name;
@@ -75,7 +76,7 @@ define(['./cookies'], function(Cookies) {
         element.value = name;
       } else if (newName != name) {
         name = newName;
-        Cookies.createCookie("name", name, 90);
+        nameCookie.set(name, 90);
         sendName();
       }
       sendBusy(false);

@@ -31,40 +31,39 @@
 "use strict";
 
 define(function() {
-  var createCookie = function(name, value, days) {
-    var expires = "";
-    if (days) {
-      var date = new Date();
-      date.setTime(Date.now() + (days * 24 * 60 * 60 * 1000));
-      expires = "; expires=" + date.toGMTString();
-    }
-    document.cookie = name + "=" + value + expires + "; path=/";
-  };
-
-  var readCookie = function(name) {
-    var nameEQ = name + "=";
-    var ca = document.cookie.split(';');
-    for(var i = 0; i < ca.length; ++i) {
-      var c = ca[i];
-      while (c.charAt(0)==' ') {
-        c = c.substring(1,c.length);
+  // This is an object, that way you set the name just once so calling set or get you
+  // don't have to worry about getting the name wrong.
+  var Cookie = function(name) {
+    this.set = function(value, days) {
+      var expires = "";
+      if (days) {
+        var date = new Date();
+        date.setTime(Date.now() + (days * 24 * 60 * 60 * 1000));
+        expires = "; expires=" + date.toGMTString();
       }
-      if (c.indexOf(nameEQ) == 0) {
-        return c.substring(nameEQ.length, c.length);
+      document.cookie = name + "=" + value + expires + "; path=/";
+    };
+
+    this.get = function() {
+      var nameEQ = name + "=";
+      var ca = document.cookie.split(';');
+      for(var i = 0; i < ca.length; ++i) {
+        var c = ca[i];
+        while (c.charAt(0)==' ') {
+          c = c.substring(1,c.length);
+        }
+        if (c.indexOf(nameEQ) == 0) {
+          return c.substring(nameEQ.length, c.length);
+        }
       }
-    }
-    return null;
+    };
+
+    this.erase = function() {
+      createCookie(name, "", -1);
+    };
   };
 
-  var eraseCookie = function(name) {
-    createCookie(name, "", -1);
-  };
-
-  return {
-    createCookie: createCookie,
-    readCookie: readCookie,
-    eraseCookie: eraseCookie,
-  };
+  return Cookie;
 });
 
 
