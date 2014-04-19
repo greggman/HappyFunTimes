@@ -71,7 +71,7 @@ var main = function(
 
   g_audioManager = new AudioManager();
 
-  var dpadSize = 100;
+  var dpadSize = 160;
   var dpads = [
     new DPad({size: dpadSize, element: $("dpadleft")}),
     new DPad({size: dpadSize, element: $("dpadright")}),

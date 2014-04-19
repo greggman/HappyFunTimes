@@ -61,16 +61,18 @@
 }
 #dpadleft, #dpadright {
   position: absolute;
-  width: 100px;
+  width: 160px;
 }
-#dpads img {
-    width: 100px;
+#dpads canvas {
+    width: 160px;
+    height: 160px;
 }
 #dpadleft {
   left: 2em;
-  bottom: 2em;
+  bottom: 3em;
 }
 #dpadright {
   right: 2em;
-  bottom: 2em;
+  bottom: 3em;
+  text-align: right;
 }
