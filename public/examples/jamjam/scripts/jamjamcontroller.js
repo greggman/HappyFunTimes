@@ -34,6 +34,7 @@ var main = function(
     GameClient,
     SyncedClock,
     AudioManager,
+    Cookies,
     ExampleUI,
     Grid,
     Input,
@@ -44,6 +45,7 @@ var main = function(
   var g_clock;
   var g_grid;
   var g_instrument;
+  var g_rhythmCookieName = "jamjam-rhythm";
 
   var globals = {
     bpm: 120,
@@ -51,6 +53,25 @@ var main = function(
     debug: false,
     rhythm: [1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0],
   };
+
+  // I'm sure this is overkill
+  (function() {
+    var savedRhythm = Cookies.readCookie(g_rhythmCookieName);
+    if (savedRhythm) {
+      {
+        savedRhythm = JSON.parse(savedRhythm);
+        // I don't trust the cookie so
+        if (savedRhythm.length && savedRhythm.length == 16) {
+          for (var ii = 0; ii < 16; ++ii) {
+            globals.rhythm[ii] = savedRhythm[ii] ? true : false;
+          }
+        }
+      } catch (e) {
+        return;
+      }
+    }
+  }());
+
   Misc.applyUrlSettings(globals);
 
   function $(id) {
@@ -126,6 +147,7 @@ var main = function(
         return function(e) {
           var rhythm = tracks[trackIndex].rhythm;
           rhythm[rhythmIndex] = !rhythm[rhythmIndex];
+          Cookies.createCookie(g_rhythmCookieName, JSON.stringify(rhythm), 90);
           sendNote(trackIndex, rhythmIndex, rhythm[rhythmIndex]);
           setDisplayForNote(trackIndex, rhythmIndex);
         };
@@ -265,6 +287,7 @@ requirejs(
   [ '../../../scripts/gameclient',
     '../../../scripts/syncedclock',
     '../../scripts/audio',
+    '../../scripts/cookies',
     '../../scripts/exampleui',
     '../../scripts/grid',
     '../../scripts/input',
