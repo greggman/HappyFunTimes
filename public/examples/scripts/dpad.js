@@ -75,6 +75,9 @@ define(
 
   DPad.prototype.drawBits = function(bits) {
     var size = this.size;
+    if (!size) {
+      size = Math.min(this.canvas.width, this.canvas.height);
+    }
     var w6 = Math.floor(size / 6.5);
     var cx = Math.floor(size / 2);
     var cy = Math.floor(size / 2);
@@ -110,19 +113,14 @@ define(
   };
 
   DPad.prototype.resize = function() {
-    var width;
-    var height;
-    if (this.size) {
-      width = this.size;
-      height = this.size;
-    } else {
-      width = this.element.clientWidth;
-      height = this.element.clientHeight;
+    var size = this.size;
+    if (!size) {
+      size = Math.min(this.canvas.clientWidth, this.canvas.clientHeight);
     }
-    if (this.canvas.width != width ||
-        this.canvas.height != height) {
-      this.canvas.width = width;
-      this.canvas.heiht = height;
+    if (this.canvas.width != size ||
+        this.canvas.height != size) {
+      this.canvas.width = size;
+      this.canvas.height = size;
     }
   };
 
