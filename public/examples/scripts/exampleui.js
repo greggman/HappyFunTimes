@@ -31,7 +31,7 @@
 "use strict";
 
 define(
-  ['./misc', './playername'], function(Misc, PlayerNameHandler) {
+  ['../../scripts/io', './misc', './playername'], function(IO, Misc, PlayerNameHandler) {
 
   var $ = function(id) {
     return document.getElementById(id);
@@ -61,6 +61,13 @@ define(
       settings.style.display = "none";
     });
 
+//    $("hft-mainmenu").addEventListener('click', function() {
+//      window.location.href = "/";
+//    }, false);
+//    $("hft-reload").addEventListener('click', function() {
+//      window.location.reload();
+//    });
+
     // This is not currently needed. The idea
     // was to show something else like "connecting"
     // until the user connected but that's mostly
@@ -74,10 +81,35 @@ define(
       if (options.disconnectFn) {
         options.disconnectFn();
       }
-    });
 
-    $("hft-reload").addEventListener('click', function() {
-      window.location.reload();
+      //
+      var checkForGame = function() {
+        IO.sendJSON(window.location.href, {cmd: 'listRunningGames'}, function (obj, exception) {
+          if (exception) {
+            // the server is down. Try again?. I'm not sure what to do here. Currently the display
+            // will say "restart"/"main menu" but neither have a point if the server is down.
+            // Maybe there should be no options?
+            setTimeout(checkForGame, 1000);
+            return;
+          }
+
+          // Is the game running
+          for (var ii = 0; ii < obj.length; ++ii) {
+            var game = obj[ii];
+            if (game.gameId == client.getGameId()) {
+              // Yes! Reload
+              window.location.reload();
+              return;
+            }
+          }
+
+          // No! Go to main menu
+          window.location.href = "/";
+        });
+      };
+
+      // Give the game a moment to restart and connect to the relayserver
+      setTimeout(checkForGame, 1000);
     });
 
     if (options.debug) {

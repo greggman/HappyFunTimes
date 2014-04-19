@@ -37,6 +37,10 @@ define(['./virtualsocket'], function(VirtualSocket) {
     var g_sendQueue = [];
     var eventListeners = {};
 
+    this.getGameId = function() {
+      return options.gameId;
+    };
+
     this.addEventListener = function(eventType, listener) {
       eventListeners[eventType] = listener;
     };
