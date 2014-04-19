@@ -363,11 +363,11 @@ var main = function(
     }
 
     function showConnected() {
-      $('disconnected').style.display = "none";
+      $('hft-disconnected').style.display = "none";
     }
 
     function showDisconnected() {
-      $('disconnected').style.display = "block";
+      $('hft-disconnected').style.display = "block";
     }
 
     Misc.applyUrlSettings(globals);

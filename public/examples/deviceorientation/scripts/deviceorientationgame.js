@@ -72,12 +72,12 @@ var main = function(
 
   function showConnected() {
     $('outer').style.display = "block";
-    $('disconnected').style.display = "none";
+    $('hft-disconnected').style.display = "none";
   }
 
   function showDisconnected() {
     $('outer').style.display = "none";
-    $('disconnected').style.display = "block";
+    $('hft-disconnected').style.display = "block";
   }
 
   Misc.applyUrlSettings(globals);
