@@ -43,21 +43,31 @@ define(['./ships'], function(Ships) {
     this.shipURLs_ = [];
     this.elementHeight_;
 
+    // These lines create 3 ship img tags. Each image is
+    // is mask/overlay showing through to the background color.
+    // That we we can display any color of ship just by changing the background
+    // color of the element.
     var canvas = document.createElement("canvas");
     canvas.width = 32;
     canvas.height = 32;
     var ctx = canvas.getContext("2d");
     ctx.fillStyle = "#008";
-    ctx.globalCompositeOperation = "copy";
     ctx.fillRect(0, 0, 32, 32);
-    Ships.drawShip(ctx, 16, 16, Math.PI, "rgba(0,0,0,0)");
+    ctx.globalCompositeOperation = "destination-out";
+    Ships.drawShip(ctx, 16, 16, Math.PI, "rgba(0,0,0,1)");
     this.shipURLs_.push(canvas.toDataURL());
+    ctx.globalCompositeOperation = "source-over";
+    ctx.fillStyle = "#008";
     ctx.fillRect(0, 0, 32, 32);
-    Ships.drawOutlineShip(ctx, 16, 16, Math.PI, "rgba(0,0,0,0)");
+    ctx.globalCompositeOperation = "destination-out";
+    Ships.drawOutlineShip(ctx, 16, 16, Math.PI, "rgba(0,0,0,1)");
     this.shipURLs_.push(canvas.toDataURL());
+    ctx.globalCompositeOperation = "source-over";
+    ctx.fillStyle = "#008";
     ctx.fillRect(0, 0, 32, 32);
+    ctx.globalCompositeOperation = "destination-out";
     Ships.drawTwoToneShip(
-        ctx, 16, 16, Math.PI, "rgba(0,0,0,0)", "rgba(0,0,0,0.5)");
+        ctx, 16, 16, Math.PI, "rgba(0,0,0,1)", "rgba(0,0,0,0.5)");
     this.shipURLs_.push(canvas.toDataURL());
   }
 
