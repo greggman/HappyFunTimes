@@ -1,27 +1,64 @@
-*   fix powpow que/score display
+*   **Issue:** Anyone can go to the gameview.html for a game.
+
+    Curretly the relayserver assumes a new game for the same gameId is legit. It kills
+    the old game and makes a new one. This is useful during dev as you don't have to hunt
+    down any old tab that might be running the game.
+
+    At a party that's fine since you're with friends but at a bar/museum that
+    would suck because griefers can easily grief, no hacking required.
+
+    Could make it so relayserver only lets first game per gameId in. Problems. Assumes
+    games are stable. (could probably fix with timeout which might already be in there)
+
+    It doesn't solve the issue that a griefer can start other games so if you, as the party host, go to
+    start up another game you can't if the griefer has already started one. Maybe that's okay.
+    It's just at starting time so can scream at griefer.
+
+    Another idea. Maybe you can start server with optional password. Games require password in URL
+    as in http://ipaddress/example/jumpjump/gameview.html?settings={password:"foobar"}. Since
+    the griefer doesn't know the password they can't start games.
+
+    Of course sadly griefers can easily break games. Maybe I should fix this? They can break games
+    by sending bogus messages. Example. `sendCmd('move', {dir: "foo"})` will end up in the code as
+
+        position += msg.foo;  // exception? ... or actually position becomes NaN :(
+
+    I could put a try/catch when I call events. Unfortunately you'd like to be able to catch
+    the exceptions in the debugger when debugger. Maybe again this should be an option in
+    starting a game as in `...?settings={trycatchevents:true}`
+
+    That wouldn't prevent griefing. See NaN above.
+
+    I'm just wondering out loud if by some luck HFT was used
+    at a museum some griefer that knew the library could easily crash the game :(  I suppose,
+    at least at the beginning, the odds that some griefer is going to come to some event with
+    his laptop or tablet and hack some custom code just to be an ahole is not so likely?
+
+*   Have better splash if no games running
+*   Fix collisions for jumpjujmp
+*   Make more world sizes
+*   make gameviews template based so we can make disconnect behavior common
 *   stop sliding fingers from selecting stuff.
 *   make bird quack if you click him (consider random speed)
-*   test on iOS 6.x and iOS 7.0
-*   make disconnect have "main menu" if game is not running
-*   fix simple so div doesnt' mess up
+*   make disconnect have "main menu" if game is not running?
+
+    Maybe only option should be "Main Menu"? If I'm changing games I want them
+    to go to the main menu and pick a new game. If game crashes it can be picked
+    from the main menu.?
+
 *   fix flex css (remove need for fixHeightHack)
 *   add some CSS animation foo for menu appearing, disappearing
 *   figure out why deviceorientation message is low
-*   figure out why everyone is player2
-*   make powpow use handjs
 *   put player name above character in unity.
 *   test older ios
     *   consider making it warn if version not good enough
 *   test older android
     *   consider making it warn if version not good enough
-*
+*   should I restructure samples to wait for sounds to load?
 
 *   send no caching header? or at least optionally
 
-*   add touchmove preventdefault lib to all samples
-
-*   decide best dead-space etc for dpad
-
+*   size dpads
 *   make powpow/unitycharacter/shootshoot controller show a simple to rotate if in portrate mode
 
 *   remove android single touch from powpow
@@ -54,11 +91,13 @@
 
 *   make sample games
 
+    *   bomberman
     *   platformer
     *   8way shooter
     *   unity character controller
     *   johann sabastian bach
     *   rougelike
+    *   Make a round based game. (bomberman fits this. Each round lasts 2 mins. Players entering later have to wait)
     *   quiz
 
         send question Q + 4 answers, display on phone and on game. On game show counts
@@ -94,18 +133,22 @@
 Done
 ----
 
+*   Make games.html to make it easier to show off games. Generate it
+*   Remove connect msg from powwow
+*   fix powpow que/score display
+*   add touchmove preventdefault lib to all samples
+
+*   decide best dead-space etc for dpad
+
+*   figure out why everyone is player2
+*   make powpow use handjs
+*   fix simple so div doesnt' mess up
 *   show the bird
-
 *   make simple and supersimple use template
-
 *   make clock sync show a clock
-
 *   make public/index.html template generated?
-
 *   Make disconnect centered/sized and clickable.
-
 *   Make controllers have button to go back to games
-
 *   abstract name stuff
 
     Powpow lets you name your player. Should this be in every game? Turned into a library?
