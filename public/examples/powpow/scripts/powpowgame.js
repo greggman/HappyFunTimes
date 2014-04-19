@@ -166,14 +166,6 @@ var main = function(
     Misc.applyUrlSettings(globals);
 
     g_canvas = $("canvas");
-    if (globals.msg) {
-      $("url").innerHTML = globals.msg;
-    } else if (globals.haveServer) {
-      $("url").innerHTML = "To Play Go To " +
-          window.location.href.replace(/\/[^/]*$/, '');
-    } else {
-      $("url").innerHTML = "!!DEBUG MODE!! -- Must run from server to play";
-    }
 
     var gl = tdl.webgl.setupWebGL(g_canvas, undefined, function() {});
     if (g_debug) {
