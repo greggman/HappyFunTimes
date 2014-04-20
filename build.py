@@ -117,7 +117,7 @@ class Builder(object):
   def Process(self):
     examples = [
       { "useGameTemplate": False, "name": "DeviceOrientation",     "gameId": "orient", },
-      { "useGameTemplate": False, "name": "JamJam",                "gameId": "jamjam", },
+      { "useGameTemplate": True,  "name": "JamJam",                "gameId": "jamjam", },
       { "useGameTemplate": True,  "name": "JumpJump",              "gameId": "jumpjump", },
       { "useGameTemplate": False, "name": "PowPow",                "gameId": "powpow", },
       { "useGameTemplate": False, "name": "ShootShoot",            "gameId": "shootshoot", },

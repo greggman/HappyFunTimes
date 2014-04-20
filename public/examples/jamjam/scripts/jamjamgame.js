@@ -332,6 +332,7 @@ var main = function(
     AudioManager,
     CSSParse,
     GameClock,
+    GameSupport,
     Misc,
     CanvasRenderer,
     WebGLRenderer) {
@@ -362,14 +363,6 @@ var main = function(
       return new Player(g_services, netPlayer);
     }
 
-    function showConnected() {
-      $('hft-disconnected').style.display = "none";
-    }
-
-    function showDisconnected() {
-      $('hft-disconnected').style.display = "block";
-    }
-
     Misc.applyUrlSettings(globals);
 
     g_services.globals = globals;
@@ -378,8 +371,7 @@ var main = function(
       gameId: "jamjam",
     });
     g_services.server = server;
-    server.addEventListener('connect', showConnected);
-    server.addEventListener('disconnect', showDisconnected);
+    GameSupport.init(server, globals);
     server.addEventListener('playerconnect', g_playerManager.startPlayer.bind(g_playerManager));
 
     var clock = SyncedClock.createClock(true);
@@ -402,23 +394,17 @@ var main = function(
     var secondsPerQuarterBeat = secondsPerBeat / 4;
     var lastDisplayedQuarterBeat = 0;
 
-    if (globals.debug) {
-      var status = $("status").firstChild;
-      var debugCSS = Misc.findCSSStyleRule("#debug");
-      debugCSS.style.display = "block";
-    }
-
     function process() {
       var currentTime = clock.getTime();
       var currentQuarterBeat = Math.floor(currentTime / secondsPerQuarterBeat);
 
       if (globals.debug) {
         var beat = Math.floor(currentQuarterBeat / 4) % 4;
-        status.nodeValue =
-        "\n ct: " + currentTime.toFixed(2).substr(-5) +
-        "\ncqb: " + currentQuarterBeat.toString().substr(-4) +
-        "\n rt: " + currentQuarterBeat % globals.loopLength +
-        "\n bt: " + beat + ((beat % 2) == 0 ? " ****" : "");
+        GameSupport.setStatus(
+            "\n ct: " + currentTime.toFixed(2).substr(-5) +
+            "\ncqb: " + currentQuarterBeat.toString().substr(-4) +
+            "\n rt: " + currentQuarterBeat % globals.loopLength +
+            "\n bt: " + beat + ((beat % 2) == 0 ? " ****" : ""));
       }
 
       if (lastDisplayedQuarterBeat != currentQuarterBeat) {
@@ -432,47 +418,14 @@ var main = function(
     }
     process();
 
-    var gameClock = new GameClock(clock);
-    function render() {
-      globals.elapsedTime = gameClock.getElapsedTime();
-
+    GameSupport.run(globals, function() {
       //var x = Misc.randInt(150) + 500;
       //var y = Misc.randInt(150) + 300;
       //renderer.drawCircle([x, y], 40, [1,1,1,1]);
       renderer.begin();
       renderer.end();
-      requestAnimationFrame(render);
-    }
-    render();
+    });
 
-    //var sounds = {
-    //  fire: {
-    //    filename: "assets/fire.ogg",
-    //    samples: 8,
-    //  },
-    //  explosion: {
-    //    filename: "assets/explosion.ogg",
-    //    samples: 6,
-    //  },
-    //  hitshield: {
-    //    filename: "assets/hitshield.ogg",
-    //    samples: 6,
-    //  },
-    //  launch: {
-    //    filename: "assets/launch.ogg",
-    //    samples: 2,
-    //  },
-    //  gameover: {
-    //    filename: "assets/gameover.ogg",
-    //    samples: 1,
-    //  },
-    //  play: {
-    //    filename: "assets/play.ogg",
-    //    samples: 1,
-    //  },
-    //};
-    //var audioManager = new AudioManager(sounds);
-    //g_services.audioManager = audioManager;
   };
   start();
 };
@@ -484,6 +437,7 @@ requirejs(
     '../../scripts/audio',
     '../../scripts/cssparse',
     '../../scripts/gameclock',
+    '../../scripts/gamesupport',
     '../../scripts/misc',
     './canvasrenderer',
     './webglrenderer',
