@@ -51,7 +51,7 @@ define(function() {
       ++this.callCount;
 
       var now = clock.getTime();
-      var elapsedTime = Math.min(now - then, 0.1);  // Don't return a time less than 0.1 second
+      var elapsedTime = Math.min(now - then, 0.05);  // Don't return a time less than 0.05 second
       this.gameTime += elapsedTime;
 
       then = now;
