@@ -110,7 +110,6 @@ window.p = this;
     if (name != this.playerName) {
       this.playerName = name;
       this.nameImage = ImageProcess.makeTextImage(name, nameFontOptions);
-      document.getElementById("hft-status").appendChild(this.nameImage);
     }
   };
 
