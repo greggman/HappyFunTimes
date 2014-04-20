@@ -50,6 +50,18 @@ define([
   var logger = new Logger.NullLogger();
 
   var init = function(server, options) {
+    var showConnected = function() {
+      $('hft-disconnected').style.display = "none";
+    }
+
+    var showDisconnected = function() {
+      $('hft-disconnected').style.display = "block";
+    }
+
+    server.addEventListener('connect', showConnected);
+    server.addEventListener('disconnect', showDisconnected);
+
+
     if (options.showFPS) {
       stats = new Stats();
       stats.setMode(0); // 0: fps, 1: ms
@@ -91,7 +103,7 @@ define([
 
   var setStatus = function(str) {
     if (statusNode) {
-      statusNode.value = str;
+      statusNode.nodeValue = str;
     }
   };
 
