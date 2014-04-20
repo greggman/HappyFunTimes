@@ -30,7 +30,12 @@
  */
 "use strict";
 
-define(['../../scripts/2d'], function(M2D) {
+define([
+    '../../scripts/2d',
+    '../../scripts/imageprocess',
+  ], function(
+    M2D,
+    ImageProcess) {
 
   var clamp = function(v, min, max) {
     return Math.max(min, Math.min(max, v));
@@ -44,14 +49,18 @@ define(['../../scripts/2d'], function(M2D) {
     return v < 0 ? -1 : (v > 0 ? 1 : 0);
   };
 
+  var availableColors = [];
+  var nameFontOptions = {
+    yOffset: 8,
+    height: 10,
+    fillStyle: "black",
+  };
+
   /**
    * Player represnt a player in the game.
    * @constructor
    */
   var Player = (function() {
-
-    var availableColors = [];
-
     return function(services, x, y, width, height, direction, name, netPlayer) {
       this.services = services;
       this.renderer = services.renderer;
@@ -87,7 +96,7 @@ window.p = this;
       netPlayer.addEventListener('setName', Player.prototype.handleNameMsg.bind(this));
       netPlayer.addEventListener('busy', Player.prototype.handleBusyMsg.bind(this));
 
-      this.playerName = name;
+      this.setName(name);
       this.direction = 0;         // direction player is pushing (-1, 0, 1)
       this.facing = direction;    // direction player is facing (-1, 1)
       this.score = 0;
@@ -96,6 +105,14 @@ window.p = this;
       this.checkBounds();
     };
   }());
+
+  Player.prototype.setName = function(name) {
+    if (name != this.playerName) {
+      this.playerName = name;
+      this.nameImage = ImageProcess.makeTextImage(name, nameFontOptions);
+      document.getElementById("hft-status").appendChild(this.nameImage);
+    }
+  };
 
   Player.prototype.setState = function(state) {
     this.state = state;
@@ -136,6 +153,7 @@ window.p = this;
   Player.prototype.removeFromGame = function() {
     this.services.entitySystem.removeEntity(this);
     this.services.playerManager.removePlayer(this);
+    availableColors.push(this.color);
   };
 
   Player.prototype.handleDisconnect = function() {
@@ -166,7 +184,7 @@ window.p = this;
         name: this.playerName
       });
     } else {
-      this.playerName = msg.name.replace(/[<>]/g, '');
+      this.setName(msg.name.replace(/[<>]/g, ''));
     }
   };
 
@@ -385,7 +403,8 @@ window.f = frameNumber;
       ctx.fillRect(0, 0, 1, 1);
     }
     ctx.fillStyle = "black";
-    ctx.fillText(this.playerName, -this.width / 2,  -this.height - 10);
+//    ctx.fillText(this.playerName, -this.width / 2,  -this.height - 10);
+    ctx.drawImage(this.nameImage, -this.width / 2, -this.height - 10);
     if (globals.showState) {
       ctx.fillText(this.state, -this.width / 2,  -this.height - 20);
       ctx.fillText(this.velocity[1].toFixed(2), -this.width / 2,  -this.height - 30);
