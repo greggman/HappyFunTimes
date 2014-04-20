@@ -57,7 +57,7 @@ Some useful examples are
 
     ...?settings={debug:true,haveServer:false}
 
-On some **game**s and **controller**s `debug:true` will turn on onscreen status. On some **game**s
+On some games and some controllers `debug:true` will turn on onscreen status. On some games
 `haveServer:false` will make the game run in a local mode where keyboard keys will control one or more players.
 This can be very useful for quick iteration.
 
@@ -65,7 +65,7 @@ This can be very useful for quick iteration.
 SuperSimple
 -----------
 
-This is basically the one from the docs. It just send touchmove and mousemove events to the game.
+This is basically the one from the docs. It just sends pointermove events to the game (provided by handjs).
 The game moves a `div` element around for each player. If the player touches the **goal** a score
 is sent to the player.
 
@@ -92,7 +92,7 @@ a desktop PC as a **controller** ASWD are the move dpad and cursor keys the fire
 JumpJump
 --------
 
-A simple platformer TBD
+A simple platformer. Players try to get the one coin.
 
 Deviceorientation
 -----------------
@@ -102,8 +102,8 @@ Orient a 3d ship to shoot a ball.
 Demonstrates using device orientation. The game is nearly impossible to play but it least
 demonstrates using device orientation as well as three.js
 
-BeatBeat
---------
+JamJam
+------
 
 A collective drum sequencer. Each player has one drum they can set the sequence for.
 All the machines are synced using a `SyncedClock`. Each player must turn on the volume
@@ -127,7 +127,7 @@ unity parts from UnityScript (or as Unity wrongly used to call it, JavaScript).
 I'm going to have to try these again but to set this up what I had to do was
 
 *   In Unity, make a new Scene and pick Assets->Import Package->Character Controller
-*   Copy Unity3D/src to Assets/Plugins/HappyFunTimes
+*   Copy Unity3D/src to Assets/Plugins/HappyFunTimes (or make a sym link)
 *   Copy Unity3D/Extra to Assets/Plugins/HappyFunTimesExtra
 *   Copy Unity3d/Examples to Assets/Scripts/HappyFunTimes
 *   Open the scene Unity3D/Examples/Scenes/HappyFunTimesCharacterExample
@@ -142,5 +142,51 @@ instructions above for the **UnityCharacterExample** but open the scene
 Unity3D/Examples/Scenes/HappyFunTimesSimpleExample
 
 This one shows using HappyFunTimes in C# with Unity.
+
+Common UI
+=========
+
+There is a common UI for all the samples. To facilitate this there's a build script which
+you can run by typing `./build.py` or `python build.py` on Windows. For controllers it
+inserts `public/examples/<nameofgame>/contoller.html` into `templates/controller.index.html`
+and writes the result to `public/examples/<nameofgame>/index.html`. For games it
+inserts `public/examples/<nameofgame>/game.html` into `templates/game.gameview.html`
+and writes the result to `public/examples/<nameofgame>/gameview.html`
+
+Games
+-----
+
+For games the code is in `public/examples/scripts/gamesupport.js`. it handles disconnecting,
+turning on debug elements, and the main game loop and clock.
+
+Controllers
+-----------
+
+For controllers the main code is in `public/examples/scripts/exampleui.js`. It sets up
+name editing, handling disconnecting, turning on debug elements, and implementing a menu on the side.
+When a game disconnects the code will wait 1/2 a second and check if the game is running again. If
+so it reloads the controller. If no it redirects to "/"
+
+/index.html
+-----------
+Shows a list of running games. The idea is that one server can handle relaying messages for more
+than one game. Users can connect to `http://ipaddress/` and choose a game. The list is updated
+live every few seconds.
+
+/games.html
+-----------
+This page exist solely to make it easy for the person running the game to pick a game. They
+don't have to type long paths.
+
+Because of the way controllers work (see above), if you are having a party and running just
+one game at a time you go to `http://ipaddress/games.index` and tell you users to go to
+`http://ipaddress/`.  You choose a game and it will magically show up on the user's smartphone screen.
+
+When you want to play another game you press *back* in the browser and pick another game. The user's
+smartphone screens will automatically exit the current contoller and go back to the main menu
+where they can pick the new game.
+
+
+
 
 
