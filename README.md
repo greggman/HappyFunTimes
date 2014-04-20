@@ -357,7 +357,7 @@ Windows docs
 Example Notes and tips
 ----------------------
 
-Here's [a few notes on the provided examples](example.md) as well as [a few tips](tips.md)
+Here's [a few notes on the provided examples](examples.md) as well as [a few tips](tips.md)
 that have come up while making the examples.
 
 Making It Simple For Players To Get Started
