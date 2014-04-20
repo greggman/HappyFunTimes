@@ -354,6 +354,12 @@ Windows docs
 
 [Some Windows docs here](windows.md)
 
+Example Notes and tips
+----------------------
+
+Here's [a few notes on the provided examples](example.md) as well as [a few tips](tips.md)
+that have come up while making the examples.
+
 Making It Simple For Players To Get Started
 -------------------------------------------
 

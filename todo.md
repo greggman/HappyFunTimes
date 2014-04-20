@@ -1,5 +1,7 @@
-*   size dpads
-*   make powpow/unitycharacter/shootshoot controller show a simple to rotate if in portrate mode
+*   make relayserver optionally run on 2 ports, 80 and 8080. The reason being
+    there's no easy way for Unity to connect on port 80? Wait: why?
+
+*   fix jamjam controller on iOS7.0
 
 *   **Issue:** Anyone can go to the gameview.html for a game.
 
@@ -111,6 +113,10 @@
 
 Done
 ----
+
+*   size dpads
+
+*   make powpow/unitycharacter/shootshoot controller show a simple to rotate if in portrate mode
 
 *   store rhythm in cookie?
 
