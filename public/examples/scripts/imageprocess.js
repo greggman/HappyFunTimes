@@ -229,9 +229,42 @@ define(function() {
     return canvas;
   };
 
+  var makeTextImage = function(str, options, opt_canvas) {
+    var canvas = opt_canvas || document.createElement("canvas");
+    var ctx = canvas.getContext("2d");
+
+    ctx.save();
+
+    if (options.font        ) { ctx.font         = options.font;        }
+    if (options.fillStyle   ) { ctx.fillStyle    = options.fillStyle;   }
+    if (options.textAlign   ) { ctx.textAlign    = options.textAlign;   }
+    if (options.testBaseline) { ctx.textBaseline = options.textBaselne; }
+
+    var metrics = ctx.measureText(str);
+    var width = metrics.width + (options.padding || 0);
+    if (options.maxWidth) {
+      width = Math.min(width, options.maxWidth);
+    }
+    if (options.minWidth) {
+      width = Math.max(width, options.minWidth);
+    }
+    canvas.width = width;
+    canvas.height = options.height;
+
+    ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+    ctx.fillText(
+        str,
+        options.xOffset || 0,
+        options.yOffset || 0);
+
+    ctx.restore();
+    return canvas;
+  };
+
   return {
-      adjustHSV: adjustHSV,
-      cropImage: cropImage,
-      scaleImage: scaleImage,
+    adjustHSV: adjustHSV,
+    cropImage: cropImage,
+    makeTextImage: makeTextImage,
+    scaleImage: scaleImage,
   };
 });
