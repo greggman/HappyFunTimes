@@ -39,7 +39,7 @@ var main = function(
     LocalNetPlayer,
     AudioManager,
     EntitySystem,
-    GameClock,
+    GameSupport,
     ImageLoader,
     ImageProcess,
     Input,
@@ -153,16 +153,12 @@ window.g = globals;
   server.addEventListener('disconnect', showDisconnected);
   server.addEventListener('playerconnect', g_playerManager.startPlayer.bind(g_playerManager));
 
+  GameSupport.init(server, globals);
+
   var levelCanvas = $("level");
   var levelCtx = levelCanvas.getContext("2d");
   var actorCanvas = $("actors");
   var actorCtx = actorCanvas.getContext("2d");
-
-  if (globals.debug) {
-    var status = $("status").firstChild;
-    var debugCSS = Misc.findCSSStyleRule("#debug");
-    debugCSS.style.display = "block";
-  }
 
   var resize = function(canvas) {
     if (canvas.width != canvas.clientWidth ||
@@ -250,16 +246,12 @@ window.g = globals;
       startLocalPlayers();
     }
 
-    render();
+    GameSupport.run(globals, mainloop);
   };
 
   ImageLoader.loadImages(images, processImages);
 
-  var clock = new GameClock();
-  function render() {
-    globals.elapsedTime = clock.getElapsedTime();
-    ++globals.frameCount;
-
+  var mainloop = function() {
     g_entitySystem.processEntities();
 
     resize(levelCanvas);
@@ -267,9 +259,7 @@ window.g = globals;
 
     g_levelManager.draw(levelCtx);
     g_playerManager.draw(actorCtx);
-
-    requestAnimationFrame(render);
-  }
+  };
 
   //var sounds = {
   //  fire: {
@@ -307,7 +297,7 @@ requirejs(
     '../../../scripts/localnetplayer',
     '../../scripts/audio',
     '../../scripts/entitysystem',
-    '../../scripts/gameclock',
+    '../../scripts/gamesupport',
     '../../scripts/imageloader',
     '../../scripts/imageprocess',
     '../../scripts/input',

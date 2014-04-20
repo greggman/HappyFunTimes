@@ -116,15 +116,15 @@ class Builder(object):
 
   def Process(self):
     examples = [
-      { "useTemplate": True, "name": "DeviceOrientation",     "gameId": "orient", },
-      { "useTemplate": True, "name": "JamJam",                "gameId": "jamjam", },
-      { "useTemplate": True, "name": "JumpJump",              "gameId": "jumpjump", },
-      { "useTemplate": True, "name": "PowPow",                "gameId": "powpow", },
-      { "useTemplate": True, "name": "ShootShoot",            "gameId": "shootshoot", },
-      { "useTemplate": True, "name": "UnityCharacterExample", "gameId": "unitycharacterexample", },
-      { "useTemplate": True, "name": "Simple",                "gameId": "simple", },
-      { "useTemplate": True, "name": "SuperSimple",           "gameId": "supersimple", },
-      { "useTemplate": True, "name": "ClockSync",             "gameId": "clocksync", },
+      { "useGameTemplate": False, "name": "DeviceOrientation",     "gameId": "orient", },
+      { "useGameTemplate": False, "name": "JamJam",                "gameId": "jamjam", },
+      { "useGameTemplate": True,  "name": "JumpJump",              "gameId": "jumpjump", },
+      { "useGameTemplate": False, "name": "PowPow",                "gameId": "powpow", },
+      { "useGameTemplate": False, "name": "ShootShoot",            "gameId": "shootshoot", },
+      { "useGameTemplate": False, "name": "UnityCharacterExample", "gameId": "unitycharacterexample", },
+      { "useGameTemplate": False, "name": "Simple",                "gameId": "simple", },
+      { "useGameTemplate": False, "name": "SuperSimple",           "gameId": "supersimple", },
+      { "useGameTemplate": False, "name": "ClockSync",             "gameId": "clocksync", },
     ]
     menuParts = []
     gamemenuParts = []
@@ -132,8 +132,6 @@ class Builder(object):
       name = example["name"]
       filebasename = name.lower()
       dirname = os.path.join("public", "examples", filebasename)
-      filename = os.path.join(dirname, "controller.html")
-      outname = os.path.join(dirname, "index.html")
       example["filebasename"] = filebasename
       menuParts.append(self.ApplyTemplate("templates/menu.item.html", example))
 
@@ -141,8 +139,14 @@ class Builder(object):
       if os.path.exists(gameviewfilename):
         gamemenuParts.append(self.ApplyTemplate("templates/gamemenu.item.html", example))
 
-      if example["useTemplate"]:
-        self.ApplyTemplateToFile("templates/controller.index.html", filename, outname, example)
+      if example["useGameTemplate"]:
+        gameview_src_name = os.path.join(dirname, "game.html")
+        gameview_dst_name = os.path.join(dirname, "gameview.html")
+        self.ApplyTemplateToFile("templates/game.gameview.html", gameview_src_name, gameview_dst_name, example)
+
+      index_src_name = os.path.join(dirname, "controller.html")
+      index_dst_name = os.path.join(dirname, "index.html")
+      self.ApplyTemplateToFile("templates/controller.index.html", index_src_name, index_dst_name, example)
 
     self.ApplyTemplateToString("templates/menu.index.html", "public/index.html", {
       "content": "\n".join(menuParts)

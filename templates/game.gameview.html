@@ -34,10 +34,10 @@
 <html>
 <head>
   <meta charset="utf-8">
-  <title>JumpJump</title>
+  <title>%(name)s</title>
   <link rel="stylesheet" href="../css/games.css">
-  <link rel="stylesheet" href="css/jumpjump-game.css">
-  <script data-main="scripts/jumpjumpgame.js" src="../scripts/require.js"></script>
+  <link rel="stylesheet" href="css/%(filebasename)s-game.css">
+  <script data-main="scripts/%(filebasename)sgame.js" src="../scripts/require.js"></script>
 <script>
 requirejs.config({
   shim: {
@@ -62,13 +62,7 @@ requirejs.config({
 </script>
 </head>
 <body>
-<div id="visual" class="hft-fullsize">
-<canvas id="level" class="hft-fullsize"></canvas>
-<canvas id="actors" class="hft-fullsize"></canvas>
-</div>
-<div id="outer" class="hft-fullcenter">
-</div>
-
+%(content)s
 <div id="hft-debug">
   <pre id="hft-status">d</pre>
   <div id="hft-console"></div>
