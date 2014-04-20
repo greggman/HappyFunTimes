@@ -44,6 +44,7 @@ var main = function(
     ImageProcess,
     Input,
     Misc,
+    PixiJS,
     Speedup,
     LevelManager,
     PlayerManager) {
@@ -82,14 +83,6 @@ window.s = g_services;
     fallTopAnimVelocity: 100,
   };
 window.g = globals;
-
-  function showConnected() {
-    $('hft-disconnected').style.display = "none";
-  }
-
-  function showDisconnected() {
-    $('hft-disconnected').style.display = "block";
-  }
 
   function startLocalPlayers() {
     var player1 = g_playerManager.startPlayer(new LocalNetPlayer(), "Player1");
@@ -149,8 +142,6 @@ window.g = globals;
     gameId: "jumpjump",
   });
   g_services.server = server;
-  server.addEventListener('connect', showConnected);
-  server.addEventListener('disconnect', showDisconnected);
   server.addEventListener('playerconnect', g_playerManager.startPlayer.bind(g_playerManager));
 
   GameSupport.init(server, globals);
@@ -302,6 +293,7 @@ requirejs(
     '../../scripts/imageprocess',
     '../../scripts/input',
     '../../scripts/misc',
+    '../../scripts/pixi',
     '../../scripts/speedup',
     './levelmanager',
     './playermanager',
