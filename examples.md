@@ -156,13 +156,13 @@ and writes the result to `public/examples/<nameofgame>/gameview.html`
 Games
 -----
 
-For games the code is in `public/examples/scripts/gamesupport.js`. it handles disconnecting,
+For games the common code is in `public/examples/scripts/gamesupport.js`. it handles disconnecting,
 turning on debug elements, and the main game loop and clock.
 
 Controllers
 -----------
 
-For controllers the main code is in `public/examples/scripts/exampleui.js`. It sets up
+For controllers the common code is in `public/examples/scripts/exampleui.js`. It sets up
 name editing, handling disconnecting, turning on debug elements, and implementing a menu on the side.
 When a game disconnects the code will wait 1/2 a second and check if the game is running again. If
 so it reloads the controller. If no it redirects to "/"
