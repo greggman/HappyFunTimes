@@ -1,7 +1,12 @@
 HappyFunTimes
 =============
 
-<img src="images/scene-00.png" width="782" height="441" />
+<img id="test" src="images/scene-00.png" width="782" height="441" />
+<script>
+  setInterval(function() {
+    document.getElementById("test").style.border = (Math.floor(Date.now() * 0.001) & 1) ? "5px solid red" : "5px solid yellow";
+  }, 1000);
+</script>
 
 HappyFunTimes is a library for making party games that are meant to be
 played with a bunch of people in the same room and 1 ideally large display.
