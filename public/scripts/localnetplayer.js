@@ -38,19 +38,34 @@ define(function() {
    * @constructor
    *
    * You can use this class as a substitute for NetPlayer when
-   * offline. It just provides no-ops for NetPlayer functions.
+   * offline. It provides a no-op version of sendCmd so when
+   * your game tries to send a message to the contoller nothing
+   * happens.
+   *
+   * It also provides a sendEvent method you can use to trigger
+   * events in your game as though they were from the controller.
    *
    * Example:
    *   if (offline) {
    *     // We're testing locally so just manually create //
    *     players.
    *
-   *     var player1 = new MyPlayer(new LocalNetPlayer());
-   *     var player2 = new MyPlayer(new LocalNetPlayer());
+   *     var localNetPlayer1 = new LocalNetPlayer();
+   *     var localNetPlayer2 = new LocalNetPlayer();
+   *     var player1 = new MyPlayer(localNetPlayer1);
+   *     var player2 = new MyPlayer(localNetPlayer2);
    *     addPlayer(player1);
    *     addPlayer(player2);
    *
+   *     // pretend player1 one got a message from the
+   *     // controller when a key is pressed
+   *
+   *     window.addEventListner('keypress', function() {
+   *       localNetPlayer1.sendEvent('jump', { power: 10 });
+   *     });
+   *
    *   } else {
+   *
    *     // We're online so create players as they connect.
    *     var server = new GameServer(...);
    *     server.addEventListener(
@@ -63,16 +78,33 @@ define(function() {
     var _count = 0;
     return function() {
       this.id = ++_count;
+      this.eventHandlers = { };
     }
   }());
 
-  LocalNetPlayer.prototype.addEventListener = function() {
+  LocalNetPlayer.prototype.addEventListener = function(eventType, handler) {
+    this.eventHandlers[eventType] = handler;
   };
 
-  LocalNetPlayer.prototype.removeEventListener = function() {
+  LocalNetPlayer.prototype.removeEventListener = function(eventType) {
+    this.eventHandlers[eventType] = undefined;
+  };
+
+  LocalNetPlayer.prototype.removeAllListeners = function() {
+    this.eventHanders = { };
   };
 
   LocalNetPlayer.prototype.sendCmd = function() {
+    // No-op because this is a local player.
+  };
+
+  LocalNetPlayer.prototype.sendEvent = function(eventType, data) {
+    var fn = this.eventHandlers[eventType];
+    if (fn) {
+      fn.call(this, data);
+    } else {
+      console.error("Unknown Event: " + eventType);
+    }
   };
 
   return LocalNetPlayer;
