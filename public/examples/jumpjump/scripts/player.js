@@ -33,21 +33,11 @@
 define([
     '../../scripts/2d',
     '../../scripts/imageprocess',
+    '../../scripts/misc',
   ], function(
     M2D,
-    ImageProcess) {
-
-  var clamp = function(v, min, max) {
-    return Math.max(min, Math.min(max, v));
-  };
-
-  var clampPlusMinus = function(v, max) {
-    return clamp(v, -max, max);
-  };
-
-  var sign = function(v) {
-    return v < 0 ? -1 : (v > 0 ? 1 : 0);
-  };
+    ImageProcess,
+    Misc) {
 
   var availableColors = [];
   var nameFontOptions = {
@@ -66,6 +56,7 @@ define([
       this.renderer = services.renderer;
 
       services.entitySystem.addEntity(this);
+      services.drawSystem.addEntity(this);
       this.netPlayer = netPlayer;
       this.position = [x, y];
       this.velocity = [0, 0];
@@ -151,6 +142,7 @@ window.p = this;
 
   Player.prototype.removeFromGame = function() {
     this.services.entitySystem.removeEntity(this);
+    this.services.drawSystem.removeEntity(this);
     this.services.playerManager.removePlayer(this);
     availableColors.push(this.color);
   };
@@ -207,11 +199,11 @@ window.p = this;
     var axis = axis || 3;
     if (axis & 1) {
       this.velocity[0] += this.acceleration[0] * globals.elapsedTime * globals.elapsedTime;
-      this.velocity[0] = clampPlusMinus(this.velocity[0], globals.maxVelocity[0]);
+      this.velocity[0] = Misc.clampPlusMinus(this.velocity[0], globals.maxVelocity[0]);
     }
     if (axis & 2) {
       this.velocity[1] += (this.acceleration[1] + globals.gravity) * globals.elapsedTime * globals.elapsedTime;
-      this.velocity[1] = clampPlusMinus(this.velocity[1], globals.maxVelocity[1]);
+      this.velocity[1] = Misc.clampPlusMinus(this.velocity[1], globals.maxVelocity[1]);
     }
   };
 
@@ -387,8 +379,7 @@ window.p = this;
 window.p = this;
 window.f = frameNumber;
     if (this.facing > 0) {
-      ctx.translate(-img.width /
-                     2, -img.height);
+      ctx.translate(-img.width / 2, -img.height);
     } else {
       ctx.translate(img.width / 2, -img.height);
       ctx.scale(this.facing, 1);

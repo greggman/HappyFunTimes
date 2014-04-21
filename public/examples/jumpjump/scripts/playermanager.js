@@ -41,15 +41,9 @@ define(['./player'], function(Player) {
     var misc = this.services.misc;
     var levelManager = this.services.levelManager;
     var level = levelManager.getLevel();
-    var found = false;
-    while (!found) {
-      var x = (2 + misc.randInt(level.width  - 4)) * level.tileWidth;
-      var y = (2 + misc.randInt(level.height - 4)) * level.tileHeight;
-      var tile = levelManager.getTileInfoByPixel(x, y);
-      found = !tile.collisions;
-    }
+    var position = levelManager.getRandomOpenPosition();
     var direction = misc.randInt(2) ? -1 : 1;
-    var player = new Player(this.services, x, y, level.tileWidth, level.tileHeight, direction, name, netPlayer);
+    var player = new Player(this.services, position.x + level.tileWidth / 2, position.y, level.tileWidth, level.tileHeight, direction, name, netPlayer);
     this.players.push(player);
     return player;
   }
@@ -67,21 +61,10 @@ define(['./player'], function(Player) {
 
   PlayerManager.prototype.forEachPlayer = function(callback) {
     for (var ii = 0; ii < this.players.length; ++ii) {
-      callback(this.players[ii]);
+      if (callback(this.players[ii])) {
+        return this;
+      }
     }
-  };
-
-  // Should probably have a renderable object managed by a render manager or some shit like
-  // that
-  PlayerManager.prototype.draw = function(ctx) {
-    ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
-    ctx.save();
-    var level = this.services.levelManager.getLevel();
-    level.setTransformForDrawing(ctx);
-    this.players.forEach(function(player) {
-      player.draw(ctx);
-    });
-    ctx.restore();
   };
 
   return PlayerManager;

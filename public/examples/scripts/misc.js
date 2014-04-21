@@ -158,13 +158,28 @@ define(function() {
     return r;
   };
 
+  var clamp = function(v, min, max) {
+    return Math.max(min, Math.min(max, v));
+  };
+
+  var clampPlusMinus = function(v, max) {
+    return clamp(v, -max, max);
+  };
+
+  var sign = function(v) {
+    return v < 0 ? -1 : (v > 0 ? 1 : 0);
+  };
+
   return {
     applyUrlSettings: applyUrlSettings,
+    clamp: clamp,
+    clampPlusMinus: clampPlusMinus,
+    copyProperties: copyProperties,
     findCSSStyleRule: findCSSStyleRule,
     getAbsolutePosition: getAbsolutePosition,
     randInt: randInt,
     randCSSColor: randCSSColor,
-    copyProperties: copyProperties,
+    sign: sign,
   };
 });
 

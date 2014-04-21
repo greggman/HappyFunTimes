@@ -46,6 +46,7 @@ var main = function(
     Misc,
     PixiJS,
     Speedup,
+    Collectable,
     LevelManager,
     PlayerManager) {
 
@@ -55,6 +56,8 @@ window.s = g_services;
 
   var g_entitySystem = new EntitySystem();
   g_services.entitySystem = g_entitySystem;
+  var g_drawSystem = new EntitySystem('draw');
+  g_services.drawSystem = g_drawSystem;
   var g_playerManager = new PlayerManager(g_services);
   g_services.playerManager = g_playerManager;
   var g_levelManager = new LevelManager(g_services);
@@ -67,6 +70,7 @@ window.s = g_services;
   var globals = {
     port: 8080,
     haveServer: true,
+    numLocalPlayers: 1,
     force2d: false,
     debug: false,
     tileInspector: false,
@@ -79,14 +83,18 @@ window.s = g_services;
     frameCount: 0,
     idleAnimSpeed: 4,
     moveAnimSpeed: 0.2,
+    coinAnimSpeed: 10,
     jumpFirstFrameTime: 0.1,
     fallTopAnimVelocity: 100,
   };
 window.g = globals;
 
   function startLocalPlayers() {
-    var player1 = g_playerManager.startPlayer(new LocalNetPlayer(), "Player1");
-    //var player2 = g_playerManager.startPlayer(new LocalNetPlayer(), "Player2");
+    var players = [];
+    for (var ii = 0; ii < globals.numLocalPlayers; ++ii) {
+      players.push(g_playerManager.startPlayer(new LocalNetPlayer(), "Player" + (ii + 1)));
+    }
+    var player1 = players[0];
     var g_left = false;
     var g_right = false;
     var g_jump = false;
@@ -191,10 +199,11 @@ window.g = globals;
   // colorize: number of colors to make
   // slizes: number = width of all slices, array = width of each consecutive slice
   var images = {
-    idle:  { url: "assets/spr_idle.png", colorize: 32, slices: 16, },
-    move:  { url: "assets/spr_run.png",  colorize: 32, slices: 16, },
-    jump:  { url: "assets/spr_jump.png", colorize: 32, slices: [16, 17, 17, 18, 16, 16] },
-    brick: { url: "assets/bricks.png",   colorize:  1, slices: 16, },
+    idle:  { url: "assets/spr_idle.png",  colorize: 32, scale: 2, slices: 16, },
+    move:  { url: "assets/spr_run.png",   colorize: 32, scale: 2, slices: 16, },
+    jump:  { url: "assets/spr_jump.png",  colorize: 32, scale: 2, slices: [16, 17, 17, 18, 16, 16] },
+    brick: { url: "assets/bricks.png",    colorize:  1, scale: 2, slices: 16, },
+    coin:  { url: "assets/coin_anim.png", colorize:  1, scale: 4, slices: 8, },
   };
   var colors = [];
   g_services.images = images;
@@ -207,8 +216,8 @@ window.g = globals;
       image.colors = [];
       for (var ii = 0; ii < image.colorize; ++ii) {
         var h = ii / 32;
-        var s = -(ii % 2) * 0.5;
-        var v = 0;
+        var s = (ii % 2) * -0.6;
+        var v = (ii % 2) * 0.1;
         var range = duckBlueRange;
         colors.push({
           id: ii,
@@ -223,8 +232,8 @@ window.g = globals;
         var x = 0;
         for (var jj = 0; jj < numFrames; ++jj) {
           var width = image.slices.length ? image.slices[jj] : image.slices;
-          var frame = ImageProcess.cropImage(coloredImage, x, 0, width, 16);
-          frame = ImageProcess.scaleImage(frame, 32, 32);
+          var frame = ImageProcess.cropImage(coloredImage, x, 0, width, coloredImage.height);
+          frame = ImageProcess.scaleImage(frame, width * image.scale, frame.height * image.scale);
           frames.push(frame);
           x += width;
         }
@@ -237,6 +246,7 @@ window.g = globals;
       startLocalPlayers();
     }
 
+    new Collectable(g_services);
     GameSupport.run(globals, mainloop);
   };
 
@@ -249,7 +259,13 @@ window.g = globals;
     resize(actorCanvas);
 
     g_levelManager.draw(levelCtx);
-    g_playerManager.draw(actorCtx);
+    var ctx = actorCtx;
+    ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+    ctx.save();
+    var level = g_levelManager.getLevel();
+    level.setTransformForDrawing(ctx);
+    g_drawSystem.processEntities(ctx);
+    ctx.restore();
   };
 
   //var sounds = {
@@ -295,6 +311,7 @@ requirejs(
     '../../scripts/misc',
     '../../scripts/pixi',
     '../../scripts/speedup',
+    './collectable',
     './levelmanager',
     './playermanager',
   ],

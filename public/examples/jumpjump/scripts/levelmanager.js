@@ -30,7 +30,7 @@
  */
 "use strict";
 
-define(function() {
+define(['../../scripts/Misc'], function(Misc) {
 
   var Level = function(width, height, tileWidth, tileHeight, tiles) {
     this.width = width + 2;
@@ -177,6 +177,18 @@ define(function() {
 
   LevelManager.prototype.getLevel = function() {
     return this.level;
+  };
+
+  LevelManager.prototype.getRandomOpenPosition = function() {
+    var level = this.level;
+    var found = false;
+    while (!found) {
+      var x = (2 + Misc.randInt(level.width  - 4)) * level.tileWidth;
+      var y = (2 + Misc.randInt(level.height - 4)) * level.tileHeight;
+      var tile = this.getTileInfoByPixel(x, y);
+      found = !tile.collisions;
+    }
+    return {x: x, y: y};
   };
 
   return LevelManager;
