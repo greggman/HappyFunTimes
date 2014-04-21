@@ -103,8 +103,18 @@ define(
             }
           }
 
-          // No! Go to main menu
-          window.location.href = "/";
+          // Are any games running?
+          if (obj.length > 0) {
+            // Go to main menu
+            window.location.href = "/";
+            return;
+          }
+
+          // Note: If we knew the path each game and there was only 1 game running
+          // we could jump directly to that game. Right now gameIds don't correspond
+          // to their URL.
+
+          setTimeout(checkForGame, 1000);
         });
       };
 
