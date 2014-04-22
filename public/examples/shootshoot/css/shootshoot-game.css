@@ -1,0 +1,26 @@
+html, body {
+  background-color: #148;
+}
+#visual {
+  position: absolute;
+  left: 0px;
+  top: 0px;
+}
+#level, #actors {
+  position: absolute;
+  left: 0px;
+  top: 0px;
+}
+#actors {
+  z-index: 2;
+}
+#outer {
+  z-index: 4;
+  left: 0px;
+  top: 0px;
+  color: white;
+  font-size: 50px;
+  font-weight: bolder;
+  text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
+}
+

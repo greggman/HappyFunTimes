@@ -39,7 +39,7 @@ var main = function(
     LocalNetPlayer,
     AudioManager,
     EntitySystem,
-    GameClock,
+    GameSupport,
     Input,
     Misc,
     Speedup,
@@ -92,6 +92,7 @@ var main = function(
   var globals = {
     port: 8080,
     haveServer: true,
+    numLocalPlayers: 2,  // num players when local (ie, debugging)
     force2d: false,
     debug: false,
     playerMoveSpeed: 192,
@@ -101,20 +102,17 @@ var main = function(
     shotDuration: 3,
   };
 
-  function showConnected() {
-    $('hft-disconnected').style.display = "none";
-  }
-
-  function showDisconnected() {
-    $('hft-disconnected').style.display = "block";
-  }
-
   function startLocalPlayers() {
-    var player1 = g_playerManager.startPlayer(new LocalNetPlayer(), "Player1");
-    var player2 = g_playerManager.startPlayer(new LocalNetPlayer(), "Player2");
+    var localNetPlayers = [];
+    for (var ii = 0; ii < globals.numLocalPlayers; ++ii) {
+      var localNetPlayer = new LocalNetPlayer();
+      var player = g_playerManager.startPlayer(localNetPlayer, "Player" + (ii + 1));
+      localNetPlayers.push(localNetPlayer);
+    }
+    var localNetPlayer1 = localNetPlayers[0];
 
     Input.setupKeyboardDPadKeys(function(e) {
-      player1.handlePadMsg({pad: e.pad, dir: e.info.direction});
+      localNetPlayer1.sendEvent('pad', {pad: e.pad, dir: e.info.direction});
     });
   }
 
@@ -136,18 +134,11 @@ var main = function(
     gameId: "shootshoot",
   });
   g_services.server = server;
-  server.addEventListener('connect', showConnected);
-  server.addEventListener('disconnect', showDisconnected);
   server.addEventListener('playerconnect', g_playerManager.startPlayer.bind(g_playerManager));
+  GameSupport.init(server, globals);
 
   var canvas = $("canvas");
   var ctx = canvas.getContext("2d");
-
-  if (globals.debug) {
-    var status = $("status").firstChild;
-    var debugCSS = Misc.findCSSStyleRule("#debug");
-    debugCSS.style.display = "block";
-  }
 
   resize(canvas);
 
@@ -156,20 +147,15 @@ var main = function(
     startLocalPlayers();
   }
 
-  var clock = new GameClock();
   function render() {
-    globals.elapsedTime = clock.getElapsedTime();
-
     g_entitySystem.processEntities();
 
     resize(canvas);
 
     ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
     g_drawSystem.processEntities(ctx);
-
-    requestAnimationFrame(render);
   }
-  render();
+  GameSupport.run(globals, render);
 
 };
 
@@ -179,7 +165,7 @@ requirejs(
     '../../../scripts/localnetplayer',
     '../../scripts/audio',
     '../../scripts/entitysystem',
-    '../../scripts/gameclock',
+    '../../scripts/gamesupport',
     '../../scripts/input',
     '../../scripts/misc',
     '../../scripts/speedup',

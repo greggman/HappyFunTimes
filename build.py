@@ -120,7 +120,7 @@ class Builder(object):
       { "useGameTemplate": True,  "name": "JamJam",                "gameId": "jamjam", },
       { "useGameTemplate": True,  "name": "JumpJump",              "gameId": "jumpjump", },
       { "useGameTemplate": False, "name": "PowPow",                "gameId": "powpow", },
-      { "useGameTemplate": False, "name": "ShootShoot",            "gameId": "shootshoot", },
+      { "useGameTemplate": True,  "name": "ShootShoot",            "gameId": "shootshoot", },
       { "useGameTemplate": False, "name": "UnityCharacterExample", "gameId": "unitycharacterexample", },
       { "useGameTemplate": False, "name": "Simple",                "gameId": "simple", },
       { "useGameTemplate": False, "name": "SuperSimple",           "gameId": "supersimple", },
