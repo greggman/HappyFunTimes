@@ -1,6 +1,10 @@
+*   make server serve "chose another WiFi network to browse internet"
+*   unity: see if we can figure out a way so controllers don't get disconnected if script is updated.
 *   make relayserver optionally run on 2 ports, 80 and 8080. The reason being
     there's no easy way for Unity to connect on port 80? Wait: why?
+    Maybe the unity one should try port 80 first, then 8080, and ping pong until it finds the server?
 
+*   move DNS server into main server, then you don't need to run 2 things
 *   fix jamjam controller on iOS7.0
 
 *   **Issue:** Anyone can go to the gameview.html for a game.
@@ -48,7 +52,6 @@
 *   fix flex css (remove need for fixHeightHack)
 *   add some CSS animation foo for menu appearing, disappearing
 *   figure out why deviceorientation message is low
-*   put player name above character in unity.
 *   test older ios
     *   consider making it warn if version not good enough
 *   test older android
@@ -56,10 +59,6 @@
 *   should I restructure samples to wait for sounds to load?
 
 *   send no caching header? or at least optionally
-
-*   remove android single touch from powpow
-
-    When this was first written single touch android phones were common.
 
 *   fix tdl vs require load issues.
 
@@ -107,12 +106,20 @@
 
 *   put $ in misc
 
-*   make tick for clocksync ogg/mp3
-
 *   handle ssl as well for captive portal? I don't think I can :(
 
 Done
 ----
+
+*   put player name above character in unity.
+
+*   remove android single touch from powpow
+
+    When this was first written single touch android phones were common.
+
+*   make tick for clocksync ogg/mp3
+
+*   refractor keyboard stuff from games.
 
 *   size dpads
 

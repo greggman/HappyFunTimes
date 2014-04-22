@@ -126,13 +126,18 @@ unity parts from UnityScript (or as Unity wrongly used to call it, JavaScript).
 
 I'm going to have to try these again but to set this up what I had to do was
 
-*   In Unity, make a new Scene and pick Assets->Import Package->Character Controller
+*   In Unity, make a new Project
+*   Pick Assets->Import Package->Standard Assets
 *   Copy Unity3D/src to Assets/Plugins/HappyFunTimes (or make a sym link)
 *   Copy Unity3D/Extra to Assets/Plugins/HappyFunTimesExtra
 *   Copy Unity3d/Examples to Assets/Scripts/HappyFunTimes
 *   Open the scene Unity3D/Examples/Scenes/HappyFunTimesCharacterExample
+*   Pick Edit->Project Settings->Player and check "Run in Background"
 
-Run the game then connect a browser to the corresponding **controller**
+Run the game. If you see an error in the console you probably forgot to run the
+relaysever. (See above)
+
+Now connect a browser `http://localhost:8080` and pick the UnityCharacterExample
 
 UnitySimpleExample
 ------------------
