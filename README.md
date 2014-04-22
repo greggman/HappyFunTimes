@@ -378,9 +378,10 @@ will take them to the game. **This turns out it's not that hard**
 We're going to tell the router to give the relayserver a specfiic IP address.
 The relayserver has an option to handle DNS so we're going to setup a router
 so it tells all devices connecting to it to ask the relayserver for DNS info.
+This well let us serve our game pages no matter what URL is typed. It will
+also let us auto join on iOS.
 
-Setup
------
+**Setup**
 
 First, get a router. You probably have an old one or if you want to be portable I
 recommend the [TP-Link TL-WR702N](http://google.com/#q=TP-Link+TL-WR702N).
