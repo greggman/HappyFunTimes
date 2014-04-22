@@ -1,11 +1,11 @@
+*   fix camera on unitycharacter example so
+    * it works for 1 player
+    * it doesn't swing around so much
 *   make server serve "chose another WiFi network to browse internet"
 *   unity: see if we can figure out a way so controllers don't get disconnected if script is updated.
 *   make relayserver optionally run on 2 ports, 80 and 8080. The reason being
     there's no easy way for Unity to connect on port 80? Wait: why?
     Maybe the unity one should try port 80 first, then 8080, and ping pong until it finds the server?
-
-*   move DNS server into main server, then you don't need to run 2 things
-*   fix jamjam controller on iOS7.0
 
 *   **Issue:** Anyone can go to the gameview.html for a game.
 
@@ -45,7 +45,7 @@
 
 *   Have better splash if no games running
 *   Fix collisions for jumpjujmp
-*   Make more world sizes
+*   Make more world sizes for jumpjump
 *   make gameviews template based so we can make disconnect behavior common
 *   stop sliding fingers from selecting stuff.
 *   make bird quack if you click him (consider random speed)
@@ -77,8 +77,16 @@
     *   platformer
     *   8way shooter
     *   unity character controller
-    *   johann sabastian bach
-    *   rougelike
+    *   johann sabastian joust
+
+        johann sabastian joust is a game played with move controllers
+        where you try not to move the controller too much or you're out.
+        Other players try to make you move to fast knocking you out while
+        at the same time trying not to get taken out themselves.
+
+        HTML5 allows access to the accelerometers of the phone so it
+        should be possible ot make this game with HFT.
+
     *   Make a round based game. (bomberman fits this. Each round lasts 2 mins. Players entering later have to wait)
     *   quiz
 
@@ -87,29 +95,25 @@
         Make sure answers after game has moved on do not affect results
         Add score for players
 
-     *  Device orientation game, each player is assigned a piece of a shape, they have
+    *   Device orientation game, each player is assigned a piece of a shape, they have
         to rotate their device to get the shape to line up (ie, jigsaw puzzle). Anytime
         a new player is added the current shape is subdivided.
 
         Not sure this is a fun idea.
 
-     *  Use device motion to play tennis like Wii (shake controller to return ball)
+    *   Use device motion to play tennis like Wii (shake controller to return ball)
 
 *   abstract out Unity3D parts of C#
 
     Currently the C# version of the library is Unity3d specific. Should be easy to abstract that out
     so it can be used in C# in general
 
-*   use express (the node server?)
-
-    Is that overkill
-
-*   put $ in misc
-
-*   handle ssl as well for captive portal? I don't think I can :(
-
 Done
 ----
+
+*   fix jamjam controller on iOS7.0
+
+*   move DNS server into main server, then you don't need to run 2 things
 
 *   put player name above character in unity.
 
@@ -269,5 +273,15 @@ Done
 *   make haveserver settable from url
 *   make sounds work iOS.
 *   figure out why iOS is not syncing clock. Try other computers
+
+Rejected
+--------
+
+*   handle ssl as well for captive portal? I don't think I can :(
+
+*   use express (the node server?)
+
+    Is that overkill
+
 
 

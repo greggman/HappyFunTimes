@@ -124,8 +124,6 @@ This shows how to spawn unity prefabs when a **controller** connects to the **ga
 How to pass a `NetPlayer` object into the spawned prefab. Also how to use the HappyFunTimes
 unity parts from UnityScript (or as Unity wrongly used to call it, JavaScript).
 
-I'm going to have to try these again but to set this up what I had to do was
-
 *   In Unity, make a new Project
 *   Pick Assets->Import Package->Standard Assets
 *   Copy Unity3D/src to Assets/Plugins/HappyFunTimes (or make a sym link)
