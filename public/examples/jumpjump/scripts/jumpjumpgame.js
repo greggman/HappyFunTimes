@@ -145,14 +145,6 @@ window.g = globals;
   var actorCanvas = $("actors");
   var actorCtx = actorCanvas.getContext("2d");
 
-  var resize = function(canvas) {
-    if (canvas.width != canvas.clientWidth ||
-        canvas.height != canvas.clientHeight) {
-      canvas.width = canvas.clientWidth;
-      canvas.height = canvas.clientHeight;
-    }
-  };
-
   if (globals.tileInspector) {
     var element = document.createElement("div");
     var s = element.style;
@@ -241,8 +233,8 @@ window.g = globals;
   var mainloop = function() {
     g_entitySystem.processEntities();
 
-    resize(levelCanvas);
-    resize(actorCanvas);
+    Misc.resize(levelCanvas);
+    Misc.resize(actorCanvas);
 
     g_levelManager.draw(levelCtx);
     var ctx = actorCtx;
