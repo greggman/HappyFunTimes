@@ -19,6 +19,10 @@ private var _playerName : String;
 
 private var _padEmu : DPadEmuJS = new DPadEmuJS();
 
+private var _guiStyle : GUIStyle = new GUIStyle();
+private var _nameRect : Rect = new Rect(0,0,0,0);
+private var _nameOffset : Vector3 = new Vector3(0, -1.5, 0);
+
 enum CharacterState {
 	Idle = 0,
 	Walking = 1,
@@ -97,8 +101,7 @@ private var isControllable = true;
 function Init(netPlayer : HappyFunTimes.NetPlayer, name : String) {
 	_netPlayer = netPlayer;
 	_padEmu = new DPadEmuJS();
-	_playerName = name;
-	gameObject.name = "Player-" + name;
+	SetName(name);
 }
 
 @HappyFunTimes.CmdName("pad")
@@ -128,6 +131,8 @@ function Start () {
 	_netPlayer.RegisterCmdHandler(OnSetColor);
 	_netPlayer.RegisterCmdHandler(OnSetName);
 	_netPlayer.RegisterCmdHandler(OnBusy);
+
+//	_label = GetComponent(TextMesh);
 }
 
 function Remove() {
@@ -139,13 +144,37 @@ function OnPad(data : MessagePad) {
 }
 
 function OnSetColor(data : MessageSetColor) {
-	Debug.Log("color: " + data.color);
+	var color : Color = CSSParse.Style.ParseCSSColor(data.color);
+	var pix : Color[] =  new Color[1];
+	pix[0] = color;
+	var tex : Texture2D = new Texture2D(1, 1);
+	tex.SetPixels(pix);
+	tex.Apply();
+	_guiStyle.normal.background = tex;
+}
+
+function SetName(name : String) {
+	_playerName = name;
+	gameObject.name = "Player-" + _playerName;
+	var size : Vector2 = _guiStyle.CalcSize(GUIContent(_playerName));
+	_nameRect.width = size.x + 10;
+	_nameRect.height = size.y + 5;
+}
+
+function OnGUI() {
+	var size : Vector2 = _guiStyle.CalcSize(GUIContent(_playerName));
+	var coords : Vector3 = Camera.main.WorldToScreenPoint(transform.position + _nameOffset);
+	_nameRect.x = coords.x - size.x * 0.5 - 5;
+	_nameRect.y = coords.y;
+	_guiStyle.normal.textColor = Color.black;
+	_guiStyle.contentOffset.x = 4;
+	_guiStyle.contentOffset.y = 2;
+	GUI.Box(_nameRect, _playerName, _guiStyle);
 }
 
 function OnSetName(data : MessageSetName) {
 	if (data.name.length > 0) {
-		_playerName = data.name;
-		gameObject.name = "Player-" + _playerName;
+		SetName(data.name);
 	} else {
 		var msg = new MessageSetName();
 		msg.name = _playerName;
@@ -354,7 +383,6 @@ function DidJump ()
 }
 
 function Update() {
-	
 	if (!isControllable)
 	{
 		// kill all inputs if not controllable.

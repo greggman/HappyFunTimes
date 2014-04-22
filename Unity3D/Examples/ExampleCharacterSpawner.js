@@ -21,9 +21,9 @@ function Start () {
 
 function StartNewPlayer(sender, e : HappyFunTimes.PlayerConnectMessageArgs) {
     //ExampleSimpleGameSettings settings = ExampleSimpleGameSettings.settings();
-    var x = 0.0f; //m_rand.Next(settings.areaWidth);
+    var x = m_rand.Next(-10, 10);
     var y = 1.0f; // puts him above ground
-    var z = 0.0f; //m_rand.Next(settings.areaHeight);
+    var z = m_rand.Next(-10, 10);
     var position : Vector3 = new Vector3(x, y, z);
     // Spawn a new player then add a script to it.
     var gameObject : GameObject = Instantiate(prefabToSpawnForPlayer, position, Quaternion.identity);
