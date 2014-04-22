@@ -135,7 +135,7 @@ var server = http.createServer(function() {
   };
 
   return function(req, res) {
-    debug("req: " + req.method + " : " + req.url + "\n--headers\n" + JSON.stringify(req.headers));
+    debug("req: " + req.method + " : " + req.url);
     // your normal server code
     if (req.method == "POST") {
       postHandler(req, function(query) {
