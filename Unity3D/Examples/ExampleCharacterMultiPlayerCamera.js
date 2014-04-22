@@ -23,10 +23,19 @@ class PlayerInfoComparer implements IComparer {
   }
 };
 
-
 private var _comparer : PlayerInfoComparer = new PlayerInfoComparer();
 private var _playerInfos : PlayerInfo[];
 private var _target : Vector3 = new Vector3(0,0,0);
+
+function wrapAngle(a : float) : float {
+    if (a < -System.Math.PI) {
+        return a + System.Math.PI * 2.0f;
+    }
+    if (a > System.Math.PI) {
+        return a - System.Math.PI * 2.0f;
+    }
+    return a;
+};
 
 function Start () {
     _startingPosition = transform.position;
@@ -57,7 +66,7 @@ function LateUpdate () {
 
       var delta : Vector3 = player.transform.position - transform.position;
       var realAngle : float = System.Math.Atan2(delta.x, delta.z);
-      info.deltaAngle = realAngle - cameraDir;
+      info.deltaAngle = wrapAngle(realAngle - cameraDir);
     }
 
     _playerInfos.Sort(_playerInfos, _comparer);
@@ -71,6 +80,14 @@ function LateUpdate () {
     desiredDistFromBBCenter = System.Math.Max(minBBSize, desiredDistFromBBCenter);
 
     var direction : Vector3 = new Vector3(p0.z - p1.z, 0.0f, -(p0.x - p1.x)).normalized;
+    if (direction.magnitude < 0.00001f) {
+      var perpDir : Vector3 = (transform.position - center).normalized;
+      direction.x = perpDir.x;
+      direction.y = 0.0f;
+      direction.z = perpDir.y;
+      //direction = (transform.position - center).normalized;
+      //direction.y = 0.0f;
+    }
 
     var desiredPosition : Vector3 = center + direction * -desiredDistFromBBCenter;
 
