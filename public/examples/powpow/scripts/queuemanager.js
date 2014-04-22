@@ -49,13 +49,7 @@ define(["./PListManager"], function(PListManager) {
   };
 
   //QueueManager.prototype.resize = function() {
-  //  if (this.canvas_.width != this.canvas_.clientWidth ||
-  //      this.canvas_.height != this.canvas_.clientHeight) {
-  //    this.canvas_.width = this.canvas_.clientWidth;
-  //    this.canvas_.height = this.canvas_.clientHeight;
-  //    tdl.log("newq width:", this.canvas_.width);
-  //    tdl.log("newq height:", this.canvas_.height);
-  //  }
+  //  Misc.resize(this.canvas);
   //};
   //
   //QueueManager.prototype.draw = function() {

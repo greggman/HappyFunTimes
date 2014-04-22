@@ -117,13 +117,9 @@ var main = function(
   }
 
   var resize = function(canvas) {
-    if (canvas.width != canvas.clientWidth ||
-        canvas.height != canvas.clientHeight) {
-      canvas.width = canvas.clientWidth;
-      canvas.height = canvas.clientHeight;
-      globals.width = canvas.clientWidth;
-      globals.height = canvas.clientHeight;
-    }
+    Misc.resize(canvas);
+    globals.width = canvas.clientWidth;
+    globals.height = canvas.clientHeight;
   };
 
   Misc.applyUrlSettings(globals);

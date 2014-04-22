@@ -31,7 +31,7 @@
 
 "use strict";
 
-define(["./ships"], function(Ships) {
+define(["../../scripts/misc", "./ships"], function(Misc, Ships) {
   var CanvasRenderer = function(services, canvas) {
     this.services = services;
     this.canvas = canvas;
@@ -61,13 +61,7 @@ define(["./ships"], function(Ships) {
   }
 
   CanvasRenderer.prototype.resize = function() {
-    if (this.canvas.width != this.canvas.clientWidth ||
-        this.canvas.height != this.canvas.clientHeight) {
-      this.canvas.width = this.canvas.clientWidth;
-      this.canvas.height = this.canvas.clientHeight;
-      //tdl.log("new width:", this.canvas.width);
-      //tdl.log("new height:", this.canvas.height);
-    }
+    Misc.resize(this.canvas);
   };
 
   CanvasRenderer.prototype.begin = function() {

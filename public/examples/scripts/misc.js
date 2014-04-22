@@ -170,6 +170,15 @@ define(function() {
     return v < 0 ? -1 : (v > 0 ? 1 : 0);
   };
 
+  var resize = function(canvas) {
+    if (canvas.width != canvas.clientWidth ||
+        canvas.height != canvas.clientHeight) {
+      canvas.width = canvas.clientWidth;
+      canvas.height = canvas.clientHeight;
+      return true;
+    }
+  };
+
   return {
     applyUrlSettings: applyUrlSettings,
     clamp: clamp,
@@ -179,6 +188,7 @@ define(function() {
     getAbsolutePosition: getAbsolutePosition,
     randInt: randInt,
     randCSSColor: randCSSColor,
+    resize: resize,
     sign: sign,
   };
 });

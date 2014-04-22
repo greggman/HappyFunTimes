@@ -30,7 +30,7 @@
  */
 "use strict";
 
-define(function() {
+define('../../scripts/misc', function(Misc) {
 
   var CanvasRenderer = function(services, canvas) {
     this.services = services;
@@ -38,12 +38,7 @@ define(function() {
   };
 
   CanvasRenderer.prototype.resize = function() {
-    var canvas = this.ctx.canvas;
-    if (canvas.width != canvas.clientWidth ||
-        canvas.height != canvas.clientHeight) {
-      canvas.width = canvas.clientWidth;
-      canvas.height = canvas.clientHeight;
-    }
+    Misc.resize(this.ctx.canvas);
   };
 
   CanvasRenderer.prototype.begin = function() {
