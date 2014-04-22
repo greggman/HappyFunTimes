@@ -92,6 +92,52 @@ h1 {
 
 }
 
+/* class to make something full size */
+.hft-fullsize {
+  width: 100%;
+  height: 100%;
+}
+/* class to make a column based flexbox with everything centered */
+.hft-fullcenter {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  display: -webkit-flex;
+  flex-flow: column;
+  -webkit-flex-flow: column;
+  justify-content: center;
+  align-content: center;
+  align-items: center;
+  -webkit-justify-content: center;
+  -webkit-align-content: center;
+  -webkit-align-items: center;
+  min-height: auto;
+}
+
+#hft-settings {
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  width: 100%;
+  height: 100%;
+}
+.hft-menubutton {
+  border-radius: 1em;
+  background: linear-gradient(to bottom, #f2f6f8 0%,#d8e1e7 88%,#b5c6d0 91%,#e0eff9 100%);
+  width: 80%;
+  margin: 0.2em;
+}
+.hft-menubutton div {
+  width: 100%;
+  padding-left: 0.5em;
+  height: 2em;
+  display: table-cell;
+  text-align: center;
+  vertical-align: middle;
+  font-size: xx-large;
+  font-weight: bold;
+}
+
 /* Smartphones (portrait and landscape) ----------- */
 @media only screen and (min-device-width : 320px) and (max-device-width : 480px) {
 /* Styles */

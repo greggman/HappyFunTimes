@@ -70,7 +70,11 @@ function postHandler(request, callback) {
   });
 
   request.addListener('end', function() {
-    query_ = JSON.parse(content_);
+    try {
+      query_ = JSON.parse(content_);
+    } catch (e) {
+      query_ = {};
+    }
     callback(query_);
   });
 }
@@ -128,7 +132,7 @@ var server = http.createServer(function() {
   };
 
   return function(req, res) {
-    debug("req: " + req.method);
+    debug("req: " + req.method + " : " + req.url + "\n--headers\n" + JSON.stringify(req.headers));
     // your normal server code
     if (req.method == "POST") {
       postHandler(req, function(query) {
@@ -168,8 +172,135 @@ var isFolder = (function() {
   };
 }());
 
+var sendStringResponse = function(res, data, opt_mimeType) {
+  res.writeHead(200, {
+    'Content-Type': opt_mimeType || "text/html",
+    'Content-Length': data.length,
+  });
+  res.write(data);
+  res.end();
+}
+
+var sendFileResponse = function(res, fullPath, opt_prepFn) {
+  debug("path: " + fullPath);
+  if (g.cwd != fullPath.substring(0, g.cwd.length)) {
+    sys.print("forbidden: " + fullPath + "\n");
+    return send403(res);
+  }
+  var mimeType = mime.lookup(fullPath);
+  if (mimeType) {
+    fs.readFile(fullPath, function(err, data){
+      if (err) {
+        sys.print("unknown file: " + fullPath + "\n");
+        return send404(res);
+      }
+      if (opt_prepFn) {
+        data = opt_prepFn(data.toString());
+      }
+      if (startsWith(mimeType, "text")) {
+        res.writeHead(200, {
+          'Content-Type': mimeType + "; charset=utf-8"
+        });
+        res.write(data, "utf8");
+        res.end();
+      } else {
+        sendStringResponse(res, data, mimeType);
+      }
+    });
+  } else {
+    send404(res);
+  }
+};
+
+var replaceParams = (function() {
+
+  var captureRE = /%\(([A-Za-z0-9_]+)\)s/g;
+
+  return function(str, params) {
+    return str.replace(captureRE, function(match) {
+      return params[match.substring(2, match.length - 2)];
+    });
+  };
+}());
+
+var sendCaptivePortalHTML = function(res, sessionId, opt_path) {
+  opt_path = opt_path || "captive-portal.html";
+  var fullPath = path.normalize(path.join(g.cwd, g.baseDir, opt_path));
+  sendFileResponse(res, fullPath, function(str) {
+    var params = {
+      sessionId: sessionId,
+    };
+    str = replaceParams(str, params);
+    return str;
+  });
+};
+
+var AppleCaptivePortalHandler = function() {
+  // This is a total guess. I'm assuming iOS sends a unique URL. I can use that to hopefully
+  // return my redirection page the first time and apple's success page the second time
+  this.sessions = {};
+};
+
+AppleCaptivePortalHandler.prototype.check = function(req, res) {
+  var parsedUrl = url.parse(req.url, true);
+  var filePath = querystring.unescape(parsedUrl.pathname);
+  var sessionId = filePath;
+  var isCheckingForApple = req.headers["user-agent"] && startsWith(req.headers["user-agent"], "CaptiveNetworkSupport");
+  var isLoginURL = (filePath == "/game-login.html");
+  var isIndexURL = (filePath == "/index.html" || filePath == "/");
+
+  if (isIndexURL) {
+    sessionId = parsedUrl.query.sessionId;
+    if (sessionId) {
+      delete this.sessions[sessionId];
+    }
+    return false;
+  }
+
+  if (isLoginURL && req.headers["referer"]) {
+    sessionId = querystring.unescape(url.parse(req.headers["referer"]).pathname);
+  }
+
+  var session = sessionId ? this.sessions[sessionId] : undefined;
+  if (session) {
+
+    if (isLoginURL) {
+      session.loggedIn = true;
+      sendCaptivePortalHTML(res, sessionId, "game-login.html");
+      return true;
+    }
+
+    // We've seen this device before. Either it's checking that it can connect or it's asking for a normal webpage.
+    if (isCheckingForApple) {
+      if (session.loggedIn) {
+        var data = "<HTML><HEAD><TITLE>Success</TITLE></HEAD><BODY>Success</BODY></HTML>";
+        sendStringResponse(res, data);
+        return true;
+      }
+    }
+    sendCaptivePortalHTML(res, sessionId);
+    return true;
+  }
+
+  if (!isCheckingForApple) {
+    return false;
+  }
+
+  // We are checking for apple for the first time so remember the path
+  this.sessions[sessionId] = {};
+  sendCaptivePortalHTML(res, sessionId);
+  return true;
+};
+
+var appleCaptivePortalHandler = new AppleCaptivePortalHandler();
+
 var sendRequestedFile = function(req, res) {
-  var filePath = querystring.unescape(url.parse(req.url).pathname);
+  if (appleCaptivePortalHandler.check(req, res)) {
+    return;
+  }
+
+  var parsedUrl = url.parse(req.url);
+  var filePath = querystring.unescape(parsedUrl.pathname);
   var fullPath = path.normalize(path.join(g.cwd, g.baseDir, filePath));
   // I'm sure these checks are techincally wrong but it doesn't matter for our purposes AFAICT.
   var isQuery = filePath.indexOf('?') >= 0;
@@ -189,34 +320,7 @@ var sendRequestedFile = function(req, res) {
       fullPath += "index.html";
     }
   }
-  debug("path: " + fullPath);
-  if (g.cwd != fullPath.substring(0, g.cwd.length)) {
-    sys.print("forbidden: " + fullPath + "\n");
-    return send403(res);
-  }
-  var mimeType = mime.lookup(fullPath);
-  if (mimeType) {
-    fs.readFile(fullPath, function(err, data){
-      if (err) {
-        sys.print("unknown file: " + fullPath + "\n");
-        return send404(res);
-      }
-      if (startsWith(mimeType, "text")) {
-        res.writeHead(200, {
-          'Content-Type': mimeType + "; charset=utf-8"
-        });
-        res.write(data, "utf8");
-      } else {
-        res.writeHead(200, {
-          'Content-Type': mimeType,
-          'Content-Length': data.length});
-        res.write(data);
-      }
-      res.end();
-    });
-  } else {
-    send404(res);
-  }
+  sendFileResponse(res, fullPath);
 };
 
 var send404 = function(res) {
