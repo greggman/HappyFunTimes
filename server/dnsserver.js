@@ -28,48 +28,57 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+"use strict";
 
-var os = require('os')
-var dns = require('native-dns');
-var server = dns.createServer();
+var DNSServer = function(options) {
+  options = options || { };
+  var os = require('os')
+  var dns = require('native-dns');
+  var server = dns.createServer();
 
-var port = 53;
-var interfaces = os.networkInterfaces();
-var addresses = [];
-for (k in interfaces) {
-    for (k2 in interfaces[k]) {
-        var address = interfaces[k][k2];
-        if (address.family == 'IPv4' && !address.internal) {
-            addresses.push(address.address)
+  var port = 53;
+
+  var address = options.address;
+  if (!address) {
+    var interfaces = os.networkInterfaces();
+    var addresses = [];
+    for (var k in interfaces) {
+        for (var k2 in interfaces[k]) {
+            var address = interfaces[k][k2];
+            if (address.family == 'IPv4' && !address.internal) {
+                addresses.push(address.address)
+            }
         }
     }
-}
 
-if (addresses.length < 1) {
-  console.error("No IP address found");
-}
-var address = addresses[0];
-if (addresses.length > 1) {
-  console.log("more than 1 IP address found: " + addresses);
-  console.log("using: " + address);
-}
+    if (addresses.length < 1) {
+      console.error("No IP address found for DNS");
+    }
+    address = addresses[0];
+    if (addresses.length > 1) {
+      console.log("more than 1 IP address found: " + addresses);
+    }
+  }
+  console.log("using ip address: " + address);
 
-server.on('request', function (request, response) {
-  response.answer.push(dns.A({
-    name: request.question[0].name,
-    address: address,
-    ttl: 1,
-  }));
-  response.send();
-});
+  server.on('request', function (request, response) {
+    response.answer.push(dns.A({
+      name: request.question[0].name,
+      address: address,
+      ttl: 1,
+    }));
+    response.send();
+  });
 
-server.on('error', function (err, buff, req, res) {
-  console.log(err.stack);
-});
+  server.on('error', function (err, buff, req, res) {
+    console.log(err.stack);
+  });
 
-try {
-  server.serve(port);
-} catch (e) {
-  console.error(e);
-}
+  try {
+    server.serve(port);
+  } catch (e) {
+    console.error(e);
+  }
+};
 
+exports.DNSServer = DNSServer;

@@ -49,11 +49,14 @@ var mime = require('mime');
 var querystring = require('querystring');
 var args = require('minimist')(process.argv.slice(2));
 var highResClock = require('./highresclock');
+var dns = require('./dnsserver');
 
 if (args.h || args.help) {
-  sys.print(
-      "--help: this message\n" +
-      "--port: port. Default 8080\n");
+  sys.print([
+      "--help: this message",
+      "--port: port. Default 8080",
+      "--dns:  enable dns",
+    ].join("\n"));
   process.exit(0);
 }
 
@@ -340,4 +343,7 @@ var relayServer = new rs.RelayServer(server);
 server.listen(g.port);
 sys.print("Listening on port: " + g.port + "\n");
 
+if (g.dns) {
+  var dnsServer = new dns.DNSServer();
+}
 

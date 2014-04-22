@@ -5,9 +5,9 @@
   "private": true,
   "dependencies": {
     "debug": "0.7.4",
-    "express": "3.5",
     "minimist": "0.0.8",
     "mime": "1.2.11",
-    "ws": "0.4.31"
+    "ws": "0.4.31",
+    "native-dns": "0.4.1"
   }
 }
