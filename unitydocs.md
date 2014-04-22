@@ -11,17 +11,24 @@ to achieve this goal.
 
 Installation
 ------------
-*   Clone [websocket-sharp](https://github.com/sta/websocket-sharp)
-*   Build websocket-sharp (open the .sln in that repo, set the target to Release and hit Build)
-*   Copy **websocket-sharp/websocket-sharp/bin/Release/websockets-csharp.dll** to **
-Assets/Plugins/WebsocketSharp** folder (you'll need to make the folder yourself)
-*   Clone the HappyFunTimes repo
-*   From **HappyFunTimes/Unity3D/** copy the **src** and **Extra** folders to **[MyProject]/Assets/Plugins/HappyFunTimes**
 
-### Server ###
+1.  Clone to repo
+2.  In Unity, make a new Project
+3.  Pick Assets->Import Package->Standard Assets
+4.  Copy Unity3D/src to Assets/Plugins/HappyFunTimes (or make a sym link)
+5.  Copy Unity3D/Extra to Assets/Plugins/HappyFunTimesExtra
+6.  Copy Unity3d/Examples to Assets/Scripts/HappyFunTimes
+7.  Open the scene Unity3D/Examples/Scenes/HappyFunTimesCharacterExample
+8.  Pick Edit->Project Settings->Player and check "Run in Background"
 
-The actual server is completely seperate to the Unity project.
-Follow the instructions in the main readme.md to install and run the server with node.js
+Note: These instructions include the sample projects. If all you want is
+the minimum required to do your own thing with HappyFunTimes skip steps
+#3, #6, and #7.
+
+**RelayServer**
+
+The relayserver is completely seperate to the Unity project.
+Follow the instructions in main [README.md](README.md) to install and run the server with node.js
 
 Integration with your app
 -------------------------
