@@ -52,19 +52,23 @@ public class EventProcessor : MonoBehaviour {
     void Update() {
         MoveQueuedEventsToExecuting();
 
-        while (m_executingEvents.Count > 0) {
-            Action e = m_executingEvents[0];
-            m_executingEvents.RemoveAt(0);
-            e();
+        if (m_executingEvents != null) {
+            while (m_executingEvents.Count > 0) {
+                Action e = m_executingEvents[0];
+                m_executingEvents.RemoveAt(0);
+                e();
+            }
         }
     }
 
     private void MoveQueuedEventsToExecuting() {
         lock(m_queueLock) {
-            while (m_queuedEvents.Count > 0) {
-                Action e = m_queuedEvents[0];
-                m_executingEvents.Add(e);
-                m_queuedEvents.RemoveAt(0);
+            if (m_executingEvents != null) {
+                while (m_queuedEvents.Count > 0) {
+                    Action e = m_queuedEvents[0];
+                    m_executingEvents.Add(e);
+                    m_queuedEvents.RemoveAt(0);
+                }
             }
         }
     }
