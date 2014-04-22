@@ -390,11 +390,11 @@ should be a place that lets you assign a specfiic IP address to a specific MAC
 address. On TL-WR702N that's under Advanced Settings->DHCP->Address Reservations
 
 I looked up the MAC address for my machine (the relayserver) and assigned it
-directly to `192.168.2.9`
+directly to `192.168.2.9`.
 
 <div style="text-align: center;"><a href="images/router-address-reservation.png"><img width="342" height="184" src="images/router-address-reservation.png"></a></div>
 
-I then when to the main DHCP settings at Advanced Settings->DHCP->DHCP Settings and
+I then went to the main DHCP settings at Advanced Settings->DHCP->DHCP Settings and
 configured it to give out IP addresses from to `192.168.2.10` to `192.168.2.250`.
 Finally I set the DNS there to the same address I used for the relayserver
 (`192.168.2.9`)
