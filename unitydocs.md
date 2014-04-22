@@ -1,5 +1,5 @@
-Unity Docs for HappyGameFun
-===========================
+Unity Docs for HappyFunTimes
+============================
 
 Very similar to the JavaScript version but note there is no gameclient
 (something to run on a smartphone), there is only gameserver, something to
@@ -8,6 +8,23 @@ to allow people with smartphones (or laptops) to join your game without
 needing to install any software. The browser becomes a controller. The
 game itself can be in Unity but the controllers need to be browsers
 to achieve this goal.
+
+Installation
+------------
+*   Clone [websocket-sharp](https://github.com/sta/websocket-sharp)
+*   Build websocket-sharp (open the .sln in that repo, set the target to Release and hit Build)
+*   Copy **websocket-sharp/websocket-sharp/bin/Release/websockets-csharp.dll** to **
+Assets/Plugins/WebsocketSharp** folder (you'll need to make the folder yourself)
+*   Clone the HappyFunTimes repo
+*   From **HappyFunTimes/Unity3D/** copy the **src** and **Extra** folders to **[MyProject]/Assets/Plugins/HappyFunTimes**
+
+### Server ###
+
+The actual server is completely seperate to the Unity project.
+Follow the instructions in the main readme.md to install and run the server with node.js
+
+Integration with your app
+-------------------------
 
 `GameServer`
 
