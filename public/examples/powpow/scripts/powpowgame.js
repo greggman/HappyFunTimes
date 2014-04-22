@@ -59,6 +59,7 @@ var main = function(
     AudioManager,
     EntitySystem,
     GameClock,
+    Input,
     Misc,
     CanvasRenderer,
     WebGLRenderer,
@@ -78,6 +79,7 @@ var main = function(
     var globals = {
       audio: true,
       maxActivePlayers: 6,
+      numLocalPlayers: 4,  // num players when local (ie, debugging)
       playerVelocity: 200,
       playerTurnVelocity: Math.PI * 0.5,
       invincibilityDuration: 3,
@@ -270,78 +272,44 @@ var main = function(
 
     function startLocalPlayers() {
       globals.maxActivePlayers = 2;
-      var player1 = startPlayer(new LocalNetPlayer(), "Player1");
-      var player2 = startPlayer(new LocalNetPlayer(), "Player2");
-      var player3 = startPlayer(new LocalNetPlayer(), "Player3"); // in queue
-      var player4 = startPlayer(new LocalNetPlayer(), "Player4"); // in queue
-      var g_left = false;
-      var g_right = false;
+
+      var localNetPlayers = [];
+      for (var ii = 0; ii < globals.numLocalPlayers; ++ii) {
+        var localNetPlayer = new LocalNetPlayer();
+        var player = startPlayer(localNetPlayer, "Player" + (ii + 1));
+        localNetPlayers.push(localNetPlayer);
+      }
+      var localNetPlayer1 = localNetPlayers[0];
+
+      var g_leftRight = 0;
+      var g_oldLeftRight = 0;
       var g_fire = false;
-      var g_keyState = { };
-      var g_oldKeyState = { };
 
-      function handleKeyDown(keyCode, state) {
-        switch(keyCode) {
-        case 37: // left
-          if (!g_left) {
-            g_left = true;
-            player1.handleTurnMsg({turn: -1});
-          }
-          break;
-        case 39: // right
-          if (!g_right) {
-            g_right = true;
-            player1.handleTurnMsg({turn: 1});
-          }
-          break;
-        case 90: // z
-          if (!g_fire) {
-            g_fire = true;
-            player1.handleFireMsg({fire:1});
-          }
-          break;
+      var handleLeftRight = function(pressed, bit) {
+        g_leftRight = (g_leftRight & ~bit) | (pressed ? bit : 0);
+        if (g_leftRight != g_oldLeftRight) {
+          g_oldLeftRight = g_leftRight;
+          localNetPlayer1.sendEvent('turn', {
+              turn: (g_leftRight & 1) ? -1 : ((g_leftRight & 2) ? 1 : 0),
+          });
         }
-      }
+      };
 
-      function handleKeyUp(keyCode, state) {
-        switch(keyCode) {
-        case 37: // left
-          g_left = false;
-          player1.handleTurnMsg({turn: (g_right) ? 1 : 0});
-          break;
-        case 39: // right
-          g_right = false;
-          player1.handleTurnMsg({turn: (g_left) ? -1 : 0});
-          break;
-        case 90: // z
-          g_fire = false;
-          player1.handleFireMsg({fire: 0});
-          break;
+      var handleFire = function(pressed) {
+        if (g_fire != pressed) {
+          g_fire = pressed;
+          localNetPlayer1.sendEvent('fire', {
+              fire: pressed,
+          });
         }
-      }
+      };
 
-      function updateKey(keyCode, state) {
-        g_keyState[keyCode] = state;
-        if (g_oldKeyState != g_keyState) {
-          g_oldKeyState = state;
-          if (state) {
-            handleKeyDown(keyCode);
-          } else {
-            handleKeyUp(keyCode);
-          }
-        }
-      }
+      var keys = { };
+      keys[Input.cursorKeys.kLeft]  = function(e) { handleLeftRight(e.pressed, 0x1); }
+      keys[Input.cursorKeys.kRight] = function(e) { handleLeftRight(e.pressed, 0x2); }
+      keys["Z".charCodeAt(0)]       = function(e) { handleFire(e.pressed);           }
+      Input.setupKeys(keys);
 
-      function keyUp(event) {
-        updateKey(event.keyCode, false);
-      }
-
-      function keyDown(event) {
-        updateKey(event.keyCode, true);
-      }
-
-      window.addEventListener("keyup", keyUp, false);
-      window.addEventListener("keydown", keyDown, false);
     }
   };
   start();
@@ -354,6 +322,7 @@ requirejs(
     '../../scripts/audio',
     '../../scripts/entitysystem',
     '../../scripts/gameclock',
+    '../../scripts/input',
     '../../scripts/misc',
     'canvasrenderer',
     'webglrenderer',
