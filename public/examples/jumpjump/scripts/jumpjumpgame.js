@@ -91,55 +91,42 @@ window.g = globals;
 
   function startLocalPlayers() {
     var players = [];
+    var netPlayers = [];
     for (var ii = 0; ii < globals.numLocalPlayers; ++ii) {
-      players.push(g_playerManager.startPlayer(new LocalNetPlayer(), "Player" + (ii + 1)));
+      var netPlayer = new LocalNetPlayer();
+      netPlayers.push(netPlayer);
+      players.push(g_playerManager.startPlayer(netPlayer, "Player" + (ii + 1)));
     }
     var player1 = players[0];
-    var g_left = false;
-    var g_right = false;
+    var localNetPlayer1 = netPlayers[0];
+    var g_leftRight = 0;
+    var g_oldLeftRight = 0;
     var g_jump = false;
 
-    function handleKeyDown(keyCode, state) {
-      switch(keyCode) {
-      case 37: // left
-        if (!g_left) {
-          g_left = true;
-          player1.handleMoveMsg({dir: -1});
-        }
-        break;
-      case 39: // right
-        if (!g_right) {
-          g_right = true;
-          player1.handleMoveMsg({dir: 1});
-        }
-        break;
-      case 90: // z
-        if (!g_jump) {
-          g_jump = true;
-          player1.handleJumpMsg({jump:1});
-        }
-        break;
+    var handleLeftRight = function(pressed, bit) {
+      g_leftRight = (g_leftRight & ~bit) | (pressed ? bit : 0);
+      if (g_leftRight != g_oldLeftRight) {
+        g_oldLeftRight = g_leftRight;
+        localNetPlayer1.sendEvent('move', {
+            dir: (g_leftRight & 1) ? -1 : ((g_leftRight & 2) ? 1 : 0),
+        });
       }
-    }
+    };
 
-    function handleKeyUp(keyCode, state) {
-      switch(keyCode) {
-      case 37: // left
-        g_left = false;
-        player1.handleMoveMsg({dir: (g_right) ? 1 : 0});
-        break;
-      case 39: // right
-        g_right = false;
-        player1.handleMoveMsg({dir: (g_left) ? -1 : 0});
-        break;
-      case 90: // z
-        g_jump = false;
-        player1.handleJumpMsg({jump: 0});
-        break;
+    var handleJump = function(pressed) {
+      if (g_jump != pressed) {
+        g_jump = pressed;
+        localNetPlayer1.sendEvent('jump', {
+            jump: pressed,
+        });
       }
-    }
+    };
 
-    Input.setupControllerKeys(handleKeyDown, handleKeyUp);
+    var keys = { };
+    keys[Input.cursorKeys.kLeft]  = function(e) { handleLeftRight(e.pressed, 0x1); }
+    keys[Input.cursorKeys.kRight] = function(e) { handleLeftRight(e.pressed, 0x2); }
+    keys["Z".charCodeAt(0)]       = function(e) { handleJump(e.pressed);           }
+    Input.setupKeys(keys);
   }
 
   Misc.applyUrlSettings(globals);
