@@ -70,8 +70,7 @@ window.s = g_services;
   var globals = {
     port: 8080,
     haveServer: true,
-    numLocalPlayers: 1,
-    force2d: false,
+    numLocalPlayers: 1,  // num players when local (ie, debugger)
     debug: false,
     tileInspector: false,
     showState: false,
