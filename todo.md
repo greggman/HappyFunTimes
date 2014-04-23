@@ -1,3 +1,4 @@
+*   update unitydocs with UnityScript
 *   fix camera on unitycharacter example so
     * it works for 1 player
     * it doesn't swing around so much
@@ -276,6 +277,23 @@ Done
 
 Rejected
 --------
+
+*   remove auto registering of MessageCmdData classes
+
+    this is easier said than done. The reason they are pre-registered
+    is that controllers can start before games. So, controller sends a
+    message to the game, the game deserializes it but because the types
+    would not be registered until the NetPlayer starts it doesn't know
+    how to deserialize them yet. Auto registering means it does know.
+
+    An alternative would be if it can't find the correct type to deserialize
+    then put the message in a queue. Another idea would be to put all messages
+    in queues in the net player. Right now they are deserilized in the
+    websocket thread but they could just be queued there? Actually that doesn't
+    help as they have to be deserizlied before we can figure out which
+    player they belong to.
+
+    I'm not sure it's important to change this. Punting for now.
 
 *   handle ssl as well for captive portal? I don't think I can :(
 
