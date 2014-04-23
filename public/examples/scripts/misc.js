@@ -170,11 +170,24 @@ define(function() {
     return v < 0 ? -1 : (v > 0 ? 1 : 0);
   };
 
-  var resize = function(canvas) {
-    if (canvas.width != canvas.clientWidth ||
-        canvas.height != canvas.clientHeight) {
-      canvas.width = canvas.clientWidth;
-      canvas.height = canvas.clientHeight;
+  var degToRad = function(d) {
+    return d * Math.PI / 180;
+  };
+
+  var radToDeg = function(r) {
+    return r * 180 / Math.PI;
+  };
+
+  // Resizes a cavnas to match its CSS displayed size.
+  var resize = function(canvas, use_devicePixelRatio) {
+    var mult = use_devicePixelRatio ? window.devicePixelRatio : 1;
+    mult = mult || 1;
+    var width  = Math.floor(canvas.clientWidth  * mult);
+    var height = Math.floor(canvas.clientHeight * mult);
+    if (canvas.width != width ||
+        canvas.height != height) {
+      canvas.width = width;
+      canvas.height = height;
       return true;
     }
   };
@@ -184,8 +197,10 @@ define(function() {
     clamp: clamp,
     clampPlusMinus: clampPlusMinus,
     copyProperties: copyProperties,
+    degToRad: degToRad,
     findCSSStyleRule: findCSSStyleRule,
     getAbsolutePosition: getAbsolutePosition,
+    radToDeg: radToDeg,
     randInt: randInt,
     randCSSColor: randCSSColor,
     resize: resize,
