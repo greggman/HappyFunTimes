@@ -3,7 +3,7 @@
 public var targetSpeed : float = 0.001f;
 public var positionSpeed : float = 0.001f;
 public var minBBSize : float = 6.0f;
-public var fovExtra : float = 2.0f;
+public var fovExtra : float = -10.0f;
 
 private var _startingPosition : Vector3;
 
