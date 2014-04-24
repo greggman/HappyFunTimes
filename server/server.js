@@ -202,7 +202,10 @@ var sendFileResponse = function(res, fullPath, opt_prepFn) {
       }
       if (startsWith(mimeType, "text")) {
         res.writeHead(200, {
-          'Content-Type': mimeType + "; charset=utf-8"
+          'Content-Type':  mimeType + '; charset=utf-8',
+          'Cache-Control': 'no-cache, no-store, must-revalidate', // HTTP 1.1.
+          'Pragma':        'no-cache',                            // HTTP 1.0.
+          'Expires':       '0',                                   // Proxies.
         });
         res.write(data, "utf8");
         res.end();
