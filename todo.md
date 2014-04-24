@@ -1,3 +1,28 @@
+*   it might be a FUCK LOAD easier to make the controllers using canvas instead of HTML.
+
+    no fighting where where you want controls to appear, no trying to center a character
+    inside a div. Just draw what you want. I swear I waste 1-3 hrs per controller
+    futsuing with CSS :(
+
+*   remove auto registering of MessageCmdData classes
+
+    this is easier said than done. The reason they are pre-registered
+    is that controllers can start before games. So, controller sends a
+    message to the game, the game deserializes it but because the types
+    would not be registered until the NetPlayer starts it doesn't know
+    how to deserialize them yet. Auto registering means it does know.
+
+    An alternative would be if it can't find the correct type to deserialize
+    then put the message in a queue. Another idea would be to put all messages
+    in queues in the net player. Right now they are deserilized in the
+    websocket thread but they could just be queued there? Actually that doesn't
+    help as they have to be deserizlied before we can figure out which
+    player they belong to.
+
+    The problem now is the scanner check ALL scripts in Assets (I guess that's
+    because Unity includes all scripts). So, there will be conflict if 2 different
+    scripts define objects with the same CmdName
+
 *   update unitydocs with UnityScript
 *   fix camera on unitycharacter example so
     * it works for 1 player
@@ -277,23 +302,6 @@ Done
 
 Rejected
 --------
-
-*   remove auto registering of MessageCmdData classes
-
-    this is easier said than done. The reason they are pre-registered
-    is that controllers can start before games. So, controller sends a
-    message to the game, the game deserializes it but because the types
-    would not be registered until the NetPlayer starts it doesn't know
-    how to deserialize them yet. Auto registering means it does know.
-
-    An alternative would be if it can't find the correct type to deserialize
-    then put the message in a queue. Another idea would be to put all messages
-    in queues in the net player. Right now they are deserilized in the
-    websocket thread but they could just be queued there? Actually that doesn't
-    help as they have to be deserizlied before we can figure out which
-    player they belong to.
-
-    I'm not sure it's important to change this. Punting for now.
 
 *   handle ssl as well for captive portal? I don't think I can :(
 

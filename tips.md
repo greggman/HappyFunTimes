@@ -209,3 +209,31 @@ Tips
     in question with `class="fixheight"` and then in JavaScript, search for all elements with
     class `fixheight` and set their height to their parent's clientHeight. So far that's fixed
     all the issues.
+
+*   Consider using Canvas to draw your controllers
+
+    CSS sucks balls or rather I can never figure out how to get it to do what I want.
+    I literally spend 1-3 hours doing something I expect to take me 5 minutes like
+    trying to get some unicode bullet centered in a button.
+
+    So, I realized I could just make a canvas and hand draw the controls I want in it.
+    I did this for the DPad examples although I use a separate canvas for each. I could
+    instead use one large canvas and just draw all the buttons I want on it.
+    Touch/Click detection would also be easier and faster because looking up the
+    the position of an event relative to some element is slow in JavaScript since
+    you have to compute the position of the element by decending through all of its
+    parents.
+
+*   What's with the weird `define()` stuff.
+
+    It's part of [require.js](http://requirejs.org/). See [Why AMD](http://requirejs.org/docs/whyamd.html)?
+
+*   Disable caching in your browser
+
+    Right now the relayserver tells the browser not to cache anything. Whether the browser
+    pays attention to this is up to the browser.
+
+    You can also often turn off caching in the browser. In Chrome for example, open the
+    devtools. Click the gear icon near the top right of the tools. Check
+    "Disable Cache (when Devtools is open)"
+
