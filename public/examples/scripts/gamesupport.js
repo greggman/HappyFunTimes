@@ -87,6 +87,7 @@ define([
   var run = function(globals, fn) {
     var clock = new GameClock();
 
+    var requestId;
     var loop = function() {
       stats.begin();
 
@@ -96,9 +97,28 @@ define([
       fn();
 
       stats.end();
-      requestAnimationFrame(loop);
+      requestId = requestAnimationFrame(loop);
     };
-    loop();
+
+    var start = function() {
+      if (requestId === undefined) {
+        loop();
+      }
+    };
+
+    var stop = function() {
+      if (requestId !== undefined) {
+        cancelAnimationFrame(requestId);
+        requestId = undefined;
+      }
+    };
+
+    if (!globals.haveServer || globals.pauseOnBlur) {
+      window.addEventListener('blur', stop, false);
+      window.addEventListener('focus', start, false);
+    }
+
+    start();
   };
 
   var setStatus = function(str) {
