@@ -39,6 +39,22 @@ define(['./misc'], function(Misc) {
     kDown: 40,
   };
 
+  // You can use these to make your own options for setupKeyboardDPadKeys
+  var kCursorKeys = [37, 39, 38, 40];
+  var kASWDKeys = [65, 68, 87, 83];
+
+  // You can pass these into setupKeyboardDPadKeys
+  var kASWDPadOnly = {
+    pads: [
+      { keys: kASWDKeys, },
+    ],
+  };
+  var kCursorPadOnly = {
+    pads: [
+      { keys: kCursorKeys, },
+    ],
+  };
+
   // Provides a map from direction to various info.
   //
   // Example:
@@ -114,7 +130,7 @@ define(['./misc'], function(Misc) {
     window.addEventListener("keydown", keyDown, false);
   };
 
-  // Simulates 2 virtual dpads using keys
+  // Simulates N virtual dpads using keys
   // asdw for pad 0, arrow keys for pad 1
   //
   // For each change in direction callback will be
@@ -143,21 +159,43 @@ define(['./misc'], function(Misc) {
   //     var dx    =  Math.cos(angle);
   //     var dy    = -Math.sin(angle);
   //
-  var setupKeyboardDPadKeys = function(callback) {
-    var g_dirBits = [0, 0];
-    var g_excludeBits = [0, 0];
-    var g_dir = [-1, -1];
-    var g_eventInfos = [createDirectionEventInfo(0), createDirectionEventInfo(1)];
+  var setupKeyboardDPadKeys = function(callback, options) {
+    if (!options) {
+      options = {
+        pads: [
+         { keys: kASWDKeys,   }, // LRUD
+         { keys: kCursorKeys, }, // LRUD
+        ],
+      }
+    }
+
+    var g_dirBits = [];
+    var g_excludeBits = [];
+    var g_dir = [];
+    var g_eventInfos = [];
+
+    var bitInfos = [
+      { bit: 1, exclude: 2, mask: 0x3 }, // left
+      { bit: 2, exclude: 1, mask: 0x3 }, // right
+      { bit: 4, exclude: 8, mask: 0xC }, // up
+      { bit: 8, exclude: 4, mask: 0xC }, // down
+    ];
 
     var keyToBit = { };
-    keyToBit[37] = { bit: 1, pad: 1, exclude: 2, mask: 0x3 }; // left (cursor left)
-    keyToBit[39] = { bit: 2, pad: 1, exclude: 1, mask: 0x3 }; // right (cursor right)
-    keyToBit[38] = { bit: 4, pad: 1, exclude: 8, mask: 0xC }; // up (cursor up)
-    keyToBit[40] = { bit: 8, pad: 1, exclude: 4, mask: 0xC }; // down (cursor down)
-    keyToBit[65] = { bit: 1, pad: 0, exclude: 2, mask: 0x3 }; // left 'a'
-    keyToBit[68] = { bit: 2, pad: 0, exclude: 1, mask: 0x3 }; // right 'd'
-    keyToBit[87] = { bit: 4, pad: 0, exclude: 8, mask: 0xC }; // up 'w'
-    keyToBit[83] = { bit: 8, pad: 0, exclude: 4, mask: 0xC }; // down 's'
+
+    for (var ii = 0; ii < options.pads.length; ++ii) {
+      var pad = options.pads[ii];
+      g_dirBits.push(0);
+      g_excludeBits.push(0);
+      g_dir.push(-1);
+      g_eventInfos.push(createDirectionEventInfo(ii));
+      for (var kk = 0; kk < 4; ++kk) {
+        var bitInfo = bitInfos[kk];
+        var keyInfo = { pad: ii, };
+        Misc.copyProperties(bitInfos[kk], keyInfo);
+        keyToBit[pad.keys[kk]] = keyInfo;
+      }
+    }
 
     var bitsToDir = [
       -1, // 0
@@ -241,6 +279,10 @@ define(['./misc'], function(Misc) {
     cursorKeys: cursorKeys,
     createDirectionEventInfo: createDirectionEventInfo,
     emitDirectionEvent: emitDirectionEvent,
+    kCursorKeys: kCursorKeys,
+    kCursorPadOnly: kCursorPadOnly,
+    kASWDKeys: kASWDKeys,
+    kASWDPadOnly: kASWDPadOnly,
     getRelativeCoordinates: getRelativeCoordinates,
     setupControllerKeys: setupControllerKeys,
     setupKeyboardDPadKeys: setupKeyboardDPadKeys,
