@@ -36,14 +36,12 @@ define(
     './misc',
   ], function(HandJS, Input, Misc) {
 
-  // Simulates 2 virtual dpads using touch events
-  // Assumes left half of container is left dpad
-  // and right half is right.
+  // Simulates N virtual dpads using touch events
   //
   // For each change in direction callback will be
   // called with an event info where
   //
-  // pad = (0 left, 1 right)
+  // pad = (index of pad)
   // direction =
   //
   //
@@ -124,10 +122,10 @@ define(
       };
     };
 
-    var pads = [
-      makePad(0),
-      makePad(1),
-    ];
+    var pads = [];
+    for (var ii = 0; ii < options.pads.length; ++ii) {
+      pads.push(makePad(ii));
+    }
 
     var computeDir = function(x, y) {
       var angle = Math.atan2(-y, x) + Math.PI * 2 + Math.PI / 8;
@@ -177,9 +175,24 @@ define(
       }
     };
 
+    var getClosestPad = function(e) {
+      var closestId = 0;
+      var closestDist;
+      for (var ii = 0; ii < pads.length; ++ii) {
+        var padOptions = options.pads[ii];
+        var relPos = Input.getRelativeCoordinates(padOptions.referenceElement, e);
+        var distSq = relPos.x * relPos.x + relPos.y * relPos.y;
+        if (closestDist == undefined || distSq < closestDist) {
+          closestDist = distSq;
+          closestId = ii;
+        }
+      }
+      return closestId;
+    };
+
     var onPointerDown = function(e) {
-      var relPos = Input.getRelativeCoordinates(options.inputElement, e);
-      checkStart(relPos.x < options.inputElement.clientWidth / 2 ? 0 : 1, e);
+      var padId = getClosestPad(e);
+      checkStart(padId, e);
     };
 
     var onPointerMove = function(e) {
