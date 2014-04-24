@@ -33,11 +33,10 @@
 /**
  * @fileoverview This file contains various functions for managing a clock
  */
+define(['./base-rs', './io', './log'], function(BaseRS, IO, Log) {
 
 tdl.provide('tdl.clock');
-
-tdl.require('tdl.io');
-tdl.require('tdl.log');
+tdl.clock = tdl.clock || {};
 
 /**
  * Creates a clock. Optionally synced to a server
@@ -113,3 +112,5 @@ tdl.clock.SyncedClock.prototype.getTime = function() {
   return (new Date()).getTime() * 0.001 + this.timeOffset;
 }
 
+return tdl.clock;
+});

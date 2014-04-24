@@ -33,13 +33,13 @@
 /**
  * @fileoverview This file contains objects strings.
  */
-
-tdl.provide('tdl.string');
+define(['./base-rs'], function(BaseRS) {
 
 /**
  * A module for string.
  * @namespace
  */
+tdl.provide('tdl.string');
 tdl.string = tdl.string || {};
 
 /**
@@ -124,4 +124,6 @@ tdl.string.objToString = function(obj, opt_prefix) {
   return strs.join("\n");
 };
 
+return tdl.string;
+});
 

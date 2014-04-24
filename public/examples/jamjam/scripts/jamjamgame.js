@@ -307,127 +307,103 @@ PlayerManager.prototype.drawNotes = function(trackIndex, rhythmIndex) {
   }
 };
 
-// This shit with 'load' and 'start' is because of some conflict or
-// other between tdl and require.js >:(
-
-// I think basically require.js runs before 'load' whereas
-// tdl does not. So, tdl was not loaded yet.
-var g_loaded;
-var g_run;
-
-var start = function() {
-  if (g_loaded && g_run) {
-    g_run();
-  }
-};
-
-window.addEventListener('load', function() {
-  g_loaded = true;
-  start();
-});
-
 var main = function(
     GameServer,
     SyncedClock,
     AudioManager,
     CSSParse,
-    GameClock,
     GameSupport,
     Misc,
     CanvasRenderer,
     WebGLRenderer) {
 
-  g_run = function() {
+  var g_debug = false;
+  var g_services = {};
+  var g_playerManager = new PlayerManager(g_services);
+  g_services.playerManager = g_playerManager;
+  g_services.cssParse = CSSParse;
+  g_services.misc = Misc;
+  var stop = false;
 
-    var g_debug = false;
-    var g_services = {};
-    var g_playerManager = new PlayerManager(g_services);
-    g_services.playerManager = g_playerManager;
-    g_services.cssParse = CSSParse;
-    g_services.misc = Misc;
-    var stop = false;
-
-    // You can set these from the URL with
-    // http://path/gameview.html?settings={name:value,name:value}
-    var globals = {
-      port: 8080,
-      haveServer: true,
-      bpm: 120,
-      loopLength: 16,
-      force2d: false,
-      debug: false,
-      gridSize: 32,
-    };
-
-    function startPlayer(netPlayer, name) {
-      return new Player(g_services, netPlayer);
-    }
-
-    Misc.applyUrlSettings(globals);
-
-    g_services.globals = globals;
-
-    var server = new GameServer({
-      gameId: "jamjam",
-    });
-    g_services.server = server;
-    GameSupport.init(server, globals);
-    server.addEventListener('playerconnect', g_playerManager.startPlayer.bind(g_playerManager));
-
-    var clock = SyncedClock.createClock(true);
-    g_services.clock = clock;
-
-    var instrumentManager = new InstrumentManager(Misc);
-    g_services.instrumentManager = instrumentManager;
-
-    var canvas = $("canvas");
-    var renderer;
-    if (!globals.force2d || globals.force2D) {
-      renderer = new WebGLRenderer(g_services, canvas);
-    }
-    if (!renderer || !renderer.canRender()) {
-      renderer = new CanvasRenderer(g_services, canvas);
-    }
-    g_services.renderer = renderer;
-
-    var secondsPerBeat = 60 / globals.bpm;
-    var secondsPerQuarterBeat = secondsPerBeat / 4;
-    var lastDisplayedQuarterBeat = 0;
-
-    function process() {
-      var currentTime = clock.getTime();
-      var currentQuarterBeat = Math.floor(currentTime / secondsPerQuarterBeat);
-
-      if (globals.debug) {
-        var beat = Math.floor(currentQuarterBeat / 4) % 4;
-        GameSupport.setStatus(
-            "\n ct: " + currentTime.toFixed(2).substr(-5) +
-            "\ncqb: " + currentQuarterBeat.toString().substr(-4) +
-            "\n rt: " + currentQuarterBeat % globals.loopLength +
-            "\n bt: " + beat + ((beat % 2) == 0 ? " ****" : ""));
-      }
-
-      if (lastDisplayedQuarterBeat != currentQuarterBeat) {
-        lastDisplayedQuarterBeat = currentQuarterBeat;
-        g_playerManager.drawNotes(0, currentQuarterBeat % globals.loopLength);
-      }
-
-      if (!stop) {
-       setTimeout(process, 100);
-      }
-    }
-    process();
-
-    GameSupport.run(globals, function() {
-      //var x = Misc.randInt(150) + 500;
-      //var y = Misc.randInt(150) + 300;
-      //renderer.drawCircle([x, y], 40, [1,1,1,1]);
-      renderer.begin();
-      renderer.end();
-    });
-
+  // You can set these from the URL with
+  // http://path/gameview.html?settings={name:value,name:value}
+  var globals = {
+    port: 8080,
+    haveServer: true,
+    bpm: 120,
+    loopLength: 16,
+    force2d: false,
+    debug: false,
+    gridSize: 32,
   };
-  start();
+
+  function startPlayer(netPlayer, name) {
+    return new Player(g_services, netPlayer);
+  }
+
+  Misc.applyUrlSettings(globals);
+
+  g_services.globals = globals;
+
+  var server = new GameServer({
+    gameId: "jamjam",
+  });
+  g_services.server = server;
+  GameSupport.init(server, globals);
+  server.addEventListener('playerconnect', g_playerManager.startPlayer.bind(g_playerManager));
+
+  var clock = SyncedClock.createClock(true);
+  g_services.clock = clock;
+
+  var instrumentManager = new InstrumentManager(Misc);
+  g_services.instrumentManager = instrumentManager;
+
+  var canvas = $("canvas");
+  var renderer;
+  if (!globals.force2d || globals.force2D) {
+    renderer = new WebGLRenderer(g_services, canvas);
+  }
+  if (!renderer || !renderer.canRender()) {
+    renderer = new CanvasRenderer(g_services, canvas);
+  }
+  g_services.renderer = renderer;
+
+  var secondsPerBeat = 60 / globals.bpm;
+  var secondsPerQuarterBeat = secondsPerBeat / 4;
+  var lastDisplayedQuarterBeat = 0;
+
+  function process() {
+    var currentTime = clock.getTime();
+    var currentQuarterBeat = Math.floor(currentTime / secondsPerQuarterBeat);
+
+    if (globals.debug) {
+      var beat = Math.floor(currentQuarterBeat / 4) % 4;
+      GameSupport.setStatus(
+          "\n ct: " + currentTime.toFixed(2).substr(-5) +
+          "\ncqb: " + currentQuarterBeat.toString().substr(-4) +
+          "\n rt: " + currentQuarterBeat % globals.loopLength +
+          "\n bt: " + beat + ((beat % 2) == 0 ? " ****" : ""));
+    }
+
+    if (lastDisplayedQuarterBeat != currentQuarterBeat) {
+      lastDisplayedQuarterBeat = currentQuarterBeat;
+      g_playerManager.drawNotes(0, currentQuarterBeat % globals.loopLength);
+    }
+
+    if (!stop) {
+     setTimeout(process, 100);
+    }
+  }
+  process();
+
+  GameSupport.run(globals, function() {
+    //var x = Misc.randInt(150) + 500;
+    //var y = Misc.randInt(150) + 300;
+    //renderer.drawCircle([x, y], 40, [1,1,1,1]);
+    renderer.begin();
+    renderer.end();
+  });
+
 };
 
 // Start the main app logic.
@@ -436,7 +412,6 @@ requirejs(
     '../../../scripts/syncedclock',
     '../../scripts/audio',
     '../../scripts/cssparse',
-    '../../scripts/gameclock',
     '../../scripts/gamesupport',
     '../../scripts/misc',
     './canvasrenderer',

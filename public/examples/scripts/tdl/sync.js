@@ -34,17 +34,22 @@
  * @fileoverview This file contains objects to sync app settings across
  * browsers.
  */
-
-tdl.provide('tdl.sync');
-
-tdl.require('tdl.log');
-tdl.require('tdl.io');
-tdl.require('tdl.misc');
+define(
+    [ './base-rs',
+      './log',
+      './io',
+      './misc',
+    ], function(
+      BaseRS,
+      Log,
+      IO,
+      Misc) {
 
 /**
  * A module for sync.
  * @namespace
  */
+tdl.provide('tdl.sync');
 tdl.sync = tdl.sync || {};
 
 /**
@@ -100,7 +105,7 @@ tdl.sync.SyncManager.prototype.init = function(url, slave) {
   };
   this.socket.onmessage = function(event) {
     ++that.getCount;
-    tdl.log("--GET:[", g_getCount, ":", event.type, "]-------------");
+    tdl.log("--GET:[", that.getCount, ":", event.type, "]-------------");
     var obj = JSON.parse(event.data);
     tdl.dumpObj(obj);
     tdl.misc.copyProperties(obj, that.settings);
@@ -136,4 +141,6 @@ tdl.sync.SyncManager.prototype.setSettings = function(settings) {
   }
 };
 
+return tdl.sync;
+});
 

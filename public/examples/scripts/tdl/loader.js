@@ -34,16 +34,14 @@
  * @fileoverview This file contains a loader class for helping to load
  *     muliple assets in an asynchronous manner.
  */
-
-tdl.provide('tdl.loader');
-
-tdl.require('tdl.io');
+define(['./base-rs', './io'], function(BaseRS, IO) {
 
 /**
  * A Module with a loader class for helping to load muliple assets in an
  * asynchronous manner.
  * @namespace
  */
+tdl.provide('tdl.loader');
 tdl.loader = tdl.loader || {};
 
 /**
@@ -141,4 +139,5 @@ tdl.loader.Loader.prototype.finish = function() {
   this.countDown_();
 };
 
-
+return tdl.loader;
+});

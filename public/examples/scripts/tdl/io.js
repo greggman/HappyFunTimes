@@ -33,13 +33,13 @@
 /**
  * @fileoverview This file contains various functions and class for io.
  */
-
-tdl.provide('tdl.io');
+define(['./base-rs'], function(BaseRS) {
 
 /**
  * A Module with various io functions and classes.
  * @namespace
  */
+tdl.provide('tdl.io');
 tdl.io = tdl.io || {};
 
 /**
@@ -141,10 +141,10 @@ tdl.io.LoadInfo.prototype.finish = function() {
  * @return {number} The total number of currently known bytes to be streamed.
  */
 tdl.io.LoadInfo.prototype.getTotalKnownBytesToStreamSoFar = function() {
-  if (!this.streamLength_ && this.request_ && this.hasStatus_) {
-    //
-    //this.streamLength_ = this.request_.streamLength;
-  }
+  //if (!this.streamLength_ && this.request_ && this.hasStatus_) {
+  //  //
+  //  //this.streamLength_ = this.request_.streamLength;
+  //}
   var total = this.streamLength_;
   for (var cc = 0; cc < this.children_.length; ++cc) {
     total += this.children_[cc].getTotalKnownBytesToStreamSoFar();
@@ -437,4 +437,5 @@ tdl.io.sendJSON = function(url, jsonObject, callback) {
   return loadInfo;
 };
 
-
+return tdl.io;
+});

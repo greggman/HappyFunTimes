@@ -33,15 +33,13 @@
 /**
  * @fileoverview This file contains objects to manage models.
  */
-
-tdl.provide('tdl.models');
-
-tdl.require('tdl.buffers');
+define(['./base-rs', './buffers'], function(BaseRS, Buffers) {
 
 /**
  * A module for models.
  * @namespace
  */
+tdl.provide('tdl.models');
 tdl.models = tdl.models || {};
 
 /**
@@ -76,10 +74,10 @@ tdl.models.Model.prototype.setProgram = function(program) {
   this.program = program;
 }
 
-tdl.models.Model.prototype.setBuffer = function(name, array) {
+tdl.models.Model.prototype.setBuffer = function(name, array, opt_newBuffer) {
   var target = (name == 'indices') ? gl.ELEMENT_ARRAY_BUFFER : gl.ARRAY_BUFFER;
   var b = this.buffers[name];
-  if (!b) {
+  if (!b || opt_newBuffer) {
     b = new tdl.buffers.Buffer(array, target);
   } else {
     b.set(array);
@@ -87,9 +85,24 @@ tdl.models.Model.prototype.setBuffer = function(name, array) {
   this.buffers[name] = b;
 };
 
-tdl.models.Model.prototype.setBuffers = function(arrays) {
+tdl.models.Model.prototype.setBuffers = function(arrays, opt_newBuffers) {
+  var that = this;
   for (var name in arrays) {
-    this.setBuffer(name, arrays[name]);
+    this.setBuffer(name, arrays[name], opt_newBuffers);
+  }
+  if (this.buffers.indices) {
+    this.baseBuffer = this.buffers.indices;
+    this.drawFunc = function(totalComponents, startOffset) {
+      gl.drawElements(that.mode, totalComponents, gl.UNSIGNED_SHORT, startOffset);
+    }
+  } else {
+    for (var key in this.buffers) {
+      this.baseBuffer = this.buffers[key];
+      break;
+    }
+    this.drawFunc = function(totalComponents, startOffset) {
+      gl.drawArrays(that.mode, startOffset, totalComponents);
+    }
   }
 };
 
@@ -147,11 +160,31 @@ tdl.models.Model.prototype.drawPrep = function() {
  *     textures to set on this models uniforms.
  */
 tdl.models.Model.prototype.draw = function() {
+  var buffers = this.buffers;
+  // if no indices buffer then assume drawFunc is drawArrays and thus
+  // totalComponents is the number of vertices (not indices).
+  var totalComponents = buffers.indices? buffers.indices.totalComponents(): buffers.position.numElements();
+  var startOffset = 0;
   for (var ii = 0; ii < arguments.length; ++ii) {
-    this.applyUniforms_(arguments[ii]);
+    var arg = arguments[ii];
+    if (typeof arg == 'number') {
+      switch (ii) {
+      case 0:
+        totalComponents = arg;
+        break;
+      case 1:
+        startOffset = arg;
+        break;
+      default:
+        throw 'unvalid argument';
+      }
+    } else {
+      this.applyUniforms_(arg);
+    }
   }
 
-  var buffers = this.buffers;
-  gl.drawElements(
-      this.mode, buffers.indices.totalComponents(), gl.UNSIGNED_SHORT, 0);
+  this.drawFunc(totalComponents, startOffset);
 };
+
+return tdl.models;
+});

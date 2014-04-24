@@ -31,69 +31,58 @@
 
 
 /**
- * @fileoverview This file contains objects to measure frames
- *               per second.
+ * @fileoverview This file contains misc functions to deal with
+ *               fullscreen.
  */
 define(['./base-rs'], function(BaseRS) {
 
 /**
- * A module for fps.
+ * A module for misc.
  * @namespace
  */
-tdl.provide('tdl.fps');
-tdl.fps = tdl.fps || {};
+tdl.provide('tdl.fullscreen');
+tdl.fullscreen = tdl.fullscreen || {};
 
-/**
- * Number of frames to average over for computing FPS.
- * @type {number}
- */
-tdl.fps.NUM_FRAMES_TO_AVERAGE = 16;
-
-/**
- * Measures frames per second.
- * @constructor
- */
-tdl.fps.FPSTimer = function() {
-  // total time spent for last N frames.
-  this.totalTime_ = tdl.fps.NUM_FRAMES_TO_AVERAGE;
-
-  // elapsed time for last N frames.
-  this.timeTable_ = [];
-
-  // where to record next elapsed time.
-  this.timeTableCursor_ = 0;
-
-  // Initialize the FPS elapsed time history table.
-  for (var tt = 0; tt < tdl.fps.NUM_FRAMES_TO_AVERAGE; ++tt) {
-    this.timeTable_[tt] = 1.0;
+tdl.fullscreen.requestFullScreen = function(element) {
+  if (element.requestFullscreen) {
+    element.requestFullscreen();
+  } else if (element.msRequestFullscreen) {
+    element.msRequestFullscreen();
+  } else if (element.webkitRequestFullScreen) {
+    element.webkitRequestFullScreen(Element.ALLOW_KEYBOARD_INPUT);
+  } else if (element.mozRequestFullScreen) {
+    element.mozRequestFullScreen();
   }
 };
 
-/**
- * Updates the fps measurement. You must call this in your
- * render loop.
- *
- * @param {number} elapsedTime The elasped time in seconds
- *     since the last frame.
- */
-tdl.fps.FPSTimer.prototype.update = function(elapsedTime) {
-  // Keep the total time and total active time for the last N frames.
-  this.totalTime_ += elapsedTime - this.timeTable_[this.timeTableCursor_];
-
-  // Save off the elapsed time for this frame so we can subtract it later.
-  this.timeTable_[this.timeTableCursor_] = elapsedTime;
-
-  // Wrap the place to store the next time sample.
-  ++this.timeTableCursor_;
-  if (this.timeTableCursor_ == tdl.fps.NUM_FRAMES_TO_AVERAGE) {
-    this.timeTableCursor_ = 0;
+tdl.fullscreen.cancelFullScreen = function(element) {
+  if (document.exitFullscreen) {
+    document.exitFullscreen();
+  } else if (document.msExitFullscreen) {
+    document.msExitFullscreen();
+  } else if (document.webkitCancelFullScreen) {
+    document.webkitCancelFullScreen();
+  } else if (document.mozCancelFullScreen) {
+    document.mozCancelFullScreen();
   }
-
-  this.instantaneousFPS = Math.floor(1.0 / elapsedTime + 0.5);
-  this.averageFPS = Math.floor(
-      (1.0 / (this.totalTime_ / tdl.fps.NUM_FRAMES_TO_AVERAGE)) + 0.5);
 };
 
-return tdl.fps;
+tdl.fullscreen.onFullScreenChange = function(element, callback) {
+  var isFullScreen = function() {
+    return document.fullscreenElement || document.mozFullScreenElement ||
+           document.webkitFullscreenElement || document.msFullscreenElement ||
+           document.mozFullScreen || document.webkitIsFullScreen;
+  };
+  document.addEventListener('fullscreenchange', function(event) {
+      callback(isFullScreen());
+    });
+  element.addEventListener('webkitfullscreenchange', function(event) {
+      callback(isFullScreen());
+    });
+  document.addEventListener('mozfullscreenchange', function(event) {
+      callback(isFullScreen());
+    });
+};
+
+return tdl.fullscreen;
 });
-

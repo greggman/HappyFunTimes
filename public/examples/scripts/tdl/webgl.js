@@ -29,18 +29,13 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+
 /**
  * @fileoverview This file contains objects to deal with basic webgl stuff.
  */
+define(['./base-rs', './log', './misc'], function(BaseRS, Log, Misc) {
+
 tdl.provide('tdl.webgl');
-
-tdl.require('tdl.log');
-tdl.require('tdl.misc');
-
-/**
- * A module for log.
- * @namespace
- */
 tdl.webgl = tdl.webgl || {};
 
 /**
@@ -145,10 +140,10 @@ tdl.webgl.setupWebGL = function(canvas, opt_attribs, opt_onError) {
  */
 tdl.webgl.create3DContext = function(canvas, opt_attribs) {
   if (opt_attribs === undefined) {
-    opt_attribs = {};
+    opt_attribs = {alpha:false};
     tdl.misc.applyUrlSettings(opt_attribs, 'webgl');
   }
-  var names = ["webgl", "experimental-webgl", "webkit-3d", "moz-webgl"];
+  var names = ["webgl", "experimental-webgl"];
   var context = null;
   for (var ii = 0; ii < names.length; ++ii) {
     try {
@@ -165,6 +160,7 @@ tdl.webgl.create3DContext = function(canvas, opt_attribs) {
     tdl.webgl.makeCurrent(context);
     tdl.webgl.setupCanvas_(canvas);
     context.tdl = {};
+    context.tdl.depthTexture = tdl.webgl.getExtensionWithKnownPrefixes("WEBGL_depth_texture");
 
     // Disallow selection by default. This keeps the cursor from changing to an
     // I-beam when the user clicks and drags.  It's easier on the eyes.
@@ -184,6 +180,35 @@ tdl.webgl.setupCanvas_ = function(canvas) {
   }
 };
 
+/**
+ * Browser prefixes for extensions.
+ * @type {!Array.<string>}
+ */
+tdl.webgl.browserPrefixes_ = [
+  "",
+  "MOZ_",
+  "OP_",
+  "WEBKIT_"
+];
+
+/**
+ * Given an extension name like WEBGL_compressed_texture_s3tc
+ * returns the supported version extension, like
+ * WEBKIT_WEBGL_compressed_teture_s3tc
+ * @param {string} name Name of extension to look for
+ * @return {WebGLExtension} The extension or undefined if not
+ *     found.
+ */
+tdl.webgl.getExtensionWithKnownPrefixes = function(name) {
+  for (var ii = 0; ii < tdl.webgl.browserPrefixes_.length; ++ii) {
+    var prefixedName = tdl.webgl.browserPrefixes_[ii] + name;
+    var ext = gl.getExtension(prefixedName);
+    if (ext) {
+      return ext;
+    }
+  }
+};
+
 tdl.webgl.runHandlers_ = function(handlers) {
   //tdl.log("run handlers: " + handlers.length);
   var handlersCopy = handlers.slice();
@@ -193,7 +218,8 @@ tdl.webgl.runHandlers_ = function(handlers) {
   }
 };
 
-tdl.webgl.registerContextLostHandler = function(handler, opt_sysHandler) {
+tdl.webgl.registerContextLostHandler = function(
+    canvas, handler, opt_sysHandler) { 
   tdl.webgl.setupCanvas_(canvas);
   if (!canvas.tdl.contextLostHandlers) {
     canvas.tdl.contextLostHandlers = [[],[]];
@@ -202,7 +228,8 @@ tdl.webgl.registerContextLostHandler = function(handler, opt_sysHandler) {
   a.push(handler);
 };
 
-tdl.webgl.registerContextRestoredHandler = function(handler, opt_sysHandler) {
+tdl.webgl.registerContextRestoredHandler = function(
+    canvas, handler, opt_sysHandler) {
   tdl.webgl.setupCanvas_(canvas);
   if (!canvas.tdl.contextRestoredHandlers) {
     canvas.tdl.contextRestoredHandlers = [[],[]];
@@ -480,7 +507,7 @@ tdl.webgl.makeDebugContext = function(ctx, opt_onErrorFunc, opt_onFunc) {
     if (typeof ctx[propertyName] == 'function') {
        wrapper[propertyName] = makeErrorWrapper(ctx, propertyName);
      } else {
-       wrapper[propertyName] = makePropertyWrappe(wrapper, ctx, propertyName);
+       makePropertyWrapper(wrapper, ctx, propertyName);
      }
   }
 
@@ -570,5 +597,5 @@ tdl.webgl.cancelRequestAnimationFrame = function(requestId) {
   tdl.webgl.cancelRequestAnimationFrameImpl_(requestId);
 };
 
-
-
+return tdl.webgl;
+});

@@ -30,19 +30,31 @@
  */
 "use strict";
 
-tdl.require('tdl.buffers');
-tdl.require('tdl.fast');
-tdl.require('tdl.framebuffers');
-tdl.require('tdl.log');
-tdl.require('tdl.math');
-tdl.require('tdl.models');
-tdl.require('tdl.particles');
-tdl.require('tdl.primitives');
-tdl.require('tdl.programs');
-tdl.require('tdl.textures');
-tdl.require('tdl.webgl');
-
-define(function() {
+define(
+    [
+      '../../scripts/tdl/buffers',
+      '../../scripts/tdl/fast',
+      '../../scripts/tdl/framebuffers',
+      '../../scripts/tdl/log',
+      '../../scripts/tdl/math',
+      '../../scripts/tdl/models',
+      '../../scripts/tdl/particles',
+      '../../scripts/tdl/primitives',
+      '../../scripts/tdl/programs',
+      '../../scripts/tdl/textures',
+      '../../scripts/tdl/webgl',
+    ], function(
+      Buffers,
+      Fast,
+      Framebuffers,
+      Log,
+      Maths,
+      Models,
+      Particles,
+      Primitives,
+      Programs,
+      Textures,
+      WebGL) {
 
   var WebGLRenderer = function(services, canvas) {
     var math = tdl.math;

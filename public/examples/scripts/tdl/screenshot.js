@@ -33,11 +33,10 @@
 /**
  * @fileoverview This file contains various functions for taking a screenshot
  */
+define(['./base-rs', './io'], function(BaseRS, IO) {
 
 tdl.provide('tdl.screenshot');
-
-tdl.require('tdl.io');
-tdl.require('tdl.log');
+tdl.screenshot = tdl.screenshot || {};
 
 /**
  * takes a screenshot of a canvas. Sends it to the server to be saved.
@@ -49,5 +48,7 @@ tdl.screenshot.takeScreenshot = function(canvas) {
       function() {});
 };
 
+return tdl.screenshot;
+});
 
 

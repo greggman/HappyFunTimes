@@ -34,17 +34,13 @@
  * @fileoverview This file contains various functions and classes for rendering
  * gpu based particles.
  */
-
-tdl.provide('tdl.particles');
-
-tdl.require('tdl.math');
-
-tdl.require('tdl.shader');
+define(['./base-rs', './math', './shader'], function(BaseRS, Maths, Shader) {
 
 /**
  * A Module with various io functions and classes.
  * @namespace
  */
+tdl.provide('tdl.particles');
 tdl.particles = tdl.particles || {};
 
 /**
@@ -228,7 +224,7 @@ tdl.particles.SHADER_STRINGS = [
 
   // Fragment shader used by both 2D and 3D vertex shaders
   '#ifdef GL_ES\n' +
-  'precision highp float;\n' +
+  'precision mediump float;\n' +
   '#endif\n' +
   'uniform sampler2D rampSampler;\n' +
   'uniform sampler2D colorSampler;\n' +
@@ -1337,3 +1333,5 @@ tdl.particles.createOneShotManager = function(emitter, numOneshots) {
   return new tdl.particles.OneShotManager(emitter, numOneshots);
 };
 
+return tdl.particles;
+});

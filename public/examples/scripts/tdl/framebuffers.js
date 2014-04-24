@@ -34,15 +34,13 @@
  * @fileoverview This file contains objects to manage
  *               framebuffers.
  */
-
-tdl.provide('tdl.framebuffers');
-
-tdl.require('tdl.textures');
+define(['./base-rs', './textures'], function(BaseRS, Textures) {
 
 /**
  * A module for textures.
  * @namespace
  */
+tdl.provide('tdl.framebuffers');
 tdl.framebuffers = tdl.framebuffers || {};
 
 tdl.framebuffers.createFramebuffer = function(width, height, opt_depth) {
@@ -112,14 +110,6 @@ tdl.framebuffers.Framebuffer.prototype.unbind = function() {
 tdl.framebuffers.Framebuffer.prototype.recoverFromLostContext = function() {
   var tex = new tdl.textures.SolidTexture([0,0,0,0]);
   this.initializeTexture(tex);
-  var db = null;
-  if (this.depth) {
-    db = gl.createRenderbuffer();
-    gl.bindRenderbuffer(gl.RENDERBUFFER, db);
-    gl.renderbufferStorage(
-        gl.RENDERBUFFER, gl.DEPTH_COMPONENT16, this.width, this.height);
-    gl.bindRenderbuffer(gl.RENDERBUFFER, null);
-  }
 
   var fb = gl.createFramebuffer();
   gl.bindFramebuffer(gl.FRAMEBUFFER, fb);
@@ -129,16 +119,36 @@ tdl.framebuffers.Framebuffer.prototype.recoverFromLostContext = function() {
       gl.TEXTURE_2D,
       tex.texture,
       0);
+
   if (this.depth) {
-    gl.framebufferRenderbuffer(
-        gl.FRAMEBUFFER,
-        gl.DEPTH_ATTACHMENT,
-        gl.RENDERBUFFER,
-        db);
+    if (gl.tdl.depthTexture) {
+      var dt = new tdl.textures.DepthTexture(this.width, this.height);
+      gl.framebufferTexture2D(
+          gl.FRAMEBUFFER,
+          gl.DEPTH_ATTACHMENT,
+          gl.TEXTURE_2D,
+          dt.texture,
+          0);
+      this.depthTexture = dt;
+    } else {
+      var db = gl.createRenderbuffer();
+      gl.bindRenderbuffer(gl.RENDERBUFFER, db);
+      gl.renderbufferStorage(
+          gl.RENDERBUFFER, gl.DEPTH_COMPONENT16, this.width, this.height);
+      gl.framebufferRenderbuffer(
+          gl.FRAMEBUFFER,
+          gl.DEPTH_ATTACHMENT,
+          gl.RENDERBUFFER,
+          db);
+      gl.bindRenderbuffer(gl.RENDERBUFFER, null);
+      this.depthRenderbuffer = db;
+    }
   }
+
   var status = gl.checkFramebufferStatus(gl.FRAMEBUFFER);
-  if (status != gl.FRAMEBUFFER_COMPLETE) {
-    throw("gl.checkFramebufferStatus() returned " + WebGLDebugUtils.glEnumToString(status));
+  if (status != gl.FRAMEBUFFER_COMPLETE && !gl.isContextLost()) {
+    throw("gl.checkFramebufferStatus() returned " +
+          tdl.webgl.glEnumToString(status));
   }
   this.framebuffer = fb;
   this.texture = tex;
@@ -261,3 +271,6 @@ tdl.framebuffers.Float32Framebuffer.prototype.initializeTexture = function(tex) 
                 gl.FLOAT,          // type
                 null);             // data
 };
+
+return tdl.framebuffers;
+});

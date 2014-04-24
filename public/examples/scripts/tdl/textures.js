@@ -33,15 +33,13 @@
 /**
  * @fileoverview This file contains objects to manage textures.
  */
-
-tdl.provide('tdl.textures');
-
-tdl.require('tdl.webgl');
+define(['./base-rs', './webgl'], function(BaseRS, WebGL) {
 
 /**
  * A module for textures.
  * @namespace
  */
+tdl.provide('tdl.textures');
 tdl.textures = tdl.textures || {};
 
 /**
@@ -55,9 +53,6 @@ tdl.textures = tdl.textures || {};
  * @param {function} opt_callback Function to execute when texture is loaded.
  */
 tdl.textures.loadTexture = function(arg, opt_flipY, opt_callback) {
-  if (opt_callback) {
-    alert('callback!');
-  }
   var id;
   if (typeof arg == 'string') {
     td = arg;
@@ -116,7 +111,7 @@ tdl.textures.init_ = function(gl) {
     gl.tdl.textures = { };
     gl.tdl.textures.loadingImages = [];
     tdl.webgl.registerContextLostHandler(
-        tdl.textures.handleContextLost_, true);
+        gl.canvas, tdl.textures.handleContextLost_, true);
   }
   if (!gl.tdl.textures.maxTextureSize) {
     gl.tdl.textures.maxTextureSize = gl.getParameter(gl.MAX_TEXTURE_SIZE);
@@ -190,6 +185,45 @@ tdl.textures.SolidTexture.prototype.bindToUnit = function(unit) {
 };
 
 /**
+ * A depth texture.
+ * @constructor
+ * @param {number} width
+ * @param {number} height
+ */
+tdl.textures.DepthTexture = function(width, height) {
+  if (!gl.tdl.depthTexture) {
+    throw("depth textures not supported");
+  }
+  tdl.textures.Texture.call(this, gl.TEXTURE_2D);
+  this.width = width;
+  this.height = height;
+  this.uploadTexture();
+};
+
+tdl.base.inherit(tdl.textures.DepthTexture, tdl.textures.Texture);
+
+tdl.textures.DepthTexture.prototype.uploadTexture = function() {
+  gl.bindTexture(gl.TEXTURE_2D, this.texture);
+  gl.texImage2D(
+    gl.TEXTURE_2D, 0, gl.DEPTH_COMPONENT, this.width, this.height, 0,
+    gl.DEPTH_COMPONENT, gl.UNSIGNED_INT, null);
+  this.setParameter(gl.TEXTURE_MIN_FILTER, gl.NEAREST);
+  this.setParameter(gl.TEXTURE_MAG_FILTER, gl.NEAREST);
+  this.setParameter(gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+  this.setParameter(gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+};
+
+tdl.textures.DepthTexture.prototype.recoverFromLostContext = function() {
+  tdl.textures.Texture.recoverFromLostContext.call(this);
+  this.uploadTexture();
+};
+
+tdl.textures.DepthTexture.prototype.bindToUnit = function(unit) {
+  gl.activeTexture(gl.TEXTURE0 + unit);
+  gl.bindTexture(gl.TEXTURE_2D, this.texture);
+};
+
+/**
  * A color from an array of values texture.
  * @constructor
  * @param {!{width: number, height: number: pixels:
@@ -232,9 +266,6 @@ tdl.textures.ColorTexture.prototype.bindToUnit = function(unit) {
  * @param {function} opt_callback Function to execute when texture is loaded.
  */
 tdl.textures.Texture2D = function(url, opt_flipY, opt_callback) {
-  if (opt_callback) {
-    alert('callback');
-  }
   tdl.textures.Texture.call(this, gl.TEXTURE_2D);
   this.flipY = opt_flipY || false;
   var that = this;
@@ -294,7 +325,7 @@ tdl.textures.Texture2D.prototype.setTexture = function(element) {
   gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, element);
   if (tdl.textures.isPowerOf2(element.width) &&
       tdl.textures.isPowerOf2(element.height)) {
-    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR_MIPMAP_LINEAR);
+    this.setParameter(gl.TEXTURE_MIN_FILTER, gl.LINEAR_MIPMAP_LINEAR);
     gl.generateMipmap(gl.TEXTURE_2D);
   } else {
     this.setParameter(gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
@@ -377,8 +408,8 @@ tdl.textures.CubeMap = function(urls) {
       gl.TEXTURE_CUBE_MAP_POSITIVE_Z,
       gl.TEXTURE_CUBE_MAP_NEGATIVE_Z];
     tdl.textures.CubeMap.offsets = [
-      [0, 1],
       [2, 1],
+      [0, 1],
       [1, 0],
       [1, 2],
       [1, 1],
@@ -547,5 +578,6 @@ tdl.textures.CubeMap.prototype.bindToUnit = function(unit) {
   gl.bindTexture(gl.TEXTURE_CUBE_MAP, this.texture);
 };
 
-
+return tdl.textures;
+});
 

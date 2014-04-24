@@ -34,13 +34,13 @@
  * @fileoverview This file contains objects to deal with WebGL
  *               buffers.
  */
-
-tdl.provide('tdl.buffers');
+define(['./base-rs'], function(BaseRS) {
 
 /**
  * A module for buffers.
  * @namespace
  */
+tdl.provide('tdl.buffers');
 tdl.buffers = tdl.buffers || {};
 
 tdl.buffers.Buffer = function(array, opt_target) {
@@ -72,9 +72,14 @@ tdl.buffers.Buffer = function(array, opt_target) {
   }
 };
 
-tdl.buffers.Buffer.prototype.set = function(array) {
+tdl.buffers.Buffer.prototype.set = function(array, opt_usage) {
   gl.bindBuffer(this.target, this.buf);
-  gl.bufferData(this.target, array.buffer, gl.STATIC_DRAW);
+  gl.bufferData(this.target, array.buffer, opt_usage || gl.STATIC_DRAW);
+}
+
+tdl.buffers.Buffer.prototype.setRange = function(array, offset) {
+  gl.bindBuffer(this.target, this.buf);
+  gl.bufferSubData(this.target, offset, array);
 }
 
 tdl.buffers.Buffer.prototype.type = function() {
@@ -109,4 +114,5 @@ tdl.buffers.Buffer.prototype.offset = function() {
   return 0;
 };
 
-
+return tdl.buffers;
+});

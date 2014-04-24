@@ -34,13 +34,13 @@
  * @fileoverview This file contains a class which assists with the
  * loading of GLSL shaders.
  */
-
-tdl.provide('tdl.shader');
+define(['./base-rs'], function(BaseRS) {
 
 /**
  * A module for shaders.
  * @namespace
  */
+tdl.provide('tdl.shader');
 tdl.shader = tdl.shader || {};
 
 /**
@@ -179,3 +179,6 @@ tdl.shader.Shader.prototype.getAttribute = function(name) {
 tdl.shader.Shader.prototype.getUniform = function(name) {
   return this.gl.getUniformLocation(this.program, name);
 }
+
+return tdl.shader;
+});
