@@ -105,10 +105,12 @@ define(function() {
     for (var ii = 0; ii < document.styleSheets.length; ++ii) {
       var styleSheet = document.styleSheets[ii];
       var rules = styleSheet.cssRules || styleSheet.rules;
-      for (var rr = 0; rr < rules.length; ++rr) {
-        var rule = rules[rr];
-        if (rule.selectorText == selector) {
-          return rule;
+      if (rules) {
+        for (var rr = 0; rr < rules.length; ++rr) {
+          var rule = rules[rr];
+          if (rule.selectorText == selector) {
+            return rule;
+          }
         }
       }
     }
@@ -140,6 +142,7 @@ define(function() {
         dst[name] = value;
       }
     }
+    return dst;
   };
 
   /**
