@@ -94,10 +94,11 @@ define([
       globals.elapsedTime = clock.getElapsedTime();
       ++globals.frameCount;
 
-      fn();
+      var result = fn();
 
       stats.end();
-      requestId = requestAnimationFrame(loop);
+
+      requestId = result ? undefined : requestAnimationFrame(loop);
     };
 
     var start = function() {
@@ -113,9 +114,27 @@ define([
       }
     };
 
+    // The only reason this is here is because when you
+    // open devtools in Chrome the game blurs. As the
+    // devtools is expanded and contracted, if the game
+    // is not running it won't respond to being resized.
+    var updateOnce = function() {
+      if (requestId === undefined) {
+        start();
+        stop();
+      }
+    };
+
+    // This is here because running a game at 60fps
+    // in my MacBook Pro switches the discrete GPU
+    // and uses a ton of CPU as well, eating up my
+    // battery. So, if I'm running locally I make
+    // the game pause on blur which means effectively
+    // it will stop anytime I switch back to my editor.
     if (!globals.haveServer || globals.pauseOnBlur) {
       window.addEventListener('blur', stop, false);
       window.addEventListener('focus', start, false);
+      window.addEventListener('resize', updateOnce, false);
     }
 
     start();
