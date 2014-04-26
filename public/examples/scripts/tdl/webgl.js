@@ -545,7 +545,6 @@ tdl.webgl.requestAnimationFrame = function(callback, element) {
       for (var jj = 0; jj < functionNames.length; ++jj) {
         var functionName = functionNames[jj];
         if (window[functionName]) {
-          tdl.log("using ", functionName);
           return function(name) {
             return function(callback, element) {
               return window[name].call(window, callback, element);
@@ -553,7 +552,6 @@ tdl.webgl.requestAnimationFrame = function(callback, element) {
           }(functionName);
         }
       }
-      tdl.log("using window.setTimeout");
       return function(callback, element) {
            return window.setTimeout(callback, 1000 / 70);
         };

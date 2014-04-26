@@ -146,11 +146,29 @@ tdl.textures.Texture.prototype.setParameter = function(pname, value) {
   gl.texParameteri(this.target, pname, value);
 };
 
+tdl.textures.Texture.prototype.setParameterIfNotSet_ = function(pname, value) {
+  if (!this.params[pname]) {
+    this.setParameter(pname, value);
+  }
+};
+
 tdl.textures.Texture.prototype.recoverFromLostContext = function() {
   this.texture = gl.createTexture();
   gl.bindTexture(this.target, this.texture);
   for (var pname in this.params) {
     gl.texParameteri(this.target, pname, this.params[pname]);
+  }
+};
+
+tdl.textures.Texture.prototype.setFilteringBasedOnDimensions = function(width, height) {
+  if (tdl.textures.isPowerOf2(width) &&
+      tdl.textures.isPowerOf2(height)) {
+    this.setParameterIfNotSet_(gl.TEXTURE_MIN_FILTER, gl.LINEAR_MIPMAP_LINEAR);
+    gl.generateMipmap(this.target);
+  } else {
+    this.setParameter(gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+    this.setParameter(gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+    this.setParameterIfNotSet_(gl.TEXTURE_MIN_FILTER, gl.LINEAR);
   }
 };
 
@@ -236,7 +254,7 @@ tdl.textures.ColorTexture = function(data, opt_format, opt_type) {
   if (data.pixels instanceof Array) {
     data.pixels = new Uint8Array(data.pixels);
   }
-  this.data   = data;
+  this.data = data;
   this.uploadTexture();
 };
 
@@ -248,6 +266,7 @@ tdl.textures.ColorTexture.prototype.uploadTexture = function() {
   gl.texImage2D(
     gl.TEXTURE_2D, 0, this.format, this.data.width, this.data.height,
     0, this.format, this.type, this.data.pixels);
+  this.setFilteringBasedOnDimensions(this.data.width, this.data.height);
 };
 
 tdl.textures.ColorTexture.prototype.recoverFromLostContext = function() {
@@ -308,7 +327,6 @@ tdl.textures.isPowerOf2 = function(value) {
 
 tdl.textures.Texture2D.prototype.uploadTexture = function() {
   gl.bindTexture(gl.TEXTURE_2D, this.texture);
-  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
   if (this.loaded) {
     gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, this.flipY);
     this.setTexture(this.img);
@@ -323,15 +341,7 @@ tdl.textures.Texture2D.prototype.setTexture = function(element) {
   // TODO(gman): use texSubImage2D if the size is the same.
   gl.bindTexture(gl.TEXTURE_2D, this.texture);
   gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, element);
-  if (tdl.textures.isPowerOf2(element.width) &&
-      tdl.textures.isPowerOf2(element.height)) {
-    this.setParameter(gl.TEXTURE_MIN_FILTER, gl.LINEAR_MIPMAP_LINEAR);
-    gl.generateMipmap(gl.TEXTURE_2D);
-  } else {
-    this.setParameter(gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
-    this.setParameter(gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
-    this.setParameter(gl.TEXTURE_MIN_FILTER, gl.LINEAR);
-  }
+  this.setFilteringBasedOnDimensions(element, element.height);
 };
 
 tdl.textures.Texture2D.prototype.updateTexture = function() {
@@ -540,9 +550,9 @@ tdl.textures.CubeMap.prototype.uploadTextures = function() {
   }
   if (genMips) {
     gl.generateMipmap(gl.TEXTURE_CUBE_MAP);
-    this.setParameter(gl.TEXTURE_MIN_FILTER, gl.LINEAR_MIPMAP_LINEAR);
+    this.setParameterIfNotSet_(gl.TEXTURE_MIN_FILTER, gl.LINEAR_MIPMAP_LINEAR);
   } else {
-    this.setParameter(gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+    this.setParameterIfNotSet_(gl.TEXTURE_MIN_FILTER, gl.LINEAR);
   }
 };
 
