@@ -41,35 +41,74 @@
   <meta name="MobileOptimized" content="320">
   <meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0, maximum-scale=1, user-scalable=no, minimal-ui">
   <meta name="format-detection" content="telephone=no" />
-  <title>HappyFunTimes Example Games</title>
-  <link rel="stylesheet" href="css/menu.css">
+  <title>BoomBoom Controls</title>
+  <link rel="stylesheet" href="../css/samples.css">
+  <link rel="stylesheet" href="css/boomboom.css">
+<script data-main="scripts/boomboomcontroller.js" src="../scripts/require.js"></script>
+<script>
+requirejs.config({
+  shim: {
+        '../../scripts/hand-1.3.7': {
+            //These script dependencies should be loaded before loading
+            //hand.js
+            deps: [],
+            //Once loaded, use the global 'HANDJS' as the
+            //module value.
+            exports: 'HANDJ',
+        },
+    },
+});
+</script>
 </head>
 <body>
-<h1>HappyFunTimes</h1>
-<div id="gamemenu" style="display: none;">
-<div class="game" id="boomboom"><a href="examples/boomboom/index.html"><div>BoomBoom</div><img src="examples/boomboom/boomboom-screenshot.png" /></a></div>
+<div id="hft-container">
+  <div id="hft-header">
+    <form id="hft-nameform">
+      <input type="text" id="hft-name" autocorrect="off" spellcheck="false" />
+    </form>
+    <div id="hft-menu"><img src="../assets/gear-icon.svg"></div>
+  </div>
+  <div id="hft-content">
+    <!-- this is inserted into index.html by build.py -->
+    <div id="buttons" class="hft-fullsize">
+      <div id="dpadleft"></div>
+      <canvas id="avatar"></canvas>
+      <div id="abutton" class="button">&#x2707;</div>
+    </div>
+    <div id="hft-portrait" class="hft-fullsize hft-fullcenter">
+      <div class="hft-instruction">
+        Turn the Screen
+      </div>
+      <div class="hft-xlarge">
+        &#x21ba;
+      </div>
+    </div>
 
-<div class="game" id="orient"><a href="examples/deviceorientation/index.html"><div>DeviceOrientation</div><img src="examples/deviceorientation/deviceorientation-screenshot.png" /></a></div>
 
-<div class="game" id="jamjam"><a href="examples/jamjam/index.html"><div>JamJam</div><img src="examples/jamjam/jamjam-screenshot.png" /></a></div>
-
-<div class="game" id="jumpjump"><a href="examples/jumpjump/index.html"><div>JumpJump</div><img src="examples/jumpjump/jumpjump-screenshot.png" /></a></div>
-
-<div class="game" id="powpow"><a href="examples/powpow/index.html"><div>PowPow</div><img src="examples/powpow/powpow-screenshot.png" /></a></div>
-
-<div class="game" id="shootshoot"><a href="examples/shootshoot/index.html"><div>ShootShoot</div><img src="examples/shootshoot/shootshoot-screenshot.png" /></a></div>
-
-<div class="game" id="unitycharacterexample"><a href="examples/unitycharacterexample/index.html"><div>UnityCharacterExample</div><img src="examples/unitycharacterexample/unitycharacterexample-screenshot.png" /></a></div>
-
-<div class="game" id="simple"><a href="examples/simple/index.html"><div>Simple</div><img src="examples/simple/simple-screenshot.png" /></a></div>
-
-<div class="game" id="supersimple"><a href="examples/supersimple/index.html"><div>SuperSimple</div><img src="examples/supersimple/supersimple-screenshot.png" /></a></div>
-
-<div class="game" id="clocksync"><a href="examples/clocksync/index.html"><div>ClockSync</div><img src="examples/clocksync/clocksync-screenshot.png" /></a></div>
-
-<div id="nogames"><div>No games currently running</div></div>
+    <div id="hft-disconnected">
+      <div class="hft-fullcenter">
+        <div class="hft-instruction">Disconnected</div>
+        <!--
+        <div class="hft-menubutton" id="hft-reload"><div>Restart</div></div>
+        <div class="hft-menubutton" id="hft-mainmenu"><div>Main Menu</div></div>
+        -->
+      </div>
+    </div>
+    <div id="hft-debug">
+      <pre id="hft-status">d</pre>
+      <div id="hft-console"></div>
+    </div>
+  </div>
+</div>
+<div id="hft-settings">
+  <div class="hft-fullcenter">
+    <div id="hft-setname" class="hft-menubutton"><div>Set Name</div></div>
+    <div id="hft-restart" class="hft-menubutton"><div>Restart</div></div>
+    <div id="hft-exit"    class="hft-menubutton"><div>Main Menu</div></div>
+    <div id="hft-back"    class="hft-menubutton"><div>Back</div></div>
+  </div>
 </div>
 </body>
-<script data-main="showgames.js" src="examples/scripts/require.js"></script>
 </html>
+
 
