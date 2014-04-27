@@ -330,6 +330,16 @@ define(['../../scripts/Misc', '../../scripts/tilemap'], function(Misc, TileMap) 
     return tileInfoMap[tileId];
   };
 
+  // This needs to go. We should be passing in the offset
+  // when drawing the level not querying it when using it
+  // else where.
+  LevelManager.prototype.getDrawOffset = function(obj) {
+    var renderer = this.services.renderer;
+    var opt = this.layer0.tileDrawOptions;
+    obj.x = Math.floor((renderer.canvas.width  - opt.width ) / 2);
+    obj.y = Math.floor((renderer.canvas.height - opt.height) / 2);
+  };
+
   LevelManager.prototype.draw = function(renderer) {
     this.layer0.draw(renderer);
     this.layer1.draw(renderer);

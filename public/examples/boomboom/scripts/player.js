@@ -37,6 +37,7 @@ define([
     '../../scripts/tdl/models',
     '../../scripts/tdl/primitives',
     '../../scripts/tdl/programs',
+    '../../scripts/gamebutton',
     '../../scripts/imageprocess',
     '../../scripts/misc',
   ], function(
@@ -46,8 +47,11 @@ define([
     Models,
     Primitives,
     Programs,
+    GameButton,
     ImageProcess,
     Misc) {
+
+  var m4 = Fast.matrix4;
 
   var availableColors = [];
   var nameFontOptions = {
@@ -56,65 +60,146 @@ define([
     fillStyle: "black",
   };
 
+
+  var s_playerVertexShader = [
+    "attribute vec4 position;                  ",
+    "attribute vec2 texcoord;                  ",
+    "                                          ",
+    "uniform mat4 u_matrix;                    ",
+    "                                          ",
+    "varying vec2 v_texcoord;                  ",
+    "                                          ",
+    "void main() {                             ",
+    "  gl_Position = u_matrix * position;      ",
+    "  v_texcoord = texcoord;                  ",
+    "}                                         ",
+  ].join("\n");
+
+  var s_playerFragmentShader = [
+    "precision mediump float;                                                          ",
+    "                                                                                  ",
+    "uniform sampler2D u_texture;                                                      ",
+    "uniform vec2 u_adjustRange;                                                       ",
+    "uniform vec3 u_hsvAdjust;                                                         ",
+    "                                                                                  ",
+    "varying vec2 v_texcoord;                                                          ",
+    "                                                                                  ",
+    "vec3 rgb2hsv(vec3 c) {                                                            ",
+    "  vec4 K = vec4(0.0, -1.0 / 3.0, 2.0 / 3.0, -1.0);                                ",
+    "  vec4 p = mix(vec4(c.bg, K.wz), vec4(c.gb, K.xy), step(c.b, c.g));               ",
+    "  vec4 q = mix(vec4(p.xyw, c.r), vec4(c.r, p.yzx), step(p.x, c.r));               ",
+    "                                                                                  ",
+    "  float d = q.x - min(q.w, q.y);                                                  ",
+    "  float e = 1.0e-10;                                                              ",
+    "  return vec3(abs(q.z + (q.w - q.y) / (6.0 * d + e)), d / (q.x + e), q.x);        ",
+    "}                                                                                 ",
+    "                                                                                  ",
+    "vec3 hsv2rgb(vec3 c) {                                                            ",
+    "  c = vec3(c.x, clamp(c.yz, 0.0, 1.0));                                           ",
+    "  vec4 K = vec4(1.0, 2.0 / 3.0, 1.0 / 3.0, 3.0);                                  ",
+    "  vec3 p = abs(fract(c.xxx + K.xyz) * 6.0 - K.www);                               ",
+    "  return c.z * mix(K.xxx, clamp(p - K.xxx, 0.0, 1.0), c.y);                       ",
+    "}                                                                                 ",
+    "                                                                                  ",
+    "void main() {                                                                     ",
+    "  vec4 color = texture2D(u_texture, v_texcoord);                                  ",
+    "  if (color.a < 0.1) {                                                            ",
+    "    discard;                                                                      ",
+    "  }                                                                               ",
+    "  vec3 hsv = rgb2hsv(color.rgb);                                                  ",
+    "  float affectMult = step(u_adjustRange.x, hsv.r) * step(hsv.r, u_adjustRange.y); ",
+    "  vec3 rgb = hsv2rgb(hsv + u_hsvAdjust * affectMult);                             ",
+    "  gl_FragColor = vec4(rgb, color.a);                                              ",
+    "}                                                                                 ",
+  ].join("\n");
+
   var s_playerModel;
 
   var makePlayerModel = function() {
+    if (s_playerModel) {
+      return;
+    }
+
     var arrays = {
       position: new Primitives.AttribBuffer(2, [
-          0,  15,
-         15, -15,
-          0, -10,
-        -15, -15
+          0,  0,
+          1,  0,
+          0,  1,
+          1,  1,
+      ]),
+      texcoord: new Primitives.AttribBuffer(2, [
+          0,  0,
+          1,  0,
+          0,  1,
+          1,  1,
       ]),
       indices: new Primitives.AttribBuffer(3, [
-        0, 1, 2, 0, 2, 3
+          0, 1, 2,
+          2, 1, 3,
       ], 'Uint16Array')
     }
     var textures = {
     };
-    var program = Programs.loadProgramFromScriptTags(
-        "screenVertexShader", "screenFragmentShader");
-    return new Models.Model(program, arrays, textures);
+    var program = new Programs.Program(
+        s_playerVertexShader, s_playerFragmentShader);
+    s_playerModel = new Models.Model(program, arrays, textures);
   };
 
   /**
-   * Player represnt a player in the game.
+   * Player represents a player in the game.
    * @constructor
    */
   var Player = (function() {
-    return function(services, x, y, width, height, direction, name, netPlayer) {
+    return function(services, position, name, netPlayer) {
       this.services = services;
       this.renderer = services.renderer;
+
+      // add the button before the player so it will get
+      // processed first.
+      this.abutton = new GameButton(services.entitySystem);
 
       services.entitySystem.addEntity(this);
       services.drawSystem.addEntity(this);
       this.netPlayer = netPlayer;
-      this.position = [x, y];
-      this.velocity = [0, 0];
-      this.acceleration = [0, 0];
-      if (availableColors.length == 0) {
-        var colors = services.colors;
-        for (var ii = 0; ii < colors.length; ++ii) {
-          availableColors.push(colors[ii]);
-        }
-      }
-      this.color = availableColors[Math.floor(Math.random() * availableColors.length)];
-window.p = this;
-      netPlayer.sendCmd('setColor', this.color);
-      availableColors.splice(this.color, 1);
+      this.position = position;
+
+      makePlayerModel();
+
+      var images = this.services.images;
+      this.matrix = new Float32Array(16);
+      m4.identity(this.matrix);
+      this.uniforms = {
+        u_matrix: this.matrix,
+        u_adjustRange: [0, 1],
+        u_hsvAdjust: [0, 0, 0],
+      };
+
+      this.textures = {
+        u_texture: images.avatar[0].avatarStandU,
+      };
+
+      //if (availableColors.length == 0) {
+      //  var colors = services.colors;
+      //  for (var ii = 0; ii < colors.length; ++ii) {
+      //    availableColors.push(colors[ii]);
+      //  }
+      //}
+
+      //this.color = availableColors[Math.floor(Math.random() * availableColors.length)];
+      //netPlayer.sendCmd('setColor', this.color);
+      //availableColors.splice(this.color, 1);
+
       this.animTimer = 0;
-      this.width = width;
-      this.height = height;
 
       netPlayer.addEventListener('disconnect', Player.prototype.handleDisconnect.bind(this));
-      netPlayer.addEventListener('move', Player.prototype.handleMoveMsg.bind(this));
-      netPlayer.addEventListener('jump', Player.prototype.handleJumpMsg.bind(this));
+      netPlayer.addEventListener('pad', Player.prototype.handlePadMsg.bind(this));
+      netPlayer.addEventListener('abutton', Player.prototype.handleAButtonMsg.bind(this));
       netPlayer.addEventListener('setName', Player.prototype.handleNameMsg.bind(this));
       netPlayer.addEventListener('busy', Player.prototype.handleBusyMsg.bind(this));
 
       this.setName(name);
-      this.direction = 0;         // direction player is pushing (-1, 0, 1)
-      this.facing = direction;    // direction player is facing (-1, 1)
+      this.direction = 6;            // direction player is pushing (-1, 0, 1)
+      this.facing = this.direction;  // direction player is facing (-1, 1)
 
       this.setState('waiting');
     };
@@ -140,6 +225,7 @@ window.p = this;
     this.services.entitySystem.removeEntity(this);
     this.services.drawSystem.removeEntity(this);
     this.services.playerManager.removePlayer(this);
+    this.abutton.destroy();
     availableColors.push(this.color);
   };
 
@@ -151,18 +237,15 @@ window.p = this;
     // We ignore this message
   };
 
-  Player.prototype.handleMoveMsg = function(msg) {
+  Player.prototype.handlePadMsg = function(msg) {
     this.direction = msg.dir;
     if (this.direction) {
       this.facing = this.direction;
     }
   };
 
-  Player.prototype.handleJumpMsg = function(msg) {
-    this.jump = msg.jump;
-    if (this.jump == 0) {
-      this.jumpTimer = 0;
-    }
+  Player.prototype.handleAButtonMsg = function(msg) {
+    this.abutton.setState(msg.pressed);
   };
 
   Player.prototype.handleNameMsg = function(msg) {
@@ -180,11 +263,11 @@ window.p = this;
   };
 
   // This state is when you're waiting to join a game.
-  Player.prototype.init_wait = function() {
+  Player.prototype.init_waiting = function() {
     this.netPlayer.sendCmd('wait', {});
   };
 
-  Player.prototype.state_wait = function() {
+  Player.prototype.state_waiting = function() {
   };
 
   Player.prototype.init_idle = function() {
@@ -207,6 +290,11 @@ window.p = this;
   Player.prototype.draw = function(renderer) {
     var globals = this.services.globals;
     var images = this.services.images;
+    var off = {};
+    this.services.levelManager.getDrawOffset(off);
+
+    s_playerModel.drawPrep();
+    s_playerModel.draw(this.uniforms, this.textures);
   };
 
   return Player;

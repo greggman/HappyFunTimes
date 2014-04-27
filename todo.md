@@ -1,3 +1,8 @@
+*   refactor boomboom (and jumpjump?) to make the rendering forward driven.
+
+    For example in boobboom the layers choose their own offset.
+    where to draw. Rather that should be passed down.
+
 *   it might be a FUCK LOAD easier to make the controllers using canvas instead of HTML.
 
     no fighting where where you want controls to appear, no trying to center a character

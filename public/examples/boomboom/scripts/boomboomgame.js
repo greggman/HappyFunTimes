@@ -134,6 +134,7 @@ window.gs = GameSupport;
   var gl = WebGL.setupWebGL(canvas, {alpha:false}, function() {});
   var renderer = new WebGLRenderer(g_services, canvas, gl);
   g_services.canvas = canvas;
+  g_services.renderer = renderer;
 
   if (globals.tileInspector) {
     var element = document.createElement("div");

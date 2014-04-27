@@ -35,17 +35,24 @@ define(['./player'], function(Player) {
   var PlayerManager = function(services) {
     this.services = services;
     this.players = [];
+window.p = this.players;
+  };
+
+  PlayerManager.prototype.reset = function() {
+
   };
 
   PlayerManager.prototype.startPlayer = function(netPlayer, name) {
     var misc = this.services.misc;
     var levelManager = this.services.levelManager;
-    var position = [0,0];//levelManager.getRandomOpenPosition();
-    var direction = misc.randInt(2) ? -1 : 1;
-//    var player = new Player(this.services, position.x + level.tileWidth / 2, position.y, level.tileWidth, level.tileHeight, direction, name, netPlayer);
-//    this.players.push(player);
-//    return player;
-  }
+    var position = [
+      (1 + this.players.length * 4) * levelManager.tileset.tileWidth,
+      (1 + this.players.length * 2) * levelManager.tileset.tileHeight,
+    ];
+    var player = new Player(this.services, position, name, netPlayer);
+    this.players.push(player);
+    return player;
+  };
 
   PlayerManager.prototype.removePlayer = function(playerToRemove) {
     var netPlayer = playerToRemove.netPlayer;
