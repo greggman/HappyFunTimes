@@ -100,26 +100,22 @@ define(
 
     s_tileProgram = new Programs.Program(s_tileVertexShader, s_tileFragmentShader);
 
-    var position = new Primitives.AttribBuffer(2, 4);
-    var texcoord = new Primitives.AttribBuffer(2, 4);
-    var indices = new Primitives.AttribBuffer(3, 6, 'Uint16Array');
-
-//    position.push([-1, -1]);
-//    position.push([ 1, -1]);
-//    position.push([-1,  1]);
-//    position.push([ 1,  1]);
-    position.push([ 0,  0]);
-    position.push([ 1,  0]);
-    position.push([ 0,  1]);
-    position.push([ 1,  1]);
-
-    texcoord.push([0, 0]);
-    texcoord.push([1, 0]);
-    texcoord.push([0, 1]);
-    texcoord.push([1, 1]);
-
-    indices.push([0, 1, 2]);
-    indices.push([2, 1, 3]);
+    var position = new Primitives.AttribBuffer(2, [
+        0, 0,
+        1, 0,
+        0, 1,
+        1, 1,
+      ]);
+    var texcoord = new Primitives.AttribBuffer(2, [
+        0, 0,
+        1, 0,
+        0, 1,
+        1, 1,
+      ]);
+    var indices = new Primitives.AttribBuffer(3, [
+        0, 1, 2,
+        2, 1, 3,
+      ], 'Uint16Array');
 
     var arrays = {
       position: position,
