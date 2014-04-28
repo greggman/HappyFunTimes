@@ -1,3 +1,29 @@
+*   boomboom
+
+    *   start at "waiting for players"
+    *   size level based on # players
+    *   have 3..2..1..Go
+    *   check for winner
+    *   show inner
+    *   check for death
+    *   show death
+    *   place bombs
+    *   explode bombs
+    *   chain bombs
+    *   random powerup
+        *   +bomb
+        *   +size
+        *   fire
+        *   kick
+    *   show names (limit to size?)
+    *   show state on controller
+        *   waiting to join
+        *   waiting to start
+        *   died
+        *   winner
+    *   figure out what players waiting can do
+    *   walking speed should start at 48 and progres to 64?
+
 *   refactor boomboom (and jumpjump?) to make the rendering forward driven.
 
     For example in boobboom the layers choose their own offset.
@@ -17,7 +43,7 @@
     would not be registered until the NetPlayer starts it doesn't know
     how to deserialize them yet. Auto registering means it does know.
 
-    An alternative would be if it can't find the correct type to deserialize
+    An alternative would be if it can't find the correct type to deserialize to Dict<Object>
     then put the message in a queue. Another idea would be to put all messages
     in queues in the net player. Right now they are deserilized in the
     websocket thread but they could just be queued there? Actually that doesn't
@@ -104,11 +130,11 @@
 
 *   make sample games
 
-    *   bomberman
+    *   boomboom
     *   platformer
     *   8way shooter
     *   unity character controller
-    *   johann sabastian joust
+    *   johann sabastian joust?
 
         johann sabastian joust is a game played with move controllers
         where you try not to move the controller too much or you're out.
