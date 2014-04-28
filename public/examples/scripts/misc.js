@@ -173,6 +173,16 @@ define(function() {
     return v < 0 ? -1 : (v > 0 ? 1 : 0);
   };
 
+  // flips 0->max to max<-0 and 0->min to min->
+  // In otherwords
+  //   max: 3, v: 2.7  =  0.3
+  //   max: 3, v:-2.7  = -0.3
+  //   max: 3, v: 0.2  =  2.8
+  //   max: 3, v:-0.2  = -2.8
+  var invertPlusMinusRange = function(v, max) {
+    return sign(v) * (max - Math.min(max, Math.abs(v)));
+  };
+
   var degToRad = function(d) {
     return d * Math.PI / 180;
   };
@@ -203,6 +213,7 @@ define(function() {
     degToRad: degToRad,
     findCSSStyleRule: findCSSStyleRule,
     getAbsolutePosition: getAbsolutePosition,
+    invertPlusMinusRange: invertPlusMinusRange,
     radToDeg: radToDeg,
     randInt: randInt,
     randCSSColor: randCSSColor,
