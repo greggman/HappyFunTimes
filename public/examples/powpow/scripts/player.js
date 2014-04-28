@@ -30,9 +30,7 @@
  */
 "use strict";
 
-tdl.require('tdl.math');
-
-define(['../../scripts/2d', './ships', './shot'], function(M2D, Ships, Shot) {
+define(['../../scripts/tdl/math', '../../scripts/2d', './ships', './shot'], function(math, M2D, Ships, Shot) {
   /**
    * Player represnt a player in the game.
    * @constructor
@@ -119,7 +117,6 @@ define(['../../scripts/2d', './ships', './shot'], function(M2D, Ships, Shot) {
   }
 
   Player.prototype.setState = function(state) {
-    //tdl.log(this.id, state);
     this.state = state;
     this.process = this["state_" + state];
   }
@@ -385,9 +382,9 @@ define(['../../scripts/2d', './ships', './shot'], function(M2D, Ships, Shot) {
         var t = this.timer / this.launchDuration;
         shipRenderFunc.call(
             renderer,
-            [tdl.math.lerpScalar(this.position[0], sx, t),
-             tdl.math.lerpScalar(this.position[1], sy, t)],
-            tdl.math.lerpCircular(this.direction, Math.PI, t, Math.PI * 2),
+            [math.lerpScalar(this.position[0], sx, t),
+             math.lerpScalar(this.position[1], sy, t)],
+             math.lerpCircular(this.direction, Math.PI, t, Math.PI * 2),
             this.color);
         return;
     }

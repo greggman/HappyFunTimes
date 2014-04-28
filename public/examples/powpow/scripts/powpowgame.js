@@ -32,8 +32,6 @@
 
 var g_metaQueuePlayer;
 var g_updateStatus = false;
-var g_loaded;
-var g_run;
 
 var main = function(
     GameServer,
@@ -99,23 +97,23 @@ var main = function(
   function ValidateNoneOfTheArgsAreUndefined(functionName, args) {
     for (var ii = 0; ii < args.length; ++ii) {
       if (args[ii] === undefined) {
-        tdl.error("undefined passed to gl." + functionName + "(" +
-                  tdl.webgl.glFunctionArgsToString(functionName, args) + ")");
+        console.error("undefined passed to gl." + functionName + "(" +
+                      WebGL.glFunctionArgsToString(functionName, args) + ")");
       }
     }
   }
 
   function Log(msg) {
     if (g_logGLCalls) {
-      tdl.log(msg);
+      console.log(msg);
     }
   }
 
   function LogGLCall(functionName, args) {
     if (g_logGLCalls) {
       ValidateNoneOfTheArgsAreUndefined(functionName, args)
-      tdl.log("gl." + functionName + "(" +
-                  tdl.webgl.glFunctionArgsToString(functionName, args) + ")");
+      console.log("gl." + functionName + "(" +
+                  WebGL.glFunctionArgsToString(functionName, args) + ")");
     }
   }
 
@@ -151,9 +149,9 @@ var main = function(
 
   g_canvas = $("canvas");
 
-  var gl = tdl.webgl.setupWebGL(g_canvas, undefined, function() {});
+  var gl = WebGL.setupWebGL(g_canvas, undefined, function() {});
   if (g_debug) {
-    gl = tdl.webgl.makeDebugContext(gl, undefined, LogGLCall);
+    gl = WebGL.makeDebugContext(gl, undefined, LogGLCall);
   }
   var renderer = gl ? new WebGLRenderer(g_services, g_canvas, gl) : new CanvasRenderer(g_services, g_canvas);
 
