@@ -33,8 +33,10 @@
 define(['../../scripts/Misc', '../../scripts/tilemap'], function(Misc, TileMap) {
 
   var iEmpty = {
+    bombOk: true,
   };
   var iSolid = {
+    solid: true,
   };
   var iGoldCrate = {
   };
@@ -45,30 +47,43 @@ define(['../../scripts/Misc', '../../scripts/tilemap'], function(Misc, TileMap) 
   var iFlameCrate = {
   };
   var iCrate = {
+    solid: true,
   };
   var iFlame = {
+    bombOk: true,  // yes you can place a bomb here. If you do it will blow up
   };
   var iBomb = {
+    solid: true,
   };
   var iPipeH = {
+    solid: true,
   };
   var iPipeV = {
+    solid: true,
   };
   var iPipeU = {
+    solid: true,
   };
   var iPipeD = {
+    solid: true,
   };
   var iPipeL = {
+    solid: true,
   };
   var iPipeR = {
+    solid: true,
   };
   var iPipeRU = {
+    solid: true,
   };
   var iPipeLU = {
+    solid: true,
   };
   var iPipeRD = {
+    solid: true,
   };
   var iPipeLD = {
+    solid: true,
   };
 
   // normal I'd make this at build time. Either I'd much a a bunch of icons representing
@@ -165,8 +180,8 @@ define(['../../scripts/Misc', '../../scripts/tilemap'], function(Misc, TileMap) 
     var numTiles = width * height;
     this.width = width;
     this.height = height;
-    this.tileWidth = tileset.width;
-    this.tileHeight = tileset.height;
+    this.tileWidth = tileset.tileWidth;
+    this.tileHeight = tileset.tileHeight;
     this.outOfBoundsTile = opt_outOfBoundsTile || 0;
     this.uint32View = new Uint32Array(numTiles);
     this.uint8View = new Uint8Array(this.uint32View.buffer);
@@ -234,6 +249,37 @@ define(['../../scripts/Misc', '../../scripts/tilemap'], function(Misc, TileMap) 
   var LevelManager = function(services, tileset) {
     this.services = services;
     this.tileset = tileset;
+    this.tiles = tiles;
+  };
+
+  LevelManager.prototype.getTileInfo = function(tileId) {
+    return tileInfoMap[tileId];
+  };
+
+  LevelManager.prototype.setWalls = function() {
+    var layer1 = this.layer1;
+    var tilesAcross = this.tilesAcross;
+    var tilesDown = this.tilesDown;
+
+    var wall = tiles.wall.id;
+
+    // put in the edges
+    for (var ii = 0; ii < tilesAcross; ++ii) {
+      layer1.setTile(ii, 0, wall);
+      layer1.setTile(ii, tilesDown - 1, wall);
+    }
+    for (var ii = 0; ii < tilesDown; ++ii) {
+      layer1.setTile(0, ii, wall);
+      layer1.setTile(tilesAcross - 1, ii, wall);
+    }
+    // put in the grid
+    var numColumns = (tilesAcross - 1) / 2;
+    var numRows    = (tilesDown   - 1) / 2;
+    for (var yy = 0; yy < numRows - 1; ++yy) {
+      for (var xx = 0; xx < numColumns - 1; ++xx) {
+        layer1.setTile(xx * 2 + 2, yy * 2 + 2, wall);
+      }
+    };
   };
 
   LevelManager.prototype.makeLevel = function(canvasWidth, canvasHeight) {
@@ -255,30 +301,18 @@ define(['../../scripts/Misc', '../../scripts/tilemap'], function(Misc, TileMap) 
     var layer0 = new Layer(tilesAcross, tilesDown, scale, this.tileset);
     var layer1 = new Layer(tilesAcross, tilesDown, scale, this.tileset);
 
-    var wall = tiles.wall.id;
-    // put in the edges
-    for (var ii = 0; ii < tilesAcross; ++ii) {
-      layer0.setTile(ii, 0, wall);
-      layer0.setTile(ii, tilesDown - 1, wall);
-    }
-    for (var ii = 0; ii < tilesDown; ++ii) {
-      layer0.setTile(0, ii, wall);
-      layer0.setTile(tilesAcross - 1, ii, wall);
-    }
-    // put in the grid
-    var numColumns = (tilesAcross - 1) / 2;
-    var numRows    = (tilesDown   - 1) / 2;
-    for (var yy = 0; yy < numRows - 1; ++yy) {
-      for (var xx = 0; xx < numColumns - 1; ++xx) {
-        layer0.setTile(xx * 2 + 2, yy * 2 + 2, wall);
-      }
-    };
+    this.tilesAcross = tilesAcross;
+    this.tilesDown = tilesDown;
+    this.layer0 = layer0;
+    this.layer1 = layer1;
 
     // fill level1 with "air"
     var numTiles = tilesAcross * tilesDown;
     for (var ii = 0; ii < numTiles; ++ii) {
       layer1.setTile(ii % tilesAcross, Math.floor(ii / tilesAcross), tiles.empty.id);
     }
+
+    this.setWalls();
 
     var rows = [{range: numColumns * 2 - 1, mult: 1}, {range: numRows, mult: 2}];
     var cols = [{range: numColumns, mult: 2}, {range: numRows * 2 - 1, mult: 1}];
@@ -294,6 +328,8 @@ define(['../../scripts/Misc', '../../scripts/tilemap'], function(Misc, TileMap) 
     };
 
     var freeSpots = [];
+    var numColumns = (tilesAcross - 1) / 2;
+    var numRows    = (tilesDown   - 1) / 2;
     var numInColumn = numRows * 2 - 1;
     for (var ii = 0; ii < numColumns; ++ii) {
       for (var jj = 0; jj < numInColumn; ++jj) {
@@ -320,9 +356,6 @@ define(['../../scripts/Misc', '../../scripts/tilemap'], function(Misc, TileMap) 
         layer1.setTile(p[0], p[1], s.tile.id);
       }
     }
-
-    this.layer0 = layer0;
-    this.layer1 = layer1;
   };
 
 

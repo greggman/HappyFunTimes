@@ -73,17 +73,12 @@ window.s = g_services;
     tileInspector: false,
     showState: false,
     scale: 2,
-    moveAcceleration: 5000,
-    maxVelocity: [200, 1000],
-    jumpDuration: 0.4,
-    jumpVelocity: -220,
-    gravity: 40000,
     frameCount: 0,
     idleAnimSpeed: 4,
-    moveAnimSpeed: 0.2,
-    coinAnimSpeed: 10,
-    jumpFirstFrameTime: 0.1,
-    fallTopAnimVelocity: 100,
+    walkAnimSpeed: 0.2,
+    walkSpeed: 64,
+    bombDuration: 6,
+    columnRowSpace: 3,
   };
 window.g = globals;
 
@@ -95,17 +90,19 @@ window.g = globals;
       netPlayers.push(netPlayer);
       players.push(g_playerManager.startPlayer(netPlayer, "Player" + (ii + 1)));
     }
-    var localNetPlayer1 = netPlayers[0];
     var g_abutton = false;
 
     var handleDPad = function(e) {
-      localNetPlayer.sendEvent('pad', {pad: e.pad, dir: e.info.direction});
+      var localNetPlayer = netPlayers[e.pad];
+      if (localNetPlayer) {
+        localNetPlayer.sendEvent('pad', {pad: e.pad, dir: e.info.direction});
+      }
     };
 
     var handleAbutton = function(pressed) {
       if (g_abutton != pressed) {
         g_abutton = pressed;
-        localNetPlayer1.sendEvent('abutton', {
+        netPlayers[0].sendEvent('abutton', {
             abutton: pressed,
         });
       }
@@ -114,7 +111,7 @@ window.g = globals;
     var keys = { };
     keys["Z".charCodeAt(0)] = function(e) { handleAbutton(e.pressed); }
     Input.setupKeys(keys);
-    Input.setupKeyboardDPadKeys(handleDPad, Input.kASWDPadOnly);
+    Input.setupKeyboardDPadKeys(handleDPad);
   }
 
   Misc.applyUrlSettings(globals);
@@ -176,6 +173,8 @@ window.gs = GameSupport;
     var tex = Textures.loadTexture(img);
     tex.setParameter(gl.TEXTURE_MIN_FILTER, gl.NEAREST);
     tex.setParameter(gl.TEXTURE_MAG_FILTER, gl.NEAREST);
+    tex.setParameter(gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+    tex.setParameter(gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
     return tex;
   };
 
@@ -238,17 +237,14 @@ window.gs = GameSupport;
 
     var resetLevel = function() {
       g_levelManager.makeLevel(canvas.width, canvas.height);
-      g_playerManager.forEachPlayer(function(player) {
-        player.reset();
-      });
+      g_playerManager.reset();
     };
-
-    resetLevel();
 
     // Add a 2 players if there is no communication
     if (!globals.haveServer) {
       startLocalPlayers();
     }
+    resetLevel();
 
     var mainloop = function() {
       if (renderer.resize()) {

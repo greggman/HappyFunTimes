@@ -39,7 +39,9 @@ define([
     '../../scripts/tdl/programs',
     '../../scripts/gamebutton',
     '../../scripts/imageprocess',
+    '../../scripts/input',
     '../../scripts/misc',
+    './bomb',
   ], function(
     Buffers,
     Fast,
@@ -49,7 +51,9 @@ define([
     Programs,
     GameButton,
     ImageProcess,
-    Misc) {
+    Input,
+    Misc,
+    Bomb) {
 
   var m4 = Fast.matrix4;
 
@@ -145,6 +149,110 @@ define([
     s_playerModel = new Models.Model(program, arrays, textures);
   };
 
+  //    2     -1 = not pressed
+  //  3 | 1
+  //   \|/
+  // 4--+--0
+  //   /|\
+  //  5 | 7
+  //    6
+  var walkAnim = ['avatarWalkR0', 'avatarWalkR1', 'avatarWalkR2', 'avatarWalkR1'];
+  var directionInfo = [
+    { /* 0 right */
+      dx:  1,
+      dy:  0,
+      hflip: false,
+      anims: {
+        idle: 'avatarStandR',
+        walk: walkAnim,
+      },
+      noChangeDirs: [],
+    },
+    { /* 1 right up*/
+      dx:  1,
+      dy: -1,
+      hflip: false,
+      anims: {
+        idle: 'avatarStandR',
+        walk: walkAnim,
+      },
+      noChangeDirs: [0, 2],
+    },
+    { /* 2 up */
+      dx:  0,
+      dy: -1,
+      hflip: false,
+      anims: {
+        idle: 'avatarStandU',
+        walk: ['avatarWalkU0', 'avatarWalkU1'],
+      },
+      noChangeDirs: [],
+    },
+    { /* 3 left up */
+      dx: -1,
+      dy: -1,
+      hflip: true,
+      anims: {
+        idle: 'avatarStandR',
+        walk: walkAnim,
+      },
+      noChangeDirs: [2, 4],
+    },
+    { /* 4 left */
+      dx: -1,
+      dy:  0,
+      hflip: true,
+      anims: {
+        idle: 'avatarStandR',
+        walk: walkAnim,
+      },
+      noChangeDirs: [],
+    },
+    { /* 5 left down */
+      dx: -1,
+      dy:  1,
+      hflip: true,
+      anims: {
+        idle: 'avatarStandR',
+        walk: walkAnim,
+      },
+      noChangeDirs: [4, 6],
+    },
+    { /* 6 down */
+      dx:  0,
+      dy:  1,
+      hflip: false,
+      anims: {
+        idle: 'avatarStandD',
+        walk: ['avatarWalkD0', 'avatarWalkD1'],
+      },
+      noChangeDirs: [],
+    },
+    { /* 7 right down */
+      dx:  1,
+      dy:  1,
+      hflip: false,
+      anims: {
+        idle: 'avatarStandR',
+        walk: walkAnim,
+      },
+      noChangeDirs: [0, 6],
+    },
+  ];
+
+  var freeBombs = [];
+  var getBomb = function(services) {
+    if (freeBombs.length) {
+      return freeBombs.pop();
+    }
+    return new Bomb(services);
+  };
+
+  var putBomb = function(bomb) {
+    bomb.reset();
+    freeBombs.push(bomb);
+  };
+
   /**
    * Player represents a player in the game.
    * @constructor
@@ -163,6 +271,22 @@ define([
       this.netPlayer = netPlayer;
       this.position = position;
 
+      if (availableColors.length == 0) {
+        var avatar = this.services.images.avatar;
+        for (var ii = 0; ii < 64; ++ii) {
+          availableColors.push({
+            hsv: [ii % 16 / 16, 0, 0],
+            set: ii / 16 | 0,
+          });
+        }
+      }
+
+      this.color = availableColors[Math.floor(Math.random() * availableColors.length)];
+      availableColors.splice(this.color, 1);
+      netPlayer.sendCmd('setColor', this.color);
+
+      this.imageSet = this.services.images.avatar[this.color.set];
+
       makePlayerModel();
 
       var images = this.services.images;
@@ -171,25 +295,12 @@ define([
       this.uniforms = {
         u_matrix: this.matrix,
         u_adjustRange: [0, 1],
-        u_hsvAdjust: [0, 0, 0],
+        u_hsvAdjust: this.color.hsv,
       };
 
       this.textures = {
-        u_texture: images.avatar[0].avatarStandU,
+        u_texture: this.imageSet.avatarStandU,
       };
-
-      //if (availableColors.length == 0) {
-      //  var colors = services.colors;
-      //  for (var ii = 0; ii < colors.length; ++ii) {
-      //    availableColors.push(colors[ii]);
-      //  }
-      //}
-
-      //this.color = availableColors[Math.floor(Math.random() * availableColors.length)];
-      //netPlayer.sendCmd('setColor', this.color);
-      //availableColors.splice(this.color, 1);
-
-      this.animTimer = 0;
 
       netPlayer.addEventListener('disconnect', Player.prototype.handleDisconnect.bind(this));
       netPlayer.addEventListener('pad', Player.prototype.handlePadMsg.bind(this));
@@ -197,13 +308,46 @@ define([
       netPlayer.addEventListener('setName', Player.prototype.handleNameMsg.bind(this));
       netPlayer.addEventListener('busy', Player.prototype.handleBusyMsg.bind(this));
 
-      this.setName(name);
-      this.direction = 6;            // direction player is pushing (-1, 0, 1)
-      this.facing = this.direction;  // direction player is facing (-1, 1)
-
-      this.setState('waiting');
+      this.reset();
     };
   }());
+
+  Player.prototype.reset = function(x, y) {
+    while (this.bombs && this.bombs.length) {
+      putBomb(this.bombs.pop());
+    }
+    this.setPosition(x, y);
+    this.animTimer = 0;
+    this.bombs = [getBomb(this.services)];
+    this.bombSize = 1;
+    this.setName(name);
+    this.setFacing(6);
+    this.direction = -1;  // direction player is pressing.
+    this.setState('idle');
+  };
+
+  Player.prototype.returnBomb = function(bomb) {
+    this.bombs.push(bomb);
+  };
+
+  Player.prototype.setAnimFrame = function(name) {
+    this.textures.u_texture = this.imageSet[name];
+  };
+
+  Player.prototype.setFacing = function(direction) {
+    var oldFacing = this.facing;
+    this.facing = direction;
+    this.facingInfo = directionInfo[direction];
+    this.hflip = this.facingInfo.hflip;
+    if (this.facingInfo.noChangeDirs.indexOf(oldFacing) < 0) {
+      this.anims = this.facingInfo.anims;
+    }
+  };
+
+  Player.prototype.setPosition = function(x, y) {
+    this.position[0] = x;
+    this.position[1] = y;
+  };
 
   Player.prototype.setName = function(name) {
     if (name != this.playerName) {
@@ -219,7 +363,7 @@ define([
       init.call(this);
     }
     this.process = this["state_" + state];
-  }
+  };
 
   Player.prototype.removeFromGame = function() {
     this.services.entitySystem.removeEntity(this);
@@ -239,13 +383,13 @@ define([
 
   Player.prototype.handlePadMsg = function(msg) {
     this.direction = msg.dir;
-    if (this.direction) {
-      this.facing = this.direction;
+    if (this.direction >= 0) {
+      this.setFacing(this.direction);
     }
   };
 
   Player.prototype.handleAButtonMsg = function(msg) {
-    this.abutton.setState(msg.pressed);
+    this.abutton.setState(msg.abutton);
   };
 
   Player.prototype.handleNameMsg = function(msg) {
@@ -258,8 +402,41 @@ define([
     }
   };
 
+  Player.prototype.checkBombPlace = function() {
+    if (!this.abutton.justOn()) {
+      return;
+    }
+    if (!this.bombs.length) {
+      return;
+    }
+
+    var levelManager = this.services.levelManager;
+    var tileWidth = 16;
+    var tileHeight = 16;
+    // hmm, if we made the center of the player the
+    // center of the sprite we'd need less math.
+    var tx = (this.position[0] + tileWidth  * 0.5 * this.facingInfo.dx) / tileWidth  | 0;
+    var ty = (this.position[1] + tileHeight * 0.5 * this.facingInfo.dy) / tileHeight | 0;
+
+    var tile = levelManager.layer1.getTile(tx, ty);
+    var tileInfo = levelManager.getTileInfo(tile);
+
+    if (!tileInfo.info.bombOk) {
+      return;
+    }
+
+    var bomb = this.bombs.pop();
+    bomb.place(this, tx, ty, this.bombSize);
+  };
+
   Player.prototype.sendCmd = function(cmd, data) {
     this.netPlayer.sendCmd(cmd, data);
+  };
+
+  Player.prototype.checkForDeath = function() {
+    // Need to check if we're standing on death.
+    // Could be 1 of 2 tiles (or is it 4?). I think
+    // as long as there are no open areas it's 2.
   };
 
   // This state is when you're waiting to join a game.
@@ -274,17 +451,141 @@ define([
   };
 
   Player.prototype.state_idle = function() {
+    this.setAnimFrame(this.anims.idle);
+    if (this.checkForDeath()) {
+      return;
+    }
+    this.checkBombPlace();
+    if (this.direction >= 0) {
+      this.setState('walk');
+    }
   };
 
-  Player.prototype.init_move = function() {
+  Player.prototype.init_walk = function() {
     this.animTimer = 0;
   };
 
-  Player.prototype.state_move = function() {
-    if (!this.direction) {
+  Player.prototype.state_walk = function() {
+    var globals = this.services.globals;
+    var levelManager = this.services.levelManager;
+    this.animTimer += globals.walkAnimSpeed;
+    this.setAnimFrame(this.anims.walk[(this.animTimer | 0) % this.anims.walk.length]);
+
+    if (this.direction < 0) {
       this.setState('idle');
       return;
     }
+
+    // we're either in a column, row, or at an intersection
+    var tileWidth  = 16;
+    var tileHeight = 16;
+
+    var dx = this.facingInfo.dx;
+    var dy = this.facingInfo.dy;
+    var newX = this.position[0] + dx * globals.walkSpeed * globals.elapsedTime;
+    var newY = this.position[1] + dy * globals.walkSpeed * globals.elapsedTime;
+
+    if (dx > 0) {
+      for (var ii = 0; ii < 2; ++ii) {
+        var tileX = newX + tileWidth / 2;
+        var tileY = this.position[1] - tileHeight / 2 + ii * (tileHeight - 1);
+        var tile = levelManager.layer1.getTileByPixels(tileX, tileY);
+        var tileInfo = levelManager.getTileInfo(tile);
+        if (tileInfo.info.solid) {
+          newX -= tileX % tileWidth;
+        }
+      }
+    } else if (dx < 0) {
+      for (var ii = 0; ii < 2; ++ii) {
+        var tileX = newX - tileWidth / 2;
+        var tileY = this.position[1] - tileHeight / 2 + ii * (tileHeight - 1);
+        var tile = levelManager.layer1.getTileByPixels(tileX, tileY);
+        var tileInfo = levelManager.getTileInfo(tile);
+        if (tileInfo.info.solid) {
+          newX += tileWidth - tileX % tileWidth;
+        }
+      }
+    }
+
+    if (dy > 0) {
+      for (var ii = 0; ii < 2; ++ii) {
+        var tileX = this.position[0] - tileWidth / 2 + ii * (tileWidth - 1);
+        var tileY = newY + tileWidth / 2;
+        var tile = levelManager.layer1.getTileByPixels(tileX, tileY);
+        var tileInfo = levelManager.getTileInfo(tile);
+        if (tileInfo.info.solid) {
+          newY -= tileY % tileHeight;
+        }
+      }
+    } else if (dy < 0) {
+      for (var ii = 0; ii < 2; ++ii) {
+        var tileX = this.position[0] - tileWidth / 2 + ii * (tileWidth - 1);
+        var tileY = newY - tileWidth / 2;
+        var tile = levelManager.layer1.getTileByPixels(tileX, tileY);
+        var tileInfo = levelManager.getTileInfo(tile);
+        if (tileInfo.info.solid) {
+          newY += tileHeight - tileY % tileHeight;
+        }
+      }
+    }
+
+
+    this.position[0] = newX;
+    this.position[1] = newY;
+
+    this.checkBombPlace();
+
+//    var columnRowRange = 1 + globals.columnRowSpace * 2;
+//    var columnPos = (this.position[0] + tileWidth  + globals.columnRowSpace) % (tileWidth  * 2);
+//    var rowPos    = (this.position[1] + tileHeight + globals.columnRowSpace) % (tileHeight * 2);
+//    var inColumn  = columnPos < columnRowRange;
+//    var inRow     = rowPos    < columnRowRange;
+//    columnPos -= globals.columnRowSpace;
+//    rowPos    -= globals.columnRowSpace;
+//    var inIntersection = inColumn && inRow;
+//
+//    var columnX = Math.floor((this.position[0] + tileWidth  * 2) / (tileWidth  * 2)) * tileWidth  * 2 - tileWidth  * 1;
+//    var rowY    = Math.floor((this.position[1] + tileHeight * 2) / (tileHeight * 2)) * tileHeight * 2 - tileHeight * 1;
+//
+//    this.services.playerManager.players[1].position = [columnX, 100];
+//    this.services.playerManager.players[2].position = [100, rowY];
+//
+//    var dirInfo = Input.getDirectionInfo(this.direction);
+//    var newX = this.position[0];
+//    var newY = this.position[1];
+//    if (inRow) {
+//      newX += globals.walkSpeed * globals.elapsedTime * dirInfo.dx;
+//    }
+//    if (inColumn) {
+//      newY -= globals.walkSpeed * globals.elapsedTime * dirInfo.dy;
+//    }
+//
+////    var rowLimit    = Misc.invertPlusMinusRange(columnPos, globals.columnRowSpace);
+////    var columnLimit = Misc.invertPlusMinusRange(rowPos, globals.columnRowSpace);
+//    var rowLimit    = globals.columnRowSpace - Math.min(globals.columnRowSpace, Math.abs(columnPos));
+//    var columnLimit = globals.columnRowSpace - Math.min(globals.columnRowSpace, Math.abs(rowPos));
+//
+//    if (rowLimit == 0) {
+//      columnLimit = 100000000;
+//    } else if (columnLimit == 0) {
+//      rowLimit = 100000000;
+//    }
+//
+//    var ndx = Misc.clamp(newX, columnX - columnLimit, columnX + columnLimit);
+//    var ndy = Misc.clamp(newY, rowY    - rowLimit   , rowY    + rowLimit   );
+//
+//window.gs.setStatus("cp: " + columnPos.toFixed(2) + "\n" +
+//                    "rp: " + rowPos.toFixed(2) + "\n" +
+//                    "ir: " + inRow + "\n" +
+//                    "ic: " + inColumn + "\n" +
+//                    "rl: " + rowLimit + "\n" +
+//                    "cl: " + columnLimit + "\n" +
+//                    "ndx: " + ndx + "\n" +
+//                    "ndy: " + ndy + "\n" +
+//                    "");
+//    this.position[0] = ndx;
+//    this.position[1] = ndy;
+
   };
 
   Player.prototype.draw = function(renderer) {
@@ -292,6 +593,21 @@ define([
     var images = this.services.images;
     var off = {};
     this.services.levelManager.getDrawOffset(off);
+
+    var scale  = globals.scale;
+    var width  = 16 * scale;
+    var height = 16 * scale;
+    var dispScaleX = width  / renderer.canvas.width;
+    var dispScaleY = height / renderer.canvas.height;
+    var x = off.x + this.position[0] * scale - width  / 2;
+    var y = off.y + this.position[1] * scale - height / 2;
+
+    x += this.hflip ? width : 0;
+    var s = this.hflip ? -1 : 1;
+    this.matrix[ 0] =  2 * dispScaleX * s;
+    this.matrix[ 5] = -2 * dispScaleY;
+    this.matrix[12] = -1 + 2 * x / renderer.canvas.width;
+    this.matrix[13] =  1 - 2 * y / renderer.canvas.height;
 
     s_playerModel.drawPrep();
     s_playerModel.draw(this.uniforms, this.textures);

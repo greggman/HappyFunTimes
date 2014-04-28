@@ -32,6 +32,14 @@
 
 define(['./player'], function(Player) {
 
+  var clearOffsets = [
+    { x:  0, y:  0, },
+    { x:  1, y:  0, },
+    { x: -1, y:  0, },
+    { x:  0, y:  1, },
+    { x:  0, y: -1, },
+  ];
+
   var PlayerManager = function(services) {
     this.services = services;
     this.players = [];
@@ -39,7 +47,23 @@ window.p = this.players;
   };
 
   PlayerManager.prototype.reset = function() {
+    var levelManager = this.services.levelManager;
+    var tiles = levelManager.tiles;
 
+    this.forEachPlayer(function(player, ii) {
+      var tx = (1 + ii * 4);
+      var ty = (1 + ii * 2);
+
+      for (var ii = 0; ii < clearOffsets.length; ++ii) {
+        var off = clearOffsets[ii];
+        levelManager.layer1.setTile(tx + off.x, ty + off.y, tiles.empty.id);
+      }
+      player.reset(
+        (tx + 0.5) * levelManager.tileset.tileWidth,
+        (ty + 0.5) * levelManager.tileset.tileHeight);
+    });
+
+    levelManager.setWalls();
   };
 
   PlayerManager.prototype.startPlayer = function(netPlayer, name) {
@@ -67,7 +91,7 @@ window.p = this.players;
 
   PlayerManager.prototype.forEachPlayer = function(callback) {
     for (var ii = 0; ii < this.players.length; ++ii) {
-      if (callback(this.players[ii])) {
+      if (callback(this.players[ii], ii)) {
         return this;
       }
     }
