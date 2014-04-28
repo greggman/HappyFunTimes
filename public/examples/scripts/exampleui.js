@@ -74,6 +74,9 @@ define(
     // pointless.
     client.addEventListener('connect', function() {
       disconnected.style.display = "none";
+      if (options.connectFn) {
+        options.connectFn();
+      }
     });
 
     client.addEventListener('disconnect', function() {
