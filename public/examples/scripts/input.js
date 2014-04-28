@@ -92,6 +92,10 @@ define(['./misc'], function(Misc) {
     callback(eventInfo);
   };
 
+  var getDirectionInfo = function(direction) {
+    return dirInfo[direction];
+  };
+
   var getRelativeCoordinates = (function(window, undefined) {
     return function(reference, event) {
       // Use absolute coordinates
@@ -279,6 +283,7 @@ define(['./misc'], function(Misc) {
     cursorKeys: cursorKeys,
     createDirectionEventInfo: createDirectionEventInfo,
     emitDirectionEvent: emitDirectionEvent,
+    getDirectionInfo: getDirectionInfo,
     kCursorKeys: kCursorKeys,
     kCursorPadOnly: kCursorPadOnly,
     kASWDKeys: kASWDKeys,
