@@ -34,7 +34,7 @@
 }
 #gamestatus {
     position: absolute;
-    z-index: 5;
+    z-index: 5000;
     border-radius: 5px;
     background-color: rgba(0,0,0,0.5);
     margin: 0.5em;

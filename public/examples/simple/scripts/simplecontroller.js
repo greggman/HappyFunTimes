@@ -52,20 +52,29 @@ var main = function(
   var client = new GameClient({
     gameId: "simple",
   });
+
+  // Note: ExampleUI handles these events for almost all the samples.
+  var onConnect = function() {
+    statusElem.innerHTML = "you've connected to the relayserver";
+  };
+
+  var onDisconnect = function() {
+    statusElem.innerHTML = "you were disconnected from the relayserver";
+  }
+
+  // If I was going to handle this without ExampleUI this is what I'd do
+  //client.addEventListener('connect', onConnect);
+  //client.addEventListener('disconnect', onDisconnect);
+
+  // Because I want the ExampleUI to work
+  globals.disconnectFn = onDisconnect;
+  globals.connectFn = onConnect;
+
   ExampleUI.setupStandardControllerUI(client, globals);
 
   var randInt = function(range) {
     return Math.floor(Math.random() * range);
   };
-
-  // Note: ExampleUI handles these events for almost all the samples.
-  client.addEventListener('connect', function() {
-    statusElem.innerHTML = "you've connected to the relayserver";
-  });
-
-  client.addEventListener('disconnect', function() {
-    statusElem.innerHTML = "you were disconnected from the relayserver";
-  });
 
   // Sends a move command to the game.
   //
