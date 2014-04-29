@@ -287,10 +287,17 @@ window.gs = GameSupport;
           if (g_services.gridTable.length < y + 1) {
             g_services.gridTable.push([]);
           }
-          var pre = document.createElement("pre");
-          var txt = document.createTextNode("" + x + "," + y);
-          pre.appendChild(txt);
-          element.appendChild(pre);
+          var pre = element.firstChild;
+          var txt;
+          if (pre) {
+            txt = pre.firstChild;
+          } else {
+            pre = document.createElement("pre");
+            txt = document.createTextNode("");
+            pre.appendChild(txt);
+            element.appendChild(pre);
+          }
+          txt.nodeValue = "" + x + "," + y;
           g_services.gridTable[y].push(txt);
         });
       }
