@@ -41,6 +41,10 @@ define([
     Misc,
     StatsJS) {
 
+  var $ = function(id) {
+    return document.getElementById(id);
+  };
+
   var stats = {
     begin: function() { },
     end: function() { },
@@ -87,7 +91,8 @@ define([
     }
 
     if (options.debug) {
-      statusNode = $("hft-status").firstChild;
+      statusNode = document.createTextNode("");
+      $("hft-status").appendChild(statusNode);
       var debugCSS = Misc.findCSSStyleRule("#hft-debug");
       debugCSS.style.display = "block";
 

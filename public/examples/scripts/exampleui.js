@@ -126,7 +126,8 @@ define(
     });
 
     if (options.debug) {
-      var status = $("hft-status").firstChild;
+      statusNode = document.createTextNode("");
+      $("hft-status").appendChild(statusNode);
       var debugCSS = Misc.findCSSStyleRule("#hft-debug");
       debugCSS.style.display = "block";
     }
