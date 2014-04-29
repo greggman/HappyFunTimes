@@ -1,5 +1,7 @@
 *   boomboom
 
+    *   fix turning. Trying to go down lines is too hard.
+    *   fix explosions at crates.
     *   start at "waiting for players"
     *   size level based on # players
     *   have 3..2..1..Go
@@ -23,8 +25,8 @@
         *   winner
     *   figure out what players waiting can do
     *   walking speed should start at 48 and progres to 64?
+    *   make flames handle erasing correctly. Sometimes the wrong tip is displayed.
 
-*   remove 'd' from status
 *   refactor boomboom (and jumpjump?) to make the rendering forward driven.
 
     For example in boobboom the layers choose their own offset.
@@ -168,6 +170,8 @@
 
 Done
 ----
+
+*   remove 'd' from status
 
 *   fix jamjam controller on iOS7.0
 

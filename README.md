@@ -429,6 +429,11 @@ Notes
 
     Feel free to submit a pull request ;-)
 
+Attribution
+-----------
+
+See [attribution](attribution.md)
+
 To Do
 -----
 
