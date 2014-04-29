@@ -49,6 +49,17 @@ define([
   var statusNode;
   var logger = new Logger.NullLogger();
 
+  // options:
+  //   showFPS: true adds a fps display
+  //   debug: un-hides the debug html elements
+  //   numConsoleLines: number of lines to show for the debug console.
+  //
+  // You can add text to the debug console with
+  // `GameSupport.log(msg)` or `GameSupport.error(msg)`
+  // which are no-ops if `debug` is false.
+  //
+  // Similarly you can display status with
+  // `GameSupport.setStatus("foo\nbar");`
   var init = function(server, options) {
     var showConnected = function() {
       $('hft-disconnected').style.display = "none";
@@ -84,6 +95,14 @@ define([
     }
   };
 
+  // globals that are checked/effected
+  //
+  //   elapsedTime: time elapsed in seconds since last frame
+  //   frameCount:  count of frames
+  //   haveServer:  if false will pause when it doens't have the focus.
+  //   pauseOnBlur: if true will pause when it doesn't have the focus.
+  //   step:        if true will step one tick for each mouse click
+  //
   var run = function(globals, fn) {
     var clock = new GameClock();
 
@@ -137,7 +156,12 @@ define([
       window.addEventListener('resize', updateOnce, false);
     }
 
-    start();
+    if (globals.step) {
+      updateOnce();
+      window.addEventListener('click', updateOnce, false);
+    } else {
+      start();
+    }
   };
 
   var setStatus = function(str) {
