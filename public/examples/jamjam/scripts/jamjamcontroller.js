@@ -94,7 +94,7 @@ var main = function(
 
   var rhythmButtons = [];
   g_grid.forEach(function(cell) {
-    rhythmButtons.push(cell.getElement());
+    rhythmButtons.push(cell);
   });
 
   var tracks = [

@@ -31,6 +31,17 @@
 "use strict";
 
 define(function() {
+  // Grid is basically a managed html table.
+  //
+  // Grid inserts it into `container`. You can change the size of
+  // the table with `grid.setDimensions(numColumns, numRows)`.
+  // You can get access to a cell's element with
+  // `grid.getElement(x, y)`.
+  //
+  // options:
+  //   container: element to add grid
+  //   columns: num columns
+  //   rows: num rows
   var Grid = function(options) {
 
     var Cell = function() {
@@ -63,7 +74,7 @@ define(function() {
 
       this.forEach = function(fn, yy) {
         for (var ii = 0; ii < cells.length; ++ii) {
-          fn(cells[ii], ii, yy);
+          fn(cells[ii].getElement(), ii, yy);
         }
       };
 
@@ -91,11 +102,13 @@ define(function() {
       return grid[y];
     };
 
+    // Gets an element.
     this.getElement = function(x, y) {
       var row = grid[y];
       return row.getCell(x).getElement();
     };
 
+    // Calls fn for each element, passes in element, x, y.
     this.forEach = function(fn) {
       for (var y = 0; y < grid.length; ++y) {
         var row = grid[y];
@@ -104,6 +117,10 @@ define(function() {
     };
 
     this.setDimensions = function(numColumns, numRows) {
+      var numExistingRows = Math.min(numColumns, grid.length);
+      for (var ii = 0; ii < numExistingRows; ++ii) {
+        grid[ii].setNumColumns(numColumns);
+      }
       while (grid.length < numRows) {
         var row = new Row(numColumns);
         tbody.appendChild(row.getElement());
