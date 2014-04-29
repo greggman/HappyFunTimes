@@ -54,7 +54,9 @@ define(function() {
 
   EntitySystem.prototype.forEachEntity = function(fn) {
     for (var ii = 0; ii < this.entities_.length; ++ii) {
-      fn(this.entities_[ii]);
+      if (fn(this.entities_[ii], ii)) {
+        break;
+      }
     }
     this.removeEntitiesMarkedForRemoval();
   };
