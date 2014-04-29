@@ -24,6 +24,7 @@
     *   figure out what players waiting can do
     *   walking speed should start at 48 and progres to 64?
 
+*   remove 'd' from status
 *   refactor boomboom (and jumpjump?) to make the rendering forward driven.
 
     For example in boobboom the layers choose their own offset.
