@@ -127,7 +127,7 @@ define(function() {
         grid.push(row);
       }
       var oldRows = grid.splice(numRows);
-      for (var ii = 0; ii < oldRows.length; --ii) {
+      for (var ii = 0; ii < oldRows.length; ++ii) {
         oldRows[ii].remove();
       }
     };
