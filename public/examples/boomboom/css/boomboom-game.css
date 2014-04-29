@@ -40,4 +40,23 @@ html, body {
   left: 0px;
   top: 0px;
 }
-
+#grid {
+  gdisplay: hidden;
+  position: absolute;
+  left: 0px;
+  top: 0px;
+  z-index: 2;
+}
+#grid table {
+  border-spacing: 0px;
+  border-collapse: collapse;
+}
+#grid td {
+  border: 1px solid black;
+  width: 64px;
+  height: 64px;
+  padding: 1px;
+  overflow: hidden;
+  vertical-align: text-top;
+  font-size: xx-small;
+}

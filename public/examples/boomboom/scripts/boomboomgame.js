@@ -42,6 +42,7 @@ var main = function(
     AudioManager,
     EntitySystem,
     GameSupport,
+    Grid,
     ImageLoader,
     ImageProcess,
     Input,
@@ -72,25 +73,49 @@ window.s = g_services;
     debug: false,
     tileInspector: false,
     showState: false,
+    grid: false,
+    step: false,
     scale: 2,
     frameCount: 0,
+    crateProb: [
+      { tileName: 'goldCrate',  prob:  1, },
+      { tileName: 'kickCrate',  prob:  3, },
+      { tileName: 'bombCrate',  prob:  6, },
+      { tileName: 'flameCrate', prob:  6, },
+      { tileName: 'empty',      prob: 30, },
+    ],
+    numStartingBombs: 10, //1,
+    bombStartSize: 10, //1,
     idleAnimSpeed: 4,
     walkAnimSpeed: 0.2,
     walkSpeed: 64,
-    bombDuration: 6,
+    bombDuration: 5,
+    explosionDuration: 3,
+    unexplodeTickDuration: 0.05,
     columnRowSpace: 3,
   };
 window.g = globals;
 
+  // Expand the probabitilites for easier selection
+  var probTable = [];
+  for (var ii = 0; ii < globals.crateProb.length; ++ii) {
+    var probInfo = globals.crateProb[ii];
+    for (var jj = 0; jj < probInfo.prob; ++jj) {
+      probTable.push(probInfo);
+    }
+  }
+  globals.crateProbTable = probTable;
+
   function startLocalPlayers() {
     var players = [];
     var netPlayers = [];
+    var abutton = [];
     for (var ii = 0; ii < globals.numLocalPlayers; ++ii) {
       var netPlayer = new LocalNetPlayer();
       netPlayers.push(netPlayer);
       players.push(g_playerManager.startPlayer(netPlayer, "Player" + (ii + 1)));
+      abutton.push(false);
     }
-    var g_abutton = false;
 
     var handleDPad = function(e) {
       var localNetPlayer = netPlayers[e.pad];
@@ -99,17 +124,21 @@ window.g = globals;
       }
     };
 
-    var handleAbutton = function(pressed) {
-      if (g_abutton != pressed) {
-        g_abutton = pressed;
-        netPlayers[0].sendEvent('abutton', {
-            abutton: pressed,
-        });
+    var handleAbutton = function(player, pressed) {
+      var localNetPlayer = netPlayers[player];
+      if (localNetPlayer) {
+        if (abutton[player] != pressed) {
+          abutton[player] = pressed;
+          localNetPlayer.sendEvent('abutton', {
+              abutton: pressed,
+          });
+        }
       }
     };
 
     var keys = { };
-    keys["Z".charCodeAt(0)] = function(e) { handleAbutton(e.pressed); }
+    keys["Z".charCodeAt(0)] = function(e) { handleAbutton(0, e.pressed); }
+    keys[".".charCodeAt(0)] = function(e) { handleAbutton(1, e.pressed); }
     Input.setupKeys(keys);
     Input.setupKeyboardDPadKeys(handleDPad);
   }
@@ -238,12 +267,42 @@ window.gs = GameSupport;
     var resetLevel = function() {
       g_levelManager.makeLevel(canvas.width, canvas.height);
       g_playerManager.reset();
+      if (globals.grid) {
+        if (!g_services.grid) {
+          g_services.grid = new Grid({
+            container: $("grid"),
+            columns: 1,
+            rows: 1,
+          });
+        }
+        g_services.grid.setDimensions(g_levelManager.tilesAcross, g_levelManager.tilesDown);
+        var off = {};
+        g_levelManager.getDrawOffset(off);
+        var s = $("grid").style;
+        s.display = "block";
+        s.left = off.x + "px";
+        s.top = off.y + "px";
+        g_services.gridTable = [];
+        g_services.grid.forEach(function(element, x, y) {
+          if (g_services.gridTable.length < y + 1) {
+            g_services.gridTable.push([]);
+          }
+          var pre = document.createElement("pre");
+          var txt = document.createTextNode("" + x + "," + y);
+          pre.appendChild(txt);
+          element.appendChild(pre);
+          g_services.gridTable[y].push(txt);
+        });
+      }
     };
 
     // Add a 2 players if there is no communication
     if (!globals.haveServer) {
       startLocalPlayers();
     }
+
+    // make the level after making the players. This calls
+    // player reset.
     resetLevel();
 
     var mainloop = function() {
@@ -303,6 +362,7 @@ requirejs(
     '../../scripts/audio',
     '../../scripts/entitysystem',
     '../../scripts/gamesupport',
+    '../../scripts/grid',
     '../../scripts/imageloader',
     '../../scripts/imageprocess',
     '../../scripts/input',

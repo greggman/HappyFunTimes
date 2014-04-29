@@ -313,17 +313,38 @@ define([
   }());
 
   Player.prototype.reset = function(x, y) {
+    var globals = this.services.globals;
     while (this.bombs && this.bombs.length) {
       putBomb(this.bombs.pop());
     }
     this.setPosition(x, y);
     this.animTimer = 0;
-    this.bombs = [getBomb(this.services)];
-    this.bombSize = 1;
+    this.bombs = [];
+    for (var ii = 0; ii < globals.numStartingBombs; ++ii) {
+      this.bombs.push(getBomb(this.services));
+    }
+    this.bombSize = globals.bombStartSize;
+    this.haveKick = false;
     this.setName(name);
     this.setFacing(6);
     this.direction = -1;  // direction player is pressing.
     this.setState('idle');
+
+//if (!window.bombs) {
+//  window.bombs = true;
+//  setTimeout(function() { this.tryPlaceBomb( 1, 1); }.bind(this),  250);
+//  setTimeout(function() { this.tryPlaceBomb( 3, 1); }.bind(this),  500);
+//  setTimeout(function() { this.tryPlaceBomb( 5, 1); }.bind(this),  750);
+//  setTimeout(function() { this.tryPlaceBomb(15, 1); }.bind(this), 1000);
+//  setTimeout(function() { this.tryPlaceBomb( 3, 3); }.bind(this), 1250);
+//}
+
+  };
+
+  Player.prototype.setBombSize = function(size) {
+    var levelManager = this.services.levelManager;
+    var maxSize = Math.max(levelManager.tilesAcross, levelManager.tilesDown);
+    this.bombSize = Math.min(maxSize, size);
   };
 
   Player.prototype.returnBomb = function(bomb) {
@@ -406,18 +427,22 @@ define([
     if (!this.abutton.justOn()) {
       return;
     }
+    var tileWidth = 16;
+    var tileHeight = 16;
+    var tx = (this.position[0] + tileWidth  * 0.5 * this.facingInfo.dx) / tileWidth  | 0;
+    var ty = (this.position[1] + tileHeight * 0.5 * this.facingInfo.dy) / tileHeight | 0;
+    if (!this.tryPlaceBomb(tx, ty)) {
+      tx = this.position[0] / tileWidth  | 0;
+      ty = this.position[1] / tileHeight | 0;
+      this.tryPlaceBomb(tx, ty);
+    }
+  };
+
+  Player.prototype.tryPlaceBomb = function(tx, ty) {
     if (!this.bombs.length) {
       return;
     }
-
     var levelManager = this.services.levelManager;
-    var tileWidth = 16;
-    var tileHeight = 16;
-    // hmm, if we made the center of the player the
-    // center of the sprite we'd need less math.
-    var tx = (this.position[0] + tileWidth  * 0.5 * this.facingInfo.dx) / tileWidth  | 0;
-    var ty = (this.position[1] + tileHeight * 0.5 * this.facingInfo.dy) / tileHeight | 0;
-
     var tile = levelManager.layer1.getTile(tx, ty);
     var tileInfo = levelManager.getTileInfo(tile);
 
@@ -427,6 +452,11 @@ define([
 
     var bomb = this.bombs.pop();
     bomb.place(this, tx, ty, this.bombSize);
+    return true;
+  };
+
+  Player.prototype.restoreBomb = function(bomb) {
+    this.bombs.push(bomb);
   };
 
   Player.prototype.sendCmd = function(cmd, data) {
@@ -437,6 +467,42 @@ define([
     // Need to check if we're standing on death.
     // Could be 1 of 2 tiles (or is it 4?). I think
     // as long as there are no open areas it's 2.
+
+    // For now let's just check the center and see
+    // how it feels.
+    var tileWidth = 16;
+    var tileHeight = 16;
+    var tx = (this.position[0]) / tileWidth  | 0;
+    var ty = (this.position[1]) / tileHeight | 0;
+    var levelManager = this.services.levelManager;
+    var tile = levelManager.layer1.getTile(tx, ty);
+    var tileInfo = levelManager.getTileInfo(tile);
+    if (tileInfo.info.flame) {
+      this.set_state('die');
+      return true;
+    }
+
+    // Lets check for powerups here too?
+    var crateType = tileInfo.info.crateType;
+    if (crateType) {
+      levelManager.layer1.setTile(tx, ty, levelManager.tiles.empty.id);
+      switch (crateType) {
+      case 'gold':
+        this.setBombSize(10000);
+        break;
+      case 'kick':
+        this.haveKick = true;
+        break;
+      case 'bomb':
+        this.bombs.push(getBomb(this.services));
+        break;
+      case 'flame':
+        this.setBombSize(this.bombSize + 1);
+        break;
+      }
+    }
+
+
   };
 
   // This state is when you're waiting to join a game.
@@ -532,6 +598,10 @@ define([
 
     this.position[0] = newX;
     this.position[1] = newY;
+
+    if (this.checkForDeath()) {
+      return;
+    }
 
     this.checkBombPlace();
 

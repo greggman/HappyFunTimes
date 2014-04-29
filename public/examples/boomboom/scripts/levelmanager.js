@@ -37,53 +37,81 @@ define(['../../scripts/Misc', '../../scripts/tilemap'], function(Misc, TileMap) 
   };
   var iSolid = {
     solid: true,
+    flameStop: true,
   };
   var iGoldCrate = {
+    flameStop: true,
+    flameEat: true,
+    crateType: 'gold',
   };
   var iKickCrate = {
+    flameStop: true,
+    flameEat: true,
+    crateType: 'kick',
   };
   var iBombCrate = {
+    flameStop: true,
+    flameEat: true,
+    crateType: 'bomb',
   };
   var iFlameCrate = {
+    flameStop: true,
+    flameEat: true,
+    crateType: 'flame',
   };
   var iCrate = {
     solid: true,
+    flameStop: true,
+    crate: true,
   };
   var iFlame = {
     bombOk: true,  // yes you can place a bomb here. If you do it will blow up
+    flame: true,
   };
   var iBomb = {
     solid: true,
+    flameStop: true,
+    bomb: true,
   };
   var iPipeH = {
     solid: true,
+    flameStop: true,
   };
   var iPipeV = {
     solid: true,
+    flameStop: true,
   };
   var iPipeU = {
     solid: true,
+    flameStop: true,
   };
   var iPipeD = {
     solid: true,
+    flameStop: true,
   };
   var iPipeL = {
     solid: true,
+    flameStop: true,
   };
   var iPipeR = {
     solid: true,
+    flameStop: true,
   };
   var iPipeRU = {
     solid: true,
+    flameStop: true,
   };
   var iPipeLU = {
     solid: true,
+    flameStop: true,
   };
   var iPipeRD = {
     solid: true,
+    flameStop: true,
   };
   var iPipeLD = {
     solid: true,
+    flameStop: true,
   };
 
   // normal I'd make this at build time. Either I'd much a a bunch of icons representing
