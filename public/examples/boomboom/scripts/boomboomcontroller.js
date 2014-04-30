@@ -40,6 +40,7 @@ var main = function(
     Input,
     Misc,
     MobileHacks,
+    Ticker,
     Touch) {
   var g_client;
   var g_audioManager;
@@ -60,7 +61,51 @@ var main = function(
     return document.getElementById(id);
   }
 
+  var msgContainerStyle = $("msgcontainer").style;
+  var msgText = Misc.createTextNode($("msg"));
+  var msgContainerOriginalDisplay = msgContainerStyle.display;
+
+  var flashNdx;
+  var ticker = new Ticker();
+  var cancelFlash = function() {
+    ticker.cancel();
+  };
+  var flash = function(colors) {
+    flashNdx = 0;
+    cancelFlash();
+    ticker.tick(2, 0.1, function() {
+      msgContainerStyle.backgroundColor = colors[(flashNdx++) % colors.length];
+    });
+  };
+
+  var showMsg = function(msg, color) {
+    cancelFlash()
+    msgContainerStyle.backgroundColor = color;
+    msgContainerStyle.display = msgContainerOriginalDisplay;
+    msgText.nodeValue = msg;
+  };
+
+  var hideMsg = function() {
+    msgContainerStyle.display = "none";
+  };
+
+  var images = {
+    tiles0:  { url: "assets/bomb_party-00.png", },
+  };
+  var avatarTileId = 0x0101;
+
   var startClient = function() {
+    var cutTile = function(xy, ii) {
+      var tx = (((xy >> 0) & 0xFF)     );
+      var ty = (((xy >> 8) & 0xFF) + ii);
+      var img = ImageProcess.cropImage(images.tiles0.img, tx * 16, ty * 16, 16, 16);
+      return img = ImageProcess.scaleImage(img, 128, 128);
+    };
+
+    images.avatars = [];
+    for (var ii = 0; ii < 4; ++ii) {
+      images.avatars.push(cutTile(avatarTileId, ii));
+    }
 
     g_client = new GameClient({
       gameId: "boomboom",
@@ -70,6 +115,33 @@ var main = function(
     };
 
     var handleDeath = function() {
+      showMsg("DEAD!", "red");
+      flash(["red", "yellow"]);
+    };
+
+    var handleWinner = function() {
+      showMsg("WINNER!!!", "yellow");
+      flash(["green", "blue", "purple", "red", "orange", "yellow"]);
+    };
+
+    var handleTie = function() {
+      showMsg("tie", "green");
+    };
+
+    var handleWaitForStart = function(data) {
+      showMsg("Start In: " + data.waitTime, "blue");
+    };
+
+    var handleWaitForNextGame = function(data) {
+      showMsg("Please Wait For Next Game", "orange");
+    };
+
+    var handleWaitForMorePlayers = function(data) {
+      showMsg("Please Wait For More Players", "orange");
+    };
+
+    var handleStart = function() {
+      hideMsg();
     };
 
     var handleSetColor = function(msg) {
@@ -77,15 +149,19 @@ var main = function(
       canvas.width = canvas.clientWidth;
       canvas.height = canvas.clientHeight;
       var ctx = canvas.getContext("2d");
-      var coloredImage = ImageProcess.adjustHSV(images.idle.img, msg.h, msg.s, msg.v, msg.range)
-      var frame = ImageProcess.cropImage(coloredImage, 0, 0, 16, 16);
-      var frame = ImageProcess.scaleImage(frame, 128, 128);
+      var frame = ImageProcess.adjustHSV(images.avatars[msg.set], msg.hsv[0], msg.hsv[1], msg.hsv[2]);
       ctx.drawImage(frame, 0, 0);
     };
 
     g_client.addEventListener('score', handleScore);
-    g_client.addEventListener('die', handleDeath);
+    g_client.addEventListener('start', handleStart);
+    g_client.addEventListener('tied', handleTie);
+    g_client.addEventListener('died', handleDeath);
+    g_client.addEventListener('winner', handleWinner);
     g_client.addEventListener('setColor', handleSetColor);
+    g_client.addEventListener('waitForStart', handleWaitForStart);
+    g_client.addEventListener('waitForNextGame', handleWaitForNextGame);
+    g_client.addEventListener('waitForMorePlayers', handleWaitForMorePlayers);
 
     var sounds = {};
     g_audioManager = new AudioManager(sounds);
@@ -137,12 +213,8 @@ var main = function(
       ],
     });
   };
-  startClient();
-//  var images = {
-//    idle:  { url: "assets/spr_idle.png", },
-//  };
-//
-//  ImageLoader.loadImages(images, startClient);
+
+  ImageLoader.loadImages(images, startClient);
 };
 
 // Start the main app logic.
@@ -156,6 +228,7 @@ requirejs(
     '../../scripts/input',
     '../../scripts/misc',
     '../../scripts/mobilehacks',
+    '../../scripts/Ticker',
     '../../scripts/touch',
   ],
   main

@@ -30,7 +30,7 @@
  */
 "use strict";
 
-define(['./player'], function(Player) {
+define(['../../scripts/misc', './player'], function(Misc, Player) {
 
   var clearOffsets = [
     { x:  0, y:  0, },
@@ -50,10 +50,52 @@ window.p = this.players;
   PlayerManager.prototype.reset = function() {
     var levelManager = this.services.levelManager;
     var tiles = levelManager.tiles;
+    var canvas = this.services.canvas;
+    var globals = this.services.globals;
+    var mapSize = levelManager.computeMapSize(canvas.width, canvas.height, globals.scale);
 
+    // Always choose corners first?
+    // Then choose others at random?
+    var lastRow = mapSize.numRows - 1;
+    var lastCol = mapSize.numColumns - 1;
+    var corners = [];
+    var others = [];
+    for (var yy = 0; yy < mapSize.numRows; ++yy) {
+      for (var xx = 0; xx < mapSize.numColumns; ++xx) {
+        var pos = { x: xx, y: yy, };
+        var isCorner = (xx == 0 && yy == 0) ||
+                       (xx == 0 && yy == lastRow) ||
+                       (xx == lastCol && yy == 0) ||
+                       (xx == lastCol && yy == lastRow);
+        if (isCorner) {
+          corners.push(pos);
+        } else {
+          others.push(pos);
+        }
+      }
+    }
+
+    // make opposite corners #0 and #1
+    var t = corners[1];
+    corners[1] = corners[3];
+    corners[3] = t;
+
+    // To corners add numPlayers - 4 random others.
+    var numNeeded = this.players.length - 4;
+    for (var ii = 0; ii < numNeeded; ++ii) {
+      var index = Misc.randInt(others.length);
+      corners.push(others.splice(index, 1)[0]);
+    }
+
+    // Keep only what we need (there might be 4 corners and 2 players for example)
+    corners = corners.slice(0, this.players.length);
+
+    // now choose random places to start players from valid place.
     this.forEachPlayer(function(player, ii) {
-      var tx = (1 + ii * 4);
-      var ty = (1 + ii * 2);
+      var index = Misc.randInt(corners.length);
+      var pos = corners.splice(index, 1)[0];
+      var tx = (1 + pos.x * 2);
+      var ty = (1 + pos.y * 2);
 
       for (var ii = 0; ii < clearOffsets.length; ++ii) {
         var off = clearOffsets[ii];
@@ -100,12 +142,11 @@ window.p = this.players;
   };
 
   PlayerManager.prototype.removePlayer = function(playerToRemove) {
-    var index = this.players.indexOf(player);
+    var index = this.players.indexOf(playerToRemove);
     if (index >= 0) {
-      this.playerDied();
       this.players.splice(index, 1);
     }
-    index = this.playersPlaying.indexOf(player);
+    index = this.playersPlaying.indexOf(playerToRemove);
     if (index >= 0) {
       this.playersPlaying.splice(index, 1);
     }

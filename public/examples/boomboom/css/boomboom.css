@@ -68,11 +68,37 @@ html, body {
 }
 #avatar {
   position: absolute;
-  left: 35%;
+  left: 36%;
   bottom: 100px;
   width: 128px;
   height: 128px;
 }
+#msgcontainer {
+  position: absolute;
+  left: 0px;
+  top: 0px;
+  width: 100%;
+  height: 100%;
+  z-index: 2;
+  background-color: #48F;
 
+  display: flex;
+  display: -webkit-flex;
+  flex-flow: column;
+  -webkit-flex-flow: column;
+  justify-content: center;
+  align-content: center;
+  align-items: center;
+  -webkit-justify-content: center;
+  -webkit-align-content: center;
+  -webkit-align-items: center;
+  min-height: auto;
+}
 
-
+#msg {
+  color: white;
+  flex: 0 0 auto;
+  -webkit-flex: 0 0 auto;
+  font-size: xx-large;
+  font-weight: bold;
+}

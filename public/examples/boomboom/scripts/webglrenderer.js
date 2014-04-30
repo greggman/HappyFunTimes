@@ -268,7 +268,7 @@ define(
 //    this.baseFBO.bind();
     gl.colorMask(true, true, true, true);
     gl.depthMask(true);
-    gl.clearColor(0,1,1,0);
+    gl.clearColor(0.2,0.3,0.1,1);
     gl.clearDepth(1);
     gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT | gl.STENCIL_BUFFER_BIT);
 

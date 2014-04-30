@@ -384,6 +384,14 @@ define([
     this.position[1] = y;
   };
 
+  Player.prototype.sendWinner = function() {
+    this.sendCmd('winner');
+  };
+
+  Player.prototype.sendTied = function() {
+    this.sendCmd('tied');
+  };
+
   Player.prototype.setName = function(name) {
     if (name != this.playerName) {
       this.playerName = name;
@@ -523,7 +531,6 @@ define([
   // This state is when the round has finished.
   // Show the character but don't update anything.
   Player.prototype.init_end = function() {
-    this.alive = false;
   };
 
   Player.prototype.state_end = function() {
@@ -543,6 +550,7 @@ define([
   // This state is just before the game has started
   Player.prototype.init_start = function() {
     // player.reset will have just been called.
+    this.sendCmd('start');
   };
 
   Player.prototype.state_start = function() {
@@ -646,6 +654,7 @@ define([
     this.reportDied();
     this.dieTimer = 0;
   };
+
   Player.prototype.state_die = function() {
     var globals = this.services.globals;
     this.uniforms.u_hsvaAdjust[0] += globals.dieColorSpeed * globals.elapsedTime;

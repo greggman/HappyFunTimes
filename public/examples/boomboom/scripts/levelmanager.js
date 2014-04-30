@@ -264,15 +264,14 @@ define(['../../scripts/Misc', '../../scripts/tilemap'], function(Misc, TileMap) 
     this.tileDrawOptions.tiles = tilesTexture;
   };
 
-  Layer.prototype.draw = function(renderer) {
+  Layer.prototype.draw = function(renderer, levelManager) {
     if (this.dirty) {
       this.tilemap.uploadTilemap();
       this.dirty = false;
     }
 
     var opt = this.tileDrawOptions;
-    opt.x = Math.floor((renderer.canvas.width  - opt.width ) / 2);
-    opt.y = Math.floor((renderer.canvas.height - opt.height) / 2);
+    levelManager.getDrawOffset(opt);
     opt.canvasWidth = renderer.canvas.width;
     opt.canvasHeight = renderer.canvas.height;
     this.tilemap.draw(opt);
@@ -314,21 +313,32 @@ define(['../../scripts/Misc', '../../scripts/tilemap'], function(Misc, TileMap) 
     };
   };
 
+  LevelManager.prototype.computeMapSize = function(width, height, scale) {
+    // figure out how many tiles we can fit.
+    var mapSize = {
+      across: Math.floor(width  / (this.tileset.tileWidth  * scale)),
+      down:   Math.floor(height / (this.tileset.tileHeight * scale)),
+    };
+    // We need an odd number of tiles.
+    if (mapSize.across % 2 == 0) {
+      mapSize.across -= 1;
+    }
+    if (mapSize.down % 2 == 0) {
+      mapSize.down -= 1;
+    }
+    mapSize.numColumns = (mapSize.across - 1) / 2;
+    mapSize.numRows    = (mapSize.down   - 1) / 2;
+    return mapSize;
+  };
+
   LevelManager.prototype.makeLevel = function(canvasWidth, canvasHeight) {
     var globals = this.services.globals;
     var scale = globals.scale;
 
     // figure out how many tiles we can fit.
-    var tilesAcross = Math.floor(canvasWidth  / (this.tileset.tileWidth  * scale));
-    var tilesDown   = Math.floor(canvasHeight / (this.tileset.tileHeight * scale));
-
-    // We need an odd number of tiles.
-    if (tilesAcross % 2 == 0) {
-      tilesAcross -= 1;
-    }
-    if (tilesDown % 2 == 0) {
-      tilesDown -= 1;
-    }
+    var mapSize = this.computeMapSize(canvasWidth, canvasHeight, scale);
+    var tilesAcross = mapSize.across;
+    var tilesDown   = mapSize.down;
 
     var layer0 = new Layer(tilesAcross, tilesDown, scale, this.tileset);
     var layer1 = new Layer(tilesAcross, tilesDown, scale, this.tileset);
@@ -402,12 +412,15 @@ define(['../../scripts/Misc', '../../scripts/tilemap'], function(Misc, TileMap) 
     var renderer = this.services.renderer;
     var opt = this.layer0.tileDrawOptions;
     obj.x = Math.floor((renderer.canvas.width  - opt.width ) / 2);
-    obj.y = Math.floor((renderer.canvas.height - opt.height) / 2);
+    obj.y = Math.floor((renderer.canvas.height - opt.height));
+    if (obj.y > 4) {
+      obj.y -= 4;
+    }
   };
 
   LevelManager.prototype.draw = function(renderer) {
-    this.layer0.draw(renderer);
-    this.layer1.draw(renderer);
+    this.layer0.draw(renderer, this);
+    this.layer1.draw(renderer, this);
   };
 
   return LevelManager;

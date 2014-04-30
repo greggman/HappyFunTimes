@@ -76,6 +76,7 @@ window.s = g_services;
     grid: false,
     step: false,
     scale: 2,
+    forceScale: false,
     frameCount: 0,
     crateProb: [
       { tileName: 'goldCrate',  prob:  1, },
@@ -88,8 +89,8 @@ window.s = g_services;
     waitForPlayersDuration: 15,
     waitForStartDuration: 3,
     waitForGo: 1,
-    waitForEnd: 1,
-    waitForWinnerDuration: 4,
+    waitForEnd: 3,
+    waitForWinnerDuration: 6,
     roundDuration: 120,
     //
     tileAnimSpeed: 16,
@@ -251,7 +252,7 @@ window.gs = GameSupport;
       0x0509,
     ];
     images.avatar = [];
-    var cutTile = function(xy) {
+    var cutTile = function(xy, ii) {
       var tx = (((xy >> 0) & 0xFF)     );
       var ty = (((xy >> 8) & 0xFF) + ii);
       var img = ImageProcess.cropImage(images.tiles0.img, tx * 16, ty * 16, 16, 16);
@@ -260,7 +261,7 @@ window.gs = GameSupport;
     for (var ii = 0; ii < 4; ++ii) {
       var avatar = {};
       for (var spriteName in avatarSprites) {
-        var img = cutTile(avatarSprites[spriteName]);
+        var img = cutTile(avatarSprites[spriteName], ii);
         avatar[spriteName] = img;
       }
       images.avatar.push(avatar);
@@ -269,7 +270,7 @@ window.gs = GameSupport;
       frames: [],
     };
     for (var ii = 0; ii < bombSprites.length; ++ii) {
-      images.bomb.frames.push(cutTile(bombSprites[ii]));
+      images.bomb.frames.push(cutTile(bombSprites[ii]), 0);
     }
 
     var tilesetTextures = [

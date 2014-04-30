@@ -89,6 +89,21 @@ define([
     var globals = services.globals;
     var canvas = services.canvas;
 
+    var numPlayers = playerManager.getNumPlayersConnected();
+
+    if (!globals.forceScale) {
+      // Compute a good scale for the number of players.
+      globals.scale = 1;
+      for (var ii = 8; ii > 0; --ii) {
+        var mapSize = levelManager.computeMapSize(canvas.width, canvas.height, ii);
+        var numPlayersThatFitOnMap = ((mapSize.numColumns + 2) / 3 | 0) * ((mapSize.numRows + 2) / 3 | 0);
+        if (numPlayersThatFitOnMap >= numPlayers) {
+          globals.scale = ii;
+          break;
+        }
+      }
+    }
+
     levelManager.makeLevel(canvas.width, canvas.height);
     if (globals.grid) {
       if (!services.grid) {
@@ -135,6 +150,7 @@ define([
   };
 
   GameManager.prototype.setState = function(state) {
+console.log("gm state: " + state);
     this.state = state;
     var init = this["init_" + state];
     if (init) {
@@ -143,7 +159,7 @@ define([
     this.process = this["state_" + state];
   };
 
-  GameManager.prototype.waitForPlayersUpdate = function() {
+  GameManager.prototype.waitForStartUpdate = function() {
     var globals = this.services.globals;
     var numPlayers = this.services.playerManager.getNumPlayersConnected();
 
@@ -160,11 +176,24 @@ define([
 
     var globals = this.services.globals;
     this.timer = globals.waitForPlayersDuration;
-    this.waitForPlayersUpdate();
+    this.waitForStartUpdate();
+    if (this.services.playerManager.getNumPlayersConnected() < 2) {
+      this.services.server.broadcastCmd('waitForMorePlayers');
+    }
   };
 
   GameManager.prototype.state_waitForPlayers = function() {
-    this.waitForPlayersUpdate();
+    this.waitForStartUpdate();
+    if (this.services.playerManager.getNumPlayersConnected() > 1) {
+      this.setState('waitForStart');
+    }
+  };
+
+  GameManager.prototype.init_waitForStart = function() {
+  };
+
+  GameManager.prototype.state_waitForStart = function() {
+    this.waitForStartUpdate();
     var globals = this.services.globals;
     var oldTimer = this.timer | 0;
     this.timer -= globals.elapsedTime;
@@ -174,18 +203,17 @@ define([
       return;
     }
 
-    var secondsLeft = this.timer | 0;
-    if (oldTimer != secondsLeft) {
-      // I'm not 100% sure broadcasting is a good idea.
-      // Sending through player would allow player to look at player state.
-      this.services.server.broadcastCmd('waitForPlayers', {
-        waitTime: secondsLeft,
-      });
-    }
-
     // Wait for at least 2 players.
     if (this.services.playerManager.getNumPlayersConnected() < 2) {
-      this.timer = globals.waitForPlayersDuration;
+      this.setState('waitForPlayers');
+      return;
+    }
+
+    var secondsLeft = this.timer | 0;
+    if (oldTimer != secondsLeft) {
+      this.services.server.broadcastCmd('waitForStart', {
+        waitTime: secondsLeft,
+      });
     }
   };
 
@@ -259,18 +287,26 @@ define([
       this.overlayLine1.nodeValue = "No Winners";
     } else if (numPlayersAlive > 1) {
       this.overlayLine1.nodeValue = "Draw";
+      this.services.playerManager.forEachPlayerPlaying(function(player) {
+        if (player.alive) {
+          player.sendTied();
+        }
+      });
     } else {
       ++this.winner.wins;
       this.overlayLine1.nodeValue = "Winner";
       this.overlayLine2.nodeValue = this.winner.playerName + " " + this.winner.wins + "/" + this.winner.roundsPlayed;
+      this.winner.sendWinner();
     }
     this.timer = globals.waitForWinnerDuration;
   };
 
   GameManager.prototype.state_showWinners = function() {
     var globals = this.services.globals;
-    this.timer -= globals.waitForWinnerDurtation;
-    this.setState('waitForPlayers');
+    this.timer -= globals.elapsedTime;
+    if (this.timer <= 0) {
+      this.setState('waitForPlayers');
+    }
   };
 
   return GameManager;
