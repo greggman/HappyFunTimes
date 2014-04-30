@@ -38,6 +38,8 @@ define(
     './netplayer',
   ], function(VirtualSocket, NetPlayer) {
 
+  var emptyMsg = { };
+
   /**
    *
    */
@@ -169,12 +171,26 @@ define(
     // This sends a command to the 'relayserver'. The relaysever uses 'cmd' to figure out what to do
     // and 'id' to figure out which client this is for. 'data' will be delieved to that client.
     this.sendCmd = function(cmd, id, data) {
+      if (data === undefined) {
+        data = emptyMsg;
+      }
       var msg = {
         cmd: cmd,
         id: id,
         data: data
       };
       send_(msg);
+    };
+
+    // Sends a command to all clients connected to this server. It's effectively the
+    // same as iterating over all NetPlayers returned in playerconnect events. The difference
+    // is only one message is sent from the server (here) to the relayserver. The relayserver
+    // then sends the same message to each client.
+    this.broadcastCmd = function(cmd, data) {
+      if (data === undefined) {
+        data = emptyMsg;
+      }
+      this.sendCmd('broadcast', {cmd: cmd, data: data});
     };
 
     connect_();
