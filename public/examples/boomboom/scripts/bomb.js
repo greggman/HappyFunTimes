@@ -113,9 +113,6 @@ define([
   var incDecExplosion = function(nx, ny, tiles, flameInfo, layer, delta) {
     var offset = (ny * explosionTableWidth + nx) * 2;
     explosionTable[offset + flameInfo.dirNdx] += delta;
-    if (g_services.gridTable) {
-      g_services.gridTable[ny][nx].nodeValue = "ex: " + explosionTable[offset] + ", " + explosionTable[offset + 1];
-    }
     var h = explosionTable[offset + 0];
     var v = explosionTable[offset + 1];
     var tileId = tiles.empty.id;
@@ -125,6 +122,9 @@ define([
       tileId = tiles[(h > 1 || v > 1) ? flameInfo.midId : flameInfo.tipId].id;
     }
     layer.setTile(nx, ny, tileId);
+    if (g_services.gridTable) {
+      g_services.gridTable[ny][nx].nodeValue = "ex: " + explosionTable[offset] + ", " + explosionTable[offset + 1] + "\n" + "t: " + tileId.toString(16);
+    }
   };
 
   var Bomb = function(services) {

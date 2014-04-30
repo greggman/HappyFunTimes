@@ -263,11 +263,6 @@ define(
   WebGLRenderer.prototype.begin = function() {
     ++this.renderCount;
     this.leadMarkInfo.on = false;
-    this.ships = [];
-    this.outlineShips = [];
-    this.twoToneShips = [];
-    this.shields = [];
-    this.shots = [];
     this.screenDimensions[0] = 2 / this.canvas.width;
     this.screenDimensions[1] = 2 / this.canvas.height;
 //    this.baseFBO.bind();

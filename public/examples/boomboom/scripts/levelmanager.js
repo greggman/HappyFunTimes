@@ -172,7 +172,7 @@ define(['../../scripts/Misc', '../../scripts/tilemap'], function(Misc, TileMap) 
     flameCrate: { id: 0x0008, info: iFlameCrate, },
     crate:      { id: 0x0009, info: iCrate, },
     pipeRD:     { id: 0x000A, info: iPipeRD, },
-    flameU:     { id: 0x000F, info: iFlame, },
+    flameU:     { id: 0x000E, info: iFlame, },
     pipeLD:     { id: 0x010A, info: iPipeLD, },
     pipeV:      { id: 0x010D, info: iPipeV, },
     flameV:     { id: 0x010E, info: iFlame, },
@@ -258,6 +258,10 @@ define(['../../scripts/Misc', '../../scripts/tilemap'], function(Misc, TileMap) 
 
   Layer.prototype.setTileByPixels = function(x, y, value) {
     this.setTile((x / this.tileWidth) | 0, (y / this.tileHeight) | 0, value);
+  };
+
+  Layer.prototype.setTiles = function(tilesTexture) {
+    this.tileDrawOptions.tiles = tilesTexture;
   };
 
   Layer.prototype.draw = function(renderer) {

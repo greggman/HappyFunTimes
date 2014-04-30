@@ -42,11 +42,11 @@ var main = function(
     AudioManager,
     EntitySystem,
     GameSupport,
-    Grid,
     ImageLoader,
     ImageProcess,
     Input,
     Misc,
+    GameManager,
     LevelManager,
     PlayerManager,
     WebGLRenderer) {
@@ -84,14 +84,31 @@ window.s = g_services;
       { tileName: 'flameCrate', prob:  6, },
       { tileName: 'empty',      prob: 30, },
     ],
-    numStartingBombs: 10, //1,
-    bombStartSize: 10, //1,
+    // game stuff
+    waitForPlayersDuration: 15,
+    waitForStartDuration: 3,
+    waitForGo: 1,
+    waitForEnd: 1,
+    waitForWinnerDuration: 4,
+    roundDuration: 120,
+    //
+    tileAnimSpeed: 16,
     idleAnimSpeed: 4,
+    // walk size
     walkAnimSpeed: 0.2,
     walkSpeed: 64,
-    bombDuration: 5,
-    explosionDuration: 3,
-    unexplodeTickDuration: 0.05,
+    // bomb stuff
+    numStartingBombs: 1,          // how many bombs a player gets to start
+    bombStartSize: 1,             // starting size of bombs
+    bombDuration: 5,              // time bomb ticks
+    explosionDuration: 2,         // time bomb as at full size
+    unexplodeTickDuration: 0.05,  // time per tile as bomb contracts.
+    // die stuff
+    dieColorSpeed: 2,
+    dieDuration: 2,
+    dieScaleSpeed: 20,
+    dieRotationSpeed: 16,
+    evaporateDuration: 0.5,
     columnRowSpace: 3,
   };
 window.g = globals;
@@ -194,7 +211,10 @@ window.gs = GameSupport;
   // colorize: number of colors to make
   // slizes: number = width of all slices, array = width of each consecutive slice
   var images = {
-    tiles:  { url: "assets/bomb_party.png", },
+    tiles0:  { url: "assets/bomb_party-00.png", },
+    tiles1:  { url: "assets/bomb_party-01.png", },
+    tiles2:  { url: "assets/bomb_party-02.png", },
+    tiles3:  { url: "assets/bomb_party-03.png", },
   };
   g_services.images = images;
 
@@ -234,7 +254,7 @@ window.gs = GameSupport;
     var cutTile = function(xy) {
       var tx = (((xy >> 0) & 0xFF)     );
       var ty = (((xy >> 8) & 0xFF) + ii);
-      var img = ImageProcess.cropImage(images.tiles.img, tx * 16, ty * 16, 16, 16);
+      var img = ImageProcess.cropImage(images.tiles0.img, tx * 16, ty * 16, 16, 16);
       return createTexture(img);
     };
     for (var ii = 0; ii < 4; ++ii) {
@@ -252,75 +272,54 @@ window.gs = GameSupport;
       images.bomb.frames.push(cutTile(bombSprites[ii]));
     }
 
-    var tilesetTexture = createTexture(images.tiles.img);
+    var tilesetTextures = [
+      createTexture(images.tiles0.img),
+      createTexture(images.tiles1.img),
+      createTexture(images.tiles2.img),
+      createTexture(images.tiles3.img),
+    ];
 
     var tileset = {
       tileWidth: 16,
       tileHeight: 16,
       tilesAcross: 15,  // tiles across set
       tilesDown: 6,     // tiles across set
-      texture: tilesetTexture,
+      texture: tilesetTextures[0],
     };
     var g_levelManager = new LevelManager(g_services, tileset);
     g_services.levelManager = g_levelManager;
-
-    var resetLevel = function() {
-      g_levelManager.makeLevel(canvas.width, canvas.height);
-      g_playerManager.reset();
-      if (globals.grid) {
-        if (!g_services.grid) {
-          g_services.grid = new Grid({
-            container: $("grid"),
-            columns: 1,
-            rows: 1,
-          });
-        }
-        g_services.grid.setDimensions(g_levelManager.tilesAcross, g_levelManager.tilesDown);
-        var off = {};
-        g_levelManager.getDrawOffset(off);
-        var s = $("grid").style;
-        s.display = "block";
-        s.left = off.x + "px";
-        s.top = off.y + "px";
-        g_services.gridTable = [];
-        g_services.grid.forEach(function(element, x, y) {
-          if (g_services.gridTable.length < y + 1) {
-            g_services.gridTable.push([]);
-          }
-          var pre = element.firstChild;
-          var txt;
-          if (pre) {
-            txt = pre.firstChild;
-          } else {
-            pre = document.createElement("pre");
-            txt = document.createTextNode("");
-            pre.appendChild(txt);
-            element.appendChild(pre);
-          }
-          txt.nodeValue = "" + x + "," + y;
-          g_services.gridTable[y].push(txt);
-        });
-      }
-    };
 
     // Add a 2 players if there is no communication
     if (!globals.haveServer) {
       startLocalPlayers();
     }
 
+    var gameManager = new GameManager(g_services);
+
     // make the level after making the players. This calls
     // player reset.
-    resetLevel();
+    gameManager.reset();
+
+    var tileAnimClock = 0;
 
     var mainloop = function() {
       if (renderer.resize()) {
-        resetLevel();
+        gameManager.reset();
       }
 
       g_services.entitySystem.processEntities();
 
       renderer.begin();
+      gl.disable(gl.BLEND);
+
+      tileAnimClock += globals.tileAnimSpeed * globals.elapsedTime;
+      var tilesTexture = tilesetTextures[(tileAnimClock | 0) % tilesetTextures.length];
+      g_services.levelManager.layer0.setTiles(tilesTexture);
+      g_services.levelManager.layer1.setTiles(tilesTexture);
+
       g_services.levelManager.draw(renderer);
+      gl.enable(gl.BLEND);
+      gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
       g_services.drawSystem.processEntities(renderer);
       renderer.end();
     };
@@ -369,11 +368,11 @@ requirejs(
     '../../scripts/audio',
     '../../scripts/entitysystem',
     '../../scripts/gamesupport',
-    '../../scripts/grid',
     '../../scripts/imageloader',
     '../../scripts/imageprocess',
     '../../scripts/input',
     '../../scripts/misc',
+    './gamemanager',
     './levelmanager',
     './playermanager',
     './webglrenderer',

@@ -28,84 +28,13 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-html, body {
-}
-#visual {
-  position: absolute;
-  left: 0px;
-  top: 0px;
-}
-#playfield {
-  position: absolute;
-  left: 0px;
-  top: 0px;
-}
-#grid {
-  gdisplay: hidden;
-  position: absolute;
-  left: 0px;
-  top: 0px;
-  z-index: 10;
-}
-#grid table {
-  border-spacing: 0px;
-  border-collapse: collapse;
-}
-#grid td {
-  border: 1px solid black;
-  width: 64px;
-  height: 64px;
-  padding: 1px;
-  overflow: hidden;
-  vertical-align: text-top;
-  font-size: xx-small;
-}
+"use strict";
 
-#timeContainer {
-  position: absolute;
-  left: 0px;
-  top: 10px;
-  width: 100%;
-  z-index: 3;
-  text-align: center;
-}
-#time {
-  width: 5em;
-  font-size: 60px;
-  font-weight: bold;
-  color: white;
-  margin: 0 auto;
-  padding: 2px 10px 2px 10px;
-  border-radius: 10px;
-  background-color: rgba(0,0,0,0.5);
-  display: inline-block;
-}
+define(function() {
+  var GameManager = function() {
 
-#overlay {
-  position: absolute;
-  left: 0px;
-  top: 0px;
-  display: flex;
-  display: -webkit-flex;
-  justify-content: center;
-  align-content: center;
-  align-items: center;
-  -webkit-justify-content: center;
-  -webkit-align-content: center;
-  -webkit-align-items: center;
-  z-index: 4;
-}
+  };
 
-#overlay-inner {
-  flex: 0 0 auto;
-  background-color: rgba(0,0,0,0.5);
-  color: white;
-  font-size: 60px;
-  font-weight: bold;
-  width: 50%;
-  padding: 0.5em;
-  border: 5px solid blue;
-  border-radius: 50px;
-  white-space: nowrap;
-  overflow: hidden;
-}
+  return GameManager;
+});
+

@@ -43,6 +43,7 @@ define(['./player'], function(Player) {
   var PlayerManager = function(services) {
     this.services = services;
     this.players = [];
+    this.playersPlaying = [];
 window.p = this.players;
   };
 
@@ -64,6 +65,26 @@ window.p = this.players;
     });
 
     levelManager.setWalls();
+    // Players that connect while a session will increase players.length so
+    // record the players playing at the time the game starts.
+    this.playersPlaying = this.players.slice();
+    this.numPlayersAlive = this.players.length;
+  };
+
+  PlayerManager.prototype.playerDied = function() {
+    --this.numPlayersAlive;
+  }
+
+  PlayerManager.prototype.getNumPlayersAlive = function() {
+    return this.numPlayersAlive;
+  };
+
+  PlayerManager.prototype.getNumPlayersPlaying = function() {
+    return this.playersPlaying.length;
+  };
+
+  PlayerManager.prototype.getNumPlayersConnected = function() {
+    return this.players.length;
   };
 
   PlayerManager.prototype.startPlayer = function(netPlayer, name) {
@@ -79,12 +100,21 @@ window.p = this.players;
   };
 
   PlayerManager.prototype.removePlayer = function(playerToRemove) {
-    var netPlayer = playerToRemove.netPlayer;
-    for (var ii = 0; ii < this.players.length; ++ii) {
-      var player = this.players[ii];
-      if (player.netPlayer === netPlayer) {
-        this.players.splice(ii, 1);
-        return;
+    var index = this.players.indexOf(player);
+    if (index >= 0) {
+      this.playerDied();
+      this.players.splice(index, 1);
+    }
+    index = this.playersPlaying.indexOf(player);
+    if (index >= 0) {
+      this.playersPlaying.splice(index, 1);
+    }
+  };
+
+  PlayerManager.prototype.forEachPlayerPlaying = function(callback) {
+    for (var ii = 0; ii < this.playersPlaying.length; ++ii) {
+      if (callback(this.playersPlaying[ii], ii)) {
+        return this;
       }
     }
   };

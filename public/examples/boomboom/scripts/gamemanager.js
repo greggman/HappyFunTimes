@@ -1,0 +1,278 @@
+/*
+ * Copyright 2014, Gregg Tavares.
+ * All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are
+ * met:
+ *
+ *     * Redistributions of source code must retain the above copyright
+ * notice, this list of conditions and the following disclaimer.
+ *     * Redistributions in binary form must reproduce the above
+ * copyright notice, this list of conditions and the following disclaimer
+ * in the documentation and/or other materials provided with the
+ * distribution.
+ *     * Neither the name of Gregg Tavares. nor the names of its
+ * contributors may be used to endorse or promote products derived from
+ * this software without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+ * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+ * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+ * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+ * OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+ * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+ * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+ * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+ * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+ * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ */
+"use strict";
+
+define([
+    '../../scripts/grid',
+    '../../scripts/misc',
+    '../../scripts/mobilehacks',
+    '../../scripts/strings',
+  ], function(
+    Grid,
+    Misc,
+    MobileHacks,
+    Strings) {
+
+  var $ = function(id) {
+    return document.getElementById(id);
+  };
+
+  var GameManager = function(services) {
+    this.services = services;
+    this.services.entitySystem.addEntity(this);
+    this.timeContainer = $("timeContainer");
+    this.timeStyle = $("time").style;
+    this.timeNode = Misc.createTextNode($("time"));
+    this.overlay = $("overlay-inner");
+    this.overlayLine1 = Misc.createTextNode($("overlay-line1"));
+    this.overlayLine2 = Misc.createTextNode($("overlay-line2"));
+    this.setState('waitForPlayers');
+  };
+
+  GameManager.prototype.showOverlay = function(show) {
+    this.overlay.style.display = show ? "block" : "none";
+  };
+
+  GameManager.prototype.showTime = function(show) {
+    this.timeContainer.style.display = show ? "block" : "none";
+  };
+
+  GameManager.prototype.updateTime = function() {
+    var time = this.roundTimer | 0;
+    if (time != this.oldRoundTimer) {
+      this.oldRoundTimer = time;
+      var mins = time / 60 | 0;
+      var seconds = time % 60;
+      this.timeNode.nodeValue = Strings.padLeft(mins, 2, '0') + ":" + Strings.padLeft(seconds, 2, '0');
+    }
+    var globals = this.services.globals;
+    var color = time > 15 ? 'white' : ((globals.frameCount & 8) ? 'white' : 'red');
+    if (this.oldTimeColor != color) {
+      this.oldTimeColor = color;
+      this.timeStyle.color = color;
+    }
+  };
+
+  GameManager.prototype.reset = function() {
+    MobileHacks.fixHeightHack();
+    var services = this.services;
+    var levelManager = services.levelManager;
+    var playerManager = services.playerManager;
+    var globals = services.globals;
+    var canvas = services.canvas;
+
+    levelManager.makeLevel(canvas.width, canvas.height);
+    if (globals.grid) {
+      if (!services.grid) {
+        services.grid = new Grid({
+          container: $("grid"),
+          columns: 1,
+          rows: 1,
+        });
+      }
+      services.grid.setDimensions(levelManager.tilesAcross, levelManager.tilesDown);
+      var off = {};
+      levelManager.getDrawOffset(off);
+      var s = $("grid").style;
+      s.display = "block";
+      s.left = off.x + "px";
+      s.top = off.y + "px";
+      services.gridTable = [];
+      services.grid.forEach(function(element, x, y) {
+        if (services.gridTable.length < y + 1) {
+          services.gridTable.push([]);
+        }
+        var pre = element.firstChild;
+        var txt;
+        if (pre) {
+          txt = pre.firstChild;
+        } else {
+          pre = document.createElement("pre");
+          txt = document.createTextNode("");
+          pre.appendChild(txt);
+          element.appendChild(pre);
+        }
+        txt.nodeValue = "" + x + "," + y;
+        services.gridTable[y].push(txt);
+      });
+    }
+    this.setAllPlayersToState('waiting');
+    this.setState('waitForPlayers');
+  };
+
+  GameManager.prototype.setAllPlayersToState = function(state) {
+    this.services.playerManager.forEachPlayerPlaying(function(player) {
+      player.setState(state);
+    });
+  };
+
+  GameManager.prototype.setState = function(state) {
+    this.state = state;
+    var init = this["init_" + state];
+    if (init) {
+      init.call(this);
+    }
+    this.process = this["state_" + state];
+  };
+
+  GameManager.prototype.waitForPlayersUpdate = function() {
+    var globals = this.services.globals;
+    var numPlayers = this.services.playerManager.getNumPlayersConnected();
+
+    var timeStr = Strings.padLeft((this.timer | 0), 2, '0');
+
+    this.overlayLine1.nodeValue = "Start In: " + ((numPlayers < 2 || (globals.frameCount & 16)) ? timeStr : '');
+    this.overlayLine2.nodeValue = "Players: " + numPlayers + ((globals.frameCount & 16) && numPlayers < 2 ? ' Need 2+' : '');
+  }
+
+  GameManager.prototype.init_waitForPlayers = function() {
+    this.showOverlay(true);
+    this.showTime(false);
+    this.overlay.style.textAlign = "";
+
+    var globals = this.services.globals;
+    this.timer = globals.waitForPlayersDuration;
+    this.waitForPlayersUpdate();
+  };
+
+  GameManager.prototype.state_waitForPlayers = function() {
+    this.waitForPlayersUpdate();
+    var globals = this.services.globals;
+    var oldTimer = this.timer | 0;
+    this.timer -= globals.elapsedTime;
+
+    if (this.timer <= 0) {
+      this.setState('start');
+      return;
+    }
+
+    var secondsLeft = this.timer | 0;
+    if (oldTimer != secondsLeft) {
+      // I'm not 100% sure broadcasting is a good idea.
+      // Sending through player would allow player to look at player state.
+      this.services.server.broadcastCmd('waitForPlayers', {
+        waitTime: secondsLeft,
+      });
+    }
+
+    // Wait for at least 2 players.
+    if (this.services.playerManager.getNumPlayersConnected() < 2) {
+      this.timer = globals.waitForPlayersDuration;
+    }
+  };
+
+  GameManager.prototype.init_start = function() {
+    var globals = this.services.globals;
+    this.roundTimer = globals.roundDuration;
+    this.showTime(true);
+    this.updateTime();
+    this.services.playerManager.reset();
+    this.overlay.style.textAlign = "center";
+    this.overlayLine1.nodeValue = "Ready?";
+    this.overlayLine2.nodeValue = "";
+    this.timer = globals.waitForStartDuration;
+  };
+
+  GameManager.prototype.state_start = function() {
+    var globals = this.services.globals;
+    var old = this.timer | 0;
+    this.timer -= globals.elapsedTime;
+    if (old != (this.timer | 0) && old == globals.waitForGo) {
+      this.overlayLine1.nodeValue = "GO!";
+    }
+    if (this.timer <= 0) {
+      this.setState('play');
+    }
+  };
+
+  GameManager.prototype.init_play = function() {
+    this.showOverlay(false);
+    this.setAllPlayersToState('idle');
+  };
+
+  GameManager.prototype.state_play = function() {
+    var globals = this.services.globals;
+    this.roundTimer -= globals.elapsedTime;
+    var numPlayersAlive = this.services.playerManager.getNumPlayersAlive();
+    if (this.roundTimer <= 0 || numPlayersAlive < 2) {
+      this.setState('end');
+      return;
+    }
+    this.updateTime();
+  };
+
+  GameManager.prototype.init_end = function() {
+    var globals = this.services.globals;
+    this.services.playerManager.forEachPlayerPlaying(function(player) {
+      ++player.roundsPlayed;
+      if (player.alive) {
+        player.setState('end');
+        this.winner = player;
+      }
+    }.bind(this));
+    this.timer = globals.waitForEnd;
+  };
+
+  GameManager.prototype.state_end = function() {
+    var globals = this.services.globals;
+    this.timer -= globals.elapsedTime;
+    if (this.timer <= 0) {
+      this.setState('showWinners');
+    }
+  };
+
+  GameManager.prototype.init_showWinners = function() {
+    var globals = this.services.globals;
+    this.showOverlay(true);
+    this.overlay.style.textAlign = "center";
+    var numPlayersAlive = this.services.playerManager.getNumPlayersAlive();
+    this.overlayLine2.nodeValue = "";
+    if (numPlayersAlive <= 0) {
+      this.overlayLine1.nodeValue = "No Winners";
+    } else if (numPlayersAlive > 1) {
+      this.overlayLine1.nodeValue = "Draw";
+    } else {
+      ++this.winner.wins;
+      this.overlayLine1.nodeValue = "Winner";
+      this.overlayLine2.nodeValue = this.winner.playerName + " " + this.winner.wins + "/" + this.winner.roundsPlayed;
+    }
+    this.timer = globals.waitForWinnerDuration;
+  };
+
+  GameManager.prototype.state_showWinners = function() {
+    var globals = this.services.globals;
+    this.timer -= globals.waitForWinnerDurtation;
+    this.setState('waitForPlayers');
+  };
+
+  return GameManager;
+});
+

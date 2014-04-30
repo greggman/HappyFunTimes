@@ -1,46 +1,17 @@
 <div id="visual" class="hft-fullsize">
 <canvas id="playfield" class="hft-fullsize"></canvas>
 </div>
+<div id="timeContainer">
+  <div id="time"></div>
+</div>
+<div id="overlay" class="hft-fullsize">
+  <div id="overlay-inner">
+    <div id="overlay-line1"></div>
+    <div id="overlay-line2"></div>
+  </div>
+</div>
 <div id="grid">
 </div>
-<script id="screenVertexShader" type="whatever">
-uniform mat3 matrix;
-uniform vec2 screenDimensions;
-attribute vec2 position;
-
-void main() {
-  vec3 pos = vec3(-1, -1, 0) + matrix * vec3(position, 1) * vec3(screenDimensions, 0);
-  gl_Position = vec4(pos.x, -pos.y, 0, 1);
-}
-</script>
-<script id="screenFragmentShader" type="whatever">
-precision mediump float;
-uniform vec4 color;
-void main() {
-  gl_FragColor = color;
-}
-</script>
-<script id="twoToneVertexShader" type="whatever">
-uniform mat3 matrix;
-uniform vec2 screenDimensions;
-attribute vec2 position;
-attribute float colorMult;
-varying float v_colorMult;
-
-void main() {
-  vec3 pos = vec3(-1, -1, 0) + matrix * vec3(position, 1) * vec3(screenDimensions, 0);
-  gl_Position = vec4(pos.x, -pos.y, 0, 1);
-  v_colorMult = colorMult;
-}
-</script>
-<script id="twoToneFragmentShader" type="whatever">
-precision mediump float;
-uniform vec4 color;
-varying float v_colorMult;
-void main() {
-  gl_FragColor = color * vec4(v_colorMult, v_colorMult, v_colorMult, 1);
-}
-</script>
 <script id="persistVertexShader" type="whatever">
 attribute vec2 position;
 attribute vec2 texCoord;

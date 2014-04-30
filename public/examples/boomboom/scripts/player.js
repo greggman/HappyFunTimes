@@ -84,7 +84,7 @@ define([
     "                                                                                  ",
     "uniform sampler2D u_texture;                                                      ",
     "uniform vec2 u_adjustRange;                                                       ",
-    "uniform vec3 u_hsvAdjust;                                                         ",
+    "uniform vec4 u_hsvaAdjust;                                                        ",
     "                                                                                  ",
     "varying vec2 v_texcoord;                                                          ",
     "                                                                                  ",
@@ -112,8 +112,8 @@ define([
     "  }                                                                               ",
     "  vec3 hsv = rgb2hsv(color.rgb);                                                  ",
     "  float affectMult = step(u_adjustRange.x, hsv.r) * step(hsv.r, u_adjustRange.y); ",
-    "  vec3 rgb = hsv2rgb(hsv + u_hsvAdjust * affectMult);                             ",
-    "  gl_FragColor = vec4(rgb, color.a);                                              ",
+    "  vec3 rgb = hsv2rgb(hsv + u_hsvaAdjust.xyz * affectMult);                        ",
+    "  gl_FragColor = vec4(rgb, color.a + u_hsvaAdjust.a);                             ",
     "}                                                                                 ",
   ].join("\n");
 
@@ -261,6 +261,8 @@ define([
     return function(services, position, name, netPlayer) {
       this.services = services;
       this.renderer = services.renderer;
+      this.roundsPlayed = 0;
+      this.wins = 0;
 
       // add the button before the player so it will get
       // processed first.
@@ -275,7 +277,7 @@ define([
         var avatar = this.services.images.avatar;
         for (var ii = 0; ii < 64; ++ii) {
           availableColors.push({
-            hsv: [ii % 16 / 16, 0, 0],
+            hsv: [ii % 16 / 16, 0, 0, 0],
             set: ii / 16 | 0,
           });
         }
@@ -283,7 +285,8 @@ define([
 
       this.color = availableColors[Math.floor(Math.random() * availableColors.length)];
       availableColors.splice(this.color, 1);
-      netPlayer.sendCmd('setColor', this.color);
+      this.sendCmd('setColor', this.color);
+      this.setName(name);
 
       this.imageSet = this.services.images.avatar[this.color.set];
 
@@ -292,11 +295,6 @@ define([
       var images = this.services.images;
       this.matrix = new Float32Array(16);
       m4.identity(this.matrix);
-      this.uniforms = {
-        u_matrix: this.matrix,
-        u_adjustRange: [0, 1],
-        u_hsvAdjust: this.color.hsv,
-      };
 
       this.textures = {
         u_texture: this.imageSet.avatarStandU,
@@ -308,7 +306,7 @@ define([
       netPlayer.addEventListener('setName', Player.prototype.handleNameMsg.bind(this));
       netPlayer.addEventListener('busy', Player.prototype.handleBusyMsg.bind(this));
 
-      this.reset();
+      this.setState('waiting');
     };
   }());
 
@@ -318,6 +316,16 @@ define([
       putBomb(this.bombs.pop());
     }
     this.setPosition(x, y);
+    this.uniforms = {
+      u_matrix: this.matrix,
+      u_adjustRange: [0, 1],
+      u_hsvaAdjust: this.color.hsv.slice(),
+    };
+    this.playing = true;
+    this.alive = true;
+    this.display = true;
+    this.scale = 1;
+    this.rotation = 0;
     this.animTimer = 0;
     this.bombs = [];
     for (var ii = 0; ii < globals.numStartingBombs; ++ii) {
@@ -325,10 +333,9 @@ define([
     }
     this.bombSize = globals.bombStartSize;
     this.haveKick = false;
-    this.setName(name);
     this.setFacing(6);
     this.direction = -1;  // direction player is pressing.
-    this.setState('idle');
+    this.setState('start');
 
 //if (!window.bombs) {
 //  window.bombs = true;
@@ -339,6 +346,13 @@ define([
 //  setTimeout(function() { this.tryPlaceBomb( 3, 3); }.bind(this), 1250);
 //}
 
+  };
+
+  Player.prototype.reportDied = function() {
+    if (this.alive) {
+      this.alive = false;
+      this.services.playerManager.playerDied();
+    }
   };
 
   Player.prototype.setBombSize = function(size) {
@@ -387,6 +401,7 @@ define([
   };
 
   Player.prototype.removeFromGame = function() {
+    this.reportDied();
     this.services.entitySystem.removeEntity(this);
     this.services.drawSystem.removeEntity(this);
     this.services.playerManager.removePlayer(this);
@@ -478,7 +493,7 @@ define([
     var tile = levelManager.layer1.getTile(tx, ty);
     var tileInfo = levelManager.getTileInfo(tile);
     if (tileInfo.info.flame) {
-      this.set_state('die');
+      this.setState('die');
       return true;
     }
 
@@ -505,12 +520,32 @@ define([
 
   };
 
+  // This state is when the round has finished.
+  // Show the character but don't update anything.
+  Player.prototype.init_end = function() {
+    this.alive = false;
+  };
+
+  Player.prototype.state_end = function() {
+  };
+
   // This state is when you're waiting to join a game.
+  // Don't show any characters.
   Player.prototype.init_waiting = function() {
-    this.netPlayer.sendCmd('wait', {});
+    this.display = false;
+    this.alive = false;
+    this.sendCmd('waitForNextGame'); //??
   };
 
   Player.prototype.state_waiting = function() {
+  };
+
+  // This state is just before the game has started
+  Player.prototype.init_start = function() {
+    // player.reset will have just been called.
+  };
+
+  Player.prototype.state_start = function() {
   };
 
   Player.prototype.init_idle = function() {
@@ -604,80 +639,71 @@ define([
     }
 
     this.checkBombPlace();
+  };
 
-//    var columnRowRange = 1 + globals.columnRowSpace * 2;
-//    var columnPos = (this.position[0] + tileWidth  + globals.columnRowSpace) % (tileWidth  * 2);
-//    var rowPos    = (this.position[1] + tileHeight + globals.columnRowSpace) % (tileHeight * 2);
-//    var inColumn  = columnPos < columnRowRange;
-//    var inRow     = rowPos    < columnRowRange;
-//    columnPos -= globals.columnRowSpace;
-//    rowPos    -= globals.columnRowSpace;
-//    var inIntersection = inColumn && inRow;
-//
-//    var columnX = Math.floor((this.position[0] + tileWidth  * 2) / (tileWidth  * 2)) * tileWidth  * 2 - tileWidth  * 1;
-//    var rowY    = Math.floor((this.position[1] + tileHeight * 2) / (tileHeight * 2)) * tileHeight * 2 - tileHeight * 1;
-//
-//    this.services.playerManager.players[1].position = [columnX, 100];
-//    this.services.playerManager.players[2].position = [100, rowY];
-//
-//    var dirInfo = Input.getDirectionInfo(this.direction);
-//    var newX = this.position[0];
-//    var newY = this.position[1];
-//    if (inRow) {
-//      newX += globals.walkSpeed * globals.elapsedTime * dirInfo.dx;
-//    }
-//    if (inColumn) {
-//      newY -= globals.walkSpeed * globals.elapsedTime * dirInfo.dy;
-//    }
-//
-////    var rowLimit    = Misc.invertPlusMinusRange(columnPos, globals.columnRowSpace);
-////    var columnLimit = Misc.invertPlusMinusRange(rowPos, globals.columnRowSpace);
-//    var rowLimit    = globals.columnRowSpace - Math.min(globals.columnRowSpace, Math.abs(columnPos));
-//    var columnLimit = globals.columnRowSpace - Math.min(globals.columnRowSpace, Math.abs(rowPos));
-//
-//    if (rowLimit == 0) {
-//      columnLimit = 100000000;
-//    } else if (columnLimit == 0) {
-//      rowLimit = 100000000;
-//    }
-//
-//    var ndx = Misc.clamp(newX, columnX - columnLimit, columnX + columnLimit);
-//    var ndy = Misc.clamp(newY, rowY    - rowLimit   , rowY    + rowLimit   );
-//
-//window.gs.setStatus("cp: " + columnPos.toFixed(2) + "\n" +
-//                    "rp: " + rowPos.toFixed(2) + "\n" +
-//                    "ir: " + inRow + "\n" +
-//                    "ic: " + inColumn + "\n" +
-//                    "rl: " + rowLimit + "\n" +
-//                    "cl: " + columnLimit + "\n" +
-//                    "ndx: " + ndx + "\n" +
-//                    "ndy: " + ndy + "\n" +
-//                    "");
-//    this.position[0] = ndx;
-//    this.position[1] = ndy;
+  Player.prototype.init_die = function() {
+    this.sendCmd('died');
+    this.reportDied();
+    this.dieTimer = 0;
+  };
+  Player.prototype.state_die = function() {
+    var globals = this.services.globals;
+    this.uniforms.u_hsvaAdjust[0] += globals.dieColorSpeed * globals.elapsedTime;
+    this.uniforms.u_hsvaAdjust[2] = (globals.frameCount & 2) ? 1 : 0;
+    this.rotation += globals.dieRotationSpeed * globals.elapsedTime;
+    this.dieTimer += globals.elapsedTime;
+    if (this.dieTimer >= globals.dieDuration) {
+      this.setState('evaporate');
+    }
+  };
 
+  Player.prototype.init_evaporate = function() {
+    this.dieTimer = 0;
+  };
+
+  Player.prototype.state_evaporate = function() {
+    var globals = this.services.globals;
+    this.uniforms.u_hsvaAdjust[0] += globals.dieColorSpeed * globals.elapsedTime;
+    this.uniforms.u_hsvaAdjust[2] = (globals.frameCount & 2) ? 1 : 0;
+    this.rotation += globals.dieRotationSpeed * globals.elapsedTime;
+    this.scale += globals.dieScaleSpeed * globals.elapsedTime;
+    this.dieTimer += globals.elapsedTime;
+    var a = this.dieTimer / globals.evaporateDuration;
+    this.uniforms.u_hsvaAdjust[3] = -a;
+    if (this.dieTimer >= globals.evaporateDuration) {
+      this.setState('dead');
+    }
+  };
+
+  Player.prototype.init_dead = function() {
+    this.display = false;
+  };
+
+  Player.prototype.state_dead = function() {
   };
 
   Player.prototype.draw = function(renderer) {
+    if (!this.display) {
+      return;
+    }
     var globals = this.services.globals;
     var images = this.services.images;
     var off = {};
     this.services.levelManager.getDrawOffset(off);
 
-    var scale  = globals.scale;
+    var scale  = globals.scale * this.scale;
     var width  = 16 * scale;
     var height = 16 * scale;
-    var dispScaleX = width  / renderer.canvas.width;
-    var dispScaleY = height / renderer.canvas.height;
-    var x = off.x + this.position[0] * scale - width  / 2;
-    var y = off.y + this.position[1] * scale - height / 2;
 
-    x += this.hflip ? width : 0;
-    var s = this.hflip ? -1 : 1;
-    this.matrix[ 0] =  2 * dispScaleX * s;
-    this.matrix[ 5] = -2 * dispScaleY;
-    this.matrix[12] = -1 + 2 * x / renderer.canvas.width;
-    this.matrix[13] =  1 - 2 * y / renderer.canvas.height;
+    m4.identity(this.matrix);
+    m4.scale(this.matrix, [2 / renderer.canvas.width, -2 / renderer.canvas.height, 1]);
+    m4.translate(this.matrix, [
+                 -renderer.canvas.width  * 0.5 + off.x + this.position[0] * globals.scale,
+                 -renderer.canvas.height * 0.5 + off.y + this.position[1] * globals.scale,
+                 0]);
+    m4.rotateZ(this.matrix, this.rotation);
+    m4.scale(this.matrix, [width * (this.hflip ? -1 : 1), height, 1]);
+    m4.translate(this.matrix, [-0.5, -0.5, 0]);
 
     s_playerModel.drawPrep();
     s_playerModel.draw(this.uniforms, this.textures);
