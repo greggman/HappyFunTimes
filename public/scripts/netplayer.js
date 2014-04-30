@@ -35,6 +35,8 @@
 
 define(function() {
 
+  var emptyMsg = {};
+
   /**
    * Manages a player across the net.
    *
@@ -56,6 +58,9 @@ define(function() {
    * @param msg
    */
   NetPlayer.prototype.sendCmd = function(cmd, msg) {
+    if (msg === undefined) {
+      msg = emptyMsg;
+    }
     this.server.sendCmd("client", this.id, {cmd: cmd, data: msg});
   };
 
