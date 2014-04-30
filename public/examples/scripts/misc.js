@@ -116,6 +116,12 @@ define(function() {
     }
   };
 
+  var createTextNode = function(element) {
+    var txt = document.createTextNode("");
+    element.appendChild(txt);
+    return txt;
+  };
+
   var copyProperties = function(src, dst) {
     for (var name in src) {
       if (!src.hasOwnProperty(name)) {
@@ -210,6 +216,7 @@ define(function() {
     clamp: clamp,
     clampPlusMinus: clampPlusMinus,
     copyProperties: copyProperties,
+    createTextNode: createTextNode,
     degToRad: degToRad,
     findCSSStyleRule: findCSSStyleRule,
     getAbsolutePosition: getAbsolutePosition,
