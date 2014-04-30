@@ -1,5 +1,17 @@
 *   boomboom
-
+    *   blow up bushes.
+    *   fix explosion on crates
+    *   controller
+        *   handle 'waitForPlayers' {waitTime: seconds} msg
+        *   handle 'waitForNextGame'? What can players do while waiting?
+        *   handle 'died'
+        *   handle 'winner'
+        *   handle 'tied'
+    *   Music
+        * main
+        * fast?
+    *   "Hurry!!!"
+    *   close off edges at 30 second point?
     *   fix turning. Trying to go down lines is too hard.
     *   fix explosions at crates.
     *   start at "waiting for players"
