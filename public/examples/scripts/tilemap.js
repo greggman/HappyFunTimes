@@ -229,7 +229,7 @@ define(
   //
   TileMap.prototype.draw = function(options) {
     if (options.tiles) {
-      this.textures.u_tiles = tiles;
+      this.textures.u_tiles = options.tiles;
     }
 
     var scaleX = options.scaleX || 1;
