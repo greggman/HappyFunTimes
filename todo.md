@@ -1,46 +1,20 @@
-*   fix unity
+
 *   make unity try :80
 *   fix jamjam
-*   fix so games go directly to running game
-*   fix so main menu goes to running game if 1
 *   see if orientation is easy fix
 *   boomboom
+    *   implement kick
     *   blow up bushes.
     *   fix explosion on crates
-    *   controller
-        *   handle 'waitForPlayers' {waitTime: seconds} msg
-        *   handle 'waitForNextGame'? What can players do while waiting?
-        *   handle 'died'
-        *   handle 'winner'
-        *   handle 'tied'
     *   Music
         * main
         * fast?
     *   "Hurry!!!"
+    *   fix so more than R*C players
     *   close off edges at 30 second point?
     *   fix turning. Trying to go down lines is too hard.
     *   fix explosions at crates.
-    *   start at "waiting for players"
-    *   size level based on # players
-    *   have 3..2..1..Go
-    *   check for winner
-    *   show inner
-    *   check for death
-    *   show death
-    *   place bombs
-    *   explode bombs
-    *   chain bombs
-    *   random powerup
-        *   +bomb
-        *   +size
-        *   fire
-        *   kick
     *   show names (limit to size?)
-    *   show state on controller
-        *   waiting to join
-        *   waiting to start
-        *   died
-        *   winner
     *   figure out what players waiting can do
     *   walking speed should start at 48 and progres to 64?
     *   make flames handle erasing correctly. Sometimes the wrong tip is displayed.
@@ -194,6 +168,40 @@
 
 Done
 ----
+
+*   boomboom
+    *   controller
+        *   handle 'waitForPlayers' {waitTime: seconds} msg
+        *   handle 'waitForNextGame'? What can players do while waiting?
+        *   handle 'died'
+        *   handle 'winner'
+        *   handle 'tied'
+    *   start at "waiting for players"
+    *   have 3..2..1..Go
+    *   check for winner
+    *   show inner
+    *   check for death
+    *   show death
+    *   place bombs
+    *   explode bombs
+    *   chain bombs
+    *   random powerup
+        *   +bomb
+        *   +size
+        *   fire
+        *   kick
+    *   show state on controller
+        *   waiting to join
+        *   waiting to start
+        *   died
+        *   winner
+    *   size level based on # players
+
+*   fix so games go directly to running game
+
+*   fix so main menu goes to running game if 1
+
+*   fix unity
 
 *   remove 'd' from status
 

@@ -12,19 +12,19 @@ to achieve this goal.
 Installation
 ------------
 
-1.  Clone to repo
+1.  Clone the repo
 2.  In Unity, make a new Project
 3.  Pick Assets->Import Package->Standard Assets
 4.  Copy the contents of Unity3D/3rdParty to Assets/Plugins
-4.  Copy Unity3D/src to Assets/Plugins/HappyFunTimes (or make a sym link)
-5.  Copy Unity3D/Extra to Assets/Plugins/HappyFunTimesExtra
-6.  Copy Unity3d/Examples to Assets/Scripts/HappyFunTimes
-7.  Open the scene Unity3D/Examples/Scenes/HappyFunTimesCharacterExample
-8.  Pick Edit->Project Settings->Player and check "Run in Background"
+5.  Copy Unity3D/src to Assets/Plugins/HappyFunTimes (or make a sym link)
+6.  Copy Unity3D/Extra to Assets/Plugins/HappyFunTimesExtra
+7.  Copy Unity3d/Examples to Assets/Scripts/HappyFunTimes
+8.  Open the scene Unity3D/Examples/Scenes/HappyFunTimesCharacterExample
+9.  Pick Edit->Project Settings->Player and check "Run in Background"
 
 Note: These instructions include the sample projects. If all you want is
 the minimum required to do your own thing with HappyFunTimes skip steps
-#3, #6, and #7.
+#3, #7, and #8
 
 **RelayServer**
 

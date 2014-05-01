@@ -124,16 +124,10 @@ This shows how to spawn unity prefabs when a **controller** connects to the **ga
 How to pass a `NetPlayer` object into the spawned prefab. Also how to use the HappyFunTimes
 unity parts from UnityScript (or as Unity wrongly used to call it, JavaScript).
 
-*   In Unity, make a new Project
-*   Pick Assets->Import Package->Standard Assets
-*   Copy Unity3D/src to Assets/Plugins/HappyFunTimes (or make a sym link)
-*   Copy Unity3D/Extra to Assets/Plugins/HappyFunTimesExtra
-*   Copy Unity3d/Examples to Assets/Scripts/HappyFunTimes
-*   Open the scene Unity3D/Examples/Scenes/HappyFunTimesCharacterExample
-*   Pick Edit->Project Settings->Player and check "Run in Background"
+First, See **Installation** in the [Unity Docs](unitydocs.md)
 
-Run the game. If you see an error in the console you probably forgot to run the
-relaysever. (See above)
+Now run the game. If you see an error in the console maybe you didn't start the
+relaysever?. (See above)
 
 Now connect a browser `http://localhost:8080` and pick the UnityCharacterExample
 
