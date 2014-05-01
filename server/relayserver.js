@@ -374,7 +374,7 @@ Game.prototype.assignClient = function(client, relayserver, data) {
 
 // options:
 //   address: used to replace "localhost" in urls.
-var RelayServer = function(server, options) {
+var RelayServer = function(servers, options) {
 
   var g_nextSessionId = 1;
   var g_games = {};
@@ -472,11 +472,14 @@ var RelayServer = function(server, options) {
   }.bind(this);
 
   //var io = new SocketIOServer(server);
-  var io = new WSServer(server);
+  for (var ii = 0; ii < servers.length; ++ii) {
+    var server = servers[ii];
+    var io = new WSServer(server);
 
-  io.on('connection', function(client){
-      new Player(client, this, ++g_nextSessionId);
-  }.bind(this));
+    io.on('connection', function(client){
+        new Player(client, this, ++g_nextSessionId);
+    }.bind(this));
+  }
 
 };
 

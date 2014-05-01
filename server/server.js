@@ -52,6 +52,8 @@ var highResClock = require('./highresclock');
 var dns = require('./dnsserver');
 var iputils = require('./iputils');
 
+var relayServer;
+
 if (args.h || args.help) {
   sys.print([
       "--help:    this message",
@@ -137,6 +139,10 @@ var handleScreenshotRequest = function(query, res) {
 };
 
 var handleListRunningGamesRequest = function(query, res) {
+  if (!relayServer) {
+    send404(res);
+    return;
+  }
   var games = relayServer.getGames();
   sendJSONResponse(res, games);
 };
@@ -356,11 +362,52 @@ var send403 = function(res) {
   res.end();
 };
 
-var server = http.createServer(handleRequests);
-var rs = require('./relayserver.js');
-var relayServer = new rs.RelayServer(server, {address: g.address});
-server.listen(g.port);
-sys.print("Listening on port: " + g.port + "\n");
+var ports = [g.port];
+// If we're not trying port 80 then add it.
+if (g.port.toString() != "80") {
+  ports.push("80");
+}
+
+var numResponsesNeeded = ports.length;
+var servers = [];
+var goodPorts = [];
+
+var tryStartRelayServer = function() {
+  --numResponsesNeeded;
+  if (numResponsesNeeded < 0) {
+    throw "numReponsese is negative";
+  }
+  if (numResponsesNeeded == 0) {
+    if (goodPorts.length == 0) {
+      console.error("NO PORTS available. Tried port(s) " + ports.join(", "));
+      process.exit(1);
+    }
+    var rs = require('./relayserver.js');
+    relayServer = new rs.RelayServer(servers, {address: g.address});
+    sys.print("Listening on port(s): " + goodPorts.join(", ") + "\n");
+  }
+};
+
+for (var ii = 0; ii < ports.length; ++ii) {
+  var port = ports[ii];
+  var server = http.createServer(handleRequests);
+  server.once('error', function(port) {
+    return function(err) {
+      console.warn("WARNING!!!: " + err.code + ": could NOT connect to port: " + port);
+      tryStartRelayServer();
+    };
+  }(port));
+
+  server.once('listening', function(server, port) {
+    return function() {
+      servers.push(server);
+      goodPorts.push(port);
+      tryStartRelayServer();
+    };
+  }(server, port));
+
+  server.listen(port);
+}
 
 if (g.dns) {
   var dnsServer = new dns.DNSServer({address: g.address});

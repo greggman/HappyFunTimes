@@ -1,4 +1,6 @@
 
+*   fix simple controller status affecting input
+*   now that we have game URLs make main menu generated at runtime
 *   make unity try :80
 *   fix jamjam
 *   see if orientation is easy fix
