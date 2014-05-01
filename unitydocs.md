@@ -15,6 +15,7 @@ Installation
 1.  Clone to repo
 2.  In Unity, make a new Project
 3.  Pick Assets->Import Package->Standard Assets
+4.  Copy the contents of Unity3D/3rdParty to Assets/Plugins
 4.  Copy Unity3D/src to Assets/Plugins/HappyFunTimes (or make a sym link)
 5.  Copy Unity3D/Extra to Assets/Plugins/HappyFunTimesExtra
 6.  Copy Unity3d/Examples to Assets/Scripts/HappyFunTimes
