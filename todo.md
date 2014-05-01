@@ -1,7 +1,6 @@
 
 *   now that we have game URLs make main menu generated at runtime
 *   fix jamjam
-*   see if orientation is easy fix
 *   boomboom
     *   implement kick
     *   blow up bushes.
@@ -165,6 +164,10 @@
 
 Done
 ----
+
+*   see if orientation is easy fix
+
+    It's not! :(
 
 *   fix simple controller status affecting input
 
