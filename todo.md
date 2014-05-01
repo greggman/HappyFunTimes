@@ -1,7 +1,5 @@
 
-*   fix simple controller status affecting input
 *   now that we have game URLs make main menu generated at runtime
-*   make unity try :80
 *   fix jamjam
 *   see if orientation is easy fix
 *   boomboom
@@ -63,9 +61,6 @@
     * it doesn't swing around so much
 *   make server serve "chose another WiFi network to browse internet"
 *   unity: see if we can figure out a way so controllers don't get disconnected if script is updated.
-*   make relayserver optionally run on 2 ports, 80 and 8080. The reason being
-    there's no easy way for Unity to connect on port 80? Wait: why?
-    Maybe the unity one should try port 80 first, then 8080, and ping pong until it finds the server?
 
 *   **Issue:** Anyone can go to the gameview.html for a game.
 
@@ -170,6 +165,15 @@
 
 Done
 ----
+
+*   fix simple controller status affecting input
+
+*   make relayserver optionally run on 2 ports, 80 and 8080. The reason being
+    there's no easy way for Unity to connect on port 80? Wait: why?
+    Maybe the unity one should try port 80 first, then 8080, and ping pong until it finds the server?
+
+    Made the relayserver use both ports 80 (if it can) and 8080. So, if sudo run the relayserver
+    it just works. Unity can connect to ws://localhost:8080 and games can connect to http://ipaddress/foo/bar/somecontroller.html
 
 *   boomboom
     *   controller
