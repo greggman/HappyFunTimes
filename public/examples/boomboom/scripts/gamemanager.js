@@ -150,7 +150,6 @@ define([
   };
 
   GameManager.prototype.setState = function(state) {
-console.log("gm state: " + state);
     this.state = state;
     var init = this["init_" + state];
     if (init) {
