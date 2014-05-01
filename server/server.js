@@ -141,7 +141,7 @@ var handleListRunningGamesRequest = function(query, res) {
   sendJSONResponse(res, games);
 };
 
-var server = http.createServer(function() {
+var handleRequests = (function() {
 
   var postCmdHandlers = {
     time: handleTimeRequest,
@@ -356,6 +356,7 @@ var send403 = function(res) {
   res.end();
 };
 
+var server = http.createServer(handleRequests);
 var rs = require('./relayserver.js');
 var relayServer = new rs.RelayServer(server, {address: g.address});
 server.listen(g.port);
