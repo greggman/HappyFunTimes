@@ -229,16 +229,24 @@ define([
       if (tileInfo.info.flameStop) {
         flame.stopped = true;
       }
-      if (!flame.stopped || tileInfo.info.flameEat) {
+
+      var placedCrate = false;
+      if (tileInfo.info.crate) {
+        // change this to a random crate.
+        var crateType = globals.crateProbTable[Misc.randInt(globals.crateProbTable.length)];
+        if (crateType.tileName != 'empty') {
+          layer.setTile(nx, ny, tiles[crateType.tileName].id);
+          placedCrate = true;
+        }
+      }
+
+      // advance
+      if (!flame.stopped || (tileInfo.info.flameEat && !placedCrate)) {
           incDecExplosion(nx, ny, tiles, flameInfo, layer, 1);
           ++flame.size;
       }
 
-      if (tileInfo.info.crate) {
-        // change this to a random crate.
-        var crateType = globals.crateProbTable[Misc.randInt(globals.crateProbTable.length)];
-        layer.setTile(nx, ny, tiles[crateType.tileName].id);
-      } else if (tileInfo.info.bomb) {
+      if (tileInfo.info.bomb) {
         // Find the corresponding bomb and set its state
         for (var jj = 0; jj < tickingBombs.length; ++jj) {
           var bomb = tickingBombs[jj];

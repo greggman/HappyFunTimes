@@ -62,7 +62,13 @@ define(['../../scripts/Misc', '../../scripts/tilemap'], function(Misc, TileMap) 
   var iCrate = {
     solid: true,
     flameStop: true,
+    flameEat: true,
     crate: true,
+  };
+  var iBush = {
+    solid: true,
+    flameStop: true,
+    flameEat: true,
   };
   var iFlame = {
     bombOk: true,  // yes you can place a bomb here. If you do it will blow up
@@ -164,7 +170,7 @@ define(['../../scripts/Misc', '../../scripts/tilemap'], function(Misc, TileMap) 
     ground:     { id: 0x0000, info: iEmpty, },
     grass1:     { id: 0x0001, info: iEmpty, },
     grass2:     { id: 0x0002, info: iEmpty, },
-    bush:       { id: 0x0003, info: iSolid, },
+    bush:       { id: 0x0003, info: iBush, },
     empty:      { id: 0x0004, info: iEmpty, },
     goldCrate:  { id: 0x0005, info: iGoldCrate, },
     kickCrate:  { id: 0x0006, info: iKickCrate, },
