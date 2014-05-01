@@ -41,7 +41,13 @@ define(
   var emptyMsg = { };
 
   /**
-   *
+   * options:
+   *   controllerUrl: url of the controller. If not passed in
+   *   assumes it's the same as the game except 'index.html'.
+   *   In other words if the game's url is
+   *   http://foo/bar/game.html it will assume you want
+   *   to go to http://foo/bar/index.html if you don't set the
+   *   controllerUrl.
    */
   var GameServer = function(options) {
     var _connected = false;
@@ -194,6 +200,18 @@ define(
     };
 
     connect_();
+
+    if (!options.controllerUrl) {
+      var url = window.location.href;
+      var subs = {"#": 1, "?": 1, "/": 0};
+      for (var c in subs) {
+        var ndx = subs[c] ? url.indexOf(c) : url.lastIndexOf(c);
+        if (ndx >= 0) {
+          url = url.substr(0, ndx);
+        }
+      }
+      options.controllerUrl = url + "/index.html";
+    }
     this.sendCmd("server", -1, options);
   };
 

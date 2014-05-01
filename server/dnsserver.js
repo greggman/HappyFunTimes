@@ -30,36 +30,17 @@
  */
 "use strict";
 
+// This DNS server just servers the same ip address for all domains.
+// options:
+//   address: ip address to report
 var DNSServer = function(options) {
   options = options || { };
-  var os = require('os')
   var dns = require('native-dns');
   var server = dns.createServer();
 
   var port = 53;
 
   var address = options.address;
-  if (!address) {
-    var interfaces = os.networkInterfaces();
-    var addresses = [];
-    for (var k in interfaces) {
-        for (var k2 in interfaces[k]) {
-            var address = interfaces[k][k2];
-            if (address.family == 'IPv4' && !address.internal) {
-                addresses.push(address.address)
-            }
-        }
-    }
-
-    if (addresses.length < 1) {
-      console.error("No IP address found for DNS");
-    }
-    address = addresses[0];
-    if (addresses.length > 1) {
-      console.log("more than 1 IP address found: " + addresses);
-    }
-  }
-  console.log("using ip address: " + address);
 
   server.on('request', function (request, response) {
     response.answer.push(dns.A({

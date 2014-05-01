@@ -42,6 +42,7 @@ public class GameServer {
 
     public class Options {
         public string gameId;
+        public string controllerUrl;
     };
 
     public GameServer(Options options, GameObject gameObject) {

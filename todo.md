@@ -1,3 +1,9 @@
+*   fix unity
+*   make unity try :80
+*   fix jamjam
+*   fix so games go directly to running game
+*   fix so main menu goes to running game if 1
+*   see if orientation is easy fix
 *   boomboom
     *   blow up bushes.
     *   fix explosion on crates
@@ -38,6 +44,12 @@
     *   figure out what players waiting can do
     *   walking speed should start at 48 and progres to 64?
     *   make flames handle erasing correctly. Sometimes the wrong tip is displayed.
+
+*   need to handle orientation better.
+
+    problem: user has orientation locked to portrait. Game requires landscape. They have
+    to dig into their settings to play. Could try to CSS rotate the layout so the game
+    shows up landscape. Not sure all the implelications. Do touch events get rotated? I doubt it.
 
 *   refactor boomboom (and jumpjump?) to make the rendering forward driven.
 

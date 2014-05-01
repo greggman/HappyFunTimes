@@ -169,7 +169,7 @@ var Player = function(client, relayServer, id) {
     // Seems like player should stop existing at this point?
     //this.client('onmessage', undefined);
     //this.client('ondisconnect', undefined);
-    this.relayServer.assignAsClientForGame(data.gameId, this.client);
+    this.relayServer.assignAsClientForGame(data, this.client);
   }.bind(this);
 
   var passMessageFromPlayerToGame = function(data) {
@@ -299,11 +299,15 @@ Game.prototype.forEachPlayer = function(fn) {
   };
 };
 
-Game.prototype.assignClient = function(client) {
+// data:
+//   gameId: id of game (not used here
+//   controllerUrl: url of controller.
+Game.prototype.assignClient = function(client, relayserver, data) {
   if (this.client) {
     console.error("this game already has a client!");
   }
   this.client = client;
+  this.controllerUrl = data.controllerUrl;
 
   var sendMessageToPlayer = function(id, message) {
     var player = this.players[id];
@@ -368,7 +372,9 @@ Game.prototype.assignClient = function(client) {
   this.sendQueue = [];
 };
 
-var RelayServer = function(server) {
+// options:
+//   address: used to replace "localhost" in urls.
+var RelayServer = function(server, options) {
 
   var g_nextSessionId = 1;
   var g_games = {};
@@ -433,6 +439,8 @@ var RelayServer = function(server) {
         gameList.push({
           gameId: id,
           numPlayers: game.getNumPlayers(),
+          controllerUrl: game.controllerUrl,
+          foo: "bar",
         });
       }
     }
@@ -455,9 +463,12 @@ var RelayServer = function(server) {
     delete g_games[gameId];
   }.bind(this);
 
-  this.assignAsClientForGame = function(gameId, client) {
-    var game = getGame(gameId);
-    game.assignClient(client, this)
+  this.assignAsClientForGame = function(data, client) {
+    var game = getGame(data.gameId);
+    if (data.controllerUrl && options.address) {
+      data.controllerUrl = data.controllerUrl.replace("localhost", options.address);
+    }
+    game.assignClient(client, this, data)
   }.bind(this);
 
   //var io = new SocketIOServer(server);

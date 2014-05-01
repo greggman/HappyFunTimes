@@ -66,6 +66,12 @@ var main = function(IO) {
       noGames.style.display = obj.length ? "none" : noGamesOriginalDisplayValue;
       gamemenu.style.display = "block";
 
+      // If there's only one game just go to it.
+      if (obj.length == 1 && obj[0].controllerUrl) {
+        window.location.href = obj[0].controllerUrl;
+        return;
+      }
+
       setTimeout(getGames, 5000);
     });
   };

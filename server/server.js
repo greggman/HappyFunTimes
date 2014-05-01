@@ -50,12 +50,14 @@ var querystring = require('querystring');
 var args = require('minimist')(process.argv.slice(2));
 var highResClock = require('./highresclock');
 var dns = require('./dnsserver');
+var iputils = require('./iputils');
 
 if (args.h || args.help) {
   sys.print([
-      "--help: this message",
-      "--port: port. Default 8080",
-      "--dns:  enable dns",
+      "--help:    this message",
+      "--port:    port. Default 8080",
+      "--dns:     enable dns",
+      "--address: ip address for dns and controller url conversion",
     ].join("\n"));
   process.exit(0);
 }
@@ -63,6 +65,19 @@ if (args.h || args.help) {
 for (var prop in args) {
   g[prop] = args[prop];
 }
+
+if (!g.address) {
+  var addresses = iputils.getIpAddress();
+
+  if (addresses.length < 1) {
+    console.error("No IP address found for DNS");
+  }
+  g.address = addresses[0];
+  if (addresses.length > 1) {
+    console.log("more than 1 IP address found: " + addresses);
+  }
+}
+console.log("using ip address: " + g.address);
 
 function postHandler(request, callback) {
   var query_ = { };
@@ -342,11 +357,11 @@ var send403 = function(res) {
 };
 
 var rs = require('./relayserver.js');
-var relayServer = new rs.RelayServer(server);
+var relayServer = new rs.RelayServer(server, {address: g.address});
 server.listen(g.port);
 sys.print("Listening on port: " + g.port + "\n");
 
 if (g.dns) {
-  var dnsServer = new dns.DNSServer();
+  var dnsServer = new dns.DNSServer({address: g.address});
 }
 

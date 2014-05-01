@@ -106,8 +106,13 @@ define(
             }
           }
 
-          // Are any games running?
-          if (obj.length > 0) {
+          // Are any games running? If 1 game, go to it.
+          if (obj.length == 1 && obj[0].controllerUrl) {
+            window.location.href = obj[0].controllerUrl;
+            return;
+          }
+          // If 2+ games, go to the menu.
+          if (obj.length > 1) {
             // Go to main menu
             window.location.href = "/";
             return;
