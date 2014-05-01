@@ -24,6 +24,21 @@
     to dig into their settings to play. Could try to CSS rotate the layout so the game
     shows up landscape. Not sure all the implelications. Do touch events get rotated? I doubt it.
 
+    Note: I tried it. First problem, just rotating the entire page 90deg didn't work.
+
+    First problem, the content was still sized as portrait. Added code to fix the size.
+
+    Second problem, the content rotated was several pixels offscreen. On iOS 7.0 on
+    on 3.5 inch iPhone4s it was 26 pixels off. In iOS7.1 on a 4.0 inch iPhone 5s it
+    was 104 pixels off when the ui is minimized but changes when the ui comes back :(
+
+    3rd problem, if I clicked on the name to edit it it slide down around 1/2 a screen
+    and when done entering the name it did not slide back :(
+
+    4th problem, touch events are not rotated. I kind of expected that but not sure
+    what to do about it. One problem is getting a relative position of an event
+    required going thorugh
+
 *   refactor boomboom (and jumpjump?) to make the rendering forward driven.
 
     For example in boobboom the layers choose their own offset.
