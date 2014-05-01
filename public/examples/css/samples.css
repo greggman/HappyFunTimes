@@ -65,7 +65,17 @@ html, body {
   -webkit-align-items: center;
   min-height: auto;
 }
-/* the entire page */
+/* This is everything.
+ *
+ * It's basically body. It's needed to rotate all content
+ * when we need to force an orientation
+ */
+#hft-everything {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+/* the content container (does not include overlays for status/popup dialogs */
 #hft-container {
   width: 100%;
   height: 100%;
@@ -210,6 +220,7 @@ html, body {
   font-size: 150pt;
   font-weight: bold;
 }
+
 @media only screen and (max-width : 320px) {
   #hft-portrait {
     position: absolute;
@@ -222,4 +233,15 @@ html, body {
     z-index: 9999;
   }
 }
+
+/*
+.hft-portrait-to-landscape {
+  g-webkit-transform: rotate(90deg) translate(26px, 26px);
+  -webkit-transform: rotate(90deg) translate(104px, 104px);
+  g-moz-transform: rotate(90deg);
+  g-o-transform: rotate(90deg);
+  g-ms-transform: rotate(90deg);
+  gtransform: rotate(90deg);
+}
+*/
 

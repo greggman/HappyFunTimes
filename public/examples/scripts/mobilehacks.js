@@ -32,6 +32,10 @@
 
 define(function() {
 
+  var $ = function(id) {
+    return document.getElementById(id);
+  };
+
   var fixHeightHack = function() {
     // Also fix all fucked up sizing
     var elements = document.querySelectorAll(".fixheight");
@@ -59,8 +63,45 @@ define(function() {
     e.preventDefault();
   }, false);
 
+  // This DOESN'T WORK! I'm leaving it here so I can revisit it.
+  // The issue is all kinds of things mess up. Events are not rotated,
+  // the page does strange things.
+  var forceLandscape = function() {
+    // Note: This code is for games that require a certain orientation
+    // on phones only. I'm making the assuption that tablets don't need
+    // this.
+    //
+    // The issue I ran into is I tried to show several people games
+    // and they had their phone orientation locked to portrait. Having
+    // to go unlock just to play the game was frustrating. So, for
+    // controllers than require landscape just try to make the page
+    // show up in landscape. They'll understand they need to turn the phone.
+    //
+    // If the orientation is unlocked they'll turn and the page will
+    // switch to landscape. If the orientation is locked then turning
+    // the phone will not switch to landscape NOR will we get an orientation
+    // event.
+    var everything = $("hft-everything");
+    var detectPortrait = function() {
+      if (screen.width < screen.height) {
+        everything.className = "hft-portrait-to-landscape";
+        everything.style.width = window.innerHeight + "px";
+        everything.style.height = window.innerWidth + "px";
+
+        var viewport = document.querySelector("meta[name=viewport]");
+        viewport.setAttribute('content', 'width=device-height, initial-scale=1.0, maximum-scale=1, user-scalable=no, minimal-ui');
+      } else {
+        everything.className = "";
+      }
+    };
+
+    detectPortrait();
+    window.addEventListener('resize', detectPortrait, false);
+  };
+
   return {
     fixHeightHack: fixHeightHack,
+    forceLandscape: forceLandscape,
   };
 });
 

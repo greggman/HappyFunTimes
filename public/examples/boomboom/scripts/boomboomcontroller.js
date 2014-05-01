@@ -56,6 +56,7 @@ var main = function(
   };
   Misc.applyUrlSettings(globals);
   MobileHacks.fixHeightHack();
+  //MobileHacks.forceLandscape();
 
   function $(id) {
     return document.getElementById(id);
