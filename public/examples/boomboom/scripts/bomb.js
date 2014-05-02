@@ -67,34 +67,86 @@ define([
   // U = 4
   // D = 8
   var bitsToTile = [
-    'empty',  // 0
-    'flameR', // 1 L
-    'flameL', // 2 R
-    'flameH', // 3 LR
-    'flameD', // 4 U
-    'flameM', // 5 LU
-    'flameM', // 6 RU
-    'flameM', // 7 LRU
-    'flameU', // 8 D
-    'flameM', // 9 LD
-    'flameM', // 10 RD
-    'flameM', // 11 LRD
-    'flameV', // 12 UD
-    'flameM', // 13 LUD
-    'flameM', // 14 RUD
-    'flameM', // 15 LRUD
+    'empty',  //  0
+    'flameL', //  1   L
+    'flameR', //  2   R
+    'flameH', //  3   LR
+    'flameU', //  4   U
+    'flameM', //  5   LU
+    'flameM', //  6   RU
+    'flameM', //  7   LRU
+    'flameD', //  8   D
+    'flameM', //  9   LD
+    'flameM', // 10   RD
+    'flameM', // 11   LRD
+    'flameV', // 12   UD
+    'flameM', // 13   LUD
+    'flameM', // 14   RUD
+    'flameM', // 15   LRUD
+
+    'flameH', //  0  H
+    'flameH', //  1  HL
+    'flameH', //  2  HR
+    'flameH', //  3  HLR
+    'flameM', //  4  HU
+    'flameM', //  5  HLU
+    'flameM', //  6  HRU
+    'flameM', //  7  HLRU
+    'flameM', //  8  HD
+    'flameM', //  9  HLD
+    'flameM', // 10  HRD
+    'flameM', // 11  HLRD
+    'flameM', // 12  HUD
+    'flameM', // 13  HLUD
+    'flameM', // 14  HRUD
+    'flameM', // 15  HLRUD
+
+    'flameV', //  0  V
+    'flameM', //  1  VL
+    'flameM', //  2  VR
+    'flameM', //  3  VLR
+    'flameV', //  4  VU
+    'flameM', //  5  VLU
+    'flameM', //  6  VRU
+    'flameM', //  7  VLRU
+    'flameV', //  8  VD
+    'flameM', //  9  VLD
+    'flameM', // 10  VRD
+    'flameM', // 11  VLRD
+    'flameV', // 12  VUD
+    'flameM', // 13  VLUD
+    'flameM', // 14  VRUD
+    'flameM', // 15  VLRUD
+
+    'flameM', //  0  VH
+    'flameM', //  1  VHL
+    'flameM', //  2  VHR
+    'flameM', //  3  VHLR
+    'flameM', //  4  VHU
+    'flameM', //  5  VHLU
+    'flameM', //  6  VHRU
+    'flameM', //  7  VHLRU
+    'flameM', //  8  VHD
+    'flameM', //  9  VHLD
+    'flameM', // 10  VHRD
+    'flameM', // 11  VHLRD
+    'flameM', // 12  VHUD
+    'flameM', // 13  VHLUD
+    'flameM', // 14  VHRUD
+    'flameM', // 15  VHLRUD
   ];
+
 
   var flameDirInfo = [
     { dx: -1, dy:  0, dirNdx: 0, tipId: 'flameL', midId: 'flameH', },
-    { dx:  1, dy:  0, dirNdx: 0, tipId: 'flameR', midId: 'flameH', },
-    { dx:  0, dy: -1, dirNdx: 1, tipId: 'flameU', midId: 'flameV', },
-    { dx:  0, dy:  1, dirNdx: 1, tipId: 'flameD', midId: 'flameV', },
+    { dx:  1, dy:  0, dirNdx: 1, tipId: 'flameR', midId: 'flameH', },
+    { dx:  0, dy: -1, dirNdx: 2, tipId: 'flameU', midId: 'flameV', },
+    { dx:  0, dy:  1, dirNdx: 3, tipId: 'flameD', midId: 'flameV', },
   ];
 
   var initExplosionTable = function(levelManager) {
     var numTiles = levelManager.tilesAcross * levelManager.tilesDown;
-    var tableLength = numTiles * 2;
+    var tableLength = numTiles * 4;
     if (numTiles && explosionTable.length != tableLength) {
       explosionTable = new Int16Array(tableLength);
       explosionTableWidth  = levelManager.tilesAcross;
@@ -102,28 +154,29 @@ define([
     }
   };
 
-  var getExplosion = function(tx, ty) {
-    if (tx < 0 || tx > explosionTableWidth || ty < 0 || ty >= explosionTableHeight) {
-      return 0;
-    }
-    var offset = ty * explosionTableWidth + tx;
-    return explosionTable[offset];
-  };
-
   var incDecExplosion = function(nx, ny, tiles, flameInfo, layer, delta) {
-    var offset = (ny * explosionTableWidth + nx) * 2;
+    var offset = (ny * explosionTableWidth + nx) * 4;
     explosionTable[offset + flameInfo.dirNdx] += delta;
-    var h = explosionTable[offset + 0];
-    var v = explosionTable[offset + 1];
-    var tileId = tiles.empty.id;
-    if (h && v) {
-      tileId = tiles.flameM.id;
-    } else if (h || v) {
-      tileId = tiles[(h > 1 || v > 1) ? flameInfo.midId : flameInfo.tipId].id;
-    }
+    var l = explosionTable[offset + 0];
+    var r = explosionTable[offset + 1];
+    var u = explosionTable[offset + 2];
+    var d = explosionTable[offset + 3];
+    var h = (l > 1 || r > 1) ? 16 : 0;
+    var v = (u > 1 || d > 1) ? 32 : 0;
+    var bits = (l > 0 ? 1 : 0) |
+               (r > 0 ? 2 : 0) |
+               (u > 0 ? 4 : 0) |
+               (v > 0 ? 8 : 0) |
+               h | v;
+    var tileId = tiles[bitsToTile[bits]].id;
     layer.setTile(nx, ny, tileId);
     if (g_services.gridTable) {
-      g_services.gridTable[ny][nx].nodeValue = "ex: " + explosionTable[offset] + ", " + explosionTable[offset + 1] + "\n" + "t: " + tileId.toString(16);
+      g_services.gridTable[ny][nx].nodeValue = "01: " +
+        explosionTable[offset + 0] + ", " +
+        explosionTable[offset + 1] + "\n23: " +
+        explosionTable[offset + 2] + ", " +
+        explosionTable[offset + 3] + "\n" +
+        "t: " + tileId.toString(16);
     }
   };
 

@@ -1,10 +1,7 @@
-*   fix simple so dot is not off screen
 *   figure out why no sound from powpow controller?
 *   now that we have game URLs make main menu generated at runtime
 *   boomboom
     *   implement kick
-    *   blow up bushes.
-    *   fix explosion on crates
     *   Music
         * main
         * fast?
@@ -12,7 +9,6 @@
     *   fix so more than R*C players
     *   close off edges at 30 second point?
     *   fix turning. Trying to go down lines is too hard.
-    *   fix explosions at crates.
     *   show names (limit to size?)
     *   figure out what players waiting can do
     *   walking speed should start at 48 and progres to 64?
@@ -182,6 +178,8 @@
 Done
 ----
 
+*   fix simple so dot is not off screen
+
 *   fix for iOS 6
 
 *   change turn the screen to be landscape.
@@ -206,6 +204,8 @@ Done
     it just works. Unity can connect to ws://localhost:8080 and games can connect to http://ipaddress/foo/bar/somecontroller.html
 
 *   boomboom
+    *   fix explosion on crates
+    *   blow up bushes.
     *   controller
         *   handle 'waitForPlayers' {waitTime: seconds} msg
         *   handle 'waitForNextGame'? What can players do while waiting?
