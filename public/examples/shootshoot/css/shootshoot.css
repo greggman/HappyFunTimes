@@ -76,3 +76,14 @@
   bottom: 3em;
   text-align: right;
 }
+
+@media only screen and (max-height : 208px) {
+  #dpadleft, #dpadright {
+    bottom: 2px;
+  }
+  #dpads canvas {
+      width: 140px;
+      height: 140px;
+  }
+}
+
