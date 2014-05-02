@@ -62,7 +62,8 @@ html, body {
   -webkit-flex-flow: column;
   flex-flow: column;
 
-  -webkit-box-pack: justify;
+  -webkit-box-align: center;
+  -webkit-box-pack: center;
   -webkit-justify-content: center;
   -webkit-align-content: center;
   -webkit-align-items: center;
@@ -171,6 +172,7 @@ html, body {
 .hft-instruction {
   font-size: xx-large;
   font-weight: bold;
+  text-align: center;
 }
 /* phone landscape */
 @media only screen and (min-device-width : 320px) and (max-device-width: 568px) and (orientation: landscape) {
