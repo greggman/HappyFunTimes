@@ -78,3 +78,14 @@ html, body {
   font-weight: bold;
 }
 
+@media only screen and (max-height : 208px) {
+    .button {
+        bottom: 2px;
+    }
+    #avatar {
+      left: 52%;
+      width: 100px;
+      height: 100px;
+      bottom: 32px;
+    }
+}
