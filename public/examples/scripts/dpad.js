@@ -67,17 +67,23 @@ define(
     this.element = options.element;
     this.size = options.size;
     this.canvas = document.createElement("canvas");
+    // We have to put this in the DOM before asking it's size.
+    this.element.appendChild(this.canvas);
     this.resize();
     this.ctx = this.canvas.getContext("2d");
-    this.element.appendChild(this.canvas);
     this.drawBits(0);
   };
 
-  DPad.prototype.drawBits = function(bits) {
+  DPad.prototype.getSize = function() {
     var size = this.size;
     if (!size) {
       size = Math.min(this.canvas.width, this.canvas.height);
     }
+    return size;
+  };
+
+  DPad.prototype.drawBits = function(bits) {
+    var size = this.getSize();
     var w6 = Math.floor(size / 6.5);
     var cx = Math.floor(size / 2);
     var cy = Math.floor(size / 2);
