@@ -44,3 +44,27 @@ table {
     color: white;
     background-color: purple;
 }
+
+/* iOS 6 the chrome takes more space */
+@media only screen and (max-height : 356px) {
+    td {
+        font-size: large;
+        width: 44px;
+        height: 44px;
+        border-radius: 7px;
+        border-size: 2px;
+    }
+}
+
+@media only screen and (max-height : 208px) {
+    table {
+        border-spacing: 2px;
+    }
+    td {
+        font-size: xx-small;
+        width: 34px;
+        height: 28px;
+        border-radius: 7px;
+        border-size: 2px;
+    }
+}
