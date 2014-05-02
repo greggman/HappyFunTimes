@@ -71,11 +71,13 @@ var main = function(
 
   g_audioManager = new AudioManager();
 
-  var dpadSize = 160;
   var dpads = [
-    new DPad({size: dpadSize, element: $("dpadleft")}),
-    new DPad({size: dpadSize, element: $("dpadright")}),
+    new DPad({element: $("dpadleft")}),
+    new DPad({element: $("dpadright")}),
   ];
+
+  var dpadSize0 = dpads[0].getSize();
+  var dpadSize1 = dpads[1].getSize();
 
   var sendPad = function(e) {
     if (globals.debug) {
@@ -96,13 +98,13 @@ var main = function(
     pads: [
       {
         referenceElement: $("dpadleft"),
-        offsetX: dpadSize / 2,
-        offsetY: dpadSize / 2,
+        offsetX: dpadSize0 / 2,
+        offsetY: dpadSize0 / 2,
       },
       {
         referenceElement: $("dpadright"),
-        offsetX: dpadSize / 2,
-        offsetY: dpadSize / 2,
+        offsetX: dpadSize1 / 2,
+        offsetY: dpadSize1 / 2,
       },
     ],
   });
