@@ -58,19 +58,31 @@ window.p = this.players;
     // Then choose others at random?
     var lastRow = mapSize.numRows - 1;
     var lastCol = mapSize.numColumns - 1;
-    var corners = [];
+    var numPositionsIfBy3 = ((mapSize.numColumns + 2) / 3 | 0) * ((mapSize.numRows + 2) / 3 | 0);
+    var numPositionsIfBy2 = ((mapSize.numColumns + 1) / 2 | 0) * ((mapSize.numRows + 1) / 2 | 0);
+
+    var step = 1;
+    if (this.players.length <= numPositionsIfBy3) {
+      step = 3;
+    } else if (this.players.length <= numPositionsIfBy2) {
+      step = 2;
+    }
+
+    var corners = [
+      { x:       0, y:       0, },
+      { x: lastCol, y:       0, },
+      { x:       0, y: lastRow, },
+      { x: lastCol, y: lastRow, },
+    ];
     var others = [];
-    for (var yy = 0; yy < mapSize.numRows; ++yy) {
-      for (var xx = 0; xx < mapSize.numColumns; ++xx) {
-        var pos = { x: xx, y: yy, };
+    for (var y = 0, yy = 0; yy < mapSize.numRows; ++y, yy += step) {
+      for (var x = 0, xx = 0; xx < mapSize.numColumns; ++x, xx += step) {
         var isCorner = (xx == 0 && yy == 0) ||
                        (xx == 0 && yy == lastRow) ||
                        (xx == lastCol && yy == 0) ||
                        (xx == lastCol && yy == lastRow);
-        if (isCorner) {
-          corners.push(pos);
-        } else {
-          others.push(pos);
+        if (!isCorner) {
+          others.push({x: xx + y % step, y: yy + x % step});
         }
       }
     }

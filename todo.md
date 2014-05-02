@@ -6,7 +6,6 @@
         * main
         * fast?
     *   "Hurry!!!"
-    *   fix so more than R*C players
     *   close off edges at 30 second point?
     *   fix turning. Trying to go down lines is too hard.
     *   show names (limit to size?)
@@ -205,6 +204,7 @@ Done
 
 *   boomboom
     *   fix explosion on crates
+    *   fix so more than R*C players
     *   blow up bushes.
     *   controller
         *   handle 'waitForPlayers' {waitTime: seconds} msg

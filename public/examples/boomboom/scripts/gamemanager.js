@@ -96,8 +96,9 @@ define([
       globals.scale = 1;
       for (var ii = 8; ii > 0; --ii) {
         var mapSize = levelManager.computeMapSize(canvas.width, canvas.height, ii);
-        var numPlayersThatFitOnMap = ((mapSize.numColumns + 2) / 3 | 0) * ((mapSize.numRows + 2) / 3 | 0);
-        if (numPlayersThatFitOnMap >= numPlayers) {
+        var numPlayersThatFitOnMapBy3 = ((mapSize.numColumns + 2) / 3 | 0) * ((mapSize.numRows + 2) / 3 | 0);
+        var numPlayersThatFitOnMapBy2 = ((mapSize.numColumns + 1) / 2 | 0) * ((mapSize.numRows + 1) / 2 | 0);
+        if (numPlayersThatFitOnMapBy2 >= numPlayers) {
           globals.scale = ii;
           break;
         }
