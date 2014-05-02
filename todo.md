@@ -1,3 +1,4 @@
+*   fix simple so dot is not off screen
 *   figure out why no sound from powpow controller?
 *   fix for iOS 6
 *   change timing to 10 seconds?
