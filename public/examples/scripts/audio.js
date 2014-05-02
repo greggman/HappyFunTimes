@@ -71,7 +71,11 @@ define(function() {
       var src = g_context.createBufferSource();
       src.buffer = this.buffer;
       src.connect(g_context.destination);
-      src.start(when);
+      if (src.start) {
+        src.start(when);
+      } else {
+        src.noteOn(when);
+      }
     };
 
     function AudioTagSound(name, filename, samples, opt_callback) {
@@ -159,7 +163,11 @@ define(function() {
             source.connect(gain);
             gain.gain.value = 0;
             gain.connect(g_context.destination);
-            source.start(0);
+            if (source.start) {
+              source.start(0);
+            } else {
+              source.noteOn(0);
+            }
             setTimeout(function() {
               source.disconnect();
             }, 100);
@@ -202,6 +210,9 @@ define(function() {
       if (webAudioAPI) {
         console.log("Using Web Audio API");
         g_context = new webAudioAPI();
+
+        if (!g_context.createGain) { g_context.createGain = g_context.createGainNode.bind(g_context); }
+
         g_createFn = WebAudioSound;
       } else {
         console.log("Using Audio Tag");
