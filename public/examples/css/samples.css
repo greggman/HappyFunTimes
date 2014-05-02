@@ -219,6 +219,10 @@ html, body {
 .hft-xlarge {
   font-size: 150pt;
   font-weight: bold;
+  padding: 0px;
+  margin: 0px;
+  text-align: center;
+  line-height: 1;
 }
 
 @media only screen and (max-width : 320px) {
@@ -231,6 +235,14 @@ html, body {
     display: flex;
     display: -webkit-flex;
     z-index: 9999;
+  }
+
+  .hft-portrait-rot90 {
+      -webkit-transform: rotate(90deg);
+      -moz-transform: rotate(90deg);
+      -o-transform: rotate(90deg);
+      -ms-transform: rotate(90deg);
+      transform: rotate(90deg);
   }
 }
 

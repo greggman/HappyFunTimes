@@ -1,6 +1,12 @@
+*   change turn the screen to be landscape.
 
+    People will understand that better I think based on observation. They won't
+    bother to read what the screen says but they will see the text is 90 degrees
+    rotated and so rotate the display.
+
+*   fix for iOS 6
+*   change timing to 10 seconds?
 *   now that we have game URLs make main menu generated at runtime
-*   fix jamjam
 *   boomboom
     *   implement kick
     *   blow up bushes.
@@ -38,6 +44,8 @@
     4th problem, touch events are not rotated. I kind of expected that but not sure
     what to do about it. One problem is getting a relative position of an event
     required going thorugh
+
+    Note: See todo below, change them to canvas based would also make this easier.
 
 *   refactor boomboom (and jumpjump?) to make the rendering forward driven.
 
@@ -179,6 +187,8 @@
 
 Done
 ----
+
+*   fix jamjam
 
 *   see if orientation is easy fix
 
