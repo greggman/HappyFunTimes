@@ -39,10 +39,12 @@ var main = function(GameServer) {
   var players = [];
 
   var resizeCanvas = function() {
-    if (canvas.width != canvas.clientWidth ||
-        canvas.height != canvas.clientHeight) {
-      canvas.width = canvas.clientWidth;
-      canvas.height = canvas.clientHeight;
+    var width = canvas.clientWidth;
+    var height = canvas.clientHeight
+    if (canvas.width != width ||
+        canvas.height != height) {
+      canvas.width = width;
+      canvas.height = height;
     }
   };
 
@@ -52,8 +54,8 @@ var main = function(GameServer) {
 
   var pickRandomPosition = function() {
     return {
-      x: randInt(canvas.width),
-      y: randInt(canvas.height),
+      x: 30 + randInt(canvas.width  - 60),
+      y: 30 + randInt(canvas.height - 60),
     };
   };
 
