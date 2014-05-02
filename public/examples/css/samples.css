@@ -53,16 +53,24 @@ html, body {
 .hft-fullcenter {
   width: 100%;
   height: 100%;
-  display: flex;
+
+  display: -webkit-box;
   display: -webkit-flex;
-  flex-flow: column;
+  display: flex;
+
+  -webkit-box-orient: vertical;
   -webkit-flex-flow: column;
-  justify-content: center;
-  align-content: center;
-  align-items: center;
+  flex-flow: column;
+
+  -webkit-box-pack: justify;
   -webkit-justify-content: center;
   -webkit-align-content: center;
   -webkit-align-items: center;
+
+  justify-content: center;
+  align-content: center;
+  align-items: center;
+
   min-height: auto;
 }
 /* This is everything.
@@ -79,67 +87,84 @@ html, body {
 #hft-container {
   width: 100%;
   height: 100%;
-  gborder: 1px solid white;
 
-  display: flex;
+  display: -webkit-box;
   display: -webkit-flex;
-  flex-flow: column;
+  display: flex;
+
+  -webkit-box-orient: vertical;
   -webkit-flex-flow: column;
-  justify-content: center;
-  align-content: center;
-  align-items: center;
+  flex-flow: column;
+
+  -webkit-box-pack: justify;
   -webkit-justify-content: center;
   -webkit-align-content: center;
   -webkit-align-items: center;
+
+  justify-content: center;
+  align-content: center;
+  align-items: center;
+
   min-height: auto;
 }
 
 /* the top area */
 #hft-header {
+  background: -webkit-linear-gradient(top, #f2f6f8 0%,#d8e1e7 88%,#b5c6d0 91%,#e0eff9 100%);
   background: linear-gradient(to bottom, #f2f6f8 0%,#d8e1e7 88%,#b5c6d0 91%,#e0eff9 100%);
   width: 100%;
-  flex: 0 1 auto;
-  -webkit-flex: 0 1 auto;
 
-  display: flex;
+  -webkit-box-flex: 0;
+  -webkit-flex: 0 1 auto;
+  flex: 0 1 auto;
+
+  display: -webkit-box;
   display: -webkit-flex;
+  display: flex;
+
+  -webkit-box-pack: justify;
+  -webkit-justify-content: center;
+  -webkit-align-content: center;
+  -webkit-align-items: center;
 
   justify-content: center;
   align-content: center;
   align-items: center;
-  -webkit-justify-content: center;
-  -webkit-align-content: center;
-  -webkit-align-items: center;
 }
 /* the bottom area */
 #hft-content {
   width: 100%;
   height: 100%;
-  flex: 1 1 auto;
+
+  -webkit-box-flex: 1;
   -webkit-flex: 1 1 auto;
-  gborder: 5px solid purple;
+  flex: 1 1 auto;
+
   position: relative;
 }
 /* left header area */
 #hft-nameform {
-  flex: 1 1 auto;
+  -webkit-box-flex: 1;
   -webkit-flex: 1 1 auto;
+  flex: 1 1 auto;
 
   margin: 0.5em;
 }
 #hft-name
 {
-    width: 100%;
-    background-color: rgba(0,0,0,0);
-    font-size: x-large;
-    font-weight: bold;
-    color: #444;
-    border: none;
+  width: 100%;
+  background-color: rgba(0,0,0,0);
+  font-size: x-large;
+  font-weight: bold;
+  color: #444;
+  border: none;
 }
 /* right header area */
 #hft-menu {
-  flex: 0 1 auto;
+  -webkit-box: 0;
   -webkit-flex: 0 1 auto;
+  flex: 0 1 auto;
+
   margin-left: 0.5em;
   margin-right: 0.5em;
 }
@@ -232,9 +257,12 @@ html, body {
     left: 0px;
     background-color: red;
     color: white;
-    display: flex;
-    display: -webkit-flex;
     z-index: 9999;
+
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: flex;
+
   }
 
   .hft-portrait-rot90 {

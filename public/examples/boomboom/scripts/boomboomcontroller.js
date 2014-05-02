@@ -169,10 +169,10 @@ var main = function(
 
     ExampleUI.setupStandardControllerUI(g_client, globals);
 
-    var dpadSize = 160;
     var dpads = [
-      new DPad({size: dpadSize, element: $("dpadleft")}),
+      new DPad({element: $("dpadleft")}),
     ];
+    var dpadSize = dpads[0].getSize();
 
     var handleAbutton = function(pressed) {
       if (g_abutton != pressed) {

@@ -82,23 +82,55 @@ html, body {
   z-index: 2;
   background-color: #48F;
 
-  display: flex;
+  display: -webkit-box;
   display: -webkit-flex;
-  flex-flow: column;
+  display: flex;
+
+  -webkit-box-orient: vertical;
   -webkit-flex-flow: column;
-  justify-content: center;
-  align-content: center;
-  align-items: center;
+  flex-flow: column;
+
+  -webkit-box-pack: center;
   -webkit-justify-content: center;
   -webkit-align-content: center;
   -webkit-align-items: center;
+
+  justify-content: center;
+  align-content: center;
+  align-items: center;
+
   min-height: auto;
 }
 
 #msg {
   color: white;
-  flex: 0 0 auto;
+  text-align: center;
+
+  -webkit-box-flex: 0;
   -webkit-flex: 0 0 auto;
+  flex: 0 0 auto;
+
   font-size: xx-large;
   font-weight: bold;
+}
+
+/* iOS 6 the chrome takes more space */
+@media only screen and (max-height : 319px) {
+    .button {
+        width: 144px;
+        height: 144px;
+        border-radius: 70px;
+    }
+    #dpadleft, #abutton {
+      position: absolute;
+      width: 130px;
+      bottom: 4px;
+    }
+    #dpadleft {
+      bottom: 0px;
+    }
+    #avatar {
+      left: 38%;
+      bottom: 10px;
+    }
 }

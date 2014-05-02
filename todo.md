@@ -1,9 +1,4 @@
-*   change turn the screen to be landscape.
-
-    People will understand that better I think based on observation. They won't
-    bother to read what the screen says but they will see the text is 90 degrees
-    rotated and so rotate the display.
-
+*   figure out why no sound from powpow controller?
 *   fix for iOS 6
 *   change timing to 10 seconds?
 *   now that we have game URLs make main menu generated at runtime
@@ -187,6 +182,12 @@
 
 Done
 ----
+
+*   change turn the screen to be landscape.
+
+    People will understand that better I think based on observation. They won't
+    bother to read what the screen says but they will see the text is 90 degrees
+    rotated and so rotate the display.
 
 *   fix jamjam
 
