@@ -147,8 +147,10 @@ var main = function(
 
     var handleSetColor = function(msg) {
       var canvas = $("avatar");
-      canvas.width = canvas.clientWidth;
-      canvas.height = canvas.clientHeight;
+      var width = canvas.clientWidth;
+      var height = canvas.clientHeight;
+      canvas.width = width;
+      canvas.height = height;
       var ctx = canvas.getContext("2d");
       var frame = ImageProcess.adjustHSV(images.avatars[msg.set], msg.hsv[0], msg.hsv[1], msg.hsv[2]);
       ctx.drawImage(frame, 0, 0);

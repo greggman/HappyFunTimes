@@ -73,8 +73,10 @@ var main = function(
 
     var handleSetColor = function(msg) {
       var canvas = $("avatar");
-      canvas.width = canvas.clientWidth;
-      canvas.height = canvas.clientHeight;
+      var width = canvas.clientWidth;
+      var height = canvas.clientHeight;
+      canvas.width = width;
+      canvas.height = height;
       var ctx = canvas.getContext("2d");
       var coloredImage = ImageProcess.adjustHSV(images.idle.img, msg.h, msg.s, msg.v, msg.range)
       var frame = ImageProcess.cropImage(coloredImage, 0, 0, 16, 16);
