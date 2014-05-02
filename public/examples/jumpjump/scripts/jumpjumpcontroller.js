@@ -79,7 +79,7 @@ var main = function(
       var coloredImage = ImageProcess.adjustHSV(images.idle.img, msg.h, msg.s, msg.v, msg.range)
       var frame = ImageProcess.cropImage(coloredImage, 0, 0, 16, 16);
       var frame = ImageProcess.scaleImage(frame, 128, 128);
-      ctx.drawImage(frame, 0, 0);
+      ctx.drawImage(frame, 0, 0, ctx.canvas.width, ctx.canvas.height);
     };
 
     g_client.addEventListener('score', handleScore);
