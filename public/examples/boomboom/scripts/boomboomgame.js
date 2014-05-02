@@ -86,7 +86,7 @@ window.s = g_services;
       { tileName: 'empty',      prob: 30, },
     ],
     // game stuff
-    waitForPlayersDuration: 15,
+    waitForPlayersDuration: 10,
     waitForStartDuration: 3,
     waitForGo: 1,
     waitForEnd: 3,
