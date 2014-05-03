@@ -106,6 +106,8 @@ define([
     }
 
     levelManager.makeLevel(canvas.width, canvas.height);
+    var off = {};
+    levelManager.getDrawOffset(off);
     if (globals.grid) {
       if (!services.grid) {
         services.grid = new Grid({
@@ -115,8 +117,6 @@ define([
         });
       }
       services.grid.setDimensions(levelManager.tilesAcross, levelManager.tilesDown);
-      var off = {};
-      levelManager.getDrawOffset(off);
       var s = $("grid").style;
       s.display = "block";
       s.left = off.x + "px";
@@ -140,6 +140,19 @@ define([
         services.gridTable[y].push(txt);
       });
     }
+
+    // Adjust clock size.
+    var tileHeight = 16;
+    var topMax = 80;
+    var topMin = 16;
+    var topMaxOffset = 10;
+    var topSpace = Math.min(topMax, Math.max(topMin, off.y + tileHeight * globals.scale));
+
+    var topOffset = Math.floor((topSpace - topMin) * topMaxOffset / (topMax - topMin));
+    var topSize = Math.max(topSpace - topOffset - 8, tileHeight - 8);
+    this.timeContainer.style.top  = topOffset + "px";
+    this.timeStyle.fontSize = topSize + "px";
+
     this.setAllPlayersToState('waiting');
     this.setState('waitForPlayers');
   };
