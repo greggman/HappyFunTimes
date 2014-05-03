@@ -51,14 +51,13 @@ define([
    * @constructor
    */
   var Player = (function() {
-    return function(services, x, y, width, height, direction, name, netPlayer) {
+    return function(services, width, height, direction, name, netPlayer) {
       this.services = services;
       this.renderer = services.renderer;
 
       services.entitySystem.addEntity(this);
       services.drawSystem.addEntity(this);
       this.netPlayer = netPlayer;
-      this.position = [x, y];
       this.velocity = [0, 0];
       this.acceleration = [0, 0];
       if (availableColors.length == 0) {
@@ -93,6 +92,7 @@ window.p = this;
       this.score = 0;
 
       this.setState('idle');
+      this.reset();
       this.checkBounds();
     };
   }());
@@ -102,6 +102,13 @@ window.p = this;
       this.playerName = name;
       this.nameImage = ImageProcess.makeTextImage(name, nameFontOptions);
     }
+  };
+
+  Player.prototype.reset = function() {
+    var levelManager = this.services.levelManager;
+    var level = levelManager.getLevel();
+    var position = levelManager.getRandomOpenPosition();
+    this.position = [position.x + level.tileWidth / 2, position.y];
   };
 
   Player.prototype.setState = function(state) {

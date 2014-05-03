@@ -130,6 +130,21 @@ window.g = globals;
 
   Misc.applyUrlSettings(globals);
 
+  var levelCanvas = $("level");
+  var levelCtx = levelCanvas.getContext("2d");
+  var actorCanvas = $("actors");
+  var actorCtx = actorCanvas.getContext("2d");
+
+  var resize = function() {
+    if (Misc.resize(levelCanvas)) {
+      Misc.resize(actorCanvas);
+      g_levelManager.reset(levelCanvas.width, levelCanvas.height);
+      g_playerManager.forEachPlayer(function(player) {
+        player.reset();
+      });
+    }
+  };
+  resize();
   g_services.globals = globals;
 
   var server = new GameServer({
@@ -139,11 +154,6 @@ window.g = globals;
   server.addEventListener('playerconnect', g_playerManager.startPlayer.bind(g_playerManager));
 
   GameSupport.init(server, globals);
-
-  var levelCanvas = $("level");
-  var levelCtx = levelCanvas.getContext("2d");
-  var actorCanvas = $("actors");
-  var actorCtx = actorCanvas.getContext("2d");
 
   if (globals.tileInspector) {
     var element = document.createElement("div");
@@ -231,10 +241,8 @@ window.g = globals;
   ImageLoader.loadImages(images, processImages);
 
   var mainloop = function() {
+    resize();
     g_entitySystem.processEntities();
-
-    Misc.resize(levelCanvas);
-    Misc.resize(actorCanvas);
 
     g_levelManager.draw(levelCtx);
     var ctx = actorCtx;

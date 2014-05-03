@@ -127,21 +127,70 @@ define(['../../scripts/Misc'], function(Misc) {
     ctx.restore();
   };
 
-  var level1 = new Level(
-    20, 10,
-    32, 32,
-    [ // 01234567890123456789
-        "                    ", // 0
-        "                    ", // 1
-        "                    ", // 2
-        "         #####      ", // 3
-        "                    ", // 4
-        "                    ", // 5
-        "     ####      ##   ", // 6
-        "              ####  ", // 7
-        " #           ###### ", // 8
-        "###         ########", // 9
-    ].join(""));
+  var levels = [
+    new Level(
+      20, 10,
+      32, 32,
+      [ // 01234567890123456789
+          "                    ", // 0
+          "                    ", // 1
+          "                    ", // 2
+          "         #####      ", // 3
+          "                    ", // 4
+          "                    ", // 5
+          "     ####      ##   ", // 6
+          "              ####  ", // 7
+          " #           ###### ", // 8
+          "###         ########", // 9
+      ].join("")),
+
+    new Level(
+      30, 15,
+      32, 32,
+      [ // 012345678901234567890123456789
+          "                              ", // 0
+          "                              ", // 1
+          "                              ", // 2
+          "         #####                ", // 3
+          "                   ######     ", // 4
+          "                              ", // 5
+          "     ####                     ", // 6
+          "             ##########       ", // 7
+          " #                            ", // 8
+          "###                           ", // 9
+          "#####                 ###     ", //
+          "#######              #####    ", //
+          "########            #######   ", //
+          "#####      ###     #########  ", //
+          "###               ########### ", //
+      ].join("")),
+
+    new Level(
+      40, 20,
+      32, 32,
+      [ // 0123456789012345678901234567890123456789
+          "                                        ", // 0
+          "                                        ", // 1
+          "                                        ", // 2
+          "         #####                          ", // 3
+          "                           ####         ", // 4
+          "                                        ", // 5
+          "     ####      ##                       ", // 6
+          "                      #####             ", // 7
+          "                                        ", // 8
+          "###    ########                         ", // 9
+          "                           #####        ", //
+          "                                        ", //
+          "     #####                              ", //
+          "                               #######  ", //
+          "                                        ", //
+          "                                        ", //
+          "                           ###          ", //
+          "  #    ########          #######        ", //
+          " ###                   ###########      ", //
+          "#####                ################   ", //
+      ].join("")),
+    ];
 
   var tileInfoSky = {
     collisions: false,
@@ -159,7 +208,26 @@ define(['../../scripts/Misc'], function(Misc) {
 
   var LevelManager = function(services) {
     this.services = services;
-    this.level = level1;
+  };
+
+  LevelManager.prototype.reset = function(canvasWidth, canvasHeight) {
+    // pick the largest level that fits
+    var largestLevel = levels[0];
+    var largestSize = 0;
+    for (var ii = 0; ii < levels.length; ++ii) {
+      var level = levels[ii];
+      var hSpace = canvasWidth  - level.levelWidth;
+      var vSpace = canvasHeight - level.levelHeight;
+      if (hSpace >= 0 && vSpace >= 0) {
+        var size = level.levelWidth * level.levelHeight;
+        if (size > largestSize) {
+          largestSize = size;
+          largestLevel = level;
+        }
+      }
+    }
+    this.level = largestLevel;
+    this.level.needsUpdate = true;
   };
 
   LevelManager.prototype.getTileInfo = function(tileId) {
