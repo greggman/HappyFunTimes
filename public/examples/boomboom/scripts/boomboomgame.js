@@ -70,6 +70,7 @@ window.s = g_services;
     port: 8080,
     haveServer: true,
     numLocalPlayers: 1,  // num players when local (ie, debugger)
+    ai: false,
     debug: false,
     tileInspector: false,
     showState: false,
@@ -133,6 +134,28 @@ window.g = globals;
       netPlayers.push(netPlayer);
       players.push(g_playerManager.startPlayer(netPlayer, "Player" + (ii + 1)));
       abutton.push(false);
+    }
+
+    if (globals.ai) {
+      for (var ii = 2; ii < netPlayers.length; ++ii) {
+        setInterval(function(netPlayer) {
+          return function() {
+            var r = Misc.randInt(7);
+            switch (r) {
+            case 0:
+            case 1:
+            case 2:
+            case 3:
+              netPlayer.sendEvent('pad', {pad: 0, dir: r * 2});
+              break;
+            case 4:
+            case 5:
+              netPlayer.sendEvent('abutton', {abutton: r == 4});
+              break;
+            }
+          };
+        }(netPlayers[ii]), 1000 + Misc.randInt(1000));
+      }
     }
 
     var handleDPad = function(e) {
