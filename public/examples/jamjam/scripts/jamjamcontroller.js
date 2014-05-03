@@ -184,6 +184,10 @@ var main = function(
     g_client.addEventListener('setInstrument', handleSetInstrument);
 
     ExampleUI.setupStandardControllerUI(g_client, globals);
+    if (!AudioManager.hasWebAudio) {
+      $("needWebAudio").style.display = "block";
+      return;
+    }
 
     var color = Misc.randCSSColor();
     g_client.sendCmd('setColor', { color: color });

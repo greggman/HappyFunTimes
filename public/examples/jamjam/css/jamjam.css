@@ -44,6 +44,16 @@ table {
     color: white;
     background-color: purple;
 }
+#needWebAudio {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0px;
+    display: none;
+    color: white;
+    background-color: red;
+    z-index: 10;
+}
 
 /* iOS 6 the chrome takes more space */
 @media only screen and (max-height : 356px) {

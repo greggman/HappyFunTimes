@@ -2,6 +2,8 @@
 
 define(function() {
 
+  var webAudioAPI = window.AudioContext || window.webkitAudioContext || window.mozAudioContext;
+
   // To play a sound, simply call audio.playSound(id), where id is
   // one of the keys of the g_sound_files array, e.g. "damage".
 
@@ -206,7 +208,6 @@ define(function() {
       if (!g_canPlay)
         return;
 
-      var webAudioAPI = window.AudioContext || window.webkitAudioContext || window.mozAudioContext;
       if (webAudioAPI) {
         console.log("Using Web Audio API");
         g_context = new webAudioAPI();
@@ -245,6 +246,10 @@ define(function() {
       }
     }.bind(this);
     this.init(sounds);
+  };
+
+  AudioManager.hasWebAudio = function() {
+    return webAudioAPI !== undefined;
   };
 
   return AudioManager;
