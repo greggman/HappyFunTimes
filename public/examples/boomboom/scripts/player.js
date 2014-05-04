@@ -240,6 +240,11 @@ define([
     },
   ];
 
+  var moveInfoTable = [
+    { dxMult: 1, dyMult: 0, xOffset: 1, yOffset: 0, }, // row
+    { dxMult: 0, dyMult: 1, xOffset: 0, yOffset: 1, }, // col
+  ];
+
   var freeBombs = [];
   var getBomb = function(services) {
     if (freeBombs.length) {
@@ -321,6 +326,7 @@ define([
       u_adjustRange: [0, 1],
       u_hsvaAdjust: this.color.hsv.slice(),
     };
+    this.inRow = true; // false = in column
     this.playing = true;
     this.alive = true;
     this.display = true;
@@ -589,55 +595,101 @@ define([
     var tileWidth  = 16;
     var tileHeight = 16;
 
+    var tx = this.position[0] / tileWidth  | 0;
+    var ty = this.position[1] / tileHeight | 0;
+    var inCol = tx % 2 == 1;
+    var inRow = ty % 2 == 1;
+    var inIntersection = inRow && inCol;
+
     var dx = this.facingInfo.dx;
     var dy = this.facingInfo.dy;
-    var newX = this.position[0] + dx * globals.walkSpeed * globals.elapsedTime;
-    var newY = this.position[1] + dy * globals.walkSpeed * globals.elapsedTime;
 
-    if (dx > 0) {
-      for (var ii = 0; ii < 2; ++ii) {
-        var tileX = newX + tileWidth / 2;
-        var tileY = this.position[1] - tileHeight / 2 + ii * (tileHeight - 1);
-        var tile = levelManager.layer1.getTileByPixels(tileX, tileY);
-        var tileInfo = levelManager.getTileInfo(tile);
-        if (tileInfo.info.solid) {
-          newX -= tileX % tileWidth;
+    var moveDX = dx * globals.walkSpeed * globals.elapsedTime;
+    var moveDY = dy * globals.walkSpeed * globals.elapsedTime;
+
+    //      col
+    //       |
+    // _____/ \______row
+    //      \ /
+    //       |
+    //
+
+    var centerOfTileX = tx * tileWidth  + tileWidth  / 2;
+    var centerOfTileY = ty * tileHeight + tileHeight / 2;
+    var dxFromCenterOfTile = centerOfTileX - this.position[0];
+    var dyFromCenterOfTile = centerOfTileY - this.position[1];
+
+    var centerOfCol = (tx - (tx % 2) + 1.5) * tileWidth;
+    var centerOfRow = (ty - (ty % 2) + 1.5) * tileHeight;
+    var dxFromCenterOfCol = centerOfCol - this.position[0];
+    var dyFromCenterOfRow = centerOfRow - this.position[1];
+
+    // This seems fucking rediculous to me. I'm missing the simple solution
+    // stairing me in the face :(
+    if (this.inRow) {
+      if (!moveDX && moveDY) {
+        var t = Math.abs(moveDY) * Misc.sign(dxFromCenterOfCol);
+        moveDX = Misc.minToZero(dxFromCenterOfCol, t);
+      }
+      if (moveDY) {
+        var newX = this.position[0] + moveDX;
+        var newDxFromCenterOfCol = centerOfCol - newX;
+        if (dxFromCenterOfCol == 0 || Misc.sign(newDxFromCenterOfCol) != Misc.sign(dxFromCenterOfCol)) {
+          moveDX = dxFromCenterOfCol;
+          this.inRow = false;
+        } else {
+          moveDY = 0;
         }
       }
-    } else if (dx < 0) {
-      for (var ii = 0; ii < 2; ++ii) {
-        var tileX = newX - tileWidth / 2;
-        var tileY = this.position[1] - tileHeight / 2 + ii * (tileHeight - 1);
-        var tile = levelManager.layer1.getTileByPixels(tileX, tileY);
-        var tileInfo = levelManager.getTileInfo(tile);
-        if (tileInfo.info.solid) {
-          newX += tileWidth - tileX % tileWidth;
+    } else {
+      if (!moveDY && moveDX) {
+        var t = Math.abs(moveDX) * Misc.sign(dyFromCenterOfRow);
+        moveDY = Misc.minToZero(dyFromCenterOfRow, t);
+      }
+      if (moveDX) {
+        var newY = this.position[1] + moveDY;
+        var newDyFromCenterOfRow = centerOfRow - newY;
+        if (dyFromCenterOfRow == 0 || Misc.sign(newDyFromCenterOfRow) != Misc.sign(dyFromCenterOfRow)) {
+          moveDY = dyFromCenterOfRow;
+          this.inRow = true;
+        } else {
+          moveDX = 0;
         }
       }
     }
 
-    if (dy > 0) {
-      for (var ii = 0; ii < 2; ++ii) {
-        var tileX = this.position[0] - tileWidth / 2 + ii * (tileWidth - 1);
-        var tileY = newY + tileWidth / 2;
-        var tile = levelManager.layer1.getTileByPixels(tileX, tileY);
-        var tileInfo = levelManager.getTileInfo(tile);
-        if (tileInfo.info.solid) {
-          newY -= tileY % tileHeight;
-        }
-      }
-    } else if (dy < 0) {
-      for (var ii = 0; ii < 2; ++ii) {
-        var tileX = this.position[0] - tileWidth / 2 + ii * (tileWidth - 1);
-        var tileY = newY - tileWidth / 2;
-        var tile = levelManager.layer1.getTileByPixels(tileX, tileY);
-        var tileInfo = levelManager.getTileInfo(tile);
-        if (tileInfo.info.solid) {
-          newY += tileHeight - tileY % tileHeight;
-        }
+    var newX = this.position[0] + moveDX;
+    var newY = this.position[1];
+
+    if (moveDX) {
+      var tileX = newX + tileWidth  / 2 * Misc.sign(moveDX);
+      var tileY = newY;
+      var tile = levelManager.layer1.getTileByPixels(tileX, tileY);
+      var tileInfo = levelManager.getTileInfo(tile);
+      if (tileInfo.info.solid) {
+        // Where ever we were standing was safe so don't move us back further than that.
+        // This will allow us to walk off a bomb?
+        moveDX = (Misc.sign(dxFromCenterOfTile) == Misc.sign(moveDX)) ? dxFromCenterOfTile : 0;
       }
     }
 
+    newX = this.position[0] + moveDX;
+    newY = this.position[1] + moveDY;
+
+    if (moveDY) {
+      var tileX = newX;
+      var tileY = newY + tileHeight / 2 * Misc.sign(moveDY);
+      var tile = levelManager.layer1.getTileByPixels(tileX, tileY);
+      var tileInfo = levelManager.getTileInfo(tile);
+      if (tileInfo.info.solid) {
+        // Where ever we were standing was safe so don't move us back further than that.
+        // This will allow us to walk off a bomb?
+        moveDY = (Misc.sign(dyFromCenterOfTile) == Misc.sign(moveDY)) ? dyFromCenterOfTile : 0;
+      }
+    }
+
+    var newX = this.position[0] + moveDX;
+    var newY = this.position[1] + moveDY;
 
     this.position[0] = newX;
     this.position[1] = newY;

@@ -114,8 +114,8 @@ window.p = this.players;
         levelManager.layer1.setTile(tx + off.x, ty + off.y, tiles.empty.id);
       }
       player.reset(
-        (tx + 0.5) * levelManager.tileset.tileWidth,
-        (ty + 0.5) * levelManager.tileset.tileHeight);
+        (tx + 0.5) * levelManager.tileset.tileWidth  | 0,
+        (ty + 0.5) * levelManager.tileset.tileHeight | 0);
     });
 
     levelManager.setWalls();

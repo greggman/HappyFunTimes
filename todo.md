@@ -1,4 +1,6 @@
+*   make jamjam fail without audio api
 *   figure out why no sound from powpow controller?
+*   add settimeout/setinterval to game support
 *   now that we have game URLs make main menu generated at runtime
 *   boomboom
     *   implement kick
