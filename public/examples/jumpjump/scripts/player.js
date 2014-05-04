@@ -109,6 +109,7 @@ window.p = this;
     var level = levelManager.getLevel();
     var position = levelManager.getRandomOpenPosition();
     this.position = [position.x + level.tileWidth / 2, position.y];
+    this.lastPosition = [this.position[0], this.position[1]];
   };
 
   Player.prototype.setState = function(state) {
@@ -193,6 +194,8 @@ window.p = this;
   Player.prototype.updatePosition = function(axis) {
     var axis = axis || 3;
     var globals = this.services.globals;
+    this.lastPosition[0] = this.position[0];
+    this.lastPosition[1] = this.position[1];
     if (axis & 1) {
       this.position[0] += this.velocity[0] * globals.elapsedTime;
     }
@@ -249,8 +252,9 @@ window.p = this;
     var globals = this.services.globals;
     this.acceleration[0] = this.direction * globals.moveAcceleration;
     this.updatePhysics();
+    var landed = this.checkLand();
     this.checkWall();
-    if (this.checkLand()) {
+    if (landed) {
       return;
     }
     if (Math.abs(this.velocity[1]) < globals.fallTopAnimVelocity) {
@@ -319,15 +323,16 @@ window.p = this;
 
   Player.prototype.checkLand = function() {
     if (this.velocity[1] > 0) {
-      this.checkDown();
+      return this.checkDown();
     } else {
-      this.checkUp();
+      return this.checkUp();
     }
   };
 
   Player.prototype.init_move = function() {
     this.animTimer = 0;
     this.anim = this.services.images.move.colors[this.color.id];
+    this.lastDirection = this.direction;
   };
 
   Player.prototype.state_move = function() {
@@ -335,13 +340,43 @@ window.p = this;
       return;
     }
 
+    var globals = this.services.globals;
+    this.acceleration[0] = this.lastDirection * globals.moveAcceleration;
+    this.animTimer += globals.moveAnimSpeed * Math.abs(this.velocity[0]) * globals.elapsedTime;
+    this.updatePhysics(1);
+
     if (!this.direction) {
-      this.setState('idle');
+      this.setState('stop');
+      return;
+    }
+
+    this.checkWall();
+    this.checkFall();
+    this.lastDirection = this.direction;
+  };
+
+  Player.prototype.init_stop = function() {
+    this.lastDirection = this.direction;
+    this.acceleration[0] = 0;
+  };
+
+  Player.prototype.state_stop = function() {
+    if (this.checkJump()) {
+      return;
+    }
+
+    if (this.direction) {
+      this.setState('move');
       return;
     }
 
     var globals = this.services.globals;
-    this.acceleration[0] = this.direction * globals.moveAcceleration;
+    this.velocity[0] *= globals.stopFriction;
+    if (Math.abs(this.velocity[0]) < globals.minStopVelocity) {
+      this.setState('idle');
+      return;
+    }
+
     this.animTimer += globals.moveAnimSpeed * Math.abs(this.velocity[0]) * globals.elapsedTime;
     this.updatePhysics(1);
     this.checkWall();
@@ -404,7 +439,7 @@ window.f = frameNumber;
     ctx.drawImage(this.nameImage, -this.width / 2, -this.height - 10);
     if (globals.showState) {
       ctx.fillText(this.state, -this.width / 2,  -this.height - 20);
-      ctx.fillText(this.velocity[1].toFixed(2), -this.width / 2,  -this.height - 30);
+      ctx.fillText(this.velocity[0].toFixed(2), -this.width / 2,  -this.height - 30);
     }
     ctx.restore();
   };

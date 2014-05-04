@@ -76,8 +76,10 @@ window.s = g_services;
     showState: false,
     moveAcceleration: 5000,
     maxVelocity: [200, 1000],
-    jumpDuration: 0.4,
+    jumpDuration: 0.4,        // how long the jump velocity can be applied
     jumpVelocity: -220,
+    minStopVelocity: 25,      // below this we're idling
+    stopFriction: 0.95,       // amount of velocity to keep each frame
     gravity: 40000,
     frameCount: 0,
     idleAnimSpeed: 4,

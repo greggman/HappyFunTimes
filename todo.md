@@ -1,3 +1,4 @@
+*   Fix collisions for jumpjujmp
 *   Make game maker plugin
 *   Make C++ version of lib
 *   touch code already debounces pressed so remove similar code from controllers?
@@ -14,6 +15,17 @@
     *   close off edges at 30 second point?
     *   figure out what players waiting can do
     *   walking speed should start at 48 and progres to 64?
+    *   consider showing map "radar" on controller when game starts and point to player
+
+            +-------------------------------+
+            |                               |
+            |                               |
+            |               You R Here      |
+            |                       |       |
+            |                       V       |
+            |                       .       |
+            |                               |
+            +-------------------------------+
 
 *   need to handle orientation better.
 
@@ -112,7 +124,6 @@
     his laptop or tablet and hack some custom code just to be an ahole is not so likely?
 
 *   Have better splash if no games running
-*   Fix collisions for jumpjujmp
 *   make gameviews template based so we can make disconnect behavior common
 *   stop sliding fingers from selecting stuff.
 *   make bird quack if you click him (consider random speed)
