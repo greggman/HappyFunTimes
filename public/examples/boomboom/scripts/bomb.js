@@ -156,6 +156,15 @@ define([
 
   var incDecExplosion = function(nx, ny, tiles, flameInfo, layer, delta) {
     var offset = (ny * explosionTableWidth + nx) * 4;
+    if (offset < 0 || offset >= explosionTable.length) {
+      throw 'bad offset!';
+    }
+    if (offset % 1 != 0) {
+      throw 'bad offset 2';
+    }
+    if (nx % 1 != 0 || ny % 1 != 0) {
+      throw 'bad nx or ny';
+    }
     explosionTable[offset + flameInfo.dirNdx] += delta;
     var l = explosionTable[offset + 0];
     var r = explosionTable[offset + 1];
@@ -166,17 +175,21 @@ define([
     var bits = (l > 0 ? 1 : 0) |
                (r > 0 ? 2 : 0) |
                (u > 0 ? 4 : 0) |
-               (v > 0 ? 8 : 0) |
+               (d > 0 ? 8 : 0) |
                h | v;
     var tileId = tiles[bitsToTile[bits]].id;
     layer.setTile(nx, ny, tileId);
     if (g_services.gridTable) {
-      g_services.gridTable[ny][nx].nodeValue = "01: " +
-        explosionTable[offset + 0] + ", " +
-        explosionTable[offset + 1] + "\n23: " +
-        explosionTable[offset + 2] + ", " +
-        explosionTable[offset + 3] + "\n" +
-        "t: " + tileId.toString(16);
+      try {
+        g_services.gridTable[ny][nx].nodeValue = "01: " +
+          explosionTable[offset + 0] + ", " +
+          explosionTable[offset + 1] + "\n23: " +
+          explosionTable[offset + 2] + ", " +
+          explosionTable[offset + 3] + "\n" +
+          "t: " + tileId.toString(16);
+      } catch (e) {
+        throw e;
+      }
     }
   };
 
