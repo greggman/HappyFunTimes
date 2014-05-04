@@ -2,17 +2,16 @@
 *   add settimeout/setinterval to game support
 *   now that we have game URLs make main menu generated at runtime
 *   boomboom
+    *   fix explosion at crate/bush with nothing on other side. should be tip.
     *   implement kick
     *   Music
         * main
         * fast?
     *   "Hurry!!!"
     *   close off edges at 30 second point?
-    *   fix turning. Trying to go down lines is too hard.
-    *   show names (limit to size?)
+    *   show names (limit to size?). Maybe only show it larger if player clicks avatar
     *   figure out what players waiting can do
     *   walking speed should start at 48 and progres to 64?
-    *   make flames handle erasing correctly. Sometimes the wrong tip is displayed.
 
 *   need to handle orientation better.
 
@@ -209,6 +208,8 @@ Done
 
 *   boomboom
     *   fix explosion on crates
+    *   make flames handle erasing correctly. Sometimes the wrong tip is displayed.
+    *   fix turning. Trying to go down lines is too hard.
     *   fix so more than R*C players
     *   blow up bushes.
     *   controller

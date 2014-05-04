@@ -83,8 +83,8 @@ window.s = g_services;
       { tileName: 'goldCrate',  prob:  1, },
       { tileName: 'kickCrate',  prob:  3, },
       { tileName: 'bombCrate',  prob:  6, },
-      { tileName: 'flameCrate', prob:  6, },
-      { tileName: 'empty',      prob: 30, },
+      { tileName: 'flameCrate', prob:  9, },
+      { tileName: 'empty',      prob: 20, },
     ],
     // game stuff
     waitForPlayersDuration: 10,
@@ -102,9 +102,9 @@ window.s = g_services;
     // bomb stuff
     numStartingBombs: 1,          // how many bombs a player gets to start
     bombStartSize: 1,             // starting size of bombs
-    bombDuration: 5,              // time bomb ticks
-    explosionDuration: 2,         // time bomb as at full size
-    unexplodeTickDuration: 0.05,  // time per tile as bomb contracts.
+    bombDuration: 2,              // time bomb ticks
+    explosionDuration: 0.5,       // time bomb as at full size
+    unexplodeTickDuration: 0.025, // time per tile as bomb contracts.
     // die stuff
     dieColorSpeed: 2,
     dieDuration: 2,
