@@ -385,9 +385,22 @@ define([
     }
   };
 
+  Player.prototype.validatePosition = function() {
+    var levelManager = this.services.levelManager;
+    var tileWidth  = 16;
+    var tileHeight = 16;
+    var tx = this.position[0] / tileWidth  | 0;
+    var ty = this.position[1] / tileHeight | 0;
+    if (tx < 1 || ty < 1 || tx > levelManager.tilesAcross - 2 || ty > levelManager.tilesDown - 2) {
+      throw 'bad position';
+    }
+
+  };
+
   Player.prototype.setPosition = function(x, y) {
     this.position[0] = x;
     this.position[1] = y;
+this.validatePosition();
   };
 
   Player.prototype.sendWinner = function() {
@@ -693,6 +706,9 @@ define([
 
     this.position[0] = newX;
     this.position[1] = newY;
+
+this.validatePosition();
+
 
     if (this.checkForDeath()) {
       return;

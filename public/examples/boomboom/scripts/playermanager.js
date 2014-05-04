@@ -69,10 +69,10 @@ window.p = this.players;
     }
 
     var corners = [
-      { x:       0, y:       0, },
-      { x: lastCol, y:       0, },
-      { x:       0, y: lastRow, },
-      { x: lastCol, y: lastRow, },
+      { x:               1, y:               1, },
+      { x: 1 + lastCol * 2, y:               1, },
+      { x:               1, y: 1 + lastRow * 2, },
+      { x: 1 + lastCol * 2, y: 1 + lastRow * 2, },
     ];
     var others = [];
     for (var y = 0, yy = 0; yy < mapSize.numRows; ++y, yy += step) {
@@ -82,7 +82,9 @@ window.p = this.players;
                        (xx == lastCol && yy == 0) ||
                        (xx == lastCol && yy == lastRow);
         if (!isCorner) {
-          others.push({x: xx + y % step, y: yy + x % step});
+          var tx = Math.min(mapSize.across - 2, 1 + (xx + y % step) * 2);
+          var ty = Math.min(mapSize.down   - 2, 1 + (yy + x % step) * 2);
+          others.push({x: tx, y: ty});
         }
       }
     }
@@ -106,9 +108,12 @@ window.p = this.players;
     this.forEachPlayer(function(player, ii) {
       var index = Misc.randInt(corners.length);
       var pos = corners.splice(index, 1)[0];
-      var tx = (1 + pos.x * 2);
-      var ty = (1 + pos.y * 2);
+      var tx = pos.x;
+      var ty = pos.y;
 
+      if (tx < 1 || ty < 1 || tx > mapSize.across - 2 || ty > mapSize.down - 2) {
+        throw 'WTF';
+      }
       for (var ii = 0; ii < clearOffsets.length; ++ii) {
         var off = clearOffsets[ii];
         levelManager.layer1.setTile(tx + off.x, ty + off.y, tiles.empty.id);
