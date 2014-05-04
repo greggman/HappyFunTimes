@@ -89,6 +89,9 @@ define([
     var globals = services.globals;
     var canvas = services.canvas;
 
+    var tileWidth  = 16;
+    var tileHeight = 16;
+
     var numPlayers = playerManager.getNumPlayersConnected();
 
     if (!globals.forceScale) {
@@ -139,10 +142,14 @@ define([
         txt.nodeValue = "" + x + "," + y;
         services.gridTable[y].push(txt);
       });
+      var rule = Misc.findCSSStyleRule("#grid td");
+      if (rule) {
+        rule.style.width  = tileWidth * globals.scale + "px";
+        rule.style.height = tileHeight * globals.scale + "px";
+      }
     }
 
     // Adjust clock size.
-    var tileHeight = 16;
     var topMax = 80;
     var topMin = 16;
     var topMaxOffset = 10;
