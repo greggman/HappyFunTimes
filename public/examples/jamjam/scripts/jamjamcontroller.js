@@ -184,7 +184,7 @@ var main = function(
     g_client.addEventListener('setInstrument', handleSetInstrument);
 
     ExampleUI.setupStandardControllerUI(g_client, globals);
-    if (!AudioManager.hasWebAudio) {
+    if (!AudioManager.hasWebAudio()) {
       $("needWebAudio").style.display = "block";
       return;
     }
