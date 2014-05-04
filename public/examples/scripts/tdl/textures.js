@@ -140,6 +140,10 @@ tdl.textures.Texture = function(target) {
   this.params = { };
 };
 
+tdl.textures.Texture.prototype.destroy = function() {
+  gl.deleteTexture(this.texture);
+};
+
 tdl.textures.Texture.prototype.setParameter = function(pname, value) {
   this.params[pname] = value;
   gl.bindTexture(this.target, this.texture);
