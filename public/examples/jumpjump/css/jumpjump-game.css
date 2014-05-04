@@ -29,7 +29,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 html, body {
-  background-color: yellow; //#28F;
+  background-color: yellow;
 }
 #visual {
   position: absolute;

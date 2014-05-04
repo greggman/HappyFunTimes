@@ -345,13 +345,14 @@ window.p = this;
     this.animTimer += globals.moveAnimSpeed * Math.abs(this.velocity[0]) * globals.elapsedTime;
     this.updatePhysics(1);
 
+    this.checkWall();
+    this.checkFall();
+
     if (!this.direction) {
       this.setState('stop');
       return;
     }
 
-    this.checkWall();
-    this.checkFall();
     this.lastDirection = this.direction;
   };
 
