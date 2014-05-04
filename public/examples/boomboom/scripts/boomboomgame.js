@@ -177,8 +177,16 @@ window.g = globals;
       }
     };
 
+    var handleShow = function(player, pressed) {
+      var localNetPlayer = netPlayers[player];
+      if (localNetPlayer) {
+        localNetPlayer.sendEvent('show', {show:pressed});
+      }
+    };
+
     var keys = { };
     keys["Z".charCodeAt(0)] = function(e) { handleAbutton(0, e.pressed); }
+    keys["X".charCodeAt(0)] = function(e) { handleShow(0, e.pressed); }
     keys[".".charCodeAt(0)] = function(e) { handleAbutton(1, e.pressed); }
     Input.setupKeys(keys);
     Input.setupKeyboardDPadKeys(handleDPad);
@@ -250,6 +258,7 @@ window.gs = GameSupport;
     tex.setParameter(gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
     return tex;
   };
+  g_services.createTexture = createTexture;
 
   var processImages = function() {
     // cut out sprites

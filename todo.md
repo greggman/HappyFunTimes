@@ -1,3 +1,6 @@
+*   Make game maker plugin
+*   Make C++ version of lib
+*   touch code already debounces pressed so remove similar code from controllers?
 *   figure out why no sound from powpow controller?
 *   add settimeout/setinterval to game support
 *   now that we have game URLs make main menu generated at runtime
@@ -9,7 +12,6 @@
         * fast?
     *   "Hurry!!!"
     *   close off edges at 30 second point?
-    *   show names (limit to size?). Maybe only show it larger if player clicks avatar
     *   figure out what players waiting can do
     *   walking speed should start at 48 and progres to 64?
 
@@ -111,22 +113,16 @@
 
 *   Have better splash if no games running
 *   Fix collisions for jumpjujmp
-*   Make more world sizes for jumpjump
 *   make gameviews template based so we can make disconnect behavior common
 *   stop sliding fingers from selecting stuff.
 *   make bird quack if you click him (consider random speed)
 *   fix flex css (remove need for fixHeightHack)
-*   add some CSS animation foo for menu appearing, disappearing
 *   figure out why deviceorientation message is low
 *   test older ios
     *   consider making it warn if version not good enough
 *   test older android
     *   consider making it warn if version not good enough
 *   should I restructure samples to wait for sounds to load?
-
-*   send no caching header? or at least optionally
-
-*   fix tdl vs require load issues.
 
 *   Get nice designs for games. Particularly controllers
 
@@ -142,6 +138,10 @@
     *   boomboom
     *   platformer
     *   8way shooter
+    *   drawing game.
+
+        Player's draw on their phone, add drawing to level?
+
     *   unity character controller
     *   johann sabastian joust?
 
@@ -153,7 +153,7 @@
         HTML5 allows access to the accelerometers of the phone so it
         should be possible ot make this game with HFT.
 
-    *   Make a round based game. (bomberman fits this. Each round lasts 2 mins. Players entering later have to wait)
+    *   Make a round based game. (bombbomb fits this. Each round lasts 2 mins. Players entering later have to wait)
     *   quiz
 
         send question Q + 4 answers, display on phone and on game. On game show counts
@@ -176,6 +176,12 @@
 
 Done
 ----
+
+*   send no caching header? or at least optionally
+
+*   fix tdl vs require load issues.
+
+*   Make more world sizes for jumpjump
 
 *   make jamjam fail without audio api
 
@@ -208,6 +214,7 @@ Done
 
 *   boomboom
     *   fix explosion on crates
+    *   show names (limit to size?). Maybe only show it larger if player clicks avatar
     *   make flames handle erasing correctly. Sometimes the wrong tip is displayed.
     *   fix turning. Trying to go down lines is too hard.
     *   fix so more than R*C players
@@ -412,6 +419,10 @@ Done
 
 Rejected
 --------
+
+*   add some CSS animation foo for menu appearing, disappearing
+
+    menu is rarely used
 
 *   handle ssl as well for captive portal? I don't think I can :(
 

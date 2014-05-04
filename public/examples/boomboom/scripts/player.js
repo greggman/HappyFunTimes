@@ -59,9 +59,11 @@ define([
 
   var availableColors = [];
   var nameFontOptions = {
-    yOffset: 8,
-    height: 10,
-    fillStyle: "black",
+    font: "40px sans-serif",
+    yOffset: 36,
+    height: 44,
+    fillStyle: "white",
+    backgroundColor: "rgba(0,0,0,0.5)",
   };
 
 
@@ -288,6 +290,9 @@ define([
         }
       }
 
+      this.nameTextures = {
+      };
+
       this.color = availableColors[Math.floor(Math.random() * availableColors.length)];
       availableColors.splice(this.color, 1);
       this.sendCmd('setColor', this.color);
@@ -308,6 +313,7 @@ define([
       netPlayer.addEventListener('disconnect', Player.prototype.handleDisconnect.bind(this));
       netPlayer.addEventListener('pad', Player.prototype.handlePadMsg.bind(this));
       netPlayer.addEventListener('abutton', Player.prototype.handleAButtonMsg.bind(this));
+      netPlayer.addEventListener('show', Player.prototype.handleShowMsg.bind(this));
       netPlayer.addEventListener('setName', Player.prototype.handleNameMsg.bind(this));
       netPlayer.addEventListener('busy', Player.prototype.handleBusyMsg.bind(this));
 
@@ -340,6 +346,7 @@ define([
     this.bombSize = globals.bombStartSize;
     this.haveKick = false;
     this.setFacing(6);
+    this.setAnimFrame(this.anims.idle);
     this.direction = -1;  // direction player is pressing.
     this.setState('start');
 
@@ -400,7 +407,7 @@ define([
   Player.prototype.setPosition = function(x, y) {
     this.position[0] = x;
     this.position[1] = y;
-this.validatePosition();
+    this.validatePosition();
   };
 
   Player.prototype.sendWinner = function() {
@@ -411,10 +418,19 @@ this.validatePosition();
     this.sendCmd('tied');
   };
 
+  Player.prototype.deleteNameImage = function() {
+    if (this.nameTextures.u_texture) {
+      this.nameTextures.u_texture.destroy();
+      delete this.nameTextures.u_texture;
+    }
+  };
+
   Player.prototype.setName = function(name) {
     if (name != this.playerName) {
       this.playerName = name;
-      this.nameImage = ImageProcess.makeTextImage(name, nameFontOptions);
+      this.deleteNameImage();
+      this.nameTextures.u_texture = this.services.createTexture(
+          ImageProcess.makeTextImage(name, nameFontOptions));
     }
   };
 
@@ -429,6 +445,7 @@ this.validatePosition();
 
   Player.prototype.removeFromGame = function() {
     this.reportDied();
+    this.deleteNameImage();
     this.services.entitySystem.removeEntity(this);
     this.services.drawSystem.removeEntity(this);
     this.services.playerManager.removePlayer(this);
@@ -454,6 +471,11 @@ this.validatePosition();
   Player.prototype.handleAButtonMsg = function(msg) {
     this.abutton.setState(msg.abutton);
   };
+
+  Player.prototype.handleShowMsg = function(msg) {
+    this.userRequestShowName = msg.show;
+  };
+
 
   Player.prototype.handleNameMsg = function(msg) {
     if (!msg.name) {
@@ -569,6 +591,7 @@ this.validatePosition();
   // This state is just before the game has started
   Player.prototype.init_start = function() {
     // player.reset will have just been called.
+    this.showName = true;
     this.sendCmd('start');
   };
 
@@ -576,6 +599,7 @@ this.validatePosition();
   };
 
   Player.prototype.init_idle = function() {
+    this.showName = false;
   };
 
   Player.prototype.state_idle = function() {
@@ -784,6 +808,26 @@ this.validatePosition();
 
     s_playerModel.drawPrep();
     s_playerModel.draw(this.uniforms, this.textures);
+
+    if (this.showName || this.userRequestShowName) {
+      var width  = this.nameTextures.u_texture.img.width  / 4;
+      var height = this.nameTextures.u_texture.img.height / 4;
+      var x = this.position[0] * globals.scale;
+      var y = (this.position[1] - height - 2) * globals.scale
+
+      width  *= globals.scale;
+      height *= globals.scale;
+
+      m4.identity(this.matrix);
+      m4.scale(this.matrix, [2 / renderer.canvas.width, -2 / renderer.canvas.height, 1]);
+      m4.translate(this.matrix, [
+                   -renderer.canvas.width  * 0.5 + off.x + x,
+                   -renderer.canvas.height * 0.5 + off.y + y,
+                   0]);
+      m4.scale(this.matrix, [width, height, 1]);
+      m4.translate(this.matrix, [-0.5, -0.5, 0]);
+      s_playerModel.draw(this.uniforms, this.nameTextures);
+    }
   };
 
   return Player;

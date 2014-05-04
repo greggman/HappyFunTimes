@@ -122,7 +122,7 @@ var main = function(
 
     var handleWinner = function() {
       showMsg("WINNER!!!", "yellow");
-      flash(["green", "blue", "purple", "red", "orange", "yellow"]);
+      flash(["green", "blue", "purple", "red", "orange", "yellow", "purple"]);
     };
 
     var handleTie = function() {
@@ -185,6 +185,10 @@ var main = function(
       }
     };
 
+    var handleShow = function(pressed) {
+      g_client.sendCmd('show', {show:pressed});
+    };
+
     var handleDPad = function(e) {
       dpads[e.pad].draw(e.info);
       g_client.sendCmd('pad', {pad: e.pad, dir: e.info.direction});
@@ -192,6 +196,7 @@ var main = function(
 
     var keys = { };
     keys["Z".charCodeAt(0)] = function(e) { handleAbutton(e.pressed); }
+    keys["X".charCodeAt(0)] = function(e) { handleShow(e.pressed); }
     Input.setupKeys(keys);
     Input.setupKeyboardDPadKeys(handleDPad, Input.kASWDPadOnly);
 
@@ -199,6 +204,7 @@ var main = function(
       inputElement: $("buttons"),
       buttons: [
         { element: $("abutton"), callback: function(e) { handleAbutton(e.pressed); }, },
+        { element: $("avatar"),  callback: function(e) { handleShow(e.pressed); }, },
       ],
     });
 
