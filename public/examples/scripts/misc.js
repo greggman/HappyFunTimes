@@ -179,6 +179,12 @@ define(function() {
     return v < 0 ? -1 : (v > 0 ? 1 : 0);
   };
 
+  // Takes which ever is closer to zero
+  // In other words minToZero(-2, -1) = -1 and minToZero(2, 1) = 1
+  var minToZero = function(v, min) {
+    return Math.abs(v) < Math.abs(min) ? v : min;
+  };
+
   // flips 0->max to max<-0 and 0->min to min->
   // In otherwords
   //   max: 3, v: 2.7  =  0.3
@@ -221,6 +227,7 @@ define(function() {
     findCSSStyleRule: findCSSStyleRule,
     getAbsolutePosition: getAbsolutePosition,
     invertPlusMinusRange: invertPlusMinusRange,
+    minToZero: minToZero,
     radToDeg: radToDeg,
     randInt: randInt,
     randCSSColor: randCSSColor,
