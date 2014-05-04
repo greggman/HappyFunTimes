@@ -229,16 +229,20 @@ define(function() {
     return canvas;
   };
 
+  var setCanvasFontStyles = function(ctx, options) {
+    if (options.font        ) { ctx.font         = options.font;        }
+    if (options.fillStyle   ) { ctx.fillStyle    = options.fillStyle;   }
+    if (options.textAlign   ) { ctx.textAlign    = options.textAlign;   }
+    if (options.testBaseline) { ctx.textBaseline = options.textBaselne; }
+  };
+
   var makeTextImage = function(str, options, opt_canvas) {
     var canvas = opt_canvas || document.createElement("canvas");
     var ctx = canvas.getContext("2d");
 
     ctx.save();
 
-    if (options.font        ) { ctx.font         = options.font;        }
-    if (options.fillStyle   ) { ctx.fillStyle    = options.fillStyle;   }
-    if (options.textAlign   ) { ctx.textAlign    = options.textAlign;   }
-    if (options.testBaseline) { ctx.textBaseline = options.textBaselne; }
+    setCanvasFontStyles(ctx, options);
 
     var metrics = ctx.measureText(str);
     var width = metrics.width + (options.padding || 0);
@@ -248,10 +252,19 @@ define(function() {
     if (options.minWidth) {
       width = Math.max(width, options.minWidth);
     }
+
     canvas.width = width;
     canvas.height = options.height;
 
-    ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+    if (options.backgroundColor) {
+      ctx.fillStyle = options.backgroundColor;
+      ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+    } else {
+      ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+    }
+
+    // We have to set them again because re-sizing the canvas resets all canvas settings.
+    setCanvasFontStyles(ctx, options);
     ctx.fillText(
         str,
         options.xOffset || 0,
