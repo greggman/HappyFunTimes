@@ -31,31 +31,17 @@
 "use strict";
 
 define([
-    '../../scripts/tdl/buffers',
-    '../../scripts/tdl/fast',
-    '../../scripts/tdl/math',
-    '../../scripts/tdl/models',
-    '../../scripts/tdl/primitives',
-    '../../scripts/tdl/programs',
     '../../scripts/gamebutton',
     '../../scripts/imageprocess',
     '../../scripts/input',
     '../../scripts/misc',
     './bomb',
   ], function(
-    Buffers,
-    Fast,
-    math,
-    Models,
-    Primitives,
-    Programs,
     GameButton,
     ImageProcess,
     Input,
     Misc,
     Bomb) {
-
-  var m4 = Fast.matrix4;
 
   var availableColors = [];
   var nameFontOptions = {
@@ -64,91 +50,6 @@ define([
     height: 44,
     fillStyle: "white",
     backgroundColor: "rgba(0,0,0,0.5)",
-  };
-
-
-  var s_playerVertexShader = [
-    "attribute vec4 position;                  ",
-    "attribute vec2 texcoord;                  ",
-    "                                          ",
-    "uniform mat4 u_matrix;                    ",
-    "                                          ",
-    "varying vec2 v_texcoord;                  ",
-    "                                          ",
-    "void main() {                             ",
-    "  gl_Position = u_matrix * position;      ",
-    "  v_texcoord = texcoord;                  ",
-    "}                                         ",
-  ].join("\n");
-
-  var s_playerFragmentShader = [
-    "precision mediump float;                                                          ",
-    "                                                                                  ",
-    "uniform sampler2D u_texture;                                                      ",
-    "uniform vec2 u_adjustRange;                                                       ",
-    "uniform vec4 u_hsvaAdjust;                                                        ",
-    "                                                                                  ",
-    "varying vec2 v_texcoord;                                                          ",
-    "                                                                                  ",
-    "vec3 rgb2hsv(vec3 c) {                                                            ",
-    "  vec4 K = vec4(0.0, -1.0 / 3.0, 2.0 / 3.0, -1.0);                                ",
-    "  vec4 p = mix(vec4(c.bg, K.wz), vec4(c.gb, K.xy), step(c.b, c.g));               ",
-    "  vec4 q = mix(vec4(p.xyw, c.r), vec4(c.r, p.yzx), step(p.x, c.r));               ",
-    "                                                                                  ",
-    "  float d = q.x - min(q.w, q.y);                                                  ",
-    "  float e = 1.0e-10;                                                              ",
-    "  return vec3(abs(q.z + (q.w - q.y) / (6.0 * d + e)), d / (q.x + e), q.x);        ",
-    "}                                                                                 ",
-    "                                                                                  ",
-    "vec3 hsv2rgb(vec3 c) {                                                            ",
-    "  c = vec3(c.x, clamp(c.yz, 0.0, 1.0));                                           ",
-    "  vec4 K = vec4(1.0, 2.0 / 3.0, 1.0 / 3.0, 3.0);                                  ",
-    "  vec3 p = abs(fract(c.xxx + K.xyz) * 6.0 - K.www);                               ",
-    "  return c.z * mix(K.xxx, clamp(p - K.xxx, 0.0, 1.0), c.y);                       ",
-    "}                                                                                 ",
-    "                                                                                  ",
-    "void main() {                                                                     ",
-    "  vec4 color = texture2D(u_texture, v_texcoord);                                  ",
-    "  if (color.a < 0.1) {                                                            ",
-    "    discard;                                                                      ",
-    "  }                                                                               ",
-    "  vec3 hsv = rgb2hsv(color.rgb);                                                  ",
-    "  float affectMult = step(u_adjustRange.x, hsv.r) * step(hsv.r, u_adjustRange.y); ",
-    "  vec3 rgb = hsv2rgb(hsv + u_hsvaAdjust.xyz * affectMult);                        ",
-    "  gl_FragColor = vec4(rgb, color.a + u_hsvaAdjust.a);                             ",
-    "}                                                                                 ",
-  ].join("\n");
-
-  var s_playerModel;
-
-  var makePlayerModel = function() {
-    if (s_playerModel) {
-      return;
-    }
-
-    var arrays = {
-      position: new Primitives.AttribBuffer(2, [
-          0,  0,
-          1,  0,
-          0,  1,
-          1,  1,
-      ]),
-      texcoord: new Primitives.AttribBuffer(2, [
-          0,  0,
-          1,  0,
-          0,  1,
-          1,  1,
-      ]),
-      indices: new Primitives.AttribBuffer(3, [
-          0, 1, 2,
-          2, 1, 3,
-      ], 'Uint16Array')
-    }
-    var textures = {
-    };
-    var program = new Programs.Program(
-        s_playerVertexShader, s_playerFragmentShader);
-    s_playerModel = new Models.Model(program, arrays, textures);
   };
 
   //    2     -1 = not pressed
@@ -300,11 +201,7 @@ define([
 
       this.imageSet = this.services.images.avatar[this.color.set];
 
-      makePlayerModel();
-
       var images = this.services.images;
-      this.matrix = new Float32Array(16);
-      m4.identity(this.matrix);
 
       this.textures = {
         u_texture: this.imageSet.avatarStandU,
@@ -327,11 +224,8 @@ define([
       putBomb(this.bombs.pop());
     }
     this.setPosition(x, y);
-    this.uniforms = {
-      u_matrix: this.matrix,
-      u_adjustRange: [0, 1],
-      u_hsvaAdjust: this.color.hsv.slice(),
-    };
+    this.uniforms = this.services.spriteRenderer.getUniforms();
+    this.uniforms.u_hsvaAdjust = this.color.hsv.slice(),
     this.inRow = true; // false = in column
     this.playing = true;
     this.alive = true;
@@ -789,6 +683,7 @@ this.validatePosition();
     }
     var globals = this.services.globals;
     var images = this.services.images;
+    var spriteRenderer = this.services.spriteRenderer;
     var off = {};
     this.services.levelManager.getDrawOffset(off);
 
@@ -796,37 +691,38 @@ this.validatePosition();
     var width  = 16 * scale;
     var height = 16 * scale;
 
-    m4.identity(this.matrix);
-    m4.scale(this.matrix, [2 / renderer.canvas.width, -2 / renderer.canvas.height, 1]);
-    m4.translate(this.matrix, [
-                 -renderer.canvas.width  * 0.5 + off.x + this.position[0] * globals.scale,
-                 -renderer.canvas.height * 0.5 + off.y + this.position[1] * globals.scale,
-                 0]);
-    m4.rotateZ(this.matrix, this.rotation);
-    m4.scale(this.matrix, [width * (this.hflip ? -1 : 1), height, 1]);
-    m4.translate(this.matrix, [-0.5, -0.5, 0]);
+    this.uniforms.u_texture = this.textures.u_texture;
 
-    s_playerModel.drawPrep();
-    s_playerModel.draw(this.uniforms, this.textures);
+    spriteRenderer.drawPrep();
+    spriteRenderer.draw(
+        this.uniforms,
+        off.x + this.position[0] * globals.scale,
+        off.y + this.position[1] * globals.scale,
+        width,
+        height,
+        this.rotation,
+        this.hFlip ? -1 : 1,
+        1);
 
     if (this.showName || this.userRequestShowName) {
       var width  = this.nameTextures.u_texture.img.width  / 4;
       var height = this.nameTextures.u_texture.img.height / 4;
-      var x = this.position[0] * globals.scale;
-      var y = (this.position[1] - height - 2) * globals.scale
+      var x = off.x + this.position[0] * globals.scale;
+      var y = off.y + (this.position[1] - height - 2) * globals.scale
 
       width  *= globals.scale;
       height *= globals.scale;
 
-      m4.identity(this.matrix);
-      m4.scale(this.matrix, [2 / renderer.canvas.width, -2 / renderer.canvas.height, 1]);
-      m4.translate(this.matrix, [
-                   -renderer.canvas.width  * 0.5 + off.x + x,
-                   -renderer.canvas.height * 0.5 + off.y + y,
-                   0]);
-      m4.scale(this.matrix, [width, height, 1]);
-      m4.translate(this.matrix, [-0.5, -0.5, 0]);
-      s_playerModel.draw(this.uniforms, this.nameTextures);
+      this.uniforms.u_texture = this.nameTextures.u_texture;
+
+      spriteRenderer.draw(
+          this.uniforms,
+          x,
+          y,
+          width,
+          height,
+          0,
+          1, 1);
     }
   };
 

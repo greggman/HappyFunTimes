@@ -41,8 +41,9 @@ define([
 
   var availableColors = [];
   var nameFontOptions = {
-    yOffset: 8,
-    height: 10,
+    font: "20px sans-serif",
+    yOffset: 18,
+    height: 20,
     fillStyle: "black",
   };
 
@@ -54,7 +55,6 @@ define([
     return function(services, width, height, direction, name, netPlayer) {
       this.services = services;
       this.renderer = services.renderer;
-
       services.entitySystem.addEntity(this);
       services.drawSystem.addEntity(this);
       this.netPlayer = netPlayer;
@@ -80,6 +80,8 @@ window.p = this;
         this.width / 2 - 1,
       ];
 
+      this.uniforms = this.services.spriteRenderer.getUniforms();
+
       netPlayer.addEventListener('disconnect', Player.prototype.handleDisconnect.bind(this));
       netPlayer.addEventListener('move', Player.prototype.handleMoveMsg.bind(this));
       netPlayer.addEventListener('jump', Player.prototype.handleJumpMsg.bind(this));
@@ -100,7 +102,8 @@ window.p = this;
   Player.prototype.setName = function(name) {
     if (name != this.playerName) {
       this.playerName = name;
-      this.nameImage = ImageProcess.makeTextImage(name, nameFontOptions);
+      this.nameImage = this.services.createTexture(
+          ImageProcess.makeTextImage(name, nameFontOptions));
     }
   };
 
@@ -407,42 +410,41 @@ window.p = this;
     }
   };
 
-  Player.prototype.draw = function(ctx) {
+  Player.prototype.draw = function() {
     var globals = this.services.globals;
     var images = this.services.images;
-    ctx.save();
-    ctx.translate(Math.floor(this.position[0]), Math.floor(this.position[1]));
-
-//    ctx.fillStyle = this.color;
-//    ctx.fillRect(-this.width / 2, -this.height, this.width, this.height);
-
-    ctx.save();
+    var spriteRenderer = this.services.spriteRenderer;
     var frameNumber = Math.floor(this.animTimer % this.anim.length);
     var img = this.anim[frameNumber];
-window.p = this;
-window.f = frameNumber;
-    if (this.facing > 0) {
-      ctx.translate(-img.width / 2, -img.height);
-    } else {
-      ctx.translate(img.width / 2, -img.height);
-      ctx.scale(this.facing, 1);
-    }
-    ctx.drawImage(img, 0, 0);
-    ctx.restore();
+    this.uniforms.u_texture = img;
 
-//    ctx.fillRect(-this.width / 2, -this.height, this.width, this.height);
-    if (globals.showState) {
-      ctx.fillStyle = (globals.frameCount & 4) ? "white" : "black";
-      ctx.fillRect(0, 0, 1, 1);
-    }
-    ctx.fillStyle = "black";
-//    ctx.fillText(this.playerName, -this.width / 2,  -this.height - 10);
-    ctx.drawImage(this.nameImage, -this.width / 2, -this.height - 10);
-    if (globals.showState) {
-      ctx.fillText(this.state, -this.width / 2,  -this.height - 20);
-      ctx.fillText(this.velocity[0].toFixed(2), -this.width / 2,  -this.height - 30);
-    }
-    ctx.restore();
+    var off = {};
+    this.services.levelManager.getDrawOffset(off);
+
+    var width  = 32;
+    var height = 32;
+
+    spriteRenderer.drawPrep();
+    spriteRenderer.draw(
+        this.uniforms,
+        (off.x + this.position[0]) | 0,
+        (off.y + height / -2 + this.position[1]) | 0,
+        width,
+        height,
+        0,
+        this.facing > 0 ? 1 : -1,
+        1);
+
+    this.uniforms.u_texture = this.nameImage;
+    spriteRenderer.draw(
+        this.uniforms,
+        (off.x + this.position[0]) | 0,
+        (off.y + height / -2 + this.position[1] - 24) | 0,
+        this.nameImage.img.width / 2,
+        this.nameImage.img.height / 2,
+        0,
+        1,
+        1);
   };
 
   return Player;

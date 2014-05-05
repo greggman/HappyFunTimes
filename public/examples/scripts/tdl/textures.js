@@ -345,7 +345,7 @@ tdl.textures.Texture2D.prototype.setTexture = function(element) {
   // TODO(gman): use texSubImage2D if the size is the same.
   gl.bindTexture(gl.TEXTURE_2D, this.texture);
   gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, element);
-  this.setFilteringBasedOnDimensions(element, element.height);
+  this.setFilteringBasedOnDimensions(element.width, element.height);
 };
 
 tdl.textures.Texture2D.prototype.updateTexture = function() {

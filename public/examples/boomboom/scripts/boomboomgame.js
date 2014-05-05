@@ -46,6 +46,7 @@ var main = function(
     ImageProcess,
     Input,
     Misc,
+    SpriteRenderer,
     GameManager,
     LevelManager,
     PlayerManager,
@@ -208,6 +209,7 @@ window.gs = GameSupport;
   var canvas = $("playfield");
   var gl = WebGL.setupWebGL(canvas, {alpha:false}, function() {});
   var renderer = new WebGLRenderer(g_services, canvas, gl);
+  g_services.spriteRenderer = new SpriteRenderer();
   g_services.canvas = canvas;
   g_services.renderer = renderer;
 
@@ -405,6 +407,7 @@ requirejs(
     '../../scripts/imageprocess',
     '../../scripts/input',
     '../../scripts/misc',
+    '../../scripts/sprite',
     './gamemanager',
     './levelmanager',
     './playermanager',

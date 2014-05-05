@@ -1,3 +1,11 @@
+*   use particles for coin
+*   fix coin collisions
+*   use particles for boomboom death
+*   make coin jump time indepent
+*   put name back in jumpjump
+*   add sounds jumpjump
+*   add sounds bombbomb
+*   fix dpads!!!!
 *   Fix collisions for jumpjujmp
 *   Make game maker plugin
 *   Make C++ version of lib

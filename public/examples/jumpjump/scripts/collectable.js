@@ -57,6 +57,8 @@ define([
       this.width = level.tileWidth;
       this.height = level.tileHeight;
 
+      this.uniforms = this.services.spriteRenderer.getUniforms();
+
       this.chooseNewPosition();
       this.setState("fall");
     };
@@ -103,18 +105,28 @@ define([
   };
 
   Collectable.prototype.draw_collected = function(ctx) {
+    var spriteRenderer = this.services.spriteRenderer;
     var frameNumber = Math.floor(this.animTimer % this.anim.length);
     var img = this.anim[frameNumber];
-    ctx.save();
-    ctx.translate(-img.width / 2, -img.height);
+    var off = {};
+    this.services.levelManager.getDrawOffset(off);
+    this.uniforms.u_texture = img;
+
+    spriteRenderer.drawPrep();
     for (var ii = -1; ii < 2; ++ii) {
       var a = ii * Math.PI / 4;
       var x =  Math.sin(a) * 512 * this.collectTime;
       var y = -Math.cos(a) * 512 * this.collectTime;
-      ctx.drawImage(img, x, y);
+      spriteRenderer.draw(
+          this.uniforms,
+          off.x + x + this.position[0],
+          off.y + y + this.position[1] - this.height / 2,
+          this.width,
+          this.height,
+          0,
+          1,
+          1);
     }
-    ctx.restore();
-
   };
 
   Collectable.prototype.state_idle = function() {
@@ -158,25 +170,29 @@ define([
 
   Collectable.prototype.defaultDraw = function(ctx) {
     var globals = this.services.globals;
+    var spriteRenderer = this.services.spriteRenderer;
     var images = this.services.images;
     var frameNumber = Math.floor(this.animTimer % this.anim.length);
     var img = this.anim[frameNumber];
-    ctx.save();
-    ctx.translate(-img.width / 2, -img.height);
-    ctx.drawImage(img, 0, 0);
-    ctx.restore();
+
+    var off = {};
+    this.services.levelManager.getDrawOffset(off);
+    this.uniforms.u_texture = img;
+
+    spriteRenderer.drawPrep();
+    spriteRenderer.draw(
+        this.uniforms,
+        off.x + this.position[0],
+        off.y + this.position[1] - this.height / 2,
+        this.width,
+        this.height,
+        0,
+        1,
+        1);
   };
 
   Collectable.prototype.draw = function(ctx) {
-    var globals = this.services.globals;
-    ctx.save();
-    ctx.translate(Math.floor(this.position[0]), Math.floor(this.position[1]));
     this.drawFn(ctx);
-    if (globals.showState) {
-      ctx.fillStyle = (globals.frameCount & 4) ? "white" : "black";
-      ctx.fillRect(0, 0, 1, 1);
-    }
-    ctx.restore();
   };
 
   return Collectable;

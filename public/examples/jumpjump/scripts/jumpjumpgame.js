@@ -37,6 +37,8 @@ function $(id) {
 var main = function(
     GameServer,
     LocalNetPlayer,
+    Textures,
+    WebGL,
     AudioManager,
     EntitySystem,
     GameSupport,
@@ -46,6 +48,7 @@ var main = function(
     Misc,
     PixiJS,
     Speedup,
+    SpriteRenderer,
     Collectable,
     LevelManager,
     PlayerManager) {
@@ -60,8 +63,6 @@ window.s = g_services;
   g_services.drawSystem = g_drawSystem;
   var g_playerManager = new PlayerManager(g_services);
   g_services.playerManager = g_playerManager;
-  var g_levelManager = new LevelManager(g_services);
-  g_services.levelManager = g_levelManager;
   g_services.misc = Misc;
   var stop = false;
 
@@ -132,21 +133,18 @@ window.g = globals;
 
   Misc.applyUrlSettings(globals);
 
-  var levelCanvas = $("level");
-  var levelCtx = levelCanvas.getContext("2d");
-  var actorCanvas = $("actors");
-  var actorCtx = actorCanvas.getContext("2d");
+  var canvas = $("playfield");
+  var gl = WebGL.setupWebGL(canvas, {alpha:false}, function() {});
+  g_services.spriteRenderer = new SpriteRenderer();
 
   var resize = function() {
-    if (Misc.resize(levelCanvas)) {
-      Misc.resize(actorCanvas);
-      g_levelManager.reset(levelCanvas.width, levelCanvas.height);
-      g_playerManager.forEachPlayer(function(player) {
+    if (Misc.resize(canvas)) {
+      g_services.levelManager.reset(canvas.width, canvas.height);
+      g_services.playerManager.forEachPlayer(function(player) {
         player.reset();
       });
     }
   };
-  resize();
   g_services.globals = globals;
 
   var server = new GameServer({
@@ -175,8 +173,8 @@ window.g = globals;
       var y = pos.y - offset.y;
       var tileId = level.getTileByPixel(x, y);
       var tileInfo = g_levelManager.getTileInfo(tileId);
-      var px = (levelCanvas.clientLeft + pos.x) + "px";
-      var py = (levelCanvas.clientTop  + pos.y) + "px";
+      var px = (canvas.clientLeft + pos.x) + "px";
+      var py = (canvas.clientTop  + pos.y) + "px";
       s.left = px;
       s.top  = py;
       element.innerHTML = "<pre>" +
@@ -186,13 +184,23 @@ window.g = globals;
     }, false);
   };
 
+  var createTexture = function(img) {
+    var tex = Textures.loadTexture(img);
+    tex.setParameter(gl.TEXTURE_MIN_FILTER, gl.NEAREST);
+    tex.setParameter(gl.TEXTURE_MAG_FILTER, gl.NEAREST);
+    tex.setParameter(gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+    tex.setParameter(gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+    return tex;
+  };
+
+  g_services.createTexture = createTexture;
   // colorize: number of colors to make
   // slizes: number = width of all slices, array = width of each consecutive slice
   var images = {
     idle:  { url: "assets/spr_idle.png",  colorize: 32, scale: 2, slices: 16, },
     move:  { url: "assets/spr_run.png",   colorize: 32, scale: 2, slices: 16, },
     jump:  { url: "assets/spr_jump.png",  colorize: 32, scale: 2, slices: [16, 17, 17, 18, 16, 16] },
-    brick: { url: "assets/bricks.png",    colorize:  1, scale: 2, slices: 16, },
+    brick: { url: "assets/bricks.png",    colorize:  1, scale: 2, slices: 48, },
     coin:  { url: "assets/coin_anim.png", colorize:  1, scale: 4, slices: 8, },
   };
   var colors = [];
@@ -224,12 +232,24 @@ window.g = globals;
           var width = image.slices.length ? image.slices[jj] : image.slices;
           var frame = ImageProcess.cropImage(coloredImage, x, 0, width, coloredImage.height);
           frame = ImageProcess.scaleImage(frame, width * image.scale, frame.height * image.scale);
+          frame = createTexture(frame);
           frames.push(frame);
           x += width;
         }
         image.colors[ii] = frames;
       }
     }
+
+    var tileset = {
+      tileWidth: 32,
+      tileHeight: 32,
+      tilesAcross: 3,  // tiles across set
+      tilesDown: 1,    // tiles across set
+      texture: images.brick.colors[0][0],
+    };
+    var g_levelManager = new LevelManager(g_services, tileset);
+    g_services.levelManager = g_levelManager;
+    resize();
 
     // Add a 2 players if there is no communication
     if (!globals.haveServer) {
@@ -244,16 +264,12 @@ window.g = globals;
 
   var mainloop = function() {
     resize();
-    g_entitySystem.processEntities();
+    g_services.entitySystem.processEntities();
 
-    g_levelManager.draw(levelCtx);
-    var ctx = actorCtx;
-    ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
-    ctx.save();
-    var level = g_levelManager.getLevel();
-    level.setTransformForDrawing(ctx);
-    g_drawSystem.processEntities(ctx);
-    ctx.restore();
+    gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
+    gl.clear(gl.CLEAR_BUFFER_BIT);
+    g_services.levelManager.draw();
+    g_services.drawSystem.processEntities();
   };
 
   //var sounds = {
@@ -290,6 +306,8 @@ window.g = globals;
 requirejs(
   [ '../../../scripts/gameserver',
     '../../../scripts/localnetplayer',
+    '../../scripts/tdl/textures',
+    '../../scripts/tdl/webgl',
     '../../scripts/audio',
     '../../scripts/entitysystem',
     '../../scripts/gamesupport',
@@ -299,6 +317,7 @@ requirejs(
     '../../scripts/misc',
     '../../scripts/pixi',
     '../../scripts/speedup',
+    '../../scripts/sprite',
     './collectable',
     './levelmanager',
     './playermanager',

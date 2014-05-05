@@ -33,6 +33,11 @@
 define(function() {
   // This is an object, that way you set the name just once so calling set or get you
   // don't have to worry about getting the name wrong.
+  //
+  //     var fooCookie = new Cookie("foo");
+  //     var value = fooCookie.get();
+  //     fooCookie.set(newValue);
+  //     fooCookie.erase();
   var Cookie = function(name) {
     this.set = function(value, days) {
       var expires = "";

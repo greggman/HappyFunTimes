@@ -36,13 +36,10 @@ html, body {
   left: 0px;
   top: 0px;
 }
-#level, #actors {
+#playfield {
   position: absolute;
   left: 0px;
   top: 0px;
-}
-#actors {
-  z-index: 2;
 }
 #outer {
   z-index: 4;

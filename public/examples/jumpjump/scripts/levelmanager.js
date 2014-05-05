@@ -30,16 +30,21 @@
  */
 "use strict";
 
-define(['../../scripts/Misc'], function(Misc) {
+define(['../../scripts/Misc', '../../scripts/tilemap'], function(Misc, TileMap) {
 
-  var Level = function(width, height, tileWidth, tileHeight, tiles) {
+  var charToTileId = {
+    ' ': { tileId: 0x0001, },
+    '#': { tileId: 0x0002, },
+  };
+
+  var Level = function(tileset, width, height, tiles) {
     this.width = width + 2;
     this.height = height + 2;
-    this.tileWidth = tileWidth;
-    this.tileHeight = tileHeight;
+    this.tileWidth = tileset.tileWidth;
+    this.tileHeight = tileset.tileHeight;
     this.levelWidth = this.width * this.tileWidth;
     this.levelHeight = this.height * this.tileHeight;
-    this.outOfBoundsTile = "#".charCodeAt(0);
+    this.outOfBoundsTile = charToTileId['#'].tileId;
     if (typeof(tiles) == 'string') {
       var t = [];
       // Add top line
@@ -50,7 +55,7 @@ define(['../../scripts/Misc'], function(Misc) {
       for (var yy = 0; yy < height; ++yy) {
         t.push(this.outOfBoundsTile);
         for (var xx = 0; xx < width; ++xx) {
-          t.push(tiles.charCodeAt(yy * width + xx));
+          t.push(charToTileId[tiles.substr(yy * width + xx, 1)].tileId);
         }
         t.push(this.outOfBoundsTile);
       }
@@ -60,14 +65,38 @@ define(['../../scripts/Misc'], function(Misc) {
       }
       tiles = t;
     }
-    this.tiles = tiles;
-    this.needsUpdate = true;
+
+    this.tiles = new Uint32Array(tiles);
+    this.uint8view = new Uint8Array(this.tiles.buffer);
+    this.uint16view = new Uint16Array(this.tiles.buffer);
+    this.tilemap = new TileMap({
+      mapTilesAcross: this.width,
+      mapTilesDown: this.height,
+      tilemap: this.uint8view,
+      tileset: tileset,
+    });
+
+    this.tileDrawOptions = {
+      x: 0,
+      y: 0,
+      width:  this.width  * this.tileWidth ,
+      height: this.height * this.tileHeight,
+      canvasWidth: 0, //this.canvas.width,
+      canvasHeight: 0, //this.canvas.height,
+      scrollX: 0,
+      scrollY: 0,
+      rotation: 0,
+      scaleX: 1,
+      scaleY: 1,
+      originX: 0,
+      originY: 0,
+    };
   };
 
   Level.prototype.getTile = function(tileX, tileY) {
     if (tileX >= 0 && tileX < this.width &&
         tileY >= 0 && tileY < this.height) {
-      return this.tiles[tileY * this.width + tileX];
+      return this.uint16view[(tileY * this.width + tileX) * 2];
     }
     return this.outOfBoundsTile;
   };
@@ -78,59 +107,30 @@ define(['../../scripts/Misc'], function(Misc) {
     return this.getTile(tileX, tileY);
   };
 
-  Level.prototype.getTransformOffset = function(ctx) {
-    return {
-      x: ((ctx.canvas.width  - this.levelWidth ) / 2) | 0,
-      y: ((ctx.canvas.height - this.levelHeight) / 2) | 0,
-    };
+  Level.prototype.getDrawOffset = function(obj) {
+    obj.x = ((gl.canvas.width  - this.levelWidth ) / 2) | 0;
+    obj.y = ((gl.canvas.height - this.levelHeight) / 2) | 0;
   };
 
-  Level.prototype.setTransformForDrawing = function(ctx) {
-    var offset = this.getTransformOffset(ctx);
-    ctx.translate(offset.x, offset.y);
-  };
-
-  Level.prototype.draw = function(ctx, levelManager) {
-    if (!this.needsUpdate) {
-      return;
+  Level.prototype.draw = function(levelManager) {
+    if (this.dirty) {
+      this.tilemap.uploadTilemap();
+      this.dirty = false;
     }
 
-    ctx.fillStyle = "#444";
-    ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height);
-
-    ctx.save();
-    this.setTransformForDrawing(ctx);
-
-    ctx.fillStyle = "lightblue";
-    ctx.fillRect(0, 0, this.levelWidth, this.levelHeight);
-
-    for (var ty = 0; ty < this.height; ++ty) {
-      for (var tx = 0; tx < this.width; ++tx) {
-        var tile = this.tiles[ty * this.width + tx];
-        var info = levelManager.getTileInfo(tile);
-        var x = tx * this.tileWidth;
-        var y = ty * this.tileHeight;
-        if (info) {
-          if (info.imgName) {
-            var imgInfo = levelManager.services.images[info.imgName];
-            var frames = imgInfo.colors[0];
-            var img = frames[0];
-            ctx.drawImage(img, x, y);
-          } else if (info.color) {
-            ctx.fillStyle = info.color;
-            ctx.fillRect(x, y, this.tileWidth, this.tileHeight);
-          }
-        }
-      }
-    }
-
-    ctx.restore();
+    var opt = this.tileDrawOptions;
+    this.getDrawOffset(opt);
+    opt.canvasWidth = gl.canvas.width;
+    opt.canvasHeight = gl.canvas.height;
+    this.tilemap.draw(opt);
   };
 
-  var levels = [
-    new Level(
+  var levels = [];
+
+  var initLevels = function(tileset) {
+    levels.push(new Level(
+      tileset,
       20, 10,
-      32, 32,
       [ // 01234567890123456789
           "                    ", // 0
           "                    ", // 1
@@ -142,11 +142,11 @@ define(['../../scripts/Misc'], function(Misc) {
           "              ####  ", // 7
           " #           ###### ", // 8
           "###         ########", // 9
-      ].join("")),
+      ].join("")));
 
-    new Level(
+    levels.push(new Level(
+      tileset,
       30, 15,
-      32, 32,
       [ // 012345678901234567890123456789
           "                              ", // 0
           "                              ", // 1
@@ -163,11 +163,11 @@ define(['../../scripts/Misc'], function(Misc) {
           "########            #######   ", //
           "#####      ###     #########  ", //
           "###               ########### ", //
-      ].join("")),
+      ].join("")));
 
-    new Level(
+    levels.push(new Level(
+      tileset,
       40, 20,
-      32, 32,
       [ // 0123456789012345678901234567890123456789
           "                                        ", // 0
           "                                        ", // 1
@@ -189,8 +189,8 @@ define(['../../scripts/Misc'], function(Misc) {
           "  #    ########          #######        ", //
           " ###                   ###########      ", //
           "#####                ################   ", //
-      ].join("")),
-    ];
+      ].join("")));
+  };
 
   var tileInfoSky = {
     collisions: false,
@@ -203,11 +203,14 @@ define(['../../scripts/Misc'], function(Misc) {
   };
 
   var tileInfoMap = {};
-  tileInfoMap[' '.charCodeAt(0)] = tileInfoSky;
-  tileInfoMap['#'.charCodeAt(0)] = tileInfoWall;
+  tileInfoMap[charToTileId[' '].tileId] = tileInfoSky;
+  tileInfoMap[charToTileId['#'].tileId] = tileInfoWall;
 
-  var LevelManager = function(services) {
+  var LevelManager = function(services, tileset) {
     this.services = services;
+    this.tileset = tileset;
+
+    initLevels(tileset);
   };
 
   LevelManager.prototype.reset = function(canvasWidth, canvasHeight) {
@@ -239,12 +242,16 @@ define(['../../scripts/Misc'], function(Misc) {
     return this.getTileInfo(tileId);
   }
 
-  LevelManager.prototype.draw = function(ctx) {
-    this.level.draw(ctx, this);
+  LevelManager.prototype.draw = function() {
+    this.level.draw(this);
   };
 
   LevelManager.prototype.getLevel = function() {
     return this.level;
+  };
+
+  LevelManager.prototype.getDrawOffset = function(obj) {
+    this.level.getDrawOffset(obj);
   };
 
   LevelManager.prototype.getRandomOpenPosition = function() {
