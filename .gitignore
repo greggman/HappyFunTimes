@@ -13,4 +13,8 @@ temp
 *.orig
 .project
 *.meta
+*.vpj
+*.vpw
+*.vpwhistu
+*.vtg
 
