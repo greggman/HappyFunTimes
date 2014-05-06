@@ -408,6 +408,7 @@ define([
       return;
     }
 
+    this.services.audioManager.playSound('placeBomb');
     var bomb = this.bombs.pop();
     bomb.place(this, tx, ty, this.bombSize);
     return true;
@@ -636,6 +637,7 @@ this.validatePosition();
   };
 
   Player.prototype.init_die = function() {
+    this.services.audioManager.playSound('die');
     this.sendCmd('died');
     this.reportDied();
     this.dieTimer = 0;
@@ -701,7 +703,7 @@ this.validatePosition();
         width,
         height,
         this.rotation,
-        this.hFlip ? -1 : 1,
+        this.hflip ? -1 : 1,
         1);
 
     if (this.showName || this.userRequestShowName) {

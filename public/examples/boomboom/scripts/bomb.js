@@ -371,6 +371,7 @@ define([
   };
 
   Bomb.prototype.init_explode = function() {
+    this.services.audioManager.playSound('explode');
     tickingBombs.splice(tickingBombs.indexOf(this), 1);
     this.flames = [
      { stopped: false, size: 0, info: flameDirInfo[0], },

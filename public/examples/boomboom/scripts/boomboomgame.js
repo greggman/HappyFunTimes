@@ -79,6 +79,7 @@ window.s = g_services;
     step: false,
     scale: 2,
     forceScale: false,
+    playBGM: true,
     frameCount: 0,
     crateProb: [
       { tileName: 'goldCrate',  prob:  1, },
@@ -185,10 +186,35 @@ window.g = globals;
       }
     };
 
+    var handleTestSound = (function() {
+      var soundNdx = 0;
+      var soundIds;
+      return function(pressed) {
+        if (pressed) {
+          if (!soundIds) {
+            soundIds = Object.keys(sounds);
+console.log(sounds);
+          }
+          var found = false;
+          while (!found) {
+            var id = soundIds[soundNdx];
+            soundNdx = (soundNdx + 1) % soundIds.length;
+            var sound = sounds[id];
+            if (!sound.music) {
+              console.log("play: " + id);
+              g_services.audioManager.playSound(id);
+              found  = true;
+            }
+          }
+        }
+      };
+    }());
+
     var keys = { };
     keys["Z".charCodeAt(0)] = function(e) { handleAbutton(0, e.pressed); }
     keys["X".charCodeAt(0)] = function(e) { handleShow(0, e.pressed); }
     keys[".".charCodeAt(0)] = function(e) { handleAbutton(1, e.pressed); }
+    keys["C".charCodeAt(0)] = function(e) { handleTestSound(e.pressed); }
     Input.setupKeys(keys);
     Input.setupKeyboardDPadKeys(handleDPad);
   }
@@ -364,34 +390,28 @@ window.gs = GameSupport;
 
   ImageLoader.loadImages(images, processImages);
 
-  //var sounds = {
-  //  fire: {
-  //    filename: "assets/fire.ogg",
-  //    samples: 8,
-  //  },
-  //  explosion: {
-  //    filename: "assets/explosion.ogg",
-  //    samples: 6,
-  //  },
-  //  hitshield: {
-  //    filename: "assets/hitshield.ogg",
-  //    samples: 6,
-  //  },
-  //  launch: {
-  //    filename: "assets/launch.ogg",
-  //    samples: 2,
-  //  },
-  //  gameover: {
-  //    filename: "assets/gameover.ogg",
-  //    samples: 1,
-  //  },
-  //  play: {
-  //    filename: "assets/play.ogg",
-  //    samples: 1,
-  //  },
-  //};
-  //var audioManager = new AudioManager(sounds);
-  //g_services.audioManager = audioManager;
+  var startBGM = function() {
+    if (globals.playBGM) {
+      g_services.audioManager.playSound('bgm', 0, true);
+    }
+  };
+
+  var sounds = {
+    placeBomb:         { jsfx: ["sine",0.0000,0.4000,0.0000,0.1260,0.0840,0.0720,110.0000,548.0000,2400.0000,-0.7300,0.0000,0.0000,0.0100,0.0003,0.0000,0.0000,0.0000,0.2700,0.2000,0.0000,0.0000,0.0000,1.0000,0.0000,0.0000,0.1730,0.0000] , },
+    explode:           { jsfx: ["noise",0.0000,0.2360,0.0000,0.4180,1.8690,0.5380,20.0000,300.0000,2400.0000,-0.0940,0.0000,0.0000,0.3939,0.0679,0.1400,-0.7120,0.8100,0.0000,0.0000,0.4600,-0.1000,-0.0300,0.9900,-0.0660,0.9990,0.0000,0.0000], },
+    die:               { jsfx: ["saw",0.0000,0.4020,0.0000,1.0660,0.0000,0.2680,20.0000,262.0000,2400.0000,-0.3060,0.0000,0.6590,12.2475,0.4319,-0.1960,0.3320,0.0000,0.0000,-0.0140,0.0000,0.0000,0.0000,1.0000,-0.0100,0.0000,0.0000,-1.0000], },
+    bgm:               { music: true, filename: "assets/MSTR_-_MSTR_-_Choro_bavario_Loop.ogg", },
+    swingup:           { jsfx: ["square",0.0000,0.4000,0.0000,0.0120,0.4560,0.4600,20.0000,1176.0000,2400.0000,0.0000,1.0000,0.0000,0.0100,0.0003,0.0000,0.4740,0.2480,0.0000,0.0000,0.0000,0.0000,0.0000,1.0000,0.0000,0.0000,0.0000,0.0000], },
+    coinishAxe:        { jsfx: ["square",0.0000,0.4000,0.0000,0.0200,0.4080,0.3400,20.0000,692.0000,2400.0000,0.0000,0.0000,0.0000,0.0100,0.0003,0.0000,0.4740,0.1110,0.0000,0.0000,0.0000,0.0000,0.0000,1.0000,0.0000,0.0000,0.0000,0.0000] , },
+    takeHitShotsound3: { jsfx: ["saw",0.0000,0.4000,0.0000,0.1200,0.0000,0.3580,20.0000,988.0000,2400.0000,-0.6800,0.0000,0.0000,0.0100,0.0003,0.0000,0.0000,0.0000,0.3755,0.0180,0.0000,0.0760,0.1760,1.0000,0.0000,0.0000,0.0000,0.0000]   , },
+    mellowPew:         { jsfx: ["sine",0.0000,0.4000,0.0000,0.2860,0.0000,0.2760,20.0000,1006.0000,2400.0000,-0.6120,0.0000,0.0000,0.0100,0.0003,0.0000,0.0000,0.0000,0.2190,0.1860,0.0000,0.0000,0.0000,1.0000,0.0000,0.0000,0.0000,0.0000] , },
+    tinnySwingUp:      { jsfx: ["saw",0.0000,0.4000,0.0000,0.0620,0.0000,0.2400,20.0000,596.0000,2400.0000,0.6180,0.0000,0.0000,0.0100,0.0003,0.0000,0.0000,0.0000,0.0000,0.0000,0.4080,0.0000,0.0000,1.0000,0.0000,0.0000,0.0000,0.0000]    , },
+    beamMeUp:          { jsfx: ["square",0.0000,0.4000,0.0000,0.3480,0.0000,0.4040,20.0000,550.0000,2400.0000,0.2420,0.0000,0.6560,37.2982,0.0003,0.0000,0.0000,0.0000,0.3500,0.0000,0.0000,0.0000,0.0000,1.0000,0.0000,0.0000,0.0000,0.0000], },
+    stunned:           { jsfx: ["saw",0.0000,0.4000,0.0000,0.2520,0.0000,0.4220,20.0000,638.0000,2400.0000,0.0720,0.0000,0.2100,10.5198,0.0003,0.0000,0.0000,0.0000,0.0000,0.0000,0.0000,0.0000,0.0000,1.0000,0.0000,0.0000,0.0000,0.0000]   , },
+    mellowStunned:     { jsfx: ["saw",0.0000,0.4000,0.0000,0.0660,0.0000,0.3380,20.0000,455.0000,2400.0000,0.0760,0.0000,0.3150,11.0477,0.0003,0.0000,0.0000,0.0000,0.0000,0.0000,0.0000,0.0000,0.0000,1.0000,0.0000,0.0000,0.0000,0.0000]   , },
+  };
+  var audioManager = new AudioManager(sounds, { callback: startBGM });
+  g_services.audioManager = audioManager;
 };
 
 // Start the main app logic.
