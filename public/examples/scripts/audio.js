@@ -1,6 +1,13 @@
 "use strict";
 
-define(function() {
+define([
+    './3rdparty/jsfx/audio',
+    './3rdparty/jsfx/jsfx',
+    './3rdparty/jsfx/jsfxlib',
+  ], function(
+     AudioJSFX,
+     JSFX,
+     JSFXLib) {
 
   var webAudioAPI = window.AudioContext || window.webkitAudioContext || window.mozAudioContext;
 
@@ -25,7 +32,8 @@ define(function() {
     var g_canPlayMp3;
     var g_canPlayWav;
     var g_canPlayAif;
-    var g_createFn;
+    var g_createFromFileFn;
+    var g_createFromJSFXFn;
 
     var changeExt = function(filename, ext) {
       return filename.substring(0, filename.length - 3) + ext;
@@ -38,6 +46,28 @@ define(function() {
         return needUserGesture;
       };
     }());
+
+    var WebAudioJSFX = function(name, data, samples, opt_callback) {
+      this.buffer = jsfxlib.createAudioBuffer(g_context, data);
+      if (opt_callback) {
+        setTimeout(opt_callback, 0);
+      }
+    };
+
+    WebAudioJSFX.prototype.play = function(when) {
+      if (!this.buffer) {
+        console.log(this.name, " not loaded");
+        return;
+      }
+      var src = g_context.createBufferSource();
+      src.buffer = this.buffer;
+      src.connect(g_context.destination);
+      if (src.start) {
+        src.start(when);
+      } else {
+        src.noteOn(when);
+      }
+    };
 
     function WebAudioSound(name, filename, samples, opt_callback) {
       this.name = name;
@@ -78,6 +108,30 @@ define(function() {
       } else {
         src.noteOn(when);
       }
+    };
+
+    var AudioTagJSFX = function(name, data, samples, opt_callback) {
+      this.samples = samples;
+      this.audio = {};
+      this.playNdx = 0;
+      for (var i = 0; i < samples; ++i) {
+        this.audio[i] = jsfxlib.createWave(data);
+      }
+      if (opt_callback) {
+        setTimeout(opt_callback, 0);
+      }
+    };
+
+    AudioTagJSFX.prototype.play = function(when) {
+      this.playNdx = (this.playNdx + 1) % this.samples;
+      var a = this.audio[this.playNdx];
+      var b = new Audio();
+      b.src = a.src;
+      // TODO: use when
+      b.addEventListener("canplaythrough", function() {
+        b.play();
+        }, false);
+      b.load();
     };
 
     function AudioTagSound(name, filename, samples, opt_callback) {
@@ -195,7 +249,12 @@ define(function() {
       } else if (ext == 'mp3' && !g_canPlayMp3) {
         filename = changeExt(filename, "ogg");
       }
-      g_soundBank[soundName] = new g_createFn(soundName, filename, samples, opt_callback);
+      return new g_createFromFileFn(soundName, filename, samples, opt_callback);
+    }.bind(this);
+
+    this.makeJSFXSound = function(soundName, data, samples, opt_callback) {
+      samples = samples || 1;
+      return new g_createFromJSFXFn(soundName, data, samples, opt_callback);
     }.bind(this);
 
     this.init = function(sounds) {
@@ -214,10 +273,12 @@ define(function() {
 
         if (!g_context.createGain) { g_context.createGain = g_context.createGainNode.bind(g_context); }
 
-        g_createFn = WebAudioSound;
+        g_createFromFileFn = WebAudioSound;
+        g_createFromJSFXFn = WebAudioJSFX;
       } else {
         console.log("Using Audio Tag");
-        g_createFn = AudioTagSound;
+        g_createFromFileFn = AudioTagSound;
+        g_createFromJSFXFn = AudioTagJSFX;
       }
 
       var soundsPending = 1;
@@ -232,7 +293,13 @@ define(function() {
         for (var sound in sounds) {
           var data = sounds[sound];
           ++soundsPending;
-          this.loadSound(sound, data.filename, data.samples, soundsLoaded);
+          var s;
+          if (data.jsfx) {
+            s = this.makeJSFXSound(sound, data.jsfx, data.samples, soundsLoaded);
+          } else {
+            s = this.loadSound(sound, data.filename, data.samples, soundsLoaded);
+          }
+          g_soundBank[sound] = s;
         }
       }
 
@@ -246,6 +313,10 @@ define(function() {
       }
     }.bind(this);
     this.init(sounds);
+
+    this.getSoundIds = function() {
+      return Object.keys(g_soundBank);
+    };
   };
 
   AudioManager.hasWebAudio = function() {
