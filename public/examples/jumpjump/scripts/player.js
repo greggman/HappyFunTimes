@@ -310,6 +310,10 @@ window.p = this;
         var level = levelManager.getLevel();
         this.velocity[1] = 0;
         this.position[1] = (Math.floor(this.position[1] / level.tileHeight) + 1) * level.tileHeight;
+        if (!this.bonked) {
+          this.bonked = true;
+          this.services.audioManager.playSound('bonkhead');
+        }
         return true;
       }
     }
@@ -324,6 +328,7 @@ window.p = this;
         var level = levelManager.getLevel();
         this.position[1] = Math.floor(this.position[1] / level.tileHeight) * level.tileHeight;
         this.velocity[1] = 0;
+        this.services.audioManager.playSound('land');
         this.setState('move');
         return true;
       }
@@ -398,7 +403,9 @@ window.p = this;
     var globals = this.services.globals;
     this.jumpTimer = 0;
     this.animTimer = 0;
+    this.bonked = false;
     this.anim = this.services.images.jump.colors[this.color.id];
+    this.services.audioManager.playSound('jump');
   };
 
   Player.prototype.state_jump = function(elaspedTime) {

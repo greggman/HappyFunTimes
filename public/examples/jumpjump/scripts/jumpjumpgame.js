@@ -75,7 +75,7 @@ window.s = g_services;
     debug: false,
     tileInspector: false,
     showState: false,
-    moveAccexleration: 500,
+    moveAcceleration: 500,
     maxVelocity: [200, 1000],
     jumpDuration: 0.2,        // how long the jump velocity can be applied
     jumpVelocity: -350,
@@ -124,10 +124,28 @@ window.g = globals;
       }
     };
 
+    var handleTestSound = (function() {
+      var soundNdx = 0;
+      var soundIds;
+
+      return function(pressed) {
+        if (!soundIds) {
+          soundIds = g_services.audioManager.getSoundIds();
+        }
+        if (pressed) {
+          var id = soundIds[soundNdx];
+          console.log("play: " + id);
+          g_services.audioManager.playSound(id);
+          soundNdx = (soundNdx + 1) % soundIds.length;
+        }
+      };
+    }());
+
     var keys = { };
     keys[Input.cursorKeys.kLeft]  = function(e) { handleLeftRight(e.pressed, 0x1); }
     keys[Input.cursorKeys.kRight] = function(e) { handleLeftRight(e.pressed, 0x2); }
     keys["Z".charCodeAt(0)]       = function(e) { handleJump(e.pressed);           }
+    keys["X".charCodeAt(0)]       = function(e) { handleTestSound(e.pressed);           }
     Input.setupKeys(keys);
   }
 
@@ -272,34 +290,15 @@ window.g = globals;
     g_services.drawSystem.processEntities();
   };
 
-  //var sounds = {
-  //  fire: {
-  //    filename: "assets/fire.ogg",
-  //    samples: 8,
-  //  },
-  //  explosion: {
-  //    filename: "assets/explosion.ogg",
-  //    samples: 6,
-  //  },
-  //  hitshield: {
-  //    filename: "assets/hitshield.ogg",
-  //    samples: 6,
-  //  },
-  //  launch: {
-  //    filename: "assets/launch.ogg",
-  //    samples: 2,
-  //  },
-  //  gameover: {
-  //    filename: "assets/gameover.ogg",
-  //    samples: 1,
-  //  },
-  //  play: {
-  //    filename: "assets/play.ogg",
-  //    samples: 1,
-  //  },
-  //};
-  //var audioManager = new AudioManager(sounds);
-  //g_services.audioManager = audioManager;
+  var sounds = {
+    coin:              { jsfx: ["square",0.0000,0.4000,0.0000,0.0240,0.4080,0.3480,20.0000,909.0000,2400.0000,0.0000,0.0000,0.0000,0.0100,0.0003,0.0000,0.2540,0.1090,0.0000,0.0000,0.0000,0.0000,0.0000,1.0000,0.0000,0.0000,0.0000,0.0000], },
+    jump:              { jsfx: ["square",0.0000,0.4000,0.0000,0.1800,0.0000,0.2040,20.0000,476.0000,2400.0000,0.3360,0.0000,0.0000,0.0100,0.0003,0.0000,0.0000,0.0000,0.5000,0.0000,0.0000,0.0000,0.0000,1.0000,0.0000,0.0000,0.0000,0.0000], },
+    coinland:          { jsfx: ["square",0.0000,0.4000,0.0000,0.0520,0.3870,0.1160,20.0000,1050.0000,2400.0000,0.0000,0.0000,0.0000,0.0100,0.0003,0.0000,0.0000,0.0000,0.0000,0.0000,0.0000,0.0000,0.0000,1.0000,0.0000,0.0000,0.0000,0.0000], },
+    bonkhead:          { jsfx: ["square",0.0000,0.4000,0.0000,0.0120,0.4500,0.1140,20.0000,1218.0000,2400.0000,0.0000,0.0000,0.0000,0.0100,0.0003,0.0000,0.5140,0.2350,0.0000,0.0000,0.0000,0.0000,0.0000,1.0000,0.0000,0.0000,0.0000,0.0000], },
+    land:              { jsfx: ["sine",0.0000,0.4000,0.0000,0.1960,0.0000,0.1740,20.0000,1012.0000,2400.0000,-0.7340,0.0000,0.0000,0.0100,0.0003,0.0000,0.0000,0.0000,0.3780,0.0960,0.0000,0.0000,0.0000,1.0000,0.0000,0.0000,0.0000,0.0000] , },
+  };
+  var audioManager = new AudioManager(sounds);
+  g_services.audioManager = audioManager;
 };
 
 // Start the main app logic.

@@ -92,6 +92,7 @@ define([
 
   Collectable.prototype.init_collected = function() {
     this.collectTime = 0;
+    this.services.audioManager.playSound('coin');
   };
 
   Collectable.prototype.state_collected = function() {
@@ -156,6 +157,7 @@ define([
       var level = levelManager.getLevel();
       this.position[1] = Math.floor(this.position[1] / level.tileHeight) * level.tileHeight;
       this.velocity[1] = 0;
+      this.services.audioManager.playSound('coinland');
       this.setState('idle');
     }
   };
