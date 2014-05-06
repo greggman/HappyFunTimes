@@ -47,6 +47,25 @@ define([
       };
     }());
 
+    var WebAudioBuffer = function() {
+    };
+
+    WebAudioBuffer.prototype.play = function(opt_when, opt_loop) {
+      if (!this.buffer) {
+        console.log(this.name, " not loaded");
+        return;
+      }
+      var src = g_context.createBufferSource();
+      src.buffer = this.buffer;
+      src.loop = opt_loop || false;
+      src.connect(g_context.destination);
+      if (src.start) {
+        src.start(opt_when);
+      } else {
+        src.noteOn(opt_when);
+      }
+    };
+
     var WebAudioJSFX = function(name, data, samples, opt_callback) {
       this.buffer = jsfxlib.createAudioBuffer(g_context, data);
       if (opt_callback) {
@@ -54,20 +73,7 @@ define([
       }
     };
 
-    WebAudioJSFX.prototype.play = function(when) {
-      if (!this.buffer) {
-        console.log(this.name, " not loaded");
-        return;
-      }
-      var src = g_context.createBufferSource();
-      src.buffer = this.buffer;
-      src.connect(g_context.destination);
-      if (src.start) {
-        src.start(when);
-      } else {
-        src.noteOn(when);
-      }
-    };
+    WebAudioJSFX.prototype = new WebAudioBuffer();
 
     function WebAudioSound(name, filename, samples, opt_callback) {
       this.name = name;
@@ -95,23 +101,10 @@ define([
       req.send();
     }
 
-    WebAudioSound.prototype.play = function(when) {
-      if (!this.buffer) {
-        console.log(this.name, " not loaded");
-        return;
-      }
-      var src = g_context.createBufferSource();
-      src.buffer = this.buffer;
-      src.connect(g_context.destination);
-      if (src.start) {
-        src.start(when);
-      } else {
-        src.noteOn(when);
-      }
-    };
+    WebAudioSound.prototype = new WebAudioBuffer();
 
     var AudioTagJSFX = function(name, data, samples, opt_callback) {
-      this.samples = samples;
+      this.samples = samples || 1;
       this.audio = {};
       this.playNdx = 0;
       for (var i = 0; i < samples; ++i) {
@@ -122,7 +115,7 @@ define([
       }
     };
 
-    AudioTagJSFX.prototype.play = function(when) {
+    AudioTagJSFX.prototype.play = function(opt_when, opt_loop) {
       this.playNdx = (this.playNdx + 1) % this.samples;
       var a = this.audio[this.playNdx];
       var b = new Audio();
@@ -136,7 +129,7 @@ define([
 
     function AudioTagSound(name, filename, samples, opt_callback) {
       this.waiting_on_load = samples;
-      this.samples = samples;
+      this.samples = samples || 1;
       this.name = name;
       this.play_idx = 0;
       this.audio = {};
@@ -161,7 +154,7 @@ define([
       }
     };
 
-    AudioTagSound.prototype.play = function(when) {
+    AudioTagSound.prototype.play = function(opt_when, opt_loop) {
       if (this.waiting_on_load > 0) {
         console.log(this.name, " not loaded");
         return;
@@ -184,7 +177,7 @@ define([
       }
     };
 
-    this.playSound = function(name, when) {
+    this.playSound = function(name, opt_when, opt_loop) {
       if (!g_canPlay)
         return;
       var sound = g_soundBank[name];
@@ -192,7 +185,7 @@ define([
         console.error("audio: '" + name + "' not known.");
         return;
       }
-      sound.play(when);
+      return sound.play(opt_when, opt_loop);
     }.bind(this);
 
     this.getTime = function() {
@@ -253,7 +246,6 @@ define([
     }.bind(this);
 
     this.makeJSFXSound = function(soundName, data, samples, opt_callback) {
-      samples = samples || 1;
       return new g_createFromJSFXFn(soundName, data, samples, opt_callback);
     }.bind(this);
 
