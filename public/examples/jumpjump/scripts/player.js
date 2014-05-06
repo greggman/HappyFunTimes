@@ -79,6 +79,7 @@ window.p = this;
         -this.width / 2,
         this.width / 2 - 1,
       ];
+      this.timeAccumulator = 0;
 
       this.uniforms = this.services.spriteRenderer.getUniforms();
 
@@ -194,35 +195,41 @@ window.p = this;
     this.netPlayer.sendCmd(cmd, data);
   };
 
-  Player.prototype.updatePosition = function(axis) {
+  Player.prototype.updatePosition = function(axis, elapsedTime) {
     var axis = axis || 3;
-    var globals = this.services.globals;
     this.lastPosition[0] = this.position[0];
     this.lastPosition[1] = this.position[1];
     if (axis & 1) {
-      this.position[0] += this.velocity[0] * globals.elapsedTime;
+      this.position[0] += this.velocity[0] * elapsedTime;
     }
     if (axis & 3) {
-      this.position[1] += this.velocity[1] * globals.elapsedTime;
+      this.position[1] += this.velocity[1] * elapsedTime;
     }
   };
 
-  Player.prototype.updateVelocity = function(axis) {
+  Player.prototype.updateVelocity = function(axis, elapsedTime) {
     var globals = this.services.globals;
     var axis = axis || 3;
     if (axis & 1) {
-      this.velocity[0] += this.acceleration[0] * globals.elapsedTime * globals.elapsedTime;
+      this.velocity[0] += this.acceleration[0] * elapsedTime;
       this.velocity[0] = Misc.clampPlusMinus(this.velocity[0], globals.maxVelocity[0]);
     }
     if (axis & 2) {
-      this.velocity[1] += (this.acceleration[1] + globals.gravity) * globals.elapsedTime * globals.elapsedTime;
+      this.velocity[1] += (this.acceleration[1] + globals.gravity) * elapsedTime;
       this.velocity[1] = Misc.clampPlusMinus(this.velocity[1], globals.maxVelocity[1]);
     }
   };
 
   Player.prototype.updatePhysics = function(axis) {
-    this.updateVelocity(axis);
-    this.updatePosition(axis);
+    var kOneTick = 1 / 60;
+    var globals = this.services.globals;
+    this.timeAccumulator += globals.elapsedTime;
+    var ticks = (this.timeAccumulator / kOneTick) | 0;
+    this.timeAccumulator -= ticks * kOneTick;
+    for (var ii = 0; ii < ticks; ++ii) {
+      this.updateVelocity(axis, kOneTick);
+      this.updatePosition(axis, kOneTick);
+    }
   };
 
   Player.prototype.init_idle = function() {

@@ -75,13 +75,13 @@ window.s = g_services;
     debug: false,
     tileInspector: false,
     showState: false,
-    moveAcceleration: 5000,
+    moveAccexleration: 500,
     maxVelocity: [200, 1000],
-    jumpDuration: 0.4,        // how long the jump velocity can be applied
-    jumpVelocity: -220,
+    jumpDuration: 0.2,        // how long the jump velocity can be applied
+    jumpVelocity: -350,
     minStopVelocity: 25,      // below this we're idling
     stopFriction: 0.95,       // amount of velocity to keep each frame
-    gravity: 40000,
+    gravity: 1200,
     frameCount: 0,
     idleAnimSpeed: 4,
     moveAnimSpeed: 0.2,

@@ -7,6 +7,8 @@
 *   add sounds bombbomb
 *   fix dpads!!!!
 *   Fix collisions for jumpjujmp
+*   refactor sprite code to have offset (current assumes center of image is center)
+*   refactor sprite code so drawPrep is only called once.
 *   Make game maker plugin
 *   Make C++ version of lib
 *   touch code already debounces pressed so remove similar code from controllers?

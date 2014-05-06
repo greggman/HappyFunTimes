@@ -146,7 +146,7 @@ define([
       return;
     }
 
-    this.velocity[1] += globals.gravity * globals.elapsedTime * globals.elapsedTime;
+    this.velocity[1] += globals.gravity * globals.elapsedTime;
     this.velocity[1] = Misc.clampPlusMinus(this.velocity[1], globals.maxVelocity[1]);
     this.position[1] += this.velocity[1] * globals.elapsedTime;
 
