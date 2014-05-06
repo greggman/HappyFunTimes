@@ -30,7 +30,7 @@
  */
 "use strict";
 
-define(['../../scripts/Misc', '../../scripts/tilemap'], function(Misc, TileMap) {
+define(['../../scripts/misc', '../../scripts/tilemap'], function(Misc, TileMap) {
 
   var iEmpty = {
     bombOk: true,

@@ -37,7 +37,7 @@ define([
     '../../scripts/tdl/models',
     '../../scripts/tdl/primitives',
     '../../scripts/tdl/programs',
-    '../../scripts/Misc',
+    '../../scripts/misc',
   ], function(
     Buffers,
     Fast,

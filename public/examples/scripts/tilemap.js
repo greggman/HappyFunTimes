@@ -38,7 +38,7 @@ define(
     './tdl/primitives',
     './tdl/programs',
     './tdl/textures',
-    './Misc',
+    './misc',
   ], function(
     Buffers,
     Fast,

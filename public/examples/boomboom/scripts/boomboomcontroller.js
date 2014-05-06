@@ -237,7 +237,7 @@ requirejs(
     '../../scripts/input',
     '../../scripts/misc',
     '../../scripts/mobilehacks',
-    '../../scripts/Ticker',
+    '../../scripts/ticker',
     '../../scripts/touch',
   ],
   main

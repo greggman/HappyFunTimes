@@ -30,7 +30,7 @@
  */
 "use strict";
 
-define(["./PListManager"], function(PListManager) {
+define(["./plistmanager"], function(PListManager) {
   /**
    * Manages the Queue of players waiting.
    */
