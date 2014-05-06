@@ -88,6 +88,48 @@
     because Unity includes all scripts). So, there will be conflict if 2 different
     scripts define objects with the same CmdName
 
+*   Consider deciding the ExampleUI etc is part of HappyFunTimes
+
+    Originally I thought HappyFunTimes was just the relayserver and the libraries to
+    talk to it.
+
+    Having made the demos though it does seem there is some utility in the exampleUI.
+    The ExampleUI currently includes
+
+    *   Providing a consistent controller frame with name editing and a menu
+
+    *   Showing a disconnect message when the game stops
+
+    *   Auto-Connecting to a game if only one is running.
+
+    *   Showing a menu of games if more than one is running.
+
+    *   Auto-reloading on disconnect.
+
+    I don't really know it's useful in general. I've just noticed what when
+    demoing it it's really nice that players connect to the WiFi and it just
+    works. I switch games, their controllers switch to the new game. There's
+    often a slight delay in switching which I could fix by moving the switching
+    mechanism to use websockets instead of AJAX polling. Maybe I should move
+    that into happyfuntimes as another relayserver websocket message?
+
+    Off the top of my head gameclient would had 1 new function, `requestGameList`
+    or something like that and would generate one more event `gamelist`. The
+    `gamelist` event would be sent anytime a new game is registered or unregistered
+    as well as in response to a `requestGameList`. Not sure that's good or not,
+    one problem I can see is the controller's list might be a few moments out
+    of date so it might try to join a game that doesn't exist.
+
+    Not sure the menu is useful. Maybe I'll find out at a game jam?
+
+*   fix games so if they disconnect, when they re-connect they reload.
+
+    I'm not 100% sure this matters but, the issue is if I kill the relayserver
+    to restart it, the games detect that and put up a message. When I restart
+    the relayserver the games remove the message but seem to often be in some
+    indeterminent state. Ideally they'd just restart, the controllers as well.
+
+
 *   update unitydocs with UnityScript
 *   fix camera on unitycharacter example so
     * it works for 1 player
