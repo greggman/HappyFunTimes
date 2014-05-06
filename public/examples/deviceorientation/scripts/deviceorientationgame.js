@@ -32,10 +32,10 @@
 
 var main = function(
     GameServer,
+    ThreeFoo,
     AudioManager,
     EntitySystem,
     GameClock,
-    ThreeFoo,
     Misc,
     Goal,
     PlayerManager) {
@@ -206,10 +206,10 @@ var main = function(
 // Start the main app logic.
 requirejs(
   [ '../../../scripts/gameserver',
+    '../../scripts/3rdparty/three/three.min',
     '../../scripts/audio',
     '../../scripts/entitysystem',
     '../../scripts/gameclock',
-    '../../scripts/three.min',
     '../../scripts/misc',
     'goal',
     'playermanager',

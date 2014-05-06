@@ -1,8 +1,6 @@
 *   use particles for coin
 *   fix coin collisions
 *   use particles for boomboom death
-*   make coin jump time indepent
-*   put name back in jumpjump
 *   add sounds jumpjump
 *   add sounds bombbomb
 *   fix dpads!!!!
@@ -197,6 +195,10 @@
 
 Done
 ----
+
+*   put name back in jumpjump
+
+*   make jump time indepent
 
 *   send no caching header? or at least optionally
 

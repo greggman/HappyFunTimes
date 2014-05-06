@@ -30,7 +30,7 @@
  */
 "use strict";
 
-define(['../../scripts/three.min'], function(ThreeFoo) {
+define(['../../scripts/3rdparty/three/three.min'], function(ThreeFoo) {
 
   var g_meshes = [];
   var getShotMesh = function(services) {

@@ -33,8 +33,8 @@
 // Require will call this with input and GameClient once input.js and gameclient.js have loaded
 var main = function(
     GameClient,
-    ExampleUI,
     HandJS,
+    ExampleUI,
     Input,
     Misc,
     MobileHacks) {
@@ -115,8 +115,8 @@ var main = function(
 // Start the main app logic.
 requirejs(
   [ '../../../scripts/gameclient',
+    '../../scripts/3rdparty/handjs/hand-1.3.7',
     '../../scripts/exampleui',
-    '../../scripts/hand-1.3.7',
     '../../scripts/input',
     '../../scripts/misc',
     '../../scripts/mobilehacks',

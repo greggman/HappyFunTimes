@@ -31,15 +31,15 @@
 "use strict";
 
 define([
+    './3rdparty/stats/stats.min',
     './gameclock',
     './logger',
     './misc',
-    './stats.min',
   ], function(
+    StatsJS,
     GameClock,
     Logger,
-    Misc,
-    StatsJS) {
+    Misc) {
 
   var $ = function(id) {
     return document.getElementById(id);
