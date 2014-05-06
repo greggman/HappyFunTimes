@@ -73,9 +73,10 @@ define([
       $('hft-disconnected').style.display = "block";
     }
 
-    server.addEventListener('connect', showConnected);
-    server.addEventListener('disconnect', showDisconnected);
-
+    if (options.haveServer !== false) {
+      server.addEventListener('connect', showConnected);
+      server.addEventListener('disconnect', showDisconnected);
+    }
 
     if (options.showFPS) {
       stats = new Stats();
