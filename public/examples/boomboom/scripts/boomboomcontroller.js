@@ -203,16 +203,15 @@ var main = function(
     Touch.setupButtons({
       inputElement: $("buttons"),
       buttons: [
-        { element: $("abutton"), callback: function(e) { handleAbutton(e.pressed); }, },
-        { element: $("avatar"),  callback: function(e) { handleShow(e.pressed); }, },
+        { element: $("abutton"),     callback: function(e) { handleAbutton(e.pressed); }, },
+        { element: $("avatarinput"), callback: function(e) { handleShow(e.pressed); }, },
       ],
     });
 
-    var container = $("dpadleft");
     Touch.setupVirtualDPads({
-      inputElement: container,
+      inputElement: $("dpadleftinput"),
       callback: handleDPad,
-      fixedCenter: true,
+      fixedCenter: false,
       pads: [
         {
           referenceElement: $("dpadleft"),

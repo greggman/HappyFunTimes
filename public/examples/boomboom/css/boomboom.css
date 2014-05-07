@@ -33,7 +33,7 @@ html, body {
 }
 #buttons {
     position: absolute;
-
+border: 1px solid white;
     -moz-user-select: none;
     -webkit-user-select: none;
     -o-user-select: none;
@@ -62,6 +62,14 @@ html, body {
 #dpadleft {
   left: 20px;
 }
+#dpadleftinput {
+  position: absolute;
+  left: 0px;
+  bottom: 10px;
+  width: 190px;
+  height: 230px;
+  gbackground-color: rgba(0,255,0,0.3);
+}
 #abutton {
   right: 20px;
   bottom: 46px;  /* why is this 46 not 40? */
@@ -72,6 +80,14 @@ html, body {
   bottom: 100px;
   width: 128px;
   height: 128px;
+}
+#avatarinput {
+  position: absolute;
+  left: 41%;
+  bottom: 125px;
+  width: 96px;
+  height: 96px;
+  gbackground-color: rgba(255,0,0,0.3);
 }
 #msgcontainer {
   position: absolute;
@@ -121,13 +137,21 @@ html, body {
         height: 144px;
         border-radius: 70px;
     }
+    #dpadleftinput {
+        bottom: 0px;
+        width: 190px;
+        height: 160px;
+    }
     #dpadleft, #abutton {
-      position: absolute;
       width: 130px;
       bottom: 4px;
     }
     #dpadleft {
       bottom: 0px;
+    }
+    #avatarinput {
+      left: 43%;
+      bottom: 26px;
     }
     #avatar {
       left: 38%;

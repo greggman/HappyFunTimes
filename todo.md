@@ -1,8 +1,6 @@
 *   use particles for coin
 *   fix coin collisions
 *   use particles for boomboom death
-*   add sounds jumpjump
-*   add sounds bombbomb
 *   fix dpads!!!!
 *   Fix collisions for jumpjujmp
 *   refactor sprite code to have offset (current assumes center of image is center)
@@ -238,6 +236,8 @@
 Done
 ----
 
+*   add sounds jumpjump
+*   add sounds bombbomb
 *   put name back in jumpjump
 
 *   make jump time indepent
