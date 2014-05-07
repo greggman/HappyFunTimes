@@ -180,8 +180,13 @@ define(
       var closestDist;
       for (var ii = 0; ii < pads.length; ++ii) {
         var padOptions = options.pads[ii];
-        var relPos = Input.getRelativeCoordinates(padOptions.referenceElement, e);
-        var distSq = relPos.x * relPos.x + relPos.y * relPos.y;
+        var refElement = padOptions.referenceElement;
+        var relPos = Input.getRelativeCoordinates(refElement, e);
+        var centerX = refElement.clientWidth / 2;
+        var centerY = refElement.clientHeight / 2;
+        var dx = relPos.x - centerX;
+        var dy = relPos.y - centerY;
+        var distSq = dx * dx + dy * dy;
         if (closestDist == undefined || distSq < closestDist) {
           closestDist = distSq;
           closestId = ii;
