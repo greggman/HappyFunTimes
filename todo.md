@@ -1,7 +1,6 @@
 *   use particles for coin
 *   fix coin collisions
 *   use particles for boomboom death
-*   fix dpads!!!!
 *   Fix collisions for jumpjujmp
 *   refactor sprite code to have offset (current assumes center of image is center)
 *   refactor sprite code so drawPrep is only called once.
@@ -235,6 +234,11 @@
 
 Done
 ----
+
+*   fix dpads!!!!
+
+    I think this is done. Checking shootshoot it already worked as I thought it was. Boomboom
+    needed separate hit areas. Keeping them in the correct place by browser might be problematic.
 
 *   add sounds jumpjump
 *   add sounds bombbomb
