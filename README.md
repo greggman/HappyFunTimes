@@ -14,7 +14,7 @@ This lets you make games that support more than the typical 4 players.
 
 <img id="test" src="images/scene-01-powpow.png" width="782" height="441" />
 
-Theoretically there's no limit to the number of players.
+I suppose theoretically there's no limit to the number of players.
 
 <img id="test" src="images/400-player-bombomb.png" width="807" height="955" />
 
@@ -50,7 +50,7 @@ There's a Unity3D library if you'd like to make the game in Unity3D.
 
     *   Access the camera, send selfies to the game.
 
-    *   Acesss the mic. Have each person use sounds to control something
+    *   Access the mic. Have each person use sounds to control something
 
     *   Use the device orientation API and rotate something in game to match
 
@@ -86,7 +86,7 @@ There's a Unity3D library if you'd like to make the game in Unity3D.
 
     You can think of it this way. In the game (the code displaying the game on a large screen)
 
-    When a player connects `gameserver` will generate an event. `playerconnected`. So
+    When a player connects `gameserver` will generate an event. `playerconnect`. So
 
         gameServer.addEventListener('playerconnect', someFunctionToMakeANewPlayer);
 
@@ -95,7 +95,7 @@ There's a Unity3D library if you'd like to make the game in Unity3D.
           ...
         };
 
-    The users's webpage (smartphone) can send any command it wants by calling `gameClient.sendCmd`. Example
+    The users's webpage (smartphone) can send any command it wants by calling `GameClient.sendCmd`. Example
 
         gameClient.sendMsg('move', { x: 10, y: 20 });
 
@@ -107,7 +107,7 @@ There's a Unity3D library if you'd like to make the game in Unity3D.
 
         netPlayer.addEventListener('move', someFunctionToHandleMove);
 
-    Conversely you can send messages back to the user's display by sending commands on the `netplayer`
+    Conversely you can send messages back to the user's display by sending commands on the corresponding `netplayer`
 
         netPlayer.sendCmd('scored', { points: 200 });
 
@@ -156,6 +156,7 @@ There's a Unity3D library if you'd like to make the game in Unity3D.
 
         // Pick a random color
         var color =  'rgb(' + randInt(256) + "," + randInt(256) + "," + randInt(256) + ")";
+
         // Send the color to the game.
         //
         // This will generate a 'color' event in the corresponding

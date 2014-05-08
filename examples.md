@@ -94,6 +94,12 @@ JumpJump
 
 A simple platformer. Players try to get the one coin.
 
+Bombbomb
+--------
+
+A bomberman like game. One thing it shows over other games is round based control. Players
+joining the game have to wait for the current round to finish before they are added.
+
 Deviceorientation
 -----------------
 
@@ -162,7 +168,8 @@ Controllers
 For controllers the common code is in `public/examples/scripts/exampleui.js`. It sets up
 name editing, handling disconnecting, turning on debug elements, and implementing a menu on the side.
 When a game disconnects the code will wait 1/2 a second and check if the game is running again. If
-so it reloads the controller. If no it redirects to "/"
+so it reloads the controller. If only one game is running it goes to that game. If more than one
+game is running it redirects to "/".
 
 /index.html
 -----------
