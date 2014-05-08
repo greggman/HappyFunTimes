@@ -16,7 +16,7 @@ This lets you make games that support more than the typical 4 players.
 
 I suppose theoretically there's no limit to the number of players.
 
-<img id="test" src="images/400-player-bombbomb.jpg" width="808" height="456" />
+<img id="test" src="images/400-player-bombbomb.jpg" width="782" height="441" />
 
 It also lets you make games with unique controllers.
 
@@ -34,7 +34,7 @@ There's a Unity3D library if you'd like to make the game in Unity3D.
 
 *   JavaScript libraries for the browser and Unity3D libraries are provided
 
-    This makes it easy to bang out a game
+    This makes it easy to bang out a game. Use any JavaScript framework or Unity3D.
 
 *   For controllers the sky is the limit.
 
