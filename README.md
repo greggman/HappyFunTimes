@@ -14,11 +14,15 @@ This lets you make games that support more than the typical 4 players.
 
 <img id="test" src="images/scene-01-powpow.png" width="782" height="441" />
 
+Theoretically there's no limit to the number of players.
+
+<img id="test" src="images/400-player-bombomb.png" width="807" height="955" />
+
 It also lets you make games with unique controllers.
 
 <img id="test" src="images/scene-02-jamjam.png" width="782" height="441" />
 
-You can use Unity3D
+There's a Unity3D library if you'd like to make the game in Unity3D.
 
 <img id="test" src="images/scene-03-unity.png" width="782" height="441" />
 
