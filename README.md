@@ -16,7 +16,7 @@ This lets you make games that support more than the typical 4 players.
 
 I suppose theoretically there's no limit to the number of players.
 
-<img id="test" src="images/400-player-bombomb.png" width="807" height="955" />
+<img id="test" src="images/400-player-bombbomb.png" width="807" height="455" />
 
 It also lets you make games with unique controllers.
 
