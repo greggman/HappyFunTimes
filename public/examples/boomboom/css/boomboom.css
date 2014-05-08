@@ -33,7 +33,6 @@ html, body {
 }
 #buttons {
     position: absolute;
-border: 1px solid white;
     -moz-user-select: none;
     -webkit-user-select: none;
     -o-user-select: none;
