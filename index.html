@@ -45,15 +45,15 @@
   <link href="public/hft-icon.png" rel="shortcut icon" type="image/png">
   <style>
   html, body {
-    font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
-    font-size: 18px;
-    color: white;
-    line-height: 1.6;
-    text-align: center;
-    margin: 0px;
+      font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+      font-size: 24pt;
+      color: white;
+      line-height: 1.6;
+      text-align: center;
+      margin: 0px;
   }
   ul {
-    text-align: left;
+      text-align: left;
   }
   li {
       background: url(public/hft-icon.png) no-repeat left top;
@@ -61,18 +61,14 @@
       padding: 0px 0px 0px 96px; /* TRouBLe */
   }
   img {
-    display: block;
-    margin-left: auto;
-    margin-right: auto;
-    border: 10px solid black;
+      display: block;
+      margin-left: auto;
+      margin-right: auto;
+      border: 10px solid black;
   }
   .section {
-      gwidth: 782px;
-      gmargin-left: auto;
-      gmargin-right: auto;
       padding-bottom: 2em;
       padding-top: 2em;
-      font-size: 24pt;
   }
   .section>div {
       width: 782px;
@@ -98,6 +94,25 @@
   #section07 { background-color: #303030; color: white; }
   #section08 { background-color: #C0C0C0; color: black; }
 
+  @media only screen and (max-width : 800px) {
+      html, body {
+          font-size: 14pt;
+      }
+      .section>div {
+          width: 90%;
+      }
+      img {
+          width: 90%;
+          height: 90%;
+          border: 5px solid black;
+      }
+      li {
+          background: none;
+          list-style: disc;
+          line-height: 1.4;
+          padding: 0px 0px 0px 1em;  TRouBLe
+      }
+  }
   </style>
 </head>
   <body>
