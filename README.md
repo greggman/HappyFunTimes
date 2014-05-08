@@ -38,8 +38,6 @@ There's a Unity3D library if you'd like to make the game in Unity3D.
 
 *   For controllers the sky is the limit.
 
-    Ideas
-
     *   Have a one button game. The user touches their screen.
 
     *   Make virtual DPads
@@ -59,7 +57,13 @@ There's a Unity3D library if you'd like to make the game in Unity3D.
     *   Make a rhythm game like Parappa but each person is a different color
         so that they each have to play their part at the right time
 
+    *   Let the user draw something on their phone. Insert that drawing into the game.
 
+    *   Controllers can change dynamically.
+
+        Have 2 dpads for the dual stick part of your game. Have a single
+        button for the speed contest. Change to a 3 letter box to let a player
+        enter their high score initials.
 
 *   The API is simple to use.
 
