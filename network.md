@@ -56,7 +56,7 @@ connect to open routers.
 With that done, reboot the router, connect your machine, then open a command prompt
 and type
 
-    sudo node server/server.js --port 80 --dns
+    sudo node server/server.js --dns
 
 You need `sudo` because port 80 is normally restricted.
 
