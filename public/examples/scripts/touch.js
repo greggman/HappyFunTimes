@@ -78,10 +78,26 @@ define(
   // callback: callback to pass event
   // fixedCenter: true = center stays the same place, false = each time finger touches a new center is picked
   // deadSpaceRadius: size of dead area in center of pad.
+  // axisSize: use axis.
   // pads: Array
   //   referenceElement: element that is reference for position of pad
   //   offsetX: offset from left of reference element to center of pad
   //   offsetY: offset from top of reference element to center of pad
+
+  // The default way of figuring out the direction is to take the angle from the center to
+  // the place of touch, compute an angle, divide a circle into octants, which ever octant is the direction
+  //
+  // If axisSize is passed in then instead the space is divided into 3x3 boxes. Which ever box the finger is
+  // in is the direction. axisSize determines the width height of the axis boxes
+  //
+  //      |   |
+  //      |   |
+  // -----+---+-----
+  //      |   |
+  // -----+---+-----
+  //      |   |
+  //      |   |
+  //
 
   var setupVirtualDPads = function(options) {
     var callback = options.callback;
@@ -127,10 +143,48 @@ define(
       pads.push(makePad(ii));
     }
 
-    var computeDir = function(x, y) {
+    var computeDirByAngle = function(x, y) {
       var angle = Math.atan2(-y, x) + Math.PI * 2 + Math.PI / 8;
       return (Math.floor(angle / (Math.PI / 4))) % 8;
     };
+
+    //      |   |
+    //      | V |x
+    // -----+---+-----
+    //  H   |HV |x H
+    // -----+---+-----
+    //  y   | Vy|xy
+    //      |   |
+
+    var axisBitsToDir = [
+       3, // 0
+       4, // 1   h
+       2, // 2    v
+      -1, // 3   hv
+       1, // 4     x
+       0, // 5   h x
+       2, // 6    vx
+      -1, // 7   hvx
+       5, // 8      y
+       4, // 9   h  y
+       6, // 10   v y
+      -1, // 11  hv y
+       7, // 12    xy
+       0, // 13  h xy
+       6, // 14   vxy
+      -1, // 15  hvxy
+    ];
+
+    var computeDirByAxis = function(x, y) {
+      var h = (Math.abs(y) < options.axisSize / 2) ? 1 : 0;
+      var v = (Math.abs(x) < options.axisSize / 2) ? 2 : 0;
+      var bits = h | v |
+          (x > 0 ? 4 : 0) |
+          (y > 0 ? 8 : 0);
+      return axisBitsToDir[bits];
+    };
+
+    var computeDir = options.axisSize ? computeDirByAxis : computeDirByAngle;
 
     var callCallback = function(padId, dir) {
       var pad = pads[padId];
