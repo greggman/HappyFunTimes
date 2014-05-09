@@ -454,8 +454,8 @@ window.p = this;
         this.uniforms,
         (off.x + this.position[0]) | 0,
         (off.y + height / -2 + this.position[1] - 24) | 0,
-        this.nameImage.img.width / 2,
-        this.nameImage.img.height / 2,
+        this.nameImage.img.width,
+        this.nameImage.img.height,
         0,
         1,
         1);
