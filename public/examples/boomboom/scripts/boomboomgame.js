@@ -83,7 +83,7 @@ window.s = g_services;
     frameCount: 0,
     crateProb: [
       { tileName: 'goldCrate',  prob:  1, },
-      { tileName: 'kickCrate',  prob:  3, },
+     // { tileName: 'kickCrate',  prob:  3, },
       { tileName: 'bombCrate',  prob:  6, },
       { tileName: 'flameCrate', prob:  9, },
       { tileName: 'empty',      prob: 20, },
@@ -193,7 +193,7 @@ window.g = globals;
         if (pressed) {
           if (!soundIds) {
             soundIds = Object.keys(sounds);
-console.log(sounds);
+            console.log(sounds);
           }
           var found = false;
           while (!found) {
