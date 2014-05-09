@@ -1,3 +1,4 @@
+*   fix nexus name edit issue. controls appear over name
 *   use particles for coin
 *   fix coin collisions
 *   use particles for boomboom death

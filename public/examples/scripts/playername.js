@@ -35,9 +35,19 @@
 // so I put them here.
 define(['./cookies'], function(Cookie) {
 
+  var $ = function(id) {
+    return document.getElementById(id);
+  };
+
   var PlayerNameHandler = function(client, element) {
     var nameCookie = new Cookie("name");
     var name = nameCookie.get() || "";
+
+    // UGH! I guess this name stuff should move to ExampleUI. At one point
+    // it seemed separte
+
+    var content = $("hft-content");
+    var contentOriginalDisplay = content.style.display;
 
     var setName = function() {
       element.value = name;
@@ -66,9 +76,22 @@ define(['./cookies'], function(Cookie) {
       // as in just before she's about to be hit she clicks the name. It's up the individual
       // game to decide if it want's to pay attention to the 'busy' event.
       sendBusy(true);
+
+      // Chrome on Android seems to really mess up here. Or rather my CSS-fu sucks
+      // so where as on iOS when you edit your name it just works, on Chrome
+      // the controls fly up over the input=text area. This was the hacky
+      // solution. Just hide the controls while entering the name. (see below)
+      content.style.display = "none";
     }.bind(this);
 
     var finishEnteringName = function(e) {
+      // Unfortunately hiding the controls screwed up iOS Safari. After editing
+      // the name the page would be scrolled down a certain number of pixels
+      // like a 2/3rd of the page worth. No idea why. So again I needed
+      // to do some hacky fix like scroll back to the top.
+      content.style.display = contentOriginalDisplay;
+      window.scroll(0,1);
+      window.scroll(0,0);
       e.preventDefault();
       element.blur();
       var newName = element.value.replace(/[<>]/g, '');
@@ -91,7 +114,8 @@ define(['./cookies'], function(Cookie) {
 
     element.addEventListener('click', startEnteringName, false);
     element.addEventListener('change', finishEnteringName, false);
-    element.addEventListener('blue', startEnteringName, false);
+    element.addEventListener('blur', finishEnteringName, false);
+    element.addEventListener('focus', startEnteringName, false);
 
     if (element.form) {
       element.form.addEventListener('submit', finishEnteringName, false);
