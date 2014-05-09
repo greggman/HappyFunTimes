@@ -1,3 +1,5 @@
+*   fix movement against tiles in boomboom
+*   fix sound in powpow on contolller
 *   use particles for coin
 *   fix coin collisions
 *   use particles for boomboom death
@@ -12,7 +14,7 @@
 *   now that we have game URLs make main menu generated at runtime
 *   boomboom
     *   fix explosion at crate/bush with nothing on other side. should be tip.
-    *   implement kick
+    *   implement kick (comment in kickCrate in boomboomgame globals to make powerup appear, then implement in player.js)
     *   Music
         * main
         * fast?
