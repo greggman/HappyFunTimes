@@ -287,3 +287,16 @@ html, body {
 }
 */
 
+/* iOS 6 the chrome takes more space */
+@media only screen and (max-height : 319px) {
+    #hft-header {
+    }
+
+    #hft-nameform {
+        margin: 2px 0.5em 2px 0.5em; /* TRouBLe */
+    }
+    #hft-menu>img {
+        height: 16%;
+    }
+}
+
