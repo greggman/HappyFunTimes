@@ -53,6 +53,7 @@ var main = function(
 
   var globals = {
     debug: false,
+    forceController: false,
   };
   Misc.applyUrlSettings(globals);
   MobileHacks.fixHeightHack();
@@ -156,15 +157,19 @@ var main = function(
       ctx.drawImage(frame, 0, 0);
     };
 
-    g_client.addEventListener('score', handleScore);
-    g_client.addEventListener('start', handleStart);
-    g_client.addEventListener('tied', handleTie);
-    g_client.addEventListener('died', handleDeath);
-    g_client.addEventListener('winner', handleWinner);
+    if (globals.forceController) {
+      hideMsg();
+    } else {
+      g_client.addEventListener('score', handleScore);
+      g_client.addEventListener('start', handleStart);
+      g_client.addEventListener('tied', handleTie);
+      g_client.addEventListener('died', handleDeath);
+      g_client.addEventListener('winner', handleWinner);
+      g_client.addEventListener('waitForStart', handleWaitForStart);
+      g_client.addEventListener('waitForNextGame', handleWaitForNextGame);
+      g_client.addEventListener('waitForMorePlayers', handleWaitForMorePlayers);
+    }
     g_client.addEventListener('setColor', handleSetColor);
-    g_client.addEventListener('waitForStart', handleWaitForStart);
-    g_client.addEventListener('waitForNextGame', handleWaitForNextGame);
-    g_client.addEventListener('waitForMorePlayers', handleWaitForMorePlayers);
 
     var sounds = {};
     g_audioManager = new AudioManager(sounds);
@@ -203,15 +208,17 @@ var main = function(
     Touch.setupButtons({
       inputElement: $("buttons"),
       buttons: [
-        { element: $("abutton"),     callback: function(e) { handleAbutton(e.pressed); }, },
-        { element: $("avatarinput"), callback: function(e) { handleShow(e.pressed); }, },
+        { element: $("abuttoninput"), callback: function(e) { handleAbutton(e.pressed); }, },
+        { element: $("avatarinput"),  callback: function(e) { handleShow(e.pressed); }, },
       ],
     });
 
     Touch.setupVirtualDPads({
       inputElement: $("dpadleftinput"),
       callback: handleDPad,
-      fixedCenter: false,
+      fixedCenter: true,
+      deadSpaceRadius: 15,
+      axisSize: 35,
       pads: [
         {
           referenceElement: $("dpadleft"),
