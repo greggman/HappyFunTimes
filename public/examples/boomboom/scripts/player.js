@@ -556,12 +556,19 @@ define([
     var dxFromCenterOfCol = centerOfCol - this.position[0];
     var dyFromCenterOfRow = centerOfRow - this.position[1];
 
+    var targetCol = ((this.position[0] - tileWidth  / 2) / tileWidth  | 0) & 0xFFFE;
+    var targetRow = ((this.position[1] - tileHeight / 2) / tileHeight | 0) & 0xFFFE;
+    var centerOfTargetCol = (targetCol + 1.5) * tileWidth;
+    var centerOfTargetRow = (targetRow + 1.5) * tileHeight;
+    var dxFromCenterOfTargetCol = centerOfTargetCol - this.position[0];
+    var dyFromCenterOfTargetRow = centerOfTargetRow - this.position[1];
+
     // This seems fucking rediculous to me. I'm missing the simple solution
     // stairing me in the face :(
     if (this.inRow) {
       if (!moveDX && moveDY) {
-        var t = Math.abs(moveDY) * Misc.sign(dxFromCenterOfCol);
-        moveDX = Misc.minToZero(dxFromCenterOfCol, t);
+        var t = Math.abs(moveDY) * Misc.sign(dxFromCenterOfTargetCol);
+        moveDX = Misc.minToZero(dxFromCenterOfTargetCol, t);
       }
       if (moveDY) {
         var newX = this.position[0] + moveDX;
@@ -575,8 +582,8 @@ define([
       }
     } else {
       if (!moveDY && moveDX) {
-        var t = Math.abs(moveDX) * Misc.sign(dyFromCenterOfRow);
-        moveDY = Misc.minToZero(dyFromCenterOfRow, t);
+        var t = Math.abs(moveDX) * Misc.sign(dyFromCenterOfTargetRow);
+        moveDY = Misc.minToZero(dyFromCenterOfTargetRow, t);
       }
       if (moveDX) {
         var newY = this.position[1] + moveDY;
