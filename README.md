@@ -48,7 +48,7 @@ There's a Unity3D library if you'd like to make the game in Unity3D.
 
     *   Access the camera, send selfies to the game.
 
-    *   Access the mic. Have each person use sounds to control something
+    *   Emit sound effects from the phone
 
     *   Use the device orientation API and rotate something in game to match
 
@@ -58,6 +58,8 @@ There's a Unity3D library if you'd like to make the game in Unity3D.
         so that they each have to play their part at the right time
 
     *   Let the user draw something on their phone. Insert that drawing into the game.
+
+    *   Show diagrams. Let the user plan out football plays.
 
     *   Controllers can change dynamically.
 
