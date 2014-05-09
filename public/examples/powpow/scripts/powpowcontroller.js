@@ -172,6 +172,17 @@ var main = function(
     }
   };
 
+  var sounds = {
+    explosion: {
+      filename: "assets/explosion.ogg",
+      samples: 1,
+    },
+    launching: {
+      filename: "assets/launching.ogg",
+      samples: 1,
+    }
+  };
+
   Ships.setShipSize(60);
   g_audioManager = new AudioManager(sounds);
 
@@ -186,17 +197,6 @@ var main = function(
   g_client.addEventListener('queue', handleQueueMsg);
 
   ExampleUI.setupStandardControllerUI(g_client, globals);
-
-  var sounds = {
-    explosion: {
-      filename: "assets/explosion.ogg",
-      samples: 1,
-    },
-    launching: {
-      filename: "assets/launching.ogg",
-      samples: 1,
-    }
-  };
 
   Touch.setupButtons({
     inputElement: $("buttons"),
