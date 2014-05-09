@@ -51,6 +51,7 @@ define(function() {
   var fixupAfterSizeChange = function() {
     window.scrollTo(0, 0);
     fixHeightHack();
+    window.scrollTo(0, 0);
   };
 
   // When the device re-orients, at least on iOS, the page is scrolled down :(

@@ -288,7 +288,7 @@ html, body {
 */
 
 /* iOS 6 the chrome takes more space */
-@media only screen and (max-height : 319px) {
+@media only screen and (height : 319px) {
     #hft-header {
     }
 
