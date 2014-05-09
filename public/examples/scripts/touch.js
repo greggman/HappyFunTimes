@@ -90,14 +90,24 @@ define(
   // If axisSize is passed in then instead the space is divided into 3x3 boxes. Which ever box the finger is
   // in is the direction. axisSize determines the width height of the axis boxes
   //
-  //      |   |
-  //      |   |
-  // -----+---+-----
-  //      |   |
-  // -----+---+-----
-  //      |   |
-  //      |   |
+  //      | ax |
+  //      | is |
+  // -----+----+-----
+  //      |    | axis
+  // -----+----+-----
+  //      |    |
+  //      |    |
   //
+  // if `divisions: 4` is passed in then instead of getting 8 directions decided
+  // by octant you get 4 decided by quadrant as in
+  //
+  //        2
+  //     \  |  /
+  //      \ | /
+  // 4 <---   ---> 0
+  //      / | \
+  //     /  V  \
+  //        6
 
   var setupVirtualDPads = function(options) {
     var callback = options.callback;
@@ -148,6 +158,14 @@ define(
       return (Math.floor(angle / (Math.PI / 4))) % 8;
     };
 
+    var computeDirByAngle4 = function(x, y) {
+      if (Math.abs(x) < Math.abs(y)) {
+        return y < 0 ? 2 : 6;
+      } else {
+        return x < 0 ? 4 : 0;
+      }
+    };
+
     //      |   |
     //      | V |x
     // -----+---+-----
@@ -185,6 +203,10 @@ define(
     };
 
     var computeDir = options.axisSize ? computeDirByAxis : computeDirByAngle;
+
+    if (options.divisions == 4) {
+      computeDir = computeDirByAngle4;
+    }
 
     var callCallback = function(padId, dir) {
       var pad = pads[padId];
