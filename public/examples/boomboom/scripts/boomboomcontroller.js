@@ -217,8 +217,8 @@ var main = function(
       inputElement: $("dpadleftinput"),
       callback: handleDPad,
       fixedCenter: true,
-      deadSpaceRadius: 15,
-      axisSize: 35,
+      deadSpaceRadius: 0,
+      divisions: 4,
       pads: [
         {
           referenceElement: $("dpadleft"),
