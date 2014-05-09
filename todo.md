@@ -1,5 +1,3 @@
-*   fix movement against tiles in boomboom
-*   fix sound in powpow on contolller
 *   use particles for coin
 *   fix coin collisions
 *   use particles for boomboom death
@@ -237,6 +235,8 @@
 Done
 ----
 
+*   fix movement against tiles in boomboom
+*   fix sound in powpow on contolller
 *   fix dpads!!!!
 
     I think this is done. Checking shootshoot it already worked as I thought it was. Boomboom
