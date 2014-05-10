@@ -85,4 +85,21 @@ to use it as a normal router again are
 
     If you make your WiFi open/unsecured you probably want to turn that back on
 
+Maximum Number of Players
+=========================
+
+Apparently the TP-Link TL-WR702N only supports around 15 wireless devices at a time which
+means the main computer running the game and 14 players.
+
+[Netgear claims their dual band routers can support 64 devices](http://kb.netgear.com/app/answers/detail/a_id/24043/~/how-many-clients-can-you-connect-wirelessly-to-a-netgear-router%3F).
+[Apple claims 50 devices with the Airport Extreme](http://www.apple.com/airport-extreme/specs/)
+though it's ambigous if that means 50 wifi devices or something else. [Buffalo claims
+between 10 and 50 depending on the device](http://faq.buffalo.jp/app/answers/detail/a_id/326).
+
+This is all pretty frustrating. It would be nice to know the least expensive way to allow lots
+of players. If you're a network guru please contact me or submit a pull request with updates
+on what's best. Especially given the specfic needs of HappyFunTimes. We're not streaming video
+or dowloading torrents so for example, rather than buying the top end routers consumer routers
+maybe it's better to by 2 to 4 cheap home routers and set all but one of them into AP mode (Access Point)?
+Or should we go to business routers? Unfortunately at this time I have no idea.
 
