@@ -127,6 +127,10 @@ h1 {
   width: 80%;
   margin: 0.2em;
 }
+.hft-menubutton a {
+  text-decoration: none;
+  color: black;
+}
 .hft-menubutton div {
   width: 100%;
   padding-left: 0.5em;
