@@ -11,6 +11,67 @@
 *   figure out why no sound from powpow controller?
 *   add settimeout/setinterval to game support
 *   now that we have game URLs make main menu generated at runtime
+
+*   decide on what HappyFunTimes is
+
+    It started off as just a simple library to relay messages between game and controllers.
+    But, as I added more games I started wanted to share code on the controllers. Then
+    I got tired of typing long urls like http://localhost:8080/examples/boomboom/index.html
+    so I added a menu for the controllers. Then I realized I didn't want people to choose
+    games that weren't running so I made that menu hide game that weren't running.
+    Then, I realized when I quit a game, the shared code would put up a "disconnected" message
+    but I could change that to see if another game was running and go directly to it.
+    This has all been pretty awesome in that when showing off the system I go to
+    http://localhost/games.html and pick a game. Players connect to the Wifi and get
+    immediately taken to the game. Later I press back which brings me back to
+    http://localhost/games.html, I pick a new game and bingo, all the controllers
+    automatically switch to the new game.
+
+    This seems like the best way for it to work. The odds of being at some party
+    large enough to run multiple simultainous games are much smaller than running
+    just a single setup. On a single setup that seems like the best way to do it.
+
+    So, I think I might make the ExampleUI part of the *base* HappyFunTimes.
+
+    That brings up another question though. Right now there's a name bar at the
+    top of the shared part of the controllers. I wonder if I should get rid of that.
+    I could instead make it so when you connect to the router it takes you do a page
+    that says
+
+        +-------------+
+        |HappyFunTimes|
+        +-------------+
+        |-enter-name--|
+        +-------------+
+        |    Start    |
+        +-------------+
+
+    Most people didn't realize they could enter their names. Doing this will likely
+    make them enter something. After which they really don't need to be able to edit
+    their names. That means I could remove the name area from the controllers giving
+    more space to the controllers.
+
+    I could still make it possible to change your name while playing as I could leave
+    the gear menu. But, it might seem out of place up in the corner. I guess I can
+    style it like a tab or something.
+
+    I also currently have it so controllers can connect to a game in the relayserver
+    before a game has started. But that kind of seems pointless. It's there mostly
+    for debugging so I can start a controller then start a game.
+
+    If I change it so a controller can not connect before the game then I can also make it
+    if a controller tries to connect and there is no game the controller goes
+    back to the main menu. This would solve an issue I've seen. Sometimes for
+    whatever reason a controller dies (probably a bug). I reset a game and
+    the a few users controllers don't reset. I tell them Gear->Main Menu but
+    if I made this change they could also just refresh. On refreshing the
+    controller would see the game is not running and go to the main menu
+    or to whichever other game is running.
+
+
+
+
+
 *   boomboom
     *   fix explosion at crate/bush with nothing on other side. should be tip.
     *   implement kick (comment in kickCrate in boomboomgame globals to make powerup appear, then implement in player.js)
@@ -199,7 +260,26 @@
     *   8way shooter
     *   drawing game.
 
-        Player's draw on their phone, add drawing to level?
+        Player's draw on their phone, add drawing to level? Maybe Crayon Physics like?
+        Heck, just stop erasing the canvas with the simple example.
+
+    *   racing game
+
+        maybe like micro machines or moto roader where the camera keeps up with the lead
+        and others get put in place.
+
+        like grand prix, tiny cars on a track the fits on the screen
+
+    *   More co-op games or team games.
+    *   rapunzel
+
+        Rapunzel was a basic programming tutorial where you'd be told the wind
+        and height above ground of Rapunzel's window and you'd have to type in
+        the angle and power of the bow to shoot an arrow into her window.
+
+        That's been updated by a zillion people into showing little cannons
+        trying to hit each other and having easier input. Well, a ton-o-players
+        playing it.
 
     *   unity character controller
     *   johann sabastian joust?
@@ -210,7 +290,7 @@
         at the same time trying not to get taken out themselves.
 
         HTML5 allows access to the accelerometers of the phone so it
-        should be possible ot make this game with HFT.
+        should be possible ot make a similar game with HFT.
 
     *   Make a round based game. (bombbomb fits this. Each round lasts 2 mins. Players entering later have to wait)
     *   quiz
