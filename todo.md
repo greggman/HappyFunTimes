@@ -12,6 +12,23 @@
 *   add settimeout/setinterval to game support
 *   now that we have game URLs make main menu generated at runtime
 
+*   Game service / package installer?
+
+    It might be nice to make this like many of the package installers. You could download
+    HappyFunTimes then type something like
+
+        hft install someplatformgame
+
+    Which would go and install platform game from some repo just like `npm` and other
+    package managers do. Just an idea.
+
+    I could also change the relayserver to search for games.
+
+    I'm mixed on this idea. I really like the idea but there's no point unless there's
+    100s of games to install. At the same time, conversely, having it might make
+    it more likely people would write games. It might also make it super easy
+    to download gamejam games etc.
+
 *   decide on what HappyFunTimes is
 
     It started off as just a simple library to relay messages between game and controllers.
