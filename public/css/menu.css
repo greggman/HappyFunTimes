@@ -74,24 +74,6 @@ h1 {
     max-height: 200px;
     width: 320px;
 }
-
-#nogames {
-    width: 100%;
-    height: 100%;
-    display: flex;
-    display: -webkit-flex;
-    flex-flow: column;
-    -webkit-flex-flow: column;
-    justify-content: center;
-    align-content: center;
-    align-items: center;
-    -webkit-justify-content: center;
-    -webkit-align-content: center;
-    -webkit-align-items: center;
-    min-height: auto;
-
-}
-
 /* class to make something full size */
 .hft-fullsize {
   width: 100%;
