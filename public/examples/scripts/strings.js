@@ -67,9 +67,40 @@ define(function() {
     return padStr.substr(str.length - len) + str;
   };
 
+  var replaceParamsRE = /%\(([^\)]+)\)s/g;
+  var replaceParams = function(str, params) {
+    if (!params.length) {
+      params = [params];
+    }
+
+    return str.replace(replaceParamsRE, function(match, key) {
+      for (var ii = 0; ii < params.length; ++ii) {
+        var value = params[ii][key];
+        if (value !== undefined) {
+          return value;
+        }
+      }
+      console.error("unknown key: " + key);
+      return "%(" + key + ")s";
+    });
+  };
+
+  var startsWith = function(str, start) {
+    return (str.length >= start.length &&
+            str.substr(0, start.length) == start);
+  };
+
+  var endsWith = function(str, end) {
+    return (str.length >= end.length &&
+            str.substring(str.length - end.length) == end);
+  };
+
   return {
+    endsWith: endsWith,
     padLeft: padLeft,
     padRight: padRight,
+    replaceParams: replaceParams,
+    startsWith: startsWith,
   };
 });
 
