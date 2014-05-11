@@ -126,11 +126,14 @@ var main = function(
 
   g_services.globals = globals;
 
-  var server = new GameServer({
-    gameId: "shootshoot",
-  });
-  g_services.server = server;
-  server.addEventListener('playerconnect', g_playerManager.startPlayer.bind(g_playerManager));
+  var server;
+  if (globals.haveServer) {
+    server = new GameServer({
+      gameId: "shootshoot",
+    });
+    g_services.server = server;
+    server.addEventListener('playerconnect', g_playerManager.startPlayer.bind(g_playerManager));
+  }
   GameSupport.init(server, globals);
 
   var canvas = $("canvas");

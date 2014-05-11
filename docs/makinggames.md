@@ -250,8 +250,9 @@ To use it.
           };
           Misc.applyUrlSettings(globals);
 
+          var server;
           if (globals.haveServer) {
-            var server = new GameServer({
+            server = new GameServer({
               gameId: "gamename",  // <==-- be sure this matches your controller
             });
 

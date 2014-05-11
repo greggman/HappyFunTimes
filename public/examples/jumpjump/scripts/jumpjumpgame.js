@@ -164,12 +164,14 @@ window.g = globals;
   };
   g_services.globals = globals;
 
-  var server = new GameServer({
-    gameId: "jumpjump",
-  });
-  g_services.server = server;
-  server.addEventListener('playerconnect', g_playerManager.startPlayer.bind(g_playerManager));
-
+  var server;
+  if (globals.haveServer) {
+    var server = new GameServer({
+      gameId: "jumpjump",
+    });
+    g_services.server = server;
+    server.addEventListener('playerconnect', g_playerManager.startPlayer.bind(g_playerManager));
+  }
   GameSupport.init(server, globals);
 
   if (globals.tileInspector) {

@@ -345,12 +345,15 @@ var main = function(
 
   g_services.globals = globals;
 
-  var server = new GameServer({
-    gameId: "jamjam",
-  });
-  g_services.server = server;
+  var server;
+  if (globals.haveServer) {
+    server = new GameServer({
+      gameId: "jamjam",
+    });
+    g_services.server = server;
+    server.addEventListener('playerconnect', g_playerManager.startPlayer.bind(g_playerManager));
+  }
   GameSupport.init(server, globals);
-  server.addEventListener('playerconnect', g_playerManager.startPlayer.bind(g_playerManager));
 
   var clock = SyncedClock.createClock(true);
   g_services.clock = clock;

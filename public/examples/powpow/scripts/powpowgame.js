@@ -158,13 +158,16 @@ var main = function(
   g_services.globals = globals;
   g_services.renderer = renderer;
 
-  var server = new GameServer({
-    gameId: "powpow",
-  });
-  g_services.server = server;
-  server.addEventListener('connect', showConnected);
-  server.addEventListener('disconnect', showDisconnected);
-  server.addEventListener('playerconnect', startPlayer);
+  var server;
+  if (globals.haveServer) {
+    server = new GameServer({
+      gameId: "powpow",
+    });
+    g_services.server = server;
+    server.addEventListener('connect', showConnected);
+    server.addEventListener('disconnect', showDisconnected);
+    server.addEventListener('playerconnect', startPlayer);
+  }
 
   var sounds = {
     fire: {
