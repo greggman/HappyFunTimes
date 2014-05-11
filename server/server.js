@@ -85,7 +85,10 @@ console.log("using ip address: " + g.address);
 
 var gameDB = new GameDB({
   baseDir: g.baseDir,
-  gamesDirs: [path.join(g.baseDir, "/examples")],
+  gamesDirs: [
+      path.join(g.baseDir, "/examples"),
+      path.join(g.baseDir, "/games"),
+  ],
 });
 
 function postHandler(request, callback) {

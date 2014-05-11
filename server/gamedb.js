@@ -53,6 +53,10 @@ var GameDB = function(options) {
   var cwd = process.cwd();
 
   options.gamesDirs.forEach(function(basePath) {
+    if (!fs.existsSync(basePath)) {
+      console.warn("WARNING: " + basePath + " does not exist");
+      return;
+    }
     var filenames = fs.readdirSync(basePath);
     filenames.forEach(function(filename) {
       if (strings.startsWith(filename, '.')) {
