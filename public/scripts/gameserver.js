@@ -43,11 +43,11 @@ define(
   /**
    * options:
    *   controllerUrl: url of the controller. If not passed in
-   *   assumes it's the same as the game except 'index.html'.
-   *   In other words if the game's url is
-   *   http://foo/bar/game.html it will assume you want
-   *   to go to http://foo/bar/index.html if you don't set the
-   *   controllerUrl.
+   *       assumes it's the same as the game except 'index.html'.
+   *       In other words if the game's url is
+   *       http://foo/bar/game.html it will assume the controller
+   *       is at http://foo/bar/index.html if you don't set the
+   *       controllerUrl.
    */
   var GameServer = function(options) {
     var _connected = false;
