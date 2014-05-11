@@ -44,31 +44,13 @@
   <title>HappyFunTimes Example Games</title>
   <link rel="stylesheet" href="css/menu.css">
   <link href="/hft-icon.png" rel="shortcut icon" type="image/png">
+  <script id="item-template" type="not-javascript">
+<div class="game"><a href="%(controllerUrl)s"><div>%(name)s</div><img src="%(screenshotUrl)s" /></a></div>
+  </script>
 </head>
 <body>
 <h1>HappyFunTimes</h1>
-<div id="gamemenu" style="display: none;">
-<div class="game" id="boomboom"><a href="examples/boomboom/index.html"><div>BoomBoom</div><img src="examples/boomboom/boomboom-screenshot.png" /></a></div>
-
-<div class="game" id="orient"><a href="examples/deviceorientation/index.html"><div>DeviceOrientation</div><img src="examples/deviceorientation/deviceorientation-screenshot.png" /></a></div>
-
-<div class="game" id="jamjam"><a href="examples/jamjam/index.html"><div>JamJam</div><img src="examples/jamjam/jamjam-screenshot.png" /></a></div>
-
-<div class="game" id="jumpjump"><a href="examples/jumpjump/index.html"><div>JumpJump</div><img src="examples/jumpjump/jumpjump-screenshot.png" /></a></div>
-
-<div class="game" id="powpow"><a href="examples/powpow/index.html"><div>PowPow</div><img src="examples/powpow/powpow-screenshot.png" /></a></div>
-
-<div class="game" id="shootshoot"><a href="examples/shootshoot/index.html"><div>ShootShoot</div><img src="examples/shootshoot/shootshoot-screenshot.png" /></a></div>
-
-<div class="game" id="unitycharacterexample"><a href="examples/unitycharacterexample/index.html"><div>UnityCharacterExample</div><img src="examples/unitycharacterexample/unitycharacterexample-screenshot.png" /></a></div>
-
-<div class="game" id="simple"><a href="examples/simple/index.html"><div>Simple</div><img src="examples/simple/simple-screenshot.png" /></a></div>
-
-<div class="game" id="supersimple"><a href="examples/supersimple/index.html"><div>SuperSimple</div><img src="examples/supersimple/supersimple-screenshot.png" /></a></div>
-
-<div class="game" id="clocksync"><a href="examples/clocksync/index.html"><div>ClockSync</div><img src="examples/clocksync/clocksync-screenshot.png" /></a></div>
-
-<div id="nogames"><div>No games currently running</div></div>
+<div id="gamemenu">
 </div>
 </body>
 <script data-main="showgames.js" src="examples/scripts/require.js"></script>

@@ -31,20 +31,10 @@
 
 "use strict";
 
-var main = function(IO) {
-  var games = document.querySelectorAll(".game");
+var main = function(IO, Strings) {
   var gamemenu = document.getElementById("gamemenu");
-  var noGames = document.getElementById("nogames");
-  var noGamesOriginalDisplayValue = noGames.style.display || "";
-
-  var gameInfos = [];
-  for (var ii = 0; ii < games.length; ++ii) {
-    var game = games[ii];
-    gameInfos.push({
-      elem: game,
-      originalDisplayValue: game.style.display || "",
-    });
-  }
+  var template = document.getElementById("item-template").text;
+  var oldHtml = "";
 
   var getGames = function() {
     IO.sendJSON(window.location.href, {cmd: 'listRunningGames'}, function (obj, exception) {
@@ -52,19 +42,22 @@ var main = function(IO) {
         setTimeout(getGames, 1000);
         return;
       }
-      var runningGames = { };
+
+      var items = [];
       for (var ii = 0; ii < obj.length; ++ii) {
         var game = obj[ii];
-        runningGames[game.gameId] = true;
+
+        // Not sure how I should figure out the name and screenshot.
+        var basePath = game.controllerUrl.substring(0, game.controllerUrl.lastIndexOf('/') + 1);
+        game.name = game.name || game.gameId;
+        game.screenshotUrl = game.screenshotUrl || (basePath + game.gameId + "-screenshot.png");
+        items.push(Strings.replaceParams(template, game));
       }
-      for (var ii = 0; ii < games.length; ++ii) {
-        var gameInfo = gameInfos[ii];
-        var gameId = gameInfo.elem.id;
-        var isRunning = runningGames[gameId];
-        gameInfo.elem.style.display = isRunning ? gameInfo.originalDisplayValue : "none";
+      var html = items.join("");
+      if (html != oldHtml) {
+        oldHtml = html;
+        gamemenu.innerHTML = html;
       }
-      noGames.style.display = obj.length ? "none" : noGamesOriginalDisplayValue;
-      gamemenu.style.display = "block";
 
       // If there's only one game just go to it.
       if (obj.length == 1 && obj[0].controllerUrl) {
@@ -81,6 +74,7 @@ var main = function(IO) {
 // Start the main app logic.
 requirejs(
   [ 'scripts/io',
+    './examples/scripts/strings',
   ],
   main
 );
