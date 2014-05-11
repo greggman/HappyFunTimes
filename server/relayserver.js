@@ -471,9 +471,9 @@ var RelayServer = function(servers, options) {
     game.assignClient(client, this, data)
   }.bind(this);
 
-  //var io = new SocketIOServer(server);
   for (var ii = 0; ii < servers.length; ++ii) {
     var server = servers[ii];
+    //var io = new SocketIOServer(server);
     var io = new WSServer(server);
 
     io.on('connection', function(client){
