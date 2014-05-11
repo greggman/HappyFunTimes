@@ -105,7 +105,6 @@ var RelayServer = function(servers, options) {
           gameId: id,
           numPlayers: game.getNumPlayers(),
           controllerUrl: game.controllerUrl,
-          foo: "bar",
         });
       }
     }
