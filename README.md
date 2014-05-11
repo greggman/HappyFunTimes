@@ -335,7 +335,7 @@ There's a Unity3D library if you'd like to make the game in Unity3D.
 Unity Version
 -------------
 
-See [Unity Docs](unitydocs.md)
+See [Unity Docs](docs/unitydocs.md)
 
 Running the Examples
 --------------------
@@ -368,18 +368,23 @@ might be ok.
 Windows docs
 ------------
 
-[Some Windows docs here](windows.md)
+[Some Windows docs here](docs/windows.md)
+
+Making your own original game
+-----------------------------
+
+[See Making Games](docs/makinggames.md)
 
 Example Notes and tips
 ----------------------
 
-Here's [a few notes on the provided examples](examples.md) as well as [a few tips](tips.md)
+Here's [a few notes on the provided examples](docs/examples.md) as well as [a few tips](docs/tips.md)
 that have come up while making the examples.
 
 Setting up for a Party
 -------------------------------------------
 
-See [Making It Simple For Players To Get Started](network.md)
+See [Making It Simple For Players To Get Started](docs/network.md)
 
 Folder structure
 ----------------
@@ -448,7 +453,7 @@ Notes
 Attribution
 -----------
 
-See [attribution](attribution.md)
+See [attribution](docs/attribution.md)
 
 To Do
 -----
