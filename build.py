@@ -32,6 +32,7 @@ import glob
 import os
 import re
 import sys
+import json
 from optparse import OptionParser
 
 
@@ -115,32 +116,39 @@ class Builder(object):
       self.ApplyTemplateToFile(template_path, file_name, out_file_name, )
 
   def Process(self):
-    examples = [
-      { "useGameTemplate": True,  "name": "BoomBoom",              "gameId": "boomboom", },
-      { "useGameTemplate": False, "name": "DeviceOrientation",     "gameId": "orient", },
-      { "useGameTemplate": True,  "name": "JamJam",                "gameId": "jamjam", },
-      { "useGameTemplate": True,  "name": "JumpJump",              "gameId": "jumpjump", },
-      { "useGameTemplate": False, "name": "PowPow",                "gameId": "powpow", },
-      { "useGameTemplate": True,  "name": "ShootShoot",            "gameId": "shootshoot", },
-      { "useGameTemplate": False, "name": "UnityCharacterExample", "gameId": "unitycharacterexample", },
-      { "useGameTemplate": False, "name": "Simple",                "gameId": "simple", },
-      { "useGameTemplate": False, "name": "SuperSimple",           "gameId": "supersimple", },
-      { "useGameTemplate": False, "name": "ClockSync",             "gameId": "clocksync", },
+    dirs = [
+      os.path.join('public', 'examples'),
+      os.path.join('public', 'games'),
     ]
-    for example in examples:
-      name = example["name"]
-      filebasename = name.lower()
-      dirname = os.path.join("public", "examples", filebasename)
-      example["filebasename"] = filebasename
 
-      if example["useGameTemplate"]:
-        gameview_src_name = os.path.join(dirname, "game.html")
-        gameview_dst_name = os.path.join(dirname, "gameview.html")
-        self.ApplyTemplateToFile("templates/game.gameview.html", gameview_src_name, gameview_dst_name, example)
+    for dir in dirs:
+      if not os.path.exists(dir):
+        continue
+      folders = os.listdir(dir)
+      for folder in folders:
+        dirname = os.path.join(dir, folder)
+        filename = os.path.join(dirname, "package.json")
+        if not os.path.exists(filename):
+          continue
 
-      index_src_name = os.path.join(dirname, "controller.html")
-      index_dst_name = os.path.join(dirname, "index.html")
-      self.ApplyTemplateToFile("templates/controller.index.html", index_src_name, index_dst_name, example)
+        contents = self.ReadFile(filename)
+        try:
+          game = json.loads(contents)
+          game["filebasename"] = folder.lower()
+
+          if "useGameTemplate" in game and game["useGameTemplate"]:
+            gameview_src_name = os.path.join(dirname, "game.html")
+            gameview_dst_name = os.path.join(dirname, "gameview.html")
+            self.ApplyTemplateToFile("templates/game.gameview.html", gameview_src_name, gameview_dst_name, game)
+
+          if "useControllerTemplate" in game and game["useControllerTemplate"]:
+            index_src_name = os.path.join(dirname, "controller.html")
+            index_dst_name = os.path.join(dirname, "index.html")
+            self.ApplyTemplateToFile("templates/controller.index.html", index_src_name, index_dst_name, game)
+
+        except:
+          print "ERROR: reading ", filename
+          raise
 
 
 def main (argv):
