@@ -48,9 +48,11 @@ var util = require('util');
 var mime = require('mime');
 var querystring = require('querystring');
 var args = require('minimist')(process.argv.slice(2));
+var strings = require('./strings');
 var highResClock = require('./highresclock');
 var DNSServer = require('./dnsserver');
 var iputils = require('./iputils');
+var GameDB = require('./gamedb');
 
 var relayServer;
 
@@ -81,6 +83,11 @@ if (!g.address) {
 }
 console.log("using ip address: " + g.address);
 
+var gameDB = new GameDB({
+  baseDir: g.baseDir,
+  gamesDirs: [path.join(g.baseDir, "/examples")],
+});
+
 function postHandler(request, callback) {
   var query_ = { };
   var content_ = '';
@@ -105,19 +112,9 @@ function sendJSONResponse(res, object) {
   res.end();
 }
 
-function startsWith(str, start) {
-  return (str.length >= start.length &&
-          str.substr(0, start.length) == start);
-}
-
-function endsWith(str, end) {
-  return (str.length >= end.length &&
-          str.substring(str.length - end.length) == end);
-}
-
 function saveScreenshotFromDataURL(dataURL) {
   var EXPECTED_HEADER = "data:image/png;base64,";
-  if (startsWith(dataURL, EXPECTED_HEADER)) {
+  if (strings.startsWith(dataURL, EXPECTED_HEADER)) {
     var filename = "screenshot-" + (g.screenshotCount++) + ".png";
     fs.writeFile(
         filename,
@@ -147,12 +144,17 @@ var handleListRunningGamesRequest = function(query, res) {
   sendJSONResponse(res, games);
 };
 
+var handleListAvailableGamesRequest = function(query, res) {
+  sendJSONResponse(res, gameDB.getGames());
+};
+
 var handleRequests = (function() {
 
   var postCmdHandlers = {
     time: handleTimeRequest,
     screenshot: handleScreenshotRequest,
     listRunningGames: handleListRunningGamesRequest,
+    listAvailableGames: handleListAvailableGamesRequest,
   };
 
   return function(req, res) {
@@ -221,7 +223,7 @@ var sendFileResponse = function(res, fullPath, opt_prepFn) {
       if (opt_prepFn) {
         data = opt_prepFn(data.toString());
       }
-      if (startsWith(mimeType, "text")) {
+      if (strings.startsWith(mimeType, "text")) {
         res.writeHead(200, {
           'Content-Type':  mimeType + '; charset=utf-8',
           'Cache-Control': 'no-cache, no-store, must-revalidate', // HTTP 1.1.
@@ -272,7 +274,7 @@ AppleCaptivePortalHandler.prototype.check = function(req, res) {
   var parsedUrl = url.parse(req.url, true);
   var filePath = querystring.unescape(parsedUrl.pathname);
   var sessionId = filePath;
-  var isCheckingForApple = req.headers["user-agent"] && startsWith(req.headers["user-agent"], "CaptiveNetworkSupport");
+  var isCheckingForApple = req.headers["user-agent"] && strings.startsWith(req.headers["user-agent"], "CaptiveNetworkSupport");
   var isLoginURL = (filePath == "/game-login.html");
   var isIndexURL = (filePath == "/index.html" || filePath == "/");
 
@@ -334,7 +336,7 @@ var sendRequestedFile = function(req, res) {
   var isAnchor = filePath.indexOf('#') >= 0;
   if (!isQuery && !isAnchor) {
     // Add "/" if it's a folder.
-    if (!endsWith(filePath, "/") && isFolder(fullPath)) {
+    if (!strings.endsWith(filePath, "/") && isFolder(fullPath)) {
       filePath += "/";
       res.writeHead(302, {
         'Location': filePath
@@ -343,7 +345,7 @@ var sendRequestedFile = function(req, res) {
       return;
     }
     // Add index.html if ends with "/"
-    if (endsWith(fullPath, "/") || endsWith(fullPath, "\\")) {
+    if (strings.endsWith(fullPath, "/") || strings.endsWith(fullPath, "\\")) {
       fullPath += "index.html";
     }
   }
