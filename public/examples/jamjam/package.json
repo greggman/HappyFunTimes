@@ -1,0 +1,11 @@
+{
+  "name": "JamJam",
+  "description": "Sample that show synced music",
+  "version": "0.0.1",
+  "private": false,
+  "dependencies": {
+  },
+  "gameUrl": "gameview.html",
+  "screenshotUrl": "jamjam-screenshot.png",
+  "gameType": "html"
+}

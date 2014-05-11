@@ -1,0 +1,11 @@
+{
+  "name": "UnityCharacterExample",
+  "description": "An example that spawns characters in Unity",
+  "version": "0.0.1",
+  "private": false,
+  "dependencies": {
+  },
+  "gameType": "Unity3D",
+  "screenshotUrl": "unitycharacterexample-screenshot.png",
+  "gameExecutable": "unitygame"
+}

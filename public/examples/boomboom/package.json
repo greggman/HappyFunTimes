@@ -1,0 +1,11 @@
+{
+  "name": "BoomBoom",
+  "description": "A game with explosions",
+  "version": "0.0.1",
+  "private": false,
+  "dependencies": {
+  },
+  "gameUrl": "gameview.html",
+  "screenshotUrl": "boomboom-screenshot.png",
+  "gameType": "html"
+}

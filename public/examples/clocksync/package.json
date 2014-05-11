@@ -1,0 +1,11 @@
+{
+  "name": "ClockSync",
+  "description": "Sample that shows a sycned clock",
+  "version": "0.0.1",
+  "private": false,
+  "dependencies": {
+  },
+  "gameUrl": "gameview.html",
+  "screenshotUrl": "clocksync-screenshot.png",
+  "gameType": "html"
+}

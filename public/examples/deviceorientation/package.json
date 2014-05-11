@@ -1,0 +1,11 @@
+{
+  "name": "Device Orientation",
+  "description": "A game that shows off using device orientation",
+  "version": "0.0.1",
+  "private": false,
+  "dependencies": {
+  },
+  "gameUrl": "gameview.html",
+  "screenshotUrl": "deviceorientation-screenshot.png",
+  "gameType": "html"
+}

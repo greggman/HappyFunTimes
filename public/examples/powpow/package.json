@@ -1,0 +1,11 @@
+{
+  "name": "PowPow",
+  "description": "A Space War like game",
+  "version": "0.0.1",
+  "private": false,
+  "dependencies": {
+  },
+  "gameUrl": "gameview.html",
+  "screenshotUrl": "powpow-screenshot.png",
+  "gameType": "html"
+}

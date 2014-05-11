@@ -1,0 +1,11 @@
+{
+  "name": "JumpJump",
+  "description": "A game with Jumping",
+  "version": "0.0.1",
+  "private": false,
+  "dependencies": {
+  },
+  "gameUrl": "gameview.html",
+  "screenshotUrl": "jumpjump-screenshot.png",
+  "gameType": "html"
+}

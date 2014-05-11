@@ -1,4 +1,3 @@
-<!--
 /*
  * Copyright 2014, Gregg Tavares.
  * All rights reserved.
@@ -29,39 +28,46 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
--->
-<!DOCTYPE html>
-<html>
-<head>
-  <meta charset="utf-8">
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black">
 
-  <meta name="HandheldFriendly" content="True">
-  <meta name="MobileOptimized" content="320">
-  <meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0, maximum-scale=1, user-scalable=no, minimal-ui">
-  <meta name="format-detection" content="telephone=no" />
-  <title>HappyFunTimes Games</title>
-  <link rel="stylesheet" href="css/menu.css">
-  <style>
-    h1 {
-        border-top: 10px solid black;
-        border-bottom: 10px solid black;
-        background-color:red;
-        color: white;
-        font-size: xx-large;
-        padding: 1em;
-    }
-  </style>
-  <script id="item-template" type="not-javascript">
-<div class="game"><a href="%(gameUrl)s"><div>%(name)s</div><img src="%(screenshotUrl)s" /></a></div>
-  </script>
-</head>
-<body>
-<h1>Games (not for players!)</h1>
-<div id="gamemenu">
-</div>
-</body>
-<script data-main="showavailablegames.js" src="examples/scripts/require.js"></script>
-</html>
+"use strict";
+
+var main = function(IO, Strings) {
+  var gamemenu = document.getElementById("gamemenu");
+  var template = document.getElementById("item-template").text;
+
+  var getGames = function() {
+    IO.sendJSON(window.location.href, {cmd: 'listAvailableGames'}, function (obj, exception) {
+      if (exception) {
+        throw exception;
+      }
+
+      gamemenu.style.display = "block";
+      var html = [];
+
+      var div = document.createElement("div");
+      for (var ii = 0; ii < obj.length; ++ii) {
+        var gameInfo = obj[ii];
+        html.push(Strings.replaceParams(template, gameInfo));
+      }
+
+      gamemenu.innerHTML = html.join("");
+
+      // If there's only one game just go to it.
+      if (obj.length == 1 && obj[0].controllerUrl) {
+        window.location.href = obj[0].controllerUrl;
+        return;
+      }
+    });
+  };
+  getGames();
+};
+
+// Start the main app logic.
+requirejs(
+  [ 'scripts/io',
+    './examples/scripts/strings',
+  ],
+  main
+);
+
 
