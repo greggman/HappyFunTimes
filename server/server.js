@@ -49,7 +49,7 @@ var mime = require('mime');
 var querystring = require('querystring');
 var args = require('minimist')(process.argv.slice(2));
 var highResClock = require('./highresclock');
-var dns = require('./dnsserver');
+var DNSServer = require('./dnsserver');
 var iputils = require('./iputils');
 
 var relayServer;
@@ -382,8 +382,8 @@ var tryStartRelayServer = function() {
       console.error("NO PORTS available. Tried port(s) " + ports.join(", "));
       process.exit(1);
     }
-    var rs = require('./relayserver.js');
-    relayServer = new rs.RelayServer(servers, {address: g.address});
+    var RelayServer = require('./relayserver.js');
+    relayServer = new RelayServer(servers, {address: g.address});
     sys.print("Listening on port(s): " + goodPorts.join(", ") + "\n");
   }
 };
@@ -410,6 +410,6 @@ for (var ii = 0; ii < ports.length; ++ii) {
 }
 
 if (g.dns) {
-  var dnsServer = new dns.DNSServer({address: g.address});
+  var dnsServer = new DNSServer({address: g.address});
 }
 

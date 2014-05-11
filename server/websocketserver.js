@@ -24,42 +24,69 @@
  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
  * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
- * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ * THEORY OF2 LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+
 "use strict";
 
-// This DNS server just servers the same ip address for all domains.
-// options:
-//   address: ip address to report
-var DNSServer = function(options) {
-  options = options || { };
-  var dns = require('native-dns');
-  var server = dns.createServer();
+var debug = require('debug')('websocketserver');
 
-  var port = 53;
+var WSServer = function(server) {
+  debug("Using WebSockets directly");
 
-  var address = options.address;
+  var WebSocketServer = require('ws').Server;
+  var wss = new WebSocketServer({server: server});
 
-  server.on('request', function (request, response) {
-    response.answer.push(dns.A({
-      name: request.question[0].name,
-      address: address,
-      ttl: 1,
-    }));
-    response.send();
-  });
+  var WSClient = function(client) {
+    this.client = client;
+    var eventHandlers = { };
 
-  server.on('error', function (err, buff, req, res) {
-    console.log(err.stack);
-  });
+    this.send = function(msg) {
+      var str = JSON.stringify(msg);
+      this.client.send(str);
+    };
 
-  try {
-    server.serve(port);
-  } catch (e) {
-    console.error(e);
-  }
+    this.on = function(eventName, fn) {
+      if (eventName == 'disconnect') {
+        eventName = 'close';
+      }
+
+      if (!eventHandlers[eventName]) {
+        this.client.on(eventName, function() {
+          var fn = eventHandlers[eventName];
+          if (fn) {
+            fn.apply(this, arguments);
+          }
+        }.bind(this));
+      }
+
+      if (eventName == 'message') {
+        var origFn = fn;
+        fn = function(data, flags) {
+          origFn(JSON.parse(data));
+        };
+      }
+      eventHandlers[eventName] = fn;
+    };
+
+    this.close = function() {
+      this.client.close();
+    };
+  };
+
+  this.on = function(eventName, fn) {
+    if (eventName == 'connection') {
+      wss.on(eventName, function(client) {
+        var wrapper = new WSClient(client);
+        fn(wrapper);
+      });
+    } else {
+      wss.on(eventName, fn);  // does this case exist?
+    }
+  };
 };
 
-module.exports = DNSServer;
+module.exports = WSServer;
+
