@@ -1,7 +1,7 @@
 {
-  "name": "funtimes",
-  "description": "funtimes framework",
-  "version": "0.0.1",
+  "name": "happyfuntimes",
+  "description": "happyfuntimes framework",
+  "version": "0.0.2",
   "private": true,
   "dependencies": {
     "debug": "0.7.4",
