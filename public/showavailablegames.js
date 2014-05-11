@@ -41,7 +41,6 @@ var main = function(IO, Strings) {
         throw exception;
       }
 
-      gamemenu.style.display = "block";
       var html = [];
 
       var div = document.createElement("div");
