@@ -31,6 +31,11 @@ Tips
     runs nearly immediately and lets you switch devices
     nearly immediately.
 
+*   Use remote debugging.
+
+    Both iOS Safari and Chrome Android support remote debugging. Google for it.
+    It's awesome!
+
 *   Make options that don't need contollers.
 
     Powpow, Shootshoot, Jumpjump will all use the local
