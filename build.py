@@ -127,13 +127,11 @@ class Builder(object):
       { "useGameTemplate": False, "name": "SuperSimple",           "gameId": "supersimple", },
       { "useGameTemplate": False, "name": "ClockSync",             "gameId": "clocksync", },
     ]
-    menuParts = []
     for example in examples:
       name = example["name"]
       filebasename = name.lower()
       dirname = os.path.join("public", "examples", filebasename)
       example["filebasename"] = filebasename
-      menuParts.append(self.ApplyTemplate("templates/menu.item.html", example))
 
       if example["useGameTemplate"]:
         gameview_src_name = os.path.join(dirname, "game.html")
@@ -143,10 +141,6 @@ class Builder(object):
       index_src_name = os.path.join(dirname, "controller.html")
       index_dst_name = os.path.join(dirname, "index.html")
       self.ApplyTemplateToFile("templates/controller.index.html", index_src_name, index_dst_name, example)
-
-    self.ApplyTemplateToString("templates/menu.index.html", "public/index.html", {
-      "content": "\n".join(menuParts)
-    })
 
 
 def main (argv):
