@@ -128,17 +128,12 @@ class Builder(object):
       { "useGameTemplate": False, "name": "ClockSync",             "gameId": "clocksync", },
     ]
     menuParts = []
-    gamemenuParts = []
     for example in examples:
       name = example["name"]
       filebasename = name.lower()
       dirname = os.path.join("public", "examples", filebasename)
       example["filebasename"] = filebasename
       menuParts.append(self.ApplyTemplate("templates/menu.item.html", example))
-
-      gameviewfilename = os.path.join(dirname, "gameview.html")
-      if os.path.exists(gameviewfilename):
-        gamemenuParts.append(self.ApplyTemplate("templates/gamemenu.item.html", example))
 
       if example["useGameTemplate"]:
         gameview_src_name = os.path.join(dirname, "game.html")
@@ -153,9 +148,6 @@ class Builder(object):
       "content": "\n".join(menuParts)
     })
 
-    self.ApplyTemplateToString("templates/gamemenu.index.html", "public/games.html", {
-      "content": "\n".join(gamemenuParts)
-    })
 
 def main (argv):
   parser = OptionParser()
