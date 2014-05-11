@@ -7,5 +7,7 @@
   },
   "gameUrl": "gameview.html",
   "screenshotUrl": "simple-screenshot.png",
-  "gameType": "html"
+  "gameType": "html",
+  "useControllerTemplate": true,
+  "useGameTemplate": false
 }

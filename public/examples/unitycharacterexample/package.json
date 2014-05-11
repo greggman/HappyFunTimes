@@ -7,5 +7,7 @@
   },
   "gameType": "Unity3D",
   "screenshotUrl": "unitycharacterexample-screenshot.png",
-  "gameExecutable": "unitygame"
+  "gameExecutable": "unitygame",
+  "useControllerTemplate": true,
+  "useGameTemplate": false
 }
