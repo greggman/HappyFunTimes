@@ -47,7 +47,7 @@ var main = function(
     Input,
     Misc,
     Speedup,
-    SpriteRenderer,
+    SpriteManager,
     Collectable,
     LevelManager,
     PlayerManager) {
@@ -152,7 +152,7 @@ window.g = globals;
 
   var canvas = $("playfield");
   var gl = WebGL.setupWebGL(canvas, {alpha:false}, function() {});
-  g_services.spriteRenderer = new SpriteRenderer();
+  g_services.spriteManager = new SpriteManager();
 
   var resize = function() {
     if (Misc.resize(canvas)) {
@@ -289,6 +289,7 @@ window.g = globals;
     gl.clear(gl.CLEAR_BUFFER_BIT);
     g_services.levelManager.draw();
     g_services.drawSystem.processEntities();
+    g_services.spriteManager.draw();
   };
 
   var sounds = {
@@ -316,7 +317,7 @@ requirejs(
     '../../scripts/input',
     '../../scripts/misc',
     '../../scripts/speedup',
-    '../../scripts/sprite',
+    '../../scripts/spritemanager',
     './collectable',
     './levelmanager',
     './playermanager',

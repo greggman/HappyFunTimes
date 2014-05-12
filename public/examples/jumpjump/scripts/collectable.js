@@ -57,7 +57,12 @@ define([
       this.width = level.tileWidth;
       this.height = level.tileHeight;
 
-      this.uniforms = this.services.spriteRenderer.getUniforms();
+      this.sprites = [];
+      for (var ii = 0; ii < 3; ++ii) {
+        var sprite = this.services.spriteManager.createSprite();
+        sprite.visible = ii == 0;
+        this.sprites.push(sprite);
+      }
 
       this.chooseNewPosition();
       this.setState("fall");
@@ -93,6 +98,9 @@ define([
   Collectable.prototype.init_collected = function() {
     this.collectTime = 0;
     this.services.audioManager.playSound('coin');
+    for (var ii = 1; ii < this.sprites.length; ++ii) {
+      this.sprites[ii].visible = true;
+    }
   };
 
   Collectable.prototype.state_collected = function() {
@@ -111,22 +119,20 @@ define([
     var img = this.anim[frameNumber];
     var off = {};
     this.services.levelManager.getDrawOffset(off);
-    this.uniforms.u_texture = img;
 
-    spriteRenderer.drawPrep();
-    for (var ii = -1; ii < 2; ++ii) {
-      var a = ii * Math.PI / 4;
+    var numSprites = this.sprites.length;
+    var start = -(numSprites / 2 | 0);
+    for (var ii = 0; ii < numSprites; ++ii) {
+      var sprite = this.sprites[ii];
+      var b = ii - start;
+      var a = -Math.PI / 4 + (ii / (numSprites - 1)) * Math.PI / 2;
       var x =  Math.sin(a) * 512 * this.collectTime;
       var y = -Math.cos(a) * 512 * this.collectTime;
-      spriteRenderer.draw(
-          this.uniforms,
-          off.x + x + this.position[0],
-          off.y + y + this.position[1] - this.height / 2,
-          this.width,
-          this.height,
-          0,
-          1,
-          1);
+      sprite.uniforms.u_texture = img;
+      sprite.x = off.x + x + this.position[0];
+      sprite.y = off.y + y + this.position[1] - this.height / 2;
+      sprite.width = this.width;
+      sprite.height = this.height;
     }
   };
 
@@ -142,6 +148,9 @@ define([
   Collectable.prototype.state_fall = function() {
     var globals = this.services.globals;
     this.animTimer += globals.elapsedTime * globals.coinAnimSpeed;
+    for (var ii = 1; ii < this.sprites.length; ++ii) {
+      this.sprites[ii].visible = false;
+    }
 
     if (this.checkCollected()) {
       return;
@@ -179,18 +188,13 @@ define([
 
     var off = {};
     this.services.levelManager.getDrawOffset(off);
-    this.uniforms.u_texture = img;
 
-    spriteRenderer.drawPrep();
-    spriteRenderer.draw(
-        this.uniforms,
-        off.x + this.position[0],
-        off.y + this.position[1] - this.height / 2,
-        this.width,
-        this.height,
-        0,
-        1,
-        1);
+    var sprite = this.sprites[0];
+    sprite.uniforms.u_texture = img;
+    sprite.x = off.x + this.position[0];
+    sprite.y = off.y + this.position[1] - this.height / 2;
+    sprite.width = this.width;
+    sprite.height = this.height;
   };
 
   Collectable.prototype.draw = function(ctx) {

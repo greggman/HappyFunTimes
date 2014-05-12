@@ -81,7 +81,8 @@ window.p = this;
       ];
       this.timeAccumulator = 0;
 
-      this.uniforms = this.services.spriteRenderer.getUniforms();
+      this.sprite = this.services.spriteManager.createSprite();
+      this.nameSprite = this.services.spriteManager.createSprite();
 
       netPlayer.addEventListener('disconnect', Player.prototype.handleDisconnect.bind(this));
       netPlayer.addEventListener('move', Player.prototype.handleMoveMsg.bind(this));
@@ -153,6 +154,8 @@ window.p = this;
 //  };
 
   Player.prototype.removeFromGame = function() {
+    this.services.spriteManager.deleteSprite(this.sprite);
+    this.services.spriteManager.deleteSprite(this.nameSprite);
     this.services.entitySystem.removeEntity(this);
     this.services.drawSystem.removeEntity(this);
     this.services.playerManager.removePlayer(this);
@@ -430,7 +433,6 @@ window.p = this;
     var spriteRenderer = this.services.spriteRenderer;
     var frameNumber = Math.floor(this.animTimer % this.anim.length);
     var img = this.anim[frameNumber];
-    this.uniforms.u_texture = img;
 
     var off = {};
     this.services.levelManager.getDrawOffset(off);
@@ -438,27 +440,20 @@ window.p = this;
     var width  = 32;
     var height = 32;
 
-    spriteRenderer.drawPrep();
-    spriteRenderer.draw(
-        this.uniforms,
-        (off.x + this.position[0]) | 0,
-        (off.y + height / -2 + this.position[1]) | 0,
-        width,
-        height,
-        0,
-        this.facing > 0 ? 1 : -1,
-        1);
+    var sprite = this.sprite;
+    sprite.uniforms.u_texture = img;
+    sprite.x = (off.x + this.position[0]) | 0;
+    sprite.y = (off.y + height / -2 + this.position[1]) | 0;
+    sprite.width = width;
+    sprite.height = height;
+    sprite.xScale = this.facing > 0 ? 1 : -1;
 
-    this.uniforms.u_texture = this.nameImage;
-    spriteRenderer.draw(
-        this.uniforms,
-        (off.x + this.position[0]) | 0,
-        (off.y + height / -2 + this.position[1] - 24) | 0,
-        this.nameImage.img.width,
-        this.nameImage.img.height,
-        0,
-        1,
-        1);
+    var nameSprite = this.nameSprite;
+    nameSprite.uniforms.u_texture = this.nameImage;
+    nameSprite.x = (off.x + this.position[0]) | 0;
+    nameSprite.y = (off.y + height / -2 + this.position[1] - 24) | 0;
+    nameSprite.width = this.nameImage.img.width;
+    nameSprite.height = this.nameImage.img.height;
   };
 
   return Player;
