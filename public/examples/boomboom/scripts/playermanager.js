@@ -94,6 +94,11 @@ window.p = this.players;
     corners[1] = corners[3];
     corners[3] = t;
 
+window.o = others.slice();
+console.log("step: " + step + ", cols: " + mapSize.numColumns + " rows: " + mapSize.numRows);
+console.log("positions available: " + (others.length + 4));
+console.log("positions needed   : " + this.players.length);
+
     // To corners add numPlayers - 4 random others.
     var numNeeded = this.players.length - 4;
     for (var ii = 0; ii < numNeeded; ++ii) {

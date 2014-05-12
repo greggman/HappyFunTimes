@@ -46,7 +46,7 @@ var main = function(
     ImageProcess,
     Input,
     Misc,
-    SpriteRenderer,
+    SpriteManager,
     GameManager,
     LevelManager,
     PlayerManager,
@@ -134,7 +134,9 @@ window.g = globals;
     for (var ii = 0; ii < globals.numLocalPlayers; ++ii) {
       var netPlayer = new LocalNetPlayer();
       netPlayers.push(netPlayer);
-      players.push(g_playerManager.startPlayer(netPlayer, "Player" + (ii + 1)));
+      var player = g_playerManager.startPlayer(netPlayer, "Player" + (ii + 1));
+      player.hideName = ii >= 2;
+      players.push(player);
       abutton.push(false);
     }
 
@@ -223,11 +225,14 @@ window.g = globals;
 
   g_services.globals = globals;
 
-  var server = new GameServer({
-    gameId: "boomboom",
-  });
-  g_services.server = server;
-  server.addEventListener('playerconnect', g_playerManager.startPlayer.bind(g_playerManager));
+  var server;
+  if (globals.haveServer) {
+    var server = new GameServer({
+      gameId: "boomboom",
+    });
+    g_services.server = server;
+    server.addEventListener('playerconnect', g_playerManager.startPlayer.bind(g_playerManager));
+  }
 
   GameSupport.init(server, globals);
 window.gs = GameSupport;
@@ -235,7 +240,7 @@ window.gs = GameSupport;
   var canvas = $("playfield");
   var gl = WebGL.setupWebGL(canvas, {alpha:false}, function() {});
   var renderer = new WebGLRenderer(g_services, canvas, gl);
-  g_services.spriteRenderer = new SpriteRenderer();
+  g_services.spriteManager = new SpriteManager();
   g_services.canvas = canvas;
   g_services.renderer = renderer;
 
@@ -350,12 +355,14 @@ window.gs = GameSupport;
     var g_levelManager = new LevelManager(g_services, tileset);
     g_services.levelManager = g_levelManager;
 
+    var gameManager = new GameManager(g_services);
+
+    globals.numLocalPlayers = Math.min(globals.numLocalPlayers, gameManager.computeMaxPlayersForScale(1, 1));
+
     // Add a 2 players if there is no communication
     if (!globals.haveServer) {
       startLocalPlayers();
     }
-
-    var gameManager = new GameManager(g_services);
 
     // make the level after making the players. This calls
     // player reset.
@@ -382,6 +389,7 @@ window.gs = GameSupport;
       gl.enable(gl.BLEND);
       gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
       g_services.drawSystem.processEntities(renderer);
+      g_services.spriteManager.draw();
       renderer.end();
     };
 
@@ -428,7 +436,7 @@ requirejs(
     '../../scripts/imageprocess',
     '../../scripts/input',
     '../../scripts/misc',
-    '../../scripts/sprite',
+    '../../scripts/spritemanager',
     './gamemanager',
     './levelmanager',
     './playermanager',

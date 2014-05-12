@@ -224,8 +224,9 @@ define([
       putBomb(this.bombs.pop());
     }
     this.setPosition(x, y);
-    this.uniforms = this.services.spriteRenderer.getUniforms();
-    this.uniforms.u_hsvaAdjust = this.color.hsv.slice(),
+    this.sprite = this.services.spriteManager.createSprite();
+    this.sprite.uniforms.u_hsvaAdjust = this.color.hsv.slice();
+    this.nameSprite = this.services.spriteManager.createSprite();
     this.inRow = true; // false = in column
     this.playing = true;
     this.alive = true;
@@ -343,6 +344,8 @@ define([
     this.services.entitySystem.removeEntity(this);
     this.services.drawSystem.removeEntity(this);
     this.services.playerManager.removePlayer(this);
+    this.services.spriteManager.deleteSprite(this.sprite);
+    this.services.spriteManager.deleteSprite(this.nameSprite);
     this.abutton.destroy();
     availableColors.push(this.color);
   };
@@ -652,8 +655,8 @@ this.validatePosition();
 
   Player.prototype.state_die = function() {
     var globals = this.services.globals;
-    this.uniforms.u_hsvaAdjust[0] += globals.dieColorSpeed * globals.elapsedTime;
-    this.uniforms.u_hsvaAdjust[2] = (globals.frameCount & 2) ? 1 : 0;
+    this.sprite.uniforms.u_hsvaAdjust[0] += globals.dieColorSpeed * globals.elapsedTime;
+    this.sprite.uniforms.u_hsvaAdjust[2] = (globals.frameCount & 2) ? 1 : 0;
     this.rotation += globals.dieRotationSpeed * globals.elapsedTime;
     this.dieTimer += globals.elapsedTime;
     if (this.dieTimer >= globals.dieDuration) {
@@ -667,13 +670,13 @@ this.validatePosition();
 
   Player.prototype.state_evaporate = function() {
     var globals = this.services.globals;
-    this.uniforms.u_hsvaAdjust[0] += globals.dieColorSpeed * globals.elapsedTime;
-    this.uniforms.u_hsvaAdjust[2] = (globals.frameCount & 2) ? 1 : 0;
+    this.sprite.uniforms.u_hsvaAdjust[0] += globals.dieColorSpeed * globals.elapsedTime;
+    this.sprite.uniforms.u_hsvaAdjust[2] = (globals.frameCount & 2) ? 1 : 0;
     this.rotation += globals.dieRotationSpeed * globals.elapsedTime;
     this.scale += globals.dieScaleSpeed * globals.elapsedTime;
     this.dieTimer += globals.elapsedTime;
     var a = this.dieTimer / globals.evaporateDuration;
-    this.uniforms.u_hsvaAdjust[3] = -a;
+    this.sprite.uniforms.u_hsvaAdjust[3] = -a;
     if (this.dieTimer >= globals.evaporateDuration) {
       this.setState('dead');
     }
@@ -700,20 +703,17 @@ this.validatePosition();
     var width  = 16 * scale;
     var height = 16 * scale;
 
-    this.uniforms.u_texture = this.textures.u_texture;
+    var sprite = this.sprite;
+    sprite.uniforms.u_texture = this.textures.u_texture;
+    sprite.x = off.x + this.position[0] * globals.scale;
+    sprite.y = off.y + this.position[1] * globals.scale;
+    sprite.width = width;
+    sprite.height = height;
+    sprite.rotation = this.rotation;
+    sprite.xScale = this.hflip ? -1 : 1;
 
-    spriteRenderer.drawPrep();
-    spriteRenderer.draw(
-        this.uniforms,
-        off.x + this.position[0] * globals.scale,
-        off.y + this.position[1] * globals.scale,
-        width,
-        height,
-        this.rotation,
-        this.hflip ? -1 : 1,
-        1);
-
-    if (this.showName || this.userRequestShowName) {
+    if (!this.hideName && (this.showName || this.userRequestShowName)) {
+      var nameSprite = this.nameSprite;
       var width  = this.nameTextures.u_texture.img.width  / 4;
       var height = this.nameTextures.u_texture.img.height / 4;
       var x = off.x + this.position[0] * globals.scale;
@@ -722,16 +722,14 @@ this.validatePosition();
       width  *= globals.scale;
       height *= globals.scale;
 
-      this.uniforms.u_texture = this.nameTextures.u_texture;
-
-      spriteRenderer.draw(
-          this.uniforms,
-          x,
-          y,
-          width,
-          height,
-          0,
-          1, 1);
+      nameSprite.uniforms.u_texture = this.nameTextures.u_texture;
+      nameSprite.x = x,
+      nameSprite.y = y,
+      nameSprite.width = width,
+      nameSprite.height = height,
+      nameSprite.visible = true;
+    } else {
+      this.nameSprite.visible = false;
     }
   };
 

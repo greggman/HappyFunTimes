@@ -41,6 +41,10 @@ define([
     MobileHacks,
     Strings) {
 
+  var s_validScales = [
+    8, 7, 6, 5, 4, 3, 2, 1, //0.5,
+  ];
+
   var $ = function(id) {
     return document.getElementById(id);
   };
@@ -81,6 +85,12 @@ define([
     }
   };
 
+  GameManager.prototype.computeMaxPlayersForScale = function(scale, step) {
+    var levelManager = this.services.levelManager;
+    var canvas = this.services.canvas;
+    return levelManager.computeMaxPlayersForScale(canvas.width, canvas.height, scale, step);
+  };
+
   GameManager.prototype.reset = function() {
     MobileHacks.fixHeightHack();
     var services = this.services;
@@ -95,14 +105,14 @@ define([
     var numPlayers = playerManager.getNumPlayersConnected();
 
     if (!globals.forceScale) {
+
       // Compute a good scale for the number of players.
       globals.scale = 1;
-      for (var ii = 8; ii > 0; --ii) {
-        var mapSize = levelManager.computeMapSize(canvas.width, canvas.height, ii);
-        var numPlayersThatFitOnMapBy3 = ((mapSize.numColumns + 2) / 3 | 0) * ((mapSize.numRows + 2) / 3 | 0);
-        var numPlayersThatFitOnMapBy2 = ((mapSize.numColumns + 1) / 2 | 0) * ((mapSize.numRows + 1) / 2 | 0);
+      for (var ii = 0; ii < s_validScales.length; ++ii) {
+        var scale = s_validScales[ii];
+        var numPlayersThatFitOnMapBy2 = this.computeMaxPlayersForScale(scale, 2);
         if (numPlayersThatFitOnMapBy2 >= numPlayers) {
-          globals.scale = ii;
+          globals.scale = scale;
           break;
         }
       }
@@ -187,7 +197,13 @@ define([
 
     this.overlayLine1.nodeValue = "Start In: " + ((numPlayers < 2 || (globals.frameCount & 16)) ? timeStr : '');
     this.overlayLine2.nodeValue = "Players: " + numPlayers + ((globals.frameCount & 16) && numPlayers < 2 ? ' Need 2+' : '');
-  }
+  };
+
+  GameManager.prototype.broadcastCmd = function(cmd, data) {
+    if (this.services.server) {
+      this.services.server.broadcastCmd(cmd, data);
+    }
+  };
 
   GameManager.prototype.init_waitForPlayers = function() {
     this.showOverlay(true);
@@ -198,7 +214,7 @@ define([
     this.timer = globals.waitForPlayersDuration;
     this.waitForStartUpdate();
     if (this.services.playerManager.getNumPlayersConnected() < 2) {
-      this.services.server.broadcastCmd('waitForMorePlayers');
+      this.broadcastCmd('waitForMorePlayers');
     }
   };
 
@@ -231,7 +247,7 @@ define([
 
     var secondsLeft = this.timer | 0;
     if (oldTimer != secondsLeft) {
-      this.services.server.broadcastCmd('waitForStart', {
+      this.broadcastCmd('waitForStart', {
         waitTime: secondsLeft,
       });
     }

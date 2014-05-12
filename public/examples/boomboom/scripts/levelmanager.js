@@ -337,6 +337,11 @@ define(['../../scripts/misc', '../../scripts/tilemap'], function(Misc, TileMap) 
     return mapSize;
   };
 
+  LevelManager.prototype.computeMaxPlayersForScale = function(width, height, scale, step) {
+    var mapSize = this.computeMapSize(width, height, scale);
+    return ((mapSize.numColumns + step - 1) / step | 0) * ((mapSize.numRows + step - 1) / step | 0);
+  };
+
   LevelManager.prototype.makeLevel = function(canvasWidth, canvasHeight) {
     var globals = this.services.globals;
     var scale = globals.scale;
