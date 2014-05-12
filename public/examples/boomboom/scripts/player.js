@@ -175,6 +175,8 @@ define([
       // add the button before the player so it will get
       // processed first.
       this.abutton = new GameButton(services.entitySystem);
+      this.sprite = this.services.spriteManager.createSprite();
+      this.nameSprite = this.services.spriteManager.createSprite();
 
       services.entitySystem.addEntity(this);
       services.drawSystem.addEntity(this);
@@ -224,9 +226,7 @@ define([
       putBomb(this.bombs.pop());
     }
     this.setPosition(x, y);
-    this.sprite = this.services.spriteManager.createSprite();
     this.sprite.uniforms.u_hsvaAdjust = this.color.hsv.slice();
-    this.nameSprite = this.services.spriteManager.createSprite();
     this.inRow = true; // false = in column
     this.playing = true;
     this.alive = true;
@@ -690,6 +690,8 @@ this.validatePosition();
   };
 
   Player.prototype.draw = function(renderer) {
+    this.sprite.visible = this.display;
+    this.nameSprite.visible = this.display;
     if (!this.display) {
       return;
     }
