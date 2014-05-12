@@ -69,8 +69,6 @@ This is basically the one from the docs. It just sends pointermove events to the
 The game moves a `div` element around for each player. If the player touches the **goal** a score
 is sent to the player.
 
-*********************
-
 Simple
 ------
 
@@ -91,7 +89,7 @@ so they can get back into the game.
 ShootShoot
 ----------
 
-<img src="../public/examples/shootshoot/shootshot-screenshot.png" />
+<img src="../public/examples/shootshoot/shootshoot-screenshot.png" />
 
 A Robotron like game.
 
@@ -194,7 +192,7 @@ game is running it redirects to "/".
 -----------
 Shows a list of running games. The idea is that one server can handle relaying messages for more
 than one game. Users can connect to `http://ipaddress/` and choose a game. The list is updated
-live every few seconds.
+live every few seconds. If there is only one game running it will automatically go to that game.
 
 /games.html
 -----------
@@ -203,12 +201,11 @@ don't have to type long paths.
 
 Because of the way controllers work (see above), if you are having a party and running just
 one game at a time you go to `http://ipaddress/games.index` and tell you users to go to
-`http://ipaddress/`.  You choose a game and it will magically show up on the user's smartphone screen.
+`http://ipaddress/`.  You choose a game and it will redirect to that game's controller.
 
 When you want to play another game you press *back* in the browser and pick another game. The user's
-smartphone screens will automatically exit the current contoller and go back to the main menu
-where they can pick the new game.
-
+smartphone screens will automatically exit the current contoller and redirect to the new game's
+controller. If there are 2 games running they will be taken to the menu so they can choose a game.
 
 
 
