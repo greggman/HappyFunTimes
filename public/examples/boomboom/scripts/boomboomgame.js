@@ -323,20 +323,36 @@ window.g = globals;
       0x0508,
       0x0509,
     ];
-    images.avatar = [];
+
+    var sprites = {
+      goldCrate:  0x0005,
+      kickCrate:  0x0006,
+      bombCrate:  0x0007,
+      flameCrate: 0x0008,
+      crate:      0x0009,
+      bush:       0x0003,
+    };
+
     var cutTile = function(xy, ii) {
       var tx = (((xy >> 0) & 0xFF)     );
       var ty = (((xy >> 8) & 0xFF) + ii);
       var img = ImageProcess.cropImage(images.tiles0.img, tx * 16, ty * 16, 16, 16);
       return createTexture(img);
     };
-    for (var ii = 0; ii < 4; ++ii) {
-      var avatar = {};
-      for (var spriteName in avatarSprites) {
-        var img = cutTile(avatarSprites[spriteName], ii);
-        avatar[spriteName] = img;
+
+    var cutGroup = function(sprites, opt_offset) {
+      var group = { };
+      opt_offset = opt_offset || 0;
+      for (var spriteName in sprites) {
+        var img = cutTile(sprites[spriteName], opt_offset);
+        group[spriteName] = img;
       }
-      images.avatar.push(avatar);
+      return group;
+    };
+
+    images.avatar = [];
+    for (var ii = 0; ii < 4; ++ii) {
+      images.avatar.push(cutGroup(avatarSprites, ii));
     }
     images.bomb = {
       frames: [],
@@ -344,6 +360,7 @@ window.g = globals;
     for (var ii = 0; ii < bombSprites.length; ++ii) {
       images.bomb.frames.push(cutTile(bombSprites[ii]), 0);
     }
+    images.sprites = cutGroup(sprites);
 
     var tilesetTextures = [
       createTexture(images.tiles0.img),

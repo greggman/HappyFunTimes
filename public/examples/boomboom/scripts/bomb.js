@@ -62,6 +62,14 @@ define([
     { x:  0, y:  1, },
   ];
 
+  var tileToSprite = {};
+  tileToSprite[0x0005] = 'goldCrate';
+  tileToSprite[0x0006] = 'kickCrate';
+  tileToSprite[0x0007] = 'bombCrate';
+  tileToSprite[0x0008] = 'flameCrate';
+  tileToSprite[0x0009] = 'crate';
+  tileToSprite[0x0003] = 'bush';
+
   // L = 1
   // R = 2
   // U = 4
@@ -193,6 +201,81 @@ define([
     }
   };
 
+  var Exploder = function(services) {
+    this.services = services;
+    this.sprite = services.spriteManager.createSprite();
+    this.services.entitySystem.addEntity(this);
+    this.setState('off');
+  };
+
+  Exploder.prototype.setTile = function(tile, tx, ty) {
+    var spriteName = tileToSprite[tile];
+    if (!spriteName) {
+      putExploder(this);
+      return;
+    }
+    var globals = this.services.globals;
+    var sprite = this.sprite;
+    var off = {};
+    this.services.levelManager.getDrawOffset(off);
+    var tileWidth  = 16;
+    var tileHeight = 16;
+    sprite.x = off.x + (tileWidth  * 0.5 + tx * tileWidth ) * globals.scale;
+    sprite.y = off.y + (tileHeight * 0.5 + ty * tileHeight) * globals.scale;
+    sprite.width  = tileWidth  * globals.scale;
+    sprite.height = tileHeight * globals.scale;
+    sprite.uniforms.u_texture = this.services.images.sprites[spriteName];
+    this.setState('explode');
+  };
+
+  Exploder.prototype.setState = function(state) {
+    this.state = state;
+    var init = this["init_" + state];
+    if (init) {
+      init.call(this);
+    }
+    this.process = this["state_" + state];
+  };
+
+  Exploder.prototype.init_off = function() {
+    this.sprite.visible = false;
+  };
+
+  Exploder.prototype.state_off = function() {
+  };
+
+  Exploder.prototype.init_explode = function() {
+    var globals = this.services.globals;
+    this.timer = globals.explosionDuration;
+    this.sprite.visible = true;
+  };
+
+  Exploder.prototype.state_explode = function() {
+    var globals = this.services.globals;
+    var sprite = this.sprite;
+    sprite.uniforms.u_hsvaAdjust[0] += globals.dieColorSpeed * globals.elapsedTime;
+    sprite.uniforms.u_hsvaAdjust[2] = (globals.frameCount & 2) ? 1 : 0;
+
+    this.timer -= globals.elapsedTime;
+    if (this.timer <= 0) {
+      putExploder(this);
+      this.setState('off');
+    }
+  };
+
+  var exploders = [];
+  var getExploder = function(services) {
+    if (exploders.length) {
+      return exploders.pop();
+    } else {
+      return new Exploder(services);
+    }
+  };
+
+  var putExploder = function(exploder) {
+    exploders.push(exploder);
+  };
+
   var Bomb = function(services) {
     if (!bombFrames) {
       g_services = services;
@@ -303,13 +386,19 @@ define([
         if (crateType.tileName != 'empty') {
           layer.setTile(nx, ny, tiles[crateType.tileName].id);
           placedCrate = true;
+          var Exploder = getExploder(this.services);
+          Exploder.setTile(tile, nx, ny);
         }
       }
 
       // advance
       if (!flame.stopped || (tileInfo.info.flameEat && !placedCrate)) {
-          incDecExplosion(nx, ny, tiles, flameInfo, layer, 1);
-          ++flame.size;
+        if (tileInfo.info.flameEat) {
+          var Exploder = getExploder(this.services);
+          Exploder.setTile(tile, nx, ny);
+        }
+        incDecExplosion(nx, ny, tiles, flameInfo, layer, 1);
+        ++flame.size;
       }
 
       if (tileInfo.info.bomb) {
