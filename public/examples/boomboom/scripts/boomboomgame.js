@@ -236,6 +236,7 @@ window.g = globals;
 
   GameSupport.init(server, globals);
   var gameManager = new GameManager(g_services);
+  g_services.gameManager = gameManager;
 
   var canvas = $("playfield");
   var gl = WebGL.setupWebGL(canvas, {alpha:false});

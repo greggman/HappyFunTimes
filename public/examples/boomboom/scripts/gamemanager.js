@@ -118,6 +118,9 @@ define([
       }
     }
 
+    this.minPlayersBeforeNeedingHigherScale = this.computeMaxPlayersForScale(globals.scale + 1, 2);
+    this.maxPlayersBeforeNeedingLowerScale = this.computeMaxPlayersForScale(globals.scale, 2);
+
     levelManager.makeLevel(canvas.width, canvas.height);
     var off = {};
     levelManager.getDrawOffset(off);
@@ -205,26 +208,30 @@ define([
     }
   };
 
+  // Wait for at least 2 players
   GameManager.prototype.init_waitForPlayers = function() {
+    var globals = this.services.globals;
     this.showOverlay(true);
     this.showTime(false);
     this.overlay.style.textAlign = "";
-
-    var globals = this.services.globals;
     this.timer = globals.waitForPlayersDuration;
+
     this.waitForStartUpdate();
-    if (this.services.playerManager.getNumPlayersConnected() < 2) {
+    var numPlayersConnected = this.services.playerManager.getNumPlayersConnected();
+    if (numPlayersConnected < 2) {
       this.broadcastCmd('waitForMorePlayers');
     }
   };
 
   GameManager.prototype.state_waitForPlayers = function() {
+    var globals = this.services.globals;
     this.waitForStartUpdate();
     if (this.services.playerManager.getNumPlayersConnected() > 1) {
       this.setState('waitForStart');
     }
   };
 
+  // Wait for a few moments to let other players join
   GameManager.prototype.init_waitForStart = function() {
   };
 
@@ -240,8 +247,16 @@ define([
     }
 
     // Wait for at least 2 players.
-    if (this.services.playerManager.getNumPlayersConnected() < 2) {
+    var numPlayersConnected = this.services.playerManager.getNumPlayersConnected();
+    if (numPlayersConnected < 2) {
       this.setState('waitForPlayers');
+      return;
+    }
+
+    var needBiggerLevel = numPlayersConnected > this.maxPlayersBeforeNeedingLowerScale && globals.scale > 1;
+    var needSmallerLevel = numPlayersConnected < this.minPlayersBeforeNeedingHigherScale && globals.scale < 8;
+    if (needBiggerLevel || needSmallerLevel) {
+      this.reset();
       return;
     }
 
@@ -251,6 +266,7 @@ define([
         waitTime: secondsLeft,
       });
     }
+
   };
 
   GameManager.prototype.init_start = function() {
@@ -341,7 +357,7 @@ define([
     var globals = this.services.globals;
     this.timer -= globals.elapsedTime;
     if (this.timer <= 0) {
-      this.setState('waitForPlayers');
+      this.reset();
     }
   };
 
