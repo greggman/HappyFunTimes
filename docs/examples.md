@@ -69,20 +69,29 @@ This is basically the one from the docs. It just sends pointermove events to the
 The game moves a `div` element around for each player. If the player touches the **goal** a score
 is sent to the player.
 
+*********************
+
 Simple
 ------
+
+<img src="../public/examples/simple/simple-screenshot.png" />
 
 Basically the same as SuperSimple except uses normalized cooridinates and uses a canvas element to draw the game
 rather than HTML5 elements.
 
 PowPow
 ------
+
+<img src="../public/examples/powpow/powpow-screenshot.png" />
+
 A space wars style game. The first 6 players battle it out. If there are more than 6 players they wait
 in the *launch* queue. They collectively control a ghost ship they can use to try to kill other players
 so they can get back into the game.
 
 ShootShoot
 ----------
+
+<img src="../public/examples/shootshoot/shootshot-screenshot.png" />
 
 A Robotron like game.
 
@@ -92,16 +101,22 @@ a desktop PC as a **controller** ASWD are the move dpad and cursor keys the fire
 JumpJump
 --------
 
+<img src="../public/examples/jumpjump/jumpjump-screenshot.png" />
+
 A simple platformer. Players try to get the one coin.
 
 Bombbomb
 --------
+
+<img src="../public/examples/bombbomb/bombbomb-screenshot.png" />
 
 A bomberman like game. One thing it shows over other games is round based control. Players
 joining the game have to wait for the current round to finish before they are added.
 
 Deviceorientation
 -----------------
+
+<img src="../public/examples/deviceorientation/deviceorientation-screenshot.png" />
 
 Orient a 3d ship to shoot a ball.
 
@@ -111,6 +126,8 @@ demonstrates using device orientation as well as three.js
 JamJam
 ------
 
+<img src="../public/examples/jamjam/jamjam-screenshot.png" />
+
 A collective drum sequencer. Each player has one drum they can set the sequence for.
 All the machines are synced using a `SyncedClock`. Each player must turn on the volume
 on their phone so everyone can hear their drum.
@@ -119,6 +136,8 @@ Shows using the synced clock. Shows how to sync using the Web Audio API.
 
 UnityCharacterExample
 ---------------------
+
+<img src="../public/examples/unitycharacterexample/unitycharacterexample-screenshot.png" />
 
 For each **controller** that connects to the **game** the game spawns a 3d unity character.
 The character is controlled by a *3rd person character contoller** which is a modified
