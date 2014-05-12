@@ -235,10 +235,16 @@ window.g = globals;
   }
 
   GameSupport.init(server, globals);
-window.gs = GameSupport;
+  var gameManager = new GameManager(g_services);
 
   var canvas = $("playfield");
-  var gl = WebGL.setupWebGL(canvas, {alpha:false}, function() {});
+  var gl = WebGL.setupWebGL(canvas, {alpha:false});
+  if (!gl) {
+    gameManager.showOverlay(false);
+    gameManager.showTime(false);
+    $("overlay").style.display = "none";
+    return;
+  }
   var renderer = new WebGLRenderer(g_services, canvas, gl);
   g_services.spriteManager = new SpriteManager();
   g_services.canvas = canvas;
@@ -354,8 +360,6 @@ window.gs = GameSupport;
     };
     var g_levelManager = new LevelManager(g_services, tileset);
     g_services.levelManager = g_levelManager;
-
-    var gameManager = new GameManager(g_services);
 
     globals.numLocalPlayers = Math.min(globals.numLocalPlayers, gameManager.computeMaxPlayersForScale(1, 1));
 

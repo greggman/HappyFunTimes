@@ -77,7 +77,7 @@ tdl.webgl.GET_A_WEBGL_BROWSER = '' +
  * @type {string}
  */
 tdl.webgl.OTHER_PROBLEM = '' +
-  "It does not appear your computer supports WebGL.<br/>" +
+  "It does not appear your browser or computer supports WebGL.<br/>" +
   '<a href="http://get.webgl.org/troubleshooting/">Click here for more information.</a>';
 
 /**
@@ -125,9 +125,7 @@ tdl.webgl.setupWebGL = function(canvas, opt_attribs, opt_onError) {
       }, false);
     }
   } else {
-    if (!window.WebGLRenderingContext) {
-      opt_onError("");
-    }
+    opt_onError("");
   }
   return context;
 };
