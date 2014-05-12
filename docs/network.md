@@ -92,9 +92,14 @@ Apparently the TP-Link TL-WR702N only supports around 15 wireless devices at a t
 means the main computer running the game and 14 players.
 
 [Netgear claims their dual band routers can support 64 devices](http://kb.netgear.com/app/answers/detail/a_id/24043/~/how-many-clients-can-you-connect-wirelessly-to-a-netgear-router%3F).
+Unfortunatly netgear routers don't allow you to change the DNS server their DHCP server reports
+so avoid them. They always report themsevles and/or they always look on the WAN for resolution
+instead of the LAN. If you're lucky you can install a different firmware but otherwise avoid them.
+
 [Apple claims 50 devices with the Airport Extreme](http://www.apple.com/airport-extreme/specs/)
-though it's ambigous if that means 50 wifi devices or something else. [Buffalo claims
-between 10 and 50 depending on the device](http://faq.buffalo.jp/app/answers/detail/a_id/326).
+though it's ambigous if that means 50 wifi devices or something else.
+
+[Buffalo claims between 10 and 50 depending on the device](http://faq.buffalo.jp/app/answers/detail/a_id/326).
 
 This is all pretty frustrating. It would be nice to know the least expensive way to allow lots
 of players. If you're a network guru please contact me or submit a pull request with updates
