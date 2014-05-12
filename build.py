@@ -135,6 +135,7 @@ class Builder(object):
         try:
           game = json.loads(contents)
           game["filebasename"] = folder.lower()
+          game["screenshotPath"] = os.path.join(dirname, game["screenshotUrl"]).replace("\\", "/")
 
           if "useGameTemplate" in game and game["useGameTemplate"]:
             gameview_src_name = os.path.join(dirname, "game.html")
