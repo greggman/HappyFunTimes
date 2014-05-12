@@ -1,10 +1,14 @@
-*   fix nexus name edit issue. controls appear over name
 *   use particles for coin
-*   fix coin collisions
 *   use particles for boomboom death
 *   Fix collisions for jumpjujmp
+
+    for both coin and player collisions I'm just checking where they tried to go
+    I'm not checking the places in between so if the frame rate gets too slow
+    bad things happen.
+
+    Ideally I should separate the collision checking into some lib/utility
+
 *   refactor sprite code to have offset (current assumes center of image is center)
-*   refactor sprite code so drawPrep is only called once.
 *   Make game maker plugin
 *   Make C++ version of lib
 *   touch code already debounces pressed so remove similar code from controllers?
@@ -332,6 +336,11 @@
 
 Done
 ----
+
+*   refactor sprite code so drawPrep is only called once.
+*   fix nexus name edit issue. controls appear over name
+
+    for now I just made it hide the controls when editing your name. Hope that didn't break anything
 
 *   fix movement against tiles in boomboom
 *   fix sound in powpow on contolller
