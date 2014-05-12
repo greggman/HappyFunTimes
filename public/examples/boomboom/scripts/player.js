@@ -390,13 +390,9 @@ define([
     }
     var tileWidth = 16;
     var tileHeight = 16;
-    var tx = (this.position[0] + tileWidth  * 0.5 * this.facingInfo.dx) / tileWidth  | 0;
-    var ty = (this.position[1] + tileHeight * 0.5 * this.facingInfo.dy) / tileHeight | 0;
-    if (!this.tryPlaceBomb(tx, ty)) {
-      tx = this.position[0] / tileWidth  | 0;
-      ty = this.position[1] / tileHeight | 0;
-      this.tryPlaceBomb(tx, ty);
-    }
+    var tx = this.position[0] / tileWidth  | 0;
+    var ty = this.position[1] / tileHeight | 0;
+    this.tryPlaceBomb(tx, ty);
   };
 
   Player.prototype.tryPlaceBomb = function(tx, ty) {
