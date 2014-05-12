@@ -208,7 +208,7 @@ define([
     this.setState('off');
   };
 
-  Exploder.prototype.setTile = function(tile, tx, ty, duration) {
+  Exploder.prototype.setTile = function(tile, tx, ty, flame) {
     var spriteName = tileToSprite[tile];
     if (!spriteName) {
       putExploder(this);
@@ -225,7 +225,8 @@ define([
     sprite.width  = tileWidth  * globals.scale;
     sprite.height = tileHeight * globals.scale;
     sprite.uniforms.u_texture = this.services.images.sprites[spriteName];
-    this.timer = duration;
+    this.flameStartSize = flame.size;
+    this.flame = flame;
     this.setState('explode');
   };
 
@@ -255,8 +256,7 @@ define([
     sprite.uniforms.u_hsvaAdjust[0] += globals.dieColorSpeed * globals.elapsedTime;
     sprite.uniforms.u_hsvaAdjust[2] = (globals.frameCount & 2) ? 1 : 0;
 
-    this.timer -= globals.elapsedTime;
-    if (this.timer <= 0) {
+    if (this.flame.size < this.flameStartSize || this.flame.finished) {
       putExploder(this);
       this.setState('off');
     }
@@ -387,8 +387,7 @@ define([
           layer.setTile(nx, ny, tiles[crateType.tileName].id);
           placedCrate = true;
           var Exploder = getExploder(this.services);
-          var duration = globals.explosionDuration + (this.size - this.explosionSize) * 1 / 60;  // HACK :(
-          Exploder.setTile(tile, nx, ny, duration);
+          Exploder.setTile(tile, nx, ny, flame);
         }
       }
 
@@ -396,8 +395,7 @@ define([
       if (!flame.stopped || (tileInfo.info.flameEat && !placedCrate)) {
         if (tileInfo.info.flameEat) {
           var Exploder = getExploder(this.services);
-          var duration = globals.explosionDuration + (this.size - this.explosionSize) * 1 / 60;  // HACK :(
-          Exploder.setTile(tile, nx, ny, duration);
+          Exploder.setTile(tile, nx, ny, flame);
         }
         incDecExplosion(nx, ny, tiles, flameInfo, layer, 1);
         ++flame.size;
@@ -439,6 +437,9 @@ define([
         incDecExplosion(nx, ny, tiles, flameInfo, layer, -1);
         --flame.size;
       }
+      if (flame.size <= 0) {
+        flame.finished = true;
+      }
     }
     --this.explosionSize;
   };
@@ -469,10 +470,10 @@ define([
     this.services.audioManager.playSound('explode');
     tickingBombs.splice(tickingBombs.indexOf(this), 1);
     this.flames = [
-     { stopped: false, size: 0, info: flameDirInfo[0], },
-     { stopped: false, size: 0, info: flameDirInfo[1], },
-     { stopped: false, size: 0, info: flameDirInfo[2], },
-     { stopped: false, size: 0, info: flameDirInfo[3], },
+     { finished: false, stopped: false, size: 0, info: flameDirInfo[0], },
+     { finished: false, stopped: false, size: 0, info: flameDirInfo[1], },
+     { finished: false, stopped: false, size: 0, info: flameDirInfo[2], },
+     { finished: false, stopped: false, size: 0, info: flameDirInfo[3], },
     ];
     var levelManager = this.services.levelManager;
     initExplosionTable(levelManager);
