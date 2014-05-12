@@ -1,13 +1,9 @@
 "use strict";
 
 define([
-    './3rdparty/jsfx/audio',
-    './3rdparty/jsfx/jsfx',
     './3rdparty/jsfx/jsfxlib',
   ], function(
-     AudioJSFX,
-     JSFX,
-     JSFXLib) {
+     jsfxlib) {
 
   var webAudioAPI = window.AudioContext || window.webkitAudioContext || window.mozAudioContext;
 

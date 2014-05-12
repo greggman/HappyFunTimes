@@ -1,5 +1,6 @@
 "use strict";
 
+define(['./audio', './jsfx'], function(audio, jsfx) {
 var jsfxlib = {};
 (function () {
     // takes object with param arrays
@@ -88,3 +89,7 @@ var jsfxlib = {};
         return params;
     }
 }).apply(jsfxlib);
+
+return jsfxlib;
+});
+

@@ -1,5 +1,6 @@
 "use strict";
 
+define(function() {
 var audio = {};
 (function(samplerate){
     this.SampleRate = samplerate || 44100;
@@ -206,3 +207,6 @@ var audio = {};
         square : function(count, freq, A){ return generate(count, freq, generators.square, A) }
     };
 }).apply(audio);
+
+return audio;
+});

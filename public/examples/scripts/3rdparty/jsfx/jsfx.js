@@ -1,5 +1,6 @@
 "use strict";
 
+define(['./audio'], function(audio) {
 var jsfx = {};
 (function () {
     this.Parameters = []; // will be constructed in the end
@@ -411,3 +412,7 @@ var jsfx = {};
     this.Parameters = this.getParameters();
     
 }).apply(jsfx);
+
+return jsfx;
+});
+
