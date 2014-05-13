@@ -216,7 +216,7 @@ window.g = globals;
     var keys = { };
     keys["Z".charCodeAt(0)] = function(e) { handleAbutton(0, e.pressed); }
     keys["X".charCodeAt(0)] = function(e) { handleShow(0, e.pressed); }
-    keys[".".charCodeAt(0)] = function(e) { handleAbutton(1, e.pressed); }
+    keys["B".charCodeAt(0)] = function(e) { handleAbutton(1, e.pressed); }
     keys["C".charCodeAt(0)] = function(e) { handleTestSound(e.pressed); }
     Input.setupKeys(keys);
     Input.setupKeyboardDPadKeys(handleDPad);
