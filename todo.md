@@ -9,11 +9,17 @@
     Ideally I should separate the collision checking into some lib/utility
 
 *   refactor sprite code to have offset (current assumes center of image is center)
+
+    jumpjump could use this.
+
 *   Make game maker plugin
 *   Make C++ version of lib
 *   touch code already debounces pressed so remove similar code from controllers?
-*   figure out why no sound from powpow controller?
 *   add settimeout/setinterval to game support
+
+    Why? Because when debugging I have the games pause automatically but
+    timeouts/intervals don't pause. Basing them off the game clock would fix that.
+
 *   now that we have game URLs make main menu generated at runtime
 
 *   Game service / package installer?
@@ -94,11 +100,7 @@
 
 
 *   boomboom
-    *   fix explosion at crate/bush with nothing on other side. should be tip.
     *   implement kick (comment in kickCrate in boomboomgame globals to make powerup appear, then implement in player.js)
-    *   Music
-        * main
-        * fast?
     *   "Hurry!!!"
     *   close off edges at 30 second point?
     *   figure out what players waiting can do
@@ -337,6 +339,7 @@
 Done
 ----
 
+*   figure out why no sound from powpow controller?
 *   refactor sprite code so drawPrep is only called once.
 *   fix nexus name edit issue. controls appear over name
 
@@ -391,12 +394,16 @@ Done
     it just works. Unity can connect to ws://localhost:8080 and games can connect to http://ipaddress/foo/bar/somecontroller.html
 
 *   boomboom
+    *   fix explosion at crate/bush with nothing on other side. should be tip.
     *   fix explosion on crates
     *   show names (limit to size?). Maybe only show it larger if player clicks avatar
     *   make flames handle erasing correctly. Sometimes the wrong tip is displayed.
     *   fix turning. Trying to go down lines is too hard.
     *   fix so more than R*C players
     *   blow up bushes.
+    *   Music
+        * main
+        *   fast? with faster music? I wonder if I can do that easily in WebAudio? (yes!)
     *   controller
         *   handle 'waitForPlayers' {waitTime: seconds} msg
         *   handle 'waitForNextGame'? What can players do while waiting?
@@ -597,6 +604,11 @@ Done
 
 Rejected
 --------
+
+*   switch to vertex shader based tilemaps.
+
+    tried it to see if I could speed it up on lower end GPUs.
+    Didn't help at all on an Intel HD 4000 nor a Nexus 5.
 
 *   add some CSS animation foo for menu appearing, disappearing
 

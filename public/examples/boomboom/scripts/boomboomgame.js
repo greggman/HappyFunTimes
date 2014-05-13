@@ -95,6 +95,7 @@ window.s = g_services;
     waitForEnd: 3,
     waitForWinnerDuration: 6,
     roundDuration: 120,
+    hurryTime: 30,
     //
     tileAnimSpeed: 16,
     idleAnimSpeed: 4,
@@ -422,7 +423,7 @@ window.g = globals;
 
   var startBGM = function() {
     if (globals.playBGM) {
-      g_services.audioManager.playSound('bgm', 0, true);
+      g_services.bgm = g_services.audioManager.playSound('bgm', 0, true);
     }
   };
 

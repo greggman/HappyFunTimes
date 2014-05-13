@@ -173,6 +173,7 @@ define([
     this.timeContainer.style.top  = topOffset + "px";
     this.timeStyle.fontSize = topSize + "px";
 
+    this.setBGMSpeed(1);
     this.setAllPlayersToState('waiting');
     this.setState('waitForPlayers');
   };
@@ -181,6 +182,13 @@ define([
     this.services.playerManager.forEachPlayerPlaying(function(player) {
       player.setState(state);
     });
+  };
+
+  GameManager.prototype.setBGMSpeed = function(speed) {
+    var bgm = this.services.bgm;
+    if (bgm && bgm.playbackRate) {
+      bgm.playbackRate.value = speed;
+    }
   };
 
   GameManager.prototype.setState = function(state) {
@@ -300,7 +308,13 @@ define([
 
   GameManager.prototype.state_play = function() {
     var globals = this.services.globals;
+    var oldRoundTimer = this.roundTimer;
     this.roundTimer -= globals.elapsedTime;
+
+    if (this.roundTimer <= globals.hurryTime && oldRoundTimer > globals.hurryTime) {
+      this.setBGMSpeed(1.5);
+    }
+
     var numPlayersAlive = this.services.playerManager.getNumPlayersAlive();
     if (this.roundTimer <= 0 || numPlayersAlive < 2) {
       this.setState('end');
@@ -311,6 +325,7 @@ define([
 
   GameManager.prototype.init_end = function() {
     var globals = this.services.globals;
+    this.setBGMSpeed(1);
     this.services.playerManager.forEachPlayerPlaying(function(player) {
       ++player.roundsPlayed;
       if (player.alive) {
