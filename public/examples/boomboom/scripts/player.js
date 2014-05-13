@@ -443,6 +443,7 @@ define([
     // Lets check for powerups here too?
     var crateType = tileInfo.info.crateType;
     if (crateType) {
+      this.services.audioManager.playSound('pickup');
       levelManager.layer1.setTile(tx, ty, levelManager.tiles.empty.id);
       switch (crateType) {
       case 'gold':
