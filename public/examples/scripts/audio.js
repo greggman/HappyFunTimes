@@ -60,6 +60,7 @@ define([
       } else {
         src.noteOn(opt_when);
       }
+      return src;
     };
 
     var WebAudioJSFX = function(name, data, samples, opt_callback) {
