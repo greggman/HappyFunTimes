@@ -14,10 +14,10 @@ Installation
 
 1.  Clone the repo
 2.  In Unity, make a new Project
-3.  Pick Assets->Import Package->Standard Assets
+3.  Pick Assets->Import Package->Character Controller
 4.  Copy the contents of Unity3D/3rdParty to Assets/Plugins
-5.  Copy Unity3D/src to Assets/Plugins/HappyFunTimes (or make a sym link)
-6.  Copy Unity3D/Extra to Assets/Plugins/HappyFunTimesExtra
+5.  Copy Unity3D/Extra to Assets/Plugins/HappyFunTimesExtra
+6.  Copy Unity3D/src to Assets/Plugins/HappyFunTimes
 7.  Copy Unity3d/Examples to Assets/Scripts/HappyFunTimes
 8.  Open the scene Unity3D/Examples/Scenes/HappyFunTimesCharacterExample
 9.  Pick Edit->Project Settings->Player and check "Run in Background"

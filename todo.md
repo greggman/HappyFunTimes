@@ -1,3 +1,4 @@
+*   make games.html use game type for link. This way it can tell you to run unity games manually.
 *   use particles for coin
 *   use particles for boomboom death
 *   Fix collisions for jumpjujmp
