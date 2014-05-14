@@ -29,7 +29,7 @@ the minimum required to do your own thing with HappyFunTimes skip steps
 **RelayServer**
 
 The relayserver is completely seperate to the Unity project.
-Follow the instructions in main [README.md](../README.md) to install and run the server with node.js
+Follow the instructions in main [README.md](../README.md#running-the-examples) to install and run the server with node.js
 
 Integration with your app
 -------------------------
