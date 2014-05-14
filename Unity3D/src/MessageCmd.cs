@@ -75,44 +75,19 @@ public class MessageCmdData {
         return null;
     }
 
-    // Finds all the types derived from MessageCmdData and registers them
-    public static void RegisterTypes(Deserializer deserializer) {
-        MessageCmdDataCreator mcdc = new MessageCmdDataCreator();
-
-        // Should we go through all assemblies? For now just the one above
-        // and the UnityScript and CSharp ones?
-        AppDomain domain = System.Threading.Thread.GetDomain();
-        System.Reflection.Assembly[] assemblies = domain.GetAssemblies();
-        for (int i = 0; i < assemblies.Length; ++i) {
-            System.Reflection.Assembly assembly = assemblies[i];
-            if (assembly.FullName.Contains("-UnityScript") ||
-                assembly.FullName.Contains("-CSharp")) {
-                RegisterTypes(mcdc, assembly.GetTypes());
-            }
-        }
-
-        deserializer.RegisterCreator(mcdc);
-    }
-
-    private static void RegisterTypes(MessageCmdDataCreator mcdc, Type[] types) {
-        foreach (Type type in types) {
-            if (type.IsSubclassOf(typeof(MessageCmdData))) {
-                MessageCmdDataNameDB.RegisterTypeCommandName(type);
-                mcdc.RegisterCreator(type);
-            }
-        }
-    }
-
 }
 
+// This is just to cache the command names since iterating over fields seems like it
+// would be slow. Probably a pre-mature optimization.
 public class MessageCmdDataNameDB {
 
-    public static void RegisterTypeCommandName(System.Type type) {
-        m_typeToCommandName[type] = MessageCmdData.GetCmdName(type);
-    }
-
     public static string GetCmdName(System.Type type) {
-        return m_typeToCommandName[type];
+        string name;
+        if (!m_typeToCommandName.TryGetValue(type, out name)) {
+            name = MessageCmdData.GetCmdName(type);
+            m_typeToCommandName[type] = name;
+        }
+        return name;
     }
 
     private static Dictionary<System.Type, string> m_typeToCommandName = new Dictionary<System.Type, string>();

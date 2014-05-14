@@ -31,7 +31,6 @@
 
 using UnityEngine;
 using DeJson;
-using MiniJSON;
 using System;
 using System.Collections.Generic;
 using WebSocketSharp;
@@ -51,7 +50,6 @@ public class GameServer {
         m_players = new Dictionary<int, NetPlayer>();
         m_sendQueue = new List<String>();
         m_deserializer = new Deserializer();
-        MessageCmdData.RegisterTypes(m_deserializer);
 
         m_eventProcessor = m_gameObject.AddComponent<EventProcessor>();
     }
@@ -103,7 +101,7 @@ public class GameServer {
     public class MessageToClient {
         public string cmd;  // command 'server', 'update'
         public int id;      // id of client
-        public MessageCmd data;
+        public Dictionary<string, object> data;
     };
 
     private class RelayServerCmd {
@@ -194,12 +192,12 @@ public class GameServer {
         });
     }
 
-    private void UpdatePlayer(int id, MessageCmd cmd) {
+    private void UpdatePlayer(int id, Dictionary<string, object> cmd) {
         NetPlayer player;
         if (!m_players.TryGetValue(id, out player)) {
             return;
         }
-        player.SendEvent(cmd);
+        player.SendUnparsedEvent(cmd);
     }
 
     private void RemovePlayer(int id) {
