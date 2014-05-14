@@ -1,4 +1,4 @@
-*   make games.html use game type for link. This way it can tell you to run unity games manually.
+*   make server serve "chose another WiFi network to browse internet"
 *   use particles for coin
 *   use particles for boomboom death
 *   Fix collisions for jumpjujmp
@@ -16,12 +16,6 @@
 *   Make game maker plugin
 *   Make C++ version of lib
 *   touch code already debounces pressed so remove similar code from controllers?
-*   add settimeout/setinterval to game support
-
-    Why? Because when debugging I have the games pause automatically but
-    timeouts/intervals don't pause. Basing them off the game clock would fix that.
-
-*   now that we have game URLs make main menu generated at runtime
 
 *   Game service / package installer?
 
@@ -152,25 +146,6 @@
     inside a div. Just draw what you want. I swear I waste 1-3 hrs per controller
     futsuing with CSS :(
 
-*   remove auto registering of MessageCmdData classes
-
-    this is easier said than done. The reason they are pre-registered
-    is that controllers can start before games. So, controller sends a
-    message to the game, the game deserializes it but because the types
-    would not be registered until the NetPlayer starts it doesn't know
-    how to deserialize them yet. Auto registering means it does know.
-
-    An alternative would be if it can't find the correct type to deserialize to Dict<Object>
-    then put the message in a queue. Another idea would be to put all messages
-    in queues in the net player. Right now they are deserilized in the
-    websocket thread but they could just be queued there? Actually that doesn't
-    help as they have to be deserizlied before we can figure out which
-    player they belong to.
-
-    The problem now is the scanner check ALL scripts in Assets (I guess that's
-    because Unity includes all scripts). So, there will be conflict if 2 different
-    scripts define objects with the same CmdName
-
 *   Consider deciding the ExampleUI etc is part of HappyFunTimes
 
     Originally I thought HappyFunTimes was just the relayserver and the libraries to
@@ -217,7 +192,6 @@
 *   fix camera on unitycharacter example so
     * it works for 1 player
     * it doesn't swing around so much
-*   make server serve "chose another WiFi network to browse internet"
 *   unity: see if we can figure out a way so controllers don't get disconnected if script is updated.
 
 *   **Issue:** Anyone can go to the gameview.html for a game.
@@ -339,6 +313,34 @@
 
 Done
 ----
+
+*   remove auto registering of MessageCmdData classes
+
+    this is easier said than done. The reason they are pre-registered
+    is that controllers can start before games. So, controller sends a
+    message to the game, the game deserializes it but because the types
+    would not be registered until the NetPlayer starts it doesn't know
+    how to deserialize them yet. Auto registering means it does know.
+
+    An alternative would be if it can't find the correct type to deserialize to Dict<Object>
+    then put the message in a queue. Another idea would be to put all messages
+    in queues in the net player. Right now they are deserilized in the
+    websocket thread but they could just be queued there? Actually that doesn't
+    help as they have to be deserizlied before we can figure out which
+    player they belong to.
+
+    The problem now is the scanner check ALL scripts in Assets (I guess that's
+    because Unity includes all scripts). So, there will be conflict if 2 different
+    scripts define objects with the same CmdName
+
+*   make games.html use game type for link. This way it can tell you to run unity games manually.
+
+*   now that we have game URLs make main menu generated at runtime
+
+*   add settimeout/setinterval to game support
+
+    Why? Because when debugging I have the games pause automatically but
+    timeouts/intervals don't pause. Basing them off the game clock would fix that.
 
 *   figure out why no sound from powpow controller?
 *   refactor sprite code so drawPrep is only called once.
