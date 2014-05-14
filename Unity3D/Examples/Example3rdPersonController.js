@@ -21,7 +21,7 @@ private var _padEmu : DPadEmuJS = new DPadEmuJS();
 
 private var _guiStyle : GUIStyle = new GUIStyle();
 private var _nameRect : Rect = new Rect(0,0,0,0);
-private var _nameOffset : Vector3 = new Vector3(0, -1.5, 0);
+private var _nameOffset : Vector3 = new Vector3(0, 1.5, 0);
 
 enum CharacterState {
 	Idle = 0,
@@ -165,7 +165,7 @@ function OnGUI() {
 	var size : Vector2 = _guiStyle.CalcSize(GUIContent(_playerName));
 	var coords : Vector3 = Camera.main.WorldToScreenPoint(transform.position + _nameOffset);
 	_nameRect.x = coords.x - size.x * 0.5 - 5;
-	_nameRect.y = coords.y;
+	_nameRect.y = Screen.height - coords.y;
 	_guiStyle.normal.textColor = Color.black;
 	_guiStyle.contentOffset.x = 4;
 	_guiStyle.contentOffset.y = 2;
