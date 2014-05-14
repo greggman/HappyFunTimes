@@ -33,7 +33,24 @@
 
 var main = function(IO, Strings) {
   var gamemenu = document.getElementById("gamemenu");
-  var template = document.getElementById("item-template").text;
+
+  var itemTemplateSuffix = "-item-template";
+  var hiddenMsgSuffix = "-msg";
+  var buttonIdSuffix = "-button";
+
+  var templates = {};
+  var elements = document.querySelectorAll(".item-template");
+  for (var ii = 0; ii < elements.length; ++ii) {
+    var elem = elements[ii];
+    templates[elem.id.toLowerCase().substr(0, elem.id.length - itemTemplateSuffix.length)] = elem.text;
+  };
+
+  var hiddenMsgs = {};
+  var elements = document.querySelectorAll(".hidden-msg");
+  for (var ii = 0; ii < elements.length; ++ii) {
+    var elem = elements[ii];
+    hiddenMsgs[elem.id.toLowerCase().substr(0, elem.id.length - hiddenMsgSuffix.length)] = elem;
+  };
 
   var getGames = function() {
     IO.sendJSON(window.location.href, {cmd: 'listAvailableGames'}, function (obj, exception) {
@@ -42,14 +59,45 @@ var main = function(IO, Strings) {
       }
 
       var html = [];
-
-      var div = document.createElement("div");
       for (var ii = 0; ii < obj.length; ++ii) {
         var gameInfo = obj[ii];
+        gameInfo.count = ii;
+        var templateId = gameInfo.gameType.toLowerCase();
+        var template = templates[templateId];
+        if (!template) {
+          console.error("missing template: " + templateId);
+          continue;
+        }
         html.push(Strings.replaceParams(template, gameInfo));
       }
 
       gamemenu.innerHTML = html.join("");
+
+      var elements = document.querySelectorAll(".msg-button");
+      for (var ii = 0; ii < elements.length; ++ii) {
+        var elem = elements[ii];
+        var buttonId = elem.id;
+        var count = parseInt(buttonId.substr(0, buttonId.length - buttonIdSuffix.length));
+        var gameInfo = obj[count];
+        var msgId = gameInfo.gameType.toLowerCase() + hiddenMsgSuffix;
+        var msgElement = document.getElementById(msgId);
+        if (!msgElement) {
+          console.error("missing msg element: " + msgId);
+          continue;
+        }
+        elem.addEventListener('click', function(msgElement) {
+          return function(e) {
+            e.preventDefault(true)
+            msgElement.style.display = "block";
+          };
+        }(msgElement), false);
+        msgElement.addEventListener('click', function(msgElement) {
+          return function(e) {
+            e.preventDefault(true);
+            msgElement.style.display = "none";
+          }
+        }(msgElement), false);
+      }
 
       // If there's only one game just go to it.
       if (obj.length == 1 && obj[0].controllerUrl) {
