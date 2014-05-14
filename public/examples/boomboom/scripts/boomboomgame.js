@@ -47,6 +47,7 @@ var main = function(
     Input,
     Misc,
     SpriteManager,
+    Timeout,
     GameManager,
     LevelManager,
     PlayerManager,
@@ -143,7 +144,7 @@ window.g = globals;
 
     if (globals.ai) {
       for (var ii = 2; ii < netPlayers.length; ++ii) {
-        setInterval(function(netPlayer) {
+        Timeout.setInterval(function(netPlayer) {
           return function() {
             var r = Misc.randInt(7);
             switch (r) {
@@ -399,6 +400,7 @@ window.g = globals;
         gameManager.reset();
       }
 
+      Timeout.process(globals.elapsedTime);
       g_services.entitySystem.processEntities();
 
       renderer.begin();
@@ -461,6 +463,7 @@ requirejs(
     '../../scripts/input',
     '../../scripts/misc',
     '../../scripts/spritemanager',
+    '../../scripts/timeout',
     './gamemanager',
     './levelmanager',
     './playermanager',
