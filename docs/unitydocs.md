@@ -23,8 +23,7 @@ Installation
 9.  Pick Edit->Project Settings->Player and check "Run in Background"
 
 Note: These instructions include the sample projects. If all you want is
-the minimum required to do your own thing with HappyFunTimes skip steps
-#3, #7, and #8
+the minimum required to do your own thing with HappyFunTimes skip steps #3, #7, and #8
 
 **RelayServer**
 
