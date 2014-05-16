@@ -109,11 +109,13 @@ function postHandler(request, callback) {
   });
 }
 
-function sendJSONResponse(res, object) {
-  res.writeHead(200, {'Content-Type': 'application/json'});
+function sendJSONResponse(res, object, opt_headers) {
+  var headers = opt_headers || { };
+  headers['Content-Type'] = 'application/json';
+  res.writeHead(200, headers);
   res.write(JSON.stringify(object), 'utf8');
   res.end();
-}
+};
 
 function saveScreenshotFromDataURL(dataURL) {
   var EXPECTED_HEADER = "data:image/png;base64,";
@@ -151,6 +153,15 @@ var handleListAvailableGamesRequest = function(query, res) {
   sendJSONResponse(res, gameDB.getGames());
 };
 
+var handleHappyFunTimesPingRequest = function(query, res) {
+  sendJSONResponse(res, {
+    version: "0.0.0",
+    id: "HappyFunTimes",
+  }, {
+    'Access-Control-Allow-Origin': '*',
+  });
+};
+
 var handleRequests = (function() {
 
   var postCmdHandlers = {
@@ -158,6 +169,7 @@ var handleRequests = (function() {
     screenshot: handleScreenshotRequest,
     listRunningGames: handleListRunningGamesRequest,
     listAvailableGames: handleListAvailableGamesRequest,
+    happyFunTimesPing: handleHappyFunTimesPingRequest,
   };
 
   return function(req, res) {
@@ -174,6 +186,14 @@ var handleRequests = (function() {
         }
         handler(query, res);
       });
+    } else if (req.method == "OPTIONS") {
+      res.removeHeader('Content-Type');
+      res.writeHead(200, {
+        'Access-Control-Allow-Origin': '*',
+        'Access-Control-Allow-Methods': 'GET,POST,OPTIONS',
+        'Access-Control-Allow-Headers': 'X-Requested-With, X-HTTP-Method-Override, Content-Type, Accept',
+      });
+      res.end();
     } else {
       sendRequestedFile(req, res);
     }
