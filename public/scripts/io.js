@@ -30,12 +30,22 @@
  */
 
 define({
-  sendJSON: function(url, jsonObject, callback) {
+  /**
+   * sends a JSON 'POST' request, returns JSON repsonse
+   * @param {string} url url to POST to.
+   * @param {!object} jsonObject JavaScript object on which to call JSON.stringify.
+   * @param {!function(object, error)} callback Function to call on success or failure. If successful error will be null
+   * @param {!object} opt_options Optional options.
+   *     {number} timeout: timeout in ms to abort request. Default = no-timeout
+   */
+  sendJSON: function(url, jsonObject, callback, opt_options) {
+    opt_options = opt_options || { };
     var error = 'sendJSON failed to load url "' + url + '"';
     var request = new XMLHttpRequest();
     if (request.overrideMimeType) {
       request.overrideMimeType('text/plain');
     }
+    request.timeout = opt_options.timeout || 0;
     request.open('POST', url, true);
     var js = JSON.stringify(jsonObject);
     var finish = function() {
@@ -61,7 +71,7 @@ define({
       request.setRequestHeader("Content-type", "application/json");
       request.send(js);
     } catch (e) {
-      callback(null, 'could not load: ' + url);
+      setTimeout(function() { callback(null, 'could not load: ' + url) }, 0);
     }
   },
 });
