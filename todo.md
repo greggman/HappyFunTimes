@@ -1,3 +1,6 @@
+*   add "if you like this code, here's the repo?" like Mozilla
+*   change games.html title to be ip address or instructions
+*   remove mobile stuff from games.html
 *   make server serve "chose another WiFi network to browse internet"
 *   use particles for coin
 *   use particles for boomboom death
@@ -90,6 +93,29 @@
     controller would see the game is not running and go to the main menu
     or to whichever other game is running.
 
+    * other ideas
+
+        * what about making it into a virtual console
+
+        * using packages (think npm/package.json) could make it easy to find and install games
+
+            * step 1, make it so you can type `htf install somegame`
+
+            * step 2, provide a web interface to do the same
+
+            * step 3, add a store
+
+        * How about making hardware. For example an android stick with HFT pre-installed
+
+          I could boot directly into HFT. I could either be the WiFi or it could connect
+          to your home WiFi. Unfortunately with your home WiFi there's no way I can
+          think of for the phones to find the HFT machine through the browser?
+
+          One idea, use the WebRTC api (not available in iOS yet :()) to get your local ip.
+          From that you use XHR to try to contact all class C ip addresses searching for the
+          HTF server
+
+          You could serve the page that does that from htf.com or something like that.
 
 
 
@@ -214,13 +240,15 @@
     as in http://ipaddress/example/jumpjump/gameview.html?settings={password:"foobar"}. Since
     the griefer doesn't know the password they can't start games.
 
+    Could also make games only served on localhost or similarly ip restricted.
+
     Of course sadly griefers can easily break games. Maybe I should fix this? They can break games
     by sending bogus messages. Example. `sendCmd('move', {dir: "foo"})` will end up in the code as
 
         position += msg.foo;  // exception? ... or actually position becomes NaN :(
 
     I could put a try/catch when I call events. Unfortunately you'd like to be able to catch
-    the exceptions in the debugger when debugger. Maybe again this should be an option in
+    the exceptions in the debugger when debugging. Maybe again this should be an option in
     starting a game as in `...?settings={trycatchevents:true}`
 
     That wouldn't prevent griefing. See NaN above.
@@ -305,6 +333,12 @@
         Not sure this is a fun idea.
 
     *   Use device motion to play tennis like Wii (shake controller to return ball)
+
+    *   Use the Speech Synthesis API
+
+        Players plug in headphones and put them in just one ear. The game sends commands/advice/direction
+        to the controller which instructs each player secretly using the speech API. This way they
+        can look at the game (the TV) and still get individual and private instruction on what to do.
 
 *   abstract out Unity3D parts of C#
 
