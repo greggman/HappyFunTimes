@@ -9,9 +9,39 @@ One solution. Use a QR code. Unfortunately iOS doesn't have a built in reader.
 Another solution. Use a URL shortener. Not sure if `http://goo.gl/D3BfG4` is better or
 worse than `http://169.234.174.30:8080`
 
-The best solution is probably to setup a network router that redirects all traffic
+I've come up with 2 solutions so far.
+
+Solution #1: Use happyfuntimes.net
+==================================
+
+The easiest is check the ip address of the machine you're going to run the games
+and server on. To do this, just [run the server](../README.md#running-the-examples),
+it should tell you the ip-address when it starts up. If that address starts with
+either `192.168.0` or `192.168.1` or `10.0.0` then this should work for you
+
+1.  [run the server](../README.md#running-the-examples),
+2.  Tell your friends to connect to your Wifi
+3.  Tell your friends to go to [http://happyfuntimes.net](http://happyfuntimes.net)
+
+That should auto connect them to the your game. It does this by scanning
+the machines those subnets listed above and setting if it can find the server.
+If it does it goes there.
+
+Note: The game/server and your friends must be on the same WiFi. If the machine
+running your game is on your private WiFi and your friends are on the guest WiFi
+it won't work.
+
+Solution #2: Configure a router just for HappyFunTimes
+======================================================
+
+The next easist solution is to setup a network router that redirects all traffic
 to the relaysever. That way users can connect to your router and going to any webpage
-will take them to the game. **This turns out it's not that hard**
+will take them to the game. Even better, in iOS, we can use its captive portal
+detector to go directly to the game the moment someone connects to the Wifi.
+They don't have to type anything. Android users will have to go to any domain.
+Tell them "hft.com"
+
+**Is turns out it's not that hard**
 
 We're going to tell the router to give the relayserver a specfiic IP address.
 The relayserver has an option to handle DNS so we're going to setup a router
@@ -23,7 +53,8 @@ Setup
 -----
 
 First, get a router. You probably have an old one or if you want to be portable I
-recommend the [TP-Link TL-WR702N](http://google.com/#q=TP-Link+TL-WR702N).
+recommend the [TP-Link TL-WR702N](http://google.com/#q=TP-Link+TL-WR702N) though
+it will only handle 13-14 players.
 
 Go to your router's admin page and find the DHCP settings. Somewhere there
 should be a place that lets you assign a specfiic IP address to a specific MAC

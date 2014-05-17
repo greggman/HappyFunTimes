@@ -105,6 +105,9 @@
 
             * step 3, add a store
 
+            Could have games.html show recently played, recently installed, link for store,
+            promoted games, ... (promoted games only works if using real net.)
+
         * How about making hardware. For example an android stick with HFT pre-installed
 
           I could boot directly into HFT. I could either be the WiFi or it could connect
