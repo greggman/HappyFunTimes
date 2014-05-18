@@ -4,6 +4,9 @@
     *   enter-name.html should try to contact hft.net with like hft.net/savename.html which saves a cookie
     *   hft.net should read cookie so next time it can go to enter-name.htmk?name=
     *   enter-name.html, if no name should ask for name. If name should go to index.html
+*   Need to figure out auto-docs
+*   Need to figure out how to test. Maybe Jest would help?
+*   If UI is not part of examples but a part of HFT then need to figure out which .js file should be shared (ie, moved to public/shared/scripts) or something.
 *   Make max name 16 chars
 *   Fix name editing on controllers. (jumping down 1/2 screen)
 *   add "if you like this code, here's the repo?" like Mozilla

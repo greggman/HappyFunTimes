@@ -95,6 +95,9 @@ define(['./cookies'], function(Cookie) {
       e.preventDefault();
       element.blur();
       var newName = element.value.replace(/[<>]/g, '');
+      if (newName.length > 16) {
+        newName = newName.substring(0, 16);
+      }
       if (newName.length == 0) {
         element.value = name;
       } else if (newName != name) {
