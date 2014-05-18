@@ -59,33 +59,60 @@ define(function() {
     }
   };
 
-  var applyUrlSettings = function(obj, opt_argumentName) {
-    var argumentName = opt_argumentName || 'settings';
+
+  // Reads the query values from a URL like string.
+  // @param {string} url URL like string eg. http://foo?key=value
+  // @param {object} opt_obj Object to attach key values to
+  // @return {object} Object with key values from URL
+  var parseUrlQueryString = function(str, opt_obj) {
+    var dst = opt_obj || {};
     try {
-      var s = window.location.href;
-      var q = s.indexOf("?");
-      var e = s.indexOf("#");
+      var q = str.indexOf("?");
+      var e = str.indexOf("#");
       if (e < 0) {
-        e = s.length;
+        e = str.length;
       }
-      var query = s.substring(q + 1, e);
+      var query = str.substring(q + 1, e);
       var pairs = query.split("&");
       for (var ii = 0; ii < pairs.length; ++ii) {
         var keyValue = pairs[ii].split("=");
         var key = keyValue[0];
         var value = decodeURIComponent(keyValue[1]);
-        switch (key) {
-        case argumentName:
-          var settings = eval("(" + value + ")");
-          copyProperties(settings, obj);
-          break;
-        }
+        dst[key] = value;
       }
     } catch (e) {
       console.error(e);
-      console.error("settings:", settings);
-      return;
     }
+    return dst;
+  };
+
+  // Reads the query values from the current URL.
+  // @param {object} opt_obj Object to attach key values to
+  // @return {object} Object with key values from URL
+  var parseUrlQuery = function(opt_obj) {
+    return parseUrlQueryString(window.location.href);
+  };
+
+  // Read `settings` from URL. Assume settings it a
+  // JSON like URL as in http://foo?settings={key:value},
+  // Note that unlike real JSON we don't require quoting
+  // keys if they are alpha_numeric.
+  //
+  // @param {object} opt_obj object to apply settings to.
+  // @param {string} opt_argumentName name of key for settings, default = 'settings'.
+  // @return {object} object with settings
+  var fixKeysRE = new RegExp("([a-zA-Z0-9_]+)\:", "g");
+
+  var applyUrlSettings = function(opt_obj, opt_argumentName) {
+    var argumentName = opt_argumentName || 'settings';
+    var src = parseUrlQuery();
+    var dst = opt_obj || {};
+    if (src.settings) {
+      var json = src.settings.replace(fixKeysRE, '"$1":');
+      var settings = JSON.parse(json);
+      copyProperties(settings, dst);
+    }
+    return dst;
   };
 
   var randInt = function(value) {
@@ -228,6 +255,8 @@ define(function() {
     getAbsolutePosition: getAbsolutePosition,
     invertPlusMinusRange: invertPlusMinusRange,
     minToZero: minToZero,
+    parseUrlQuery: parseUrlQuery,
+    parseUrlQueryString: parseUrlQueryString,
     radToDeg: radToDeg,
     randInt: randInt,
     randCSSColor: randCSSColor,
