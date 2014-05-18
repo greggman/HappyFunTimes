@@ -102,7 +102,7 @@ define(['./cookies'], function(Cookie) {
         element.value = name;
       } else if (newName != name) {
         name = newName;
-        nameCookie.set(name, 90);
+        nameCookie.set(name, 700);
         sendName();
       }
       sendBusy(false);
