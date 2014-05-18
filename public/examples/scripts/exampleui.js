@@ -30,8 +30,16 @@
  */
 "use strict";
 
-define(
-  ['../../scripts/io', './misc', './playername'], function(IO, Misc, PlayerNameHandler) {
+define([
+    '../../scripts/io',
+    './hft-splash',
+    './misc',
+    './playername',
+  ], function(
+    IO,
+    HFTSplash,
+    Misc,
+    PlayerNameHandler) {
 
   var $ = function(id) {
     return document.getElementById(id);

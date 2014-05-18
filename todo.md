@@ -1,3 +1,11 @@
+*   fix name flow
+    *   capture and hft.net should go to enter-name.html
+    *   enter-name.html should accept ?name=
+    *   enter-name.html should try to contact hft.net with like hft.net/savename.html which saves a cookie
+    *   hft.net should read cookie so next time it can go to enter-name.htmk?name=
+    *   enter-name.html, if no name should ask for name. If name should go to index.html
+*   Make max name 16 chars
+*   Fix name editing on controllers. (jumping down 1/2 screen)
 *   add "if you like this code, here's the repo?" like Mozilla
 *   change games.html title to be ip address or instructions
 *   remove mobile stuff from games.html
@@ -285,8 +293,40 @@
 *   make sample games
 
     *   boomboom
-    *   platformer
-    *   8way shooter
+    *   platformer (jumpjump)
+    *   8way shooter (shootshoot)
+
+    *   Fist bump game
+
+        using accelermeters and synced clock maybe we can tell when
+        two people fist bump? Heck, maybe if 3 or more people have
+        the same time stamp we can assume all of them bumped?
+
+        Players have to fist bump everyone?
+
+    *   Games with physical movements
+
+        Players must turn around (use compass / device orientation).
+        Of course players can just turn their phones. Maybe they have
+        to hold them level (put dot on the screen with a circle, keep
+        circle in the dot as they are instructed to turn left, turn right,
+        jump, etc...
+
+    *   Just press button most times?
+
+        various track and field / hyper bishi bashi games
+
+    *   Find your name on other person's phone. Fist bump.
+
+    *   Find your picture on other person's phone.
+
+    *   Racing up or down screen using device orientation for steering
+
+    *   Use device orientation like a paddle controller. Tilting left
+        right moves basket across screen. Pressing button puts your
+        basket high for a moment. Try to catch more falling things than other
+        players?
+
     *   drawing game.
 
         Player's draw on their phone, add drawing to level? Maybe Crayon Physics like?

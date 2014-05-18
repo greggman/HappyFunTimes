@@ -33,11 +33,13 @@
 define([
     './3rdparty/stats/stats.min',
     './gameclock',
+    './hft-splash',
     './logger',
     './misc',
   ], function(
     StatsJS,
     GameClock,
+    HFTSplash,
     Logger,
     Misc) {
 
