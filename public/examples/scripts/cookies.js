@@ -38,19 +38,21 @@ define(function() {
   //     var value = fooCookie.get();
   //     fooCookie.set(newValue);
   //     fooCookie.erase();
-  var Cookie = function(name) {
-    this.set = function(value, days) {
+  var Cookie = function(name, opt_path) {
+    var path = opt_path || "/";
+    this.set = function(value, opt_days) {
       var expires = "";
-      if (days) {
+      if (opt_days !== undefined) {
         var date = new Date();
-        date.setTime(Date.now() + (days * 24 * 60 * 60 * 1000));
+        date.setTime(Date.now() + (opt_days * 24 * 60 * 60 * 1000));
         expires = "; expires=" + date.toGMTString();
       }
-      document.cookie = name + "=" + value + expires + "; path=/";
+      var cookie = encodeURIComponent(name) + "=" + encodeURIComponent(value) + expires + "; path=" + path;
+      document.cookie = cookie;
     };
 
     this.get = function() {
-      var nameEQ = name + "=";
+      var nameEQ = encodeURIComponent(name) + "=";
       var ca = document.cookie.split(';');
       for(var i = 0; i < ca.length; ++i) {
         var c = ca[i];
@@ -58,13 +60,13 @@ define(function() {
           c = c.substring(1,c.length);
         }
         if (c.indexOf(nameEQ) == 0) {
-          return c.substring(nameEQ.length, c.length);
+          return decodeURIComponent(c.substring(nameEQ.length, c.length));
         }
       }
     };
 
     this.erase = function() {
-      createCookie(name, "", -1);
+      document.cookie = this.set(" ", -1);
     };
   };
 
