@@ -281,6 +281,7 @@ var sendCaptivePortalHTML = function(res, sessionId, opt_path) {
   sendFileResponse(res, fullPath, function(str) {
     var params = {
       sessionId: sessionId,
+      localhost: g.address + ":" + g.port,
     };
     str = replaceParams(str, params);
     return str;
@@ -299,7 +300,7 @@ AppleCaptivePortalHandler.prototype.check = function(req, res) {
   var sessionId = filePath;
   var isCheckingForApple = req.headers["user-agent"] && strings.startsWith(req.headers["user-agent"], "CaptiveNetworkSupport");
   var isLoginURL = (filePath == "/game-login.html");
-  var isIndexURL = (filePath == "/index.html" || filePath == "/");
+  var isIndexURL = (filePath == "/index.html" || filePath == "/" || filePath == "/enter-name.html");
 
   if (isIndexURL) {
     sessionId = parsedUrl.query.sessionId;

@@ -4,6 +4,20 @@
     *   enter-name.html should try to contact hft.net with like hft.net/savename.html which saves a cookie
     *   hft.net should read cookie so next time it can go to enter-name.htmk?name=
     *   enter-name.html, if no name should ask for name. If name should go to index.html
+*   Consider providing a game side library for name images/textures
+
+    The issue is a name can currently be 16 characters. That's pretty long, especially in Japanese.
+    The library would make an image of the name, optionally with background color? And format it
+    either breaking at space or scaling if too long or something.
+
+*   Make buttons on Jumpjump, PowPow full height.
+    * add option to show buttons?\
+*   Make random color pickers based on color perseption.
+
+    Currently random color are based on HSL. They often look too similar.
+
+*   Change Powpow so outline version of ship is 2x or 3x thicker
+*   Change powpow to use more ship colors
 *   Need to figure out auto-docs
 *   Need to figure out how to test. Maybe Jest would help?
 *   If UI is not part of examples but a part of HFT then need to figure out which .js file should be shared (ie, moved to public/shared/scripts) or something.
