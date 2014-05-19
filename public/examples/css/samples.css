@@ -129,6 +129,7 @@ html, body {
   position: absolute;
   right: 0.5em;
   top: 0.5em;
+  z-index: 4999;
 }
 .hft-instruction {
   font-size: xx-large;
