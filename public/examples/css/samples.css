@@ -84,90 +84,41 @@ html, body {
   width: 100%;
   height: 100%;
 }
-/* the content container (does not include overlays for status/popup dialogs */
-#hft-container {
-  width: 100%;
-  height: 100%;
-
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: flex;
-
-  -webkit-box-orient: vertical;
-  -webkit-flex-flow: column;
-  flex-flow: column;
-
-  -webkit-box-pack: justify;
-  -webkit-justify-content: center;
-  -webkit-align-content: center;
-  -webkit-align-items: center;
-
-  justify-content: center;
-  align-content: center;
-  align-items: center;
-
-  min-height: auto;
-}
-
-/* the top area */
-#hft-header {
-  background: -webkit-linear-gradient(top, #f2f6f8 0%,#d8e1e7 88%,#b5c6d0 91%,#e0eff9 100%);
-  background: linear-gradient(to bottom, #f2f6f8 0%,#d8e1e7 88%,#b5c6d0 91%,#e0eff9 100%);
-  width: 100%;
-
-  -webkit-box-flex: 0;
-  -webkit-flex: 0 1 auto;
-  flex: 0 1 auto;
-
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: flex;
-
-  -webkit-box-pack: justify;
-  -webkit-justify-content: center;
-  -webkit-align-content: center;
-  -webkit-align-items: center;
-
-  justify-content: center;
-  align-content: center;
-  align-items: center;
-}
-/* the bottom area */
 #hft-content {
+  position: relative;
   width: 100%;
   height: 100%;
-
-  -webkit-box-flex: 1;
-  -webkit-flex: 1 1 auto;
-  flex: 1 1 auto;
-
-  position: relative;
 }
 /* left header area */
+#hft-nameentry {
+  position: absolute;
+  display: none;
+  left: 0px;
+  top: 0xp;
+  z-index: 5000;
+  width: 100%;
+  background: -webkit-linear-gradient(top, #f2f6f8 0%,#d8e1e7 88%,#b5c6d0 91%,#e0eff9 100%);
+  background: linear-gradient(to bottom, #f2f6f8 0%,#d8e1e7 88%,#b5c6d0 91%,#e0eff9 100%);
+}
 #hft-nameform {
-  -webkit-box-flex: 1;
-  -webkit-flex: 1 1 auto;
-  flex: 1 1 auto;
-
   margin: 0.5em;
+}
+#hft-nameform label {
+  font-size: x-large;
+  font-weight: bold;
 }
 #hft-name
 {
   width: 100%;
-  background-color: rgba(0,0,0,0);
   font-size: x-large;
   font-weight: bold;
   color: #444;
   border: none;
 }
-/* right header area */
 #hft-menu {
-  -webkit-box: 0;
-  -webkit-flex: 0 1 auto;
-  flex: 0 1 auto;
-
-  margin-left: 0.5em;
-  margin-right: 0.5em;
+  position: absolute;
+  right: 0.5em;
+  top: 0.5em;
 }
 .hft-instruction {
   font-size: xx-large;
@@ -178,6 +129,10 @@ html, body {
 @media only screen and (min-device-width : 320px) and (max-device-width: 568px) and (orientation: landscape) {
     #hft-name {
         font-size: large;
+    }
+    #hft-nameform label {
+        font-size: large;
+        font-weight: bold;
     }
     .hft-instruction {
         font-size: x-large;

@@ -45,7 +45,7 @@ define(['./cookies'], function(Cookie) {
 
     // UGH! I guess this name stuff should move to ExampleUI. At one point
     // it seemed separte
-
+    var nameentry = $("hft-nameentry");
     var content = $("hft-content");
     var contentOriginalDisplay = content.style.display;
 
@@ -71,17 +71,14 @@ define(['./cookies'], function(Cookie) {
     }.bind(this);
 
     var startEnteringName = function() {
+console.log("h3");
       // Allow the game to help the player by, for example, removing her character
       // while she's entering her name. Unfortunately that could be used to cheat
       // as in just before she's about to be hit she clicks the name. It's up the individual
       // game to decide if it want's to pay attention to the 'busy' event.
       sendBusy(true);
-
-      // Chrome on Android seems to really mess up here. Or rather my CSS-fu sucks
-      // so where as on iOS when you edit your name it just works, on Chrome
-      // the controls fly up over the input=text area. This was the hacky
-      // solution. Just hide the controls while entering the name. (see below)
-      content.style.display = "none";
+console.log("h4");
+console.log("show-name");
     }.bind(this);
 
     var finishEnteringName = function(e) {
@@ -89,7 +86,9 @@ define(['./cookies'], function(Cookie) {
       // the name the page would be scrolled down a certain number of pixels
       // like a 2/3rd of the page worth. No idea why. So again I needed
       // to do some hacky fix like scroll back to the top.
+console.log("hide-name");
       content.style.display = contentOriginalDisplay;
+      nameentry.style.display = "none";
       window.scroll(0,1);
       window.scroll(0,0);
       e.preventDefault();
@@ -109,6 +108,12 @@ define(['./cookies'], function(Cookie) {
     }.bind(this);
 
     this.startNameEntry = function() {
+      // Chrome on Android seems to really mess up here. Or rather my CSS-fu sucks
+      // so where as on iOS when you edit your name it just works, on Chrome
+      // the controls fly up over the input=text area. This was the hacky
+      // solution. Just hide the controls while entering the name. (see below)
+      nameentry.style.display = "block";
+      content.style.display = "none";
       element.focus();
     }.bind(this);
 

@@ -1,9 +1,3 @@
-*   fix name flow
-    *   capture and hft.net should go to enter-name.html
-    *   enter-name.html should accept ?name=
-    *   enter-name.html should try to contact hft.net with like hft.net/savename.html which saves a cookie
-    *   hft.net should read cookie so next time it can go to enter-name.htmk?name=
-    *   enter-name.html, if no name should ask for name. If name should go to index.html
 *   Consider providing a game side library for name images/textures
 
     The issue is a name can currently be 16 characters. That's pretty long, especially in Japanese.
@@ -11,7 +5,7 @@
     either breaking at space or scaling if too long or something.
 
 *   Make buttons on Jumpjump, PowPow full height.
-    * add option to show buttons?\
+    * add option to show buttons?
 *   Make random color pickers based on color perseption.
 
     Currently random color are based on HSL. They often look too similar.
@@ -407,6 +401,13 @@
 
 Done
 ----
+
+*   fix name flow
+    *   captive portal and hft.net should go to enter-name.html
+    *   enter-name.html should accept ?name=
+    *   enter-name.html should try to contact hft.net with like hft.net/savename.html?name= which saves a cookie
+    *   hft.net should read cookie so next time it can go to enter-name.htmk?name=
+    *   enter-name.html, if no name should ask for name. If name should go to index.html
 
 *   remove auto registering of MessageCmdData classes
 

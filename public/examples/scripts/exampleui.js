@@ -57,7 +57,9 @@ define([
     }, false);
     $("hft-setname").addEventListener('click', function() {
       settings.style.display = "none";
+  console.log("--h1");
       playerNameHandler.startNameEntry();
+  console.log("--h2");
     }, false);
     $("hft-restart").addEventListener('click', function() {
       window.location.reload();
