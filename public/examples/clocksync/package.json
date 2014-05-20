@@ -9,5 +9,5 @@
   "screenshotUrl": "clocksync-screenshot.png",
   "gameType": "html",
   "useControllerTemplate": true,
-  "useGameTemplate": false
+  "useGameTemplate": true
 }

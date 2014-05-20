@@ -321,7 +321,7 @@
 *   make gameviews template based so we can make disconnect behavior common
 
     - [x] boomboom
-    - [ ] clocksync
+    - [x] clocksync
     - [ ] deviceorientation
     - [x] jamjam
     - [x] jumpjump
