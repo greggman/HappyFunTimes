@@ -1,3 +1,14 @@
+*   make it easier to use
+
+    I've been thinking like an experienced engineer. Just passing the messages is enough,
+    people will see how to connect them up. But, I can make this much easier for the simple cases.
+
+    On the controller side, some library that takes and/or setup the client and then lets you just
+    define buttons, dpads, orientations, and it deals with the messages
+
+    On the game side some library that give a similar definition gives you similar messages
+    and/or tracks state you can just read
+
 *   Consider providing a game side library for name images/textures
 
     The issue is a name can currently be 16 characters. That's pretty long, especially in Japanese.
