@@ -275,25 +275,55 @@ var replaceParams = (function() {
   };
 }());
 
-var sendCaptivePortalHTML = function(res, sessionId, opt_path) {
-  opt_path = opt_path || "captive-portal.html";
-  var fullPath = path.normalize(path.join(g.cwd, g.baseDir, opt_path));
-  sendFileResponse(res, fullPath, function(str) {
-    var params = {
-      sessionId: sessionId,
-      localhost: g.address + ":" + g.port,
-    };
-    str = replaceParams(str, params);
-    return str;
-  });
-};
-
+/**
+ * Object to try to encapulate dealing with Apple's captive
+ * portal detector.
+ *
+ * Note: I'm sure there's a better way to do this but ... my
+ * guess is most captive portal handling is done at a lower
+ * level where the system tracking who can access the network
+ * and who can't does so by tracking MAC addresses. A router can
+ * do that but at the TCP/IP level of an app like this the MAC
+ * address of a particular connection is not available AFAIK.
+ *
+ * So, we do random things like session ids. For the purpose of
+ * HappyFunTimes our only goal is to connect the player to the
+ * games through Apple's captive portal detector.
+ *
+ * By snooping the network it appears Apple's portal detector
+ * will always set the `user-agent` and use some semi-random
+ * looking UUID as the path. If we see that user agent then we
+ * make up a sessionid from the path. The flow is something like
+ * this
+ *
+ *   1. Recognize Apple's Captive Portal Detector (user-agent)
+ *   2. Use UUID like path as sessionId
+ *   3. Send /captive-portal.html with sessionid embeded in url
+ *      to game-login.html and JS redirect to that url.
+ *   4. when we serve game-login.html we recognize the session
+ *      id and mark that session id as "loggedIn"
+ *   5. Apple's captive portal detector will try again with the
+ *      same session id, this time we'll return the response it
+ *      expects. Apple's captive protal detector will think
+ *      the system can access the net. It will change it's UI
+ *      from "Cancel" to "Done" and any links displayed when
+ *      clicked will launch Safari (or the user's default
+ *      browser on OSX).
+ */
 var AppleCaptivePortalHandler = function() {
   // This is a total guess. I'm assuming iOS sends a unique URL. I can use that to hopefully
   // return my redirection page the first time and apple's success page the second time
   this.sessions = {};
 };
 
+/**
+ * Check if this request has something to do with captive portal
+ * handling and if so handle it.
+ *
+ * @param {!Request} req node request object
+ * @param {!Response} res node response object
+ * @return {boolean} true if handled, false if not.
+ */
 AppleCaptivePortalHandler.prototype.check = function(req, res) {
   var parsedUrl = url.parse(req.url, true);
   var filePath = querystring.unescape(parsedUrl.pathname);
@@ -319,7 +349,7 @@ AppleCaptivePortalHandler.prototype.check = function(req, res) {
 
     if (isLoginURL) {
       session.loggedIn = true;
-      sendCaptivePortalHTML(res, sessionId, "game-login.html");
+      this.sendCaptivePortalHTML(res, sessionId, "game-login.html");
       return true;
     }
 
@@ -331,7 +361,7 @@ AppleCaptivePortalHandler.prototype.check = function(req, res) {
         return true;
       }
     }
-    sendCaptivePortalHTML(res, sessionId);
+    this.sendCaptivePortalHTML(res, sessionId);
     return true;
   }
 
@@ -341,9 +371,31 @@ AppleCaptivePortalHandler.prototype.check = function(req, res) {
 
   // We are checking for apple for the first time so remember the path
   this.sessions[sessionId] = {};
-  sendCaptivePortalHTML(res, sessionId);
+  this.sendCaptivePortalHTML(res, sessionId);
   return true;
 };
+
+/**
+ * Sends captive-portal.html (or optionally a different html
+ * file) but does substitutions
+ *
+ * @param {Response} res node's response object.
+ * @param {string} sessionId some sessionid
+ * @param {string} opt_path base path relative path of html file
+ */
+AppleCaptivePortalHandler.prototype.sendCaptivePortalHTML = function(res, sessionId, opt_path) {
+  opt_path = opt_path || "captive-portal.html";
+  var fullPath = path.normalize(path.join(g.cwd, g.baseDir, opt_path));
+  sendFileResponse(res, fullPath, function(str) {
+    var params = {
+      sessionId: sessionId,
+      localhost: g.address + ":" + g.port,
+    };
+    str = replaceParams(str, params);
+    return str;
+  });
+};
+
 
 var appleCaptivePortalHandler = new AppleCaptivePortalHandler();
 
