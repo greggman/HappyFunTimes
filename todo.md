@@ -1,3 +1,19 @@
+*   add timeout for input. No input from player for n seconds = disconnect?
+
+    Right now we ping and expect a response. No repsonse = player is offline. But,
+    often there's a separate tab running for whatever reason and that tab is kept
+    alive and inserted into the game so for example only 3 people are playing but
+    there are 4 players because one player happens to have an extra tab.
+
+    Ideally that tab would disconnect. Not sure how to fix that. Could try to allow
+    one connection per IP address? Or could timeout if no input for n seconds. Problems
+    with timeout is that some games are round based (like boomboom). If you die early
+    you might be waiting 2 minutes so the timeout would need to be like 3 minutes. But
+    what if some other game has a 3 minute timeout?
+
+    The problem with both ideas is that during testing I often have multiple tabs
+    open. I'd need an option to allow multiple users if I filter by ip.
+
 *   make it easier to use
 
     I've been thinking like an experienced engineer. Just passing the messages is enough,
@@ -8,6 +24,16 @@
 
     On the game side some library that give a similar definition gives you similar messages
     and/or tracks state you can just read
+
+    Can I just do it based on HTML and tags to classes
+
+        <div class="hft-dpad" />
+        <div class="hft-button" />
+        <div class="hft-area" />
+        <div class="hft-deviceorientation" />
+
+    Then on the client side just figure it out? Problem for C# / Static languages? Could write script
+    to generate class for static languagues. Could make api string based HTF.getState("d)
 
 *   Consider providing a game side library for name images/textures
 
@@ -293,6 +319,16 @@
 
 *   Have better splash if no games running
 *   make gameviews template based so we can make disconnect behavior common
+
+    - [x] boomboom
+    - [ ] clocksync
+    - [ ] deviceorientation
+    - [x] jamjam
+    - [x] jumpjump
+    - [ ] powpow
+    - [x] shootshoot
+    - [ ] simple
+
 *   stop sliding fingers from selecting stuff.
 *   make bird quack if you click him (consider random speed)
 *   fix flex css (remove need for fixHeightHack)
