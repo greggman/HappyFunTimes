@@ -325,7 +325,7 @@
     - [ ] deviceorientation
     - [x] jamjam
     - [x] jumpjump
-    - [ ] powpow
+    - [x] powpow
     - [x] shootshoot
     - [ ] simple
 

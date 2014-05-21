@@ -39,7 +39,7 @@ var main = function(
     WebGL,
     AudioManager,
     EntitySystem,
-    GameClock,
+    GameSupport,
     Input,
     Misc,
     CanvasRenderer,
@@ -124,16 +124,6 @@ var main = function(
     return playerManager.createPlayer(x, y, direction, name, netPlayer);
   }
 
-  function showConnected() {
-    $('outer').style.display = "block";
-    $('hft-disconnected').style.display = "none";
-  }
-
-  function showDisconnected() {
-    $('outer').style.display = "none";
-    $('hft-disconnected').style.display = "block";
-  }
-
   function startMetaQueuePlayer() {
     if (g_metaQueuePlayer)
       return g_metaQueuePlayer;
@@ -164,10 +154,9 @@ var main = function(
       gameId: "powpow",
     });
     g_services.server = server;
-    server.addEventListener('connect', showConnected);
-    server.addEventListener('disconnect', showDisconnected);
     server.addEventListener('playerconnect', startPlayer);
   }
+  GameSupport.init(server, globals);
 
   var sounds = {
     fire: {
@@ -215,11 +204,7 @@ var main = function(
     startLocalPlayers();
   }
 
-  var clock = new GameClock();
-  render();
-  function render() {
-    globals.elapsedTime = clock.getElapsedTime();
-
+  var render = function() {
     renderer.resize();
     globals.width = g_canvas.width;
     globals.height = g_canvas.height;
@@ -249,13 +234,10 @@ var main = function(
 
     // turn off logging after 1 frame.
     g_logGLCalls = false;
-
-    requestAnimationFrame(render, g_canvas);
   }
+  GameSupport.run(globals, render);
 
   function startLocalPlayers() {
-    globals.maxActivePlayers = 2;
-
     var localNetPlayers = [];
     for (var ii = 0; ii < globals.numLocalPlayers; ++ii) {
       var localNetPlayer = new LocalNetPlayer();
@@ -303,7 +285,7 @@ requirejs(
     '../../scripts/tdl/webgl',
     '../../scripts/audio',
     '../../scripts/entitysystem',
-    '../../scripts/gameclock',
+    '../../scripts/gamesupport',
     '../../scripts/input',
     '../../scripts/misc',
     'canvasrenderer',
