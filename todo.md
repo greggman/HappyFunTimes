@@ -33,7 +33,44 @@
         <div class="hft-deviceorientation" />
 
     Then on the client side just figure it out? Problem for C# / Static languages? Could write script
-    to generate class for static languagues. Could make api string based HTF.getState("d)
+    to generate class for static languagues. Could make api string based HTF.getState("dpad")
+
+    So the problems I ran into when first trying to do this
+
+    1.  I first tried to do jumpjump. The L - R buttons though act as a pair because I wanted it if
+        you happened to be using 2 fingers and you press L, while olding L you press R, then left off R
+        the direction should go back to L. All that is sent to the game is the current direction -1, 0, 1.
+        The controller is doing filtering of the 2 buttons.
+
+        The question is what to do.
+
+        *   Move the filtering to the game.
+
+        The controller just sends L up, L down, R up, R down messages. The game decides on a direction.
+        Maybe that's the best thing?
+
+        *   Figure out how to specify two buttons are connected
+
+        *   Consider the L - R buttons just a version of a DPad controller with no up or down.
+
+    2.  There's 3 parts in CSS/HTML which make this more complicated
+
+        *   The visual representation of the button
+
+        *   The element, often invisible, that defines the hit area of the button
+
+        *   The full document size element that actually receives the input from touching
+
+        I'm not sure if there's a way to make that easier. Maybe I should insert the full document size
+        element so the developer doesn't have to do that? On top of that often you'd like the visual
+        representation to change based on user input. How would I do that or maybe I shouldn't care for
+        now or make that some optional setting?!??
+
+*   Change jumpjump and powpow L - R buttons to something that looks like you can slide your finger across it.
+
+    Watching players play I've noticed many try to press those as two separate buttons where as it's
+    actually designed so you just slide your finger. Maybe drawing a rocker button or one long button
+    would help?
 
 *   Consider providing a game side library for name images/textures
 
@@ -42,21 +79,16 @@
     either breaking at space or scaling if too long or something.
 
 *   Make buttons on Jumpjump, PowPow full height.
-    * add option to show buttons?
+    *   add option to show buttons?
 *   Make random color pickers based on color perseption.
 
     Currently random color are based on HSL. They often look too similar.
 
-*   Change Powpow so outline version of ship is 2x or 3x thicker
 *   Change powpow to use more ship colors
 *   Need to figure out auto-docs
 *   Need to figure out how to test. Maybe Jest would help?
 *   If UI is not part of examples but a part of HFT then need to figure out which .js file should be shared (ie, moved to public/shared/scripts) or something.
-*   Make max name 16 chars
-*   Fix name editing on controllers. (jumping down 1/2 screen)
-*   add "if you like this code, here's the repo?" like Mozilla
 *   change games.html title to be ip address or instructions
-*   remove mobile stuff from games.html
 *   make server serve "chose another WiFi network to browse internet"
 *   use particles for coin
 *   use particles for boomboom death
@@ -68,7 +100,7 @@
 
     Ideally I should separate the collision checking into some lib/utility
 
-*   refactor sprite code to have offset (current assumes center of image is center)
+*   refactor sprite code to have offset (currently assumes center of image is origin)
 
     jumpjump could use this.
 
@@ -183,6 +215,13 @@
     *   implement kick (comment in kickCrate in boomboomgame globals to make powerup appear, then implement in player.js)
     *   "Hurry!!!"
     *   close off edges at 30 second point?
+    *   try to make real AI.
+
+        I don't think this would have a point for HFT but I guess it would just be fine to try.
+        Especially to see if it can be fast enough in JS for 400+ AI players. They'd have to
+        probably get one AI tick for every N players. They'd probably only be able to look
+        within some small range of tiles to decide what to do?
+
     *   figure out what players waiting can do
     *   walking speed should start at 48 and progres to 64?
     *   consider showing map "radar" on controller when game starts and point to player
@@ -449,6 +488,11 @@
 Done
 ----
 
+*   Change Powpow so outline version of ship is 2x or 3x thicker
+*   remove mobile stuff from games.html
+*   Make max name 16 chars
+*   Fix name editing on controllers. (jumping down 1/2 screen)
+*   add "if you like this code, here's the repo?" like Mozilla
 *   fix name flow
     *   captive portal and hft.net should go to enter-name.html
     *   enter-name.html should accept ?name=
