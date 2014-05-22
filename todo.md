@@ -181,32 +181,32 @@
     controller would see the game is not running and go to the main menu
     or to whichever other game is running.
 
-    * other ideas
+    *   other ideas
 
-        * what about making it into a virtual console
+        *   what about making it into a virtual console
 
-        * using packages (think npm/package.json) could make it easy to find and install games
+        *   using packages (think npm/package.json) could make it easy to find and install games
 
-            * step 1, make it so you can type `htf install somegame`
+            *   step 1, make it so you can type `htf install somegame`
 
-            * step 2, provide a web interface to do the same
+            *   step 2, provide a web interface to do the same
 
-            * step 3, add a store
+            *   step 3, add a store
 
             Could have games.html show recently played, recently installed, link for store,
             promoted games, ... (promoted games only works if using real net.)
 
-        * How about making hardware. For example an android stick with HFT pre-installed
+        *   How about making hardware. For example an android stick with HFT pre-installed
 
-          I could boot directly into HFT. I could either be the WiFi or it could connect
-          to your home WiFi. Unfortunately with your home WiFi there's no way I can
-          think of for the phones to find the HFT machine through the browser?
+            I could boot directly into HFT. I could either be the WiFi or it could connect
+            to your home WiFi. Unfortunately with your home WiFi there's no way I can
+            think of for the phones to find the HFT machine through the browser?
 
-          One idea, use the WebRTC api (not available in iOS yet :()) to get your local ip.
-          From that you use XHR to try to contact all class C ip addresses searching for the
-          HTF server
+            One idea, use the WebRTC api (not available in iOS yet :()) to get your local ip.
+            From that you use XHR to try to contact all class C ip addresses searching for the
+            HTF server
 
-          You could serve the page that does that from htf.com or something like that.
+            You could serve the page that does that from htf.com or something like that.
 
 
 
@@ -314,8 +314,8 @@
 
 *   update unitydocs with UnityScript
 *   fix camera on unitycharacter example so
-    * it works for 1 player
-    * it doesn't swing around so much
+    *   it works for 1 player
+    *   it doesn't swing around so much
 *   unity: see if we can figure out a way so controllers don't get disconnected if script is updated.
 
 *   **Issue:** Anyone can go to the gameview.html for a game.
@@ -591,7 +591,7 @@ Done
     *   fix so more than R*C players
     *   blow up bushes.
     *   Music
-        * main
+        *   main
         *   fast? with faster music? I wonder if I can do that easily in WebAudio? (yes!)
     *   controller
         *   handle 'waitForPlayers' {waitTime: seconds} msg
@@ -722,7 +722,7 @@ Done
 
 *   Make reload work on all controllers.
 
-    * consider making reload to go /index.html for game selection?
+    *   consider making reload to go /index.html for game selection?
 
 *   make dpad controller renderer
 
@@ -765,11 +765,11 @@ Done
 *   Figure out what to do when game disconnects.
 *   relayserver should tell clients when game connects/disconnects?
 *   give each game an id so one relayserver can run multiple games
-    * hard coded id means one instance of each game
-    * generated id means can handle multiple instances BUT, need way to pick instance?
-    * relayserver needs to create a new player when switching games. Probably handled
-      automatically as leaving the other game's controller panel will kill the connection.
-    * controller could have a menu button to go back to game selection screen?
+    *   hard coded id means one instance of each game
+    *   generated id means can handle multiple instances BUT, need way to pick instance?
+    *   relayserver needs to create a new player when switching games. Probably handled
+        automatically as leaving the other game's controller panel will kill the connection.
+    *   controller could have a menu button to go back to game selection screen?
 *   fix server to re-direct foo to foo/
 *   fix server to load index.html from foo/
 *   make hitshield in mp3
