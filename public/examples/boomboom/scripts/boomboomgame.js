@@ -71,7 +71,7 @@ window.s = g_services;
   var globals = {
     port: 8080,
     haveServer: true,
-    numLocalPlayers: 1,  // num players when local (ie, debugger)
+    numLocalPlayers: 0,  // num players when local (ie, debugger)
     ai: false,
     debug: false,
     tileInspector: false,
@@ -385,9 +385,7 @@ window.g = globals;
     globals.numLocalPlayers = Math.min(globals.numLocalPlayers, gameManager.computeMaxPlayersForScale(1, 1));
 
     // Add a 2 players if there is no communication
-    if (!globals.haveServer) {
-      startLocalPlayers();
-    }
+    startLocalPlayers();
 
     // make the level after making the players. This calls
     // player reset.
