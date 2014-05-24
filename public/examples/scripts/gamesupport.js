@@ -120,6 +120,7 @@ define([
   //
   var run = function(globals, fn) {
     var clock = new GameClock();
+    globals.frameCount = 0;
 
     var requestId;
     var loop = function() {
