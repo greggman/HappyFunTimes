@@ -114,6 +114,7 @@ define(["./plistmanager"], function(PListManager) {
     while (this.element_.firstChild) {
       this.element_.removeChild(this.element_.firstChild);
     }
+    this.num = 0;
     this.setElements_(0, this.launching_, true);
     this.setElements_(this.launching_.length, this.queue_, false);
   };
@@ -126,12 +127,16 @@ define(["./plistmanager"], function(PListManager) {
 
   QueueManager.prototype.setElement_ = function(player, launching, msg) {
     var globals = this.services.globals;
+    var s = player.queueLine.name.style;
     if (launching) {
-      player.queueLine.name.style.color = "#f00";
+      s.color = "#f00";
     } else {
-      player.queueLine.name.style.color = "#ff0";
+      s.color = "#ff0";
     }
-    this.element_.appendChild(player.queueLine.line);
+    if (this.num < 8) {
+      ++this.num;
+      this.element_.appendChild(player.queueLine.line);
+    }
   };
 
   QueueManager.prototype.sendPlaceInQueue = function(player) {

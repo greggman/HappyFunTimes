@@ -27,19 +27,42 @@ html, body {
 }
 #highscore, #queue {
   white-space: nowrap;
-  overflow: hidden;
-  height: 100%;
   background-color: #008;
+
+  -webkit-flex: 1 0 auto;
+  flex: 1 0 auto;
 }
-#highscores-outer {
+@keyframes color_change {
+  from { background-color: blue; }
+  to { background-color: red; }
+}
+#highscores-outer, #queue-outer {
+  overflow: hidden;
   width: 100%;
   height: 50%;
   background-color: blue;
+
+  display: -webkit-flex;
+  display: flex;
+
+  -webkit-flex-flow: column;
+  flex-flow: column;
+
+  -webkit-justify-content: flex-start;
+  -webkit-align-content: stretch;
+  -webkit-align-items: stretch;
+
+  justify-content: flex-start;
+  align-content: stretch;
+  align-items: stretch;
 }
-#queue-outer {
-  width: 100%;
-  height: 50%;
-  background-color: blue;
+.headline {
+  -webkit-flex: 0 0 auto;
+  flex: 0 0 auto;
+  font-size: x-large;
+  font-weight: bold;
+  color: white;
+  padding: 5px 5px 5px 5px;
 }
 #queue-canvas {
   width: 100%;
