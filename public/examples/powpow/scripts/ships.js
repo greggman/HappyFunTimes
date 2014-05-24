@@ -58,6 +58,10 @@ define(function() {
   return {
     styles: g_styles,
 
+    getTotalColors: function() {
+      return g_styles.length * g_colors.length;
+    },
+
     // TODO(gman): if we are going to limit the number
     // of colors and styles then we need to keep track
     // of which ones are used so if a player stops
@@ -66,7 +70,9 @@ define(function() {
     makeColor: function(count) {
       var numStyles = g_styles.length;
       var numColors = g_colors.length;
-      var style = count % numStyles;
+      var total = numStyles * numColors;
+      count = count % total;
+      var style = count / numColors | 0;
       var colorNdx = count % numColors;
 
       //var color = [

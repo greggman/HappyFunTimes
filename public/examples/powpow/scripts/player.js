@@ -33,15 +33,19 @@
 define([
     '../../scripts/tdl/math',
     '../../scripts/2d',
+    '../../scripts/misc',
     '../../scripts/strings',
     './ships',
     './shot',
   ], function(
     math,
     M2D,
+    Misc,
     Strings,
     Ships,
     Shot) {
+  var availableColors = [];
+
   /**
    * Player represnt a player in the game.
    * @constructor
@@ -64,7 +68,15 @@ define([
       this.isMetaQueuePlayer = isMetaQueuePlayer;
       this.position = [x, y];
       this.hp = 3;
-      this.color = Ships.makeColor(g_playerCount + g_startCount);
+      if (!availableColors.length) {
+        var total = Ships.getTotalColors();
+        for (var ii = 0; ii < total; ++ii) {
+          availableColors.push(ii);
+        }
+      }
+      var ndx = Misc.randInt(availableColors.length);
+      this.color = Ships.makeColor(availableColors[ndx]);
+      availableColors.splice(ndx, 1);
 
       if (netPlayer) {
         netPlayer.addEventListener('disconnect', Player.prototype.handleDisconnect.bind(this));
