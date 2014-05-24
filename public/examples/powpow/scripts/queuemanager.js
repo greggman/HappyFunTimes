@@ -39,13 +39,21 @@ define(["./plistmanager"], function(PListManager) {
     this.launching_ = [];
     this.queue_ = [];
     this.timer_ = 0;
-
-    this.plist = new PListManager(element);
+    this.element_ = element;
+    this.plist = new PListManager();
 
   //  this.rowHeight_ = 40;
   //  this.canvas_ = $("queue-canvas");
   //  this.ctx_ = this.canvas_.getContext("2d");
   //  this.resize();
+  };
+
+  QueueManager.prototype.createQueueLine = function(player, color) {
+    return this.plist.createElement(player, color);
+  };
+
+  QueueManager.prototype.deleteQueueLine = function(queueLine) {
+    this.plist.deleteElement(queueLine);
   };
 
   //QueueManager.prototype.resize = function() {
@@ -102,16 +110,28 @@ define(["./plistmanager"], function(PListManager) {
   //};
 
   QueueManager.prototype.draw = function() {
-    this.plist.begin();
+    // remove all the elements.
+    while (this.element_.firstChild) {
+      this.element_.removeChild(this.element_.firstChild);
+    }
     this.setElements_(0, this.launching_, true);
     this.setElements_(this.launching_.length, this.queue_, false);
-    this.plist.end();
   };
 
   QueueManager.prototype.setElements_ = function(index, players, launching) {
     for (var ii = 0; ii < players.length; ++ii) {
-      this.plist.setElement(players[ii], launching, "");
+      this.setElement_(players[ii], launching, "");
     }
+  };
+
+  QueueManager.prototype.setElement_ = function(player, launching, msg) {
+    var globals = this.services.globals;
+    if (launching) {
+      player.queueLine.name.style.color = "#f00";
+    } else {
+      player.queueLine.name.style.color = "#ff0";
+    }
+    this.element_.appendChild(player.queueLine.line);
   };
 
   QueueManager.prototype.sendPlaceInQueue = function(player) {

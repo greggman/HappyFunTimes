@@ -147,6 +147,7 @@ var main = function(
 
   g_services.globals = globals;
   g_services.renderer = renderer;
+window.s = g_services;
 
   var server;
   if (globals.haveServer) {

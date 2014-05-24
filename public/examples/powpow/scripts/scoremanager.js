@@ -37,11 +37,20 @@ define(["./plistmanager"], function(PListManager) {
 
   function ScoreManager(services, element) {
     this.services = services;
-    this.plist_ = new PListManager(element);
+    this.element_ = element;
     this.maxScores_ = 10;
     this.orderedPlayers_ = [];
     this.zeros_ = "";
+    this.plist = new PListManager();
   }
+
+  ScoreManager.prototype.createScoreLine = function(player, color) {
+    return this.plist.createElement(player, color);
+  };
+
+  ScoreManager.prototype.deleteScoreLine = function(scoreLine) {
+    this.plist.deleteElement(scoreLine);
+  };
 
   ScoreManager.prototype.calculateScores = function() {
     var orderedPlayers = [];
@@ -79,17 +88,16 @@ define(["./plistmanager"], function(PListManager) {
   };
 
   ScoreManager.prototype.drawScores = function() {
-    this.plist_.begin();
+    // remove all the elements.
+    while (this.element_.firstChild) {
+      this.element_.removeChild(this.element_.firstChild);
+    }
 
+    // Add back all the elements in the current order
     for (var ii = 0; ii < this.orderedPlayers_.length; ++ii) {
       var player = this.orderedPlayers_[ii];
-      var score = player.score.toString();
-      if (score.length < this.zeros_.length) {
-        score = score + this.zeros_.substr(score.length);
-      }
-      this.plist_.setElement(player, false, score + ": ");
+      this.element_.appendChild(player.scoreLine.line);
     }
-    this.plist_.end();
   };
 
   ScoreManager.prototype.update = function() {
