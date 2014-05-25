@@ -146,6 +146,10 @@ var main = function(
       hideMsg();
     };
 
+    var handleSpoil = function() {
+      hideMsg();
+    };
+
     var handleSetColor = function(msg) {
       var canvas = $("avatar");
       var width = canvas.clientWidth;
@@ -164,6 +168,7 @@ var main = function(
       g_client.addEventListener('start', handleStart);
       g_client.addEventListener('tied', handleTie);
       g_client.addEventListener('died', handleDeath);
+      g_client.addEventListener('spoil', handleSpoil);
       g_client.addEventListener('winner', handleWinner);
       g_client.addEventListener('waitForStart', handleWaitForStart);
       g_client.addEventListener('waitForNextGame', handleWaitForNextGame);

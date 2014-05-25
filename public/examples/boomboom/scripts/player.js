@@ -804,6 +804,7 @@ define([
   Player.prototype.init_spoil = function() {
     this.sprite.uniforms.u_hsvaAdjust = this.color.hsv.slice();
     this.lastBombLobbed = undefined;
+    this.sendCmd('spoil');
   };
 
   Player.prototype.state_spoil = function() {
