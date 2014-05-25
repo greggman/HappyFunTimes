@@ -488,6 +488,7 @@
 Done
 ----
 
+*   Make start on game-login use whole area.
 *   Change Powpow so outline version of ship is 2x or 3x thicker
 *   remove mobile stuff from games.html
 *   Make max name 16 chars
