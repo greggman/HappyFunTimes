@@ -204,6 +204,8 @@ define(['../../scripts/misc', '../../scripts/tilemap'], function(Misc, TileMap) 
     pipeH:      { id: 0x050B, info: iPipeH, },
   };
 
+  var s_outOfBoundsTile = 0x040A; // wall
+
   var tileInfoMap = {};
   for (var tileName in tiles) {
     var tile = tiles[tileName];
@@ -351,8 +353,8 @@ define(['../../scripts/misc', '../../scripts/tilemap'], function(Misc, TileMap) 
     var tilesAcross = mapSize.across;
     var tilesDown   = mapSize.down;
 
-    var layer0 = new Layer(tilesAcross, tilesDown, scale, this.tileset);
-    var layer1 = new Layer(tilesAcross, tilesDown, scale, this.tileset);
+    var layer0 = new Layer(tilesAcross, tilesDown, scale, this.tileset, s_outOfBoundsTile);
+    var layer1 = new Layer(tilesAcross, tilesDown, scale, this.tileset, s_outOfBoundsTile);
 
     this.tilesAcross = tilesAcross;
     this.tilesDown = tilesDown;

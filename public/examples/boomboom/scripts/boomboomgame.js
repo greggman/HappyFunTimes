@@ -63,6 +63,7 @@ window.s = g_services;
   g_services.drawSystem = g_drawSystem;
   var g_playerManager = new PlayerManager(g_services);
   g_services.playerManager = g_playerManager;
+  g_services.bombManager = new EntitySystem();
   g_services.misc = Misc;
   var stop = false;
 
@@ -90,31 +91,37 @@ window.s = g_services;
       { tileName: 'empty',      prob: 20, },
     ],
     // game stuff
-    waitForPlayersDuration: 10,
-    waitForStartDuration: 3,
-    waitForGo: 1,
-    waitForEnd: 3,
-    waitForWinnerDuration: 6,
-    roundDuration: 120,
-    hurryTime: 30,
+    waitForPlayersDuration: 10,   // seconds to wait for player
+    waitForStartDuration: 3,      // seconds to wait with "Ready?"
+    waitForGo: 1,                 // seconds to wait with "Go!"
+    waitForEnd: 3,                // seconds to pause after a winner is known
+    waitForWinnerDuration: 6,     // seconds to show "Winner!"
+    roundDuration: 120,           // seconds per round
+    hurryTime: 30,                // seconds left when "hurry" (music goes faster)
+    tileAnimSpeed: 16,            // how fast the tile animations runs
     //
-    tileAnimSpeed: 16,
     idleAnimSpeed: 4,
-    // walk size
+    // walk stuff
     walkAnimSpeed: 0.2,
     walkSpeed: 64,
     // bomb stuff
     numStartingBombs: 1,          // how many bombs a player gets to start
+    numSpoilBombs: 1,             // how many bombs a player gets when spoiling
     bombStartSize: 1,             // starting size of bombs
+    bombSpoilSize: 2,             // size of bombs when spoiling
     bombDuration: 2,              // time bomb ticks
     explosionDuration: 0.5,       // time bomb as at full size
     unexplodeTickDuration: 0.025, // time per tile as bomb contracts.
+    lobSpeed: 48,
+    lobBounceHeight: 2,           //
     // die stuff
-    dieColorSpeed: 2,
-    dieDuration: 2,
+    dieColorSpeed: 2,             // speed to rotate color on death
+    dieDuration: 2,               // seconds to flash death colors
     dieScaleSpeed: 20,
     dieRotationSpeed: 16,
-    evaporateDuration: 0.5,
+    evaporateDuration: 0.5,       // seconds to evaporate character after deth
+    // spoil stuff
+    reappearDuration: 2,          // seconds to reappear
     columnRowSpace: 3,
   };
 window.g = globals;
@@ -361,7 +368,7 @@ window.g = globals;
       frames: [],
     };
     for (var ii = 0; ii < bombSprites.length; ++ii) {
-      images.bomb.frames.push(cutTile(bombSprites[ii]), 0);
+      images.bomb.frames.push(cutTile(bombSprites[ii], 0));
     }
     images.sprites = cutGroup(sprites);
 
@@ -429,11 +436,13 @@ window.g = globals;
   };
 
   var sounds = {
-    placeBomb:         { jsfx: ["sine",0.0000,0.4000,0.0000,0.1260,0.0840,0.0720,110.0000,548.0000,2400.0000,-0.7300,0.0000,0.0000,0.0100,0.0003,0.0000,0.0000,0.0000,0.2700,0.2000,0.0000,0.0000,0.0000,1.0000,0.0000,0.0000,0.1730,0.0000] , },
-    explode:           { jsfx: ["noise",0.0000,0.2360,0.0000,0.4180,1.8690,0.5380,20.0000,300.0000,2400.0000,-0.0940,0.0000,0.0000,0.3939,0.0679,0.1400,-0.7120,0.8100,0.0000,0.0000,0.4600,-0.1000,-0.0300,0.9900,-0.0660,0.9990,0.0000,0.0000], },
+    placeBomb:         { jsfx: ["sine",0.0000,0.4000,0.0000,0.1260,0.0840,0.0720,110.0000,548.0000,2400.0000,-0.7300,0.0000,0.0000,0.0100,0.0003,0.0000,0.0000,0.0000,0.2700,0.2000,0.0000,0.0000,0.0000,1.0000,0.0000,0.0000,0.1730,0.0000]      , },
+    explode:           { jsfx: ["noise",0.0000,0.2360,0.0000,0.4180,1.8690,0.5380,20.0000,300.0000,2400.0000,-0.0940,0.0000,0.0000,0.3939,0.0679,0.1400,-0.7120,0.8100,0.0000,0.0000,0.4600,-0.1000,-0.0300,0.9900,-0.0660,0.9990,0.0000,0.0000]  , },
     die:               { jsfx: ["square",0.0000,0.4020,0.0000,1.0660,0.0000,0.2680,20.0000,262.0000,2400.0000,-0.3060,0.0000,0.6590,12.2475,0.4319,-0.1960,0.3320,0.0000,0.0000,-0.0140,0.0000,0.0000,0.0000,1.0000,-0.0100,0.0000,0.0000,-1.0000], },
-    dieOld:            { jsfx: ["saw",0.0000,0.4020,0.0000,1.0660,0.0000,0.2680,20.0000,262.0000,2400.0000,-0.3060,0.0000,0.6590,12.2475,0.4319,-0.1960,0.3320,0.0000,0.0000,-0.0140,0.0000,0.0000,0.0000,1.0000,-0.0100,0.0000,0.0000,-1.0000], },
-    pickup:            { jsfx: ["sine",0.0000,0.4000,0.0000,0.2860,0.0000,0.2760,20.0000,1006.0000,2400.0000,-0.6120,0.0000,0.0000,0.0100,0.0003,0.0000,0.0000,0.0000,0.2190,0.1860,0.0000,0.0000,0.0000,1.0000,0.0000,0.0000,0.0000,0.0000] , },
+    dieOld:            { jsfx: ["saw",0.0000,0.4020,0.0000,1.0660,0.0000,0.2680,20.0000,262.0000,2400.0000,-0.3060,0.0000,0.6590,12.2475,0.4319,-0.1960,0.3320,0.0000,0.0000,-0.0140,0.0000,0.0000,0.0000,1.0000,-0.0100,0.0000,0.0000,-1.0000]   , },
+    pickup:            { jsfx: ["sine",0.0000,0.4000,0.0000,0.2860,0.0000,0.2760,20.0000,1006.0000,2400.0000,-0.6120,0.0000,0.0000,0.0100,0.0003,0.0000,0.0000,0.0000,0.2190,0.1860,0.0000,0.0000,0.0000,1.0000,0.0000,0.0000,0.0000,0.0000]      , },
+    reappear:          { jsfx: ["square",0.0000,0.4000,0.1740,1.1080,1.3530,0.5660,20.0000,422.0000,2400.0000,-0.4340,0.2980,0.4530,17.2864,0.0003,0.0000,0.5740,0.1740,0.0000,-0.1260,0.1280,0.0000,0.0000,1.0000,0.0000,0.0000,0.0000,0.0000]   , },
+    bounce:            { jsfx: ["sine",0.0000,0.4000,0.0000,0.0000,0.1980,0.1320,20.0000,249.0000,2400.0000,-0.5620,0.0000,0.0000,0.0100,0.0003,0.0000,0.0000,0.0000,0.0000,0.0000,0.0000,0.0000,0.0000,1.0000,0.0000,0.0000,0.1840,0.0000]       , },
     bgm:               { music: true, filename: "assets/MSTR_-_MSTR_-_Choro_bavario_Loop.ogg", },
     swingup:           { jsfx: ["square",0.0000,0.4000,0.0000,0.0120,0.4560,0.4600,20.0000,1176.0000,2400.0000,0.0000,1.0000,0.0000,0.0100,0.0003,0.0000,0.4740,0.2480,0.0000,0.0000,0.0000,0.0000,0.0000,1.0000,0.0000,0.0000,0.0000,0.0000], },
     coinishAxe:        { jsfx: ["square",0.0000,0.4000,0.0000,0.0200,0.4080,0.3400,20.0000,692.0000,2400.0000,0.0000,0.0000,0.0000,0.0100,0.0003,0.0000,0.4740,0.1110,0.0000,0.0000,0.0000,0.0000,0.0000,1.0000,0.0000,0.0000,0.0000,0.0000] , },

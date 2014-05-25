@@ -201,6 +201,17 @@ define([
     }
   };
 
+  var lobInfoTable = [
+    { dx:  1, dy:  0, }, // 0,
+    { dx:  1, dy: -1, }, // 1,
+    { dx:  0, dy: -1, }, // 2,
+    { dx: -1, dy: -1, }, // 3,
+    { dx: -1, dy:  0, }, // 4,
+    { dx: -1, dy:  1, }, // 5,
+    { dx:  0, dy:  1, }, // 6,
+    { dx:  1, dy:  1, }, // 7,
+  ];
+
   var Exploder = function(services) {
     this.services = services;
     this.sprite = services.spriteManager.createSprite();
@@ -303,14 +314,16 @@ define([
     }
 
     this.services = services;
+    this.sprite = services.spriteManager.createSprite();
+    this.sprite.uniforms.u_texture = this.services.images.bomb.frames[0];
     this.reset();
-    this.setState('off');
-
     services.entitySystem.addEntity(this);
+    services.bombManager.addEntity(this);
   };
 
   Bomb.prototype.reset = function() {
     this.owner = undefined;
+    this.setState('off');
   };
 
   Bomb.prototype.setState = function(state) {
@@ -323,6 +336,7 @@ define([
   };
 
   Bomb.prototype.place = function(owner, tx, ty, size) {
+    this.lobbed = false;
     this.owner = owner;
     this.size = size;
     this.tx = tx;
@@ -340,8 +354,13 @@ define([
     this.setState('tick');
   };
 
-  Bomb.prototype.returnToOwner = function() {
-    this.owner.returnBomb(this);
+  Bomb.prototype.lob = function(owner, x, y, size, direction) {
+    this.owner = owner;
+    this.size = size;
+    this.position = [x, y];
+    this.direction = direction;
+    this.bouncing = true;
+    this.setState('bounce');
   };
 
   Bomb.prototype.setTile = function(tileId) {
@@ -394,6 +413,9 @@ define([
       // advance
       if (!flame.stopped || (tileInfo.info.flameEat && !placedCrate)) {
         if (tileInfo.info.flameEat) {
+          if (this.lobbed) {
+            this.owner.givePresent(tileInfo.info.crateType);
+          }
           var Exploder = getExploder(this.services);
           Exploder.setTile(tile, nx, ny, flame);
         }
@@ -444,11 +466,16 @@ define([
     --this.explosionSize;
   };
 
+  Bomb.prototype.init_off = function() {
+    this.sprite.visible = false;
+  };
+
   Bomb.prototype.state_off = function() {
   };
 
   Bomb.prototype.init_tick = function() {
     tickingBombs.push(this);
+    this.sprite.visible = false;
   };
 
   Bomb.prototype.state_tick = function() {
@@ -467,6 +494,7 @@ define([
   };
 
   Bomb.prototype.init_explode = function() {
+    this.sprite.visible = false;
     this.services.audioManager.playSound('explode');
     tickingBombs.splice(tickingBombs.indexOf(this), 1);
     this.flames = [
@@ -523,6 +551,82 @@ define([
         this.setState('off');
       }
     }
+  };
+
+  Bomb.prototype.init_bounce = function() {
+    this.sprite.visible = true;
+    this.stopBounce = false;
+  };
+
+  Bomb.prototype.state_bounce = function() {
+    var globals = this.services.globals;
+    var sprite = this.sprite;
+
+    if (!this.owner.abutton.on()) {
+      this.stopBounce = true;
+    }
+
+    var levelManager = this.services.levelManager;
+    var off = {};
+    levelManager.getDrawOffset(off);
+    var tileWidth  = 16;
+    var tileHeight = 16;
+    sprite.width  = tileWidth  * globals.scale;
+    sprite.height = tileHeight * globals.scale;
+
+    var lobInfo = lobInfoTable[this.direction];
+    this.position[0] += lobInfo.dx * globals.lobSpeed * globals.elapsedTime;
+    this.position[1] += lobInfo.dy * globals.lobSpeed * globals.elapsedTime;
+
+    if (this.position[0] < -tileWidth / 2) {
+      this.position[0] = levelManager.tilesAcross * tileWidth + tileWidth / 2 - 1;
+    }
+    if (this.position[0] >= levelManager.tilesAcross * tileWidth + tileWidth / 2) {
+      this.position[0] = -tileWidth / 2;
+    }
+    if (this.position[1] < -tileHeight / 2) {
+      this.position[1] = levelManager.tilesDown * tileHeight + tileHeight / 2 - 1;
+    }
+    if (this.position[1] >= levelManager.tilesDown * tileHeight + tileHeight / 2) {
+      this.position[1] = -tileHeight / 2;
+    }
+
+    var tx = this.position[0] / tileWidth  | 0;
+    var ty = this.position[1] / tileHeight | 0;
+    var centerOfTileX = tx * tileWidth  + tileWidth  / 2;
+    var centerOfTileY = ty * tileHeight + tileHeight / 2;
+    var dxFromCenterOfTile = centerOfTileX - this.position[0];
+    var dyFromCenterOfTile = centerOfTileY - this.position[1];
+
+    if (Misc.sign(this.oldDxToCenter) != Misc.sign(dxFromCenterOfTile) ||
+        Misc.sign(this.oldDyToCenter) != Misc.sign(dyFromCenterOfTile)) {
+      this.oldDxToCenter = dxFromCenterOfTile;
+      this.oldDyToCenter = dyFromCenterOfTile;
+      if (Math.abs(dxFromCenterOfTile) < 2 && Math.abs(dyFromCenterOfTile) < 2) {
+        this.services.audioManager.playSound('bounce');
+      }
+    }
+
+    var lerp = Math.max(Math.abs(dxFromCenterOfTile / tileWidth), Math.abs(dyFromCenterOfTile / tileHeight)) * 2;
+
+    sprite.x = off.x + this.position[0] * globals.scale;
+    sprite.y = off.y + (this.position[1] - Math.cos(lerp * Math.PI / 2) * globals.lobBounceHeight) * globals.scale ;
+
+    var levelManager = this.services.levelManager;
+    var tile = levelManager.layer1.getTile(tx, ty);
+    var tileInfo = levelManager.getTileInfo(tile);
+
+    if (!tileInfo.info.flame && !this.stopBounce) {
+      return;
+    }
+
+    if (!tileInfo.info.bombOk) {
+      return;
+    }
+
+    this.bouncing = false;
+    this.place(this.owner, tx, ty, this.size);
+    this.lobbed = true;
   };
 
   return Bomb;

@@ -583,6 +583,12 @@ Done
     it just works. Unity can connect to ws://localhost:8080 and games can connect to http://ipaddress/foo/bar/somecontroller.html
 
 *   boomboom
+    *   make it so you can lob bombs from the side after death
+    *   make sure bombs get reset before next level
+    *   add reappear sound
+    *   add bounce sound
+    *   let you throw bombs further? (hold button?)
+    *   make lobbed bombs explode if on flame
     *   fix explosion at crate/bush with nothing on other side. should be tip.
     *   fix explosion on crates
     *   show names (limit to size?). Maybe only show it larger if player clicks avatar
