@@ -38,6 +38,14 @@ html, body {
     -o-user-select: none;
     user-select: none;
 }
+#bombs {
+    width: 100%;
+    height: 16px;
+}
+#bombsize {
+    width: 100%;
+    height: 16px;
+}
 .button {
     background-color: #AAA;
     color: #666;

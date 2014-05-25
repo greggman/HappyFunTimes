@@ -239,8 +239,8 @@ define([
     this.scale = 1;
     this.rotation = 0;
     this.animTimer = 0;
-    this.setNumBombs(globals.numStartingBombs);
-    this.bombSize = globals.bombStartSize;
+    this.resetNumBombs(globals.numStartingBombs);
+    this.setBombSize(globals.bombStartSize);
     this.haveKick = false;
     this.setFacing(6);
     this.setAnimFrame(this.anims.idle);
@@ -269,10 +269,12 @@ define([
     var levelManager = this.services.levelManager;
     var maxSize = Math.max(levelManager.tilesAcross, levelManager.tilesDown);
     this.bombSize = Math.min(maxSize, size);
+    this.sendCmd('bombSize', {size: this.bombSize});
   };
 
   Player.prototype.returnBomb = function(bomb) {
     this.bombs.push(bomb);
+    this.sendCmd('numBombs', {numBombs: this.bombs.length});
   };
 
   Player.prototype.setAnimFrame = function(name) {
@@ -411,15 +413,17 @@ define([
 
     this.services.audioManager.playSound('placeBomb');
     var bomb = this.bombs.pop();
+    this.sendCmd('numBombs', {numBombs: this.bombs.length});
     bomb.place(this, tx, ty, this.bombSize);
     return true;
   };
 
   Player.prototype.restoreBomb = function(bomb) {
     this.bombs.push(bomb);
+    this.sendCmd('numBombs', {numBombs: this.bombs.length});
   };
 
-  Player.prototype.setNumBombs = function(numBombs) {
+  Player.prototype.resetNumBombs = function(numBombs) {
     if (!this.bombs) {
       this.bombs = [];
     }
@@ -429,6 +433,7 @@ define([
     for (var ii = 0; ii < numBombs; ++ii) {
       this.bombs.push(getBomb(this.services));
     }
+    this.sendCmd('numBombs', {numBombs: numBombs});
   };
 
   Player.prototype.sendCmd = function(cmd, data) {
@@ -447,6 +452,7 @@ define([
         break;
       case 'bomb':
         this.bombs.push(getBomb(this.services));
+        this.sendCmd('numBombs', {numBombs: this.bombs.length});
         break;
       case 'flame':
         this.setBombSize(this.bombSize + 1);
@@ -763,8 +769,8 @@ define([
     this.scale = 1;
     this.sprite.uniforms.u_hsvaAdjust = this.color.hsv.slice();
     this.rail = Misc.randInt(4);
-    this.setNumBombs(globals.numSpoilBombs);
-    this.bombSize = globals.bombSpoilSize;
+    this.resetNumBombs(globals.numSpoilBombs);
+    this.setBombSize(globals.bombSpoilSize);
     this.services.audioManager.playSound('reappear');
 
     switch (this.rail) {
@@ -849,6 +855,7 @@ define([
     var x = tx * tileWidth  + tileWidth  / 2 + this.facingInfo.dx * tileWidth  / 2;
     var y = ty * tileHeight + tileHeight / 2 + this.facingInfo.dy * tileHeight / 2;
     var bomb = this.bombs.pop();
+    this.sendCmd('numBombs', {numBombs: this.bombs.length});
     bomb.lob(this, x, y, this.bombSize, this.facing);
     this.lastBombLobbed = bomb;
     this.services.audioManager.playSound('bounce');

@@ -586,6 +586,7 @@ Done
 *   boomboom
     *   make it so you can lob bombs from the side after death
     *   make sure bombs get reset before next level
+    *   show num bombs and flame size on controller
     *   add reappear sound
     *   add bounce sound
     *   let you throw bombs further? (hold button?)
