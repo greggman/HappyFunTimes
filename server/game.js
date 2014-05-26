@@ -33,6 +33,15 @@
 
 var debug = require('debug')('Game');
 
+/**
+ * Represents one game running through the relaysever.
+ *
+ * @constructor
+ *
+ * @param {string} gameId id of game
+ * @param {!RelayServer} relayServer relaysever managing
+ *        communication for this game.
+ */
 var Game = function(gameId, relayServer) {
   this.gameId = gameId;
   this.relayServer = relayServer;

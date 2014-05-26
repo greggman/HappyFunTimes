@@ -37,8 +37,36 @@ var Game = require('./game');
 var Player = require('./player');
 var WSServer = require('./websocketserver');
 
-// options:
-//   address: used to replace "localhost" in urls.
+/**
+ * RelayServer options
+ * @typedef {Object} RelayServer~Options
+ * @property {string} address - address that will
+ *         replace "localhost" when a game's controllerUrl is
+ *         passed in.
+ */
+
+/**
+ * Game list entry
+ * @typedef {Object} RelayServer~GameEntry
+ * @property {string} gameId - id of game
+ * @property {number} numPlayers - number of players currently
+ *           connected.
+ * @property {string} controllerUrl - url of controller for game
+ */
+
+/**
+ * The relaysever manages a websocket server. It accepts
+ * connections from games and controllers, notifies the game of
+ * controllers joining and leaving the game and passes messages
+ * between them.
+ *
+ * @params {HTTPServer[]} servers. An array of of node
+ *       httpservers to run websocket servers. This is an array
+ *       because we'd to be able to run multiple servers on
+ *       different ports but have the relayserver pass messages
+ *       between them.
+ * @params {RelayServer~Options} options
+ */
 var RelayServer = function(servers, options) {
 
   var g_nextSessionId = 1;
@@ -98,7 +126,7 @@ var RelayServer = function(servers, options) {
 
   /**
    * Gets an array of game currently running.
-   * @return {!Array.<object>}
+   * @returns {RelayServer~GameEntry[]}
    */
   this.getGames = function() {
     var gameList = [];
@@ -117,8 +145,9 @@ var RelayServer = function(servers, options) {
 
   /**
    * Adds the given player to the game
-   * @param {!Player} player the player to add
+   * @param {Player} player the player to add
    * @param {string} gameId id of the game.
+   * @returns {Game} game that player was added to
    */
   this.addPlayerToGame = function(player, gameId) {
     var game = getGame(gameId);
@@ -128,7 +157,7 @@ var RelayServer = function(servers, options) {
 
   /**
    * Removes a game from the games known by this relayserver
-   * @param {stirng} gameId id of game to remove.
+   * @param {string} gameId id of game to remove.
    */
   this.removeGame = function(gameId) {
     if (!g_games[gameId]) {
