@@ -195,6 +195,8 @@ var main = function(
     if (globals.forceController) {
       hideMsg();
     } else {
+      // These messages hide/show the controller so don't handle them
+      // if we're testing the controller with `forceController`
       g_client.addEventListener('score', handleScore);
       g_client.addEventListener('start', handleStart);
       g_client.addEventListener('tied', handleTie);
@@ -204,9 +206,9 @@ var main = function(
       g_client.addEventListener('waitForStart', handleWaitForStart);
       g_client.addEventListener('waitForNextGame', handleWaitForNextGame);
       g_client.addEventListener('waitForMorePlayers', handleWaitForMorePlayers);
-      g_client.addEventListener('numBombs', handleNumBombs);
-      g_client.addEventListener('bombSize', handleBombSize);
     }
+    g_client.addEventListener('numBombs', handleNumBombs);
+    g_client.addEventListener('bombSize', handleBombSize);
     g_client.addEventListener('setColor', handleSetColor);
 
     var sounds = {};
