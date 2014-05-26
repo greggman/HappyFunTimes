@@ -48,12 +48,12 @@ var RelayServer = function(servers, options) {
   // --- messages to relay server ---
   //
   // join  :
-  //   desc: joins a particle game
+  //   desc: joins a game
   //   args:
   //      gameId: name of game
   //
   // server:
-  //   desc: identifies this session as a server
+  //   desc: identifies this session as a server (the machine running the game)
   //   args: none
   //
   // client:
@@ -63,11 +63,11 @@ var RelayServer = function(servers, options) {
   //      data: object
   //
   // update:
-  //   desc: sends an update to the game server
+  //   desc: sends an update to the game server (the machine running the game)
   //   args:
   //      anything
 
-  // -- messages to the game server --
+  // -- messages to the game server (machine running the game) --
   //
   // update:
   //   desc: updates a player
@@ -96,6 +96,10 @@ var RelayServer = function(servers, options) {
     return game;
   }.bind(this);
 
+  /**
+   * Gets an array of game currently running.
+   * @return {!Array.<object>}
+   */
   this.getGames = function() {
     var gameList = [];
     for (var id in g_games) {
@@ -111,12 +115,21 @@ var RelayServer = function(servers, options) {
     return gameList;
   };
 
+  /**
+   * Adds the given player to the game
+   * @param {!Player} player the player to add
+   * @param {string} gameId id of the game.
+   */
   this.addPlayerToGame = function(player, gameId) {
     var game = getGame(gameId);
     game.addPlayer(player);
     return game;
   }.bind(this);
 
+  /**
+   * Removes a game from the games known by this relayserver
+   * @param {stirng} gameId id of game to remove.
+   */
   this.removeGame = function(gameId) {
     if (!g_games[gameId]) {
       console.error("no game '" + gameId + "' to remove")
@@ -127,12 +140,17 @@ var RelayServer = function(servers, options) {
     delete g_games[gameId];
   }.bind(this);
 
+  /**
+   * Assigns a client as the server for a specific game.
+   * @param {object} data Data passed from game.
+   * @param {Client} client Websocket client object.
+   */
   this.assignAsClientForGame = function(data, client) {
     var game = getGame(data.gameId);
     if (data.controllerUrl && options.address) {
       data.controllerUrl = data.controllerUrl.replace("localhost", options.address);
     }
-    game.assignClient(client, this, data)
+    game.assignClient(client, this, data);
   }.bind(this);
 
   for (var ii = 0; ii < servers.length; ++ii) {

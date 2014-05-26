@@ -41,14 +41,33 @@ var Game = function(gameId, relayServer) {
   this.sendQueue = [];
 };
 
+/**
+ * Returns the number of players connected to this game.
+ * @return num of players connected to game.
+ */
 Game.prototype.getNumPlayers = function() {
   return this.numPlayers;
 };
 
+/**
+ * Game objects can exist without a 'game'. If controllers
+ * connect to the relayserver before the game starts the
+ * `Game` object will exist but no client (the websocket
+ * connected to the game) will exist yet.
+ *
+ * @return {boolean} true if this game object has a client
+ *         (game) connected to it.
+ */
 Game.prototype.hasClient = function() {
   return this.client !== undefined;
 };
 
+/**
+ * Adds a player to the game and sends a message to the game
+ * informing the game of the new player.
+ *
+ * @param {!Player} player player to add.
+ */
 Game.prototype.addPlayer = function(player) {
   var id = player.id;
   if (this.players[id]) {
@@ -60,6 +79,12 @@ Game.prototype.addPlayer = function(player) {
   this.send(null, {cmd: 'start', id: id});
 };
 
+/**
+ * Removes a player from the game and sends a messge to the game
+ * telling it the player left the game.
+ *
+ * @param {!Player} player player to remove.
+ */
 Game.prototype.removePlayer = function(player) {
   var id = player.id;
   if (!this.players[id]) {
@@ -78,6 +103,12 @@ Game.prototype.removePlayer = function(player) {
   });
 };
 
+/**
+ * Sends a message to the game.
+ *
+ * @param {!Player} owner Player sending the message
+ * @param {Object} msg the message
+ */
 Game.prototype.send = function(owner, msg) {
   if (this.client) {
     this.client.send(msg);
@@ -86,6 +117,12 @@ Game.prototype.send = function(owner, msg) {
   }
 };
 
+/**
+ * Call a function on each player.
+ *
+ * @param {!function(!Player)} fn function to call for each
+ *        player
+ */
 Game.prototype.forEachPlayer = function(fn) {
   for (var id in this.players) {
     var player = this.players[id];
@@ -93,9 +130,16 @@ Game.prototype.forEachPlayer = function(fn) {
   };
 };
 
-// data:
-//   gameId: id of game (not used here
-//   controllerUrl: url of controller.
+/**
+ *
+ * @param {!Client} client Websocket client that's connected to
+ *        the game.
+ * @param {!RelayServer} relayserver relayserver the game is
+ *        connected to.
+ * @param {object} data. Data sent from the game which includes
+ *     {string} gameId: id of game (not used here
+ *     {string} controllerUrl: url of controller.
+ */
 Game.prototype.assignClient = function(client, relayserver, data) {
   if (this.client) {
     console.error("this game already has a client!");
