@@ -46,8 +46,8 @@
 
         *   Move the filtering to the game.
 
-        The controller just sends L up, L down, R up, R down messages. The game decides on a direction.
-        Maybe that's the best thing?
+            The controller just sends L up, L down, R up, R down messages. The game decides on a direction.
+            Maybe that's the best thing?
 
         *   Figure out how to specify two buttons are connected
 
