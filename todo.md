@@ -14,6 +14,13 @@
     The problem with both ideas is that during testing I often have multiple tabs
     open. I'd need an option to allow multiple users if I filter by ip.
 
+*   make controllers check for other games if the game has not yet connected?
+
+    There's an issue where sometimes a controller will be waiting for a game since
+    controllers can join first. Maybe controllers should check for other games until
+    they are sure they are connected to a running game. If the see a different game
+    they can switch to it.
+
 *   make it easier to use
 
     I've been thinking like an experienced engineer. Just passing the messages is enough,
