@@ -40,7 +40,7 @@ var WSServer = require('./websocketserver');
 /**
  * RelayServer options
  * @typedef {Object} RelayServer~Options
- * @property {string} address - address that will
+ * @property {String} address - address that will
  *         replace "localhost" when a game's controllerUrl is
  *         passed in.
  */
@@ -48,10 +48,10 @@ var WSServer = require('./websocketserver');
 /**
  * Game list entry
  * @typedef {Object} RelayServer~GameEntry
- * @property {string} gameId - id of game
- * @property {number} numPlayers - number of players currently
+ * @property {String} gameId - id of game
+ * @property {Number} numPlayers - number of players currently
  *           connected.
- * @property {string} controllerUrl - url of controller for game
+ * @property {String} controllerUrl - url of controller for game
  */
 
 /**
@@ -60,6 +60,7 @@ var WSServer = require('./websocketserver');
  * controllers joining and leaving the game and passes messages
  * between them.
  *
+ * @constructor
  * @params {HTTPServer[]} servers. An array of of node
  *       httpservers to run websocket servers. This is an array
  *       because we'd to be able to run multiple servers on
@@ -126,6 +127,7 @@ var RelayServer = function(servers, options) {
 
   /**
    * Gets an array of game currently running.
+   * @method
    * @returns {RelayServer~GameEntry[]}
    */
   this.getGames = function() {
@@ -145,8 +147,9 @@ var RelayServer = function(servers, options) {
 
   /**
    * Adds the given player to the game
+   * @method
    * @param {Player} player the player to add
-   * @param {string} gameId id of the game.
+   * @param {String} gameId id of the game.
    * @returns {Game} game that player was added to
    */
   this.addPlayerToGame = function(player, gameId) {
@@ -157,7 +160,8 @@ var RelayServer = function(servers, options) {
 
   /**
    * Removes a game from the games known by this relayserver
-   * @param {string} gameId id of game to remove.
+   * @method
+   * @param {String} gameId id of game to remove.
    */
   this.removeGame = function(gameId) {
     if (!g_games[gameId]) {
@@ -171,7 +175,8 @@ var RelayServer = function(servers, options) {
 
   /**
    * Assigns a client as the server for a specific game.
-   * @param {object} data Data passed from game.
+   * @method
+   * @param {Object} data Data passed from game.
    * @param {Client} client Websocket client object.
    */
   this.assignAsClientForGame = function(data, client) {

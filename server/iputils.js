@@ -30,6 +30,14 @@
  */
 "use strict";
 
+/**
+ * @module
+ */
+
+/**
+ * Gets the ip address of this machine.
+ * @returns {String[]} array of ip addresses.
+ */
 var getIpAddress = (function() {
 
   var addresses;

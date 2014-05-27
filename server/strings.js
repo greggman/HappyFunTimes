@@ -31,14 +31,32 @@
 
 "use strict";
 
-var startsWith = function(str, start) {
-  return (str.length >= start.length &&
-          str.substr(0, start.length) == start);
+/**
+ * @module
+ */
+
+/**
+ * True if string starts with prefix
+ * @static
+ * @param {String} str string to check for start
+ * @param {String} prefix start value
+ * @returns {Boolean} true if str starts with prefix
+ */
+var startsWith = function(str, prefix) {
+  return (str.length >= prefix.length &&
+          str.substr(0, prefix.length) == prefix);
 };
 
-var endsWith = function(str, end) {
-  return (str.length >= end.length &&
-          str.substring(str.length - end.length) == end);
+/**
+ * True if string ends with suffix
+ * @static
+ * @param {String} str string to check for start
+ * @param {String} suffix start value
+ * @returns {Boolean} true if str starts with suffix
+ */
+var endsWith = function(str, suffix) {
+  return (str.length >= suffix.length &&
+          str.substring(str.length - suffix.length) == suffix);
 };
 
 exports.startsWith = startsWith;

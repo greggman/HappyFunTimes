@@ -309,6 +309,8 @@ var replaceParams = (function() {
  *      from "Cancel" to "Done" and any links displayed when
  *      clicked will launch Safari (or the user's default
  *      browser on OSX).
+ *
+ * @private
  */
 var AppleCaptivePortalHandler = function() {
   // This is a total guess. I'm assuming iOS sends a unique URL. I can use that to hopefully

@@ -36,14 +36,23 @@ var fs = require('fs');
 var path = require('path');
 var strings = require('./strings');
 
-// GameDB scans a folder for games (subfolders with package.json)
-//
-// It reads them all synchronously and creates a list of
-// games.
-//
-// options:
-//    baseDir: directory server serves from, ie, "public"
-//    gamesDirs: {!Array.<string>} directories to scan for games.
+/**
+ * @typedef {Object} GameDB~Options
+ * @property {string} baseDir directory server serves from, ie,
+ *           "public"
+ * @property {string} gamesDirs {String[]} directories to scan
+ *           for games.
+ */
+
+/**
+ * GameDB scans a folder for games (subfolders with package.json)
+ *
+ * It reads them all synchronously and creates a list of
+ * games.
+ *
+ * @constructor
+ * @param {GameDB~Options} options
+ */
 var GameDB = function(options) {
 
   this.games = [];
@@ -96,6 +105,27 @@ var GameDB = function(options) {
   }.bind(this));
 };
 
+/**
+ * This is basically the contents of each game's package.json.
+ * At a minimum the properties listed below are needed to
+ * generate a list of games on /games.html
+ *
+ * @typedef {Object} GameDB~GameInfo
+ * @property {string} gameType the type of game (eg. 'html',
+ *           'Unity', ...)
+ * @property {string} gameUrl the baseDir relative path to the
+ *           game's html page if it's an html based game.
+ * @property {string} screenshotUrl the baseDir relative path to
+ *           the game's screenshot.
+ * @property {string} gamExecutable the baseDir relative path to
+ *           the game's executable if it's a native executable.
+ *           Like a Unity game for example.
+ */
+
+/**
+ * Gets a list of games.
+ * @returns {GameDB~GameInfo[]} the list of games.
+ */
 GameDB.prototype.getGames = function() {
   return this.games;
 };

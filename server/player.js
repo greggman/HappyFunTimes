@@ -36,6 +36,7 @@ var debug = require('debug')('player');
 /**
  * A Player in a game.
  *
+ * @constructor
  * @param {!Client} client The websocket for this player
  * @param {!RelayServer} relayServer The server managing this
  *        player.
