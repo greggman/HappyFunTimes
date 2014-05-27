@@ -31,8 +31,6 @@
 
 "use strict";
 
-// TODO: replace tdl.log stuff
-
 define(
   [ './virtualsocket',
     './netplayer',
@@ -41,13 +39,24 @@ define(
   var emptyMsg = { };
 
   /**
-   * options:
-   *   controllerUrl: url of the controller. If not passed in
-   *       assumes it's the same as the game except 'index.html'.
-   *       In other words if the game's url is
+   * @typedef {Object} GameServer~Options
+   * @property {string} gameId id of game needed to rendezvous
+   *           with controllers.
+   * @property {string=} controllerUrl url of the controller. If
+   *       not passed in assumes it's the same as the game except
+   *       'index.html'. In other words if the game's url is
    *       http://foo/bar/game.html it will assume the controller
    *       is at http://foo/bar/index.html if you don't set the
    *       controllerUrl.
+   */
+
+  /**
+   * GameServer is used by a game to talk to the various
+   * controllers of the people playing the game.
+   *
+   * @alias GameServer
+   * @constructor
+   * @param {GameServer~Options} options options.
    */
   var GameServer = function(options) {
     var _connected = false;
@@ -61,10 +70,29 @@ define(
     var _totalPlayerCount = 0;
     var _eventListeners = {};
 
+    /**
+     * Adds an event listener for the given event type. Valid
+     * commands include 'connect' (we connected to the relayserver),
+     * 'disconnect' we were disconnected from the relaysefver,
+     * 'playerconnect' a new player has joined the game.
+     *
+     * @param {string} eventType name of event
+     * @param {GameServer~Listener} listener callback to call for
+     *        event.
+     */
     this.addEventListener = function(eventType, listener) {
       _eventListeners[eventType] = listener;
     };
 
+    /**
+     * @callback GameServer~Listener
+     * @param {Object} data data from sender.
+     */
+
+    /**
+     * Removes an eventListener
+     * @param {string} eventType name of event
+     */
     this.removeEventListener = function(eventType) {
       _eventListeners[eventType] = undefined;
     };
@@ -133,6 +161,10 @@ define(
       }
     }.bind(this);
 
+    /**
+     * True if we're connected to the relayserver
+     * @returns {Boolean} true if were connected.
+     */
     this.isConnected = function() {
       return _connected;
     };
@@ -174,8 +206,17 @@ define(
       }
     }.bind(this);
 
-    // This sends a command to the 'relayserver'. The relaysever uses 'cmd' to figure out what to do
-    // and 'id' to figure out which client this is for. 'data' will be delieved to that client.
+    /**
+     * This sends a command to the 'relayserver'. The relaysever uses 'cmd' to figure out what to do
+     *  and 'id' to figure out which client this is for. 'data' will be delieved to that client.
+     *
+     * Only NetPlayer should call this.
+     *
+     * @private
+     * @param {String} cmd name of command to send
+     * @param {String} id id of client to relay command to
+     * @param {Object=} data a jsonifiable object to send.
+     */
     this.sendCmd = function(cmd, id, data) {
       if (data === undefined) {
         data = emptyMsg;
@@ -188,10 +229,17 @@ define(
       send_(msg);
     };
 
-    // Sends a command to all clients connected to this server. It's effectively the
-    // same as iterating over all NetPlayers returned in playerconnect events. The difference
-    // is only one message is sent from the server (here) to the relayserver. The relayserver
-    // then sends the same message to each client.
+    /**
+     * Sends a command to all controllers connected to this server.
+     * It's effectively the same as iterating over all NetPlayers
+     * returned in playerconnect events and calling sendCmd on each
+     * one. The difference is only one message is sent from the
+     * server (here) to the relayserver. The relayserver then sends
+     * the same message to each client.
+     *
+     * @param {String} cmd name of command to send
+     * @param {Object=} data a jsonifyable object.
+     */
     this.broadcastCmd = function(cmd, data) {
       if (data === undefined) {
         data = emptyMsg;

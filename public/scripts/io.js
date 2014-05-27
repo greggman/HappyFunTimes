@@ -29,14 +29,31 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+/** @module io */
 define({
   /**
+   * @typedef {Object} SendJSONOptions
+   * @property {Number} timeout timeout in seconds to abort
+   *           request. Default = no-timeout
+   */
+
+  /**
+   * @callback SendJSONCallback
+   * @param {Object=} object object from json parsed jsons
+   * @param {string=} error error or null if no error
+   */
+
+  /**
    * sends a JSON 'POST' request, returns JSON repsonse
-   * @param {string} url url to POST to.
-   * @param {!object} jsonObject JavaScript object on which to call JSON.stringify.
-   * @param {!function(object, error)} callback Function to call on success or failure. If successful error will be null
-   * @param {!object} opt_options Optional options.
-   *     {number} timeout: timeout in ms to abort request. Default = no-timeout
+   * @static
+   * @param {String} url url to POST to.
+   * @param {Object} jsonObject JavaScript object on which to call
+   *        JSON.stringify.
+   * @param {SendJSONCallback} callback Function to call on
+   *        success or failure. If successful error will be null
+   * @param {SendJSONOptions=} opt_options Optional
+   *     options. {number} timeout: timeout in ms to abort
+   *     request. Default = no-timeout
    */
   sendJSON: function(url, jsonObject, callback, opt_options) {
     opt_options = opt_options || { };
