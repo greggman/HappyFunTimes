@@ -33,8 +33,8 @@
 define(function() {
   /**
    * Copies properties from obj to dst recursively.
-   * @param {!Object} obj Object with new settings.
-   * @param {!Object} dst Object to receive new settings.
+   * @param {Object} obj Object with new settings.
+   * @param {Object} dst Object to receive new settings.
    */
   var copyProperties = function(obj, dst) {
     for (var name in obj) {
@@ -61,9 +61,9 @@ define(function() {
 
 
   // Reads the query values from a URL like string.
-  // @param {string} url URL like string eg. http://foo?key=value
-  // @param {object} opt_obj Object to attach key values to
-  // @return {object} Object with key values from URL
+  // @param {String} url URL like string eg. http://foo?key=value
+  // @param {Object=} opt_obj Object to attach key values to
+  // @return {Object} Object with key values from URL
   var parseUrlQueryString = function(str, opt_obj) {
     var dst = opt_obj || {};
     try {
@@ -87,8 +87,8 @@ define(function() {
   };
 
   // Reads the query values from the current URL.
-  // @param {object} opt_obj Object to attach key values to
-  // @return {object} Object with key values from URL
+  // @param {Object=} opt_obj Object to attach key values to
+  // @return {Object} Object with key values from URL
   var parseUrlQuery = function(opt_obj) {
     return parseUrlQueryString(window.location.href);
   };
@@ -98,9 +98,9 @@ define(function() {
   // Note that unlike real JSON we don't require quoting
   // keys if they are alpha_numeric.
   //
-  // @param {object} opt_obj object to apply settings to.
-  // @param {string} opt_argumentName name of key for settings, default = 'settings'.
-  // @return {object} object with settings
+  // @param {Object=} opt_obj object to apply settings to.
+  // @param {String=} opt_argumentName name of key for settings, default = 'settings'.
+  // @return {Object} object with settings
   var fixKeysRE = new RegExp("([a-zA-Z0-9_]+)\:", "g");
 
   var applyUrlSettings = function(opt_obj, opt_argumentName) {
@@ -180,9 +180,10 @@ define(function() {
 
   /**
    * Returns the absolute position of an element for certain browsers.
-   * @param {HTML Element} element The element to get a position for.
-   * @return {Object} An object containing x and y as the absolute position
-   *   of the given element.
+   * @param {HTMLElement} element The element to get a position
+   *        for.
+   * @returns {Object} An object containing x and y as the
+   *   absolute position of the given element.
    */
   var getAbsolutePosition = function(element) {
     var r = { x: element.offsetLeft, y: element.offsetTop };
@@ -194,43 +195,93 @@ define(function() {
     return r;
   };
 
+  /**
+   * Clamp value
+   * @param {Number} v value to clamp
+   * @param {Number} min min value to clamp to
+   * @param {Number} max max value to clamp to
+   * @returns {Number} v clamped to min and max.
+   */
   var clamp = function(v, min, max) {
     return Math.max(min, Math.min(max, v));
   };
 
+  /**
+   * Clamp in both positive and negative directions.
+   * Same as clamp(v, -max, +max)
+   *
+   * @param {Number} v value to clamp
+   * @param {Number} max max value to clamp to
+   * @returns {Number} v clamped to -max and max.
+   */
   var clampPlusMinus = function(v, max) {
     return clamp(v, -max, max);
   };
 
+  /**
+   * Return sign of value
+   *
+   * @param {Number} v value
+   * @returns {Number} -1 if v < 0, 1 if v > 0, 0 if v == 0
+   */
   var sign = function(v) {
     return v < 0 ? -1 : (v > 0 ? 1 : 0);
   };
 
-  // Takes which ever is closer to zero
-  // In other words minToZero(-2, -1) = -1 and minToZero(2, 1) = 1
+  /**
+   * Takes which ever is closer to zero
+   * In other words minToZero(-2, -1) = -1 and minToZero(2, 1) = 1
+   *
+   * @param {Number} v value to min
+   * @param {Number} min min value to use if v is less then -min
+   *        or greater than +min
+   * @returns {Number} min or v, which ever is closer to zero
+   */
   var minToZero = function(v, min) {
     return Math.abs(v) < Math.abs(min) ? v : min;
   };
 
-  // flips 0->max to max<-0 and 0->min to min->
-  // In otherwords
-  //   max: 3, v: 2.7  =  0.3
-  //   max: 3, v:-2.7  = -0.3
-  //   max: 3, v: 0.2  =  2.8
-  //   max: 3, v:-0.2  = -2.8
+  /**
+   * flips 0->max to max<-0 and 0->min to min->0
+   * In otherwords
+   *     max: 3, v: 2.7  =  0.3
+   *     max: 3, v:-2.7  = -0.3
+   *     max: 3, v: 0.2  =  2.8
+   *     max: 3, v:-0.2  = -2.8
+   *
+   * @param {Number} v value to flip.
+   * @param {Number} max range to flip inside.
+   * @returns {Number} flipped value.
+   */
   var invertPlusMinusRange = function(v, max) {
     return sign(v) * (max - Math.min(max, Math.abs(v)));
   };
 
+  /**
+   * Convert degrees to radians
+   *
+   * @param {Number} d value in degrees
+   * @returns {Number} d in radians
+   */
   var degToRad = function(d) {
     return d * Math.PI / 180;
   };
 
+  /**
+   * Converts radians to degrees
+   * @param {Number} r value in radians
+   * @returns {Number} r in degrees
+   */
   var radToDeg = function(r) {
     return r * 180 / Math.PI;
   };
 
-  // Resizes a cavnas to match its CSS displayed size.
+  /**
+   * Resizes a cavnas to match its CSS displayed size.
+   * @param {Canvas} canvas canvas to resize.
+   * @param {Boolean=} use_devicePixelRatio if true canvas will be
+   *        created to match devicePixelRatio.
+   */
   var resize = function(canvas, use_devicePixelRatio) {
     var mult = use_devicePixelRatio ? window.devicePixelRatio : 1;
     mult = mult || 1;
