@@ -119,11 +119,12 @@ define(function() {
     return Math.floor(Math.random() * value);
   };
 
-  var randCSSColor = function() {
-    var strong = randInt(3);
+  var randCSSColor = function(opt_randFunc) {
+    var randFunc = opt_randFunc || randInt;
+    var strong = randFunc(3);
     var colors = [];
     for (var ii = 0; ii < 3; ++ii) {
-      colors.push(randInt(128) + (ii == strong ? 128 : 64));
+      colors.push(randFunc(128) + (ii == strong ? 128 : 64));
     }
     return "rgb(" + colors.join(",") + ")";
   };
