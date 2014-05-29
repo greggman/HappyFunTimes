@@ -64,3 +64,71 @@ a moment for them up update.
 
 Note: for whatever reason Firefox 29 doesn't position the first window
 where I tell it so you'll have to move it manually.
+
+Setting up `x`, `y`, `fullWidth`, and `fullHeight` can be a pain I
+suppose. You could design some UI like Mac/Windows Display Settings. On
+each machine, when it launches, send the screen size to the server with
+something like
+
+    client.sendCmd('size', {
+        width: window.screen.width,
+        height: window.screen.neight,
+    });
+
+The server could pop up a UI showing rectangles representing all the
+monitors which you could drag around until they match the orientation
+of your monitors. To send the new offsets you'd need to track the
+`NetPlayer` objects that are send in response to `playerconnect` messages.
+Then you can `sendCmd` some command you make up to the appropriate
+`NetPlayer` object to update its offset. Something like.
+
+    var machines = [];
+
+    var Machine = function(netPlayer) {
+      this.x = 0;
+      this.y = 0;
+      this.width = 0;
+      this.height = 0;
+
+      netPlayer.addEventListener('size', Machine.protoype.handleSizeMsg.bind(this));
+      netPlayer.addEventListener('disconnect', Machine.prototype.handleDisconnectMsg.bind(this));
+    };
+
+    Machine.prototype.handleSizeMsg = function(data) {
+      this.width = data.width;
+      this.height = data.height;
+    };
+
+    Machine.prototype.handleDisconnectMsg = function() {
+      var index = machines.indexOf(this);
+      if (index >= 0) {
+        machines.splice(index, 1);
+      }
+    };
+
+    Machine.prototype.setOffset = function(x, y) {
+      this.x = x;
+      this.y = y;
+      this.netPlayer.sendCmd('setLocal', {x: x, y: y});
+    };
+
+    server.addEventListener('playerconnect', function(netPlayer) {
+        machines.push(new Machine(netPlayer));
+    });
+
+    ...
+
+    var handleSetLocalMsg = function(data) {
+      Misc.copyProperties(data, globals);
+    };
+
+    client.addEventListener('setLocal', handleSetLocalMsg);
+
+You could also add any arbitrary rotation as well. You'd just have to
+put the appropriate call to `ctx.rotate` somewhere in the code.
+
+All that is left as an excersize to the reader ;)
+
+
+
+
