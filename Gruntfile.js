@@ -1,6 +1,3 @@
-/*
-node ../delme/node_modules/jsdoc/jsdoc.js  --destination delmedocs server/*
-*/
 "use strict";
 
 module.exports = function(grunt) {
