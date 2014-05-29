@@ -70,6 +70,27 @@ define(
     var _totalPlayerCount = 0;
     var _eventListeners = {};
 
+
+    /**
+     * Event that we've connected to the relaysever
+     *
+     * @event GameServer#connected
+     */
+
+    /**
+     * Event that we've been disconnected from the relaysever
+     *
+     * @event GameServer#disconnected
+     */
+
+    /**
+     * Event that a new player has joined the game.
+     *
+     * @event GameServer#playerconnected
+     * @param {NetPlayer} netPlayer a NetPlayer used to communicate
+     *        with the controller for the player.
+     */
+
     /**
      * Adds an event listener for the given event type. Valid
      * commands include 'connect' (we connected to the relayserver),
