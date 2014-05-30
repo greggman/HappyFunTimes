@@ -2,8 +2,8 @@ Sync2D
 ======
 
 [![Video](http://img.youtube.com/vi/ESMlZUdYXnw/0.jpg)](http://www.youtube.com/watch?v=ESMlZUdYXnw)
-[Click for video](http://www.youtube.com/watch?v=ESMlZUdYXnw)
 
+[Click for video](http://www.youtube.com/watch?v=ESMlZUdYXnw)
 
 This example shows using HappyFunTimes basic feature to sync multiple displays
 across machines.
