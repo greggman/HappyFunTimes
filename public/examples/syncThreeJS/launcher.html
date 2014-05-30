@@ -1,0 +1,125 @@
+<!--
+/*
+ * Copyright 2014, Gregg Tavares.
+ * All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are
+ * met:
+ *
+ *     * Redistributions of source code must retain the above copyright
+ * notice, this list of conditions and the following disclaimer.
+ *     * Redistributions in binary form must reproduce the above
+ * copyright notice, this list of conditions and the following disclaimer
+ * in the documentation and/or other materials provided with the
+ * distribution.
+ *     * Neither the name of Gregg Tavares. nor the names of its
+ * contributors may be used to endorse or promote products derived from
+ * this software without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+ * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+ * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+ * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+ * OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+ * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+ * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+ * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+ * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+ * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ */
+-->
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0, maximum-scale=1, user-scalable=no, minimal-ui">
+  <meta name="format-detection" content="telephone=no" />
+  <title>Sync Three.js Desktop Launcher</title>
+  <style>
+    * {
+        box-sizing: border-box;
+        -moz-box-sizing: border-box;
+    }
+    /* make the body full size, FF needs html there? */
+    html, body {
+      width: 100%;
+      height: 100%;
+      border: 0px;
+      padding: 0px;
+      margin: 0px;
+      font-family: Helvetica, Arial, sans-serif;
+      overflow: hidden;
+    }
+
+    #center {
+      width: 100%;
+      height: 100%;
+
+      display: -webkit-box;
+      display: -webkit-flex;
+      display: flex;
+
+      -webkit-box-orient: vertical;
+      -webkit-flex-flow: column;
+      flex-flow: column;
+
+      -webkit-justify-content: center;
+      -webkit-align-content: center;
+      -webkit-align-items: center;
+
+      justify-content: center;
+      align-content: center;
+      align-items: center;
+     }
+
+     #buttons {
+        -webkit-flex: 0 0 auto;
+        flex: 0 0 auto;
+        text-align: center;
+     }
+
+     #buttons>div {
+        margin: 1em;
+     }
+
+     .button {
+        padding: 1em;
+        border-radius: 1em;
+        background-color: blue;
+        color:white;
+        font-size: xx-large;
+        font-weight: bold;
+     }
+  </style>
+  <link href="/hft-icon.png" rel="shortcut icon" type="image/png">
+</head>
+<body>
+<div id="center">
+  <div id="buttons">
+  <div id="button1" class="button">
+    Start Normal
+  </div>
+  <div id="button2" class="button">
+    Start Window Position Based
+  </div>
+  <div>Note: You'll need to disable pop-up blocking</div>
+</div>
+</body>
+<script src="scripts/launcher.js"></script>
+<script>
+var $ = function(id) {
+  return document.getElementById(id);
+};
+
+$("button1").addEventListener('click', function() { launch(); }, false);
+$("button2").addEventListener('click', function() { launch({useWindowPosition: true}); }, false);
+</script>
+</html>
+
