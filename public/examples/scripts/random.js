@@ -32,32 +32,39 @@
 
 define(function() {
 
-  var s_randomSeed = 0;
-  var RANDOM_RANGE = Math.pow(2, 32);
+  var PseudoRandomGenerator = function() {
+    var s_randomSeed = 0;
+    var RANDOM_RANGE = Math.pow(2, 32);
 
-  var pseudoRandom = function() {
-    return (s_randomSeed =
-            (134775813 * s_randomSeed + 1) %
-            RANDOM_RANGE) / RANDOM_RANGE;
+    var random = function() {
+      return (s_randomSeed =
+              (134775813 * s_randomSeed + 1) %
+              RANDOM_RANGE) / RANDOM_RANGE;
+    };
+
+    this.random = random;
+
+    this.reset = function() {
+      s_randomSeed = 0;
+    };
+
+    this.randomRange = function(min, max) {
+      return min + random() * (max - min);
+    };
+
+    this.randomInt = function(range) {
+      return random() * range | 0;
+    };
   };
 
-  var resetPseudoRandom = function() {
-    s_randomSeed = 0;
-  };
-
-  var pseudoRandomRange = function(min, max) {
-    return min + pseudoRandom() * (max - min);
-  };
-
-  var pseudoRandomInt = function(range) {
-    return pseudoRandom() * range | 0;
-  };
+  var def = new PseudoRandomGenerator();
 
   return {
-    pseudoRandom: pseudoRandom,
-    pseudoRandomRange: pseudoRandomRange,
-    pseudoRandomInt: pseudoRandomInt,
-    resetPseudoRandom: resetPseudoRandom,
+    PseudoRandomGenerator: PseudoRandomGenerator,
+    pseudoRandom: def.random,
+    pseudoRandomRange: def.randomRange,
+    pseudoRandomInt: def.randomInt,
+    resetPseudoRandom: def.reset,
   };
 });
 
