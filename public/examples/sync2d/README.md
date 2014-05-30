@@ -5,7 +5,7 @@ Sync2D
 
 [Click for video](http://www.youtube.com/watch?v=ESMlZUdYXnw)
 
-This example shows using HappyFunTimes basic feature to sync multiple displays
+This example shows using HappyFunTimes basic features to sync multiple displays
 across machines.
 
 To see it work on a single machine [run HappyFunTimes](../../README.md#running-the-examples) then
@@ -89,9 +89,10 @@ Then you can `sendCmd` some command you make up to the appropriate
     var machines = [];
 
     var Machine = function(netPlayer) {
+      this.netPlayer = netPlayer;
       this.x = 0;
       this.y = 0;
-      this.width = 0;
+      this.width  = 0;
       this.height = 0;
 
       netPlayer.addEventListener('size', Machine.protoype.handleSizeMsg.bind(this));
@@ -99,7 +100,7 @@ Then you can `sendCmd` some command you make up to the appropriate
     };
 
     Machine.prototype.handleSizeMsg = function(data) {
-      this.width = data.width;
+      this.width  = data.width;
       this.height = data.height;
     };
 
