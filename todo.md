@@ -1,3 +1,8 @@
+*   game where you slide character from one phone to the other by sliding across both phones
+*
+
+*   move package.json stuff to happyfuntimes sub
+*   fix localhost replacement so it includes port
 *   add timeout for input. No input from player for n seconds = disconnect?
 
     Right now we ping and expect a response. No repsonse = player is offline. But,
