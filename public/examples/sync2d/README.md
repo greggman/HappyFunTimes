@@ -1,6 +1,10 @@
 Sync2D
 ======
 
+[![Video](http://img.youtube.com/vi/ESMlZUdYXnw/0.jpg)](http://www.youtube.com/watch?v=ESMlZUdYXnw)
+[Click for video](http://www.youtube.com/watch?v=ESMlZUdYXnw)
+
+
 This example shows using HappyFunTimes basic feature to sync multiple displays
 across machines.
 
@@ -33,9 +37,9 @@ middle machine and `x:2560` on the right machine.
 Finally on one of the machines specifiy `server:true`.  That's the machine
 that will get the UI to control the rest of the machines.
 
-[`http://ipaddress:8080/examples/sync2d/sync2d.html?settings={x:0,y:0,shared:{fullWidth:3740,fullHeight:1024}}`](http://ipaddress:8080/examples/sync2d/sync2d.html?settings={x:0,y:0,shared:{fullWidth:3740,fullHeight:1024}})
-[`http://ipaddress:8080/examples/sync2d/sync2d.html?settings={server:true,x:1280,y:0,shared:{fullWidth:3740,fullHeight:1024}}`](http://ipaddress:8080/examples/sync2d/sync2d.html?settings={server:true,x:0,y:1280,shared:{fullWidth:3740,fullHeight:1024}})
-[`http://ipaddress:8080/examples/sync2d/sync2d.html?settings={x:2560,y:0,shared:{fullWidth:3740,fullHeight:1024}}`](http://ipaddress:8080/examples/sync2d/sync2d.html?settings={x:0,y:2560,shared:{fullWidth:3740,fullHeight:1024}})
+    http://ipaddress:8080/examples/sync2d/sync2d.html?settings={x:0,y:0,shared:{fullWidth:3740,fullHeight:1024}}
+    http://ipaddress:8080/examples/sync2d/sync2d.html?settings={server:true,x:1280,y:0,shared:{fullWidth:3740,fullHeight:1024}}
+    http://ipaddress:8080/examples/sync2d/sync2d.html?settings={x:2560,y:0,shared:{fullWidth:3740,fullHeight:1024}}
 
 The code is pretty straight forward.  It creates a `GameClient` and waits
 for `set` commands.  The `set` commands just set some global shared state.

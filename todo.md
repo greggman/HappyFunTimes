@@ -1,7 +1,3 @@
-*   game where you slide character from one phone to the other by sliding across both phones
-*
-
-*   move package.json stuff to happyfuntimes sub
 *   fix localhost replacement so it includes port
 *   add timeout for input. No input from player for n seconds = disconnect?
 
@@ -429,6 +425,32 @@
 
     *   Find your picture on other person's phone.
 
+    *   game where players have to find matching piece of puzzle.
+
+        Example for groups of 3 players they might see
+
+            +---+  +---+  +---+   Picture of 3 phones side by side.
+            |   |  |   |  |   |   with some image that fits just those
+            | <-|  |-O-|  |-> |   3 phones.
+            |   |  |   |  |   |
+            |   |  |   |  |   |
+            +---+  +---+  +---+
+
+        You have to walk around the room and find your matching partners.
+        Maybe make it easier by matching background colors. First find all the red players,
+        then figure how to align the phones to see the image.
+
+        Not sure what you'd do at that point. Type the message that's across N
+        displays. Or maybe trace some line across all 3? Hard to do unless you
+        set the phones down.
+
+    *   game where you slide character from one phone to the other by sliding finger across both phones
+
+        Variation of above idea. If you know 2 phones are partners then you could slide
+        your finger from one to the other to drag a character across screens. The game would
+        know the 2 controllers belong together and based on time (syncedclock) and where fingers
+        are dragged could tell if you dragged from the the correct N phones.
+
     *   Racing up or down screen using device orientation for steering
 
     *   Use device orientation like a paddle controller. Tilting left
@@ -500,6 +522,7 @@
 Done
 ----
 
+*   move package.json stuff to happyfuntimes sub
 *   Make start on game-login use whole area.
 *   Change Powpow so outline version of ship is 2x or 3x thicker
 *   remove mobile stuff from games.html
