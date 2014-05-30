@@ -32,6 +32,12 @@
 
 define(function() {
 
+  /**
+   * Returns a padding string large enough for the given size.
+   * @param {string} padChar character for padding string
+   * @param {number} len minimum length of padding.
+   * @returns {string} string with len or more of padChar.
+   */
   var getPadding = (function() {
     var paddingDb = {};
 
@@ -45,10 +51,22 @@ define(function() {
     };
   }());
 
+  /**
+   * Turn an unknown object into a string if it's not already.
+   * Do I really needs this? I could just always do .toString even
+   * on a string.
+   */
   var stringIt = function(str) {
     return (typeof(str) === 'string') ? str : str.toString();
   };
 
+  /**
+   * Pad string on right
+   * @param {string} str string to pad
+   * @param {number} len number of characters to pad to
+   * @param {string} padChar character to pad with
+   * @returns {string} padded string.
+   */
   var padRight = function(str, len, padChar) {
     str = stringIt(str);
     if (str.length >= len) {
@@ -58,6 +76,13 @@ define(function() {
     return str + padStr.substr(str.length - len);
   };
 
+  /**
+   * Pad string on left
+   * @param {string} str string to pad
+   * @param {number} len number of characters to pad to
+   * @param {string} padChar character to pad with
+   * @returns {string} padded string.
+   */
   var padLeft = function(str, len, padChar) {
     str = stringIt(str);
     if (str.length >= len) {
@@ -67,34 +92,74 @@ define(function() {
     return padStr.substr(str.length - len) + str;
   };
 
-  var replaceParamsRE = /%\(([^\)]+)\)s/g;
-  var replaceParams = function(str, params) {
-    if (!params.length) {
-      params = [params];
-    }
+  /**
+   * Replace %(id)s in strings with values in objects(s)
+   *
+   * Given a string like `"Hello %(name)s from $(user.country)s"`
+   * and an object like `{name:"Joe",user:{country:"USA"}}` would
+   * return `"Hello Joe from USA"`.
+   *
+   * @param {string} str string to do replacements in
+   * @param {Object|Object[]} params one or more objects.
+   * @returns {string} string with replaced parts
+   */
+  var replaceParams = (function() {
+    var replaceParamsRE = /%\(([^\)]+)\)s/g;
 
-    return str.replace(replaceParamsRE, function(match, key) {
-      for (var ii = 0; ii < params.length; ++ii) {
-        var value = params[ii][key];
-        if (value !== undefined) {
-          return value;
-        }
+    return function(str, params) {
+      if (!params.length) {
+        params = [params];
       }
-      console.error("unknown key: " + key);
-      return "%(" + key + ")s";
-    });
-  };
 
+      return str.replace(replaceParamsRE, function(match, key) {
+        var keys = key.split('.');
+        for (var ii = 0; ii < params.length; ++ii) {
+          var obj = params[ii];
+          for (var jj = 0; jj < keys.length; ++jj) {
+            var key = keys[jj]
+            var obj = obj[key];
+            if (obj === undefined) {
+              break;
+            }
+          }
+          return obj;
+        }
+        console.error("unknown key: " + key);
+        return "%(" + key + ")s";
+      });
+    };
+  }());
+
+  /**
+   * True if string starts with prefix
+   * @static
+   * @param {String} str string to check for start
+   * @param {String} prefix start value
+   * @returns {Boolean} true if str starts with prefix
+   */
   var startsWith = function(str, start) {
     return (str.length >= start.length &&
             str.substr(0, start.length) == start);
   };
 
+  /**
+   * True if string ends with suffix
+   * @static
+   * @param {String} str string to check for start
+   * @param {String} suffix start value
+   * @returns {Boolean} true if str starts with suffix
+   */
   var endsWith = function(str, end) {
     return (str.length >= end.length &&
             str.substring(str.length - end.length) == end);
   };
 
+  /**
+   * Make a string from unicode code points
+   * @param {Number...} codePoint one or more code points
+   * @return {string} unicode string. Note a single code point can
+   *         return a string with length > 1.
+   */
   var fromCodePoint = String.fromCodePoint ? String.fromCodePoint : (function() {
     var stringFromCharCode = String.fromCharCode;
     var floor = Math.floor;
