@@ -55,11 +55,15 @@ var strings = require('./strings');
  */
 var GameDB = function(options) {
 
+  this.templateUrls = [];
   this.games = [];
-  this.foo = "hello";
 
   var backslashRE = new RegExp("\\\\", 'g');
   var cwd = process.cwd();
+
+  var makeAbsUrl = function(url, gameBasePath) {
+    return "/" + path.relative(options.baseDir, path.join(gameBasePath, url)).replace(backslashRE, "/");
+  };
 
   options.gamesDirs.forEach(function(basePath) {
     if (!fs.existsSync(basePath)) {
@@ -79,10 +83,21 @@ var GameDB = function(options) {
           var contents = fs.readFileSync(filePath);
           var info = JSON.parse(contents);
 
+          if (info.templateUrls) {
+            info.templateUrls.forEach(function(url) {
+              this.templateUrls.push(makeAbsUrl(url, gameBasePath));
+            }.bind(this));
+          }
+
+          var gameType = info.gameType;
+          if (!gameType) {
+            return;
+          }
+
           // Fix some urls.
           ['gameUrl', 'screenshotUrl'].forEach(function(name) {
             if (info[name]) {
-              info[name] = "/" + path.relative(options.baseDir, path.join(gameBasePath, info[name])).replace(backslashRE, "/");
+              info[name] = makeAbsUrl(info[name], gameBasePath);
             };
           });
 
@@ -128,6 +143,13 @@ var GameDB = function(options) {
  */
 GameDB.prototype.getGames = function() {
   return this.games;
+};
+
+/**
+ * List of URLs that need template subsitution
+ */
+GameDB.prototype.getTemplateUrls = function() {
+  return this.templateUrls;
 };
 
 module.exports = GameDB;
