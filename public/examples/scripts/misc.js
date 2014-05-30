@@ -129,6 +129,16 @@ define(function() {
     return "rgb(" + colors.join(",") + ")";
   };
 
+  var rand32BitColor = function(opt_randFunc) {
+    var randFunc = opt_randFunc || randInt;
+    var strong = randFunc(3);
+    var color = 0xFF;
+    for (var ii = 0; ii < 3; ++ii) {
+      color = (color << 8) | (randFunc(128) + (ii == strong ? 128 : 64));
+    }
+    return color;
+  };
+
   var findCSSStyleRule = function(selector) {
     for (var ii = 0; ii < document.styleSheets.length; ++ii) {
       var styleSheet = document.styleSheets[ii];
@@ -312,6 +322,7 @@ define(function() {
     radToDeg: radToDeg,
     randInt: randInt,
     randCSSColor: randCSSColor,
+    rand32BitColor: rand32BitColor,
     resize: resize,
     sign: sign,
   };
