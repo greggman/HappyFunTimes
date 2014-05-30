@@ -401,6 +401,12 @@ AppleCaptivePortalHandler.prototype.sendCaptivePortalHTML = function(res, sessio
 
 var appleCaptivePortalHandler = new AppleCaptivePortalHandler();
 
+var templatify = function(str) {
+  return replaceParams(str, {
+    localhost: g.address,
+  });
+};
+
 var sendRequestedFile = function(req, res) {
   if (appleCaptivePortalHandler.check(req, res)) {
     return;
@@ -408,6 +414,7 @@ var sendRequestedFile = function(req, res) {
 
   var parsedUrl = url.parse(req.url);
   var filePath = querystring.unescape(parsedUrl.pathname);
+  var isTemplate = gameDB.getTemplateUrls().indexOf(filePath) >= 0;
   var fullPath = path.normalize(path.join(g.cwd, g.baseDir, filePath));
   // I'm sure these checks are techincally wrong but it doesn't matter for our purposes AFAICT.
   var isQuery = filePath.indexOf('?') >= 0;
@@ -427,7 +434,7 @@ var sendRequestedFile = function(req, res) {
       fullPath += "index.html";
     }
   }
-  sendFileResponse(res, fullPath);
+  sendFileResponse(res, fullPath, isTemplate ? templatify : undefined);
 };
 
 var send404 = function(res) {
@@ -456,7 +463,7 @@ var tryStartRelayServer = function() {
   --numResponsesNeeded;
   if (numResponsesNeeded < 0) {
     throw "numReponsese is negative";
-  }
+  }5
   if (numResponsesNeeded == 0) {
     if (goodPorts.length == 0) {
       console.error("NO PORTS available. Tried port(s) " + ports.join(", "));
