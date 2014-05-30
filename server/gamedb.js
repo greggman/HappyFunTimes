@@ -81,35 +81,39 @@ var GameDB = function(options) {
       if (fs.existsSync(filePath)) {
         try {
           var contents = fs.readFileSync(filePath);
-          var info = JSON.parse(contents);
+          var packageInfo = JSON.parse(contents);
+          var hftInfo = packageInfo.happyFunTimes;
+          if (!hftInfo) {
+            return;
+          }
 
-          if (info.templateUrls) {
-            info.templateUrls.forEach(function(url) {
+          if (hftInfo.templateUrls) {
+            hftInfo.templateUrls.forEach(function(url) {
               this.templateUrls.push(makeAbsUrl(url, gameBasePath));
             }.bind(this));
           }
 
-          var gameType = info.gameType;
+          var gameType = hftInfo.gameType;
           if (!gameType) {
             return;
           }
 
           // Fix some urls.
           ['gameUrl', 'screenshotUrl'].forEach(function(name) {
-            if (info[name]) {
-              info[name] = makeAbsUrl(info[name], gameBasePath);
+            if (hftInfo[name]) {
+              hftInfo[name] = makeAbsUrl(hftInfo[name], gameBasePath);
             };
           });
 
-          if (info.gameExecutable) {
-            info.gameExecutable = path.relative(options.baseDir, path.join(gameBasePath, info.gameExecutable));
-            var fullPath = path.normalize(path.join(cwd, info.gameExecutable));
+          if (hftInfo.gameExecutable) {
+            hftInfo.gameExecutable = path.relative(options.baseDir, path.join(gameBasePath, hftInfo.gameExecutable));
+            var fullPath = path.normalize(path.join(cwd, hftInfo.gameExecutable));
             if (cwd != fullPath.substring(0, cwd.length)) {
               throw "bad path for game executable: " + fullPath;
             }
           }
 
-          this.games.push(info);
+          this.games.push(packageInfo);
         } catch (e) {
           console.error("ERROR: Reading " + filePath);
           throw e;

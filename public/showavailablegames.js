@@ -62,7 +62,7 @@ var main = function(IO, Strings) {
       for (var ii = 0; ii < obj.length; ++ii) {
         var gameInfo = obj[ii];
         gameInfo.count = ii;
-        var templateId = gameInfo.gameType.toLowerCase();
+        var templateId = gameInfo.happyFunTimes.gameType.toLowerCase();
         var template = templates[templateId];
         if (!template) {
           console.error("missing template: " + templateId);
@@ -79,7 +79,12 @@ var main = function(IO, Strings) {
         var buttonId = elem.id;
         var count = parseInt(buttonId.substr(0, buttonId.length - buttonIdSuffix.length));
         var gameInfo = obj[count];
-        var msgId = gameInfo.gameType.toLowerCase() + hiddenMsgSuffix;
+        var gameType = gameInfo.happyFunTimes.gameType;
+        if (!gameType) {
+          console.warn("missing happyFunTimes.gameType in package.json")
+          continue;
+        }
+        var msgId = gameType.toLowerCase() + hiddenMsgSuffix;
         var msgElement = document.getElementById(msgId);
         if (!msgElement) {
           console.error("missing msg element: " + msgId);

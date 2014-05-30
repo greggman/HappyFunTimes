@@ -5,9 +5,11 @@
   "private": false,
   "dependencies": {
   },
-  "gameType": "Unity3D",
-  "screenshotUrl": "unitycharacterexample-screenshot.png",
-  "gameExecutable": "unitygame",
-  "useControllerTemplate": true,
-  "useGameTemplate": false
+  "happyFunTimes": {
+    "gameType": "Unity3D",
+    "screenshotUrl": "unitycharacterexample-screenshot.png",
+    "gameExecutable": "unitygame",
+    "useControllerTemplate": true,
+    "useGameTemplate": false
+  }
 }

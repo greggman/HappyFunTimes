@@ -264,17 +264,6 @@ var sendFileResponse = function(res, fullPath, opt_prepFn) {
   }
 };
 
-var replaceParams = (function() {
-
-  var captureRE = /%\(([A-Za-z0-9_]+)\)s/g;
-
-  return function(str, params) {
-    return str.replace(captureRE, function(match) {
-      return params[match.substring(2, match.length - 2)];
-    });
-  };
-}());
-
 /**
  * Object to try to encapulate dealing with Apple's captive
  * portal detector.
@@ -393,7 +382,7 @@ AppleCaptivePortalHandler.prototype.sendCaptivePortalHTML = function(res, sessio
       sessionId: sessionId,
       localhost: g.address + ":" + g.port,
     };
-    str = replaceParams(str, params);
+    str = strings.replaceParams(str, params);
     return str;
   });
 };
@@ -402,7 +391,7 @@ AppleCaptivePortalHandler.prototype.sendCaptivePortalHTML = function(res, sessio
 var appleCaptivePortalHandler = new AppleCaptivePortalHandler();
 
 var templatify = function(str) {
-  return replaceParams(str, {
+  return strings.replaceParams(str, {
     localhost: g.address,
   });
 };
