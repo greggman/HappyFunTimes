@@ -35,8 +35,25 @@ import sys
 import json
 from optparse import OptionParser
 
+class Replacer(object):
+
+  def __init__ (self, params):
+    self.params = params
+
+  def repl(self, m):
+    id = m.group(1);
+    keys = id.split('.')
+    obj = self.params
+    for key in keys:
+      if not key in obj:
+        return id
+      obj = obj[key]
+    return obj
+
 
 class Builder(object):
+
+  replace_params_re = re.compile(r"%\(([^\)]+)\)s")
 
   def __init__ (self):
     self.file_db = {}
@@ -88,7 +105,8 @@ class Builder(object):
     str = str.replace('__PERCENT__', '%')
 
   def ReplaceParams(self, s, params):
-    return s % params
+    r = Replacer(params)
+    return Builder.replace_params_re.sub(r.repl, s)
 
   def ApplyTemplate(self, template_path, params):
     template = self.ReadFile(template_path)
@@ -139,8 +157,10 @@ class Builder(object):
           package = json.loads(contents)
           game = package["happyFunTimes"]
 
+          if not "gameType" in game:
+            continue
           gameType = game["gameType"]
-          if gameType == None or len(gameType) == 0:
+          if len(gameType) == 0:
             continue
 
           game["filebasename"] = folder.lower()
