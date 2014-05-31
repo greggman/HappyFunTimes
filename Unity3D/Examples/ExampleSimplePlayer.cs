@@ -21,6 +21,21 @@ class ExampleSimplePlayer : MonoBehaviour {
         public float y = 0;
     };
 
+    [CmdName("setName")]
+    private class MessageSetName : MessageCmdData {
+        public MessageSetName() {  // needed for deserialization
+        }
+        public MessageSetName(string _name) {
+            name = _name;
+        }
+        public string name = "";
+    };
+
+    [CmdName("busy")]
+    private class MessageBusy : MessageCmdData {
+        public bool busy = false;
+    }
+
     // NOTE: This message is only sent, never received
     // therefore it does not need a no parameter constructor.
     // If you do receive one you'll get an error unless you
@@ -36,6 +51,7 @@ class ExampleSimplePlayer : MonoBehaviour {
 
     public void Init(NetPlayer netPlayer) {
         m_netPlayer = netPlayer;
+        m_name = "Player" + (++s_nextPlayerId);
     }
 
     void Start() {
@@ -46,6 +62,8 @@ class ExampleSimplePlayer : MonoBehaviour {
         // Setup events for the different messages.
         m_netPlayer.RegisterCmdHandler<MessageColor>(OnColor);
         m_netPlayer.RegisterCmdHandler<MessageMove>(OnMove);
+        m_netPlayer.RegisterCmdHandler<MessageSetName>(OnSetName);
+        m_netPlayer.RegisterCmdHandler<MessageBusy>(OnBusy);
     }
 
     public void Update() {
@@ -73,10 +91,24 @@ class ExampleSimplePlayer : MonoBehaviour {
         gameObject.transform.localPosition = m_position;
     }
 
+    private void OnSetName(MessageSetName data) {
+        if (data.name.Length == 0) {
+            m_netPlayer.SendCmd(new MessageSetName(m_name));
+        } else {
+            m_name = data.name;
+        }
+    }
+
+    private void OnBusy(MessageBusy data) {
+        // not used.
+    }
+
     private System.Random m_rand;
     private NetPlayer m_netPlayer;
     private Vector3 m_position;
     private Color m_color;
+    private string m_name;
+    private static int s_nextPlayerId = 0;
 }
 
 }  // namespace HappyFunTimesExample

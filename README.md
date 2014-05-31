@@ -1,9 +1,11 @@
 HappyFunTimes
 =============
 
+[Home Page](http://greggman.github.io/HappyFunTimes/).
+
 <img id="test" src="images/scene-00-jumpjump.jpg" width="782" height="441" />
 
-HappyFunTimes is a library for making party games that are meant to be
+[HappyFunTimes](http://greggman.github.io/HappyFunTimes/) is a library for making party games that are meant to be
 played with a bunch of people in the same room and 1 ideally large display.
 
 <img id="test" src="images/scene-04-boomboom.jpg" width="782" height="441" />

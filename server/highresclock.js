@@ -31,12 +31,29 @@
 
 "use strict";
 
+/**
+ * A current time clock with high resolution. As it's the
+ * current there's no need for more than one click so this
+ * module just returns a reference to a global instance of a
+ * HighResClock. Call getTime to get the time.
+ *
+ * @constructor
+ * @example
+ *     var highResClock = require('./highresclock');
+ *     console.log(highResClock.getTime());
+ *
+ */
 var HighResClock = (function() {
 
   var startHrTime = process.hrtime();
   var startTime = Date.now() * 0.001;
 
   return function() {
+    /**
+     * Returns the current time of day in seconds
+     * @method
+     * @returns {Number} the current *time* of the clock.
+     */
     this.getTime = function() {
       var elapsedHrTime = process.hrtime(startHrTime);
       return startTime + elapsedHrTime[0] + elapsedHrTime[1] * 1e-9;

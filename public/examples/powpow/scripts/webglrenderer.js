@@ -132,17 +132,31 @@ define(
     }
 
     function makeOutlineShip() {
-      var arrays = {
-        position: new tdl.primitives.AttribBuffer(2, [
-            0,  15,
-           15, -15,
-            0, -10,
-          -15, -15
-        ]),
-        indices: new tdl.primitives.AttribBuffer(2, [
-          0, 1, 1, 2, 2, 3, 3, 0
-        ], 'Uint16Array')
+      var numOutLines = 5;
+      var numVerts = 4 * numOutLines;
+      var position = new tdl.primitives.AttribBuffer(2, numVerts);
+      var indices = new tdl.primitives.AttribBuffer(2, numVerts, 'Uint16Array');
+
+      var offset = 0;
+      var size = 15;
+      for (var ii = 0; ii < numOutLines; ++ii) {
+        position.push([0, 15 - ii]);
+        position.push([15 - ii, -15 + ii]);
+        position.push([0, -10 + ii]);
+        position.push([-15 + ii, -15 + ii]);
+
+        indices.push([offset + 0, offset + 1]);
+        indices.push([offset + 1, offset + 2]);
+        indices.push([offset + 2, offset + 3]);
+        indices.push([offset + 3, offset + 0]);
+
+        offset += 4;
       }
+
+      var arrays = {
+        position: position,
+        indices: indices,
+      };
       var textures = {
       };
       var program = tdl.programs.loadProgramFromScriptTags(

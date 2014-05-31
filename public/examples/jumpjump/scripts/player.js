@@ -34,10 +34,12 @@ define([
     '../../scripts/2d',
     '../../scripts/imageprocess',
     '../../scripts/misc',
+    '../../scripts/strings',
   ], function(
     M2D,
     ImageProcess,
-    Misc) {
+    Misc,
+    Strings) {
 
   var availableColors = [];
   var nameFontOptions = {
@@ -81,6 +83,10 @@ window.p = this;
       ];
       this.timeAccumulator = 0;
 
+      this.scoreLine = this.services.scoreManager.createScoreLine(this, this.color);
+      this.scoreLine.ctx.drawImage(
+        this.services.images.idle.imgColors[this.color.id][0], 0, 0);
+
       this.sprite = this.services.spriteManager.createSprite();
       this.nameSprite = this.services.spriteManager.createSprite();
 
@@ -94,6 +100,7 @@ window.p = this;
       this.direction = 0;         // direction player is pushing (-1, 0, 1)
       this.facing = direction;    // direction player is facing (-1, 1)
       this.score = 0;
+      this.addPoints(0);
 
       this.setState('idle');
       this.reset();
@@ -106,6 +113,7 @@ window.p = this;
       this.playerName = name;
       this.nameImage = this.services.createTexture(
           ImageProcess.makeTextImage(name, nameFontOptions));
+      this.scoreLine.setName(":" + name);
     }
   };
 
@@ -117,6 +125,11 @@ window.p = this;
     this.lastPosition = [this.position[0], this.position[1]];
   };
 
+  Player.prototype.addPoints = function(points) {
+    this.score += points;
+    this.scoreLine.setMsg(Strings.padLeft(this.score, 3, "0"));
+  };
+
   Player.prototype.setState = function(state) {
     this.state = state;
     var init = this["init_" + state];
@@ -124,7 +137,7 @@ window.p = this;
       init.call(this);
     }
     this.process = this["state_" + state];
-  }
+  };
 
   Player.prototype.checkBounds = function() {
     var levelManager = this.services.levelManager;
@@ -159,6 +172,7 @@ window.p = this;
     this.services.entitySystem.removeEntity(this);
     this.services.drawSystem.removeEntity(this);
     this.services.playerManager.removePlayer(this);
+    this.services.scoreManager.deleteScoreLine(this.scoreLine);
     availableColors.push(this.color);
   };
 

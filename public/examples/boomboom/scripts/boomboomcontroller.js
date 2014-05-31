@@ -63,6 +63,8 @@ var main = function(
     return document.getElementById(id);
   }
 
+  var bombsCtx = $("bombs").getContext("2d");
+  var bombSizeCtx = $("bombsize").getContext("2d");
   var msgContainerStyle = $("msgcontainer").style;
   var msgText = Misc.createTextNode($("msg"));
   var msgContainerOriginalDisplay = msgContainerStyle.display;
@@ -95,18 +97,29 @@ var main = function(
     tiles0:  { url: "assets/bomb_party-00.png", },
   };
   var avatarTileId = 0x0101;
+  var bombTileId   = 0x0504;
+  var flameTileIds = [
+    0x0501, // flameH,
+    0x0500, // flameL,
+    0x0503, // flameR,
+  ];
 
   var startClient = function() {
-    var cutTile = function(xy, ii) {
+    var cutTile = function(xy, ii, size) {
       var tx = (((xy >> 0) & 0xFF)     );
       var ty = (((xy >> 8) & 0xFF) + ii);
       var img = ImageProcess.cropImage(images.tiles0.img, tx * 16, ty * 16, 16, 16);
-      return img = ImageProcess.scaleImage(img, 128, 128);
+      return img = ImageProcess.scaleImage(img, size, size);
     };
 
     images.avatars = [];
     for (var ii = 0; ii < 4; ++ii) {
-      images.avatars.push(cutTile(avatarTileId, ii));
+      images.avatars.push(cutTile(avatarTileId, ii, 128));
+    }
+    images.bomb = cutTile(bombTileId, 0, 16);
+    images.flames = [];
+    for (var ii = 0; ii < flameTileIds.length; ++ii) {
+      images.flames.push(cutTile(flameTileIds[ii], 0, 16));
     }
 
     g_client = new GameClient({
@@ -146,6 +159,10 @@ var main = function(
       hideMsg();
     };
 
+    var handleSpoil = function() {
+      hideMsg();
+    };
+
     var handleSetColor = function(msg) {
       var canvas = $("avatar");
       var width = canvas.clientWidth;
@@ -157,18 +174,41 @@ var main = function(
       ctx.drawImage(frame, 0, 0);
     };
 
+    var handleNumBombs = function(msg) {
+      Misc.resize(bombsCtx.canvas);
+      bombsCtx.clearRect(0, 0, bombsCtx.canvas.width, bombsCtx.canvas.height);
+      for (var ii = 0; ii < msg.numBombs; ++ii) {
+        bombsCtx.drawImage(images.bomb, ii * 16, 0);
+      }
+    };
+
+    var handleBombSize = function(msg) {
+      Misc.resize(bombSizeCtx.canvas);
+      bombSizeCtx.clearRect(0, 0, bombSizeCtx.canvas.width, bombSizeCtx.canvas.height);
+      bombSizeCtx.drawImage(images.flames[1], 0, 0);
+      for (var ii = 1; ii <= msg.size; ++ii) {
+        bombSizeCtx.drawImage(images.flames[0], ii * 16, 0);
+      }
+      bombSizeCtx.drawImage(images.flames[2], ii * 16, 0);
+    };
+
     if (globals.forceController) {
       hideMsg();
     } else {
+      // These messages hide/show the controller so don't handle them
+      // if we're testing the controller with `forceController`
       g_client.addEventListener('score', handleScore);
       g_client.addEventListener('start', handleStart);
       g_client.addEventListener('tied', handleTie);
       g_client.addEventListener('died', handleDeath);
+      g_client.addEventListener('spoil', handleSpoil);
       g_client.addEventListener('winner', handleWinner);
       g_client.addEventListener('waitForStart', handleWaitForStart);
       g_client.addEventListener('waitForNextGame', handleWaitForNextGame);
       g_client.addEventListener('waitForMorePlayers', handleWaitForMorePlayers);
     }
+    g_client.addEventListener('numBombs', handleNumBombs);
+    g_client.addEventListener('bombSize', handleBombSize);
     g_client.addEventListener('setColor', handleSetColor);
 
     var sounds = {};

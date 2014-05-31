@@ -33,6 +33,15 @@
 
 var debug = require('debug')('Game');
 
+/**
+ * Represents one game running through the relaysever.
+ *
+ * @constructor
+ *
+ * @param {string} gameId id of game
+ * @param {!RelayServer} relayServer relaysever managing
+ *        communication for this game.
+ */
 var Game = function(gameId, relayServer) {
   this.gameId = gameId;
   this.relayServer = relayServer;
@@ -41,14 +50,33 @@ var Game = function(gameId, relayServer) {
   this.sendQueue = [];
 };
 
+/**
+ * Returns the number of players connected to this game.
+ * @return num of players connected to game.
+ */
 Game.prototype.getNumPlayers = function() {
   return this.numPlayers;
 };
 
+/**
+ * Game objects can exist without a 'game'. If controllers
+ * connect to the relayserver before the game starts the
+ * `Game` object will exist but no client (the websocket
+ * connected to the game) will exist yet.
+ *
+ * @return {boolean} true if this game object has a client
+ *         (game) connected to it.
+ */
 Game.prototype.hasClient = function() {
   return this.client !== undefined;
 };
 
+/**
+ * Adds a player to the game and sends a message to the game
+ * informing the game of the new player.
+ *
+ * @param {!Player} player player to add.
+ */
 Game.prototype.addPlayer = function(player) {
   var id = player.id;
   if (this.players[id]) {
@@ -60,6 +88,12 @@ Game.prototype.addPlayer = function(player) {
   this.send(null, {cmd: 'start', id: id});
 };
 
+/**
+ * Removes a player from the game and sends a messge to the game
+ * telling it the player left the game.
+ *
+ * @param {!Player} player player to remove.
+ */
 Game.prototype.removePlayer = function(player) {
   var id = player.id;
   if (!this.players[id]) {
@@ -78,14 +112,31 @@ Game.prototype.removePlayer = function(player) {
   });
 };
 
+/**
+ * Sends a message to the game.
+ *
+ * @param {!Player} owner Player sending the message
+ * @param {Object} msg the message
+ */
 Game.prototype.send = function(owner, msg) {
   if (this.client) {
-    this.client.send(msg);
+    try {
+      this.client.send(msg);
+    } catch (e) {
+      // This happens if the game disconnects where there are messages to send?
+      console.warn("Attempt to send message to game failed: " + e.toString());
+    }
   } else {
     this.sendQueue.push({owner: owner, msg: msg});
   }
 };
 
+/**
+ * Call a function on each player.
+ *
+ * @param {!function(!Player)} fn function to call for each
+ *        player
+ */
 Game.prototype.forEachPlayer = function(fn) {
   for (var id in this.players) {
     var player = this.players[id];
@@ -93,15 +144,30 @@ Game.prototype.forEachPlayer = function(fn) {
   };
 };
 
-// data:
-//   gameId: id of game (not used here
-//   controllerUrl: url of controller.
+/**
+ * @typedef {Object} Game~GameOptions
+ * @property {string} gameId id of game (not used here
+ * @property {string} controllerUrl url of controller.
+ * @property {boolean} disconnectPlayersOnGameDisconnects.
+ *           Default = true.
+ */
+
+/**
+ *
+ * @param {!Client} client Websocket client that's connected to
+ *        the game.
+ * @param {!RelayServer} relayserver relayserver the game is
+ *        connected to.
+ * @param {Game~GameOptions} data Data sent from the game which
+ *        includes
+ */
 Game.prototype.assignClient = function(client, relayserver, data) {
   if (this.client) {
     console.error("this game already has a client!");
   }
   this.client = client;
   this.controllerUrl = data.controllerUrl;
+  this.disconnectPlayersIfGameDisconnects = data.disconnectPlayersIfGameDisconnects === undefined ? true : data.disconnectPlayersIfGameDisconnects;
 
   var sendMessageToPlayer = function(id, message) {
     var player = this.players[id];
@@ -137,11 +203,13 @@ Game.prototype.assignClient = function(client, relayserver, data) {
 
   var onDisconnect = function() {
     this.client = undefined;
-    this.relayServer.removeGame(this.gameId);
-    this.forEachPlayer(function(player) {
-      this.removePlayer(player);
-      player.disconnect();
-    }.bind(this));
+    if (this.disconnectPlayersIfGameDisconnects) {
+      this.relayServer.removeGame(this.gameId);
+      this.forEachPlayer(function(player) {
+        this.removePlayer(player);
+        player.disconnect();
+      }.bind(this));
+    }
   }.bind(this);
 
   client.on('message', onMessage);

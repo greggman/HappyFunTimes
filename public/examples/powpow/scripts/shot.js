@@ -82,7 +82,7 @@ define(['../../scripts/2d'], function(M2D) {
           if (player.collide(self.position[0], self.position[1], 3)) {
             hit = true;
             if (player.die(self.owner, self, false)) {
-              ++self.owner.score;
+              self.owner.addPoints(1);
             }
           }
         }

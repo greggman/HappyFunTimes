@@ -37,8 +37,37 @@ var Game = require('./game');
 var Player = require('./player');
 var WSServer = require('./websocketserver');
 
-// options:
-//   address: used to replace "localhost" in urls.
+/**
+ * RelayServer options
+ * @typedef {Object} RelayServer~Options
+ * @property {String} address - address that will
+ *         replace "localhost" when a game's controllerUrl is
+ *         passed in.
+ */
+
+/**
+ * Game list entry
+ * @typedef {Object} RelayServer~GameEntry
+ * @property {String} gameId - id of game
+ * @property {Number} numPlayers - number of players currently
+ *           connected.
+ * @property {String} controllerUrl - url of controller for game
+ */
+
+/**
+ * The relaysever manages a websocket server. It accepts
+ * connections from games and controllers, notifies the game of
+ * controllers joining and leaving the game and passes messages
+ * between them.
+ *
+ * @constructor
+ * @params {HTTPServer[]} servers. An array of of node
+ *       httpservers to run websocket servers. This is an array
+ *       because we'd to be able to run multiple servers on
+ *       different ports but have the relayserver pass messages
+ *       between them.
+ * @params {RelayServer~Options} options
+ */
 var RelayServer = function(servers, options) {
 
   var g_nextSessionId = 1;
@@ -48,12 +77,12 @@ var RelayServer = function(servers, options) {
   // --- messages to relay server ---
   //
   // join  :
-  //   desc: joins a particle game
+  //   desc: joins a game
   //   args:
   //      gameId: name of game
   //
   // server:
-  //   desc: identifies this session as a server
+  //   desc: identifies this session as a server (the machine running the game)
   //   args: none
   //
   // client:
@@ -63,11 +92,11 @@ var RelayServer = function(servers, options) {
   //      data: object
   //
   // update:
-  //   desc: sends an update to the game server
+  //   desc: sends an update to the game server (the machine running the game)
   //   args:
   //      anything
 
-  // -- messages to the game server --
+  // -- messages to the game server (machine running the game) --
   //
   // update:
   //   desc: updates a player
@@ -96,6 +125,11 @@ var RelayServer = function(servers, options) {
     return game;
   }.bind(this);
 
+  /**
+   * Gets an array of game currently running.
+   * @method
+   * @returns {RelayServer~GameEntry[]}
+   */
   this.getGames = function() {
     var gameList = [];
     for (var id in g_games) {
@@ -111,12 +145,24 @@ var RelayServer = function(servers, options) {
     return gameList;
   };
 
+  /**
+   * Adds the given player to the game
+   * @method
+   * @param {Player} player the player to add
+   * @param {String} gameId id of the game.
+   * @returns {Game} game that player was added to
+   */
   this.addPlayerToGame = function(player, gameId) {
     var game = getGame(gameId);
     game.addPlayer(player);
     return game;
   }.bind(this);
 
+  /**
+   * Removes a game from the games known by this relayserver
+   * @method
+   * @param {String} gameId id of game to remove.
+   */
   this.removeGame = function(gameId) {
     if (!g_games[gameId]) {
       console.error("no game '" + gameId + "' to remove")
@@ -127,12 +173,18 @@ var RelayServer = function(servers, options) {
     delete g_games[gameId];
   }.bind(this);
 
+  /**
+   * Assigns a client as the server for a specific game.
+   * @method
+   * @param {Object} data Data passed from game.
+   * @param {Client} client Websocket client object.
+   */
   this.assignAsClientForGame = function(data, client) {
     var game = getGame(data.gameId);
     if (data.controllerUrl && options.address) {
       data.controllerUrl = data.controllerUrl.replace("localhost", options.address);
     }
-    game.assignClient(client, this, data)
+    game.assignClient(client, this, data);
   }.bind(this);
 
   for (var ii = 0; ii < servers.length; ++ii) {

@@ -20,6 +20,17 @@ Copyright 2012 Iwan Gabovitch "Choro Bavario (happy loop)" (simple editing to ma
 
 Link: http://opengameart.org/content/cheerful-1-choro-bavario-happy-loop
 
+
+FlapFlap
+--------
+
+Graphics:
+
+Name: Platforge, Hannah Cohan, and Stafford McIntyre.
+
+Link: http://opengameart.org/content/art-from-platforge
+
+
 JamJam
 ------
 

@@ -36,21 +36,34 @@ var fs = require('fs');
 var path = require('path');
 var strings = require('./strings');
 
-// GameDB scans a folder for games (subfolders with package.json)
-//
-// It reads them all synchronously and creates a list of
-// games.
-//
-// options:
-//    baseDir: directory server serves from, ie, "public"
-//    gamesDirs: {!Array.<string>} directories to scan for games.
+/**
+ * @typedef {Object} GameDB~Options
+ * @property {string} baseDir directory server serves from, ie,
+ *           "public"
+ * @property {string} gamesDirs {String[]} directories to scan
+ *           for games.
+ */
+
+/**
+ * GameDB scans a folder for games (subfolders with package.json)
+ *
+ * It reads them all synchronously and creates a list of
+ * games.
+ *
+ * @constructor
+ * @param {GameDB~Options} options
+ */
 var GameDB = function(options) {
 
+  this.templateUrls = [];
   this.games = [];
-  this.foo = "hello";
 
   var backslashRE = new RegExp("\\\\", 'g');
   var cwd = process.cwd();
+
+  var makeAbsUrl = function(url, gameBasePath) {
+    return "/" + path.relative(options.baseDir, path.join(gameBasePath, url)).replace(backslashRE, "/");
+  };
 
   options.gamesDirs.forEach(function(basePath) {
     if (!fs.existsSync(basePath)) {
@@ -68,24 +81,39 @@ var GameDB = function(options) {
       if (fs.existsSync(filePath)) {
         try {
           var contents = fs.readFileSync(filePath);
-          var info = JSON.parse(contents);
+          var packageInfo = JSON.parse(contents);
+          var hftInfo = packageInfo.happyFunTimes;
+          if (!hftInfo) {
+            return;
+          }
+
+          if (hftInfo.templateUrls) {
+            hftInfo.templateUrls.forEach(function(url) {
+              this.templateUrls.push(makeAbsUrl(url, gameBasePath));
+            }.bind(this));
+          }
+
+          var gameType = hftInfo.gameType;
+          if (!gameType) {
+            return;
+          }
 
           // Fix some urls.
           ['gameUrl', 'screenshotUrl'].forEach(function(name) {
-            if (info[name]) {
-              info[name] = "/" + path.relative(options.baseDir, path.join(gameBasePath, info[name])).replace(backslashRE, "/");
+            if (hftInfo[name]) {
+              hftInfo[name] = makeAbsUrl(hftInfo[name], gameBasePath);
             };
           });
 
-          if (info.gameExecutable) {
-            info.gameExecutable = path.relative(options.baseDir, path.join(gameBasePath, info.gameExecutable));
-            var fullPath = path.normalize(path.join(cwd, info.gameExecutable));
+          if (hftInfo.gameExecutable) {
+            hftInfo.gameExecutable = path.relative(options.baseDir, path.join(gameBasePath, hftInfo.gameExecutable));
+            var fullPath = path.normalize(path.join(cwd, hftInfo.gameExecutable));
             if (cwd != fullPath.substring(0, cwd.length)) {
               throw "bad path for game executable: " + fullPath;
             }
           }
 
-          this.games.push(info);
+          this.games.push(packageInfo);
         } catch (e) {
           console.error("ERROR: Reading " + filePath);
           throw e;
@@ -96,8 +124,36 @@ var GameDB = function(options) {
   }.bind(this));
 };
 
+/**
+ * This is basically the contents of each game's package.json.
+ * At a minimum the properties listed below are needed to
+ * generate a list of games on /games.html
+ *
+ * @typedef {Object} GameDB~GameInfo
+ * @property {string} gameType the type of game (eg. 'html',
+ *           'Unity', ...)
+ * @property {string} gameUrl the baseDir relative path to the
+ *           game's html page if it's an html based game.
+ * @property {string} screenshotUrl the baseDir relative path to
+ *           the game's screenshot.
+ * @property {string} gamExecutable the baseDir relative path to
+ *           the game's executable if it's a native executable.
+ *           Like a Unity game for example.
+ */
+
+/**
+ * Gets a list of games.
+ * @returns {GameDB~GameInfo[]} the list of games.
+ */
 GameDB.prototype.getGames = function() {
   return this.games;
+};
+
+/**
+ * List of URLs that need template subsitution
+ */
+GameDB.prototype.getTemplateUrls = function() {
+  return this.templateUrls;
 };
 
 module.exports = GameDB;

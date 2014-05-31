@@ -30,8 +30,16 @@
  */
 "use strict";
 
-define(
-  ['../../scripts/io', './misc', './playername'], function(IO, Misc, PlayerNameHandler) {
+define([
+    '../../scripts/io',
+    './hft-splash',
+    './misc',
+    './playername',
+  ], function(
+    IO,
+    HFTSplash,
+    Misc,
+    PlayerNameHandler) {
 
   var $ = function(id) {
     return document.getElementById(id);
@@ -49,7 +57,9 @@ define(
     }, false);
     $("hft-setname").addEventListener('click', function() {
       settings.style.display = "none";
+  console.log("--h1");
       playerNameHandler.startNameEntry();
+  console.log("--h2");
     }, false);
     $("hft-restart").addEventListener('click', function() {
       window.location.reload();

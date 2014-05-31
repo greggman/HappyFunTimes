@@ -239,11 +239,15 @@ define([
       } else if (ext == 'mp3' && !g_canPlayMp3) {
         filename = changeExt(filename, "ogg");
       }
-      return new g_createFromFileFn(soundName, filename, samples, opt_callback);
+      var s = new g_createFromFileFn(soundName, filename, samples, opt_callback);
+      g_soundBank[soundName] = s;
+      return s;
     }.bind(this);
 
     this.makeJSFXSound = function(soundName, data, samples, opt_callback) {
-      return new g_createFromJSFXFn(soundName, data, samples, opt_callback);
+      var s = new g_createFromJSFXFn(soundName, data, samples, opt_callback);
+      g_soundBank[soundName] = s;
+      return s;
     }.bind(this);
 
     this.init = function(sounds) {
@@ -282,13 +286,11 @@ define([
         for (var sound in sounds) {
           var data = sounds[sound];
           ++soundsPending;
-          var s;
           if (data.jsfx) {
-            s = this.makeJSFXSound(sound, data.jsfx, data.samples, soundsLoaded);
+            this.makeJSFXSound(sound, data.jsfx, data.samples, soundsLoaded);
           } else {
-            s = this.loadSound(sound, data.filename, data.samples, soundsLoaded);
+            this.loadSound(sound, data.filename, data.samples, soundsLoaded);
           }
-          g_soundBank[sound] = s;
         }
       }
 

@@ -30,7 +30,22 @@
  */
 "use strict";
 
-define(['../../scripts/tdl/math', '../../scripts/2d', './ships', './shot'], function(math, M2D, Ships, Shot) {
+define([
+    '../../scripts/tdl/math',
+    '../../scripts/2d',
+    '../../scripts/misc',
+    '../../scripts/strings',
+    './ships',
+    './shot',
+  ], function(
+    math,
+    M2D,
+    Misc,
+    Strings,
+    Ships,
+    Shot) {
+  var availableColors = [];
+
   /**
    * Player represnt a player in the game.
    * @constructor
@@ -53,7 +68,15 @@ define(['../../scripts/tdl/math', '../../scripts/2d', './ships', './shot'], func
       this.isMetaQueuePlayer = isMetaQueuePlayer;
       this.position = [x, y];
       this.hp = 3;
-      this.color = Ships.makeColor(g_playerCount + g_startCount);
+      if (!availableColors.length) {
+        var total = Ships.getTotalColors();
+        for (var ii = 0; ii < total; ++ii) {
+          availableColors.push(ii);
+        }
+      }
+      var ndx = Misc.randInt(availableColors.length);
+      this.color = Ships.makeColor(availableColors[ndx]);
+      availableColors.splice(ndx, 1);
 
       if (netPlayer) {
         netPlayer.addEventListener('disconnect', Player.prototype.handleDisconnect.bind(this));
@@ -70,7 +93,6 @@ define(['../../scripts/tdl/math', '../../scripts/2d', './ships', './shot'], func
 
       var g = this.services.globals;
 
-      this.playerName = name;
       this.turn = 0;
       this.targetDir = -1;
       this.direction = direction;
@@ -81,11 +103,15 @@ define(['../../scripts/tdl/math', '../../scripts/2d', './ships', './shot'], func
       this.maxShots = g.maxShots;
       this.shotDuration = g.shotDuration;
       this.shootTimer = 0;
-      this.score = 0;
       this.timer = 0;
       this.launchDuration = 0.5;
       this.showPlaceInQueue = true;
       this.invincibilityTimer = 0;
+      this.scoreLine = this.services.scoreManager.createScoreLine(this);
+      this.queueLine = this.services.queueManager.createQueueLine(this);
+      this.setName(name);
+      this.score = 0;
+      this.addPoints(0);
 
       // If true the player is entering their name.
       // Don't launch them if they are in the queue.
@@ -153,6 +179,8 @@ define(['../../scripts/tdl/math', '../../scripts/2d', './ships', './shot'], func
     }
     this.services.entitySystem.removeEntity(this);
     this.services.playerManager.removePlayer(this);
+    this.services.scoreManager.deleteScoreLine(this.scoreLine);
+    this.services.queueManager.deleteQueueLine(this.queueLine);
   };
 
   Player.prototype.handleDisconnect = function() {
@@ -174,6 +202,17 @@ define(['../../scripts/tdl/math', '../../scripts/2d', './ships', './shot'], func
     if (this.fire == 0) {
       this.shootTimer = 0;
     }
+  };
+
+  Player.prototype.setName = function(name) {
+    this.playerName = name;
+    this.scoreLine.setName(name);
+    this.queueLine.setName(name);
+  };
+
+  Player.prototype.addPoints = function(points) {
+    this.score += points;
+    this.scoreLine.setMsg(Strings.padLeft(this.score, 3, "0") + ": ");
   };
 
   Player.prototype.handleNameMsg = function(msg) {

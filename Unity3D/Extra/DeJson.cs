@@ -131,8 +131,12 @@ public class Deserializer {
     ///
     /// </code>
     /// </example>
-    public T Deserialize<T> (string json) {
+    public T Deserialize<T>(string json) {
         object o = Json.Deserialize(json);
+        return Deserialize<T>(o);
+    }
+
+    public T Deserialize<T>(object o) {
         return (T)ConvertToType(o, typeof(T), null);
     }
 
@@ -147,6 +151,14 @@ public class Deserializer {
 
     private object DeserializeO(Type destType, Dictionary<string, object> src, Dictionary<string, object> parentSrc) {
         object dest = null;
+
+        // This seems like a hack but for now maybe it's the right thing?
+        // Basically if the thing you want is a Dictionary<stirng, object>
+        // Then just give it do you since that's the source. No need
+        // to try to copy it.
+        if (destType == typeof(Dictionary<string, object>)) {
+            return src;
+        }
 
         // First see if there is a CustomCreator for this type.
         CustomCreator creator;

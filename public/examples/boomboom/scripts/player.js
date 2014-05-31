@@ -148,6 +148,13 @@ define([
     { dxMult: 0, dyMult: 1, xOffset: 0, yOffset: 1, }, // col
   ];
 
+  var railInfoTable = [
+    { facing: 0, dx: 0, dy: 1, }, // 0 left rail
+    { facing: 6, dx: 1, dy: 0, }, // 1 top rail
+    { facing: 4, dx: 0, dy: 1, }, // 2 right rail
+    { facing: 2, dx: 1, dy: 0, }, // 3 bottom rail
+  ];
+
   var freeBombs = [];
   var getBomb = function(services) {
     if (freeBombs.length) {
@@ -171,6 +178,7 @@ define([
       this.renderer = services.renderer;
       this.roundsPlayed = 0;
       this.wins = 0;
+      this.rail = 0;
 
       // add the button before the player so it will get
       // processed first.
@@ -222,9 +230,6 @@ define([
 
   Player.prototype.reset = function(x, y) {
     var globals = this.services.globals;
-    while (this.bombs && this.bombs.length) {
-      putBomb(this.bombs.pop());
-    }
     this.setPosition(x, y);
     this.sprite.uniforms.u_hsvaAdjust = this.color.hsv.slice();
     this.inRow = true; // false = in column
@@ -234,11 +239,8 @@ define([
     this.scale = 1;
     this.rotation = 0;
     this.animTimer = 0;
-    this.bombs = [];
-    for (var ii = 0; ii < globals.numStartingBombs; ++ii) {
-      this.bombs.push(getBomb(this.services));
-    }
-    this.bombSize = globals.bombStartSize;
+    this.resetNumBombs(globals.numStartingBombs);
+    this.setBombSize(globals.bombStartSize);
     this.haveKick = false;
     this.setFacing(6);
     this.setAnimFrame(this.anims.idle);
@@ -267,10 +269,12 @@ define([
     var levelManager = this.services.levelManager;
     var maxSize = Math.max(levelManager.tilesAcross, levelManager.tilesDown);
     this.bombSize = Math.min(maxSize, size);
+    this.sendCmd('bombSize', {size: this.bombSize});
   };
 
   Player.prototype.returnBomb = function(bomb) {
     this.bombs.push(bomb);
+    this.sendCmd('numBombs', {numBombs: this.bombs.length});
   };
 
   Player.prototype.setAnimFrame = function(name) {
@@ -409,16 +413,54 @@ define([
 
     this.services.audioManager.playSound('placeBomb');
     var bomb = this.bombs.pop();
+    this.sendCmd('numBombs', {numBombs: this.bombs.length});
     bomb.place(this, tx, ty, this.bombSize);
     return true;
   };
 
   Player.prototype.restoreBomb = function(bomb) {
     this.bombs.push(bomb);
+    this.sendCmd('numBombs', {numBombs: this.bombs.length});
+  };
+
+  Player.prototype.resetNumBombs = function(numBombs) {
+    if (!this.bombs) {
+      this.bombs = [];
+    }
+    while (this.bombs && this.bombs.length) {
+      putBomb(this.bombs.pop());
+    }
+    for (var ii = 0; ii < numBombs; ++ii) {
+      this.bombs.push(getBomb(this.services));
+    }
+    this.sendCmd('numBombs', {numBombs: numBombs});
   };
 
   Player.prototype.sendCmd = function(cmd, data) {
     this.netPlayer.sendCmd(cmd, data);
+  };
+
+  Player.prototype.givePresent = function(crateType) {
+    if (crateType) {
+      this.services.audioManager.playSound('pickup');
+      switch (crateType) {
+      case 'gold':
+        this.setBombSize(10000);
+        break;
+      case 'kick':
+        this.haveKick = true;
+        break;
+      case 'bomb':
+        this.bombs.push(getBomb(this.services));
+        this.sendCmd('numBombs', {numBombs: this.bombs.length});
+        break;
+      case 'flame':
+        this.setBombSize(this.bombSize + 1);
+        break;
+      }
+      return true;
+    }
+    return false;
   };
 
   Player.prototype.checkForDeath = function() {
@@ -440,28 +482,154 @@ define([
       return true;
     }
 
+
     // Lets check for powerups here too?
     var crateType = tileInfo.info.crateType;
-    if (crateType) {
-      this.services.audioManager.playSound('pickup');
+    if (this.givePresent(crateType)) {
+      var tileWidth = 16;
+      var tileHeight = 16;
+      var tx = (this.position[0]) / tileWidth  | 0;
+      var ty = (this.position[1]) / tileHeight | 0;
       levelManager.layer1.setTile(tx, ty, levelManager.tiles.empty.id);
-      switch (crateType) {
-      case 'gold':
-        this.setBombSize(10000);
-        break;
-      case 'kick':
-        this.haveKick = true;
-        break;
-      case 'bomb':
-        this.bombs.push(getBomb(this.services));
-        break;
-      case 'flame':
-        this.setBombSize(this.bombSize + 1);
-        break;
+    }
+  };
+
+
+  Player.prototype.move = function(onRail, moveDX, moveDY) {
+    var globals = this.services.globals;
+    var levelManager = this.services.levelManager;
+    var railInfo = railInfoTable[this.rail];
+
+    // we're either in a column, row, or at an intersection
+    var tileWidth  = 16;
+    var tileHeight = 16;
+
+    var tx = this.position[0] / tileWidth  | 0;
+    var ty = this.position[1] / tileHeight | 0;
+    var inCol = tx % 2 == 1;
+    var inRow = ty % 2 == 1;
+    var inIntersection = inRow && inCol;
+
+    //      col
+    //       |
+    // _____/ \______row
+    //      \ /
+    //       |
+    //
+
+    var centerOfTileX = tx * tileWidth  + tileWidth  / 2;
+    var centerOfTileY = ty * tileHeight + tileHeight / 2;
+    var dxFromCenterOfTile = centerOfTileX - this.position[0];
+    var dyFromCenterOfTile = centerOfTileY - this.position[1];
+
+    var centerOfCol = (tx - (tx % 2) + 1.5) * tileWidth;
+    var centerOfRow = (ty - (ty % 2) + 1.5) * tileHeight;
+    var dxFromCenterOfCol = centerOfCol - this.position[0];
+    var dyFromCenterOfRow = centerOfRow - this.position[1];
+
+    var targetCol = ((this.position[0] - tileWidth  / 2) / tileWidth  | 0) & 0xFFFE;
+    var targetRow = ((this.position[1] - tileHeight / 2) / tileHeight | 0) & 0xFFFE;
+    var centerOfTargetCol = (targetCol + 1.5) * tileWidth;
+    var centerOfTargetRow = (targetRow + 1.5) * tileHeight;
+    var dxFromCenterOfTargetCol = centerOfTargetCol - this.position[0];
+    var dyFromCenterOfTargetRow = centerOfTargetRow - this.position[1];
+
+    // This seems fucking rediculous to me. I'm missing the simple solution
+    // stairing me in the face :(
+    if (this.inRow) {
+      if (!moveDX && moveDY) {
+        var t = Math.abs(moveDY) * Misc.sign(dxFromCenterOfTargetCol);
+        moveDX = Misc.minToZero(dxFromCenterOfTargetCol, t);
+      }
+      if (moveDY) {
+        var newX = this.position[0] + moveDX;
+        var newDxFromCenterOfCol = centerOfCol - newX;
+        if (dxFromCenterOfCol == 0 || Misc.sign(newDxFromCenterOfCol) != Misc.sign(dxFromCenterOfCol)) {
+          moveDX = dxFromCenterOfCol;
+          if (!onRail) {
+            this.inRow = false;
+          }
+        } else {
+          moveDY = 0;
+        }
+      }
+    } else {
+      if (!moveDY && moveDX) {
+        var t = Math.abs(moveDX) * Misc.sign(dyFromCenterOfTargetRow);
+        moveDY = Misc.minToZero(dyFromCenterOfTargetRow, t);
+      }
+      if (moveDX) {
+        var newY = this.position[1] + moveDY;
+        var newDyFromCenterOfRow = centerOfRow - newY;
+        if (dyFromCenterOfRow == 0 || Misc.sign(newDyFromCenterOfRow) != Misc.sign(dyFromCenterOfRow)) {
+          moveDY = dyFromCenterOfRow;
+          if (!onRail) {
+            this.inRow = true;
+          }
+        } else {
+          moveDX = 0;
+        }
       }
     }
 
+    if (onRail) {
+      moveDX *= railInfo.dx;
+      moveDY *= railInfo.dy;
+    }
 
+    var newX = this.position[0] + moveDX;
+    var newY = this.position[1];
+
+    if (moveDX) {
+      if (onRail) {
+        newX = Math.max(tileWidth / 2 * 3, newX);
+        newX = Math.min((levelManager.tilesAcross - 2) * tileWidth + tileWidth / 2, newX);
+        moveDX = newX - this.position[0];
+      } else {
+        var tileX = newX + tileWidth  / 2 * Misc.sign(moveDX);
+        var tileY = newY;
+        var tile = levelManager.layer1.getTileByPixels(tileX, tileY);
+        var tileInfo = levelManager.getTileInfo(tile);
+        if (tileInfo.info.solid) {
+          // Where ever we were standing was safe so don't move us back further than that.
+          // This will allow us to walk off a bomb?
+          moveDX = (Misc.sign(dxFromCenterOfTile) == Misc.sign(moveDX)) ? dxFromCenterOfTile : 0;
+        }
+      }
+    }
+
+    newX = this.position[0] + moveDX;
+    newY = this.position[1] + moveDY;
+
+    if (moveDY) {
+      if (onRail) {
+        newY = Math.max(tileHeight / 2 * 3, newY);
+        newY = Math.min((levelManager.tilesDown - 2) * tileHeight + tileHeight / 2, newY);
+        moveDY = newY - this.position[1];
+      } else {
+        var tileX = newX;
+        var tileY = newY + tileHeight / 2 * Misc.sign(moveDY);
+        var tile = levelManager.layer1.getTileByPixels(tileX, tileY);
+        var tileInfo = levelManager.getTileInfo(tile);
+        if (tileInfo.info.solid) {
+          // Where ever we were standing was safe so don't move us back further than that.
+          // This will allow us to walk off a bomb?
+          moveDY = (Misc.sign(dyFromCenterOfTile) == Misc.sign(moveDY)) ? dyFromCenterOfTile : 0;
+        }
+      }
+    }
+
+    var newX = this.position[0] + moveDX;
+    var newY = this.position[1] + moveDY;
+
+    this.position[0] = newX;
+    this.position[1] = newY;
+
+    if (!onRail) {
+      this.validatePosition();
+    }
+
+    return moveDX || moveDY;
   };
 
   // This state is when the round has finished.
@@ -514,7 +682,6 @@ define([
 
   Player.prototype.state_walk = function() {
     var globals = this.services.globals;
-    var levelManager = this.services.levelManager;
     this.animTimer += globals.walkAnimSpeed;
     this.setAnimFrame(this.anims.walk[(this.animTimer | 0) % this.anims.walk.length]);
 
@@ -523,118 +690,13 @@ define([
       return;
     }
 
-    // we're either in a column, row, or at an intersection
-    var tileWidth  = 16;
-    var tileHeight = 16;
-
-    var tx = this.position[0] / tileWidth  | 0;
-    var ty = this.position[1] / tileHeight | 0;
-    var inCol = tx % 2 == 1;
-    var inRow = ty % 2 == 1;
-    var inIntersection = inRow && inCol;
-
     var dx = this.facingInfo.dx;
     var dy = this.facingInfo.dy;
 
     var moveDX = dx * globals.walkSpeed * globals.elapsedTime;
     var moveDY = dy * globals.walkSpeed * globals.elapsedTime;
 
-    //      col
-    //       |
-    // _____/ \______row
-    //      \ /
-    //       |
-    //
-
-    var centerOfTileX = tx * tileWidth  + tileWidth  / 2;
-    var centerOfTileY = ty * tileHeight + tileHeight / 2;
-    var dxFromCenterOfTile = centerOfTileX - this.position[0];
-    var dyFromCenterOfTile = centerOfTileY - this.position[1];
-
-    var centerOfCol = (tx - (tx % 2) + 1.5) * tileWidth;
-    var centerOfRow = (ty - (ty % 2) + 1.5) * tileHeight;
-    var dxFromCenterOfCol = centerOfCol - this.position[0];
-    var dyFromCenterOfRow = centerOfRow - this.position[1];
-
-    var targetCol = ((this.position[0] - tileWidth  / 2) / tileWidth  | 0) & 0xFFFE;
-    var targetRow = ((this.position[1] - tileHeight / 2) / tileHeight | 0) & 0xFFFE;
-    var centerOfTargetCol = (targetCol + 1.5) * tileWidth;
-    var centerOfTargetRow = (targetRow + 1.5) * tileHeight;
-    var dxFromCenterOfTargetCol = centerOfTargetCol - this.position[0];
-    var dyFromCenterOfTargetRow = centerOfTargetRow - this.position[1];
-
-    // This seems fucking rediculous to me. I'm missing the simple solution
-    // stairing me in the face :(
-    if (this.inRow) {
-      if (!moveDX && moveDY) {
-        var t = Math.abs(moveDY) * Misc.sign(dxFromCenterOfTargetCol);
-        moveDX = Misc.minToZero(dxFromCenterOfTargetCol, t);
-      }
-      if (moveDY) {
-        var newX = this.position[0] + moveDX;
-        var newDxFromCenterOfCol = centerOfCol - newX;
-        if (dxFromCenterOfCol == 0 || Misc.sign(newDxFromCenterOfCol) != Misc.sign(dxFromCenterOfCol)) {
-          moveDX = dxFromCenterOfCol;
-          this.inRow = false;
-        } else {
-          moveDY = 0;
-        }
-      }
-    } else {
-      if (!moveDY && moveDX) {
-        var t = Math.abs(moveDX) * Misc.sign(dyFromCenterOfTargetRow);
-        moveDY = Misc.minToZero(dyFromCenterOfTargetRow, t);
-      }
-      if (moveDX) {
-        var newY = this.position[1] + moveDY;
-        var newDyFromCenterOfRow = centerOfRow - newY;
-        if (dyFromCenterOfRow == 0 || Misc.sign(newDyFromCenterOfRow) != Misc.sign(dyFromCenterOfRow)) {
-          moveDY = dyFromCenterOfRow;
-          this.inRow = true;
-        } else {
-          moveDX = 0;
-        }
-      }
-    }
-
-    var newX = this.position[0] + moveDX;
-    var newY = this.position[1];
-
-    if (moveDX) {
-      var tileX = newX + tileWidth  / 2 * Misc.sign(moveDX);
-      var tileY = newY;
-      var tile = levelManager.layer1.getTileByPixels(tileX, tileY);
-      var tileInfo = levelManager.getTileInfo(tile);
-      if (tileInfo.info.solid) {
-        // Where ever we were standing was safe so don't move us back further than that.
-        // This will allow us to walk off a bomb?
-        moveDX = (Misc.sign(dxFromCenterOfTile) == Misc.sign(moveDX)) ? dxFromCenterOfTile : 0;
-      }
-    }
-
-    newX = this.position[0] + moveDX;
-    newY = this.position[1] + moveDY;
-
-    if (moveDY) {
-      var tileX = newX;
-      var tileY = newY + tileHeight / 2 * Misc.sign(moveDY);
-      var tile = levelManager.layer1.getTileByPixels(tileX, tileY);
-      var tileInfo = levelManager.getTileInfo(tile);
-      if (tileInfo.info.solid) {
-        // Where ever we were standing was safe so don't move us back further than that.
-        // This will allow us to walk off a bomb?
-        moveDY = (Misc.sign(dyFromCenterOfTile) == Misc.sign(moveDY)) ? dyFromCenterOfTile : 0;
-      }
-    }
-
-    var newX = this.position[0] + moveDX;
-    var newY = this.position[1] + moveDY;
-
-    this.position[0] = newX;
-    this.position[1] = newY;
-
-this.validatePosition();
-
+    this.move(false, moveDX, moveDY);
 
     if (this.checkForDeath()) {
       return;
@@ -681,9 +743,122 @@ this.validatePosition();
 
   Player.prototype.init_dead = function() {
     this.display = false;
+    this.dieTimer = 2;
   };
 
   Player.prototype.state_dead = function() {
+    var globals = this.services.globals;
+    this.dieTimer -= globals.elapsedTime;
+    if (this.dieTimer <= 0) {
+      if (this.services.gameManager.state != 'play') {
+        this.setState('end');
+      } else {
+        this.setState('reappear');
+      }
+    }
+  };
+
+  Player.prototype.init_reappear = function() {
+    var globals = this.services.globals;
+    var levelManager = this.services.levelManager;
+    this.dieTimer = 0;
+    var tileWidth = 16;
+    var tileHeight = 16;
+    this.display = true;
+    this.rotation = 0;
+    this.scale = 1;
+    this.sprite.uniforms.u_hsvaAdjust = this.color.hsv.slice();
+    this.rail = Misc.randInt(4);
+    this.resetNumBombs(globals.numSpoilBombs);
+    this.setBombSize(globals.bombSpoilSize);
+    this.services.audioManager.playSound('reappear');
+
+    switch (this.rail) {
+      case 0:
+      case 2:
+        this.position[0] = (this.rail == 2 ? 1 : 0) * (levelManager.tilesAcross - 1) * tileWidth + tileWidth / 2;
+        this.position[1] = (1 + Misc.randInt(levelManager.tilesDown - 2)) * tileHeight + tileHeight / 2;
+        this.inRow = false;
+        break;
+      case 1:
+      case 3:
+        this.position[0] = (1 + Misc.randInt(levelManager.tilesAcross - 2)) * tileWidth + tileWidth / 2;
+        this.position[1] = (this.rail == 3 ? 1 : 0) * (levelManager.tilesDown - 1) * tileHeight + tileHeight / 2;
+        this.inRow = true;
+        break;
+    }
+    var railInfo = railInfoTable[this.rail];
+    this.setFacing(railInfo.facing);
+    this.setAnimFrame(this.anims.idle);
+  };
+
+  Player.prototype.state_reappear = function() {
+    var globals = this.services.globals;
+    var railInfo = railInfoTable[this.rail];
+    this.setFacing(railInfo.facing);
+    this.dieTimer += globals.elapsedTime;
+
+    var lerp = this.dieTimer / globals.reappearDuration;
+    this.sprite.uniforms.u_hsvaAdjust[2] = Math.max(0, 2 - lerp * 2);
+    this.sprite.uniforms.u_hsvaAdjust[3] = Math.min(0, -1 + lerp * 2);
+
+    if (this.dieTimer >= globals.reappearDuration) {
+      this.setState('spoil');
+    }
+  };
+
+  Player.prototype.init_spoil = function() {
+    this.sprite.uniforms.u_hsvaAdjust = this.color.hsv.slice();
+    this.lastBombLobbed = undefined;
+    this.sendCmd('spoil');
+  };
+
+  Player.prototype.state_spoil = function() {
+    var globals = this.services.globals;
+    var railInfo = railInfoTable[this.rail];
+    this.setFacing(railInfo.facing);
+
+    if (this.services.gameManager.state != 'play') {
+      this.setState('end');
+      return;
+    }
+
+    if (this.direction >= 0) {
+      var info = directionInfo[this.direction];
+
+      var moveDX = info.dx * globals.walkSpeed * globals.elapsedTime;
+      var moveDY = info.dy * globals.walkSpeed * globals.elapsedTime;
+
+      if (moveDX || moveDY) {
+        if (this.move(true, moveDX, moveDY)) {
+          this.animTimer += globals.walkAnimSpeed;
+          this.setAnimFrame(this.anims.walk[(this.animTimer | 0) % this.anims.walk.length]);
+        }
+      }
+    } else {
+      this.setAnimFrame(this.anims.idle);
+    }
+
+    if (!this.abutton.justOn() || this.bombs.length == 0) {
+      return;
+    }
+
+    // you can't throw another bomb until the last one stops bouncing.
+    if (this.lastBombLobbed && this.lastBombLobbed.bouncing) {
+      return;
+    }
+
+    var tileWidth = 16;
+    var tileHeight = 16;
+    var tx = this.position[0] / tileWidth  | 0;
+    var ty = this.position[1] / tileHeight | 0;
+    var x = tx * tileWidth  + tileWidth  / 2 + this.facingInfo.dx * tileWidth  / 2;
+    var y = ty * tileHeight + tileHeight / 2 + this.facingInfo.dy * tileHeight / 2;
+    var bomb = this.bombs.pop();
+    this.sendCmd('numBombs', {numBombs: this.bombs.length});
+    bomb.lob(this, x, y, this.bombSize, this.facing);
+    this.lastBombLobbed = bomb;
+    this.services.audioManager.playSound('bounce');
   };
 
   Player.prototype.draw = function(renderer) {

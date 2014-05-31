@@ -34,7 +34,7 @@
 }
 #gamestatus {
     position: absolute;
-    z-index: 5000;
+    z-index: 4000;
     border-radius: 5px;
     background-color: rgba(0,0,0,0.5);
     margin: 0.5em;
@@ -46,7 +46,7 @@
 }
 #inputarea {
     position: absolute;
-    z-index: 6000;
+    z-index: 4100;
     top: 0px;
     left: 0px;
     width: 100%;

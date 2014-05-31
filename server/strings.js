@@ -31,15 +31,64 @@
 
 "use strict";
 
-var startsWith = function(str, start) {
-  return (str.length >= start.length &&
-          str.substr(0, start.length) == start);
+/**
+ * @module
+ */
+
+/**
+ * True if string starts with prefix
+ * @static
+ * @param {String} str string to check for start
+ * @param {String} prefix start value
+ * @returns {Boolean} true if str starts with prefix
+ */
+var startsWith = function(str, prefix) {
+  return (str.length >= prefix.length &&
+          str.substr(0, prefix.length) == prefix);
 };
 
-var endsWith = function(str, end) {
-  return (str.length >= end.length &&
-          str.substring(str.length - end.length) == end);
+/**
+ * True if string ends with suffix
+ * @static
+ * @param {String} str string to check for start
+ * @param {String} suffix start value
+ * @returns {Boolean} true if str starts with suffix
+ */
+var endsWith = function(str, suffix) {
+  return (str.length >= suffix.length &&
+          str.substring(str.length - suffix.length) == suffix);
 };
+
+/**
+ * Replace %(id)s in strings with values in objects(s)
+ *
+ * Given a string like `"Hello %(name)s from $(user.country)s"`
+ * and an object like `{name:"Joe",user:{country:"USA"}}` would
+ * return `"Hello Joe from USA"`.
+ *
+ * @param {string} str string to do replacements in
+ * @param {Object|Object[]} params one or more objects.
+ * @returns {string} string with replaced parts
+ */
+var replaceParams = (function() {
+
+  var captureRE = /%\(([A-Za-z0-9_\.]+)\)s/g;
+
+  return function(str, params) {
+    return str.replace(captureRE, function(match) {
+      var id = match.substring(2, match.length - 2);
+      var keys = id.split('.');
+      for (var ii = 0; ii < keys.length; ++ii) {
+        params = params[keys[ii]];
+        if (!params) {
+          return;
+        }
+      }
+      return params;
+    });
+  };
+}());
+
 
 exports.startsWith = startsWith;
 exports.endsWith = endsWith;

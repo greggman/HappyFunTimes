@@ -55,6 +55,8 @@ define(['./misc'], function(Misc) {
     ],
   };
 
+  var isNumRE = /^\d+$/;
+
   // Provides a map from direction to various info.
   //
   // Example:
@@ -261,9 +263,22 @@ define(['./misc'], function(Misc) {
 
   //
   var setupKeys = function(keys) {
+    var keyCodes = {};
+
+    // Convert single characters to char codes.
+    for (var key in keys) {
+      var value = keys[key];
+      if (!isNumRE.test(key)) {
+        if (key.length != 1) {
+          throw "bad key code: '" + key + "'";
+        }
+        key = key.charCodeAt(0);
+      }
+      keyCodes[key] = value;
+    }
 
     var handleKey = function(keyCode, state, pressed) {
-      var key = keys[keyCode];
+      var key = keyCodes[keyCode];
       if (key) {
         key({keyCode: keyCode, pressed:pressed});
       }

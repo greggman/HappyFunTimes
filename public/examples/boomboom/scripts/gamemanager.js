@@ -173,6 +173,10 @@ define([
     this.timeContainer.style.top  = topOffset + "px";
     this.timeStyle.fontSize = topSize + "px";
 
+    this.services.bombManager.forEachEntity(function(bomb) {
+      bomb.reset();
+    });
+
     this.setBGMSpeed(1);
     this.setAllPlayersToState('waiting');
     this.setState('waitForPlayers');

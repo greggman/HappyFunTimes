@@ -50,7 +50,8 @@ var main = function(
     SpriteManager,
     Collectable,
     LevelManager,
-    PlayerManager) {
+    PlayerManager,
+    ScoreManager) {
 
   var g_debug = false;
   var g_services = {};
@@ -63,6 +64,8 @@ window.s = g_services;
   var g_playerManager = new PlayerManager(g_services);
   g_services.playerManager = g_playerManager;
   g_services.misc = Misc;
+  var g_scoreManager = new ScoreManager(g_services, $("score"));
+  g_services.scoreManager = g_scoreManager;
   var stop = false;
 
   // You can set these from the URL with
@@ -91,35 +94,52 @@ window.s = g_services;
 window.g = globals;
 
   function startLocalPlayers() {
-    var players = [];
-    var netPlayers = [];
-    for (var ii = 0; ii < globals.numLocalPlayers; ++ii) {
-      var netPlayer = new LocalNetPlayer();
-      netPlayers.push(netPlayer);
-      players.push(g_playerManager.startPlayer(netPlayer, "Player" + (ii + 1)));
-    }
-    var player1 = players[0];
-    var localNetPlayer1 = netPlayers[0];
-    var g_leftRight = 0;
-    var g_oldLeftRight = 0;
-    var g_jump = false;
+    var localPlayers = [];
 
-    var handleLeftRight = function(pressed, bit) {
-      g_leftRight = (g_leftRight & ~bit) | (pressed ? bit : 0);
-      if (g_leftRight != g_oldLeftRight) {
-        g_oldLeftRight = g_leftRight;
-        localNetPlayer1.sendEvent('move', {
-            dir: (g_leftRight & 1) ? -1 : ((g_leftRight & 2) ? 1 : 0),
-        });
+    var addLocalPlayer = function() {
+      var netPlayer = new LocalNetPlayer();
+      localPlayers.push({
+        player: g_playerManager.startPlayer(netPlayer, "Player" + (localPlayers.length + 1)),
+        netPlayer: netPlayer,
+        leftRight: 0,
+        oldLeftRight: 0,
+        jump: false,
+      });
+    };
+
+    var removeLocalPlayer = function(playerId) {
+      if (playerId < localPlayers.length) {
+        localPlayers[playerId].netPlayer.sendEvent('disconnect');
+        localPlayers.splice(playerId, 1);
       }
     };
 
-    var handleJump = function(pressed) {
-      if (g_jump != pressed) {
-        g_jump = pressed;
-        localNetPlayer1.sendEvent('jump', {
-            jump: pressed,
-        });
+    for (var ii = 0; ii < globals.numLocalPlayers; ++ii) {
+      addLocalPlayer();
+    }
+
+    var handleLeftRight = function(playerId, pressed, bit) {
+      var localPlayer = localPlayers[playerId];
+      if (localPlayer) {
+        localPlayer.leftRight = (localPlayer.leftRight & ~bit) | (pressed ? bit : 0);
+        if (localPlayer.leftRight != localPlayer.oldLeftRight) {
+          localPlayer.oldLeftRight = localPlayer.leftRight;
+          localPlayer.netPlayer.sendEvent('move', {
+              dir: (localPlayer.leftRight & 1) ? -1 : ((localPlayer.leftRight & 2) ? 1 : 0),
+          });
+        }
+      }
+    };
+
+    var handleJump = function(playerId, pressed) {
+      var localPlayer = localPlayers[playerId];
+      if (localPlayer) {
+        if (localPlayer.jump != pressed) {
+          localPlayer.jump = pressed;
+          localPlayer.netPlayer.sendEvent('jump', {
+              jump: pressed,
+          });
+        }
       }
     };
 
@@ -141,10 +161,15 @@ window.g = globals;
     }());
 
     var keys = { };
-    keys[Input.cursorKeys.kLeft]  = function(e) { handleLeftRight(e.pressed, 0x1); }
-    keys[Input.cursorKeys.kRight] = function(e) { handleLeftRight(e.pressed, 0x2); }
-    keys["Z".charCodeAt(0)]       = function(e) { handleJump(e.pressed);           }
-    keys["X".charCodeAt(0)]       = function(e) { handleTestSound(e.pressed);           }
+    keys[Input.cursorKeys.kLeft]  = function(e) { handleLeftRight(0, e.pressed, 0x1); }
+    keys[Input.cursorKeys.kRight] = function(e) { handleLeftRight(0, e.pressed, 0x2); }
+    keys["Z"]                     = function(e) { handleJump(0, e.pressed);           }
+    keys["A"]                     = function(e) { handleLeftRight(1, e.pressed, 0x1); }
+    keys["D"]                     = function(e) { handleLeftRight(1, e.pressed, 0x2); }
+    keys["W"]                     = function(e) { handleJump(1, e.pressed);           }
+    keys["X"]                     = function(e) { handleTestSound(e.pressed);         }
+    keys[187]                     = function(e) { addLocalPlayer();                   }
+    keys[189]                     = function(e) { removeLocalPlayer(2);               }
     Input.setupKeys(keys);
   }
 
@@ -231,6 +256,7 @@ window.g = globals;
     for (var name in images) {
       var image = images[name];
       image.colors = [];
+      image.imgColors = [];
       for (var ii = 0; ii < image.colorize; ++ii) {
         var h = ii / 32;
         var s = (ii % 2) * -0.6;
@@ -246,16 +272,19 @@ window.g = globals;
         var coloredImage = ii ? ImageProcess.adjustHSV(image.img, h, s, v, range) : image.img;
         var numFrames = image.slices.length ? image.slices.length : image.img.width / image.slices;
         var frames = [];
+        var imgFrames = [];
         var x = 0;
         for (var jj = 0; jj < numFrames; ++jj) {
           var width = image.slices.length ? image.slices[jj] : image.slices;
           var frame = ImageProcess.cropImage(coloredImage, x, 0, width, coloredImage.height);
           frame = ImageProcess.scaleImage(frame, width * image.scale, frame.height * image.scale);
+          imgFrames.push(frame);
           frame = createTexture(frame);
           frames.push(frame);
           x += width;
         }
         image.colors[ii] = frames;
+        image.imgColors[ii] = imgFrames;
       }
     }
 
@@ -290,6 +319,7 @@ window.g = globals;
     g_services.levelManager.draw();
     g_services.drawSystem.processEntities();
     g_services.spriteManager.draw();
+    g_services.scoreManager.update();
   };
 
   var sounds = {
@@ -321,6 +351,7 @@ requirejs(
     './collectable',
     './levelmanager',
     './playermanager',
+    './scoremanager',
   ],
   main
 );

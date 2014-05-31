@@ -33,6 +33,15 @@
 
 var debug = require('debug')('player');
 
+/**
+ * A Player in a game.
+ *
+ * @constructor
+ * @param {!Client} client The websocket for this player
+ * @param {!RelayServer} relayServer The server managing this
+ *        player.
+ * @param {string} id a unique id for this player.
+ */
 var Player = function(client, relayServer, id) {
   this.game;
   this.client = client;
@@ -120,6 +129,10 @@ var Player = function(client, relayServer, id) {
   client.on('disconnect', onDisconnect);
 };
 
+/**
+ * Sends a message to this player's controller.
+ * @param {object} msg data to send.
+ */
 Player.prototype.send = function(msg) {
   try {
     this.client.send(msg);
@@ -130,18 +143,25 @@ Player.prototype.send = function(msg) {
   }
 };
 
+/**
+ * Sends a message to the game this player is in.
+ * If the player is not in a game nothing is sent.
+ * @param {object} msg data to send.
+ */
 Player.prototype.sendToGame = function(msg) {
   if (this.game) {
     this.game.send(this, msg);
   }
 };
 
+/**
+ * Disconnect this player. Drop their WebSocket connection.
+ */
 Player.prototype.disconnect = function() {
   clearInterval(this.intervalId);
   this.client.on('message', undefined);
   this.client.on('disconnect', undefined);
   this.client.close();
-
 };
 
 module.exports = Player;
