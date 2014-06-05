@@ -7,7 +7,7 @@
   },
   "happyFunTimes": {
     "gameUrl": "gameview.html",
-    "screenshotUrl": "shootshoot-screenshot.png",
+    "screenshotUrl": "screenshot.png",
     "gameType": "html",
     "useControllerTemplate": true,
     "useGameTemplate": true

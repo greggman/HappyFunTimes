@@ -83,13 +83,14 @@ class Builder(object):
   def ExtractHeader(self, content):
     lines = content.splitlines()
     meta_data = {}
-    while True:
-      line = lines[0]
-      m = re.match('([A-Z0-9_-]+): (.*)$', line, re.IGNORECASE)
-      if not m:
-        break
-      meta_data[m.group(1).lower()] = m.group(2)
-      lines.pop(0)
+    if len(lines) > 0:
+      while True:
+        line = lines[0]
+        m = re.match('([A-Z0-9_-]+): (.*)$', line, re.IGNORECASE)
+        if not m:
+          break
+        meta_data[m.group(1).lower()] = m.group(2)
+        lines.pop(0)
     return ("\n".join(lines), meta_data)
 
 

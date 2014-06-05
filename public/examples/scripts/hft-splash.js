@@ -37,7 +37,7 @@ define(function() {
       "If you'd like to know more about this code check out http://greggman.github.io/HappyFunTimes/",
       "---------------------------------------------------------------------------------------------",
       "",
-    ].join("\n"), "color:red; font-weight: bold;");
+    ].join("\n"), "color:blue; font-weight: bold;");
 
   return {
   };

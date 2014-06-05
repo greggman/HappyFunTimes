@@ -7,7 +7,7 @@
   },
   "happyFunTimes": {
     "gameType": "Unity3D",
-    "screenshotUrl": "unitycharacterexample-screenshot.png",
+    "screenshotUrl": "screenshot.png",
     "gameExecutable": "unitygame",
     "useControllerTemplate": true,
     "useGameTemplate": false
