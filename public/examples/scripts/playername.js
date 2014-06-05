@@ -71,14 +71,11 @@ define(['./cookies'], function(Cookie) {
     }.bind(this);
 
     var startEnteringName = function() {
-console.log("h3");
       // Allow the game to help the player by, for example, removing her character
       // while she's entering her name. Unfortunately that could be used to cheat
       // as in just before she's about to be hit she clicks the name. It's up the individual
       // game to decide if it want's to pay attention to the 'busy' event.
       sendBusy(true);
-console.log("h4");
-console.log("show-name");
     }.bind(this);
 
     var finishEnteringName = function(e) {
@@ -86,7 +83,6 @@ console.log("show-name");
       // the name the page would be scrolled down a certain number of pixels
       // like a 2/3rd of the page worth. No idea why. So again I needed
       // to do some hacky fix like scroll back to the top.
-console.log("hide-name");
       content.style.display = contentOriginalDisplay;
       nameentry.style.display = "none";
       window.scroll(0,1);
