@@ -143,6 +143,13 @@ class Builder(object):
       os.path.join('public', 'games'),
     ]
 
+    hft_default_properties = {
+      "controllerScript": { "default": "scripts/controller.js", "old": "scripts/%(folder)scontroller.js", },
+      "controllerCSS":    { "default": "css/controller.css",    "old": "css/%(folder)s.css",              },
+      "gameScript":       { "default": "scripts/game.js",       "old": "scripts/%(folder)sgame.js",       },
+      "gameCSS":          { "default": "css/game.css",          "old": "css/%(folder)s-game.css",         },
+    }
+
     for dir in dirs:
       if not os.path.exists(dir):
         continue
@@ -166,6 +173,17 @@ class Builder(object):
 
           game["filebasename"] = folder.lower()
           game["screenshotPath"] = os.path.join(dirname, game["screenshotUrl"]).replace("\\", "/")
+
+          for key,value in hft_default_properties.iteritems():
+            if not key in game:
+              old_path = value["old"] % {
+                "folder": folder,
+              }
+              old_full_path = os.path.join(dirname, old_path)
+              if os.path.exists(old_path):
+                game[key] = old_path
+              else:
+                game[key] = value["default"]
 
           if "useGameTemplate" in game and game["useGameTemplate"]:
             gameview_src_name = os.path.join(dirname, "game.html")
