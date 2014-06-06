@@ -92,6 +92,7 @@ var replaceParams = (function() {
 
 exports.startsWith = startsWith;
 exports.endsWith = endsWith;
+exports.replaceParams = replaceParams;
 
 
 
