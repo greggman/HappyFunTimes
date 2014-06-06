@@ -13,13 +13,13 @@ module.exports = function(grunt) {
       game: {
         src: ['public/scripts/*.js'],
         options: {
-          destination: 'docs/game',
+          destination: 'docs/hft',
         },
       },
       controller: {
         src: ['public/examples/scripts/*.js'],
         options: {
-          destination: 'docs/controller',
+          destination: 'docs/misc',
         },
       },
     },
