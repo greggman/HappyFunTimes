@@ -31,13 +31,13 @@
 "use strict";
 
 define([
-    '../../scripts/tdl/buffers',
-    '../../scripts/tdl/fast',
-    '../../scripts/tdl/math',
-    '../../scripts/tdl/models',
-    '../../scripts/tdl/primitives',
-    '../../scripts/tdl/programs',
-    '../../scripts/misc',
+    '../../../3rdparty/tdl/buffers',
+    '../../../3rdparty/tdl/fast',
+    '../../../3rdparty/tdl/math',
+    '../../../3rdparty/tdl/models',
+    '../../../3rdparty/tdl/primitives',
+    '../../../3rdparty/tdl/programs',
+    '../../../scripts/misc/misc',
   ], function(
     Buffers,
     Fast,

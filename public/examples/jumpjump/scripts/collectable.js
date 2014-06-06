@@ -31,10 +31,10 @@
 "use strict";
 
 define([
+    '../../../scripts/misc/misc',
     '../../scripts/2d',
-    '../../scripts/misc',
   ], function(
-    M2D, Misc) {
+    Misc, M2D) {
 
   /**
    * Collectable represnt a collectable in the game.

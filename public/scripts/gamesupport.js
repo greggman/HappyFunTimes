@@ -31,17 +31,17 @@
 "use strict";
 
 define([
-    './3rdparty/stats/stats.min',
-    './gameclock',
+    '../3rdparty/stats/stats.min',
+    './misc/gameclock',
+    './misc/logger',
+    './misc/misc',
     './hft-splash',
-    './logger',
-    './misc',
   ], function(
     StatsJS,
     GameClock,
-    HFTSplash,
     Logger,
-    Misc) {
+    Misc,
+    HFTSplash) {
 
   var $ = function(id) {
     return document.getElementById(id);

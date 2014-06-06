@@ -33,7 +33,7 @@
 
 var main = function(
     GameClient,
-    ExampleUI,
+    CommonUI,
     Misc,
     MobileHacks,
     ClockSyncImpl) {
@@ -48,16 +48,16 @@ var main = function(
   var client = new GameClient({
     gameId: "clocksync",
   });
-  ExampleUI.setupStandardControllerUI(client, {});
+  CommonUI.setupStandardControllerUI(client, {});
   ClockSyncImpl();
 };
 
 // Start the main app logic.
 requirejs(
   [ '../../../scripts/gameclient',
-    '../../scripts/exampleui',
-    '../../scripts/misc',
-    '../../scripts/mobilehacks',
+    '../../../scripts/commonui',
+    '../../../scripts/misc/misc',
+    '../../../scripts/misc/mobilehacks',
     'clocksyncimpl',
   ],
   main

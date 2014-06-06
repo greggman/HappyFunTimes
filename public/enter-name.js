@@ -102,9 +102,9 @@ var main = function(Cookie, Misc, MobileHacks) {
 
 // Start the main app logic.
 requirejs(
-  [ './examples/scripts/cookies',
-    './examples/scripts/misc',
-    './examples/scripts/mobilehacks',
+  [ './scripts/misc/cookies',
+    './scripts/misc/misc',
+    './scripts/misc/mobilehacks',
     './scripts/IO',
   ],
   main

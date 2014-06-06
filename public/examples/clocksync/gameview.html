@@ -42,13 +42,13 @@
 
   <title>ClockSync</title>
   <link href="/hft-icon.png" rel="shortcut icon" type="image/png">
-  <link rel="stylesheet" href="../css/games.css">
+  <link rel="stylesheet" href="../../css/games.css">
   <link rel="stylesheet" href="css/game.css">
-  <script data-main="scripts/game.js" src="../scripts/require.js"></script>
+  <script data-main="scripts/game.js" src="../../3rdparty/require.js"></script>
 <script>
 requirejs.config({
   shim: {
-        '../../scripts/3rdparty/three/three.min.js': {
+        '3rdparty/three/three.min.js': {
             //These script dependencies should be loaded before loading
             //three.js
             deps: [],
@@ -56,7 +56,7 @@ requirejs.config({
             //module value.
             exports: 'THREE',
         },
-        '../../scripts/3rdparty/stats/stats.min.js': {
+        '3rdparty/stats/stats.min.js': {
             //These script dependencies should be loaded before loading
             //stats.js
             deps: [],

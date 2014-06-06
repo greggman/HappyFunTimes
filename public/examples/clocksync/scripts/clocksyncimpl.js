@@ -31,9 +31,9 @@
 
 "use strict";
 
-define(
-  [ '../../../scripts/syncedclock',
-    '../../scripts/logger',
+define([
+    '../../../scripts/syncedclock',
+    '../../../scripts/misc/logger',
     '../../scripts/audio',
   ],
   function(SyncedClock, Logger, AudioManager) {

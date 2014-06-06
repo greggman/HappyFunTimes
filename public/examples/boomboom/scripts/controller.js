@@ -31,17 +31,17 @@
 "use strict";
 
 var main = function(
+    CommonUI,
     GameClient,
-    AudioManager,
     DPad,
-    ExampleUI,
-    ImageLoader,
-    ImageProcess,
     Input,
     Misc,
     MobileHacks,
     Ticker,
-    Touch) {
+    Touch,
+    AudioManager,
+    ImageLoader,
+    ImageProcess) {
   var g_client;
   var g_audioManager;
   var g_clock;
@@ -214,7 +214,7 @@ var main = function(
     var sounds = {};
     g_audioManager = new AudioManager(sounds);
 
-    ExampleUI.setupStandardControllerUI(g_client, globals);
+    CommonUI.setupStandardControllerUI(g_client, globals);
 
     var dpads = [
       new DPad({element: $("dpadleft")}),
@@ -274,17 +274,17 @@ var main = function(
 
 // Start the main app logic.
 requirejs(
-  [ '../../../scripts/gameclient',
+  [ '../../../scripts/commonui',
+    '../../../scripts/gameclient',
+    '../../../scripts/misc/dpad',
+    '../../../scripts/misc/input',
+    '../../../scripts/misc/misc',
+    '../../../scripts/misc/mobilehacks',
+    '../../../scripts/misc/ticker',
+    '../../../scripts/misc/touch',
     '../../scripts/audio',
-    '../../scripts/dpad',
-    '../../scripts/exampleui',
     '../../scripts/imageloader',
     '../../scripts/imageprocess',
-    '../../scripts/input',
-    '../../scripts/misc',
-    '../../scripts/mobilehacks',
-    '../../scripts/ticker',
-    '../../scripts/touch',
   ],
   main
 );

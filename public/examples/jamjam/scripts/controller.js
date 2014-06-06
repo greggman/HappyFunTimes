@@ -31,15 +31,15 @@
 "use strict";
 
 var main = function(
+    CommonUI,
     GameClient,
     SyncedClock,
-    AudioManager,
     Cookie,
-    ExampleUI,
     Grid,
     Input,
     Misc,
-    MobileHacks) {
+    MobileHacks,
+    AudioManager) {
   var g_client;
   var g_audioManager;
   var g_clock;
@@ -183,7 +183,7 @@ var main = function(
 
     g_client.addEventListener('setInstrument', handleSetInstrument);
 
-    ExampleUI.setupStandardControllerUI(g_client, globals);
+    CommonUI.setupStandardControllerUI(g_client, globals);
     if (!AudioManager.hasWebAudio()) {
       $("needWebAudio").style.display = "block";
       return;
@@ -288,15 +288,15 @@ var main = function(
 
 // Start the main app logic.
 requirejs(
-  [ '../../../scripts/gameclient',
+  [ '../../../scripts/commonui',
+    '../../../scripts/gameclient',
     '../../../scripts/syncedclock',
+    '../../../scripts/misc/cookies',
+    '../../../scripts/misc/grid',
+    '../../../scripts/misc/input',
+    '../../../scripts/misc/misc',
+    '../../../scripts/misc/mobilehacks',
     '../../scripts/audio',
-    '../../scripts/cookies',
-    '../../scripts/exampleui',
-    '../../scripts/grid',
-    '../../scripts/input',
-    '../../scripts/misc',
-    '../../scripts/mobilehacks',
   ],
   main
 );

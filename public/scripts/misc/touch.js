@@ -31,7 +31,7 @@
 "use strict";
 
 define(
-  [ './3rdparty/handjs/hand-1.3.7',
+  [ '../../3rdparty/handjs/hand-1.3.7',
     './input',
     './misc',
   ], function(HandJS, Input, Misc) {

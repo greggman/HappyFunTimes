@@ -82,7 +82,7 @@ var main = function(IO, Strings) {
 // Start the main app logic.
 requirejs(
   [ 'scripts/io',
-    './examples/scripts/strings',
+    'scripts/misc/strings',
   ],
   main
 );

@@ -32,7 +32,7 @@
 
 var main = function(
     GameClient,
-    ExampleUI,
+    CommonUI,
     Misc,
     MobileHacks) {
 
@@ -58,7 +58,7 @@ var main = function(
 
   g_client.addEventListener('scored', onScored);
 
-  ExampleUI.setupStandardControllerUI(g_client, globals);
+  CommonUI.setupStandardControllerUI(g_client, globals);
 
   var color = Misc.randCSSColor();
   g_client.sendCmd('setColor', { color: color });
@@ -83,9 +83,9 @@ var main = function(
 // Start the main app logic.
 requirejs(
   [ '../../../scripts/gameclient',
-    '../../scripts/exampleui',
-    '../../scripts/misc',
-    '../../scripts/mobilehacks',
+    '../../../scripts/commonui',
+    '../../../scripts/misc/misc',
+    '../../../scripts/misc/mobilehacks',
   ],
   main
 );

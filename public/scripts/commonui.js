@@ -31,10 +31,10 @@
 "use strict";
 
 define([
-    '../../scripts/io',
+    './io',
     './hft-splash',
-    './misc',
-    './playername',
+    './misc/misc',
+    './misc/playername',
   ], function(
     IO,
     HFTSplash,

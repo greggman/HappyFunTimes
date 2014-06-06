@@ -30,7 +30,7 @@
  */
 "use strict";
 
-define(['../../scripts/3rdparty/three/three.min'], function(ThreeFoo) {
+define(['../../../3rdparty/three/three.min'], function(ThreeFoo) {
 
   /**
    * The Goal.

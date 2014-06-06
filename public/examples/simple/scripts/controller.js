@@ -32,12 +32,12 @@
 
 // Require will call this with input and GameClient once input.js and gameclient.js have loaded
 var main = function(
+    CommonUI,
     GameClient,
-    HandJS,
-    ExampleUI,
     Input,
     Misc,
-    MobileHacks) {
+    MobileHacks,
+    HandJS) {
 
   var globals = {
     debug: false,
@@ -53,7 +53,7 @@ var main = function(
     gameId: "simple",
   });
 
-  // Note: ExampleUI handles these events for almost all the samples.
+  // Note: CommonUI handles these events for almost all the samples.
   var onConnect = function() {
     statusElem.innerHTML = "you've connected to the relayserver";
   };
@@ -62,15 +62,15 @@ var main = function(
     statusElem.innerHTML = "you were disconnected from the relayserver";
   }
 
-  // If I was going to handle this without ExampleUI this is what I'd do
+  // If I was going to handle this without CommonUI this is what I'd do
   //client.addEventListener('connect', onConnect);
   //client.addEventListener('disconnect', onDisconnect);
 
-  // Because I want the ExampleUI to work
+  // Because I want the CommonUI to work
   globals.disconnectFn = onDisconnect;
   globals.connectFn = onConnect;
 
-  ExampleUI.setupStandardControllerUI(client, globals);
+  CommonUI.setupStandardControllerUI(client, globals);
 
   var randInt = function(range) {
     return Math.floor(Math.random() * range);
@@ -113,13 +113,13 @@ var main = function(
 };
 
 // Start the main app logic.
-requirejs(
-  [ '../../../scripts/gameclient',
-    '../../scripts/3rdparty/handjs/hand-1.3.7',
-    '../../scripts/exampleui',
-    '../../scripts/input',
-    '../../scripts/misc',
-    '../../scripts/mobilehacks',
+requirejs([
+    '../../../scripts/commonui',
+    '../../../scripts/gameclient',
+    '../../../scripts/misc/input',
+    '../../../scripts/misc/misc',
+    '../../../scripts/misc/mobilehacks',
+    '../../../3rdparty/handjs/hand-1.3.7',
   ],
   main
 );

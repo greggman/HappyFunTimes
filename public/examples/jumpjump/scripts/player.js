@@ -31,15 +31,15 @@
 "use strict";
 
 define([
+    '../../../scripts/misc/misc',
+    '../../../scripts/misc/strings',
     '../../scripts/2d',
     '../../scripts/imageprocess',
-    '../../scripts/misc',
-    '../../scripts/strings',
   ], function(
-    M2D,
-    ImageProcess,
     Misc,
-    Strings) {
+    Strings,
+    M2D,
+    ImageProcess) {
 
   var availableColors = [];
   var nameFontOptions = {

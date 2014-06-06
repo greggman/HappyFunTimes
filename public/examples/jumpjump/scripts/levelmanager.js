@@ -30,7 +30,10 @@
  */
 "use strict";
 
-define(['../../scripts/misc', '../../scripts/tilemap'], function(Misc, TileMap) {
+define([
+    '../../../scripts/misc/misc',
+    '../../scripts/tilemap',
+  ], function(Misc, TileMap) {
 
   var charToTileId = {
     ' ': { tileId: 0x0001, },

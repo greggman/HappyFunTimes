@@ -309,11 +309,11 @@ PlayerManager.prototype.drawNotes = function(trackIndex, rhythmIndex) {
 
 var main = function(
     GameServer,
-    SyncedClock,
-    AudioManager,
-    CSSParse,
     GameSupport,
+    SyncedClock,
+    CSSParse,
     Misc,
+    AudioManager,
     CanvasRenderer,
     WebGLRenderer) {
 
@@ -412,11 +412,11 @@ var main = function(
 // Start the main app logic.
 requirejs(
   [ '../../../scripts/gameserver',
+    '../../../scripts/gamesupport',
     '../../../scripts/syncedclock',
+    '../../../scripts/misc/cssparse',
+    '../../../scripts/misc/misc',
     '../../scripts/audio',
-    '../../scripts/cssparse',
-    '../../scripts/gamesupport',
-    '../../scripts/misc',
     './canvasrenderer',
     './webglrenderer',
   ],

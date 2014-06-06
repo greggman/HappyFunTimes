@@ -1,7 +1,7 @@
 "use strict";
 
 define([
-    './3rdparty/jsfx/jsfxlib',
+    '../../3rdparty/jsfx/jsfxlib',
   ], function(
      jsfxlib) {
 

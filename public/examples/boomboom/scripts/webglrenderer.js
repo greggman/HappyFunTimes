@@ -31,17 +31,17 @@
 "use strict";
 
 define(
-    [ '../../scripts/tdl/buffers',
-      '../../scripts/tdl/fast',
-      '../../scripts/tdl/framebuffers',
-      '../../scripts/tdl/log',
-      '../../scripts/tdl/math',
-      '../../scripts/tdl/models',
-      '../../scripts/tdl/particles',
-      '../../scripts/tdl/primitives',
-      '../../scripts/tdl/programs',
-      '../../scripts/tdl/textures',
-      '../../scripts/tdl/webgl',
+    [ '../../../3rdparty/tdl/buffers',
+      '../../../3rdparty/tdl/fast',
+      '../../../3rdparty/tdl/framebuffers',
+      '../../../3rdparty/tdl/log',
+      '../../../3rdparty/tdl/math',
+      '../../../3rdparty/tdl/models',
+      '../../../3rdparty/tdl/particles',
+      '../../../3rdparty/tdl/primitives',
+      '../../../3rdparty/tdl/programs',
+      '../../../3rdparty/tdl/textures',
+      '../../../3rdparty/tdl/webgl',
     ], function(
       Buffers,
       Fast,

@@ -35,13 +35,13 @@ var g_updateStatus = false;
 
 var main = function(
     GameServer,
+    GameSupport,
     LocalNetPlayer,
+    Input,
+    Misc,
     WebGL,
     AudioManager,
     EntitySystem,
-    GameSupport,
-    Input,
-    Misc,
     CanvasRenderer,
     WebGLRenderer,
     PlayerManager,
@@ -280,15 +280,15 @@ window.s = g_services;
 };
 
 // Start the main app logic.
-requirejs(
-  [ '../../../scripts/gameserver',
+requirejs([
+    '../../../scripts/gameserver',
+    '../../../scripts/gamesupport',
     '../../../scripts/localnetplayer',
-    '../../scripts/tdl/webgl',
+    '../../../scripts/misc/input',
+    '../../../scripts/misc/misc',
+    '../../../3rdparty/tdl/webgl',
     '../../scripts/audio',
     '../../scripts/entitysystem',
-    '../../scripts/gamesupport',
-    '../../scripts/input',
-    '../../scripts/misc',
     'canvasrenderer',
     'webglrenderer',
     'playermanager',

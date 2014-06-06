@@ -31,10 +31,10 @@
 "use strict";
 
 define([
-    '../../scripts/grid',
-    '../../scripts/misc',
-    '../../scripts/mobilehacks',
-    '../../scripts/strings',
+    '../../../scripts/misc/grid',
+    '../../../scripts/misc/misc',
+    '../../../scripts/misc/mobilehacks',
+    '../../../scripts/misc/strings',
   ], function(
     Grid,
     Misc,

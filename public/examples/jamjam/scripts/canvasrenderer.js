@@ -30,7 +30,7 @@
  */
 "use strict";
 
-define('../../scripts/misc', function(Misc) {
+define('../../../scripts/misc/misc', function(Misc) {
 
   var CanvasRenderer = function(services, canvas) {
     this.services = services;

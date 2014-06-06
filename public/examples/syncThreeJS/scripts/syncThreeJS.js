@@ -235,10 +235,10 @@ requirejs(
   [ '../../../scripts/gameserver',
     '../../../scripts/gameclient',
     '../../../scripts/syncedclock',
-    '../../scripts/3rdparty/three/three.min',
-    '../../scripts/misc',
-    '../../scripts/random',
-    '../../scripts/ui',
+    '../../../3rdparty/three/three.min',
+    '../../../scripts/misc/misc',
+    '../../../scripts/misc/random',
+    '../../../scripts/misc/ui',
   ],
   main
 );

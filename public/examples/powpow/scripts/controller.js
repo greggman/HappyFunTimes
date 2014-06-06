@@ -31,13 +31,13 @@
 "use strict";
 
 var main = function(
+    CommonUI,
     GameClient,
-    AudioManager,
-    ExampleUI,
-    Misc,
     Input,
+    Misc,
     MobileHacks,
     Touch,
+    AudioManager,
     Ships) {
 
   var g_name = "";
@@ -196,7 +196,7 @@ var main = function(
   g_client.addEventListener('launch', handleLaunchMsg);
   g_client.addEventListener('queue', handleQueueMsg);
 
-  ExampleUI.setupStandardControllerUI(g_client, globals);
+  CommonUI.setupStandardControllerUI(g_client, globals);
 
   Touch.setupButtons({
     inputElement: $("buttons"),
@@ -223,14 +223,14 @@ var main = function(
 };
 
 // Start the main app logic.
-requirejs(
-  [ '../../../scripts/gameclient',
+requirejs([
+    '../../../scripts/commonui',
+    '../../../scripts/gameclient',
+    '../../../scripts/misc/input',
+    '../../../scripts/misc/misc',
+    '../../../scripts/misc/mobilehacks',
+    '../../../scripts/misc/touch',
     '../../scripts/audio',
-    '../../scripts/exampleui',
-    '../../scripts/misc',
-    '../../scripts/input',
-    '../../scripts/mobilehacks',
-    '../../scripts/touch',
     'ships',
   ],
   main

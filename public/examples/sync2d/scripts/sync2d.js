@@ -201,9 +201,9 @@ requirejs(
   [ '../../../scripts/gameserver',
     '../../../scripts/gameclient',
     '../../../scripts/syncedclock',
-    '../../scripts/misc',
-    '../../scripts/random',
-    '../../scripts/ui',
+    '../../../scripts/misc/misc',
+    '../../../scripts/misc/random',
+    '../../../scripts/misc/ui',
   ],
   main
 );

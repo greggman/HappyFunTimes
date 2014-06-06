@@ -32,19 +32,11 @@
 
 // Require will call this with input and GameClient once input.js and gameclient.js have loaded
 var main = function(
+    CommonUI,
     GameClient,
-    HandJS,
-    ExampleUI,
     Input,
-    MobileHacks) {
-  // NOTE: Techincally MobileHacks and ExampleUI are not needed
-  //
-  // ExampleUI is included to make the sample appear inside a frame with a gear menu
-  //
-  // MobileHacks is included as it adds a few events to make mobile work better
-  //    for example preventing the browser from trying to scroll the page.
-  //
-  // HandJS provides pointermove and related events.
+    MobileHacks,
+    HandJS) {
   MobileHacks.fixHeightHack();
 
   var score = 0;
@@ -52,7 +44,7 @@ var main = function(
   var inputElem = document.getElementById("input");
   var client = new GameClient({ gameId: "supersimple" });
 
-  ExampleUI.setupStandardControllerUI(client, {});
+  CommonUI.setupStandardControllerUI(client, {});
 
   var randInt = function(range) {
     return Math.floor(Math.random() * range);
@@ -102,12 +94,12 @@ var main = function(
 };
 
 // Start the main app logic.
-requirejs(
-  [ '../../../scripts/gameclient',
-    '../../scripts/3rdparty/handjs/hand-1.3.7',
-    '../../scripts/exampleui',
-    '../../scripts/input',
-    '../../scripts/mobilehacks',
+requirejs([
+    '../../../scripts/commonui',
+    '../../../scripts/gameclient',
+    '../../../scripts/misc/input',
+    '../../../scripts/misc/mobilehacks',
+    '../../../3rdparty/handjs/hand-1.3.7',
   ],
   main
 );

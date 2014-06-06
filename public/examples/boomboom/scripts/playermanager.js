@@ -30,7 +30,10 @@
  */
 "use strict";
 
-define(['../../scripts/misc', './player'], function(Misc, Player) {
+define([
+    '../../../scripts/misc/misc',
+    './player',
+  ], function(Misc, Player) {
 
   var clearOffsets = [
     { x:  0, y:  0, },

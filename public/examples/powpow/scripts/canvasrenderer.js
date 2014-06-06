@@ -31,7 +31,7 @@
 
 "use strict";
 
-define(["../../scripts/misc", "./ships"], function(Misc, Ships) {
+define(["../../../scripts/misc/misc", "./ships"], function(Misc, Ships) {
   var CanvasRenderer = function(services, canvas) {
     this.services = services;
     this.canvas = canvas;

@@ -31,7 +31,7 @@
 "use strict";
 
 define(
-  [ '../../scripts/cssparse',
+  [ '../../../scripts/misc/cssparse',
     './shot',
   ], function(CSSParse, Shot) {
   /**

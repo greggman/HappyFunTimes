@@ -31,16 +31,16 @@
 "use strict";
 
 define([
-    '../../scripts/gamebutton',
+    '../../../scripts/misc/gamebutton',
+    '../../../scripts/misc/input',
+    '../../../scripts/misc/misc',
     '../../scripts/imageprocess',
-    '../../scripts/input',
-    '../../scripts/misc',
     './bomb',
   ], function(
     GameButton,
-    ImageProcess,
     Input,
     Misc,
+    ImageProcess,
     Bomb) {
 
   var availableColors = [];

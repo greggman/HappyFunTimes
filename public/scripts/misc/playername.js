@@ -43,7 +43,7 @@ define(['./cookies'], function(Cookie) {
     var nameCookie = new Cookie("name");
     var name = nameCookie.get() || "";
 
-    // UGH! I guess this name stuff should move to ExampleUI. At one point
+    // UGH! I guess this name stuff should move to CommonUI. At one point
     // it seemed separte
     var nameentry = $("hft-nameentry");
     var content = $("hft-content");

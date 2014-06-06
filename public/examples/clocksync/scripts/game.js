@@ -59,7 +59,7 @@ var main = function(GameServer, GameSupport, ClockSyncImpl) {
 // Start the main app logic.
 requirejs(
   [ '../../../scripts/gameserver',
-    '../../scripts/gamesupport',
+    '../../../scripts/gamesupport',
     'clocksyncimpl',
   ],
   main

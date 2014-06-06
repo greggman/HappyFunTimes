@@ -31,14 +31,14 @@
 "use strict";
 
 var main = function(
+    CommonUI,
     GameClient,
-    AudioManager,
     DPad,
-    ExampleUI,
     Input,
     Misc,
     MobileHacks,
-    Touch) {
+    Touch,
+    AudioManager) {
   var g_client;
   var g_audioManager;
 
@@ -87,7 +87,7 @@ var main = function(
     g_client.sendCmd('pad', {pad: e.pad, dir: e.info.direction});
   };
 
-  ExampleUI.setupStandardControllerUI(g_client, globals);
+  CommonUI.setupStandardControllerUI(g_client, globals);
 
   Input.setupKeyboardDPadKeys(sendPad);
   var container = $("dpadinput");
@@ -112,15 +112,15 @@ var main = function(
 };
 
 // Start the main app logic.
-requirejs(
-  [ '../../../scripts/gameclient',
+requirejs([
+    '../../../scripts/commonui',
+    '../../../scripts/gameclient',
+    '../../../scripts/misc/dpad',
+    '../../../scripts/misc/input',
+    '../../../scripts/misc/misc',
+    '../../../scripts/misc/mobilehacks',
+    '../../../scripts/misc/touch',
     '../../scripts/audio',
-    '../../scripts/dpad',
-    '../../scripts/exampleui',
-    '../../scripts/input',
-    '../../scripts/misc',
-    '../../scripts/mobilehacks',
-    '../../scripts/touch',
   ],
   main
 );

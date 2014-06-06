@@ -35,14 +35,14 @@ function $(id) {
 }
 
 var main = function(
+    GameSupport,
     GameServer,
     LocalNetPlayer,
-    AudioManager,
-    EntitySystem,
-    GameSupport,
     Input,
     Misc,
     Speedup,
+    AudioManager,
+    EntitySystem,
     PlayerManager) {
 
   var g_debug = false;
@@ -159,15 +159,15 @@ var main = function(
 };
 
 // Start the main app logic.
-requirejs(
-  [ '../../../scripts/gameserver',
+requirejs([
+    '../../../scripts/gamesupport',
+    '../../../scripts/gameserver',
     '../../../scripts/localnetplayer',
+    '../../../scripts/misc/input',
+    '../../../scripts/misc/misc',
+    '../../../scripts/misc/speedup',
     '../../scripts/audio',
     '../../scripts/entitysystem',
-    '../../scripts/gamesupport',
-    '../../scripts/input',
-    '../../scripts/misc',
-    '../../scripts/speedup',
     './playermanager',
   ],
   main

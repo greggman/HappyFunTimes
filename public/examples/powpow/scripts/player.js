@@ -31,17 +31,17 @@
 "use strict";
 
 define([
-    '../../scripts/tdl/math',
+    '../../../scripts/misc/misc',
+    '../../../scripts/misc/strings',
+    '../../../3rdparty/tdl/math',
     '../../scripts/2d',
-    '../../scripts/misc',
-    '../../scripts/strings',
     './ships',
     './shot',
   ], function(
-    math,
-    M2D,
     Misc,
     Strings,
+    math,
+    M2D,
     Ships,
     Shot) {
   var availableColors = [];
