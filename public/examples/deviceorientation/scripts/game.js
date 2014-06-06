@@ -32,7 +32,7 @@
 
 var main = function(
     GameServer,
-    GameClock,
+    GameSupport,
     Misc,
     ThreeFoo,
     AudioManager,
@@ -68,16 +68,6 @@ var main = function(
 
   function startPlayer(netPlayer, name) {
     return playerManager.createPlayer(name, netPlayer);
-  }
-
-  function showConnected() {
-    $('outer').style.display = "block";
-    $('hft-disconnected').style.display = "none";
-  }
-
-  function showDisconnected() {
-    $('outer').style.display = "none";
-    $('hft-disconnected').style.display = "block";
   }
 
   Misc.applyUrlSettings(globals);
@@ -152,10 +142,9 @@ var main = function(
       gameId: "orient",
     });
     g_services.server = server;
-    server.addEventListener('connect', showConnected);
-    server.addEventListener('disconnect', showDisconnected);
     server.addEventListener('playerconnect', startPlayer);
   }
+  GameSupport.init(server, globals);
 
   var sounds = {
     fire: {
@@ -180,12 +169,7 @@ var main = function(
 
   g_services.goal = new Goal(g_services);
 
-  var clock = new GameClock();
-  render();
   function render() {
-    globals.elapsedTime = clock.getElapsedTime();
-    globals.time = clock.gameTime;
-
     if (g_canvas.width != g_canvas.clientWidth &&
         g_canvas.height != g_canvas.clientHeight) {
       camera.aspect = g_canvas.clientWidth / g_canvas.clientHeight;
@@ -201,15 +185,15 @@ var main = function(
       sphereMesh.rotation.x += globals.elapsedTime * 0.2;
       sphereMesh.rotation.z += globals.elapsedTime * 0.31;
     }
-
-    requestAnimationFrame(render, g_canvas);
   }
+
+  GameSupport.run(globals, render);
 };
 
 // Start the main app logic.
 requirejs(
   [ '../../../scripts/gameserver',
-    '../../../scripts/misc/gameclock',
+    '../../../scripts/gamesupport',
     '../../../scripts/misc/misc',
     '../../../3rdparty/three/three.min',
     '../../scripts/audio',

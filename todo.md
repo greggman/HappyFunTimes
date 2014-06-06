@@ -1,4 +1,6 @@
 *   make games.html msgs show up even when scrolled down
+*   fix docs
+*   fix doc-generation
 *   make gameviews template based so we can make disconnect behavior common
 
     - [x] boomboom
