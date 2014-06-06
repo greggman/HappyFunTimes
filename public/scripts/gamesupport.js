@@ -121,12 +121,14 @@ define([
   var run = function(globals, fn) {
     var clock = new GameClock();
     globals.frameCount = 0;
+    globals.gameTime = 0;
 
     var requestId;
     var loop = function() {
       stats.begin();
 
       globals.elapsedTime = clock.getElapsedTime();
+      globals.gameTime += globals.elapsedTime;
       ++globals.frameCount;
 
       var result = fn();
