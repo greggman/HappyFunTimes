@@ -166,7 +166,7 @@ define([
     // battery. So, if I'm running locally I make
     // the game pause on blur which means effectively
     // it will stop anytime I switch back to my editor.
-    if ((!globals.haveServer && globals.pauseOnBlur !== false) || globals.pauseOnBlur) {
+    if ((globals.haveServer === false && globals.pauseOnBlur !== false) || globals.pauseOnBlur) {
       window.addEventListener('blur', stop, false);
       window.addEventListener('focus', start, false);
       window.addEventListener('resize', updateOnce, false);

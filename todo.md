@@ -5,7 +5,7 @@
 
     - [x] boomboom
     - [x] clocksync
-    - [ ] deviceorientation
+    - [x] deviceorientation
     - [x] jamjam
     - [x] jumpjump
     - [x] powpow

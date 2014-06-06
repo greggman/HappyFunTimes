@@ -9,7 +9,6 @@
     "gameType": "Unity3D",
     "screenshotUrl": "screenshot.png",
     "gameExecutable": "unitygame",
-    "useControllerTemplate": true,
-    "useGameTemplate": false
+    "useControllerTemplate": true
   }
 }
