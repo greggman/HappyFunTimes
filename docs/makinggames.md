@@ -44,23 +44,27 @@ A description of the fields is as follows
 
 *    useContollerTemplate
 
-     If `true` then `build.py` will generate `index.html` for
-     you by inserting `controller.html` into `/templates/controller.index.html`
+     Should be 'true'. If `true` then `build.py` will generate `index.html` for
+     you by inserting `controller.html` into `/templates/controller.index.html`. You
+     want this because it's what inserts the standard UI (the gear menu) and
+     handling of disconnected and switching controllers to other games automatically.
 
 *    useGameTemplate
 
      If `true' then `build.py` will generate `gameview.html` for you
-     by inserting `game.html` into `/templates/game.gameview.html`
+     by inserting `game.html` into `/templates/game.gameview.html`. If you're
+     making an html based game you should
+     most likely set this to true as well as a few other things are handled
+     for you.
 
 
-Getting your controller to use the ExampleUI
+Getting your controller to use the CommonUI
 --------------------------------------------
 
-The example UI currently consists of the player's name at the top fo the display
-and a gear menu for more options. Below that is a space for your controller's
-specifics.
+The CommonUI currently consists of the gear menu top right of the display as well
+has handling of name editing, disconnecting, and auto switching to the new games.
 
-The ExampleUI provides several features including.
+The CommonUI provides several features including.
 
 *   Handling the player editing their name.
 
@@ -86,19 +90,17 @@ To use the ExampleUI in your controller
 
         python build.py
 
-*   make a `<gamefolder>/css/<gamename>.css` file with any css unique to your controller.
+*   make a `<gamefolder>/css/controller.css` file with any css unique to your controller.
 
-    NOTE: `<gamefolder>` and `<gamename>` must match.
+*   make a `<gamefolder>/scripts/controller.js` file
 
-*   make a `<gamefolder>/scripts/<gamename>controller.js` file
-
-    The minimum contents of a `<gamename>controller.js` is
+    The minimum contents of a `controller.js` is
 
         "use strict";
 
         var main = function(
             GameClient,
-            ExampleUI,
+            CommonUI,
             Misc,
             MobileHacks) {
           var g_client;
@@ -109,15 +111,11 @@ To use the ExampleUI in your controller
           Misc.applyUrlSettings(globals);
           MobileHacks.fixHeightHack();
 
-          function $(id) {
-            return document.getElementById(id);
-          }
-
           g_client = new GameClient({
             gameId: "gamename",   // <==-- be sure to set this to your game's id.
           });
 
-          ExampleUI.setupStandardControllerUI(g_client, globals);
+          CommonUI.setupStandardControllerUI(g_client, globals);
 
           // Insert your controller specific code here.
         };
@@ -125,9 +123,9 @@ To use the ExampleUI in your controller
         // Start the main app logic.
         requirejs(
           [ '../../../scripts/gameclient',
-            '../../scripts/exampleui',
-            '../../scripts/misc',
-            '../../scripts/mobilehacks',
+            '../../../scripts/commonui',
+            '../../../scripts/misc/misc',
+            '../../../scripts/misc/mobilehacks',
           ],
           main
         );
@@ -226,13 +224,13 @@ To use it.
 
         python build.py
 
-*   make a `<gamefolder>/css/<gamename>-game.css` file with any css unique to your controller.
+*   make a `<gamefolder>/css/game.css` file with any css unique to your controller.
 
     NOTE: `<gamefolder>` and `<gamename>` must match.
 
-*   make a `<gamefolder>/scripts/<gamename>game.js` file
+*   make a `<gamefolder>/scripts/game.js` file
 
-    The minimum contents of a `<gamename>game.js` is
+    The minimum contents of a `game.js` is
 
         "use strict";
 
@@ -244,7 +242,6 @@ To use it.
           // You can set these from the URL with
           // http://path/gameview.html?settings={name:value,name:value}
           var globals = {
-            port: 8080,
             haveServer: true,
             debug: false,
           };
@@ -276,14 +273,15 @@ To use it.
         // Start the main app logic.
         requirejs(
           [ '../../../scripts/gameserver',
-            '../../scripts/gamesupport',
-            '../../scripts/misc',
+            '../../../scripts/gamesupport',
+            '../../../scripts/misc/misc',
           ],
           main
         );
 
 *  GameSupport will set `globals.elapsedTime` to the time in seconds that have elapsed since the last
-   call to your mainloop. It will also increment `global.frameCount`.
+   call to your mainloop. `globals.gameTime` is the time since the game started.
+   `global.frameCount` is the number of times your main loop has been called.
 
 
 

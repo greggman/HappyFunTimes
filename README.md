@@ -397,9 +397,11 @@ Folder structure
     | |
     | +-scripts  // The HappyFunTime JavaScript Library
     | |
+    | +-3rdparty  // Various 3rdparty JavaScript libs
+    | |
     | +-examples  // the examples
     |   |
-    |   +-scripts  // libraries shared by the examples, not part of HappyFunTimes
+    |   +-scripts  // libraries shared by some of the examples, not part of HappyFunTimes
     |   |
     |   +-<example> // each example
     |     |
