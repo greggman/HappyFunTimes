@@ -112,6 +112,14 @@ To send one call NetPlayer.sendCmd
 
 The smartphone's client will receive a 'scored' command with the data. eg. {points: 7}
 
+    // On the phone
+    var someFunctionToHandleScoring = function(data) {
+       console.log("You scored " + data.points + " points!");
+    };
+
+    gameclient.addEventListener('scored', someFunctionToHandleScoring);
+
+
 You also need to handle if the player's smartphone disconnects. You do this by adding an
 OnDisconnect event handler.
 
