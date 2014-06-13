@@ -212,7 +212,9 @@ define(
       sendEvent_('disconnect');
       while (_numPlayers > 0) {
         for (var id in _players) {
-          removePlayer_(id);
+          if (Object.hasOwnProperty.call(_players, id)) {
+            removePlayer_(id);
+          }
           break;
         }
       }
@@ -273,12 +275,12 @@ define(
     if (!options.controllerUrl) {
       var url = window.location.href;
       var subs = {"#": 1, "?": 1, "/": 0};
-      for (var c in subs) {
+      Object.keys(subs).forEach(function(c) {
         var ndx = subs[c] ? url.indexOf(c) : url.lastIndexOf(c);
         if (ndx >= 0) {
           url = url.substr(0, ndx);
         }
-      }
+      });
       options.controllerUrl = url + "/index.html";
     }
     this.sendCmd("server", -1, options);

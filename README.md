@@ -3,6 +3,8 @@ HappyFunTimes
 
 [Home Page](http://greggman.github.io/HappyFunTimes/).
 
+[Blog](http://blog.happyfuntimes.net).
+
 <img id="test" src="images/scene-00-jumpjump.jpg" width="782" height="441" />
 
 [HappyFunTimes](http://greggman.github.io/HappyFunTimes/) is a library for making party games that are meant to be

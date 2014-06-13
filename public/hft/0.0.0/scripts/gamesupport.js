@@ -31,7 +31,7 @@
 "use strict";
 
 define([
-    '../3rdparty/stats/stats.min',
+    '../../../3rdparty/stats/stats.min',
     './misc/gameclock',
     './misc/logger',
     './misc/misc',

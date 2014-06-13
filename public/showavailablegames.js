@@ -116,8 +116,8 @@ var main = function(IO, Strings) {
 
 // Start the main app logic.
 requirejs(
-  [ 'scripts/io',
-    'scripts/misc/strings',
+  [ 'hft/io',
+    'hft/misc/strings',
   ],
   main
 );

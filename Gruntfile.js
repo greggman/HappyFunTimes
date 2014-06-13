@@ -11,22 +11,18 @@ module.exports = function(grunt) {
         },
       },
       game: {
-        src: ['public/scripts/*.js'],
+        src: [
+          'public/hft/0.0.0/scripts/*.js',
+          'public/hft/0.0.0/scripts/misc/*.js',
+        ],
         options: {
           destination: 'docs/hft',
-        },
-      },
-      controller: {
-        src: ['public/examples/scripts/*.js'],
-        options: {
-          destination: 'docs/misc',
         },
       },
     },
     clean: [
         'docs/relayserver',
-        'docs/game',
-        'docs/controller',
+        'docs/hft',
     ],
   });
 

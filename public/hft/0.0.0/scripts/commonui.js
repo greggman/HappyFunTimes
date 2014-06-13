@@ -139,7 +139,7 @@ define([
     });
 
     if (options.debug) {
-      statusNode = document.createTextNode("");
+      var statusNode = document.createTextNode("");
       $("hft-status").appendChild(statusNode);
       var debugCSS = Misc.findCSSStyleRule("#hft-debug");
       debugCSS.style.display = "block";

@@ -71,20 +71,30 @@ var endsWith = function(str, suffix) {
  * @returns {string} string with replaced parts
  */
 var replaceParams = (function() {
-
-  var captureRE = /%\(([A-Za-z0-9_\.]+)\)s/g;
+  var replaceParamsRE = /%\(([^\)]+)\)s/g;
 
   return function(str, params) {
-    return str.replace(captureRE, function(match) {
-      var id = match.substring(2, match.length - 2);
-      var keys = id.split('.');
-      for (var ii = 0; ii < keys.length; ++ii) {
-        params = params[keys[ii]];
-        if (!params) {
-          return;
+    if (!params.length) {
+      params = [params];
+    }
+
+    return str.replace(replaceParamsRE, function(match, key) {
+      var keys = key.split('.');
+      for (var ii = 0; ii < params.length; ++ii) {
+        var obj = params[ii];
+        for (var jj = 0; jj < keys.length; ++jj) {
+          var key = keys[jj];
+          obj = obj[key];
+          if (obj === undefined) {
+            break;
+          }
+        }
+        if (obj !== undefined) {
+          return obj;
         }
       }
-      return params;
+      console.error("unknown key: " + key);
+      return "%(" + key + ")s";
     });
   };
 }());

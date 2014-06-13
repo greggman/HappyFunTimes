@@ -30,6 +30,10 @@
  */
 "use strict";
 
+/**
+ * A module for strings
+ * @module strings
+ */
 define(function() {
 
   /**
@@ -122,7 +126,9 @@ define(function() {
               break;
             }
           }
-          return obj;
+          if (obj !== undefined) {
+            return obj;
+          }
         }
         console.error("unknown key: " + key);
         return "%(" + key + ")s";
@@ -144,7 +150,6 @@ define(function() {
 
   /**
    * True if string ends with suffix
-   * @static
    * @param {String} str string to check for start
    * @param {String} suffix start value
    * @returns {Boolean} true if str starts with suffix
@@ -156,7 +161,7 @@ define(function() {
 
   /**
    * Make a string from unicode code points
-   * @param {Number...} codePoint one or more code points
+   * @param {Number} codePoint one or more code points
    * @return {string} unicode string. Note a single code point can
    *         return a string with length > 1.
    */
@@ -203,14 +208,32 @@ define(function() {
     return fromCodePoint;
   }());
 
-  return {
+  /**
+   * @typedef {Object} strings:FooBar
+   * @property {string} burp
+   */
+
+  /**
+   * @alias module:strings
+   */
+  var exports = {
     endsWith: endsWith,
+    /**
+     * Make a string from unicode code points
+     * @function
+     * @param {Number} codePoint one or more code points
+     * @param {FooBar} foo the foobar
+     * @return {string} unicode string. Note a single code point can
+     *         return a string with length > 1.
+     */
     fromCodePoint: fromCodePoint,
     padLeft: padLeft,
     padRight: padRight,
     replaceParams: replaceParams,
     startsWith: startsWith,
   };
+
+  return exports;
 });
 
 

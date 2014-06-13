@@ -1,4 +1,3 @@
-<!--
 /*
  * Copyright 2014, Gregg Tavares.
  * All rights reserved.
@@ -25,54 +24,54 @@
  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
  * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
- * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ * THEORY OF2 LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
--->
-<!DOCTYPE html>
-<html>
-<head>
-  <meta charset="utf-8">
-  <title>HappyFunTimes Games</title>
-  <link rel="stylesheet" href="css/menu.css">
-  <style>
-  </style>
-  <script class="item-template" id="unity3d-item-template" type="not-javascript">
-<div class="game"><a class="msg-button" id="%(count)s-button"><div>%(name)s</div><img src="%(happyFunTimes.screenshotUrl)s" /></a></div>
-  </script>
-  <script class="item-template" id="html-item-template" type="not-javascript">
-<div class="game"><a href="%(happyFunTimes.gameUrl)s"><div>%(name)s</div><img src="%(happyFunTimes.screenshotUrl)s" /></a></div>
-  </script>
-</head>
-<body>
-<h1>Games</h1>
-<div id="gamemenu">
-</div>
-<div class="hidden-msg" id="unity3d-msg">
-  <div>
-    <div>
-      <p>Unity Games Must Currently Be Run From Unity.</p>
-      <blockquote>
-        <ol>
-          <li>Launch Unity</li>
-          <li>Load the Game</li>
-          <li>Pick Run</li>
-          <li>When done, Stop the game before coming back here</li>
-        </ol>
-        <div class="button-like">Okay</div>
-      </blockquote>
-    </div>
-  </div>
-</div>
-</body>
-<script data-main="showavailablegames.js" src="3rdparty/require.js"></script>
-<script>
-requirejs.config({
-  paths: {
-    hft: './hft/0.0.0/scripts',
-  },
-});
-</script>
-</html>
+
+"use strict";
+
+var getMissingProperties = function(obj, requiredProperties) {
+  var missingProperties = [];
+  for (var ii = 0; ii < requiredProperties.length; ++ii) {
+    var key = requiredProperties[ii];
+    if (obj[key] === undefined) {
+      missingProperties.push(key);
+    }
+  }
+  return missingProperties.length > 0 ? missingProperties : undefined;
+};
+
+var copyProperties = function(src, dst, opt_overwriteBehavior) {
+  Object.keys(src).forEach(function(key) {
+    if (opt_overwriteBehavior == 2 && dst[key] !== undefined) {
+      return;
+    }
+    var value = src[key];
+    if (value instanceof Array) {
+      var newDst = dst[key];
+      if (!newDst) {
+        newDst = [];
+        dst[name] = newDst;
+      }
+      copyProperties(value, newDst, opt_overwriteBehavior);
+    } else if (value instanceof Object) {
+      var newDst = dst[key];
+      if (!newDst) {
+        newDst = {};
+        dst[key] = newDst;
+      }
+      copyProperties(value, newDst, opt_overwriteBehavior);
+    } else {
+      if (opt_overwriteBehavior == 1 && dst[key] !== undefined) {
+        return;
+      }
+      dst[key] = value;
+    }
+  });
+  return dst;
+};
+
+exports.copyProperties = copyProperties;
+exports.getMissingProperties = getMissingProperties;
 

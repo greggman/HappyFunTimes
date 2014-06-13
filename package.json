@@ -8,7 +8,10 @@
     "minimist": "0.0.8",
     "mime": "1.2.11",
     "ws": "0.4.31",
-    "native-dns": "0.4.1"
+    "native-dns": "0.4.1",
+    "express": "^4.4.1",
+    "hanson": "^1.1.1",
+    "inmemfilecache": "0.0.1"
   },
   "devDependencies": {
     "grunt": "^0.4.5",

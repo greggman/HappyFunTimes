@@ -35,28 +35,60 @@ define(function() {
    * Copies properties from obj to dst recursively.
    * @param {Object} obj Object with new settings.
    * @param {Object} dst Object to receive new settings.
+   * @param {number?} opt_overwriteBehavior
+   *     *   0/falsy = overwrite
+   *
+   *         src    = {foo:'bar'}
+   *         dst    = {foo:'abc'}
+   *         result = {foo:'bar'}
+   *
+   *     *   1 = don't overwrite but descend if deeper
+   *
+   *         src    = {foo:{bar:'moo','abc':def}}
+   *         dst    = {foo:{bar:'ghi'}}
+   *         result = {foo:{bar:'ghi','abc':def}}
+   *
+   *         'foo' exists but we still go deeper and apply 'abc'
+   *
+   *     *   2 = don't overwrite don't descend
+   *
+   *             src    = {foo:{bar:'moo','abc':def}}
+   *             dst    = {foo:{bar:'ghi'}}
+   *             result = {foo:{bar:'ghi'}}
+   *
+   *         'foo' exists so we don't go any deeper
+   *
    */
-  var copyProperties = function(obj, dst) {
-    for (var name in obj) {
-      var value = obj[name];
+  var copyProperties = function(src, dst, opt_overwriteBehavior) {
+    Object.keys(src).forEach(function(key) {
+      if (opt_overwriteBehavior == 2 && dst[key] !== undefined) {
+        return;
+      }
+      var value = src[key];
       if (value instanceof Array) {
-        var newDst = dst[name];
+        var newDst = dst[key];
         if (!newDst) {
           newDst = [];
           dst[name] = newDst;
         }
-        copyProperties(value, newDst);
-      } else if (typeof value == 'object') {
-        var newDst = dst[name];
+        copyProperties(value, newDst, opt_overwriteBehavior);
+      } else if (value instanceof Object &&
+                 !(value instanceof Function) &&
+                 !(value instanceof HTMLElement)) {
+        var newDst = dst[key];
         if (!newDst) {
           newDst = {};
-          dst[name] = newDst;
+          dst[key] = newDst;
         }
-        copyProperties(value, newDst);
+        copyProperties(value, newDst, opt_overwriteBehavior);
       } else {
-        dst[name] = value;
+        if (opt_overwriteBehavior == 1 && dst[key] !== undefined) {
+          return;
+        }
+        dst[key] = value;
       }
-    }
+    });
+    return dst;
   };
 
 
@@ -158,35 +190,6 @@ define(function() {
     var txt = document.createTextNode("");
     element.appendChild(txt);
     return txt;
-  };
-
-  var copyProperties = function(src, dst) {
-    for (var name in src) {
-      if (!src.hasOwnProperty(name)) {
-        continue;
-      }
-      var value = src[name];
-      if (value instanceof Array) {
-        var newDst = dst[name];
-        if (!newDst) {
-          newDst = [];
-          dst[name] = newDst;
-        }
-        copyProperties(value, newDst);
-      } else if (value instanceof Object &&
-                 !(value instanceof Function) &&
-                 !(value instanceof HTMLElement)) {
-        var newDst = dst[name];
-        if (!newDst) {
-          newDst = {};
-          dst[name] = newDst;
-        }
-        copyProperties(value, newDst);
-      } else {
-        dst[name] = value;
-      }
-    }
-    return dst;
   };
 
   /**

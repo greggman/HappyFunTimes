@@ -266,7 +266,7 @@ define(['./misc'], function(Misc) {
     var keyCodes = {};
 
     // Convert single characters to char codes.
-    for (var key in keys) {
+    Object.keys(keys).forEach(function(key) {
       var value = keys[key];
       if (!isNumRE.test(key)) {
         if (key.length != 1) {
@@ -275,7 +275,7 @@ define(['./misc'], function(Misc) {
         key = key.charCodeAt(0);
       }
       keyCodes[key] = value;
-    }
+    });
 
     var handleKey = function(keyCode, state, pressed) {
       var key = keyCodes[keyCode];

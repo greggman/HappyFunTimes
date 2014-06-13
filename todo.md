@@ -1,3 +1,60 @@
+*   make games install anywhere and use ~./happyfuntimes/games.json
+*   need to store LRU for games somewhere. ~/.happyfuntimes
+*   check that bower git: doesn't need to be https:/
+*   In installed version
+    *   Make page shows games, tab for store, tab for settings
+    *   settings
+        *   allow contollers to change games (so a bar can make it so people can't change games?), only
+            the person at the computer can.
+*   implement simple in-memory file cache that checks if files are loaded
+    *   rather than check if a file has changed with stat, use events to check if files have changed.
+*   Main UX (/games.html)
+
+    *   Needs to have XBox/PS like UX. At a minimum
+        *   Show recently played games
+        *   Provide UI to find games
+            *   By alphabet
+            *   Search
+        *   Should be controllable from phone. (how do we handle 25 people trying to control it?)
+        *   Store Tab/selection
+        *   Should we have a recently updated section?
+            *   For stress on servers maybe it should be like XBox/PS. Updates are only checked if
+                you launch the game?
+        *   Should have a 'new' and 'updated' feed from public db.
+
+*   package.json needs
+    *   "gameId"
+    *   "apiVersion"  min version needed. Use it in template
+        * api version should look up defaults?
+    *   "platforms"  array of platforms support
+    *   remove "useControllerTemplate". Make the default but maybe override?
+    *   remove "screenshot.png". Make the default
+    *   use name for gameId? no. Name is unsafe, any char, id is safe? Or could gen safe id.
+    *   if controller needs certain features? WebGL, getMedia, etc. Can tell if will run on phone
+*   jumpjump: reset coin on level reset.
+*   make hft insert controller.html
+*   make hft command line
+    *   hft init - make a new template for a controller (and optionally a game?)
+    *   htf build - inserts the template stuff into the game/controller? or maybe we should do that automatically
+*   consider making server serve games flatter?
+
+    game would be served at
+
+    http://localhost:8080/name/
+
+    instead of
+
+    http://localhost:8080/games/name/
+
+    Is there a point?
+
+    One other idea, allow the game to exist else where
+    but run at http://localhost:8080/games/name
+
+    As it is games must exist inside hft. Should they
+    exist outside hft? Would allow non-hft games
+    to support hft easier?
+
 *   file bug with apple about canvas/photos
 *   make games.html msgs show up even when scrolled down
 *   fix docs
@@ -393,6 +450,7 @@
     *   boomboom
     *   platformer (jumpjump)
     *   8way shooter (shootshoot)
+    *   octopie
 
     *   Fist bump game
 

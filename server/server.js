@@ -53,7 +53,12 @@ var highResClock = require('./highresclock');
 var DNSServer = require('./dnsserver');
 var iputils = require('./iputils');
 var GameDB = require('./gamedb');
+var Cache =  require('inmemfilecache');
+var hanson = require('hanson');
+var express = require('express');
+var app = express();
 
+var fileCache = new Cache();
 var relayServer;
 
 if (args.h || args.help) {
@@ -83,11 +88,15 @@ if (!g.address) {
 }
 console.log("using ip address: " + g.address);
 
-var gameDB = new GameDB({
+var settings = hanson.parse(fs.readFileSync("hft.hanson").toString());
+var gameDB = new GameDB(settings, {
   baseDir: g.baseDir,
   gamesDirs: [
-      path.join(g.baseDir, "/examples"),
-      path.join(g.baseDir, "/games"),
+    path.join(g.baseDir, "/examples"),
+    path.join(g.baseDir, "/games"),
+  ],
+  gamesLists: [
+    path.join(process.env.HOME, ".happyfuntimes/installed-games.json"),
   ],
 });
 
@@ -162,8 +171,7 @@ var handleHappyFunTimesPingRequest = function(query, res) {
   });
 };
 
-var handleRequests = (function() {
-
+var handlePOST = (function() {
   var postCmdHandlers = {
     time: handleTimeRequest,
     screenshot: handleScreenshotRequest,
@@ -173,32 +181,28 @@ var handleRequests = (function() {
   };
 
   return function(req, res) {
-    debug("req: " + req.method + " : " + req.url);
-    // your normal server code
-    if (req.method == "POST") {
-      postHandler(req, function(query) {
-        var cmd = query.cmd;
-        debug("query: " + cmd);
-        var handler = postCmdHandlers[cmd];
-        if (!handler) {
-          send404(res);
-          return;
-        }
-        handler(query, res);
-      });
-    } else if (req.method == "OPTIONS") {
-      res.removeHeader('Content-Type');
-      res.writeHead(200, {
-        'Access-Control-Allow-Origin': '*',
-        'Access-Control-Allow-Methods': 'GET,POST,OPTIONS',
-        'Access-Control-Allow-Headers': 'X-Requested-With, X-HTTP-Method-Override, Content-Type, Accept',
-      });
-      res.end();
-    } else {
-      sendRequestedFile(req, res);
-    }
+    postHandler(req, function(query) {
+      var cmd = query.cmd;
+      debug("query: " + cmd);
+      var handler = postCmdHandlers[cmd];
+      if (!handler) {
+        send404(res);
+        return;
+      }
+      handler(query, res);
+    });
   };
 }());
+
+var handleOPTIONS = function(req, res) {
+  res.removeHeader('Content-Type');
+  res.writeHead(200, {
+    'Access-Control-Allow-Origin': '*',
+    'Access-Control-Allow-Methods': 'GET,POST,OPTIONS',
+    'Access-Control-Allow-Headers': 'X-Requested-With, X-HTTP-Method-Override, Content-Type, Accept',
+  });
+  res.end();
+};
 
 var isFolder = (function() {
   // Keep a cache of all paths because fs.statSync is sync
@@ -232,15 +236,15 @@ var sendStringResponse = function(res, data, opt_mimeType) {
 
 var sendFileResponse = function(res, fullPath, opt_prepFn) {
   debug("path: " + fullPath);
-  if (g.cwd != fullPath.substring(0, g.cwd.length)) {
-    sys.print("forbidden: " + fullPath + "\n");
-    return send403(res);
-  }
+//  if (g.cwd != fullPath.substring(0, g.cwd.length)) {
+//    console.error("forbidden: " + fullPath + "\n");
+//    return send403(res);
+//  }
   var mimeType = mime.lookup(fullPath);
   if (mimeType) {
-    fs.readFile(fullPath, function(err, data){
+    fileCache.readFile(fullPath, function(err, data){
       if (err) {
-        sys.print("unknown file: " + fullPath + "\n");
+        console.error("error: " + err + ": " + fullPath );
         return send404(res);
       }
       if (opt_prepFn) {
@@ -396,18 +400,31 @@ var templatify = function(str) {
   });
 };
 
-var sendRequestedFile = function(req, res) {
+// Send a file from a game.
+var sendGameRequestedFile = function(req, res) {
+  var gamePrefixLength = 8;  // "/games/" + the slash after the id
+  var gameId = req.params[0];
+  var gameInfo = gameDB.getGameById(gameId);
+  var parsedUrl = url.parse(req.url);
+  var filePath = parsedUrl.pathname;
+  var fullPath = path.normalize(path.join(gameInfo.happyFunTimes.basePath, filePath.substr(gamePrefixLength + gameId.length)));
+  sendRequestedFileFullPath(req, res, fullPath);
+};
+
+// Send a file from the HFT system
+var sendSystemRequestedFile = function(req, res) {
   if (appleCaptivePortalHandler.check(req, res)) {
     return;
   }
+  sendRequestedFile(req, res);
+};
 
+var sendRequestedFileFullPath = function(req, res, fullPath) {
   var parsedUrl = url.parse(req.url);
-  var filePath = querystring.unescape(parsedUrl.pathname);
+  var filePath = parsedUrl.pathname;
   var isTemplate = gameDB.getTemplateUrls().indexOf(filePath) >= 0;
-  var fullPath = path.normalize(path.join(g.cwd, g.baseDir, filePath));
-  // I'm sure these checks are techincally wrong but it doesn't matter for our purposes AFAICT.
-  var isQuery = filePath.indexOf('?') >= 0;
-  var isAnchor = filePath.indexOf('#') >= 0;
+  var isQuery = parsedUrl.query !== null;
+  var isAnchor = parsedUrl.hash !== null;
   if (!isQuery && !isAnchor) {
     // Add "/" if it's a folder.
     if (!strings.endsWith(filePath, "/") && isFolder(fullPath)) {
@@ -426,6 +443,13 @@ var sendRequestedFile = function(req, res) {
   sendFileResponse(res, fullPath, isTemplate ? templatify : undefined);
 };
 
+var sendRequestedFile = function(req, res) {
+  var parsedUrl = url.parse(req.url);
+  var filePath = parsedUrl.pathname;
+  var fullPath = path.normalize(path.join(g.cwd, g.baseDir, filePath));
+  sendRequestedFileFullPath(req, res, fullPath);
+};
+
 var send404 = function(res) {
   res.writeHead(404);
   res.write('404');
@@ -437,6 +461,46 @@ var send403 = function(res) {
   res.write('403');
   res.end();
 };
+
+var addTemplateInsertedPath = function(app, pathRegex, templateName, contentPath) {
+  app.get(pathRegex, function(req, res) {
+    var gameId = req.params[0];
+    var gameInfo = gameDB.getGameById(gameId);
+
+    if (!gameInfo.happyFunTimes.useTemplate[templateName]) {
+      sendRequestedGameFile(req, res);
+      return;
+    }
+
+    var templatePath = gameInfo.happyFunTimes.versionSettings.templates[templateName];
+    templatePath = path.normalize(path.join(g.cwd, templatePath));
+
+    var contentFullPath = path.normalize(path.join(gameInfo.happyFunTimes.basePath, contentPath));
+
+    fileCache.readFile(templatePath, function(err, templateData) {
+      if (err) {
+        console.error("error: " + err + ": " + templatePath);
+        return send404(res);
+      }
+      sendFileResponse(res, contentFullPath, function(str) {
+        var result = strings.replaceParams(templateData.toString(), [
+          gameInfo,
+          {
+            content: str,
+          }
+        ]);
+        return result;
+      });
+    });
+  });
+};
+
+addTemplateInsertedPath(app, /^\/games\/(.*?)\/index.html$/, "controller", "controller.html");
+addTemplateInsertedPath(app, /^\/games\/(.*?)\/gameview.html$/, "game", "game.html");
+app.get(/^\/games\/(.*?)\//, sendGameRequestedFile);
+app.get(/.*/, sendSystemRequestedFile);
+app.post(/.*/, handlePOST);
+app.options(/.*/, handleOPTIONS);
 
 var ports = [g.port];
 // If we're not trying port 80 then add it.
@@ -452,7 +516,7 @@ var tryStartRelayServer = function() {
   --numResponsesNeeded;
   if (numResponsesNeeded < 0) {
     throw "numReponsese is negative";
-  }5
+  }
   if (numResponsesNeeded == 0) {
     if (goodPorts.length == 0) {
       console.error("NO PORTS available. Tried port(s) " + ports.join(", "));
@@ -466,7 +530,8 @@ var tryStartRelayServer = function() {
 
 for (var ii = 0; ii < ports.length; ++ii) {
   var port = ports[ii];
-  var server = http.createServer(handleRequests);
+  var server = http.createServer(app);
+
   server.once('error', function(port) {
     return function(err) {
       console.warn("WARNING!!!: " + err.code + ": could NOT connect to port: " + port);
@@ -488,4 +553,5 @@ for (var ii = 0; ii < ports.length; ++ii) {
 if (g.dns) {
   var dnsServer = new DNSServer({address: g.address});
 }
+
 

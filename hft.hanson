@@ -1,0 +1,37 @@
+{
+  required: [
+    "gameId",
+    "apiVersion",
+    "gameType",
+  ],
+
+  hftDefaults: {
+    useTemplate: {
+      "controller": true,
+    },
+    screenshotUrl: "screenshot.png",
+  },
+
+  hftGameTypeDefaults: {
+    html: {
+      useTemplate: {
+        "game": true,
+      },
+      gameUrl: "gameview.html",
+    },
+    Unity3D: {
+      gameExecutable: "unitygame",
+    },
+  },
+
+  apiVersionSettings: {
+    "0.0.0": {
+      templates: {
+        controller: "templates/0.0.0/controller.index.html",
+        game: "templates/0.0.0/game.gameview.html",
+      },
+    },
+  },
+}
+
+
