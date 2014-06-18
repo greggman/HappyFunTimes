@@ -21,6 +21,7 @@ Installation
 7.  Copy Unity3d/Examples to Assets/Scripts/HappyFunTimes
 8.  Open the scene Unity3D/Examples/Scenes/HappyFunTimesCharacterExample
 9.  Pick Edit->Project Settings->Player and check "Run in Background"
+10. Build Settings window (File > Build Settings) go to Player Settings. Then in the Inspector, change Display Resolution Dialog to Disabled.
 
 Note: These instructions include the sample projects. If all you want is
 the minimum required to do your own thing with HappyFunTimes skip steps #3, #7, and #8
