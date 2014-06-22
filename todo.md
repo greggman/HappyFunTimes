@@ -1,3 +1,57 @@
+*   Fix uses of IO that are result,err ot err,result
+*   Have SuperHappyFunTimes check that HappyFunTimes is running and request to run it. gray out install buttons
+    until it's running. Use game to run it?
+*   Check failure on native-msg-box
+    in particular check if native parts don't run that we don't return OK or YES
+*   Sanatize msgs to native-msg-box
+
+*   Need to make installer for hft
+    *   Windows
+    *   Mac
+    *   Linux
+*   Need to make installer creator for hft games
+
+    All this needs to do is unzip some files and run a script. Unfortunately
+    it also needs to work cross platform. By that speifically I mean someone
+    who makes a game on Mac needs to be able to make an installer for Windows
+    and someone who makes a game on Windows needs to be able to make an installer
+    for mac
+
+    Ideas:
+
+    *   Can use xar/mkbom for cross platform mac pkg creation
+    *   Windows can maybe use 7zip which is open source so maybe can compile on mac (I can dream)
+
+    Or, I could make the games install through HFT. Basically you'd need to have HFT running, you'd
+    click an "install me" link on the website, that would somehow trigger HFT to download a zip.
+
+    What I don't like about that is it *feels* less secure. It's not really less secure. Installing
+    anything on any machine is not secure. But, given you could install with a single click
+    and no permission escalation I'd be worried about bad games or bad code pretending to be games
+    etc.  Maybe I shouldn't worry about that? Does steam? Do indie game devs? We just all assume
+    they aren't being evil.
+
+    I could try to make sure only links from HFT can trigger an install. Could also put up a
+    "Are you sure you want to install?" message.
+
+
+*   look into nsis has the installer solution
+    *   windows only.
+
+*   look into openframewords.cc's http://ofxaddons.com/ how it watches github tags
+*   switch port to something less likley to be in use. How about 8123 for now. We can register one later if we get users.
+*   refactor client side js so no requirejs needed? (though still supported)
+*   make hft command line
+
+    hft should call into happyfuntimes some how. I guess it should be a 'dev' function?
+    Need to figure that out. I guess HappyFunTimes could write to ~/.happyfuntimes/config.json
+    which the localtion of Happyfuntimes, then HFT could use that.
+
+    *   hft add - adds to ~/.happyfuntimes/installed-games.json
+    *   hft remove - removes from ~/.happyfuntimes/installed-games.json
+    *   hft install - installs a game from the net.
+    *   hft init - make a new template for a controller (and optionally a game?)
+    *   htf build - inserts the template stuff into the game/controller? or maybe we should do that automatically
 *   make games install anywhere and use ~./happyfuntimes/games.json
 *   need to store LRU for games somewhere. ~/.happyfuntimes
 *   check that bower git: doesn't need to be https:/
@@ -33,9 +87,6 @@
     *   if controller needs certain features? WebGL, getMedia, etc. Can tell if will run on phone
 *   jumpjump: reset coin on level reset.
 *   make hft insert controller.html
-*   make hft command line
-    *   hft init - make a new template for a controller (and optionally a game?)
-    *   htf build - inserts the template stuff into the game/controller? or maybe we should do that automatically
 *   consider making server serve games flatter?
 
     game would be served at
