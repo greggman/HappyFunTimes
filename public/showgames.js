@@ -43,7 +43,7 @@ var main = function(IO, Strings) {
   var oldHtml = "";
 
   var getGames = function() {
-    IO.sendJSON(window.location.href, {cmd: 'listRunningGames'}, function (obj, exception) {
+    IO.sendJSON(window.location.href, {cmd: 'listRunningGames'}, function (exception, obj) {
       if (exception) {
         setTimeout(getGames, 1000);
         return;

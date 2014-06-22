@@ -53,7 +53,7 @@ var main = function(IO, Strings) {
   };
 
   var getGames = function() {
-    IO.sendJSON(window.location.href, {cmd: 'listAvailableGames'}, function (obj, exception) {
+    IO.sendJSON(window.location.href, {cmd: 'listAvailableGames'}, function (exception, obj) {
       if (exception) {
         throw exception;
       }

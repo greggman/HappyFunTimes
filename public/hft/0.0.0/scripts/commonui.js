@@ -95,7 +95,7 @@ define([
 
       //
       var checkForGame = function() {
-        IO.sendJSON(window.location.href, {cmd: 'listRunningGames'}, function (obj, exception) {
+        IO.sendJSON(window.location.href, {cmd: 'listRunningGames'}, function (exception, obj) {
           if (exception) {
             // the server is down. Try again?. I'm not sure what to do here. Currently the display
             // will say "restart"/"main menu" but neither have a point if the server is down.

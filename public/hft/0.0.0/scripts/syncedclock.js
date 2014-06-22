@@ -94,7 +94,7 @@ define(["./io"], function(IO) {
       SyncedClock.prototype.syncToServer = function() {
         var that = this;
         var sendTime = getLocalTime();
-        IO.sendJSON(this.url, {cmd: 'time'}, function(obj, exception) {
+        IO.sendJSON(this.url, {cmd: 'time'}, function(exception, obj) {
           if (exception) {
             //g_services.logger.error("syncToServer: " + exception);
           } else {

@@ -29,67 +29,94 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-/** @module io */
-define({
-  /**
-   * @typedef {Object} SendJSONOptions
-   * @property {Number} timeout timeout in seconds to abort
-   *           request. Default = no-timeout
-   */
-
-  /**
-   * @callback SendJSONCallback
-   * @param {Object=} object object from json parsed jsons
-   * @param {string=} error error or null if no error
-   */
+define(function() {
+  var log = function() { };
+  //var log = console.log.bind(console);
 
   /**
    * sends a JSON 'POST' request, returns JSON repsonse
-   * @static
-   * @param {String} url url to POST to.
-   * @param {Object} jsonObject JavaScript object on which to call
-   *        JSON.stringify.
-   * @param {SendJSONCallback} callback Function to call on
-   *        success or failure. If successful error will be null
-   * @param {SendJSONOptions=} opt_options Optional
-   *     options. {number} timeout: timeout in ms to abort
-   *     request. Default = no-timeout
+   * @param {string} url url to POST to.
+   * @param {!object} jsonObject JavaScript object on which to call JSON.stringify.
+   * @param {!function(error, object)} callback Function to call
+   *        on success or failure. If successful error will be
+   *        null
+   * @param {!object} opt_options Optional options.
+   *     {number} timeout: timeout in ms to abort request. Default = no-timeout
    */
-  sendJSON: function(url, jsonObject, callback, opt_options) {
+  var sendJSON = function(url, jsonObject, callback, opt_options) {
     opt_options = opt_options || { };
     var error = 'sendJSON failed to load url "' + url + '"';
     var request = new XMLHttpRequest();
     if (request.overrideMimeType) {
       request.overrideMimeType('text/plain');
     }
-    request.timeout = opt_options.timeout || 0;
+    var timeout = opt_options.timeout || 0;
+    request.timeout = timeout;
+    log("set timeout to: " + request.timeout);
     request.open('POST', url, true);
     var js = JSON.stringify(jsonObject);
-    var finish = function() {
-      if (request.readyState == 4) {
-        var json = undefined;
-        // HTTP reports success with a 200 status. The file protocol reports
-        // success with zero. HTTP does not use zero as a status code (they
-        // start at 100).
-        // https://developer.mozilla.org/En/Using_XMLHttpRequest
-        var success = request.status == 200 || request.status == 0;
-        if (success) {
-          try {
-            json = JSON.parse(request.responseText);
-          } catch (e) {
-            success = false;
-          }
-        }
-        callback(json, success ? null : 'could not load: ' + url);
+    var callCallback = function(error, json) {
+      if (callback) {
+        log("calling-callback:" + (error ? " has error" : "success"));
+        callback(error, json);
+        callback = undefined;  // only call it once.
       }
     };
+    var handleAbort = function(e) {
+      log("--abort--");
+      callCallback("error (abort) sending json to " + url);
+    }
+    var handleError = function(e) {
+      log("--error--");
+      callCallback("error sending json to " + url);
+    }
+    var handleTimeout = function(e) {
+      log("--timeout--");
+      callCallback("timeout sending json to " + url);
+    };
+    var handleForcedTimeout = function(e) {
+      if (callback) {
+        log("--forced timeout--");
+        request.abort();
+        callCallback("forced timeout sending json to " + url);
+      }
+    }
+    var handleFinish = function() {
+      log("--finish--");
+      var json = undefined;
+      // HTTP reports success with a 200 status. The file protocol reports
+      // success with zero. HTTP does not use zero as a status code (they
+      // start at 100).
+      // https://developer.mozilla.org/En/Using_XMLHttpRequest
+      var success = request.status == 200 || request.status == 0;
+      if (success) {
+        try {
+          json = JSON.parse(request.responseText);
+        } catch (e) {
+          success = false;
+        }
+      }
+      callCallback(success ? null : 'could not load: ' + url, json);
+    };
     try {
-      request.onreadystatechange = finish;
+      // Safari 7 seems to ignore the timeout.
+      if (timeout) {
+        setTimeout(handleForcedTimeout, timeout + 50);
+      }
+      request.addEventListener('load', handleFinish, false);
+      request.addEventListener('timeout', handleTimeout, false);
+      request.addEventListener('error', handleError, false);
       request.setRequestHeader("Content-type", "application/json");
       request.send(js);
+      log("--sent: " + url);
     } catch (e) {
-      setTimeout(function() { callback(null, 'could not load: ' + url) }, 0);
+      log("--exception--");
+      setTimeout(function() { callCallback('could not load: ' + url, null) }, 0);
     }
-  },
+  };
+
+  return {
+    sendJSON: sendJSON,
+  };
 });
 
