@@ -36,6 +36,7 @@ define(['./virtualsocket'], function(VirtualSocket) {
    * @typedef {Object} GameClient~Options
    * @property {string} gameId id of game. This is how games and
    *           controller rendezvous.
+   * @property {string?} url url of websocket server.
    */
 
   /**
@@ -125,7 +126,7 @@ define(['./virtualsocket'], function(VirtualSocket) {
 
     var connect_ = function() {
       g_sendQueue = [];
-      g_socket = new VirtualSocket();
+      g_socket = new VirtualSocket(options);
       g_socket.on('connect', connected_.bind(this));
       g_socket.on('message', processMessage_.bind(this));
       g_socket.on('disconnect', disconnected_.bind(this));

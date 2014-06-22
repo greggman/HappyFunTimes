@@ -32,7 +32,8 @@
 "use strict";
 
 define(function() {
-  var SocketIOClient = function() {
+  var SocketIOClient = function(options) {
+    options = options || {};
     console.log("Using direct Socket.io");
     var _socket;
 
@@ -44,7 +45,7 @@ define(function() {
       return;
     }
 
-    var url = "http://" + window.location.host;
+    var url = options.url || "http://" + window.location.host;
     console.log("connecting to: " + url);
     _socket = io.connect(url);
 
@@ -61,11 +62,12 @@ define(function() {
     };
   };
 
-  var WebSocketClient = function() {
+  var WebSocketClient = function(options) {
+    options = options || {};
     console.log("Using direct WebSocket");
     var _socket;
 
-    var url = "ws://" + window.location.host;
+    var url = options.url || "ws://" + window.location.host;
     console.log("connecting to: " + url);
     _socket = new WebSocket(url);
 
