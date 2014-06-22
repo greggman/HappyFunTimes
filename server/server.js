@@ -54,7 +54,6 @@ var DNSServer = require('./dnsserver');
 var iputils = require('./iputils');
 var GameDB = require('./gamedb');
 var Cache =  require('inmemfilecache');
-var hanson = require('hanson');
 var express = require('express');
 var app = express();
 
@@ -88,13 +87,11 @@ if (!g.address) {
 }
 console.log("using ip address: " + g.address);
 
-var settings = hanson.parse(fs.readFileSync("hft.hanson").toString());
-var gameDB = new GameDB(settings, {
-  baseDir: g.baseDir,
-  gamesDirs: [
-    path.join(g.baseDir, "/examples"),
-    path.join(g.baseDir, "/games"),
-  ],
+var gameDB = new GameDB({
+  //gamesDirs: [
+  //  path.join(g.baseDir, "/examples"),
+  //  path.join(g.baseDir, "/games"),
+  //],
   gamesLists: [
     path.join(process.env.HOME, ".happyfuntimes/installed-games.json"),
   ],

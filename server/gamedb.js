@@ -36,29 +36,10 @@ var fs = require('fs');
 var path = require('path');
 var misc = require('./misc');
 var strings = require('./strings');
-
-var applyDefaultProperties = function(obj, defaults) {
-  if (!defaults) {
-    return;
-  }
-  misc.copyProperties(defaults, obj, 1);
-};
-
-/**
- * @typedef {Object} GameDB~Settings
- * @property {string[]} required the happyFunTimes properties in
- *           package.json
- * @property {Object} hftDefaults the default happyFunTimes
- *           properties
- * @property {Object} hftGameTypeDefaults the default
- *           happyFunTimes properties by gameType
- * @property {Object} apiVersionSettings settings by apiVersion.
- */
+var gameInfo = require('./gameinfo');
 
 /**
  * @typedef {Object} GameDB~Options
- * @property {string} baseDir directory server serves from, ie,
- *           "public"
  * @property {string[]?} gamesDirs directories to scan for
  *           games.
  * @property {string[]?} gamesLists files to read for games.
@@ -71,21 +52,19 @@ var applyDefaultProperties = function(obj, defaults) {
  * games.
  *
  * @constructor
- * @param {GameDB~Settings} settings
  * @param {GameDB~Options} options
  */
-var GameDB = function(settings, options) {
+var GameDB = function(options) {
 
-  this.settings = settings;
   this.options = options;
   this.templateUrls = [];
   this.games = [];
   this.gamesById = {};
 
+  // Why even have this option?
   if (options.gamesDirs) {
     options.gamesDirs.forEach(function(basePath) {
       if (!fs.existsSync(basePath)) {
-        console.warn("WARNING: " + basePath + " does not exist");
         return;
       }
       this.addGamesByFolder(basePath);
@@ -98,14 +77,6 @@ var GameDB = function(settings, options) {
     }.bind(this));
   }
 };
-
-GameDB.prototype.makeAbsUrl = (function() {
-  var backslashRE = new RegExp("\\\\", 'g');
-
-  return function(url, gameBasePath) {
-    return "/" + path.relative(this.options.baseDir, path.join(gameBasePath, url)).replace(backslashRE, "/");
-  };
-}());
 
 GameDB.prototype.addGamesByFolder = function(folder) {
   var filenames = fs.readdirSync(folder);
@@ -130,75 +101,17 @@ GameDB.prototype.addGamesByList = function(filePath) {
       this.addGameInfo(path.join(info.path, "package.json"));
     }.bind(this));
   } catch (e) {
-    console.error("could not read: " + filePath);
+    console.error("could not read: " + filePath + " :" + e);
     throw e;
   }
 };
 
 GameDB.prototype.addGameInfo = function(filePath) {
   try {
-    var contents = fs.readFileSync(filePath);
-    var packageInfo = JSON.parse(contents);
-    var hftInfo = packageInfo.happyFunTimes;
-    if (!hftInfo) {
-      return;
-    }
-
-    var gameBasePath = path.dirname(filePath);
-    var settings = this.settings;
-    applyDefaultProperties(hftInfo, settings.hftDefaults);
-    applyDefaultProperties(hftInfo, settings.hftGameTypeDefaults[hftInfo.gameType]);
-    var missing = misc.getMissingProperties(hftInfo, settings.required);
-    if (missing) {
-      console.error("error: " + filePath + " is missing happyFunTimes properties: " + missing.join(", "));
-      return;
-    }
-
-    if (settings.hftGameTypeDefaults[hftInfo.gameType] === undefined) {
-      console.error("error: " + filePath + " unknown gameType " + hftInfo.gameType);
-      console.error("valid gameTypes: \n\t" + Object.keys(settings.hftGameTypeDefaults).join("\n\t"));
-      return;
-    }
-
-    hftInfo.versionSettings = settings.apiVersionSettings[hftInfo.apiVersion];
-    if (hftInfo.versionSettings === undefined) {
-      console.error("error: " + filePath + " unknown apiVersion " + hftInfo.apiVersion);
-      console.error("valid apiVersions: \n\t" + Object.keys(settings.apiVersionSettings).join("\n\t"));
-      return;
-    }
-
-    if (hftInfo.templateUrls) {
-      hftInfo.templateUrls.forEach(function(url) {
-        this.templateUrls.push("/games/" + hftInfo.gameId + "/" + url);
-      }.bind(this));
-    }
-
-    var gameType = hftInfo.gameType;
-    if (!gameType) {
-      return;
-    }
-
-    // Fix some urls.
-    ['gameUrl', 'screenshotUrl'].forEach(function(name) {
-      if (hftInfo[name]) {
-        hftInfo[name] = "/games/" + hftInfo.gameId + "/" + hftInfo[name];
-      };
-    }.bind(this));
-
-    if (hftInfo.gameExecutable) {
-      hftInfo.gameExecutable = path.relative(options.baseDir, path.join(gameBasePath, hftInfo.gameExecutable));
-      var fullPath = path.normalize(path.join(process.cwd(), hftInfo.gameExecutable));
-      if (cwd != fullPath.substring(0, cwd.length)) {
-        throw "bad path for game executable: " + fullPath;
-      }
-    }
-
-    hftInfo.basePath = gameBasePath;
-
+    var packageInfo = gameInfo.readGameInfo(filePath);
     this.games.push(packageInfo);
-    this.gamesById[hftInfo.gameId] = packageInfo;
+    this.gamesById[packageInfo.happyFunTimes.gameId] = packageInfo;
   } catch (e) {
-    console.error("ERROR: Reading " + filePath);
     throw e;
   }
   return true;
