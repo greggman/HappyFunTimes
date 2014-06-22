@@ -8,6 +8,8 @@ module.exports = function(grunt) {
         src: ['server/*.js'],
         options: {
           destination: 'docs/relayserver',
+          configure: 'jsdoc.conf.json',
+          template: 'node_modules/ink-docstrap/template',
         },
       },
       game: {
@@ -17,6 +19,8 @@ module.exports = function(grunt) {
         ],
         options: {
           destination: 'docs/hft',
+          configure: 'jsdoc.conf.json',
+          template: 'node_modules/ink-docstrap/template',
         },
       },
     },
