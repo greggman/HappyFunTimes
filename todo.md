@@ -1,3 +1,30 @@
+*   make hft-cli have publish command. It looks at package.json, based on type
+    it checks various things can complains if wrong. Examples.
+
+    gameType: "html"
+
+        * update version (ask, allow no ask via cmd line (--auto), and skip (--no version))
+        * make release on github
+        * zip up entire folder
+        * update to github
+
+    gameType: "native"
+
+        * update version (ask, allow no ask via cmd line (--auto), and skip (--no version))
+        * check for platforms
+        * warn about missing platforms (ask?)
+        * update package.json if it doesn't match for missing platforms
+        * zip up release folders, one for each platform? Two one per platform and one for assets?
+        * upload releases to git
+
+*   If game is installed button should say "Run"
+
+*   fix queuing of messages. They queue objects but should queue strings.?.
+*   have server start __hft__ game.
+    *   have it mark that as not listable? (what's the point of the lists?)
+    *   make an install command
+    *   figure out what happens if disconnected
+
 *   Fix uses of IO that are result,err ot err,result
 *   Have SuperHappyFunTimes check that HappyFunTimes is running and request to run it. gray out install buttons
     until it's running. Use game to run it?

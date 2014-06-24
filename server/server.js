@@ -56,6 +56,7 @@ var GameDB = require('./gamedb');
 var Cache =  require('inmemfilecache');
 var express = require('express');
 var app = express();
+var HFTGame = require('./hftgame');
 
 var fileCache = new Cache();
 var relayServer;
@@ -522,6 +523,12 @@ var tryStartRelayServer = function() {
     var RelayServer = require('./relayserver.js');
     relayServer = new RelayServer(servers, {address: g.address});
     sys.print("Listening on port(s): " + goodPorts.join(", ") + "\n");
+
+    // Add management game
+    var hftGame = new HFTGame({
+      gameDB: gameDB,
+    });
+    relayServer.assignAsClientForGame({gameId: "__hft__", showInList: false}, hftGame.getClientForGame());
   }
 };
 

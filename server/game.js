@@ -168,6 +168,7 @@ Game.prototype.assignClient = function(client, relayserver, data) {
   this.client = client;
   this.controllerUrl = data.controllerUrl;
   this.disconnectPlayersIfGameDisconnects = data.disconnectPlayersIfGameDisconnects === undefined ? true : data.disconnectPlayersIfGameDisconnects;
+  this.showInList = data.showInList;
 
   var sendMessageToPlayer = function(id, message) {
     var player = this.players[id];

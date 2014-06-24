@@ -134,7 +134,7 @@ var RelayServer = function(servers, options) {
     var gameList = [];
     for (var id in g_games) {
       var game = g_games[id];
-      if (game.hasClient()) {
+      if (game.hasClient() && game.showInList !== false) {
         gameList.push({
           gameId: id,
           numPlayers: game.getNumPlayers(),
@@ -153,6 +153,7 @@ var RelayServer = function(servers, options) {
    * @returns {Game} game that player was added to
    */
   this.addPlayerToGame = function(player, gameId) {
+    debug("adding player to game: " + gameId);
     var game = getGame(gameId);
     game.addPlayer(player);
     return game;
@@ -192,7 +193,7 @@ var RelayServer = function(servers, options) {
     //var io = new SocketIOServer(server);
     var io = new WSServer(server);
 
-    io.on('connection', function(client){
+    io.on('connection', function(client) {
         new Player(client, this, ++g_nextSessionId);
     }.bind(this));
   }
