@@ -45,14 +45,14 @@ var HFTPlayer = function(netPlayer, game, gameDB) {
   this.gameDB = gameDB;
 
   netPlayer.addEventListener('disconnect', HFTPlayer.prototype.disconnect.bind(this));
-  netPlayer.addEventListener('getGameInfo', HFTPlayer.prototype.handleGetGameInstalledInfo.bind(this));
+  netPlayer.addEventListener('getGameInfo', HFTPlayer.prototype.handleGetGameInfo.bind(this));
 };
 
 HFTPlayer.prototype.disconnect = function() {
   this.game.removePlayer(this);
 };
 
-HFTPlayer.prototype.handleGetGameInstalledInfo = function(data) {
+HFTPlayer.prototype.handleGetGameInfo = function(data) {
   var gameInfo = this.gameDB.getGameById(data.gameId);
   this.netPlayer.sendCmd("gameInfo", gameInfo);
 };
@@ -74,7 +74,7 @@ var HFTGame = function(options) {
 
   server.addEventListener('playerconnect', function(netPlayer, name) {
     players.push(new HFTPlayer(netPlayer, this, gameDB));
-  });
+  }.bind(this));
 
   this.removePlayer = function(player) {
     var index = players.indexOf(player);
