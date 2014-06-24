@@ -29,12 +29,16 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-"use strict";
+(function() {
+
+var globalObject = this;
 
 define(
   [ './virtualsocket',
     './netplayer',
   ], function(VirtualSocket, NetPlayer) {
+
+  "use strict";
 
   var emptyMsg = { };
 
@@ -48,6 +52,7 @@ define(
    *       http://foo/bar/game.html it will assume the controller
    *       is at http://foo/bar/index.html if you don't set the
    *       controllerUrl.
+   * @property {Socket?} socket Socket to use for communications
    */
 
   /**
@@ -191,7 +196,7 @@ define(
     };
 
     var connect_ = function() {
-      _socket = new VirtualSocket();
+      _socket = options.socket || new VirtualSocket();
       _sendQueue = [];
       _socket.on('connect', connected_.bind(this));
       _socket.on('message', processMessage_.bind(this));
@@ -222,7 +227,7 @@ define(
     }.bind(this);
 
     var send_ = function(msg) {
-      if (_connected == WebSocket.CONNECTING) {
+      if (globalObject.WebSocket && _connected == globalObject.WebSocket.CONNECTING) {
         _sendQueue.push(msg);
       } else {
         _socket.send(msg);
@@ -272,8 +277,8 @@ define(
 
     connect_();
 
-    if (!options.controllerUrl) {
-      var url = window.location.href;
+    if (!options.controllerUrl && globalObject.location) {
+      var url = globalObject.location.href;
       var subs = {"#": 1, "?": 1, "/": 0};
       Object.keys(subs).forEach(function(c) {
         var ndx = subs[c] ? url.indexOf(c) : url.lastIndexOf(c);
@@ -289,5 +294,5 @@ define(
   return GameServer;
 });
 
-
+}());
 
