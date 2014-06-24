@@ -3,6 +3,10 @@
   "description": "happyfuntimes framework",
   "version": "0.0.2",
   "private": true,
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server/server.js --dns"
+  },
   "dependencies": {
     "debug": "0.7.4",
     "minimist": "0.0.8",
@@ -11,11 +15,14 @@
     "native-dns": "0.4.1",
     "express": "^4.4.1",
     "hanson": "^1.1.1",
-    "inmemfilecache": "0.0.1"
+    "inmemfilecache": "0.0.1",
+    "adm-zip": "^0.4.4",
+    "requirejs": "^2.1.14"
   },
   "devDependencies": {
     "grunt": "^0.4.5",
     "grunt-contrib-clean": "^0.5.0",
-    "grunt-jsdoc": "^0.5.4"
+    "grunt-jsdoc": "^0.5.4",
+    "ink-docstrap": "^0.4.5"
   }
 }
