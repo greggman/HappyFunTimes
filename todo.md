@@ -1,5 +1,5 @@
 *   remove adm-zip and replace with something else. Ideally something that streams
-    so the entire file doesn't have to be in memory.
+    so the entire file doesn't have to be in memory. Maybe zipstream?
 *   make hft-cli have publish command. It looks at package.json, based on type
     it checks various things can complains if wrong. Examples.
 
