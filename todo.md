@@ -1,3 +1,5 @@
+*   remove adm-zip and replace with something else. Ideally something that streams
+    so the entire file doesn't have to be in memory.
 *   make hft-cli have publish command. It looks at package.json, based on type
     it checks various things can complains if wrong. Examples.
 
@@ -19,6 +21,7 @@
 
 *   If game is installed button should say "Run"
 
+*   when creating zip check names are ascii, not too long?, and no case sensitive duplicates
 *   fix queuing of messages. They queue objects but should queue strings.?.
 *   have server start __hft__ game.
     *   have it mark that as not listable? (what's the point of the lists?)
