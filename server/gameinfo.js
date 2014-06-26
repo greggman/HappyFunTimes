@@ -66,6 +66,10 @@ var GameInfo = function() {
 
 GameInfo.prototype.readGameInfo = function(filePath) {
   try {
+    var stat = fs.statSync(filePath);
+    if (stat.isDirectory()) {
+      filePath = path.join(filePath, "package.json");
+    }
     var contents = fs.readFileSync(filePath);
     var packageInfo = JSON.parse(contents);
     var hftInfo = packageInfo.happyFunTimes;
