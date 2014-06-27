@@ -37,6 +37,7 @@ var path = require('path');
 var misc = require('./misc');
 var strings = require('./strings');
 var gameInfo = require('./gameinfo');
+var hftConfig = require('./config');
 
 /**
  * @typedef {Object} GameDB~Options
@@ -56,6 +57,7 @@ var gameInfo = require('./gameinfo');
  */
 var GameDB = function(options) {
 
+  options = options || {};
   this.options = options;
   this.templateUrls = [];
   this.games = [];
@@ -71,8 +73,12 @@ var GameDB = function(options) {
     }.bind(this));
   }
 
-  if (options.gamesLists) {
-    options.gamesLists.forEach(function(list) {
+  var gamesLists = options.gamesLists || [
+    hftConfig.installedGamesListPath,
+  ];
+
+  if (gamesLists) {
+    gamesLists.forEach(function(list) {
       this.addGamesByList(list);
     }.bind(this));
   }
@@ -159,5 +165,5 @@ GameDB.prototype.getTemplateUrls = function() {
   return this.templateUrls;
 };
 
-module.exports = GameDB;
+module.exports = new GameDB();
 

@@ -1,3 +1,38 @@
+*   stop using gameIds in certain ways.
+
+    *   remove the need for gameids?
+
+        I started with gameIds used for connecting contollers to games. Now I'm also using
+        them at install time. The problem is a I have a DB of gameId -> game but if you are
+        doing dev you might have 2 games with the same id. The one installed and one sitting
+        in your dev folder.
+
+        For connecting a game to a controller, I could make the server handle it. At startup
+        it knows, based on the folder it's serving the files from, which game they belong to
+        so it can send some made up id to each game.
+
+        That leaves the id only for the store. In which case I only care above apps installed
+        in the HFT games folder (non-dev). Meaning an id is a store<->installed game mapping.
+        But nothing else.
+
+        Actually that doesn't work because unity is not launched by the server when in dev
+        so it won't have a way for the server to give it an id.
+
+        So instead, there's 2 ways of mapping ids
+
+        1.  id to installed game. This is GameDB.getGameById
+
+            This is useful for install/uninstall
+
+        2.  id to running game. This is something the relayserver does. In that case
+            I don't care about installed ids. I only care to connect a controller to the
+            running game.
+
+        Except... :(  In the case of unity I don't know which controller to run because
+        it's by default http://localhost:port/games/<gameid>/controller.html when it really
+        and that's not enough info to map <gameid> to one real folder or another.
+
+
 *   remove adm-zip and replace with something else. Ideally something that streams
     so the entire file doesn't have to be in memory. Maybe zipstream?
 *   make hft-cli have publish command. It looks at package.json, based on type

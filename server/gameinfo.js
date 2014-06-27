@@ -71,6 +71,15 @@ GameInfo.prototype.readGameInfo = function(filePath) {
       filePath = path.join(filePath, "package.json");
     }
     var contents = fs.readFileSync(filePath);
+    return this.parseGameInfo(contents, filePath);
+  } catch (e) {
+    console.error("ERROR: Reading " + filePath);
+    throw e;
+  }
+};
+
+GameInfo.prototype.parseGameInfo = function(contents, filePath) {
+  try {
     var packageInfo = JSON.parse(contents);
     var hftInfo = packageInfo.happyFunTimes;
     if (!hftInfo) {
@@ -124,17 +133,12 @@ GameInfo.prototype.readGameInfo = function(filePath) {
     hftInfo.basePath = gameBasePath;
 
   } catch (e) {
-    console.error("ERROR: Reading " + filePath);
+    console.error("ERROR: Parsing " + filePath);
     throw e;
   }
   return packageInfo;
 };
 
 module.exports = new GameInfo();
-//    if (hftInfo.templateUrls) {
-//      hftInfo.templateUrls.forEach(function(url) {
-//        this.templateUrls.push("/games/" + hftInfo.gameId + "/" + url);
-//      }.bind(this));
-//    }
 
 

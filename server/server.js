@@ -52,7 +52,7 @@ var strings = require('./strings');
 var highResClock = require('./highresclock');
 var DNSServer = require('./dnsserver');
 var iputils = require('./iputils');
-var GameDB = require('./gamedb');
+var gameDB = require('./gamedb');
 var Cache =  require('inmemfilecache');
 var express = require('express');
 var app = express();
@@ -87,16 +87,6 @@ if (!g.address) {
   }
 }
 console.log("using ip address: " + g.address);
-
-var gameDB = new GameDB({
-  //gamesDirs: [
-  //  path.join(g.baseDir, "/examples"),
-  //  path.join(g.baseDir, "/games"),
-  //],
-  gamesLists: [
-    path.join(process.env.HOME, ".happyfuntimes/installed-games.json"),
-  ],
-});
 
 function postHandler(request, callback) {
   var query_ = { };
