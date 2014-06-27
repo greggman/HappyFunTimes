@@ -30,68 +30,114 @@
  */
 "use strict";
 
-var Zip = require('adm-zip');
+var ZipWriter = require("moxie-zip").ZipWriter;
+var JSZip = require('jszip');
 var fs = require('fs');
+var path = require('path');
+var mkdirp = require('mkdirp');
 var gameInfo = require('../server/gameinfo');
+var gameDB = require('../server/gamedb');
+var games = require('../management/games');
+var hftConfig = require('../server/config');
+var strings = require('../server/strings');
 
 var ReleaseManager = function() {
 
+  var readDirTreeSync = function(filePath, options) {
+    options = options || {};
+
+    var filter = options.filter;
+    if (filter === undefined) {
+      filter = function() { return true; };
+    } else if (filter instanceof RegExp) {
+      filter = function(filter) {
+        return function(filename) {
+          return filter.test(filename);
+        }
+      }(filter);
+    }
+
+    var fileNames = fs.readdirSync(filePath).filter(filter).map(function(fileName) {
+      return path.join(filePath, fileName);
+    });
+
+    var subdirFilenames = [];
+    fileNames.forEach(function(fileName) {
+      var stat = fs.statSync(fileName);
+      if (stat.isDirectory()) {
+        subdirFilenames.push(readDirTreeSync(fileName));
+      }
+    });
+
+    subdirFilenames.forEach(function(subNames) {
+      fileNames = fileNames.concat(subNames);
+    });
+
+    return fileNames;
+  };
+
+
+
+
   // Remove this if Zip adds the filter.
-  var addLocalFolder = (function() {
-    var Utils = require('../node_modules/adm-zip/util/utils.js');
-    return function(zip, /*String*/localPath, /*String*/zipPath, /*RegExp|Function*/filter) {
-      if (filter === undefined) {
-        filter = function() { return true; };
-      } else if (filter instanceof RegExp) {
-        filter = function(filter) {
-          return function(filename) {
-            return filter.test(filename);
-          }
-        }(filter);
-      }
-
-      if(zipPath){
-          zipPath=zipPath.split("\\").join("/");
-          if(zipPath.charAt(zipPath.length - 1) != "/"){
-              zipPath += "/";
-          }
-      }else{
-          zipPath="";
-      }
-      localPath = localPath.split("\\").join("/"); //windows fix
-      if (localPath.charAt(localPath.length - 1) != "/")
-          localPath += "/";
-
-      if (fs.existsSync(localPath)) {
-
-          var items = Utils.findFiles(localPath);
-          if (items.length) {
-              items.forEach(function(path) {
-                  var p = path.split("\\").join("/").replace(localPath, ""); //windows fix
-                  if (filter(p)) {
-                      if (p.charAt(p.length - 1) !== "/") {
-                          zip.addFile(zipPath+p, fs.readFileSync(path), "", 0)
-                      } else {
-                          zip.addFile(zipPath+p, new Buffer(0), "", 0)
-                      }
-                  }
-              });
-          }
-      } else {
-          throw Utils.Errors.FILE_NOT_FOUND.replace("%s", localPath);
-      }
-    };
-  }());
+//  var addLocalFolder = (function() {
+//    var Utils = require('../node_modules/adm-zip/util/utils.js');
+//    return function(zip, /*String*/localPath, /*String*/zipPath, /*RegExp|Function*/filter) {
+//      if (filter === undefined) {
+//        filter = function() { return true; };
+//      } else if (filter instanceof RegExp) {
+//        filter = function(filter) {
+//          return function(filename) {
+//            return filter.test(filename);
+//          }
+//        }(filter);
+//      }
+//
+//      if(zipPath){
+//          zipPath=zipPath.split("\\").join("/");
+//          if(zipPath.charAt(zipPath.length - 1) != "/"){
+//              zipPath += "/";
+//          }
+//      }else{
+//          zipPath="";
+//      }
+//      localPath = localPath.split("\\").join("/"); //windows fix
+//      if (localPath.charAt(localPath.length - 1) != "/")
+//          localPath += "/";
+//
+//      if (fs.existsSync(localPath)) {
+//
+//          var items = Utils.findFiles(localPath);
+//          if (items.length) {
+//              items.forEach(function(path) {
+//                  var p = path.split("\\").join("/").replace(localPath, ""); //windows fix
+//                  if (filter(p)) {
+//                      if (p.charAt(p.length - 1) !== "/") {
+//                          zip.addFile(zipPath+p, fs.readFileSync(path), "", 0)
+//                      } else {
+//                          zip.addFile(zipPath+p, new Buffer(0), "", 0)
+//                      }
+//                  }
+//              });
+//          }
+//      } else {
+//          throw Utils.Errors.FILE_NOT_FOUND.replace("%s", localPath);
+//      }
+//    };
+//  }());
 
 
   /**
-   * Make a release.
+   * Makes a release.
    *
    * I'm not sure this belongs here but since installing a release
    * belongs here then it seems prudent to keep the 2 together
    * since they need to match.
+   *
+   * @param {string} gamePath path to folder of game
+   * @param {stirng} destPath path to save zip file.
    */
-  var makeRelease = function(gamePath, destPath) {
+  var make = function(gamePath, destPath, callback) {
     // Make sure it's a game!
     var info = gameInfo.readGameInfo(gamePath);
     if (!info) {
@@ -106,21 +152,116 @@ var ReleaseManager = function() {
         break;
     }
 
-    try {
-      var zip = new Zip();
-      addLocalFolder(zip, gamePath, "", /^(?!\.)/);
-      zip.writeZip(destPath);
-    } catch (e) {
-      console.error("ERROR: " + e + " making " + gamePath + " in " + destPath);
+    var fileNames = readDirTreeSync(gamePath, {filter: /^(?!\.)/});
+    var zip = new ZipWriter();
+    fileNames.forEach(function(fileName) {
+      var zipName = path.join(info.happyFunTimes.gameId, fileName.substring(gamePath.length)).replace(/\\/g, '/');
+      var stat = fs.statSync(fileName);
+      if (stat.isDirectory()) {
+        zip.addDir(zipName);
+      } else {
+        var buffer = fs.readFileSync(fileName);
+        zip.addData(zipName, buffer);
+      }
+    });
+    zip.saveAs(destPath, callback);
+  };
+
+  /**
+   * @typedef {Object} Install~Options
+   * @property {boolean} overwrite default false. Install even if
+   *           already installed.
+   */
+
+  /**
+   * Installs a release.
+   *
+   * @param {string} releasePath path to zip file
+   * @param {string?} opt_destPath path to where to install. If
+   *        not provided default games path is used.
+   * @param {Install~Options?} opt_options
+   */
+  var install = function(releasePath, opt_destPath, opt_options) {
+    var options = opt_options || {};
+    var log = options.verbose ? console.log.bind(console) : function() {};
+
+    if (!strings.endsWith(releasePath, ".zip")) {
+      // ToDo: Should we handle URLs? What about ids?
+      console.error("Can't handle non zip files yet");
       return false;
+    }
+
+    var zip = new JSZip();
+    zip.load(fs.readFileSync(releasePath));
+    var entries = Object.keys(zip.files).sort().map(function(key) { return zip.files[key]; });
+    var info;
+    var packageBasePath;
+
+    try {
+      // Find the packageInfo
+      for (var ii = 0; ii < entries.length; ++ii) {
+        var entry = entries[ii];
+        var baseName = path.basename(entry.name);
+        var dirName = path.dirname(entry.name);
+        if (dirName.indexOf("/") < 0 && baseName == "package.json") {
+          info = gameInfo.parseGameInfo(entry.asText(), path.join(releasePath, entry.name));
+          packageBasePath = dirName;
+          break;
+        }
+      }
+    } catch (e) {
+      console.error("error " + e + ": could not parse package.json. Maybe this is not a HappyFunTimes game?");
+      return false;
+    }
+
+    var hftInfo = info.happyFunTimes;
+    var gameId = hftInfo.gameId;
+    var destBasePath;
+
+    // is it already installed?
+    var installedGame = gameDB.getGameById(gameId);
+    if (installedGame) {
+      if (!options.overwrite) {
+        console.error("game " + gameId + " already installed at: " + installedGame.happyFunTimes.basePath);
+        return false;
+      }
+      destBasePath = installedGame.happyFunTimes.basePath
+    } else {
+      // make the dir after we're sure we're ready to install
+      destBasePath = path.join(hftConfig.gamesDir, info.happyFunTimes.gameId);
+    }
+
+    destBasePath = opt_destPath ? opt_destPath : destBasePath;
+
+    console.log("installing to: " + destBasePath);
+    if (!options.dryRun) {
+      mkdirp.sync(destBasePath);
+    }
+
+    entries.forEach(function(entry) {
+      var filePath = entry.name.substring(packageBasePath.length + 1);
+      var destPath = path.join(destBasePath, filePath);
+      if (entry.dir) {
+        log("mkdir  : " + destPath);
+        if (!options.dryRun) {
+          mkdirp.sync(destPath);
+        }
+      } else {
+        log("install: " + entry.name + " -> " + destPath);
+        if (!options.dryRun) {
+          fs.writeFileSync(destPath, entry.asNodeBuffer());
+        }
+      };
+    });
+
+    log("add: " + destBasePath);
+    if (!options.dryRun) {
+      games.add(destBasePath);
     }
   };
 
-  var installRelease = function(releasePath, destPath) {
-  };
-
-  this.installRelease = installRelease.bind(this);
-  this.makeRelease = makeRelease.bind(this);
+  this.install = install.bind(this);
+  this.make = make.bind(this);
 };
 
 module.exports = new ReleaseManager();
