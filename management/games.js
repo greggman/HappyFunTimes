@@ -32,10 +32,11 @@
 
 var fs = require('fs');
 var path = require('path');
-var GameDB = require('../server/gamedb');
+var gameInfo = require('../server/gameinfo');
+var HFTConfig = require('../server/config');
 
 var InstalledGamesList = function() {
-  var p_installedGamesPath = path.join(process.env.HOME, ".happyfuntimes/installed-games.json");
+  var p_installedGamesPath = HFTConfig.installedGamesListPath;
   var p_installedGamesList = [];
 
   var indexByPath = function(gamePath) {
@@ -77,8 +78,8 @@ var InstalledGamesList = function() {
     var packageJSONPath = path.join(fullGamePath, "package.json");
 
     try {
-      var gameInfo = GameDB.readGameInfo(packageJSONPath);
-      if (!gameInfo) {
+      var info = gameInfo.readGameInfo(packageJSONPath);
+      if (!info) {
         throw "";
       }
       getInstalledGames();
