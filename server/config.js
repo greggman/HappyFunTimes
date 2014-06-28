@@ -35,8 +35,22 @@ var fs = require('fs');
 var path = require('path');
 var hanson = require('hanson');
 
-var g_configFolder = path.join(process.env.HOME, ".happyfuntimes");
-var g_configFile = "config.json";
+var g_configPath = path.join(process.env.HOME, ".happyfuntimes", "config.json");
+var g_configRead = false;
+var g_settingsPath = path.join(__dirname, "..", "hft.hanson");
+var g_settingsRead = false;
+
+var setup = function(options) {
+  if (g_configRead || g_settingsRead) {
+    throw "calling setup has no meaning after configuration has been read";
+  }
+  if (options.configPath) {
+    g_configPath = path.resolve(options.configPath);
+  }
+  if (options.settingsPath) {
+    g_settingsPath = path.resolve(options.settingsPath);
+  }
+};
 
 /**
  * Get the happyFunTimes directory
@@ -46,10 +60,9 @@ var getSettings = (function() {
 
   return function() {
     if (!settings) {
-      var fileName = path.join(__dirname, "..", "hft.hanson");
-
       /** @type {GameInfo~Settings} */
-      settings = hanson.parse(fs.readFileSync(fileName, "utf-8"));
+      settings = hanson.parse(fs.readFileSync(g_settingsPath, {encoding: "utf-8"}));
+      g_settingsRead = true;
     }
     return settings;
   };
@@ -63,9 +76,9 @@ var getConfig = (function() {
 
   return function() {
     if (!config) {
-      var configPath = path.join(g_configFolder, g_configFile);
       try {
-        var content = fs.readFileSync(configPath, {encoding: "utf-8"});
+        var content = fs.readFileSync(g_configPath, {encoding: "utf-8"});
+        g_configRead = true;
       } catch (e) {
         return;
       }
@@ -76,7 +89,7 @@ var getConfig = (function() {
         console.error("error: " + e + "\nunable to read config: " + configPath);
         throw e;
       }
-      config.configDir = g_configFolder;
+      config.configDir = path.dirname(g_configPath);
       config.installedGamesListPath = path.join(config.configDir, "installed-games.json");
     }
     return config;
