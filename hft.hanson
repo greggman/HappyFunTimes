@@ -32,6 +32,9 @@
       },
     },
   },
+
+  // The URL for the games API.
+  gamesUrl: "http://api.superhappyfuntimes.net/v0/"
 }
 
 
