@@ -30,10 +30,15 @@
  */
 "use strict";
 
+var debug = require('debug')('release');
 var ZipWriter = require("moxie-zip").ZipWriter;
 var JSZip = require('jszip');
+var events = require('events');
 var fs = require('fs');
 var path = require('path');
+var http = require('http');
+var https = require('https');
+var url = require('url');
 var mkdirp = require('mkdirp');
 var gameInfo = require('../server/gameinfo');
 var gameDB = require('../server/gamedb');
@@ -283,13 +288,125 @@ var ReleaseManager = function() {
    */
   var download = function(gameId, opt_destPath, options) {
     // get game
-    url = options.gamesUrl || config.getSettings().gamesUrl;
+    var url = options.gamesUrl || config.getSettings().gamesUrl;
+  };
+
+  /**
+   * Downloads a url to the specified path
+   * @param {string} srcUrl url to download
+   * @param {string} destPath path to store file
+   * @returns {EventEmitter} emitter for events.
+   *
+   * Events are:
+   *   'start': {size: number, bytesDownloaded: number},
+   *   'progress': {size: number, bytesDownloaded: number},
+   *   'end': {size: number, bytesDownloaded: number},
+   *   'error': ??,
+   */
+  var downloadFile = function(srcUrl, destPath) {
+    var depth = 0;
+
+    var doDownload = function(srcUrl, destPath, eventEmitter) {
+      debug("DL: " + srcUrl);
+      eventEmitter = eventEmitter || new events.EventEmitter();
+
+      ++depth;
+      if (depth > 5) {
+        eventEmitter.emit('error', "too many redirects");
+        return eventEmitter;
+      }
+
+      var parsedUrl = url.parse(srcUrl);
+
+      var requestType;
+      switch (parsedUrl.protocol) {
+        case 'http:':
+          requestType = http.request.bind(http);
+          break;
+        case 'https:':
+          requestType = https.request.bind(http);
+          break;
+        default:
+          // Need to use setTimeout in case this is the first time in here otherwise
+          // we'd call the event before the user has a chance to register listeners.
+          setTimeout(function() {
+            eventEmitter.emit('error', "unhandled protocol: " + parsedUrl.protocol);
+          }, 0);
+          return eventEmitter;
+      }
+
+      var request = requestType({
+        hostname: parsedUrl.hostname,
+        port: parsedUrl.port,
+        path: parsedUrl.pathname,
+      });
+
+      var stream;
+
+      request.on('response', function (response) {
+        switch (response.statusCode) {
+          case 200:
+            break;
+          case 301:
+          case 302:
+          case 307:
+          case 308:
+            doDownload(response.headers["location"].toString(), destPath, eventEmitter);
+            return;
+          case 404:
+            eventEmitter.emit('error', "url not found:" + srcUrl);
+            return;
+          default:
+            eventEmitter.emit('error', "unhandled status code:" + response.statusCode);
+            debug(JSON.stringify(response.headers, undefined, "  "));
+            return;
+        }
+        var bytesDownloaded = 0;
+        var totalBytes = response.headers['content-length'];
+        stream = fs.createWriteStream(destPath);
+        stream.on('error', function(e) {
+          eventEmitter.emit('error', "error writing to file: " + destPath + "\n" + e);
+          request.abort();
+        });
+
+        eventEmitter.emit('start', {size: totalBytes, bytesDownloaded: bytesDownloaded});
+        response.on('data', function (chunk) {
+          bytesDownloaded += chunk.length;
+          eventEmitter.emit('progress', {size: totalBytes, bytesDownloaded: bytesDownloaded});
+          stream.write(chunk);
+        });
+
+        response.on('end', function() {
+          eventEmitter.emit('progress', {size: totalBytes, bytesDownloaded: bytesDownloaded});
+          stream.end(undefined, undefined, function() {
+            eventEmitter.emit('end', {size: totalBytes, bytesDownloaded: bytesDownloaded});
+          });
+        });
+
+      });
+
+      request.on('error', function(err) {
+        if (stream) {
+          stream.end();
+          fs.unlinkSync(destPath);
+        }
+        eventEmitter.emit('error', err);
+      });
+
+      request.end();
+      return eventEmitter;
+    }
+
+    return doDownload.apply(this, arguments);
   };
 
   this.download = download.bind(this);
+  this.downloadFile = downloadFile.bind(this);
   this.install = install.bind(this);
   this.make = make.bind(this);
 };
+
+
 
 module.exports = new ReleaseManager();
 
