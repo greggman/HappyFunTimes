@@ -33,9 +33,27 @@
 
 var fs = require('fs');
 var path = require('path');
+var hanson = require('hanson');
 
 var g_configFolder = path.join(process.env.HOME, ".happyfuntimes");
 var g_configFile = "config.json";
+
+/**
+ * Get the happyFunTimes directory
+ */
+var getSettings = (function() {
+  var settings;
+
+  return function() {
+    if (!settings) {
+      var fileName = path.join(__dirname, "..", "hft.hanson");
+
+      /** @type {GameInfo~Settings} */
+      settings = hanson.parse(fs.readFileSync(fileName, "utf-8"));
+    }
+    return settings;
+  };
+}());
 
 /**
  * Get the happyFunTimes directory
@@ -65,6 +83,8 @@ var getConfig = (function() {
   };
 }());
 
-module.exports = getConfig();
+
+exports.getConfig = getConfig;
+exports.getSettings = getSettings;
 
 

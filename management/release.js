@@ -38,7 +38,7 @@ var mkdirp = require('mkdirp');
 var gameInfo = require('../server/gameinfo');
 var gameDB = require('../server/gamedb');
 var games = require('../management/games');
-var hftConfig = require('../server/config');
+var config = require('../server/config');
 var strings = require('../server/strings');
 
 var ReleaseManager = function() {
@@ -169,8 +169,11 @@ var ReleaseManager = function() {
 
   /**
    * @typedef {Object} Install~Options
-   * @property {boolean} overwrite default false. Install even if
-   *           already installed.
+   * @property {boolean?} overwrite default false. Install even if
+   *           already installed. (not implemented)
+   * @property {boolean?} verbose print extra info
+   * @property {boolean?} dryRun true = don't write any files or
+   *           make any folders.
    */
 
   /**
@@ -228,7 +231,7 @@ var ReleaseManager = function() {
       destBasePath = installedGame.happyFunTimes.basePath
     } else {
       // make the dir after we're sure we're ready to install
-      destBasePath = path.join(hftConfig.gamesDir, info.happyFunTimes.gameId);
+      destBasePath = path.join(config.getConfig().gamesDir, info.happyFunTimes.gameId);
     }
 
     destBasePath = opt_destPath ? opt_destPath : destBasePath;
@@ -260,6 +263,30 @@ var ReleaseManager = function() {
     }
   };
 
+  /**
+   * @typedef {Object} Download~Options
+   * @property {boolean?} overwrite default false. Install even if
+   *           already installed.
+   * @property {boolean?} verbose print extra info
+   * @property {boolean?} dryRun true = don't write any files or
+   *           make any folders.
+   * @property {string?} gamesUrl URL to get game info from.
+   * @property {string?} version version of game to download?
+   *           (not implemented)
+   */
+
+  /**
+   * Downloads and installs a game by gameId
+   * @param {string} gameId the gameId for the game
+   * @param {string?} opt_destPath path to install game.
+   * @param {Download~Options?) options
+   */
+  var download = function(gameId, opt_destPath, options) {
+    // get game
+    url = options.gamesUrl || config.getSettings().gamesUrl;
+  };
+
+  this.download = download.bind(this);
   this.install = install.bind(this);
   this.make = make.bind(this);
 };

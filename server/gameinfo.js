@@ -34,8 +34,8 @@
 var debug = require('debug')('gameinfo');
 var fs = require('fs');
 var path = require('path');
-var hanson = require('hanson');
 var misc = require('./misc');
+var config = require('./config');
 
 var applyDefaultProperties = function(obj, defaults) {
   if (!defaults) {
@@ -58,10 +58,6 @@ var applyDefaultProperties = function(obj, defaults) {
 
 
 var GameInfo = function() {
-  var fileName = path.join(__dirname, "..", "hft.hanson");
-
-  /** @type {GameInfo~Settings} */
-  this.settings = hanson.parse(fs.readFileSync(fileName, "utf-8"));
 };
 
 GameInfo.prototype.readGameInfo = function(filePath) {
@@ -88,7 +84,7 @@ GameInfo.prototype.parseGameInfo = function(contents, filePath) {
     }
 
     var gameBasePath = path.dirname(filePath);
-    var settings = this.settings;
+    var settings = config.getSettings();
     applyDefaultProperties(hftInfo, settings.hftDefaults);
     applyDefaultProperties(hftInfo, settings.hftGameTypeDefaults[hftInfo.gameType]);
     var missing = misc.getMissingProperties(hftInfo, settings.required);

@@ -74,7 +74,7 @@ var GameDB = function(options) {
   }
 
   var gamesLists = options.gamesLists || [
-    hftConfig.installedGamesListPath,
+    hftConfig.getConfig().installedGamesListPath,
   ];
 
   if (gamesLists) {
