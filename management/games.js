@@ -33,10 +33,10 @@
 var fs = require('fs');
 var path = require('path');
 var gameInfo = require('../server/gameinfo');
-var HFTConfig = require('../server/config');
+var hftConfig = require('../server/config');
 
 var InstalledGamesList = function() {
-  var p_installedGamesPath = HFTConfig.installedGamesListPath;
+  var p_installedGamesPath = hftConfig.getConfig().installedGamesListPath;
   var p_installedGamesList = [];
 
   var indexByPath = function(gamePath) {
@@ -119,9 +119,17 @@ var InstalledGamesList = function() {
     }
   };
 
+  /**
+   * Gets all the installed games
+   */
+  var list = function() {
+    return require('../server/gamedb').getGames();
+  };
+
   this.add = add.bind(this);
   this.remove = remove.bind(this);
   this.init = init.bind(this);
+  this.list = list.bind(this);
 };
 
 module.exports = new InstalledGamesList();
