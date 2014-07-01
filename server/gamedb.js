@@ -104,7 +104,10 @@ GameDB.prototype.addGamesByList = function(filePath) {
   try {
     var fileList = JSON.parse(fs.readFileSync(filePath, {encoding:'utf-8'}));
     fileList.forEach(function(info) {
-      this.addGameInfo(path.join(info.path, "package.json"));
+      var gameInfo = this.addGameInfo(path.join(info.path, "package.json"));
+      if (gameInfo) {
+        gameInfo.happyFunTimes.files = info.files;
+      }
     }.bind(this));
   } catch (e) {
     console.error("could not read: " + filePath + " :" + e);
@@ -118,9 +121,9 @@ GameDB.prototype.addGameInfo = function(filePath) {
     this.games.push(packageInfo);
     this.gamesById[packageInfo.happyFunTimes.gameId] = packageInfo;
   } catch (e) {
-    throw e;
+    console.warn("Could not read gameInfo for: " + filePath);
   }
-  return true;
+  return packageInfo;
 };
 
 /**
