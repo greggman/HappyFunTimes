@@ -1,3 +1,20 @@
+*   make 'fix' command that removes games that don't exist anymore
+*   on install add files that were written to installed list. on uninstall on delete those files?
+*   could make hft optionally register ip:port with happyfuntimes.net
+
+    If ip address is not in one of the 'normal' class ips that are scanned by happyfuntimes
+    then it could be added. Also, happyfuntimes.net could check the ip address of hft
+    and the ip address of users and match them up since they'd all be behind the same
+    nat?
+
+    Maybe hft could check netmask, if class B then do extra stuff?
+
+*   need to figure out how to handle 2+ hft's on same network.
+
+    maybe happyfuntimes.net shows 2 and game being played?
+
+*   make hft-config configure config.js
+*   make all hft commands have --config so you can point to a different config.
 *   stop using gameIds in certain ways.
 
     *   remove the need for gameids?

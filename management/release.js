@@ -246,26 +246,154 @@ var ReleaseManager = function() {
       mkdirp.sync(destBasePath);
     }
 
+    var files = [];
+    var bad = false;
     entries.forEach(function(entry) {
+      if (bad) {
+        return;
+      }
       var filePath = entry.name.substring(packageBasePath.length + 1);
-      var destPath = path.join(destBasePath, filePath);
-      if (entry.dir) {
-        log("mkdir  : " + destPath);
-        if (!options.dryRun) {
-          mkdirp.sync(destPath);
-        }
+      files.push(filePath);
+      var destPath = path.resolve(path.join(destBasePath, filePath));
+      if (destPath.substring(0, destBasePath.length) != destBasePath) {
+        console.error("ERROR: bad zip file. Path would write outside game folder");
+        bad = true;
       } else {
-        log("install: " + entry.name + " -> " + destPath);
-        if (!options.dryRun) {
-          fs.writeFileSync(destPath, entry.asNodeBuffer());
+        var isDir = entry.dir;
+        if (destPath.substr(-1) == "/" || destPath.substr(-1) == "//") {
+          destPath = destPath.substr(0, destPath.length - 1);
+          isDir = true;
         }
-      };
+        //??
+        if (isDir) {
+          log("mkdir  : " + destPath);
+          if (!options.dryRun) {
+            mkdirp.sync(destPath);
+          }
+        } else {
+          log("install: " + entry.name + " -> " + destPath);
+          if (!options.dryRun) {
+            fs.writeFileSync(destPath, entry.asNodeBuffer());
+          }
+        };
+      }
     });
+
+    if (bad) {
+      // Should delete all work here?
+      return false;
+    }
+
 
     log("add: " + destBasePath);
     if (!options.dryRun) {
-      games.add(destBasePath);
+      games.add(destBasePath, files);
     }
+
+    if (!options.dryRun) {
+      console.log("installed:" + releasePath);
+    }
+  };
+
+  /**
+   * @typedef {Object} Uninstall~Options
+   * @property {boolean?} verbose print extra info
+   * @property {boolean?} dryRun true = don't write any files or
+   *           make any folders.
+   */
+
+  /**
+   * Unistalls a game.
+   *
+   * @param {string} gameIdOrPath path to game or id.
+   * @param {Uninstall~Options?} opt_options
+   */
+  var uninstall = function(gameIdOrPath, opt_options) {
+    var options = opt_options || {};
+    var log = options.verbose ? console.log.bind(console) : function() {};
+
+    var installedGame = gameDB.getGameById(gameIdOrPath);
+    if (!installedGame) {
+      // See if we can find it by path
+      var gameList = gameDB.getGames();
+      var gamePath = path.resolve(gameIdOrPath);
+      for (var ii = 0; ii < gameList.length; ++ii) {
+        var game = gameList[ii];
+        if (game.happyFunTimes.basePath == gamePath) {
+          installedGame = game;
+          break;
+        }
+      }
+    }
+
+    if (!installedGame) {
+      console.error("ERROR: " + gameIdOrPath + " does not reference an installed game by id or path");
+      return false;
+    }
+
+    var hftInfo = installedGame.happyFunTimes;
+    var gameId = hftInfo.gameId;
+    var gamePath = hftInfo.basePath;
+    var files = hftInfo.files;
+
+    var failCount = 0;
+    var folders = [gamePath];
+    files.forEach(function(file) {
+      var fullPath = path.join(gamePath, file);
+      try {
+        var stat = fs.statSync(fullPath);
+        if (stat.isDirectory()) {
+          folders.push(fullPath);
+        } else {
+          log("delete: " + fullPath)
+          if (!options.dryRun) {
+            fs.unlinkSync(fullPath)
+          }
+        }
+      } catch (e) {
+        ++failCount;
+        console.error("Couldn't delete: " + fullPath)
+      }
+    });
+
+    var deleteNoFail = function(file) {
+      try {
+        if (fs.existsSync(file)) {
+          log("delete: " + file);
+          fs.unlinkSync(file);
+        }
+      } catch (e) {
+        // Don't care!
+      }
+    };
+
+    folders.sort();
+    folders.reverse();
+    folders.forEach(function(folder) {
+      try {
+        // Should I try to delete system files? I think so
+        deleteNoFail(path.join(folder, ".DS_store"));
+        deleteNoFail(path.join(folder, "Thumbs.db"));
+        log("rmdir: " + folder);
+        if (!options.dryRun) {
+          fs.rmdirSync(folder);
+        }
+      } catch (e) {
+        ++failCount;
+        console.error("Couldn't delete: " + folder);
+      }
+    });
+
+    log("remove: " + gamePath);
+    if (!options.dryRun) {
+      games.remove(gamePath);
+    }
+
+    if (!options.dryRun) {
+      console.log("uninstalled:" + gameIdOrPath);
+    }
+
+    return true;
   };
 
   /**
@@ -403,6 +531,7 @@ var ReleaseManager = function() {
   this.download = download.bind(this);
   this.downloadFile = downloadFile.bind(this);
   this.install = install.bind(this);
+  this.uninstall = uninstall.bind(this);
   this.make = make.bind(this);
 };
 

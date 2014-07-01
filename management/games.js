@@ -72,8 +72,9 @@ var InstalledGamesList = function() {
    * installed :p
    *
    * @param {string} gamePath path to game
+   * @param {string?} opt_fileList list file files relative to gamePath that were installed.
    */
-  var add = function(gamePath) {
+  var add = function(gamePath, opt_fileList) {
     var fullGamePath = path.resolve(gamePath);
     var packageJSONPath = path.join(fullGamePath, "package.json");
 
@@ -85,8 +86,9 @@ var InstalledGamesList = function() {
       getInstalledGames();
       var index = indexByPath(gamePath);
       if (index < 0) {
-        p_installedGamesList.push({path: gamePath});
+        p_installedGamesList.push({path: gamePath, files: opt_fileList});
         putInstalledGames();
+        console.log("added: " + gamePath);
         // Need to notify GameDB to add game
       } else {
         console.warn(gamePath + " already installed");
@@ -109,6 +111,7 @@ var InstalledGamesList = function() {
       if (index >= 0) {
         p_installedGamesList.splice(index, 1);
         putInstalledGames();
+        console.log("removed: " + gamePath);
         // Need to notify GameDB to remove game
       } else {
         console.warn(gamePath + " not installed");
