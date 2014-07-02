@@ -5,6 +5,8 @@ HappyFunTimes
 
 [Blog](http://blog.happyfuntimes.net).
 
+[![Build Status](https://travis-ci.org/greggman/HappyFunTimes.svg?branch=master)](https://travis-ci.org/greggman/HappyFunTimes)
+
 <img id="test" src="images/scene-00-jumpjump.jpg" width="782" height="441" />
 
 [HappyFunTimes](http://greggman.github.io/HappyFunTimes/) is a library for making party games that are meant to be
