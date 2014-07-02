@@ -89,6 +89,14 @@ var getConfig = (function() {
         console.error("error: " + e + "\nunable to read config: " + configPath);
         throw e;
       }
+
+      Object.keys(config).forEach(function(key) {
+        // Make keys that end in "Dir" relative to config path.
+        if (key.substr(-3) == "Dir") {
+          config[key] = path.resolve(path.dirname(g_configPath), config[key]);
+        }
+      });
+
       config.configDir = path.dirname(g_configPath);
       config.installedGamesListPath = path.join(config.configDir, "installed-games.json");
     }
@@ -99,5 +107,5 @@ var getConfig = (function() {
 
 exports.getConfig = getConfig;
 exports.getSettings = getSettings;
-
+exports.setup = setup;
 

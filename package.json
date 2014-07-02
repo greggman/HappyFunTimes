@@ -4,7 +4,7 @@
   "version": "0.0.2",
   "private": true,
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "node node_modules/mocha/bin/mocha --recursive",
     "start": "node server/server.js --dns"
   },
   "dependencies": {
@@ -22,12 +22,14 @@
     "promise": "^5.0.0",
     "mkdirp": "^0.5.0",
     "jszip": "^2.3.0",
-    "moxie-zip": "0.0.3"
+    "moxie-zip": "0.0.3",
+    "cli-color": "^0.3.2"
   },
   "devDependencies": {
     "grunt": "^0.4.5",
     "grunt-contrib-clean": "^0.5.0",
     "grunt-jsdoc": "^0.5.4",
-    "ink-docstrap": "^0.4.5"
+    "ink-docstrap": "^0.4.5",
+    "mocha": "^1.20.1"
   }
 }
