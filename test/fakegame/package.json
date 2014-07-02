@@ -1,0 +1,13 @@
+{
+  "name": "fakegame",
+  "description": "A fake game for testing",
+  "version": "0.0.2",
+  "private": true,
+  "dependencies": {
+  },
+  "happyFunTimes": {
+    "gameId": "fakegame",
+    "apiVersion": "0.0.0",
+    "gameType": "html"
+  }
+}
