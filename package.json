@@ -3,6 +3,9 @@
   "description": "happyfuntimes framework",
   "version": "0.0.2",
   "private": true,
+  "scripts": {
+    "test": "exit 0"
+  },
   "dependencies": {
     "debug": "0.7.4",
     "minimist": "0.0.8",
