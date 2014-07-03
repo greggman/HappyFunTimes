@@ -102,20 +102,27 @@ var InstalledGamesList = function() {
 
   /**
    * Remove a game from the list of locally installed games.
-   * @param {string} gamePath path to game
+   * @param {string} gamePathOrId path to game or gameId
    */
-  var remove = function(gamePath) {
+  var remove = function(gamePathOrId) {
     try {
       getInstalledGames();
-      var index = indexByPath(gamePath);
-      if (index >= 0) {
-        p_installedGamesList.splice(index, 1);
-        putInstalledGames();
-        console.log("removed: " + gamePath);
-        // Need to notify GameDB to remove game
+      var gamePath;
+      var info = require('../server/gamedb').getGameById(gamePathOrId);
+      if (info) {
+        gamePath = info.happyFunTimes.basePath;
       } else {
-        console.warn(gamePath + " not installed");
+        gamePath = path.resolve(gamePathOrId);
       }
+
+      var index = indexByPath(gamePath);
+      if (index < 0) {
+        console.warn(gamePathOrId + " not installed");
+        return false;
+      }
+      p_installedGamesList.splice(index, 1);
+      putInstalledGames();
+      console.log("removed: " + gamePath);
     } catch (e) {
       console.error("error: removing game: " + gamePath + "\n  " + e.toString());
       return false;

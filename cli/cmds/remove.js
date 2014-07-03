@@ -34,15 +34,15 @@ var path = require('path');
 var games = require('../../management/games');
 
 var remove = function(args) {
-  var fullPath = args._.length > 1 ? path.resolve(args._[1]) : process.cwd();
+  var fullPath = args._.length > 1 ? args._[1] : process.cwd();
   games.remove(fullPath);
 };
 
 exports.usage = [
-  "[pathToGame]",
+  "[pathToGameOrId]",
   "",
   "removes a game from the list of games currently installed.",
-  "if no path is passed in current path is used.",
+  "if no path or id is passed in current path is used.",
 ].join("\n");
 exports.cmd = remove;
 
