@@ -31,6 +31,7 @@
 "use strict";
 
 var debug = require('debug')('release');
+var Promise = require('promise');
 var ZipWriter = require("moxie-zip").ZipWriter;
 var JSZip = require('jszip');
 var events = require('events');
@@ -45,6 +46,37 @@ var gameDB = require('../server/gamedb');
 var games = require('../management/games');
 var config = require('../server/config');
 var strings = require('../server/strings');
+var utils = require('./utils');
+var GitHubApi = require('github');
+var semver = require('semver');
+var asks = require('asks');
+
+var safeishName = function(gameId) {
+  return gameId.replace(/[^a-zA-Z0-9-_]/g, '_');
+};
+
+var asyncError = function(callback, err) {
+  setTimeout(function() {
+    callback(err);
+  }, 0);
+};
+
+var logObject = function(label, obj) {
+  if (obj) {
+    console.log("---[ " + label + " ]---");
+  } else {
+    obj = label;
+  }
+  console.log(JSON.stringify(obj, undefined, "  "));
+};
+
+var askPrompt = function(questions) {
+  return new Promise(function(fulfill, reject) {
+    asks.prompt(questions, function(answers) {
+      fulfill(answers);
+    });
+  });
+};
 
 var ReleaseManager = function() {
 
@@ -131,6 +163,17 @@ var ReleaseManager = function() {
 //    };
 //  }());
 
+  /**
+   * @typedef {object} Make~FileInfo
+   * @property {string} filename Path to file
+   */
+
+  /**
+   * @callback Make~Callback
+   * @param {object?} error null if no error
+   * @param {Make~FileInfo[]} files array of paths to files
+   *        created
+   */
 
   /**
    * Makes a release.
@@ -140,27 +183,31 @@ var ReleaseManager = function() {
    * since they need to match.
    *
    * @param {string} gamePath path to folder of game
-   * @param {stirng} destPath path to save zip file.
+   * @param {string} destFolder path to save release files.
+   * @param {Make~Callback} callback
    */
-  var make = function(gamePath, destPath, callback) {
+  var make = function(gamePath, destFolder, callback) {
     // Make sure it's a game!
     var info = gameInfo.readGameInfo(gamePath);
     if (!info) {
       return false;
     }
 
-    switch (info.happyFunTimes.gameType) {
+    var hftInfo = info.happyFunTimes;
+    switch (hftInfo.gameType) {
       case 'html':
         break;
       default:
-        console.error("unsupported gametype: " + info.happyFunTimes.gameType)
+        console.error("unsupported gametype: " + hftInfo.gameType)
+        asyncError(callback, "unsupported game type:" + hftInfo.gameType);
+        return;
         break;
     }
 
     var fileNames = readDirTreeSync(gamePath, {filter: /^(?!\.)/});
     var zip = new ZipWriter();
     fileNames.forEach(function(fileName) {
-      var zipName = path.join(info.happyFunTimes.gameId, fileName.substring(gamePath.length)).replace(/\\/g, '/');
+      var zipName = path.join(hftInfo.gameId, fileName.substring(gamePath.length)).replace(/\\/g, '/');
       var stat = fs.statSync(fileName);
       if (stat.isDirectory()) {
         zip.addDir(zipName);
@@ -169,7 +216,14 @@ var ReleaseManager = function() {
         zip.addData(zipName, buffer);
       }
     });
-    zip.saveAs(destPath, callback);
+    var destPath = path.join(destFolder, safeishName(hftInfo.gameId) + "-html.zip");
+    zip.saveAs(destPath, function(err) {
+      if (err) {
+        callback(err);
+      } else {
+        callback(null, [{filename:destPath}]);
+      }
+    });
   };
 
   /**
@@ -455,11 +509,7 @@ var ReleaseManager = function() {
           requestType = https.request.bind(http);
           break;
         default:
-          // Need to use setTimeout in case this is the first time in here otherwise
-          // we'd call the event before the user has a chance to register listeners.
-          setTimeout(function() {
-            eventEmitter.emit('error', "unhandled protocol: " + parsedUrl.protocol);
-          }, 0);
+          asyncError(eventEmitter.emit.bind(emit), 'error', "unhandled protocol: " + parsedUrl.protocol);
           return eventEmitter;
       }
 
@@ -528,11 +578,179 @@ var ReleaseManager = function() {
     return doDownload.apply(this, arguments);
   };
 
+
+  /**
+   * @typedef {Object} Publish~Options
+   * @property {boolean?} verbose print extra info
+   * @property {boolean?} dryRun true = don't write any files or
+   *           make any folders.
+   * @property {string?} repo github repo
+   * @property {string?} username github username
+   * @property {string?} password github password
+   */
+
+  /**
+   * @callback Publish~Callback
+   * @param {object?} error null if no error
+   */
+
+  /**
+   * Publish a game.
+   *
+   * Packages up a game, uploads the packages to github, informs
+   * the store of the new version.
+   *
+   * Steps:
+   * 1.  Verify it's a game
+   * 2.  Check the version. See if the tags match.
+   * 3.  Make pacakges. (if it's native there will be more than
+   *     one. for example OSX, Windows, etc..
+   * 3.  Upload packages
+   * 4.  If required notify store.
+   *
+   * @param {string} gamePath path to game
+   * @param {Publish~Options?} options options.
+   * @param {Publish~Callback} callback
+   */
+  var publish = function(gamePath, options, callback) {
+    options = options || {};
+
+    // Make sure it's a game!
+    var info = gameInfo.readGameInfo(gamePath);
+    if (!info) {
+      callback(gamePath + " doesn't appear to be a game");
+      return;
+    }
+
+    var github = new GitHubApi({
+        // required
+        version: "3.0.0",
+        // optional
+        debug: options.verbose || false,
+    });
+
+    var auth = function() {
+        if (options.password) {
+          github.authenticate({
+            type: "basic",
+            username: options.username,
+            password: options.password,
+          });
+        }
+    };
+
+    auth();
+    var listReleases = Promise.denodeify(github.releases.listReleases);
+    var createRelease = Promise.denodeify(github.releases.createRelease);
+    var uploadAsset = Promise.denodeify(github.releases.uploadAsset);
+    var makeP = Promise.denodeify(make);
+    var highestVersion = '0.0.0';
+    var version = options.version || '0.0.0';
+    var filesToUpload;
+
+    // Check existing releases. There should be no release with this version
+    // AND, all releases should be less than this one
+    listReleases({
+      owner: options.username,
+      repo: options.repo,
+    }).then(function(res) {
+      for (var ii = 0; ii < res.length; ++ii) {
+        var release = res[ii];
+        if (semver.valid(res.name)) {
+          console.log("found existing release: " + res.name);
+          if (semver.gt(res.name, highestVersion)) {
+            highestVersion = res.name;
+          }
+        }
+      }
+      if (options.version) {
+        if (semver.lte(version, highestVersion)) {
+          asyncError(callback, "version '" + version + "' is less than highest version: " + highestVersion);
+          return;
+        }
+      } else {
+        version = semver.inc(highestVersion, options.bump);
+        if (!version) {
+          asyncError(callback, "bad bump type: '" + options.bump + "'");
+          return;
+        }
+      }
+
+      if (version.charAt(0) != 'v') {
+        version = "v" + version;
+      }
+
+      return utils.getTempFolder({unsafeCleanup: true});  // deletes the folder on exit.
+    }).then(function(filePath) {
+      return makeP(gamePath, filePath);
+    }).then(function(files) {
+      filesToUpload = files;
+      console.log("Upload:\n" + files.map(function(file) {
+        return "    " + file.filename;
+      }).join("\n"));
+      console.log("as version: " + version);
+      return askPrompt([
+        {
+           name: 'confirmation',
+           type: 'input',
+           message: 'release y/N?',
+           default: 'n',
+        }
+      ]);
+    }).then(function(answers) {
+      if (answers.confirmation.toLowerCase() != 'y') {
+        asyncError(callback, "aborted");
+        return;
+      }
+      console.log("creating release...");
+      auth();
+      return createRelease({
+        owner: options.username,
+        repo: options.repo,
+        tag_name: version,
+        target_commitish: "master",
+        name: version,
+      });
+    }).then(function(releaseInfo) {
+      logObject("releaseInfo", releaseInfo);
+      var promises = [];
+      filesToUpload.forEach(function(file) {
+        auth();
+        promises.push(uploadAsset({
+          owner: options.username,
+          repo: options.repo,
+          id: releaseInfo.id,
+          name: path.basename(file.filename),
+          filePath: file.filename,
+        }));
+      });
+      return Promise.all(promises);
+    }).then(function(uploadResults) {
+      for (var ii = 0; ii < uploadResults; ++ii) {
+        var uploadResult = uploadResults[ii];
+        if (uploadResult.state != 'uploaded') {
+          asyncError(callback, "upload state for '" + uploadResult.name + "' is '" + uploadResult.state + "'");
+          return;
+        }
+        var localSize = fs.statSync(filesToUpload[ii].filename).size;
+        if (uploadResult.size != localSize) {
+          asyncError(callback, "upload size for '" + uploadResult.name + "' is " + uploadResult.size + " but should be " + localSize);
+          return;
+        }
+      }
+      console.log("release uploaded");
+    }, function(err) {
+      asyncError(callback, err);
+      return;
+    });
+  };
+
   this.download = download.bind(this);
   this.downloadFile = downloadFile.bind(this);
   this.install = install.bind(this);
   this.uninstall = uninstall.bind(this);
   this.make = make.bind(this);
+  this.publish = publish.bind(this);
 };
 
 

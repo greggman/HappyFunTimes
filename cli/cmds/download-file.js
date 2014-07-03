@@ -37,11 +37,11 @@ var release = require('../../management/release');
 
 var downloadFile = function(args) {
   if (args._.length < 2) {
-    utils.badArgs("missing url and destPath", module);
+    utils.badArgs(module, "missing url and destPath");
   }
 
   if (args._.length < 3) {
-    utils.badArgs("missing destPath", module);
+    utils.badArgs(module, "missing destPath");
   }
 
   var options = {

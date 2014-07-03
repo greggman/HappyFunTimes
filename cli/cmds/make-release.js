@@ -36,20 +36,27 @@ var release = require('../../management/release');
 
 var makeRelease = function(args) {
   if (args._.length < 2) {
-    utils.badArgs("missing dstPath", module);
+    utils.badArgs(module, "missing dstPath");
   }
 
   if (args._.length > 2) {
-    utils.badArgs("too many arguments", module);
+    utils.badArgs(module, "too many arguments");
   }
 
   var destPath = path.resolve(args._[1]);
   var fullPath = args.src ? path.resolve(args.src) : process.cwd();
 
-  release.make(fullPath, destPath, function(err) {
+  release.make(fullPath, destPath, function(err, files) {
     if (err) {
-      console.error("ERROR: " + e);
+      console.error("ERROR: " + err);
       process.exit(1);
+    }
+    if (args.json) {
+      console.log(JSON.stringify(files, undefined, "  "));
+    } else {
+      files.forEach(function(file) {
+        console.log("created " + file.filename);
+      });
     }
   });
 };
@@ -59,13 +66,14 @@ exports.usage = [
   "",
   "make-release can be used see what data will be in a release. Example:",
   "",
-  "   hft make-release $TMP/test.zip",
+  "   hft make-release /tmp",
   "",
   "Normally releases are made at publish time",
   "",
   "options:",
   "",
   "    --src=srcpath: path to source. If not supplied assumes current working directory.",
+  "    --json:        format output as json",
 ].join("\n");
 exports.cmd = makeRelease;
 

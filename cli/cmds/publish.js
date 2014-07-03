@@ -34,38 +34,70 @@ var path = require('path');
 var utils = require('../utils');
 var release = require('../../management/release');
 
-var install = function(args) {
-  if (args._.length < 2) {
-    utils.badArgs(module, "missing srcPath");
-  }
+var bumpTypes = ['major', 'premajor', 'minor', 'preminor', 'patch', 'prepatch', 'prerelease'];
 
-  if (args._.length > 2) {
+var publish = function(args) {
+  if (args._.length != 1) {
     utils.badArgs(module, "too many arguments");
   }
+
+  if (!args.user) {
+    utils.badArgs(module, "must supply --user=githubusername:pass");
+  }
+
+  var bump = 'patch';
+  if (args.bump) {
+    if (bumpTypes.indexOf(args.bump) < 0) {
+      utils.badArgs(module, "unknown bump type: '" + args.bump + "'.\nvalid types: " + bumpTypes.join(", "));
+    }
+    bump = args.bump;
+  }
+
+  if (args.version && !semver.valid(args.version)) {
+    utils.badArgs(module, "version not valid semver: '" + version + "'");
+  }
+
+  var srcPath = args.src ? path.resolve(args.src) : process.cwd();
 
   var options = {
     dryRun: args['dry-run'],
     verbose: args['verbose'],
+    repo: args['repo'] || path.basename(process.cwd()),
+    username: args['user'].split(":")[0],
+    password: args['user'].split(":")[1],
+    bump: bump,
+    version: args['version'],
   };
 
-  var srcPath = path.resolve(args._[1]);
-
-  return release.install(srcPath, args.dst, options);
+  release.publish(srcPath, options, function(err) {
+    if (err) {
+      console.error("ERROR: " + err);
+      process.exit(1);
+    }
+  });
 };
 
 exports.usage = [
-  "srcpath",
   "",
-  "install installs a zip package. Example:",
   "",
-  "   hft install path/to/somegame.zip",
+  "makes releases, post them on github, and adds them to superhappyfuntimes.net. ",
+  "",
+  "Example:",
+  "",
+  "   hft publish --user=githubusername:password",
   "",
   "options:",
   "",
-  "    --dst=dstpath: path to install to. If not supplied will be installed to default games folder.",
-  "    --verbose    : print more stuff",
-  "    --dry-run    : don't write any files",
+  "    --bump=type   : how to bump version (major, premajor, minor, preminor, ",
+  "                    patch, prepatch, prerelease), default: patch",
+  "    --repo=name   : name of github repo. If not supplied assumes it matches",
+  "                    current working directory",
+  "    --src=srcpath : path to source. If not supplied assumes current working",
+  "                    directory.",
+  "    --version=ver : set a specific version in semver format.",
+  "    --verbose     : print more stuff",
+  "    --dry-run     : don't write any files",
 ].join("\n");
-exports.cmd = install;
+exports.cmd = publish;
 
 

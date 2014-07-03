@@ -36,7 +36,7 @@ var utils = require('../utils');
 
 var initGamesList = function(args) {
   if (args._.length != 1) {
-    utils.badArgs("bad args", module);
+    utils.badArgs(module, "bad args");
   }
 
   return games.init();

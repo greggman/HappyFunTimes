@@ -36,11 +36,11 @@ var release = require('../../management/release');
 
 var uninstall = function(args) {
   if (args._.length < 2) {
-    utils.badArgs("missing path or gameId", module);
+    utils.badArgs(module, "missing path or gameId");
   }
 
   if (args._.length > 2) {
-    utils.badArgs("too many arguments", module);
+    utils.badArgs(module, "too many arguments");
   }
 
   var options = {

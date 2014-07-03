@@ -36,7 +36,7 @@ function printUsage(cmdUsage, cmdName) {
   console.log("usage: hft " + cmdName + " " + usage.join("\n"));
 };
 
-function badArgs(errorMsg, cmdModule) {
+function badArgs(cmdModule, errorMsg) {
   console.error("ERROR: " + errorMsg);
   printUsage(cmdModule.exports.usage, cmdModule.exports.name);
   process.exit(1);

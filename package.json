@@ -23,7 +23,10 @@
     "mkdirp": "^0.5.0",
     "jszip": "^2.3.0",
     "moxie-zip": "0.0.3",
-    "cli-color": "^0.3.2"
+    "cli-color": "^0.3.2",
+    "github": "git+https://github.com/greggman/node-github.git#5bf3353d808c0eba74cafce7a0cc17abf8130388",
+    "semver": "^2.3.1",
+    "asks": "^1.0.2"
   },
   "devDependencies": {
     "grunt": "^0.4.5",

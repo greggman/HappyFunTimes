@@ -1,50 +1,49 @@
+/*
+ * Copyright 2014, Gregg Tavares.
+ * All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are
+ * met:
+ *
+ *     * Redistributions of source code must retain the above copyright
+ * notice, this list of conditions and the following disclaimer.
+ *     * Redistributions in binary form must reproduce the above
+ * copyright notice, this list of conditions and the following disclaimer
+ * in the documentation and/or other materials provided with the
+ * distribution.
+ *     * Neither the name of Gregg Tavares. nor the names of its
+ * contributors may be used to endorse or promote products derived from
+ * this software without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+ * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+ * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+ * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+ * OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+ * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+ * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+ * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+ * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+ * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ */
+"use strict";
+
 var fs = require('fs');
 var path = require('path');
-var Promise = require('promise');
-var tmp = require('tmp');
 var JSZip = require('jszip');
-
-tmp.setGracefulCleanup();
+var utils = require('../../management/utils');
 
 var g_configPath = path.join(__dirname, "..", "config", "config.json");
 var g_installedGamesListPath = path.join(__dirname, "..", "config", "installed-games.json");
 var g_fakeGamePath = path.join(__dirname, '..', 'fakegame');
 var g_testGameInstallDir = path.join(__dirname, '..', 'testgameinstalldir');
 
-var execute = function(cmd, args, callback) {
-  var spawn = require('child_process').spawn;
-
-  var proc = spawn(cmd, args);
-  var stdout = [];
-  var stderr = [];
-
-  proc.stdout.setEncoding('utf8');
-  proc.stdout.on('data', function (data) {
-      var str = data.toString()
-      var lines = str.split(/(\r?\n)/g);
-      stdout = stdout.concat(lines);
-  });
-
-  proc.stderr.setEncoding('utf8');
-  proc.stderr.on('data', function (data) {
-      var str = data.toString()
-      var lines = str.split(/(\r?\n)/g);
-      stderr = stderr.concat(lines);
-  });
-
-  proc.on('close', function (code) {
-    var result = {stdout: stdout.join("\n"), stderr: stderr.join("\n")};
-    if (parseInt(code) != 0) {
-      callback("exit code " + code, result)
-    } else {
-      callback(null, result)
-    }
-  });
-}
-
 var hftcli = function(cmd, args, callback) {
-   execute('node', [path.join(__dirname, "..", "..", "cli", "hft.js"), cmd, "--config=" + g_configPath].concat(args), function(err, result) {
+   utils.execute('node', [path.join(__dirname, "..", "..", "cli", "hft.js"), cmd, "--config=" + g_configPath].concat(args), function(err, result) {
      if (err != null) {
+       console.log("cmd: " + cmd + " " + args.join(" "));
        console.log("stdout:" + result.stdout);
        console.log("stderr:" + result.stderr);
      }
@@ -59,18 +58,6 @@ var hftcliP = function(cmd, args) {
         reject(err);
       } else {
         fullfil(result);
-      }
-    });
-  });
-};
-
-var getTempFilename = function(options) {
-  return new Promise(function(fulfill, reject) {
-    tmp.tmpName(options, function(err, filePath) {
-      if (err) {
-        reject(err);
-      } else {
-        fulfill(filePath);
       }
     });
   });
@@ -141,9 +128,7 @@ describe('games', function() {
     });
 
     after(function() {
-      if(fs.existsSync(g_installedGamesListPath)) {
-        fs.unlinkSync(g_installedGamesListPath);
-      }
+      utils.deleteNoFail(g_installedGamesListPath);
     });
   });
 });
@@ -152,11 +137,11 @@ describe('release', function() {
   describe('making releases', function() {
 
     var destPath;
-    var tempDir
+    var tempDir;
 
     before(function(done) {
-      getTempFilename({postfix: ".zip"}).then(function(filePath) {
-        destPath = filePath;
+      utils.getTempFolder().then(function(filePath) {
+        tempDir = filePath;
         hftcli("init-game-list", [], function(err, result) {
           assert.equal(err, null);
           assert.ok(fs.existsSync(g_installedGamesListPath));
@@ -168,8 +153,12 @@ describe('release', function() {
     });
 
     it('should make a release', function(done) {
-      hftcli('make-release', ["--src=" + g_fakeGamePath, destPath], function(err, result) {
+      hftcli('make-release', ["--src=" + g_fakeGamePath, tempDir, "--json"], function(err, result) {
         assert.equal(err, null);
+
+        var files = JSON.parse(result.stdout);
+        assert.equal(files.length, 1);
+        destPath = files[0].filename;
         assert.ok(fs.existsSync(destPath));
 
         var zip = new JSZip();
@@ -218,9 +207,8 @@ describe('release', function() {
     });
 
     after(function() {
-      if(fs.existsSync(g_installedGamesListPath)) {
-        fs.unlinkSync(g_installedGamesListPath);
-      }
+      utils.deleteNoFail(g_installedGamesListPath)
+      utils.deleteNoFail(destPath);
     });
   });
 });
