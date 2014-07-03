@@ -69,11 +69,10 @@ var publish = function(args) {
     version: args['version'],
   };
 
-  release.publish(srcPath, options, function(err) {
-    if (err) {
-      console.error("ERROR: " + err);
-      process.exit(1);
-    }
+  release.publish(srcPath, options).then(function() {
+  }, function(err) {
+    console.error(err);
+    process.exit(1);
   });
 };
 

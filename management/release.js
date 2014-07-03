@@ -610,138 +610,133 @@ var ReleaseManager = function() {
    *
    * @param {string} gamePath path to game
    * @param {Publish~Options?} options options.
-   * @param {Publish~Callback} callback
+   * @return {Promise}
    */
-  var publish = function(gamePath, options, callback) {
-    options = options || {};
+  var publish = function(gamePath, options) {
+    return new Promise(function(fulfill, reject) {
+      options = options || {};
 
-    // Make sure it's a game!
-    var info = gameInfo.readGameInfo(gamePath);
-    if (!info) {
-      callback(gamePath + " doesn't appear to be a game");
-      return;
-    }
-
-    var github = new GitHubApi({
-        // required
-        version: "3.0.0",
-        // optional
-        debug: options.verbose || false,
-    });
-
-    var auth = function() {
-        if (options.password) {
-          github.authenticate({
-            type: "basic",
-            username: options.username,
-            password: options.password,
-          });
-        }
-    };
-
-    auth();
-    var listReleases = Promise.denodeify(github.releases.listReleases);
-    var createRelease = Promise.denodeify(github.releases.createRelease);
-    var uploadAsset = Promise.denodeify(github.releases.uploadAsset);
-    var makeP = Promise.denodeify(make);
-    var highestVersion = '0.0.0';
-    var version = options.version || '0.0.0';
-    var filesToUpload;
-
-    // Check existing releases. There should be no release with this version
-    // AND, all releases should be less than this one
-    listReleases({
-      owner: options.username,
-      repo: options.repo,
-    }).then(function(res) {
-      for (var ii = 0; ii < res.length; ++ii) {
-        var release = res[ii];
-        if (semver.valid(res.name)) {
-          console.log("found existing release: " + res.name);
-          if (semver.gt(res.name, highestVersion)) {
-            highestVersion = res.name;
-          }
-        }
-      }
-      if (options.version) {
-        if (semver.lte(version, highestVersion)) {
-          asyncError(callback, "version '" + version + "' is less than highest version: " + highestVersion);
-          return;
-        }
-      } else {
-        version = semver.inc(highestVersion, options.bump);
-        if (!version) {
-          asyncError(callback, "bad bump type: '" + options.bump + "'");
-          return;
-        }
-      }
-
-      if (version.charAt(0) != 'v') {
-        version = "v" + version;
-      }
-
-      return utils.getTempFolder({unsafeCleanup: true});  // deletes the folder on exit.
-    }).then(function(filePath) {
-      return makeP(gamePath, filePath);
-    }).then(function(files) {
-      filesToUpload = files;
-      console.log("Upload:\n" + files.map(function(file) {
-        return "    " + file.filename;
-      }).join("\n"));
-      console.log("as version: " + version);
-      return askPrompt([
-        {
-           name: 'confirmation',
-           type: 'input',
-           message: 'release y/N?',
-           default: 'n',
-        }
-      ]);
-    }).then(function(answers) {
-      if (answers.confirmation.toLowerCase() != 'y') {
-        asyncError(callback, "aborted");
+      // Make sure it's a game!
+      var info = gameInfo.readGameInfo(gamePath);
+      if (!info) {
+        reject(new Error(gamePath + " doesn't appear to be a game"));
         return;
       }
-      console.log("creating release...");
+
+      var github = new GitHubApi({
+          // required
+          version: "3.0.0",
+          // optional
+          debug: options.verbose || false,
+      });
+
+      var auth = function() {
+          if (options.password) {
+            github.authenticate({
+              type: "basic",
+              username: options.username,
+              password: options.password,
+            });
+          }
+      };
+
       auth();
-      return createRelease({
+      var listReleases = Promise.denodeify(github.releases.listReleases);
+      var createRelease = Promise.denodeify(github.releases.createRelease);
+      var uploadAsset = Promise.denodeify(github.releases.uploadAsset);
+      var makeP = Promise.denodeify(make);
+      var highestVersion = '0.0.0';
+      var version = options.version || '0.0.0';
+      var filesToUpload;
+
+      // Check existing releases. There should be no release with this version
+      // AND, all releases should be less than this one
+      listReleases({
         owner: options.username,
         repo: options.repo,
-        tag_name: version,
-        target_commitish: "master",
-        name: version,
-      });
-    }).then(function(releaseInfo) {
-      logObject("releaseInfo", releaseInfo);
-      var promises = [];
-      filesToUpload.forEach(function(file) {
+      }).then(function(res) {
+        for (var ii = 0; ii < res.length; ++ii) {
+          var release = res[ii];
+          if (semver.valid(release.name)) {
+            console.log("found existing release: " + release.name);
+            if (semver.gt(release.name, highestVersion)) {
+              highestVersion = release.name;
+            }
+          }
+        }
+        if (options.version) {
+          if (semver.lte(version, highestVersion)) {
+            return Promise.reject(new Error("version '" + version + "' is less than highest version: " + highestVersion));
+          }
+        } else {
+          version = semver.inc(highestVersion, options.bump);
+          if (!version) {
+            return Promise.reject(new Error("bad bump type: '" + options.bump + "'"));
+          }
+        }
+
+        if (version.charAt(0) != 'v') {
+          version = "v" + version;
+        }
+
+        return utils.getTempFolder({unsafeCleanup: true});  // deletes the folder on exit.
+      }).then(function(filePath) {
+        return makeP(gamePath, filePath);
+      }).then(function(files) {
+        filesToUpload = files;
+        console.log("Upload:\n" + files.map(function(file) {
+          return "    " + file.filename;
+        }).join("\n"));
+        console.log("as version: " + version);
+        return askPrompt([
+          {
+             name: 'confirmation',
+             type: 'input',
+             message: 'release y/N?',
+             default: 'n',
+          }
+        ]);
+      }).then(function(answers) {
+        if (answers.confirmation.toLowerCase() != 'y') {
+          return Promise.reject(new Error("aborted"));
+        }
+        console.log("creating release...");
         auth();
-        promises.push(uploadAsset({
+        return createRelease({
           owner: options.username,
           repo: options.repo,
-          id: releaseInfo.id,
-          name: path.basename(file.filename),
-          filePath: file.filename,
-        }));
+          tag_name: version,
+          target_commitish: "master",
+          name: version,
+        });
+      }).then(function(releaseInfo) {
+        log("releaseInfo", releaseInfo);
+        var promises = [];
+        filesToUpload.forEach(function(file) {
+          auth();
+          promises.push(uploadAsset({
+            owner: options.username,
+            repo: options.repo,
+            id: releaseInfo.id,
+            name: path.basename(file.filename),
+            filePath: file.filename,
+          }));
+        });
+        return Promise.all(promises);
+      }).then(function(uploadResults) {
+        for (var ii = 0; ii < uploadResults; ++ii) {
+          var uploadResult = uploadResults[ii];
+          if (uploadResult.state != 'uploaded') {
+            return Promise.reject(new Error("upload state for '" + uploadResult.name + "' is '" + uploadResult.state + "'"));
+          }
+          var localSize = fs.statSync(filesToUpload[ii].filename).size;
+          if (uploadResult.size != localSize) {
+            return Promise.reject(new Error("upload size for '" + uploadResult.name + "' is " + uploadResult.size + " but should be " + localSize));
+          }
+        }
+        console.log("release uploaded");
+        fulfill();
       });
-      return Promise.all(promises);
-    }).then(function(uploadResults) {
-      for (var ii = 0; ii < uploadResults; ++ii) {
-        var uploadResult = uploadResults[ii];
-        if (uploadResult.state != 'uploaded') {
-          asyncError(callback, "upload state for '" + uploadResult.name + "' is '" + uploadResult.state + "'");
-          return;
-        }
-        var localSize = fs.statSync(filesToUpload[ii].filename).size;
-        if (uploadResult.size != localSize) {
-          asyncError(callback, "upload size for '" + uploadResult.name + "' is " + uploadResult.size + " but should be " + localSize);
-          return;
-        }
-      }
-      console.log("release uploaded");
-    }, function(err) {
-      asyncError(callback, err);
-      return;
     });
   };
 
