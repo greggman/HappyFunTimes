@@ -169,9 +169,9 @@ var ReleaseManager = function() {
    */
 
   /**
-   * @callback Make~Callback
-   * @param {object?} error null if no error
-   * @param {Make~FileInfo[]} files array of paths to files
+   * @promise Make~MakePromise
+   * @reject {Error} error
+   * @fulfill {Make~FileInfo[]} files array of paths to files
    *        created
    */
 
@@ -184,45 +184,46 @@ var ReleaseManager = function() {
    *
    * @param {string} gamePath path to folder of game
    * @param {string} destFolder path to save release files.
-   * @param {Make~Callback} callback
+   * @returns {Make~Promise}
    */
-  var make = function(gamePath, destFolder, callback) {
-    // Make sure it's a game!
-    var info = gameInfo.readGameInfo(gamePath);
-    if (!info) {
-      return false;
-    }
-
-    var hftInfo = info.happyFunTimes;
-    switch (hftInfo.gameType) {
-      case 'html':
-        break;
-      default:
-        console.error("unsupported gametype: " + hftInfo.gameType)
-        asyncError(callback, "unsupported game type:" + hftInfo.gameType);
+  var make = function(gamePath, destFolder) {
+    return new Promise(function(fulfill, reject) {
+      // Make sure it's a game!
+      var info = gameInfo.readGameInfo(gamePath);
+      if (!info) {
+        reject(Error("not a game: " + gamePath));
         return;
-        break;
-    }
+      }
 
-    var fileNames = readDirTreeSync(gamePath, {filter: /^(?!\.)/});
-    var zip = new ZipWriter();
-    fileNames.forEach(function(fileName) {
-      var zipName = path.join(hftInfo.gameId, fileName.substring(gamePath.length)).replace(/\\/g, '/');
-      var stat = fs.statSync(fileName);
-      if (stat.isDirectory()) {
-        zip.addDir(zipName);
-      } else {
-        var buffer = fs.readFileSync(fileName);
-        zip.addData(zipName, buffer);
+      var hftInfo = info.happyFunTimes;
+      switch (hftInfo.gameType) {
+        case 'html':
+          break;
+        default:
+          reject(new Error("unsupported game type:" + hftInfo.gameType));
+          return;
       }
-    });
-    var destPath = path.join(destFolder, safeishName(hftInfo.gameId) + "-html.zip");
-    zip.saveAs(destPath, function(err) {
-      if (err) {
-        callback(err);
-      } else {
-        callback(null, [{filename:destPath}]);
-      }
+
+      var fileNames = readDirTreeSync(gamePath, {filter: /^(?!\.)/});
+      var zip = new ZipWriter();
+      fileNames.forEach(function(fileName) {
+        var zipName = path.join(hftInfo.gameId, fileName.substring(gamePath.length)).replace(/\\/g, '/');
+        var stat = fs.statSync(fileName);
+        if (stat.isDirectory()) {
+          zip.addDir(zipName);
+        } else {
+          var buffer = fs.readFileSync(fileName);
+          zip.addData(zipName, buffer);
+        }
+      });
+      var destPath = path.join(destFolder, safeishName(hftInfo.gameId) + "-html.zip");
+      zip.saveAs(destPath, function(err) {
+        if (err) {
+          reject(err);
+        } else {
+          fulfill([{filename:destPath}]);
+        }
+      });
     });
   };
 
@@ -644,7 +645,6 @@ var ReleaseManager = function() {
       var listReleases = Promise.denodeify(github.releases.listReleases);
       var createRelease = Promise.denodeify(github.releases.createRelease);
       var uploadAsset = Promise.denodeify(github.releases.uploadAsset);
-      var makeP = Promise.denodeify(make);
       var highestVersion = '0.0.0';
       var version = options.version || '0.0.0';
       var filesToUpload;
@@ -681,7 +681,7 @@ var ReleaseManager = function() {
 
         return utils.getTempFolder({unsafeCleanup: true});  // deletes the folder on exit.
       }).then(function(filePath) {
-        return makeP(gamePath, filePath);
+        return make(gamePath, filePath);
       }).then(function(files) {
         filesToUpload = files;
         console.log("Upload:\n" + files.map(function(file) {

@@ -46,11 +46,7 @@ var makeRelease = function(args) {
   var destPath = path.resolve(args._[1]);
   var fullPath = args.src ? path.resolve(args.src) : process.cwd();
 
-  release.make(fullPath, destPath, function(err, files) {
-    if (err) {
-      console.error("ERROR: " + err);
-      process.exit(1);
-    }
+  release.make(fullPath, destPath).then(function(files) {
     if (args.json) {
       console.log(JSON.stringify(files, undefined, "  "));
     } else {
@@ -58,6 +54,9 @@ var makeRelease = function(args) {
         console.log("created " + file.filename);
       });
     }
+  }, function(err) {
+    console.error("ERROR: " + err);
+    process.exit(1);
   });
 };
 
