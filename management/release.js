@@ -591,11 +591,6 @@ var ReleaseManager = function() {
    */
 
   /**
-   * @callback Publish~Callback
-   * @param {object?} error null if no error
-   */
-
-  /**
    * Publish a game.
    *
    * Packages up a game, uploads the packages to github, informs
