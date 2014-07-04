@@ -468,10 +468,13 @@ var ReleaseManager = function() {
    * @param {string} gameId the gameId for the game
    * @param {string?} opt_destPath path to install game.
    * @param {Download~Options?) options
+   * @returns {Promise}
    */
   var download = function(gameId, opt_destPath, options) {
-    // get game
-    var url = options.gamesUrl || config.getSettings().gamesUrl;
+    return new Promise(function(fulfill, reject) {
+      // get game
+      var url = options.gamesUrl || config.getSettings().gamesUrl;
+    });
   };
 
   /**
@@ -611,6 +614,7 @@ var ReleaseManager = function() {
   var publish = function(gamePath, options) {
     return new Promise(function(fulfill, reject) {
       options = options || {};
+      var log = options.verbose ? console.log.bind(console) : function() {};
 
       // Make sure it's a game!
       var info = gameInfo.readGameInfo(gamePath);
@@ -731,6 +735,8 @@ var ReleaseManager = function() {
         }
         console.log("release uploaded");
         fulfill();
+      },function(err) {
+        reject(err)
       });
     });
   };

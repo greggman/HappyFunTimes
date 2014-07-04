@@ -32,17 +32,24 @@
 
 var path = require('path');
 var utils = require('../utils');
+var Promise = require('promise');
 var release = require('../../management/release');
+var asks = require('asks');
 
 var bumpTypes = ['major', 'premajor', 'minor', 'preminor', 'patch', 'prepatch', 'prerelease'];
+
+var askPrompt = function(questions) {
+  return new Promise(function(fulfill, reject) {
+    asks.prompt(questions, function(answers) {
+      fulfill(answers);
+    });
+  });
+};
+
 
 var publish = function(args) {
   if (args._.length != 1) {
     utils.badArgs(module, "too many arguments");
-  }
-
-  if (!args.user) {
-    utils.badArgs(module, "must supply --user=githubusername:pass");
   }
 
   var bump = 'patch';
@@ -59,17 +66,53 @@ var publish = function(args) {
 
   var srcPath = args.src ? path.resolve(args.src) : process.cwd();
 
-  var options = {
-    dryRun: args['dry-run'],
-    verbose: args['verbose'],
-    repo: args['repo'] || path.basename(process.cwd()),
-    username: args['user'].split(":")[0],
-    password: args['user'].split(":")[1],
-    bump: bump,
-    version: args['version'],
-  };
+  var username;
+  var password;
+  if (args.user) {
+    username = args.user.split(":")[0];
+    password = args.user.split(":")[1];
+  }
 
-  release.publish(srcPath, options).then(function() {
+  var promise;
+  if (!password) {
+    var questions = [{
+      name: 'password',
+      type: 'password',
+      message: 'github password:',
+    }];
+    if (!username) {
+      questions.unshift({
+        name: 'username',
+        type: 'input',
+        message: 'github username:',
+      });
+    }
+    promise = askPrompt(questions).then(function(answers) {
+      return Promise.resolve({
+        username: answers.username || username,
+        password: answers.password,
+      });
+    });
+  } else {
+    promise = Promise.resolve({
+      username: username,
+      password: password,
+    });
+  }
+
+  promise.then(function(answers) {
+    var options = {
+      dryRun: args['dry-run'],
+      verbose: args['verbose'],
+      repo: args['repo'] || path.basename(process.cwd()),
+      username: answers.username,
+      password: answers.password,
+      bump: bump,
+      version: args['version'],
+    };
+
+    return release.publish(srcPath, options);
+  }).then(function() {
   }, function(err) {
     console.error(err);
     process.exit(1);
@@ -83,19 +126,20 @@ exports.usage = [
   "",
   "Example:",
   "",
-  "   hft publish --user=githubusername:password",
+  "   hft publish",
   "",
   "options:",
   "",
-  "    --bump=type   : how to bump version (major, premajor, minor, preminor, ",
-  "                    patch, prepatch, prerelease), default: patch",
-  "    --repo=name   : name of github repo. If not supplied assumes it matches",
-  "                    current working directory",
-  "    --src=srcpath : path to source. If not supplied assumes current working",
-  "                    directory.",
-  "    --version=ver : set a specific version in semver format.",
-  "    --verbose     : print more stuff",
-  "    --dry-run     : don't write any files",
+  "    --user=username : github username or username:password",
+  "    --bump=type     : how to bump version (major, premajor, minor, preminor, ",
+  "                      patch, prepatch, prerelease), default: patch",
+  "    --repo=name     : name of github repo. If not supplied assumes it matches",
+  "                      current working directory",
+  "    --src=srcpath   : path to source. If not supplied assumes current working",
+  "                      directory.",
+  "    --version=ver   : set a specific version in semver format.",
+  "    --verbose       : print more stuff",
+  "    --dry-run       : don't write any files",
 ].join("\n");
 exports.cmd = publish;
 
