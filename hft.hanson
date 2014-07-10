@@ -34,7 +34,7 @@
   },
 
   // The URL for the games API.
-  gamesUrl: "http://api.superhappyfuntimes.net/v0/"
+  gamesUrl: "http://api.superhappyfuntimes.net/hftapi/v0/games"
 }
 
 

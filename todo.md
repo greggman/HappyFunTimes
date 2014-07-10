@@ -1,3 +1,41 @@
+*   should I switch all of the gamedb to meteor?
+
+    No, as their's no database? But I can run it through collections.
+
+*   use github oauth2 authentication.
+
+    save the token in like .happyfuntimes/repoauth or something? Is it safe to save that token?
+
+    Then, subsequent commands can use the old token. If error re-auth
+
+*   add loggly or other logging both client and server. Make sure you can opt in/out.
+*   make it possible to pass description to publish which becomes the "body" field.
+*   Use 'unconnected' collection to handle installed games? Copy gameDB into Collection?
+*   Is it possible to put meteor into hft so I can use it for local game sys?
+*   games installing status needs to be per game like play/itunes because 2+ games
+    could be being installed at the same time.
+*   when making a package for a native game warn if EXEs are not near same date
+*   look up best practices for user:pass
+*   if --user=name has no colon prompt for password
+*   move username/password prompt to func
+*   install meteor browser policy
+*   turn off meteor websockets and live updating
+*   enable meteor spiderable
+*   implement hft download <gameId>
+
+    dowloads and installs a game by id.
+
+*   make "pubish-file"? that adds a specific file to a release?
+
+    basically I want someone to be able to make an executable on
+    a particular platform and then add it to the release
+
+    maybe call it "add-to-release"?
+
+*   make hft notify
+
+    notifes the store of an update.
+
 *   make 'fix' command that removes games that don't exist anymore
 *   on install add files that were written to installed list. on uninstall on delete those files?
 *   could make hft optionally register ip:port with happyfuntimes.net

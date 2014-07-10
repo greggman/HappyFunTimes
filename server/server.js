@@ -38,6 +38,27 @@ var g = {
   cwd: process.cwd(),
 };
 
+var config = require('./config');
+var args = require('minimist')(process.argv.slice(2));
+
+if (args.h || args.help) {
+  sys.print([
+      "--help:         this message",
+      "--port:         port. Default 8080",
+      "--dns:          enable dns",
+      "--address:      ip address for dns and controller url conversion",
+      "--configPath:   config path",
+      "--settingsPath: settings path",
+    ].join("\n"));
+  process.exit(0);
+}
+
+for (var prop in args) {
+  g[prop] = args[prop];
+}
+
+config.setup(args);
+
 var http = require('http');
 var debug = require('debug')('server');
 var url = require('url');
@@ -47,7 +68,6 @@ var path = require('path');
 var util = require('util');
 var mime = require('mime');
 var querystring = require('querystring');
-var args = require('minimist')(process.argv.slice(2));
 var strings = require('./strings');
 var highResClock = require('./highresclock');
 var DNSServer = require('./dnsserver');
@@ -60,20 +80,6 @@ var HFTGame = require('./hftgame');
 
 var fileCache = new Cache();
 var relayServer;
-
-if (args.h || args.help) {
-  sys.print([
-      "--help:    this message",
-      "--port:    port. Default 8080",
-      "--dns:     enable dns",
-      "--address: ip address for dns and controller url conversion",
-    ].join("\n"));
-  process.exit(0);
-}
-
-for (var prop in args) {
-  g[prop] = args[prop];
-}
 
 if (!g.address) {
   var addresses = iputils.getIpAddress();

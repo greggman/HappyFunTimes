@@ -122,7 +122,7 @@ define(function() {
   // @param {Object=} opt_obj Object to attach key values to
   // @return {Object} Object with key values from URL
   var parseUrlQuery = function(opt_obj) {
-    return parseUrlQueryString(window.location.href);
+    return parseUrlQueryString(window.location.href, opt_obj);
   };
 
   // Read `settings` from URL. Assume settings it a

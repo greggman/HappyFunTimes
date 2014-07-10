@@ -69,6 +69,7 @@ var execute = function(cmd, args, callback) {
 }
 
 var getTempFilename = function(options) {
+  options = options || {};
   return new Promise(function(fulfill, reject) {
     tmp.tmpName(options, function(err, filePath) {
       if (err) {

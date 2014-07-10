@@ -30,26 +30,27 @@
  */
 "use strict";
 
+var asks = require('asks');
+var config = require('../server/config');
 var debug = require('debug')('release');
-var Promise = require('promise');
-var ZipWriter = require("moxie-zip").ZipWriter;
-var JSZip = require('jszip');
 var events = require('events');
 var fs = require('fs');
-var path = require('path');
+var gameDB = require('../server/gamedb');
+var gameInfo = require('../server/gameinfo');
+var games = require('../management/games');
+var GitHubApi = require('github');
 var http = require('http');
 var https = require('https');
-var url = require('url');
+var io = require('../server/io');
+var JSZip = require('jszip');
 var mkdirp = require('mkdirp');
-var gameInfo = require('../server/gameinfo');
-var gameDB = require('../server/gamedb');
-var games = require('../management/games');
-var config = require('../server/config');
-var strings = require('../server/strings');
-var utils = require('./utils');
-var GitHubApi = require('github');
+var path = require('path');
+var Promise = require('promise');
 var semver = require('semver');
-var asks = require('asks');
+var strings = require('../server/strings');
+var url = require('url');
+var utils = require('./utils');
+var ZipWriter = require("moxie-zip").ZipWriter;
 
 var safeishName = function(gameId) {
   return gameId.replace(/[^a-zA-Z0-9-_]/g, '_');
@@ -112,56 +113,6 @@ var ReleaseManager = function() {
 
     return fileNames;
   };
-
-
-
-
-  // Remove this if Zip adds the filter.
-//  var addLocalFolder = (function() {
-//    var Utils = require('../node_modules/adm-zip/util/utils.js');
-//    return function(zip, /*String*/localPath, /*String*/zipPath, /*RegExp|Function*/filter) {
-//      if (filter === undefined) {
-//        filter = function() { return true; };
-//      } else if (filter instanceof RegExp) {
-//        filter = function(filter) {
-//          return function(filename) {
-//            return filter.test(filename);
-//          }
-//        }(filter);
-//      }
-//
-//      if(zipPath){
-//          zipPath=zipPath.split("\\").join("/");
-//          if(zipPath.charAt(zipPath.length - 1) != "/"){
-//              zipPath += "/";
-//          }
-//      }else{
-//          zipPath="";
-//      }
-//      localPath = localPath.split("\\").join("/"); //windows fix
-//      if (localPath.charAt(localPath.length - 1) != "/")
-//          localPath += "/";
-//
-//      if (fs.existsSync(localPath)) {
-//
-//          var items = Utils.findFiles(localPath);
-//          if (items.length) {
-//              items.forEach(function(path) {
-//                  var p = path.split("\\").join("/").replace(localPath, ""); //windows fix
-//                  if (filter(p)) {
-//                      if (p.charAt(p.length - 1) !== "/") {
-//                          zip.addFile(zipPath+p, fs.readFileSync(path), "", 0)
-//                      } else {
-//                          zip.addFile(zipPath+p, new Buffer(0), "", 0)
-//                      }
-//                  }
-//              });
-//          }
-//      } else {
-//          throw Utils.Errors.FILE_NOT_FOUND.replace("%s", localPath);
-//      }
-//    };
-//  }());
 
   /**
    * @typedef {object} Make~FileInfo
@@ -389,7 +340,7 @@ var ReleaseManager = function() {
     var hftInfo = installedGame.happyFunTimes;
     var gameId = hftInfo.gameId;
     var gamePath = hftInfo.basePath;
-    var files = hftInfo.files;
+    var files = hftInfo.files || [];
 
     var failCount = 0;
     var folders = [gamePath];
@@ -468,13 +419,75 @@ var ReleaseManager = function() {
    * @param {string} gameId the gameId for the game
    * @param {string?} opt_destPath path to install game.
    * @param {Download~Options?) options
-   * @returns {Promise}
+   * @returns {EventEmitter}
    */
   var download = function(gameId, opt_destPath, options) {
-    return new Promise(function(fulfill, reject) {
-      // get game
-      var url = options.gamesUrl || config.getSettings().gamesUrl;
-    });
+    options = options || {};
+    var log = options.verbose ? console.log.bind(console) : function() {};
+    var eventEmitter = new events.EventEmitter();
+    var sendJSON = Promise.denodeify(io.sendJSON);
+    var apiurl = options.gamesUrl || config.getSettings().gamesUrl;
+    var url = apiurl + "/" + gameId;
+    var releaseUrl;
+    setTimeout(function() {
+      eventEmitter.emit('status', {status: "Getting Game Info"});
+      sendJSON(url, {}, {method:"GET"}).then(function(info) {
+        log("gameInfo response:\n" + JSON.stringify(info, undefined, "  "));
+        info = info[0];
+        // based on the gameType and current platform download the correct file
+        info.versions.sort(function(a, b) {
+          if (semver.eq(a.version, b.version)) {
+            return 0;
+          }
+          return semver.gt(a.version, b.version) ? 1 : -1;
+        });
+        var version = info.versions[info.versions.length - 1];
+        switch (info.gameType.toLowerCase()) {
+          case "html":
+            releaseUrl = version.releaseUrl;
+            break;
+          default:
+            return Promise.reject("Unsupported gameType: " + info.gameType);
+        }
+
+        // Yea, I know I probably shouldn't rely on the extension.
+        return utils.getTempFilename({postfix: path.extname(releaseUrl)});
+      }).then(function(destName) {
+        return new Promise(function(fulfill, reject) {
+          eventEmitter.emit('status', {status: "Downloading Game..."});
+          var downloadEmitter = downloadFile(releaseUrl, destName);
+
+          downloadEmitter.on('start', function(e) {
+            eventEmitter.emit('progress', e);
+          });
+
+          downloadEmitter.on('progress', function(e) {
+            eventEmitter.emit('progress', e);
+          });
+
+          downloadEmitter.on('error', function(e) {
+            reject(e);
+          });
+
+          downloadEmitter.on('end', function(e) {
+            eventEmitter.emit('progress', e);
+            fulfill(destName);
+          });
+        });
+      }).then(function(srcPath) {
+        eventEmitter.emit('status', {status: "Installing..."});
+        if (install(srcPath, opt_destPath, options) == false) {
+          return Promise.reject("Trouble installing " + gameId);
+        }
+        return Promise.resolve();
+      }).then(function() {
+        eventEmitter.emit('status', {status: "Finished"});
+        eventEmitter.emit('end', {status: "Done"});
+      }, function(err) {
+        eventEmitter.emit('error', err);
+      });
+    }, 0);
+    return eventEmitter;
   };
 
   /**
@@ -492,14 +505,26 @@ var ReleaseManager = function() {
   var downloadFile = function(srcUrl, destPath) {
     var depth = 0;
 
-    var doDownload = function(srcUrl, destPath, eventEmitter) {
-      debug("DL: " + srcUrl);
-      eventEmitter = eventEmitter || new events.EventEmitter();
+    var depthDebug = function(msg) {
+      debug("" + depth + ": " + msg);
+    };
 
+    var eventEmitter = new events.EventEmitter();
+    eventEmitter.emit = (function(oldFn) {
+      return function() {
+        depthDebug("emit: " + arguments[0] + arguments[1].toString());
+        oldFn.apply(eventEmitter, arguments);
+      };
+    }(eventEmitter.emit));
+
+    var doDownload = function(srcUrl, destPath) {
       ++depth;
+
+      depthDebug("DL: " + srcUrl);
+
       if (depth > 5) {
         eventEmitter.emit('error', "too many redirects");
-        return eventEmitter;
+        return;
       }
 
       var parsedUrl = url.parse(srcUrl);
@@ -510,22 +535,23 @@ var ReleaseManager = function() {
           requestType = http.request.bind(http);
           break;
         case 'https:':
-          requestType = https.request.bind(http);
+          requestType = https.request.bind(https);
           break;
         default:
           asyncError(eventEmitter.emit.bind(emit), 'error', "unhandled protocol: " + parsedUrl.protocol);
-          return eventEmitter;
+          return;
       }
 
       var request = requestType({
         hostname: parsedUrl.hostname,
         port: parsedUrl.port,
-        path: parsedUrl.pathname,
+        path: parsedUrl.path,
       });
 
       var stream;
 
       request.on('response', function (response) {
+        depthDebug("response.statusCode: " + response.statusCode);
         switch (response.statusCode) {
           case 200:
             break;
@@ -533,10 +559,13 @@ var ReleaseManager = function() {
           case 302:
           case 307:
           case 308:
+            depthDebug("redirect: " + response.headers["location"].toString());
             doDownload(response.headers["location"].toString(), destPath, eventEmitter);
             return;
           case 404:
-            eventEmitter.emit('error', "url not found:" + srcUrl);
+            var msg = "url not found:" + srcUrl;
+            depthDebug(msg)
+            eventEmitter.emit('error', msg);
             return;
           default:
             eventEmitter.emit('error', "unhandled status code:" + response.statusCode);
@@ -576,10 +605,11 @@ var ReleaseManager = function() {
       });
 
       request.end();
-      return eventEmitter;
+      return;
     }
 
-    return doDownload.apply(this, arguments);
+    doDownload.apply(this, arguments);
+    return eventEmitter;
   };
 
 
@@ -641,9 +671,9 @@ var ReleaseManager = function() {
       };
 
       auth();
-      var listReleases = Promise.denodeify(github.releases.listReleases);
-      var createRelease = Promise.denodeify(github.releases.createRelease);
-      var uploadAsset = Promise.denodeify(github.releases.uploadAsset);
+      var listReleases   = Promise.denodeify(github.releases.listReleases);
+      var createRelease  = Promise.denodeify(github.releases.createRelease);
+      var uploadAsset    = Promise.denodeify(github.releases.uploadAsset);
       var highestVersion = '0.0.0';
       var version = options.version || '0.0.0';
       var filesToUpload;

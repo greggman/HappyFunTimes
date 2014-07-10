@@ -51,15 +51,34 @@ var download = function(args) {
 
   var gameId = args._[1];
 
-  release.download(gameId, args.dst, options);
+  var emitter = release.download(gameId, args.dst, options);
+  emitter.on('status', function(e) {
+    console.log("STATUS: " + e.status);
+  });
+  emitter.on('progress', function(e) {
+    console.log("downloaded: " + (e.bytesDownloaded / e.size * 100).toFixed() + "% (" + e.bytesDownloaded + "/" + e.size + ")");
+  });
+  emitter.on('error', function(e) {
+    console.error("ERROR downloading gameId: " + gameId);
+    console.error(e);
+    if (e instanceof Error) {
+      if (e.stack) {
+        console.log(e.stack);
+      }
+    }
+    process.exit(1);
+  });
+  emitter.on('end', function(e) {
+    console.log("downloaded and installed:" + gameId);
+  });
 };
 
 exports.usage = [
-  "srcpath",
+  "gameId",
   "",
-  "download download and installs a game by gameId. Example:",
+  "download and installs a game by gameId. Example:",
   "",
-  "   hft download hft-jumpjump",
+  "   hft download jumpjump",
   "",
   "options:",
   "",

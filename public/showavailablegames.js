@@ -31,8 +31,17 @@
 
 "use strict";
 
-var main = function(IO, Strings) {
+// Start the main app logic.
+requirejs(
+  [ 'hft/io',
+    'hft/misc/misc',
+    'hft/misc/strings',
+  ], function(
+    IO,
+    Misc,
+    Strings) {
   var gamemenu = document.getElementById("gamemenu");
+  var params = Misc.parseUrlQuery();
 
   var itemTemplateSuffix = "-item-template";
   var hiddenMsgSuffix = "-msg";
@@ -59,8 +68,10 @@ var main = function(IO, Strings) {
       }
 
       var html = [];
+      var gamesById = {};
       for (var ii = 0; ii < obj.length; ++ii) {
         var gameInfo = obj[ii];
+        gamesById[gameInfo.happyFunTimes.gameId] = gameInfo;
         gameInfo.count = ii;
         var templateId = gameInfo.happyFunTimes.gameType.toLowerCase();
         var template = templates[templateId];
@@ -104,6 +115,23 @@ var main = function(IO, Strings) {
         }(msgElement), false);
       }
 
+      // If we started with a gameId param just launch it?
+      // NOTE: this is kind of wonky. Seems like we should just go directly
+      // instead of waiting
+      if (params.gameId) {
+        var gameInfo = gamesById[params.gameId];
+        if (!gameInfo) {
+          console.error("unknown gameId: " + params.gameId);
+        } else {
+          // LOL. If we don't replace the history then pressing back will just end up going forward again :P
+          // Yet another reason maybe we should just go directly to the game?
+          window.history.replaceState({}, "", window.location.origin + window.location.pathname);
+          var event = new Event('click');
+          var elem = document.getElementById(gameInfo.count + "-button");
+          elem.dispatchEvent(event);
+        }
+      }
+
       // If there's only one game just go to it.
       if (obj.length == 1 && obj[0].controllerUrl) {
         window.location.href = obj[0].controllerUrl;
@@ -112,14 +140,7 @@ var main = function(IO, Strings) {
     });
   };
   getGames();
-};
+});
 
-// Start the main app logic.
-requirejs(
-  [ 'hft/io',
-    'hft/misc/strings',
-  ],
-  main
-);
 
 

@@ -26,7 +26,9 @@
     "cli-color": "^0.3.2",
     "github": "git+https://github.com/greggman/node-github.git#5bf3353d808c0eba74cafce7a0cc17abf8130388",
     "semver": "^2.3.1",
-    "asks": "^1.0.2"
+    "asks": "^1.0.2",
+    "native-msg-box": "0.0.3",
+    "request-json": "^0.4.10"
   },
   "devDependencies": {
     "grunt": "^0.4.5",
