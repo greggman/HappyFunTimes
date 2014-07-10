@@ -34,7 +34,7 @@
 
 *   make hft notify
 
-    notifes the store of an update.
+    notifes the gallery of an update.
 
 *   make 'fix' command that removes games that don't exist anymore
 *   on install add files that were written to installed list. on uninstall on delete those files?
@@ -66,8 +66,8 @@
         it knows, based on the folder it's serving the files from, which game they belong to
         so it can send some made up id to each game.
 
-        That leaves the id only for the store. In which case I only care above apps installed
-        in the HFT games folder (non-dev). Meaning an id is a store<->installed game mapping.
+        That leaves the id only for the gallery. In which case I only care above apps installed
+        in the HFT games folder (non-dev). Meaning an id is a gallery<->installed game mapping.
         But nothing else.
 
         Actually that doesn't work because unity is not launched by the server when in dev
@@ -176,7 +176,7 @@
 *   need to store LRU for games somewhere. ~/.happyfuntimes
 *   check that bower git: doesn't need to be https:/
 *   In installed version
-    *   Make page shows games, tab for store, tab for settings
+    *   Make page shows games, tab for gallery, tab for settings
     *   settings
         *   allow contollers to change games (so a bar can make it so people can't change games?), only
             the person at the computer can.
@@ -190,7 +190,7 @@
             *   By alphabet
             *   Search
         *   Should be controllable from phone. (how do we handle 25 people trying to control it?)
-        *   Store Tab/selection
+        *   gallery Tab/selection
         *   Should we have a recently updated section?
             *   For stress on servers maybe it should be like XBox/PS. Updates are only checked if
                 you launch the game?
@@ -430,9 +430,9 @@
 
             *   step 2, provide a web interface to do the same
 
-            *   step 3, add a store
+            *   step 3, add a gallery
 
-            Could have games.html show recently played, recently installed, link for store,
+            Could have games.html show recently played, recently installed, link for gallery,
             promoted games, ... (promoted games only works if using real net.)
 
         *   How about making hardware. For example an android stick with HFT pre-installed

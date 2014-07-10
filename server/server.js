@@ -39,17 +39,26 @@ var g = {
 };
 
 var config = require('./config');
-var args = require('minimist')(process.argv.slice(2));
+var optionator = require('optionator')({
+  options: [
+    { option: 'help', alias: 'h', type: 'Boolean', description: 'displays help'},
+    { option: 'port', alias: 'p', type: 'Int',     description: 'port. Default 8080'},
+    { option: 'dns',              type: 'Boolean', description: 'enable dns server'},
+    { option: 'address',          type: 'String',  description: 'ip address for dns and controller url conversion'},
+    { option: 'config-path',      type: 'String',  description: 'config path'},
+    { option: 'settings-path',    type: 'String',  description: 'settings path'},
+  ]
+});
 
-if (args.h || args.help) {
-  sys.print([
-      "--help:         this message",
-      "--port:         port. Default 8080",
-      "--dns:          enable dns",
-      "--address:      ip address for dns and controller url conversion",
-      "--configPath:   config path",
-      "--settingsPath: settings path",
-    ].join("\n"));
+try {
+  var args = optionator.parse(process.argv);
+} catch (e) {
+  console.error(e);
+  process.exit(1);
+}
+
+if (args.help) {
+  console.log(optionator.generateHelp());
   process.exit(0);
 }
 
