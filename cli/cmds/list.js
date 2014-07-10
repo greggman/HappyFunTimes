@@ -49,15 +49,12 @@ var list = function(args) {
   }
 };
 
-exports.usage = [
-  "",
-  "",
-  "list installed games",
-  "",
-  "options:",
-  "",
-  "    --full: list entire contents of package for each game as json.",
-].join("\n");
+exports.usage = {
+  prepend: "list installed games",
+  options: [
+    { option: 'full', type: 'Boolean', description: "list entire contents of package for each game as json", },
+  ]
+};
 exports.cmd = list;
 
 

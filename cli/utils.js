@@ -30,15 +30,26 @@
  */
 "use strict";
 
-function printUsage(cmdUsage, cmdName) {
-  var usage = [];
-  usage.push(cmdUsage.split("\n").join("\n    ") + "\n");
-  console.log("usage: hft " + cmdName + " " + usage.join("\n"));
+var optionator = require('optionator');
+
+function printUsage(globalOptions, cmdUsage, cmdName) {
+  if (cmdUsage.prepend && cmdUsage.prepend instanceof Array) {
+    cmdUsage.prepend = cmdUsage.prepend.join("\n");
+  }
+  console.log("usage: hft " + cmdName + ' ' + (cmdUsage.usage || '') + "\n");
+  var o = optionator(cmdUsage);
+  console.log(o.generateHelp());
+  o = optionator({
+    prepend: "\nglobal options:",
+    options: globalOptions,
+    helpStyle: cmdUsage.helpStyle,
+  });
+  console.log(o.generateHelp());
 };
 
 function badArgs(cmdModule, errorMsg) {
   console.error("ERROR: " + errorMsg);
-  printUsage(cmdModule.exports.usage, cmdModule.exports.name);
+  printUsage(cmdModule.exports.globalOptions, cmdModule.exports.usage, cmdModule.exports.name);
   process.exit(1);
 }
 

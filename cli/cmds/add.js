@@ -38,12 +38,15 @@ var add = function(args) {
   return games.add(fullPath);
 };
 
-exports.usage = [
-  "[pathToGame]",
-  "",
-  "adds a game to the list of installed games. If not path given",
-  "assumes the current folder holds the game to be added.",
-].join("\n");
+exports.usage = {
+  usage: "[pathToGame]",
+  prepend: [
+    "adds a game to the list of installed games. If not path given",
+    "assumes the current folder holds the game to be added.",
+  ].join("\n"),
+  options: [
+  ]
+};
 exports.cmd = add;
 
 

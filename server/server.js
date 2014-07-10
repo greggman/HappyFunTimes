@@ -47,7 +47,12 @@ var optionator = require('optionator')({
     { option: 'address',          type: 'String',  description: 'ip address for dns and controller url conversion'},
     { option: 'config-path',      type: 'String',  description: 'config path'},
     { option: 'settings-path',    type: 'String',  description: 'settings path'},
-  ]
+  ],
+  helpStyle: {
+    typeSeparator: '=',
+    descriptionSeparator: ' : ',
+    initialIndent: 4,
+  },
 });
 
 try {

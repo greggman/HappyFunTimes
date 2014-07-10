@@ -44,9 +44,9 @@ var download = function(args) {
   }
 
   var options = {
-    dryRun: args['dry-run'],
+    dryRun: args['dryRun'],
     verbose: args['verbose'],
-    gamesUrl: args['games-url'],
+    gamesUrl: args['gamesUrl'],
   };
 
   var gameId = args._[1];
@@ -73,20 +73,19 @@ var download = function(args) {
   });
 };
 
-exports.usage = [
-  "gameId",
-  "",
-  "download and installs a game by gameId. Example:",
-  "",
-  "   hft download jumpjump",
-  "",
-  "options:",
-  "",
-  "    --dst=dstpath: path to install to. If not supplied will be installed to default games folder.",
-  "    --verbose    : print more stuff",
-  "    --dry-run    : don't write any files",
-  "    --games-url  : get game info from url",
-].join("\n");
+exports.usage = {
+  usage: "gameId",
+  prepend: [
+    "download and installs a game by gameId. Example:",
+    "",
+    "   hft download jumpjump",
+  ],
+  options: [
+    { option: "dst",      type: 'String',   description: "path to install to. If not supplied will be installed to default games folder", },
+    { option: "dry-run",  type: 'Boolean',  description: "don't write any files", },
+    { option: "games-url",type: 'String',   description: "get game info from url", },
+  ],
+};
 exports.cmd = download;
 
 

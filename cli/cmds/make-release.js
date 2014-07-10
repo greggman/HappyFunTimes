@@ -60,20 +60,20 @@ var makeRelease = function(args) {
   });
 };
 
-exports.usage = [
-  "dstpath",
-  "",
-  "make-release can be used see what data will be in a release. Example:",
-  "",
-  "   hft make-release /tmp",
-  "",
-  "Normally releases are made at publish time",
-  "",
-  "options:",
-  "",
-  "    --src=srcpath: path to source. If not supplied assumes current working directory.",
-  "    --json:        format output as json",
-].join("\n");
+exports.usage = {
+  usage: "dstpath",
+  prepend: [
+    "make-release can be used see what data will be in a release. Example:",
+    "",
+    "   hft make-release /tmp",
+    "",
+    "Normally releases are made at publish time",
+  ],
+  options: [
+    { option: 'src',  type: 'String',  description: "path to source. If not supplied assumes current working directory"},
+    { option: 'json', type: 'Boolean', description: "format output as json" },
+  ],
+};
 exports.cmd = makeRelease;
 
 

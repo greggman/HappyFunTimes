@@ -38,12 +38,15 @@ var remove = function(args) {
   games.remove(fullPath);
 };
 
-exports.usage = [
-  "[pathToGameOrId]",
-  "",
-  "removes a game from the list of games currently installed.",
-  "if no path or id is passed in current path is used.",
-].join("\n");
+exports.usage = {
+  usage: "[pathToGameOrId]",
+  prepend: [
+    "removes a game from the list of games currently installed.",
+    "if no path or id is passed in current path is used.",
+  ],
+  options: [
+  ],
+};
 exports.cmd = remove;
 
 

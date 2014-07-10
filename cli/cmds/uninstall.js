@@ -53,19 +53,18 @@ var uninstall = function(args) {
   return release.uninstall(gamePathOrId, options);
 };
 
-exports.usage = [
-  "pathToGameOrGameId",
-  "",
-  "uninstall uninstalls a game. Example:",
-  "",
-  "   hft uninstall path/to/game",
-  "   hft uninstall gameid",
-  "",
-  "options:",
-  "",
-  "    --verbose    : print more stuff",
-  "    --dry-run    : don't delete any files"
-].join("\n");
+exports.usage = {
+  usage: "pathToGameOrGameId",
+  prepend: [
+    "uninstall uninstalls a game. Example:",
+    "",
+    "   hft uninstall path/to/game",
+    "   hft uninstall gameid",
+  ],
+  options: [
+    { option: 'dry-run', type: 'String', description: "don't delete any files", },
+  ]
+};
 exports.cmd = uninstall;
 
 

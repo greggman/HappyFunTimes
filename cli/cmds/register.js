@@ -34,11 +34,14 @@ var register = function(args) {
   console.log("register");
 };
 
-exports.usage = [
-  "", // first line is args
-  "",
-  "not yet implemented",
-].join("\n");
+exports.usage = {
+  usage: "",
+  prepend: [
+    "not yet implemented",
+  ],
+  options: [
+  ],
+}
 exports.cmd = register;
 
 

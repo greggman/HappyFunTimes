@@ -71,17 +71,16 @@ var downloadFile = function(args) {
   });
 };
 
-exports.usage = [
-  "url destPath",
-  "",
-  "downloads a file. Example:",
-  "",
-  "   hft download-file http://foo/bar.zip /tmp/bar.zip",
-  "",
-  "options:",
-  "",
-  "    --verbose    : print more stuff",
-].join("\n");
+exports.usage = {
+  usage: "url destPath",
+  prepend: [
+    "downloads a file. Example:",
+    "",
+    "   hft download-file http://foo/bar.zip /tmp/bar.zip",
+  ].join("\n"),
+  options: [
+  ],
+}
 exports.cmd = downloadFile;
 
 

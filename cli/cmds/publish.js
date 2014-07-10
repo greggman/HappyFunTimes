@@ -102,7 +102,7 @@ var publish = function(args) {
 
   promise.then(function(answers) {
     var options = {
-      dryRun: args['dry-run'],
+      dryRun: args['dryRun'],
       verbose: args['verbose'],
       repo: args['repo'] || path.basename(process.cwd()),
       username: answers.username,
@@ -119,28 +119,24 @@ var publish = function(args) {
   });
 };
 
-exports.usage = [
-  "",
-  "",
-  "makes releases, post them on github, and adds them to superhappyfuntimes.net. ",
-  "",
-  "Example:",
-  "",
-  "   hft publish",
-  "",
-  "options:",
-  "",
-  "    --user=username : github username or username:password",
-  "    --bump=type     : how to bump version (major, premajor, minor, preminor, ",
-  "                      patch, prepatch, prerelease), default: patch",
-  "    --repo=name     : name of github repo. If not supplied assumes it matches",
-  "                      current working directory",
-  "    --src=srcpath   : path to source. If not supplied assumes current working",
-  "                      directory.",
-  "    --version=ver   : set a specific version in semver format.",
-  "    --verbose       : print more stuff",
-  "    --dry-run       : don't write any files",
-].join("\n");
+exports.usage = {
+  usage: "",
+  prepend: [
+    "makes releases, post them on github, and adds them to superhappyfuntimes.net. ",
+    "",
+    "Example:",
+    "",
+    "   hft publish",
+  ],
+  options: [
+    { option: 'user',    type: 'String',  description: "github username or username:password", },
+    { option: 'bump',    type: 'String',  description: "how to bump version (major, premajor, minor, preminor, patch, prepatch, prerelease), default: patch", },
+    { option: 'repo',    type: 'String',  description: "name of github repo. If not supplied assumes it matches current working directory", },
+    { option: 'src',     type: 'String',  description: "path to source. If not supplied assumes current working directory.", },
+    { option: 'version', type: 'String',  description: "set a specific version in semver format.", },
+    { option: 'dry-run', type: 'Boolean', description: "don't write any files", },
+  ],
+};
 exports.cmd = publish;
 
 

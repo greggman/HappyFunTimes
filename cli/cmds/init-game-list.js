@@ -42,11 +42,11 @@ var initGamesList = function(args) {
   return games.init();
 };
 
-exports.usage = [
-  "",
-  "",
-  "inits the list of installed games.",
-].join("\n");
+exports.usage = {
+  prepend:  "inits the list of installed games.",
+  options: [
+  ],
+}
 exports.cmd = initGamesList;
 
 

@@ -44,7 +44,7 @@ var install = function(args) {
   }
 
   var options = {
-    dryRun: args['dry-run'],
+    dryRun: args['dryRun'],
     verbose: args['verbose'],
   };
 
@@ -53,19 +53,18 @@ var install = function(args) {
   return release.install(srcPath, args.dst, options);
 };
 
-exports.usage = [
-  "srcpath",
-  "",
-  "install installs a zip package. Example:",
-  "",
-  "   hft install path/to/somegame.zip",
-  "",
-  "options:",
-  "",
-  "    --dst=dstpath: path to install to. If not supplied will be installed to default games folder.",
-  "    --verbose    : print more stuff",
-  "    --dry-run    : don't write any files",
-].join("\n");
+exports.usage = {
+  usage: "srcpath",
+  prepend: [
+    "install installs a zip package. Example:",
+    "",
+    "   hft install path/to/somegame.zip",
+  ],
+  options: [
+    { option: 'dst',     type: 'String',  description: "path to install to. If not supplied will be installed to default games folder"},
+    { option: 'dry-run', type: 'Boolean', description: "don't write any files"},
+  ],
+};
 exports.cmd = install;
 
 
