@@ -156,6 +156,28 @@ var ReleaseManager = function() {
       }
 
       var fileNames = readDirTreeSync(gamePath, {filter: /^(?!\.)/});
+      // check a few files are not missing
+      var foundIcon = false;
+      var foundScreenshot = false;
+
+      var iconRE = /^icon\.(jpg|png|gif|svg)$/i;
+      var screenshotRE = /^screenshot(?:-\d\d){0,1}\.(jpg|png|gif|svg)$/i;
+      fileNames.forEach(function(fileName) {
+        var name = path.relative(gamePath, fileName);
+        foundIcon = foundIcon || iconRE.test(name);
+        foundScreenshot = foundScreenshot || screenshotRE.test(name);
+      });
+
+      if (!foundIcon) {
+        reject(new Error("no icon found. Must have 64x64 or 128x128 pixel icon.png/jpg/gif in root folder"));
+        return;
+      }
+
+      if (!foundScreenshot) {
+        reject(new Error("no screenshots found. Must have 640x480 pixel screenshot.png/jpg/gif or screenshot-00 to screenshot-05 in root folder"));
+        return;
+      }
+
       var zip = new ZipWriter();
       fileNames.forEach(function(fileName) {
         var zipName = path.join(hftInfo.gameId, fileName.substring(gamePath.length)).replace(/\\/g, '/');

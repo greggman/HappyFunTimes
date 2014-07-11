@@ -1,10 +1,4 @@
 {
-  required: [
-    "gameId",
-    "apiVersion",
-    "gameType",
-  ],
-
   hftDefaults: {
     useTemplate: {
       "controller": true,

@@ -36,6 +36,7 @@ var fs = require('fs');
 var path = require('path');
 var misc = require('./misc');
 var config = require('./config');
+var semver = require('semver');
 
 var applyDefaultProperties = function(obj, defaults) {
   if (!defaults) {
@@ -60,6 +61,27 @@ var applyDefaultProperties = function(obj, defaults) {
 var GameInfo = function() {
 };
 
+/**
+ * Test if gameId is valid.
+ * @param {string} gameId id to test
+ * @throws {Error} if not valid
+ */
+var validGameId = (function() {
+  var idRE = /^[a-zA-Z0-9-_]+$/;
+  return function(id) {
+    if (!id) {
+      throw ("gameId not defined");
+    }
+    if (!idRE.test(id)) {
+      throw ("invalid characters in gameId only A-Z a-z 0-9 _ - allowed");
+    }
+    if (id.length > 60) {
+      throw ("gameId must be less than 60 characters");
+    }
+    return true;
+  };
+}());
+
 GameInfo.prototype.readGameInfo = function(filePath) {
   try {
     var stat = fs.statSync(filePath);
@@ -72,6 +94,47 @@ GameInfo.prototype.readGameInfo = function(filePath) {
     console.error("ERROR: Reading " + filePath);
     throw e;
   }
+};
+
+var validSemver = function(v) {
+  if (!semver.valid(v)) {
+    throw ("not a valid semver");
+  }
+};
+
+var validString = function(v) {
+  if (typeof(v) !== "string") {
+    throw ("not a string");
+  }
+};
+
+var validNumber = function(v) {
+  if (typeof(v) !== "number") {
+    throw ("not a number");
+  }
+};
+
+var validGameType = function(v) {
+  validString(v);
+};
+
+var requiredFields = {
+  gameId:     { type: validGameId, },
+  apiVersion: { type: validSemver, },
+  gameType:   { type: validString, },
+  category:   { type: validString, },
+  minPlayers: { type: validNumber, },
+};
+
+var validateObject = function(obj, validators) {
+  Object.keys(validators).forEach(function(fieldName) {
+    var info = validators[fieldName];
+    try {
+      info.type(obj[fieldName]);
+    } catch (e) {
+      throw (fieldName + ": " + e);
+    }
+  });
 };
 
 GameInfo.prototype.parseGameInfo = function(contents, filePath) {
@@ -87,9 +150,11 @@ GameInfo.prototype.parseGameInfo = function(contents, filePath) {
     var settings = config.getSettings();
     applyDefaultProperties(hftInfo, settings.hftDefaults);
     applyDefaultProperties(hftInfo, settings.hftGameTypeDefaults[hftInfo.gameType]);
-    var missing = misc.getMissingProperties(hftInfo, settings.required);
-    if (missing) {
-      console.error("error: " + filePath + " is missing happyFunTimes properties: " + missing.join(", "));
+
+    try {
+      validateObject(hftInfo, requiredFields);
+    } catch (e) {
+      console.error("error: " + filePath + " happyFunTimes." + e);
       return;
     }
 
