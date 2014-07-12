@@ -50,23 +50,7 @@ requirejs.config({
     hft: '../../../../hft/%(happyFunTimes.apiVersion)s/scripts',
   },
   shim: {
-        '3rdparty/three/three.min.js': {
-            //These script dependencies should be loaded before loading
-            //three.js
-            deps: [],
-            //Once loaded, use the global 'HANDJS' as the
-            //module value.
-            exports: 'THREE',
-        },
-        '3rdparty/stats/stats.min.js': {
-            //These script dependencies should be loaded before loading
-            //stats.js
-            deps: [],
-            //Once loaded, use the global 'HANDJS' as the
-            //module value.
-            exports: 'Stats',
-        },
-    },
+  },
 });
 </script>
 </head>

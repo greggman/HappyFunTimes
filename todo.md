@@ -1,3 +1,63 @@
+copy to other folder
+add .gitignore
+git init
+git add
+git commit
+edit package.json
+  only fields should be
+  "gameUrl": "gameview.html",
+  "screenshotUrl": "screenshot.png",
+  "gameType": "html",
+  "minPlayers": 2,
+  "category": "game"
+copy a bower.json?
+edit bower.json
+  "name"
+  "deps"
+  private: true // this is not itself a bower package
+run `bower install`
+make an icon.png/jpg/gif (64x64 or 128x128)
+
+delete gameview.html // assuming you were using templating
+delete index.html  // assuming you were using templating
+edit all your scripts
+
+define([ ])
+requirejs([])
+if you were referencing tdl as
+   '../../../3rdparty/tdl/???' -> '../bower_components/tdl/tdl/??
+   '../../../scripts' -> 'hft'
+   '../../scripts' -> '../bower_components/hft-utils/dist'
+   imageprocess -> imageutils
+
+add README.md?
+
+make repo on github
+git remote add origin git@github.com:<githubname>/<reponame>.git
+git push -u origin master
+
+
+
+Runs Repo
+* hft-boomboom
+* hft-clocksync
+* hft-deviceorientation
+hft-flapflap
+* hft-jamjam
+hft-photopile
+* hft-powpow
+* hft-shootshoot
+* hft-simple
+hft-simplecamera
+hft-supersimple
+? hft-sync2d
+? hft-syncThreeJS
+hft-unitycharacterexample
+hft-unitysimpleexample
+
+*   make sync examples work. Where should they show up?
+*
+*   FIX GEAR ICON!!!
 *   should I switch all of the gamedb to meteor?
 
     No, as their's no database? But I can run it through collections.

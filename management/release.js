@@ -45,6 +45,7 @@ var io = require('../server/io');
 var JSZip = require('jszip');
 var mkdirp = require('mkdirp');
 var path = require('path');
+var readdirtree = require('../server/readdirtree');
 var Promise = require('promise');
 var semver = require('semver');
 var strings = require('../server/strings');
@@ -80,39 +81,6 @@ var askPrompt = function(questions) {
 };
 
 var ReleaseManager = function() {
-
-  var readDirTreeSync = function(filePath, options) {
-    options = options || {};
-
-    var filter = options.filter;
-    if (filter === undefined) {
-      filter = function() { return true; };
-    } else if (filter instanceof RegExp) {
-      filter = function(filter) {
-        return function(filename) {
-          return filter.test(filename);
-        }
-      }(filter);
-    }
-
-    var fileNames = fs.readdirSync(filePath).filter(filter).map(function(fileName) {
-      return path.join(filePath, fileName);
-    });
-
-    var subdirFilenames = [];
-    fileNames.forEach(function(fileName) {
-      var stat = fs.statSync(fileName);
-      if (stat.isDirectory()) {
-        subdirFilenames.push(readDirTreeSync(fileName));
-      }
-    });
-
-    subdirFilenames.forEach(function(subNames) {
-      fileNames = fileNames.concat(subNames);
-    });
-
-    return fileNames;
-  };
 
   /**
    * @typedef {object} Make~FileInfo
@@ -155,29 +123,13 @@ var ReleaseManager = function() {
           return;
       }
 
-      var fileNames = readDirTreeSync(gamePath, {filter: /^(?!\.)/});
-      // check a few files are not missing
-      var foundIcon = false;
-      var foundScreenshot = false;
-
-      var iconRE = /^icon\.(jpg|png|gif|svg)$/i;
-      var screenshotRE = /^screenshot(?:-\d\d){0,1}\.(jpg|png|gif|svg)$/i;
-      fileNames.forEach(function(fileName) {
-        var name = path.relative(gamePath, fileName);
-        foundIcon = foundIcon || iconRE.test(name);
-        foundScreenshot = foundScreenshot || screenshotRE.test(name);
-      });
-
-      if (!foundIcon) {
-        reject(new Error("no icon found. Must have 64x64 or 128x128 pixel icon.png/jpg/gif in root folder"));
-        return;
+      try {
+        gameinfo.checkRequiredFiles(info, gamePath);
+      } catch (e) {
+        reject(new Error(e.toString()));
       }
 
-      if (!foundScreenshot) {
-        reject(new Error("no screenshots found. Must have 640x480 pixel screenshot.png/jpg/gif or screenshot-00 to screenshot-05 in root folder"));
-        return;
-      }
-
+      var fileNames = readdirtree.sync(gamePath, {filter: /^(?!\.)/});
       var zip = new ZipWriter();
       fileNames.forEach(function(fileName) {
         var zipName = path.join(hftInfo.gameId, fileName.substring(gamePath.length)).replace(/\\/g, '/');

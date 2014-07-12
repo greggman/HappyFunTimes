@@ -83,6 +83,8 @@ var InstalledGamesList = function() {
       if (!info) {
         throw "";
       }
+      gameInfo.checkRequiredFiles(info, info.happyFunTimes.basePath);
+
       getInstalledGames();
       var index = indexByPath(gamePath);
       if (index < 0) {

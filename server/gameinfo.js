@@ -37,6 +37,7 @@ var path = require('path');
 var misc = require('./misc');
 var config = require('./config');
 var semver = require('semver');
+var readdirtree = require('./readdirtree');
 
 var applyDefaultProperties = function(obj, defaults) {
   if (!defaults) {
@@ -137,6 +138,79 @@ var validateObject = function(obj, validators) {
   });
 };
 
+GameInfo.prototype.checkRequiredFiles = (function() {
+  var baseChecks = [
+    { re: /^icon\.(jpg|png|gif|svg)$/i,
+      msg: "no icon found. Must have 64x64 or 128x128 pixel icon.png/jpg/gif in root folder",
+    },
+    { re: /^screenshot(?:-\d\d){0,1}\.(jpg|png|gif|svg)$/i,
+      msg: "no screenshots found. Must have 640x480 pixel screenshot.png/jpg/gif or screenshot-00 to screenshot-05 in root folder",
+    },
+    { re: /^controller.html$/,
+      msg: "no controller.html",
+    },
+    { re: /^css\/controller.css$/,
+      msg: "no css\/controller.css",
+    },
+    { re: /^scripts\/controller.js$/,
+      msg: "no scripts\/controller.js",
+    },
+  ];
+
+  var gameTypeChecks = {
+    html: [
+      { re: /^game.html$/,
+        msg: "no game.html",
+      },
+      { re: /^game.html$/,
+        msg: "no game.html",
+      },
+      { re: /^css\/game.css$/,
+        msg: "no css\/game.css",
+      },
+      { re: /^scripts\/game.js$/,
+        msg: "no scripts\/game.js",
+      },
+    ],
+  };
+
+  return function(info, basePath) {
+    var found = [];
+    var foundCount = 0;
+
+    var checks = baseChecks.slice();
+    var gameChecks = gameTypeChecks[info.happyFunTimes.gameType.toLowerCase()];
+    if (gameChecks) {
+      checks = checks.concat(gameChecks);
+    }
+
+    var fileNames = readdirtree.sync(basePath);
+    for (var ii = 0; ii < fileNames.length && foundCount < checks.length; ++ii) {
+      var fileName = fileNames[ii].replace(/\\/g, '/');
+      checks.forEach(function(check, ndx) {
+        if (!found[ndx]) {
+          if (check.re.test(fileName)) {
+            found[ndx] = true;
+            ++foundCount;
+          }
+        }
+      });
+    };
+
+    var errors = [];
+    checks.forEach(function(check, ndx) {
+      if (!found[ndx]) {
+        errors.push(check.msg);
+      }
+    });
+
+    if (errors.length) {
+      throw errors.join("\n");
+    }
+  };
+
+}());
+
 GameInfo.prototype.parseGameInfo = function(contents, filePath) {
   try {
     var packageInfo = JSON.parse(contents);
@@ -176,6 +250,15 @@ GameInfo.prototype.parseGameInfo = function(contents, filePath) {
       return;
     }
 
+//    // Check icon and screenshot
+//    try {
+//      this.checkRequiredFiles(packageInfo, gameBasePath);
+//    } catch (e) {
+//      console.error("error: " + filePath + " " + e);
+//      return;
+//    }
+
+// REMOVE THIS!!
     // Fix some urls.
     ['gameUrl', 'screenshotUrl'].forEach(function(name) {
       if (hftInfo[name]) {
