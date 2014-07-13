@@ -56,6 +56,9 @@ var makeRelease = function(args) {
     }
   }, function(err) {
     console.error("ERROR: " + err);
+    if (err.stack) {
+      console.error(err.stack);
+    }
     process.exit(1);
   });
 };

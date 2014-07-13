@@ -124,7 +124,7 @@ var ReleaseManager = function() {
       }
 
       try {
-        gameinfo.checkRequiredFiles(info, gamePath);
+        gameInfo.checkRequiredFiles(info, gamePath);
       } catch (e) {
         reject(new Error(e.toString()));
       }
@@ -132,12 +132,13 @@ var ReleaseManager = function() {
       var fileNames = readdirtree.sync(gamePath, {filter: /^(?!\.)/});
       var zip = new ZipWriter();
       fileNames.forEach(function(fileName) {
-        var zipName = path.join(hftInfo.gameId, fileName.substring(gamePath.length)).replace(/\\/g, '/');
-        var stat = fs.statSync(fileName);
+        var zipName = path.join(hftInfo.gameId, fileName).replace(/\\/g, '/');
+        var srcPath = path.join(gamePath, fileName);
+        var stat = fs.statSync(srcPath);
         if (stat.isDirectory()) {
           zip.addDir(zipName);
         } else {
-          var buffer = fs.readFileSync(fileName);
+          var buffer = fs.readFileSync(srcPath);
           zip.addData(zipName, buffer);
         }
       });
