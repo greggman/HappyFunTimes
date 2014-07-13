@@ -138,6 +138,19 @@ describe('release', function() {
 
     var destPath;
     var tempDir;
+    var expectedFileNames = [
+      "fakegame/package.json",
+      "fakegame/file1.html",
+      "fakegame/somedir/file2.html",
+      "fakegame/game.html",
+      "fakegame/css/game.css",
+      "fakegame/scripts/game.js",
+      "fakegame/controller.html",
+      "fakegame/css/controller.css",
+      "fakegame/scripts/controller.js",
+      "fakegame/icon.png",
+      "fakegame/screenshot.png",
+    ];
 
     before(function(done) {
       utils.getTempFolder().then(function(filePath) {
@@ -149,7 +162,6 @@ describe('release', function() {
           done();
         });
       });
-
     });
 
     it('should make a release', function(done) {
@@ -164,17 +176,9 @@ describe('release', function() {
         var zip = new JSZip();
         zip.load(fs.readFileSync(destPath));
 
-        assert.ok(zip.files["fakegame/package.json"]);
-        assert.ok(zip.files["fakegame/file1.html"]);
-        assert.ok(zip.files["fakegame/somedir/file2.html"]);
-        assert.ok(zip.files["fakegame/game.html"]);
-        assert.ok(zip.files["fakegame/css/game.css"]);
-        assert.ok(zip.files["fakegame/scripts/game.js"]);
-        assert.ok(zip.files["fakegame/controller.html"]);
-        assert.ok(zip.files["fakegame/css/controller.css"]);
-        assert.ok(zip.files["fakegame/scripts/controller.js"]);
-        assert.ok(zip.files["fakegame/icon.png"]);
-        assert.ok(zip.files["fakegame/screenshot.png"]);
+        expectedFileNames.forEach(function(fileName) {
+          assert.ok(zip.files[fileName], fileName + " should be in zip");
+        });
 
         done();
       });
@@ -191,16 +195,9 @@ describe('release', function() {
         assert.equal(err, null);
 
         assert.ok(fs.existsSync(path.join(g_testGameInstallDir, "fakegame")), "fakegame folder exists");
-        assert.ok(fs.existsSync(path.join(g_testGameInstallDir, "fakegame", "package.json")), "package.json exists");
-        assert.ok(fs.existsSync(path.join(g_testGameInstallDir, "fakegame", "file1.html")), "file1.html exists");
-        assert.ok(fs.existsSync(path.join(g_testGameInstallDir, "fakegame", "somedir", "file2.html")), "file2.html exists");
-        assert.ok(fs.existsSync(path.join(g_testGameInstallDir, "fakegame", "css", "game.css")));
-        assert.ok(fs.existsSync(path.join(g_testGameInstallDir, "fakegame", "scripts", "game.js")));
-        assert.ok(fs.existsSync(path.join(g_testGameInstallDir, "fakegame", "controller.html")));
-        assert.ok(fs.existsSync(path.join(g_testGameInstallDir, "fakegame", "css", "controller.css")));
-        assert.ok(fs.existsSync(path.join(g_testGameInstallDir, "fakegame", "scripts", "controller.js")));
-        assert.ok(fs.existsSync(path.join(g_testGameInstallDir, "fakegame", "icon.png")));
-        assert.ok(fs.existsSync(path.join(g_testGameInstallDir, "fakegame", "screenshot.png")));
+        expectedFileNames.forEach(function(fileName) {
+          assert.ok(fs.existsSync(path.join(g_testGameInstallDir, fileName)), fileName + " should exist");
+        });
 
         var gameList = getInstalledGames();
         assert.equal(gameList.length, 1);
