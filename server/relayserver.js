@@ -117,7 +117,7 @@ var RelayServer = function(servers, options) {
     }
     var game = g_games[gameId];
     if (!game) {
-      game = new Game(gameId, this);
+      game = new Game(gameId, this, { baseUrl: options.baseUrl });
       g_games[gameId] = game;
       ++g_numGames;
       debug("added game: " + gameId + ", num games = " + g_numGames);
@@ -182,9 +182,6 @@ var RelayServer = function(servers, options) {
    */
   this.assignAsClientForGame = function(data, client) {
     var game = getGame(data.gameId);
-    if (data.controllerUrl && options.address) {
-      data.controllerUrl = data.controllerUrl.replace("localhost", options.address);
-    }
     game.assignClient(client, this, data);
   }.bind(this);
 

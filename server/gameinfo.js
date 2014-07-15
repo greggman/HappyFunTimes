@@ -267,8 +267,11 @@ GameInfo.prototype.parseGameInfo = function(contents, filePath) {
     }.bind(this));
 
     if (hftInfo.gameExecutable) {
-      hftInfo.gameExecutable = path.relative(path.join(gameBasePath, hftInfo.gameExecutable));
-      var fullPath = path.normalize(hftInfo.gameExecutable);
+      var localPath = path.join(gameBasePath, hftInfo.gameExecutable);
+      hftInfo.gameExecutable = localPath;
+
+      // make sure the executable is the the game's folder.
+      var fullPath = path.normalize(localPath);
       if (gameBasePath != fullPath.substring(0, gameBasePath.length)) {
         throw "bad path for game executable: " + fullPath;
       }

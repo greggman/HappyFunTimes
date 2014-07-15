@@ -531,7 +531,10 @@ var tryStartRelayServer = function() {
       process.exit(1);
     }
     var RelayServer = require('./relayserver.js');
-    relayServer = new RelayServer(servers, {address: g.address});
+    relayServer = new RelayServer(servers, {
+      address: g.address,
+      baseUrl: "http://" + g.address + ":" + g.port,
+    });
     sys.print("Listening on port(s): " + goodPorts.join(", ") + "\n");
 
     // Add management game

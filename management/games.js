@@ -98,6 +98,9 @@ var InstalledGamesList = function() {
       return true;
     } catch (e) {
       console.error(gamePath + " does not appear to be a happyFunTimes game\n  " + e.toString());
+      if (e.stack) {
+        console.error(e.stack);
+      }
       return false;
     }
   };

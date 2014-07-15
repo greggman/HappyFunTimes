@@ -46,12 +46,6 @@ define(
    * @typedef {Object} GameServer~Options
    * @property {string} gameId id of game needed to rendezvous
    *           with controllers.
-   * @property {string=} controllerUrl url of the controller. If
-   *       not passed in assumes it's the same as the game except
-   *       'index.html'. In other words if the game's url is
-   *       http://foo/bar/game.html it will assume the controller
-   *       is at http://foo/bar/index.html if you don't set the
-   *       controllerUrl.
    * @property {Socket?} socket Socket to use for communications
    */
 
@@ -277,17 +271,6 @@ define(
 
     connect_();
 
-    if (!options.controllerUrl && globalObject.location) {
-      var url = globalObject.location.href;
-      var subs = {"#": 1, "?": 1, "/": 0};
-      Object.keys(subs).forEach(function(c) {
-        var ndx = subs[c] ? url.indexOf(c) : url.lastIndexOf(c);
-        if (ndx >= 0) {
-          url = url.substr(0, ndx);
-        }
-      });
-      options.controllerUrl = url + "/index.html";
-    }
     this.sendCmd("server", -1, options);
   };
 

@@ -1,40 +1,42 @@
-copy to other folder
-add .gitignore
-git init
-git add
-git commit
-edit package.json
-  only fields should be
-  "gameUrl": "gameview.html",
-  "screenshotUrl": "screenshot.png",
-  "gameType": "html",
-  "minPlayers": 2,
-  "category": "game"
-copy a bower.json?
-edit bower.json
-  "name"
-  "deps"
-  private: true // this is not itself a bower package
-run `bower install`
-make an icon.png/jpg/gif (64x64 or 128x128)
+*   how to migrate old happy fun times
 
-delete gameview.html // assuming you were using templating
-delete index.html  // assuming you were using templating
-edit all your scripts
+    copy to other folder
+    add .gitignore
+    git init
+    git add
+    git commit
+    edit package.json
+      only fields should be
+      "gameUrl": "gameview.html",
+      "screenshotUrl": "screenshot.png",
+      "gameType": "html",
+      "minPlayers": 2,
+      "category": "game"
+    copy a bower.json?
+    edit bower.json
+      "name"
+      "deps"
+      private: true // this is not itself a bower package
+    run `bower install`
+    make an icon.png/jpg/gif (64x64 or 128x128)
 
-define([ ])
-requirejs([])
-if you were referencing tdl as
-   '../../../3rdparty/tdl/???' -> '../bower_components/tdl/tdl/??
-   '../../../scripts' -> 'hft'
-   '../../scripts' -> '../bower_components/hft-utils/dist'
-   imageprocess -> imageutils
+    delete gameview.html // assuming you were using templating
+    delete index.html  // assuming you were using templating
+    edit all your scripts
 
-add README.md?
+    define([ ])
+    requirejs([])
+    if you were referencing tdl as
+       '../../../3rdparty/tdl/???' -> '../bower_components/tdl/tdl/??
+       '../../../scripts' -> 'hft'
+       '../../scripts' -> '../bower_components/hft-utils/dist'
+       imageprocess -> imageutils
 
-make repo on github
-git remote add origin git@github.com:<githubname>/<reponame>.git
-git push -u origin master
+    add README.md?
+
+    make repo on github
+    git remote add origin git@github.com:<githubname>/<reponame>.git
+    git push -u origin master
 
 
 

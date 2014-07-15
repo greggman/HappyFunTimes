@@ -34,6 +34,11 @@
 var debug = require('debug')('Game');
 
 /**
+ * @typedef {object} Game~Options
+ * @property {string} baseUrl the base url used to make urls
+ */
+
+/**
  * Represents one game running through the relaysever.
  *
  * @constructor
@@ -41,13 +46,17 @@ var debug = require('debug')('Game');
  * @param {string} gameId id of game
  * @param {!RelayServer} relayServer relaysever managing
  *        communication for this game.
+ * @param {Game~Options} options
  */
-var Game = function(gameId, relayServer) {
+var Game = function(gameId, relayServer, options) {
+  options = options || {};
   this.gameId = gameId;
   this.relayServer = relayServer;
   this.players = {};
   this.numPlayers = 0;
   this.sendQueue = [];
+  this.options = options;
+  this.controllerUrl = options.baseUrl + "/games/" + gameId + "/index.html";
 };
 
 /**
@@ -147,7 +156,7 @@ Game.prototype.forEachPlayer = function(fn) {
 /**
  * @typedef {Object} Game~GameOptions
  * @property {string} gameId id of game (not used here
- * @property {string} controllerUrl url of controller.
+ * @property {string?} controllerUrl url of controller.
  * @property {boolean} disconnectPlayersOnGameDisconnects.
  *           Default = true.
  */
@@ -166,7 +175,10 @@ Game.prototype.assignClient = function(client, relayserver, data) {
     console.error("this game already has a client!");
   }
   this.client = client;
-  this.controllerUrl = data.controllerUrl;
+  if (data.controllerUrl) {
+    this.controllerUrl = data.controllerUrl.replace(/http:\/\/localhost(?:\:\d+)*/, this.options.baseUrl);
+  }
+
   this.disconnectPlayersIfGameDisconnects = data.disconnectPlayersIfGameDisconnects === undefined ? true : data.disconnectPlayersIfGameDisconnects;
   this.showInList = data.showInList;
 
