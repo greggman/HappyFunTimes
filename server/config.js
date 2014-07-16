@@ -35,7 +35,7 @@ var fs = require('fs');
 var path = require('path');
 var hanson = require('hanson');
 
-var g_configPath = path.join(process.env.HOME, ".happyfuntimes", "config.json");
+var g_configPath = path.join(process.env.HOME || process.env.APPDATA, ".happyfuntimes", "config.json");
 var g_configRead = false;
 var g_settingsPath = path.join(__dirname, "..", "hft.hanson");
 var g_settingsRead = false;
@@ -49,6 +49,20 @@ var setup = function(options) {
   }
   if (options.settingsPath) {
     g_settingsPath = path.resolve(options.settingsPath);
+  }
+};
+
+var init = function() {
+  if (!fs.existsSync(g_configPath)) {
+    var configDir = path.dirname(g_configPath);
+    if (!fs.existsSync(configDir)) {
+      fs.mkdirSync(configDir);
+    }
+    fs.writeFileSync(g_configPath, JSON.stringify({
+      installDir: path.resolve(path.normalize(path.join(__dirname, ".."))),
+      gamesDir: path.resolve(path.normalize(path.join(__dirname, "..", "public", "games"))),
+    }, undefined, "  "));
+    console.log("Wrote config");
   }
 };
 
@@ -108,4 +122,4 @@ var getConfig = (function() {
 exports.getConfig = getConfig;
 exports.getSettings = getSettings;
 exports.setup = setup;
-
+exports.init = init;

@@ -34,7 +34,7 @@ var path = require('path');
 var games = require('../../management/games');
 var utils = require('../utils');
 
-var initGamesList = function(args) {
+var init = function(args) {
   if (args._.length != 1) {
     utils.badArgs(module, "bad args");
   }
@@ -43,11 +43,12 @@ var initGamesList = function(args) {
 };
 
 exports.usage = {
-  prepend:  "inits the list of installed games.",
+  usage: "",
+  prepend:  "inits happyfuntimes",
   options: [
   ],
 }
-exports.cmd = initGamesList;
+exports.cmd = init;
 
 
 

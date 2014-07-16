@@ -180,7 +180,7 @@ HFTPlayer.prototype.handleLaunch = function(data) {
 
     var args = [];
     if (!launcher) {
-      lanucher = nativePath;
+      launcher = nativePath;
     } else {
       args.push(nativePath);
     }

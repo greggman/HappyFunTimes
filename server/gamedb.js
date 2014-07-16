@@ -73,9 +73,10 @@ var GameDB = function(options) {
     }.bind(this));
   }
 
-  var gamesLists = options.gamesLists || [
-    hftConfig.getConfig().installedGamesListPath,
-  ];
+  var config = hftConfig.getConfig();
+  var gamesLists = options.gamesLists || (config ? [
+    config.installedGamesListPath,
+  ] : []);
 
   if (gamesLists) {
     gamesLists.forEach(function(list) {
