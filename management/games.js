@@ -36,9 +36,15 @@ var gameInfo = require('../server/gameinfo');
 var hftConfig = require('../server/config');
 
 var InstalledGamesList = function() {
-  var config = hftConfig.getConfig();
-  var p_installedGamesPath = config ? config.installedGamesListPath : undefined;
-  var p_installedGamesList = [];
+  var p_installedGamesPath;
+  var p_installedGamesList;
+
+  var setup = function() {
+    var config = hftConfig.getConfig();
+    p_installedGamesPath = config ? config.installedGamesListPath : undefined;
+    p_installedGamesList = p_installedGamesList || [];
+  };
+  setup();
 
   var indexByPath = function(gamePath) {
     for (var ii = 0; ii < p_installedGamesList.length; ++ii) {
@@ -64,6 +70,7 @@ var InstalledGamesList = function() {
    */
   var init = function() {
     hftConfig.init();
+    setup();
     if (!fs.existsSync(p_installedGamesPath)) {
       putInstalledGames();
       console.log("Wrote game db");

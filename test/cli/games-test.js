@@ -35,8 +35,8 @@ var path = require('path');
 var JSZip = require('jszip');
 var utils = require('../../management/utils');
 
-var g_configPath = path.join(__dirname, "..", "config", "config.json");
-var g_installedGamesListPath = path.join(__dirname, "..", "config", "installed-games.json");
+var g_configPath = path.join(__dirname, "..", "testconfig", "config.json");
+var g_installedGamesListPath = path.join(__dirname, "..", "testconfig", "installed-games.json");
 var g_fakeGamePath = path.join(__dirname, '..', 'fakegame');
 var g_testGameInstallDir = path.join(__dirname, '..', 'testgameinstalldir');
 
@@ -69,7 +69,42 @@ var getInstalledGames = function() {
 };
 
 var assert = require("assert");
+describe('init', function() {
+
+  before(function() {
+    g_configPath = path.join(__dirname, "..", "testareaconfig", "config.json");
+    g_installedGamesListPath = path.join(__dirname, "..", "testareaconfig", "installed-games.json");
+  });
+
+  it('config files should should not exist', function() {
+    assert.ok(!fs.existsSync(g_installedGamesListPath));
+    assert.ok(!fs.existsSync(g_configPath));
+    assert.ok(!fs.existsSync(path.dirname(g_configPath)));
+  });
+
+  it('should create empty list', function(done) {
+    hftcli("init", [], function(err, result) {
+      assert.equal(err, null);
+      assert.ok(fs.existsSync(g_installedGamesListPath));
+      assert.ok(fs.existsSync(g_configPath));
+      assert.equal(getInstalledGames().length, 0);
+      done();
+    });
+  });
+
+  after(function() {
+    utils.deleteNoFail(g_installedGamesListPath);
+    utils.deleteNoFail(g_configPath);
+    utils.deleteNoFail(path.dirname(g_configPath));
+  })
+});
+
 describe('games', function() {
+
+  before(function() {
+    g_configPath = path.join(__dirname, "..", "testconfig", "config.json");
+    g_installedGamesListPath = path.join(__dirname, "..", "testconfig", "installed-games.json");
+  });
 
   describe('list of installed games', function() {
     it('should not exist', function() {
@@ -77,7 +112,7 @@ describe('games', function() {
     });
 
     it('should create empty list', function(done) {
-      hftcli("init-game-list", [], function(err, result) {
+      hftcli("init", [], function(err, result) {
         assert.equal(err, null);
         assert.ok(fs.existsSync(g_installedGamesListPath));
         assert.equal(getInstalledGames().length, 0);
@@ -134,6 +169,12 @@ describe('games', function() {
 });
 
 describe('release', function() {
+
+  before(function() {
+    g_configPath = path.join(__dirname, "..", "testconfig", "config.json");
+    g_installedGamesListPath = path.join(__dirname, "..", "testconfig", "installed-games.json");
+  });
+
   describe('making releases', function() {
 
     var destPath;
@@ -155,7 +196,7 @@ describe('release', function() {
     before(function(done) {
       utils.getTempFolder().then(function(filePath) {
         tempDir = filePath;
-        hftcli("init-game-list", [], function(err, result) {
+        hftcli("init", [], function(err, result) {
           assert.equal(err, null);
           assert.ok(fs.existsSync(g_installedGamesListPath));
           assert.equal(getInstalledGames().length, 0);
@@ -219,7 +260,7 @@ describe('release', function() {
     });
 
     after(function() {
-      utils.deleteNoFail(g_installedGamesListPath)
+      utils.deleteNoFail(g_installedGamesListPath);
       utils.deleteNoFail(destPath);
     });
   });

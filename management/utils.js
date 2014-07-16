@@ -96,7 +96,11 @@ var getTempFolder = function(options) {
 
 var deleteNoFail = function(filePath) {
   if (filePath && fs.existsSync(filePath)) {
-    fs.unlinkSync(filePath);
+    if (fs.statSync(filePath).isDirectory()) {
+      fs.rmdirSync(filePath);
+    } else {
+      fs.unlinkSync(filePath);
+    }
   }
 };
 

@@ -1,3 +1,4 @@
+*   fix hft init so it works from scratch. Add npm test!
 *   how to migrate old happy fun times
 
     copy to other folder
