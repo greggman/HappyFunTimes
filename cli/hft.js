@@ -11,14 +11,17 @@ var clc = require('cli-color');
 var utils = require('./utils');
 var config = require('../server/config');
 var optionator = require('optionator');
+var showStackTrace;
 
 var globalOptions = [
-  { option: 'help',    alias: 'h', type: 'Boolean', description: 'displays help'         },
-  { option: 'verbose', alias: 'v', type: 'Boolean', description: 'print more stuff'      },
-  { option: 'config-path',         type: 'String',  description: 'config path'           },
-  { option: 'settings-path',       type: 'String',  description: 'settings path'         },
-  { option: 'hft-dir',             type: 'String',  description: 'hft installation path' },
+  { option: 'help',    alias: 'h', type: 'Boolean', description: 'displays help'              },
+  { option: 'verbose', alias: 'v', type: 'Boolean', description: 'print more stuff'           },
+  { option: 'debug',   alias: 'd', type: 'Boolean', description: 'print stack trace on error' },
+  { option: 'config-path',         type: 'String',  description: 'config path'                },
+  { option: 'settings-path',       type: 'String',  description: 'settings path'              },
+  { option: 'hft-dir',             type: 'String',  description: 'hft installation path'      },
 ];
+
 
 if (process.stderr.isTTY) {
   console.error = function(originalError) {
@@ -26,6 +29,11 @@ if (process.stderr.isTTY) {
       var args = Array.prototype.slice.apply(arguments);
       args[0] = clc.red(args[0]);
       originalError.apply(console, args);
+      if (showStackTrace) {
+        if (arguments[0].stack) {
+          console.error(arguments[0].stack);
+        }
+      }
     };
   }(console.error);
 }
@@ -87,8 +95,11 @@ if (args.help) {
 
 try {
   args = optionator({options:cmdModule.usage.options.concat(globalOptions)}).parse(process.argv);
+  if (args.debug) {
+    showStackTrace = true;
+  }
 } catch (e) {
-  console.error(e.toString());
+  console.error(e);
   process.exit(1);
 }
 if (cmdModule.cmd(args) === false) {

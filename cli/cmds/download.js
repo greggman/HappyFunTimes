@@ -61,11 +61,6 @@ var download = function(args) {
   emitter.on('error', function(e) {
     console.error("ERROR downloading gameId: " + gameId);
     console.error(e);
-    if (e instanceof Error) {
-      if (e.stack) {
-        console.log(e.stack);
-      }
-    }
     process.exit(1);
   });
   emitter.on('end', function(e) {

@@ -100,7 +100,8 @@ var getConfig = (function() {
       try {
         config = JSON.parse(content);
       } catch (e) {
-        console.error("error: " + e + "\nunable to read config: " + configPath);
+        console.error("nunable to read config: " + configPath);
+        console.error(e);
         throw e;
       }
 

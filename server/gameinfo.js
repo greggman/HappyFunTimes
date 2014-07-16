@@ -228,7 +228,8 @@ GameInfo.prototype.parseGameInfo = function(contents, filePath) {
     try {
       validateObject(hftInfo, requiredFields);
     } catch (e) {
-      console.error("error: " + filePath + " happyFunTimes." + e);
+      console.error("error: " + filePath + " happyFunTimes.");
+      console.error(e);
       return;
     }
 
@@ -254,7 +255,8 @@ GameInfo.prototype.parseGameInfo = function(contents, filePath) {
 //    try {
 //      this.checkRequiredFiles(packageInfo, gameBasePath);
 //    } catch (e) {
-//      console.error("error: " + filePath + " " + e);
+//      console.error("error: " + filePath);
+//      console.error(e);
 //      return;
 //    }
 

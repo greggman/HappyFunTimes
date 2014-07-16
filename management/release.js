@@ -82,6 +82,147 @@ var askPrompt = function(questions) {
 
 var ReleaseManager = function() {
 
+  var makeZip = function(gameId, baseSrcPath, destPath, filter) {
+    if (filter === undefined) {
+      filter = function() { return true; }
+    } else if (filter instanceof RegExp) {
+      filter = function(filter) {
+        return function(filename) {
+          return filter.test(filename);
+        }
+      }(filter);
+    }
+
+    var fileNames = readdirtree.sync(baseSrcPath, {filter: /^(?!\.)/});
+    fileNames = fileNames.filter(filter);
+    var zip = new ZipWriter();
+    fileNames.forEach(function(fileName) {
+      var zipName = path.join(gameId, fileName).replace(/\\/g, '/');
+      var srcPath = path.join(baseSrcPath, fileName);
+      var stat = fs.statSync(srcPath);
+      if (stat.isDirectory()) {
+        zip.addDir(zipName);
+      } else {
+        var buffer = fs.readFileSync(srcPath);
+        zip.addData(zipName, buffer);
+      }
+    });
+
+    return new Promise(function(fulfill, reject) {
+      zip.saveAs(destPath, function(err) {
+        if (err) {
+          reject(err);
+        } else {
+          fulfill([{filename:destPath}]);
+        }
+      });
+    });
+  };
+
+  var makeHTML = function(info, gamePath, destFolder) {
+    var hftInfo = info.happyFunTimes;
+    var destPath = path.join(destFolder, safeishName(hftInfo.gameId) + "-html.zip");
+    return makeZip(hftInfo.gameId, gamePath, destPath);
+  };
+
+  var makeUnity3d = function(info, gamePath, destFolder) {
+    var hftInfo = info.happyFunTimes;
+    var gameId = hftInfo.gameId;
+
+    var platforms = [
+      { platform: "Windows",
+        zipSuffix: "-win.zip",
+        binSuffix: "-win.exe",
+        dirSuffix: "-win_Data",
+      },
+      { platform: "Mac",
+        zipSuffix: "-osx.zip",
+        binSuffix: undefined,
+        dirSuffix: "-osx.app",
+      },
+      { platform: "Linux",
+        zipSuffix: "-linux.zip",
+        binSuffix: "-linux.x86",
+        dirSuffix: "-linux_Data",
+      },
+    ];
+
+    var platInfos = [];
+    platforms.forEach(function(platform) {
+      var missing = false;
+      var binPath;
+      var dirPath;
+      if (platform.binSuffix) {
+        binPath = path.join("bin", gameId + platform.binSuffix);
+        var localBinPath = path.join(gamePath, binPath);
+        if (!fs.existsSync(localBinPath)) {
+          missing = true;
+          console.log("no binary for " + platform.platform);
+          console.log("expected: " + localBinPath);
+        }
+      }
+
+      if (!missing) {
+        dirPath = path.join("bin", gameId + platform.dirSuffix);
+        var localDirPath = path.join(gamePath, dirPath);
+        if (!fs.existsSync(localDirPath)) {
+          missing = true;
+          console.log("no data folder for " + platform.platform);
+          console.log("expected: " + localDirPath);
+        }
+      }
+
+      if (!missing) {
+        platInfos.push({platform: platform, binPath: binPath, dirPath: dirPath});
+      }
+    });
+
+    var promise = (platInfos.length == platforms.length) ? Promise.resolve({confirmation: 'y'}) :
+      askPrompt([
+        {
+          name: 'confirmation',
+          type: 'input',
+          message: 'continue y/N?',
+          default: 'n',
+        }
+      ]);
+
+    promise.then(function(answers) {
+      if (answers.confirmation.toLowerCase() != 'y') {
+        return Promise.reject(new Error("aborted"));
+      }
+
+      var promises = [];
+      platInfos.forEach(function(platInfo) {
+        var destPath = path.join(destFolder, safeishName(gameId) + platInfo.platform.zipSuffix);
+        var binStart = "bin";
+        var filter = function(filename) {
+          if (filename.substr(0, binStart.length) == binStart) {
+            if (platInfo.binPath && filename == platInfo.binPath) {
+              return true;
+            }
+            if (platInfo.dirPath && filename.substr(0, platInfo.dirPath.length) == platInfo.dirPath) {
+              return true;
+            }
+            return false;
+          }
+          return true;
+        };
+        promises.push(makeZip(gameId, gamePath, destPath, filter));
+      });
+      return Promise.all(promises);
+    }).then(function(zipFiles) {
+      var result = Array.prototype.concat.apply([], zipFiles);
+      return Promise.resolve(result);
+    });
+    return promise;
+  };
+
+  var makers = {
+    html: makeHTML,
+    unity3d: makeUnity3d,
+  };
+
   /**
    * @typedef {object} Make~FileInfo
    * @property {string} filename Path to file
@@ -106,51 +247,25 @@ var ReleaseManager = function() {
    * @returns {Make~Promise}
    */
   var make = function(gamePath, destFolder) {
-    return new Promise(function(fulfill, reject) {
-      // Make sure it's a game!
-      var info = gameInfo.readGameInfo(gamePath);
-      if (!info) {
-        reject(Error("not a game: " + gamePath));
-        return;
-      }
+    // Make sure it's a game!
+    var info = gameInfo.readGameInfo(gamePath);
+    if (!info) {
+      return Promise.reject(Error("not a game: " + gamePath));
+    }
 
-      var hftInfo = info.happyFunTimes;
-      switch (hftInfo.gameType) {
-        case 'html':
-          break;
-        default:
-          reject(new Error("unsupported game type:" + hftInfo.gameType));
-          return;
-      }
+    var hftInfo = info.happyFunTimes;
+    var maker = makers[hftInfo.gameType.toLowerCase()];
+    if (!maker) {
+      return Promise.reject(new Error("unsupported game type:" + hftInfo.gameType));
+    }
 
-      try {
-        gameInfo.checkRequiredFiles(info, gamePath);
-      } catch (e) {
-        reject(new Error(e.toString()));
-      }
+    try {
+      gameInfo.checkRequiredFiles(info, gamePath);
+    } catch (e) {
+      return Promise.reject(new Error(e.toString()));
+    }
 
-      var fileNames = readdirtree.sync(gamePath, {filter: /^(?!\.)/});
-      var zip = new ZipWriter();
-      fileNames.forEach(function(fileName) {
-        var zipName = path.join(hftInfo.gameId, fileName).replace(/\\/g, '/');
-        var srcPath = path.join(gamePath, fileName);
-        var stat = fs.statSync(srcPath);
-        if (stat.isDirectory()) {
-          zip.addDir(zipName);
-        } else {
-          var buffer = fs.readFileSync(srcPath);
-          zip.addData(zipName, buffer);
-        }
-      });
-      var destPath = path.join(destFolder, safeishName(hftInfo.gameId) + "-html.zip");
-      zip.saveAs(destPath, function(err) {
-        if (err) {
-          reject(err);
-        } else {
-          fulfill([{filename:destPath}]);
-        }
-      });
-    });
+    return maker(info, gamePath, destFolder);
   };
 
   /**
@@ -199,7 +314,8 @@ var ReleaseManager = function() {
         }
       }
     } catch (e) {
-      console.error("error " + e + ": could not parse package.json. Maybe this is not a HappyFunTimes game?");
+      console.error("could not parse package.json. Maybe this is not a HappyFunTimes game?");
+      console.error(e);
       return false;
     }
 
@@ -362,6 +478,7 @@ var ReleaseManager = function() {
       } catch (e) {
         ++failCount;
         console.error("Couldn't delete: " + folder);
+        console.error(e);
       }
     });
 

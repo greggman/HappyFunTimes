@@ -107,10 +107,8 @@ var InstalledGamesList = function() {
       }
       return true;
     } catch (e) {
-      console.error(gamePath + " does not appear to be a happyFunTimes game\n  " + e.toString());
-      if (e.stack) {
-        console.error(e.stack);
-      }
+      console.error(gamePath + " does not appear to be a happyFunTimes game");
+      console.error(e);
       return false;
     }
   };
@@ -139,7 +137,8 @@ var InstalledGamesList = function() {
       putInstalledGames();
       console.log("removed: " + gamePath);
     } catch (e) {
-      console.error("error: removing game: " + gamePath + "\n  " + e.toString());
+      console.error("error: removing game: " + gamePath);
+      console.error(e);
       return false;
     }
   };

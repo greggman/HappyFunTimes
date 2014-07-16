@@ -221,6 +221,8 @@ describe('release', function() {
           assert.ok(zip.files[fileName], fileName + " should be in zip");
         });
 
+        assert.ok(zip.files["fakegame/.adotfile"] === undefined, ".adotfile is not in .zip file");
+
         done();
       });
     });

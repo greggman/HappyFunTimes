@@ -1,4 +1,3 @@
-*   fix hft init so it works from scratch. Add npm test!
 *   how to migrate old happy fun times
 
     copy to other folder
@@ -807,6 +806,7 @@ hft-unitysimpleexample
 Done
 ----
 
+*   fix hft init so it works from scratch. Add npm test!
 *   make gameviews template based so we can make disconnect behavior common
 
     - [x] boomboom

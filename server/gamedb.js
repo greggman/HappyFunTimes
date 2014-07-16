@@ -111,7 +111,8 @@ GameDB.prototype.addGamesByList = function(filePath) {
       }
     }.bind(this));
   } catch (e) {
-    console.error("could not read: " + filePath + " :" + e);
+    console.error("could not read: " + filePath);
+    console.error(e);
   }
 };
 
