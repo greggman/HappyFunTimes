@@ -32,10 +32,16 @@
 "use strict";
 
 var requirejs = require('requirejs');
-var Promise = require('promise');
+
+var child_process = require('child_process');
+var fs = require('fs');
+var GameServer = requirejs('../public/hft/0.0.0/scripts/gameserver');
 var LoopbackClient = require('./loopbackclient');
-var GameServer = requirejs('../public/hft/0.0.0/scripts/gameserver')
 var msgbox = require('native-msg-box');
+var os = require('os');
+var platform = os.platform().toLowerCase();
+var path = require('path');
+var Promise = require('promise');
 var release = require('../management/release');
 
 requirejs.config({
@@ -50,6 +56,7 @@ var HFTPlayer = function(netPlayer, game, gameDB) {
   netPlayer.addEventListener('disconnect', HFTPlayer.prototype.disconnect.bind(this));
   netPlayer.addEventListener('getGameInfo', HFTPlayer.prototype.handleGetGameInfo.bind(this));
   netPlayer.addEventListener('install', HFTPlayer.prototype.handleInstall.bind(this));
+  netPlayer.addEventListener('launch', HFTPlayer.prototype.handleLaunch.bind(this));
 };
 
 HFTPlayer.prototype.disconnect = function() {
@@ -61,10 +68,16 @@ HFTPlayer.prototype.sendCmd = function(cmd, data) {
 };
 
 HFTPlayer.prototype.sendInstallProgress = function(gameId, size, bytesDownloaded, msg) {
-  this.netPlayer.sendCmd("installProgress", {
+  this.sendCmd("installProgress", {
     gameId: gameId,
     size: size,
     bytesDownloaded: bytesDownloaded,
+    msg: msg,
+  });
+};
+
+HFTPlayer.prototype.sendError = function(msg) {
+  this.sendCmd("errorMsg", {
     msg: msg,
   });
 };
@@ -124,6 +137,56 @@ HFTPlayer.prototype.handleInstall = function(data) {
         break;
     }
   }.bind(this));
+
+};
+
+HFTPlayer.prototype.handleLaunch = function(data) {
+  var gameId = data.gameId;
+  var info = this.gameDB.getGameById(gameId);
+
+  if (!info) {
+    this.sendError("no such game: " + gameId);
+    return;
+  }
+
+  var nativeName;
+  var launcher;
+  var hftInfo = info.happyFunTimes;
+  switch (hftInfo.gameType.toLowerCase()) {
+    case 'html':
+      this.sendCmd('redirect', { url: hftInfo.gameUrl });
+      break;
+    case 'unity3d':
+      if (platform == 'darwin') {
+        nativeName = gameId + "-osx.app";
+        launcher = "open"
+      } else if (platform.substr(0, 3) == "win") {
+        nativeName = gameId + "-win.exe";
+      } else {
+        nativeName = gameId + "-linux";
+      }
+      break;
+    default:
+      this.sendError("can not handle gameType: " + hftInfo.gameType);
+      return;
+  }
+
+  if (nativeName) {
+    var nativePath = path.join(hftInfo.basePath, "bin", nativeName);
+    if (!fs.existsSync(nativePath)) {
+      this.sendError("native game does not exist: " + nativePath);
+      return;
+    }
+
+    var args = [];
+    if (!launcher) {
+      lanucher = nativePath;
+    } else {
+      args.push(nativePath);
+    }
+    var child = child_process.spawn(launcher, args);
+    child.unref();
+  }
 
 };
 

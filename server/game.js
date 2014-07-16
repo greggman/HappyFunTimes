@@ -134,6 +134,9 @@ Game.prototype.send = function(owner, msg) {
     } catch (e) {
       // This happens if the game disconnects where there are messages to send?
       console.warn("Attempt to send message to game failed: " + e.toString());
+      if (e.stack) {
+        console.warn(e.stack);
+      }
     }
   } else {
     this.sendQueue.push({owner: owner, msg: msg});

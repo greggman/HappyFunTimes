@@ -34,12 +34,31 @@
 // Start the main app logic.
 requirejs(
   [ 'hft/io',
+    'hft/gameclient',
     'hft/misc/misc',
     'hft/misc/strings',
   ], function(
     IO,
+    GameClient,
     Misc,
     Strings) {
+
+  var handleCmdErrorMsg = function(data) {
+    // TODO: change to html dialog.
+    alert(data.msg);
+  };
+
+  var handleRedirectMsg = function(data) {
+    window.location.href = data.url;
+  };
+
+  var client = new GameClient({
+    gameId: "__hft__",
+  });
+
+  client.addEventListener('errorMsg', handleCmdErrorMsg);
+  client.addEventListener('redirect', handleRedirectMsg);
+
   var gamemenu = document.getElementById("gamemenu");
   var params = Misc.parseUrlQuery();
 
@@ -84,6 +103,7 @@ requirejs(
 
       gamemenu.innerHTML = html.join("");
 
+      // change .msg-button elements to bring up message
       var elements = document.querySelectorAll(".msg-button");
       for (var ii = 0; ii < elements.length; ++ii) {
         var elem = elements[ii];
@@ -107,6 +127,39 @@ requirejs(
             msgElement.style.display = "block";
           };
         }(msgElement), false);
+        msgElement.addEventListener('click', function(msgElement) {
+          return function(e) {
+            e.preventDefault(true);
+            msgElement.style.display = "none";
+          }
+        }(msgElement), false);
+      }
+
+      // change .launch-button elements to bring up message
+      var elements = document.querySelectorAll(".launch-button");
+      for (var ii = 0; ii < elements.length; ++ii) {
+        var elem = elements[ii];
+        var buttonId = elem.id;
+        var count = parseInt(buttonId.substr(0, buttonId.length - buttonIdSuffix.length));
+        var gameInfo = obj[count];
+        var gameType = gameInfo.happyFunTimes.gameType;
+        if (!gameType) {
+          console.warn("missing happyFunTimes.gameType in package.json")
+          continue;
+        }
+        var msgId = gameType.toLowerCase() + hiddenMsgSuffix;
+        var msgElement = document.getElementById(msgId);
+        if (!msgElement) {
+          console.error("missing msg element: " + msgId);
+          continue;
+        }
+        elem.addEventListener('click', function(msgElement, gameId) {
+          return function(e) {
+            e.preventDefault(true)
+            msgElement.style.display = "block";
+            client.sendCmd('launch', {gameId: gameId});
+          };
+        }(msgElement, gameInfo.happyFunTimes.gameId), false);
         msgElement.addEventListener('click', function(msgElement) {
           return function(e) {
             e.preventDefault(true);

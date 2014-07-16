@@ -138,6 +138,9 @@ Player.prototype.send = function(msg) {
     this.client.send(msg);
   } catch (e) {
     console.error("error sending to client: " + e);
+    if (e.stack) {
+      console.error(e.stack);
+    }
     console.error("disconnecting");
     this.disconnect();
   }
