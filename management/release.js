@@ -134,16 +134,19 @@ var ReleaseManager = function() {
         zipSuffix: "-win.zip",
         binSuffix: "-win.exe",
         dirSuffix: "-win_Data",
+        dateCheck: "-win.exe",
       },
       { platform: "Mac",
         zipSuffix: "-osx.zip",
         binSuffix: undefined,
         dirSuffix: "-osx.app",
+        dateCheck: "-osx.app/Contents/MacOS/%(gameId)s-osx",
       },
       { platform: "Linux",
         zipSuffix: "-linux.zip",
         binSuffix: "-linux.x86",
         dirSuffix: "-linux_Data",
+        dateCheck: "-linux.x86",
       },
     ];
 
@@ -173,12 +176,30 @@ var ReleaseManager = function() {
       }
 
       if (!missing) {
-        platInfos.push({platform: platform, binPath: binPath, dirPath: dirPath});
+        var datePath = path.join(gamePath, "bin", gameId + strings.replaceParams(platform.dateCheck, {gameId:gameId}));
+        var stat = fs.statSync(datePath);
+        platInfos.push({platform: platform, binPath: binPath, dirPath: dirPath, stat: stat});
       }
     });
 
+    var tooOld = false;
+    if (platInfos.length > 1) {
+      platInfos.sort(function(a, b) {
+        return a.stat.mtime == b.stat.mtime ? 0 : (a.stat.mtime < b.stat.mtime ? -1 : 1);
+      });
+
+      var newest = platInfos[platInfos.length - 1];
+      var oldest = platInfos[0];
+
+      var timeDiff = newest.stat.mtime - oldest.stat.mtime;
+      if (timeDiff > 1000 * 60 * 120) {
+        console.log("oldest executable (" + oldest.platform.platform + ") is more than 2 hours older than newest (" + newest.platform.platform + ")");
+        tooOld = true;
+      }
+    }
+
     var promise;
-    if (platInfos.length == platforms.length) {
+    if (!tooOld && platInfos.length == platforms.length) {
       promise = Promise.resolve({confirmation: 'y'});
     } else {
       promise = askPrompt([

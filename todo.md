@@ -58,8 +58,7 @@ hft-unitycharacterexample
 hft-unitysimpleexample
 
 *   make sync examples work. Where should they show up?
-*
-*   FIX GEAR ICON!!!
+
 *   should I switch all of the gamedb to meteor?
 
     No, as their's no database? But I can run it through collections.
@@ -806,6 +805,7 @@ hft-unitysimpleexample
 Done
 ----
 
+*   FIX GEAR ICON!!!
 *   fix hft init so it works from scratch. Add npm test!
 *   make gameviews template based so we can make disconnect behavior common
 
