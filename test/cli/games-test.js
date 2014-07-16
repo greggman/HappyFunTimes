@@ -33,11 +33,13 @@
 var fs = require('fs');
 var path = require('path');
 var JSZip = require('jszip');
+var strings = require('../../server/strings');
 var utils = require('../../management/utils');
 
 var g_configPath = path.join(__dirname, "..", "testconfig", "config.json");
 var g_installedGamesListPath = path.join(__dirname, "..", "testconfig", "installed-games.json");
 var g_fakeGamePath = path.join(__dirname, '..', 'fakegame');
+var g_fakeUnityGamePath = path.join(__dirname, '..', 'fakeunitygame');
 var g_testGameInstallDir = path.join(__dirname, '..', 'testgameinstalldir');
 
 var hftcli = function(cmd, args, callback) {
@@ -168,7 +170,7 @@ describe('games', function() {
   });
 });
 
-describe('release', function() {
+describe('release html', function() {
 
   before(function() {
     g_configPath = path.join(__dirname, "..", "testconfig", "config.json");
@@ -264,6 +266,152 @@ describe('release', function() {
     after(function() {
       utils.deleteNoFail(g_installedGamesListPath);
       utils.deleteNoFail(destPath);
+    });
+  });
+});
+
+describe('release unity3d', function() {
+
+  before(function() {
+    g_configPath = path.join(__dirname, "..", "testconfig", "config.json");
+    g_installedGamesListPath = path.join(__dirname, "..", "testconfig", "installed-games.json");
+  });
+
+  describe('making releases', function() {
+
+    var destPaths = [];
+    var tempDir;
+    var expectedFileNames = [
+      "fakeunitygame/package.json",
+      "fakeunitygame/file1.html",
+      "fakeunitygame/somedir/file2.html",
+      "fakeunitygame/game.html",
+      "fakeunitygame/css/game.css",
+      "fakeunitygame/scripts/game.js",
+      "fakeunitygame/controller.html",
+      "fakeunitygame/css/controller.css",
+      "fakeunitygame/scripts/controller.js",
+      "fakeunitygame/icon.png",
+      "fakeunitygame/screenshot.png",
+    ];
+
+    var unexpectedFileNames = [
+      "fakeunitygame/.adotfile",
+      "fakeunitygame/src/test.txt",
+    ];
+
+    var platformFiles = {
+      "-osx.zip": {
+        expected: [
+          "fakeunitygame/bin/fakeunitygame-osx.app/test.txt",
+        ],
+      },
+      "-win.zip": {
+        expected: [
+          "fakeunitygame/bin/fakeunitygame-win.exe",
+          "fakeunitygame/bin/fakeunitygame-win_Data/test.txt",
+        ],
+      },
+      "-linux.zip": {
+        expected: [
+          "fakeunitygame/bin/fakeunitygame-linux.x86",
+          "fakeunitygame/bin/fakeunitygame-linux_Data/test.txt",
+        ],
+      }
+    };
+
+
+    before(function(done) {
+      utils.getTempFolder().then(function(filePath) {
+        tempDir = filePath;
+        hftcli("init", [], function(err, result) {
+          assert.equal(err, null);
+          assert.ok(fs.existsSync(g_installedGamesListPath));
+          assert.equal(getInstalledGames().length, 0);
+          done();
+        });
+      });
+    });
+
+    it('should make a release', function(done) {
+      hftcli('make-release', ["--src=" + g_fakeUnityGamePath, tempDir, "--json"], function(err, result) {
+        assert.equal(err, null);
+
+        var files = JSON.parse(result.stdout);
+        assert.equal(files.length, 3);
+        files.forEach(function(files) {
+          var destPath = files.filename;
+          destPaths.push(destPath);
+          assert.ok(fs.existsSync(destPath));
+
+          var zip = new JSZip();
+          zip.load(fs.readFileSync(destPath));
+
+          var expected;
+          var unexpected = [];
+          Object.keys(platformFiles).forEach(function(suffix) {
+            var platInfo = platformFiles[suffix];
+            if (strings.endsWith(destPath, suffix)) {
+              expected = platInfo.expected;
+            } else {
+              unexpected = unexpected.concat.apply(unexpected, platInfo.expected);
+            }
+          });
+
+          var expected = expectedFileNames.concat.apply(expectedFileNames, expected);
+          expected.forEach(function(fileName) {
+            assert.ok(zip.files[fileName], fileName + " should be in zip " + destPath);
+          });
+
+          var unexpected = unexpectedFileNames.concat.apply(unexpectedFileNames, unexpected);
+          unexpected.forEach(function(fileName) {
+            assert.ok(zip.files[fileName] === undefined, fileName + " should not be in zip " + destPath);
+          });
+        });
+
+        done();
+      });
+    });
+
+//    it('should install release', function(done) {
+//
+//      try {
+//        fs.mkdirSync(g_testGameInstallDir);
+//      } catch (e) {
+//      }
+//
+//      hftcli('install', [destPath, "--verbose"], function(err, result) {
+//        assert.equal(err, null);
+//
+//        assert.ok(fs.existsSync(path.join(g_testGameInstallDir, "fakeunitygame")), "fakeunitygame folder exists");
+//        expectedFileNames.forEach(function(fileName) {
+//          assert.ok(fs.existsSync(path.join(g_testGameInstallDir, fileName)), fileName + " should exist");
+//        });
+//
+//        var gameList = getInstalledGames();
+//        assert.equal(gameList.length, 1);
+//
+//        done();
+//      });
+//    });
+
+//    it('should uninstall game', function(done) {
+//      hftcli('uninstall', ["fakeunitygame"], function(err, result) {
+//        assert.equal(err, null);
+//        assert.ok(!fs.existsSync(path.join(g_testGameInstallDir, "fakeunitygame")));
+//
+//        var gameList = getInstalledGames();
+//        assert.equal(gameList.length, 0);
+//
+//        done();
+//      });
+//    });
+
+    after(function() {
+      utils.deleteNoFail(g_installedGamesListPath);
+      destPaths.forEach(function(destPath) {
+        utils.deleteNoFail(destPath);
+      });
     });
   });
 });

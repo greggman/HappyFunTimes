@@ -177,8 +177,11 @@ var ReleaseManager = function() {
       }
     });
 
-    var promise = (platInfos.length == platforms.length) ? Promise.resolve({confirmation: 'y'}) :
-      askPrompt([
+    var promise;
+    if (platInfos.length == platforms.length) {
+      promise = Promise.resolve({confirmation: 'y'});
+    } else {
+      promise = askPrompt([
         {
           name: 'confirmation',
           type: 'input',
@@ -186,8 +189,9 @@ var ReleaseManager = function() {
           default: 'n',
         }
       ]);
+    }
 
-    promise.then(function(answers) {
+    return promise.then(function(answers) {
       if (answers.confirmation.toLowerCase() != 'y') {
         return Promise.reject(new Error("aborted"));
       }
@@ -195,13 +199,18 @@ var ReleaseManager = function() {
       var promises = [];
       platInfos.forEach(function(platInfo) {
         var destPath = path.join(destFolder, safeishName(gameId) + platInfo.platform.zipSuffix);
-        var binStart = "bin";
+        var binStart = "bin/";
+        var srcPath = "src/";
         var filter = function(filename) {
-          if (filename.substr(0, binStart.length) == binStart) {
+          filename = filename.replace(/\\/g, '/');
+          if (strings.startsWith(filename, srcPath)) {
+            return false;
+          }
+          if (strings.startsWith(filename, binStart)) {
             if (platInfo.binPath && filename == platInfo.binPath) {
               return true;
             }
-            if (platInfo.dirPath && filename.substr(0, platInfo.dirPath.length) == platInfo.dirPath) {
+            if (platInfo.dirPath && strings.startsWith(filename, platInfo.dirPath)) {
               return true;
             }
             return false;
@@ -215,7 +224,6 @@ var ReleaseManager = function() {
       var result = Array.prototype.concat.apply([], zipFiles);
       return Promise.resolve(result);
     });
-    return promise;
   };
 
   var makers = {
