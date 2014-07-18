@@ -1,3 +1,7 @@
+*   Need to make installer for hft
+    *   Windows
+    *   Mac
+    *   Linux
 *   how to migrate old happy fun times
 
     copy to other folder
@@ -86,7 +90,6 @@ hft-unitysimpleexample
 *   move username/password prompt to func
 *   install meteor browser policy
 *   turn off meteor websockets and live updating
-*   enable meteor spiderable
 *   make "pubish-file"? that adds a specific file to a release?
 
     basically I want someone to be able to make an executable on
@@ -156,68 +159,20 @@ hft-unitysimpleexample
     *   make an install command
     *   figure out what happens if disconnected
 
-*   Fix uses of IO that are result,err ot err,result
 *   Have SuperHappyFunTimes check that HappyFunTimes is running and request to run it. gray out install buttons
     until it's running. Use game to run it?
 *   Sanatize msgs to native-msg-box
-
-*   Need to make installer for hft
-    *   Windows
-    *   Mac
-    *   Linux
-*   Need to make installer creator for hft games
-
-    All this needs to do is unzip some files and run a script. Unfortunately
-    it also needs to work cross platform. By that speifically I mean someone
-    who makes a game on Mac needs to be able to make an installer for Windows
-    and someone who makes a game on Windows needs to be able to make an installer
-    for mac
-
-    Ideas:
-
-    *   Can use xar/mkbom for cross platform mac pkg creation
-    *   Windows can maybe use 7zip which is open source so maybe can compile on mac (I can dream)
-
-    Or, I could make the games install through HFT. Basically you'd need to have HFT running, you'd
-    click an "install me" link on the website, that would somehow trigger HFT to download a zip.
-
-    What I don't like about that is it *feels* less secure. It's not really less secure. Installing
-    anything on any machine is not secure. But, given you could install with a single click
-    and no permission escalation I'd be worried about bad games or bad code pretending to be games
-    etc.  Maybe I shouldn't worry about that? Does steam? Do indie game devs? We just all assume
-    they aren't being evil.
-
-    I could try to make sure only links from HFT can trigger an install. Could also put up a
-    "Are you sure you want to install?" message.
-
-
-*   look into nsis has the installer solution
-    *   windows only.
+*   Make sure SuperHappyFunTimes can be indexed.  enable meteor spiderable
 
 *   look into openframewords.cc's http://ofxaddons.com/ how it watches github tags
 *   switch port to something less likley to be in use. How about 8123 for now. We can register one later if we get users.
 *   refactor client side js so no requirejs needed? (though still supported)
-*   make hft command line
-
-    hft should call into happyfuntimes some how. I guess it should be a 'dev' function?
-    Need to figure that out. I guess HappyFunTimes could write to ~/.happyfuntimes/config.json
-    which the localtion of Happyfuntimes, then HFT could use that.
-
-    *   hft add - adds to ~/.happyfuntimes/installed-games.json
-    *   hft remove - removes from ~/.happyfuntimes/installed-games.json
-    *   hft install - installs a game from the net.
-    *   hft init - make a new template for a controller (and optionally a game?)
-    *   htf build - inserts the template stuff into the game/controller? or maybe we should do that automatically
-*   make games install anywhere and use ~./happyfuntimes/games.json
 *   need to store LRU for games somewhere. ~/.happyfuntimes
-*   check that bower git: doesn't need to be https:/
 *   In installed version
     *   Make page shows games, tab for gallery, tab for settings
     *   settings
         *   allow contollers to change games (so a bar can make it so people can't change games?), only
             the person at the computer can.
-*   implement simple in-memory file cache that checks if files are loaded
-    *   rather than check if a file has changed with stat, use events to check if files have changed.
 *   Main UX (/games.html)
 
     *   Needs to have XBox/PS like UX. At a minimum
@@ -242,27 +197,6 @@ hft-unitysimpleexample
     *   use name for gameId? no. Name is unsafe, any char, id is safe? Or could gen safe id.
     *   if controller needs certain features? WebGL, getMedia, etc. Can tell if will run on phone
 *   jumpjump: reset coin on level reset.
-*   make hft insert controller.html
-*   consider making server serve games flatter?
-
-    game would be served at
-
-    http://localhost:8080/name/
-
-    instead of
-
-    http://localhost:8080/games/name/
-
-    Is there a point?
-
-    One other idea, allow the game to exist else where
-    but run at http://localhost:8080/games/name
-
-    As it is games must exist inside hft. Should they
-    exist outside hft? Would allow non-hft games
-    to support hft easier?
-
-*   file bug with apple about canvas/photos
 *   make games.html msgs show up even when scrolled down
 *   fix docs
 *   fix localhost replacement so it includes port
@@ -780,6 +714,58 @@ hft-unitysimpleexample
 Done
 ----
 
+*   file bug with apple about canvas/photos.
+
+    The issue is as of iOS7 at least you can request an photo
+    in HTML with `<input type="file" accept="image/*" />` but you can't then actually
+    use that image beacuse iOS Safari's canvas implementation doesn't allow images that large.
+    In other words, I'd like to let the user take a picture, draw that picture into a smaller
+    canvas with something like `ctx.drawImage(photoImage, 0, 0, ctx.canvas.width, ctx.canvas.height)`
+    but that fails because Safari iOS canvas 2d implementation doesn't allow images the size
+    taken by the camera. Smaller sizes work fine. Here's hoping Apple will fix this (though given
+    no response on the bug I'm not hopeful).
+
+    https://bugs.webkit.org/show_bug.cgi?id=133570
+
+*   consider making server serve games flatter?
+
+    game would be served at
+
+    http://localhost:8080/name/
+
+    instead of
+
+    http://localhost:8080/games/name/
+
+    Is there a point?
+
+    One other idea, allow the game to exist else where
+    but run at http://localhost:8080/games/name
+
+    As it is games must exist inside hft. Should they
+    exist outside hft? Would allow non-hft games
+    to support hft easier?
+
+    This is basically done
+
+*   make hft insert controller.html
+*   implement simple in-memory file cache that checks if files are loaded
+    *   rather than check if a file has changed with stat, use events to check if files have changed.
+*   check that bower git: doesn't need to be https:/
+*   make games install anywhere and use ~./happyfuntimes/games.json
+*   make hft command line
+
+    hft should call into happyfuntimes some how. I guess it should be a 'dev' function?
+    Need to figure that out. I guess HappyFunTimes could write to ~/.happyfuntimes/config.json
+    which the localtion of Happyfuntimes, then HFT could use that.
+
+    *   hft add - adds to ~/.happyfuntimes/installed-games.json
+    *   hft remove - removes from ~/.happyfuntimes/installed-games.json
+    *   hft install - installs a game from the net.
+    *   hft init - make a new template for a controller (and optionally a game?)
+    *   htf build - inserts the template stuff into the game/controller? or maybe we should do that automatically
+
+*   Fix uses of IO that are result,err ot err,result
 *   when creating zip check names are ascii, not too long?, and no case sensitive duplicates
 *   make hft-cli have publish command. It looks at package.json, based on type
     it checks various things can complains if wrong. Examples.
@@ -1142,6 +1128,34 @@ Done
 
 Rejected
 --------
+
+*   look into nsis has the installer solution
+    *   windows only.
+*   Need to make installer creator for hft games
+
+    All this needs to do is unzip some files and run a script. Unfortunately
+    it also needs to work cross platform. By that speifically I mean someone
+    who makes a game on Mac needs to be able to make an installer for Windows
+    and someone who makes a game on Windows needs to be able to make an installer
+    for mac
+
+    Ideas:
+
+    *   Can use xar/mkbom for cross platform mac pkg creation
+    *   Windows can maybe use 7zip which is open source so maybe can compile on mac (I can dream)
+
+    Or, I could make the games install through HFT. Basically you'd need to have HFT running, you'd
+    click an "install me" link on the website, that would somehow trigger HFT to download a zip.
+
+    What I don't like about that is it *feels* less secure. It's not really less secure. Installing
+    anything on any machine is not secure. But, given you could install with a single click
+    and no permission escalation I'd be worried about bad games or bad code pretending to be games
+    etc.  Maybe I shouldn't worry about that? Does steam? Do indie game devs? We just all assume
+    they aren't being evil.
+
+    I could try to make sure only links from HFT can trigger an install. Could also put up a
+    "Are you sure you want to install?" message.
+
 
 *   switch to vertex shader based tilemaps.
 
