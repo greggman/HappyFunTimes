@@ -57,6 +57,9 @@ hft-supersimple
 hft-unitycharacterexample
 hft-unitysimpleexample
 
+*   add a hft.release.ignore array to package.json. if it doesn't exist
+    have it be "src". Use it in release.make
+
 *   make sync examples work. Where should they show up?
 
 *   should I switch all of the gamedb to meteor?
@@ -69,6 +72,10 @@ hft-unitysimpleexample
 
     Then, subsequent commands can use the old token. If error re-auth
 
+*   Can we make Unity plugin find the port? It could look in ~/.happyfuntimes/config or something.
+
+    I worry that it might not work in some other platform
+
 *   add loggly or other logging both client and server. Make sure you can opt in/out.
 *   make it possible to pass description to publish which becomes the "body" field.
 *   Use 'unconnected' collection to handle installed games? Copy gameDB into Collection?
@@ -76,16 +83,10 @@ hft-unitysimpleexample
 *   games installing status needs to be per game like play/itunes because 2+ games
     could be being installed at the same time.
 *   when making a package for a native game warn if EXEs are not near same date
-*   look up best practices for user:pass
-*   if --user=name has no colon prompt for password
 *   move username/password prompt to func
 *   install meteor browser policy
 *   turn off meteor websockets and live updating
 *   enable meteor spiderable
-*   implement hft download <gameId>
-
-    dowloads and installs a game by id.
-
 *   make "pubish-file"? that adds a specific file to a release?
 
     basically I want someone to be able to make an executable on
@@ -98,7 +99,6 @@ hft-unitysimpleexample
     notifes the gallery of an update.
 
 *   make 'fix' command that removes games that don't exist anymore
-*   on install add files that were written to installed list. on uninstall on delete those files?
 *   could make hft optionally register ip:port with happyfuntimes.net
 
     If ip address is not in one of the 'normal' class ips that are scanned by happyfuntimes
@@ -112,8 +112,6 @@ hft-unitysimpleexample
 
     maybe happyfuntimes.net shows 2 and game being played?
 
-*   make hft-config configure config.js
-*   make all hft commands have --config so you can point to a different config.
 *   stop using gameIds in certain ways.
 
     *   remove the need for gameids?
@@ -151,28 +149,7 @@ hft-unitysimpleexample
 
 *   remove adm-zip and replace with something else. Ideally something that streams
     so the entire file doesn't have to be in memory. Maybe zipstream?
-*   make hft-cli have publish command. It looks at package.json, based on type
-    it checks various things can complains if wrong. Examples.
 
-    gameType: "html"
-
-        * update version (ask, allow no ask via cmd line (--auto), and skip (--no version))
-        * make release on github
-        * zip up entire folder
-        * update to github
-
-    gameType: "native"
-
-        * update version (ask, allow no ask via cmd line (--auto), and skip (--no version))
-        * check for platforms
-        * warn about missing platforms (ask?)
-        * update package.json if it doesn't match for missing platforms
-        * zip up release folders, one for each platform? Two one per platform and one for assets?
-        * upload releases to git
-
-*   If game is installed button should say "Run"
-
-*   when creating zip check names are ascii, not too long?, and no case sensitive duplicates
 *   fix queuing of messages. They queue objects but should queue strings.?.
 *   have server start __hft__ game.
     *   have it mark that as not listable? (what's the point of the lists?)
@@ -182,8 +159,6 @@ hft-unitysimpleexample
 *   Fix uses of IO that are result,err ot err,result
 *   Have SuperHappyFunTimes check that HappyFunTimes is running and request to run it. gray out install buttons
     until it's running. Use game to run it?
-*   Check failure on native-msg-box
-    in particular check if native parts don't run that we don't return OK or YES
 *   Sanatize msgs to native-msg-box
 
 *   Need to make installer for hft
@@ -805,6 +780,38 @@ hft-unitysimpleexample
 Done
 ----
 
+*   when creating zip check names are ascii, not too long?, and no case sensitive duplicates
+*   make hft-cli have publish command. It looks at package.json, based on type
+    it checks various things can complains if wrong. Examples.
+
+    gameType: "html"
+
+        * update version (ask, allow no ask via cmd line (--auto), and skip (--no version))
+        * make release on github
+        * zip up entire folder
+        * update to github
+
+    gameType: "native"
+
+        * update version (ask, allow no ask via cmd line (--auto), and skip (--no version))
+        * check for platforms
+        * warn about missing platforms (ask?)
+        * update package.json if it doesn't match for missing platforms
+        * zip up release folders, one for each platform? Two one per platform and one for assets?
+        * upload releases to git
+
+*   Check failure on native-msg-box
+    in particular check if native parts don't run that we don't return OK or YES
+*   If game is installed button should say "Run"
+*   make all hft commands have --config so you can point to a different config.
+*   make hft-config configure config.js
+*   implement hft download <gameId>
+
+    dowloads and installs a game by id.
+
+*   on install add files that were written to installed list. on uninstall on delete those files?
+*   look up best practices for user:pass
+*   if --user=name has no colon prompt for password
 *   FIX GEAR ICON!!!
 *   fix hft init so it works from scratch. Add npm test!
 *   make gameviews template based so we can make disconnect behavior common

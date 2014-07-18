@@ -82,6 +82,8 @@ var askPrompt = function(questions) {
 
 var ReleaseManager = function() {
 
+  var goodNameRE = /^[a-zA-Z0-9_ \.\\\/-]+$/;
+
   var makeZip = function(gameId, baseSrcPath, destPath, filter) {
     if (filter === undefined) {
       filter = function() { return true; }
@@ -95,6 +97,33 @@ var ReleaseManager = function() {
 
     var fileNames = readdirtree.sync(baseSrcPath, {filter: /^(?!\.)/});
     fileNames = fileNames.filter(filter);
+
+    // check there are no non-casesenative duplicates
+    var lowerCaseFileNames = fileNames.map(function(f) { return f.toLowerCase(); }).sort();
+    for (var ii = 0; ii < lowerCaseFileNames.length - 1; ++ii) {
+      if (lowerCaseFileNames[ii] == lowerCaseFileNames[ii + 1]) {
+        return Promise.reject(new Error("two filenames are different only by case which won't work on some platforms: " + lowerCaseFileNames[ii]));
+      }
+    }
+
+    // check there are no non-ascii names
+    var badNames = fileNames.filter(function(fileName) {
+      return !goodNameRE.test(fileName);
+    });
+
+    if (badNames.length > 0) {
+      return Promise.reject(new Error("only alphanumeric names are allowed a-z 0-9 _ - and space:\n\t" + badNames.join("\n\t")));
+    }
+
+    // check no names are too long. Let's limit to 192 characters so /Users/someusername/happyFunTimes/whatever/ +  192 is less than 256?
+    var longNames = fileNames.filter(function(fileName) {
+      return fileName.length > 192;
+    });
+
+    if (longNames.length > 0) {
+      return Promise.reject(new Error("max path length 192 characters. These are too long\n\t" + longNames.join("\n\t")));
+    }
+
     var zip = new ZipWriter();
     fileNames.forEach(function(fileName) {
       var zipName = path.join(gameId, fileName).replace(/\\/g, '/');
