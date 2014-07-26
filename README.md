@@ -73,256 +73,91 @@ There's a Unity3D library if you'd like to make the game in Unity3D.
         button for the speed contest. Change to a 3 letter box to let a player
         enter their high score initials.
 
-*   The API is simple to use.
+*   The API is simple to use (for some defintion of *simple* :D).
 
-    Basically there are 2 libraries and a webserver.
+    Games create a `GameServer` object
 
-    `gameserver.js` provides a library that runs in the game that tracks players joining or
-    leaving the game. It lets the game receive input from those players and
-    send messages to them. (There's a Unity version of this library)
+       var server = new GameServer({gameId: "myAwesomeGame"});
 
-    `gameclient.js` provides a library that lets smartphones (browsers) connect to the game and
-    send and receive messages. (There is NO Unity version of this library as the whole
-    point is anyone with a smartphone should be able to play immediately, no need to
-    install anything).
+    From that point on anytime a player connects the GameServer will emit an event
+    `playerconnect`
 
-    `server.js` is a node.js based webserver. At a basic level all it does is relay
-    messages to and from the smartphones and the game.
+       server.addEventListener('playerconnect', createNewPlayer);
 
-    Once connected, anytime a player (smartphone) connects to the game the game
-    will get a `playerconnect` event and passed a NetPlayer object. After that
-    any message the player's smartphone sends generates a corresponding event
-    in the game on that NetPlayer. Conversely, any message the game sends to a
-    NetPlayer object generates a corresponding event on the smartphone that corresponds to
-    that NetPlayer.
+    It's up to you what to do when a new player connects. For example if you had a `Player`
+    object you might do something like this
 
-    You can think of it this way. In the game (the code displaying the game on a large screen)
+       var players = [];
 
-    When a player connects `gameserver` will generate an event. `playerconnect`. So
+       Player = function(netPlayer) {
+         this.netPlayer = netPlayer;  // remember this Player's NetPlayer
+       };
 
-        gameServer.addEventListener('playerconnect', someFunctionToMakeANewPlayer);
+       // make a new Player anytime the 'playerconnect' event is emitted
+       function createNewPlayer(netPlayer) {
+         players.push(new Player(netPlayer));
+       }
 
-        var someFunctionToMakeAPlayer = function(netplayer) {
-          // Generate a new player and remember netplayer.
-          ...
+    If the player disconnects or quits the `NetPlayer` will emit a `disconnect` event.
+    If we want to handle that we might go
+
+        Player = function(netPlayer) {
+          this.netPlayer = netPlayer;  // remember this Player's NetPlayer
+
+          netPlayer.addEventListener('disconnect', Player.prototype.remove.bind(this));
         };
 
-    The users's webpage (smartphone) can send any command it wants by calling `GameClient.sendCmd`. Example
-
-        gameClient.sendMsg('move', { x: 10, y: 20 });
-
-    Back in the game, the corresponding `netplayer` will get an event.
-
-        var someFunctionToHandleMove = function(data) {
-           console.log("You got a move event: " + data.x + "," + data.y);
+        Player.prototype.remove = function() {
+          players.splice(players.indexOf(this), 1);  // remove ourselves from the array of players.
         };
 
-        netPlayer.addEventListener('move', someFunctionToHandleMove);
+    We can send events to the player's phone by calling `netPlayer.sendCmd` For example
 
-    Conversely you can send messages back to the user's display by sending commands on the corresponding `netplayer`
-
-        netPlayer.sendCmd('scored', { points: 200 });
-
-    That player's `gameclient` will get that event
-
-        var someFunctionToHandleScoring = function(data) {
-           console.log("You scored " + data.points + " points!");
+        Player.prototype.score = function(points) {
+          this.netPlayer.sendCmd('score', {points: points});
         };
 
-        gameclient.addEventListener('scored', someFunctionToHandleScoring);
+    That will cause an event `score` to be emitted on the player's phone. The player's phone
+    can has a correspondiing `sendCmd` function. When called an event will be emitted on that
+    player's `NetPlayer` object.  Add listeners for any events you make up
 
-    A simple client might look like this
+        Player = function(netPlayer) {
+          this.netPlayer = netPlayer;  // remember this Player's NetPlayer
 
-        <h1 id="status">status</h1>
-        <div id="input" style="width: 300px; height: 300px; border: 1px solid black;"></div>
-        <script src="utils/input.js"></script>
-        <script src="gameclient.js"></script>
-        <script>
-        var score = 0;
-        var statusElem = document.getElementById("status");
-        var inputElem = document.getElementById("input");
-        var client = new GameClient({ gameId: "simple" });
-
-        var randInt = function(range) {
-          return Math.floor(Math.random() * range);
+          netPlayer.addEventListener('disconnect', Player.prototype.remove.bind(this));
+          netPlayer.addEventListener('moveleft', Player.prototype.moveleft.bind(this));
+          netPlayer.addEventListener('moveright', Player.prototype.moveright.bind(this));
+          netPlayer.addEventListener('jump', Player.prototype.jump.bind(this));
         };
 
-        client.addEventListener('connect', function() {
-          statusElem.innerHTML = "you've connected to the relayserver";
+    Whatever data you pass to `sendCmd` will arrive with the event.
+
+        ...
+        this.netPlayer.sendCmd('die', {
+          reason: "So and so killed you",
+          pointsToLose: 100,
         });
 
-        client.addEventListener('disconnect', function() {
-          statusElem.innerHTML = "you were disconnected from the relayserver";
-        });
+    On the phone we create a `GameClient`
 
-        // Sends a move command to the game.
-        //
-        // This will generate a 'move' event in the corresponding
-        // NetPlayer object in the game.
-        var sendMoveCmd = function(position) {
-          client.sendCmd('move', {
-            x: position.x,
-            y: position.y,
-          });
-        };
+        var client = new GameClient({gameId: "myAwesomeGame"});
 
-        // Pick a random color
-        var color =  'rgb(' + randInt(256) + "," + randInt(256) + "," + randInt(256) + ")";
+    Just like `NetPlayer` above we can listen for events.
 
-        // Send the color to the game.
-        //
-        // This will generate a 'color' event in the corresponding
-        // NetPlayer object in the game.
-        client.sendCmd('color', {
-          color: color,
-        });
-        inputElem.style.backgroundColor = color;
+        client.addEventListener('score', handleScore);
 
-        // Send a message to the game when the screen is touched
-        inputElem.addEventListener('touchmove', function(event) {
-          sendMoveCmd(input.getRelativeCoordinates(event.target, event.touches[0]));
-          event.preventDefault();
-        });
-
-        inputElem.addEventListener('mousemove', function(event) {
-          sendMoveCmd(input.getRelativeCoordinates(event.target, event));
-        });
-
-        // Update our score when the game tells us.
-        client.addEventListener('scored', function(cmd) {
-          score += cmd.points;
-          statusElem.innerHTML = "You scored: " + cmd.points + " total: " + score;
-        });
-        </script>
-
-    A simple game would be something like this
-
-        <style>
-        #playfield {
-          position: relative;
-          width: 332px;
-          height: 332px;
-          border: 1px solid black;
+        function handleScore(data) {
+          console.log("you got " + data.points + " points");
         }
-        .visual {
-          position: absolute;
-          width: 32px;
-          height: 32px;
-          border: 1px solid black;
-          border-radius: 16px;
-        }
-        }
-        </style>
-        <h1 id="status"></h1>
-        <div id="playfield"></div>
-        <script src="gameserver.js"></script>
-        <script>
-        var statusElem = document.getElementById("status");
-        var container = document.getElementById("playfield");
-        var itemSize = 16;
-        var playfieldWidth = 300;
-        var playfieldHeight = 300;
 
-        var randInt = function(range) {
-          return Math.floor(Math.random() * range);
-        };
+    Similarly you can send events to the game
 
-        var pickRandomPosition = function() {
-          return {
-            x: randInt(playfieldWidth),
-            y: randInt(playfieldHeight),
-          };
-        };
-
-        var Visual = function(container) {
-          this.element = document.createElement('div');
-          this.element.className = "visual";
-          container.appendChild(this.element);
-        };
-
-        Visual.prototype.setColor = function(color) {
-          this.element.style.backgroundColor = color;
-        };
-
-        Visual.prototype.updatePosition = function(position) {
-          this.element.style.left = position.x + "px";
-          this.element.style.top  = position.y + "px";
-        };
-
-        Visual.prototype.remove = function() {
-          this.element.parentNode.removeChild(this.element);
-        };
-
-        var Goal = function(container) {
-          this.visual = new Visual(container);
-          this.visual.setColor("red");
-          this.pickGoal();
-          this.radiusesSquared = itemSize * 2 * itemSize;
-        };
-
-        Goal.prototype.pickGoal = function() {
-          this.position = pickRandomPosition();
-          this.visual.updatePosition(this.position);
-        };
-
-        Goal.prototype.hit = function(otherPosition) {
-          var dx = otherPosition.x - this.position.x;
-          var dy = otherPosition.y - this.position.y;
-          return dx * dx + dy * dy < this.radiusesSquared;
-        };
-
-        var Player = function(netPlayer, name, container) {
-          this.netPlayer = netPlayer;
-          this.name = name;
-          this.visual = new Visual(container);
-          this.position = pickRandomPosition();
-          this.visual.updatePosition(this.position);
-
-          netPlayer.addEventListener('disconnect', Player.prototype.disconnect.bind(this));
-          netPlayer.addEventListener('move', Player.prototype.movePlayer.bind(this));
-          netPlayer.addEventListener('color', Player.prototype.setColor.bind(this));
-        };
-
-        // The player disconnected.
-        Player.prototype.disconnect = function() {
-          this.netPlayer.removeAllListeners();
-          this.visual.remove();
-        };
-
-        Player.prototype.movePlayer = function(cmd) {
-          this.position.x = cmd.x;
-          this.position.y = cmd.y;
-          this.visual.updatePosition(this.position);
-          if (goal.hit(this.position)) {
-            // This will generate a 'scored' event on the client (player's smartphone)
-            // that corresponds to this player.
-            this.netPlayer.sendCmd('scored', {
-              points: 5 + randInt(6), // 5 to 10 points
-            });
-            goal.pickGoal();
-          }
-        };
-
-        Player.prototype.setColor = function(cmd) {
-          this.visual.setColor(cmd.color);
-        };
-
-        var server = new GameServer({ gameId: "simple" });
-        var goal = new Goal(container);
-
-        server.addEventListener('connect', function() {
-          statusElem.innerHTML ="you've connected to the relayserver";
+        window.addEventListener('pointerdown', function(e) {
+           client.sendCmd('jump', { power: e.mouseY });
         });
 
-        server.addEventListener('disconnect', function() {
-          statusElem.innerHTML = "you were disconnected from the relayserver";
-        });
-
-        // A new player has arrived.
-        server.addEventListener('playerconnect', function(netPlayer, name) {
-          new Player(netPlayer, name, container);
-        });
-        </script>
+    It's up to you to decide which events to send and receive for your particular
+    game's needs.
 
 *   There is also a synchronized clock across machines.
 

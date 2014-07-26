@@ -1,3 +1,12 @@
+*   separate inmemfilecache into cache vs filecache
+*   Optionally allow games to advertize they are running.
+
+    Superhappyfuntimes can show games in your area. Think
+
+        15 people playing jumpjump at Joe's Bar in Maintown, MA
+        17 people playing shootshoot at Big Burger in Anywhere, USA
+        etc..
+
 *   Need to make installer for hft
     *   Windows
     *   Mac
