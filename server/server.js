@@ -36,6 +36,7 @@ var g = {
   screenshotCount: 0,
   baseDir: "public",
   cwd: process.cwd(),
+  hftDomain: "happyfuntimes.net",
 };
 
 var config = require('./config');
@@ -47,6 +48,8 @@ var optionator = require('optionator')({
     { option: 'address',          type: 'String',  description: 'ip address for dns and controller url conversion'},
     { option: 'config-path',      type: 'String',  description: 'config path'},
     { option: 'settings-path',    type: 'String',  description: 'settings path'},
+    { option: 'hft-domain',       type: 'String',  description: 'domain for happyfuntimes site'},
+    { option: 'private-server',   type: 'Boolean', description: 'do not inform happyfuntimes.net about this server. Users will not be able to use happyfuntimes.net to connect to your games'},
   ],
   helpStyle: {
     typeSeparator: '=',
@@ -91,6 +94,7 @@ var Cache =  require('inmemfilecache');
 var express = require('express');
 var app = express();
 var HFTGame = require('./hftgame');
+var hftSite = require('./hftsite');
 
 var fileCache = new Cache();
 var relayServer;
@@ -107,6 +111,7 @@ if (!g.address) {
   }
 }
 console.log("using ip address: " + g.address);
+hftSite.setup(g);
 
 function postHandler(request, callback) {
   var query_ = { };
@@ -182,7 +187,7 @@ var handleHappyFunTimesPingRequest = function(query, res) {
 var handlePOST = (function() {
   var postCmdHandlers = {
     time: handleTimeRequest,
-    screenshot: handleScreenshotRequest,
+    //screenshot: handleScreenshotRequest,
     listRunningGames: handleListRunningGamesRequest,
     listAvailableGames: handleListAvailableGamesRequest,
     happyFunTimesPing: handleHappyFunTimesPingRequest,

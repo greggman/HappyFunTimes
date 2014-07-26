@@ -32,6 +32,7 @@
 "use strict";
 
 var debug = require('debug')('Game');
+var hftSite = require('./hftsite');
 
 /**
  * @typedef {object} Game~Options
@@ -174,6 +175,7 @@ Game.prototype.forEachPlayer = function(fn) {
  *        includes
  */
 Game.prototype.assignClient = function(client, relayserver, data) {
+  hftSite.inform();
   if (this.client) {
     console.error("this game already has a client!");
   }
