@@ -54,7 +54,7 @@ var readDirTreeSync = function(filePath, options) {
     var subdirFileName = path.join(filePath, fileName);
     var stat = fs.statSync(subdirFileName);
     if (stat.isDirectory()) {
-      subdirFilenames.push(readDirTreeSync(subdirFileName).map(function(subFileName) {
+      subdirFilenames.push(readDirTreeSync(subdirFileName, options).map(function(subFileName) {
         return path.join(fileName, subFileName);
       }));
     }
