@@ -1,3 +1,9 @@
+*   make way to quit HFT from browser.
+*   make hft exe launch browser
+    *   osx
+    *   win
+    *   linux
+*   make hft-exe update Info.plist version from hft version?
 *   separate inmemfilecache into cache vs filecache
 *   Optionally allow games to advertize they are running.
 
