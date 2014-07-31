@@ -50,6 +50,7 @@ var optionator = require('optionator')({
     { option: 'settings-path',    type: 'String',  description: 'settings path'},
     { option: 'hft-domain',       type: 'String',  description: 'domain for happyfuntimes site'},
     { option: 'private-server',   type: 'Boolean', description: 'do not inform happyfuntimes.net about this server. Users will not be able to use happyfuntimes.net to connect to your games'},
+    { option: 'app-mode',         type: 'Boolean', description: 'run as an app'},
   ],
   helpStyle: {
     typeSeparator: '=',

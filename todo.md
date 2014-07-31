@@ -1,5 +1,8 @@
+*   Figure out how to get HFT on start screen
+*   make --app-mode
+    *   make small splash "HappyFunTimes Running ..."
 *   make way to quit HFT from browser.
-*   make hft exe launch browser
+*   make hft exe launch in default browser but ask for chrome or firefox
     *   osx
     *   win
     *   linux

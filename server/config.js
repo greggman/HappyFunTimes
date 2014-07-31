@@ -34,8 +34,16 @@
 var fs = require('fs');
 var path = require('path');
 var hanson = require('hanson');
+var home = require('./home');
 
-var g_configPath = path.join(process.env.HOME || process.env.APPDATA, ".happyfuntimes", "config.json");
+var baseName = "HappyFunTimes";
+if (process.platform.substring(0, 3).toLowerCase() == "win") {
+} else if (process.platform.toLowerCase() == "darwin") {
+} else {
+  baseName = ".happyfuntimes";
+}
+
+var g_configPath = path.join(home.appDataDir, baseName, "config.json");
 var g_configRead = false;
 var g_settingsPath = path.join(__dirname, "..", "hft.hanson");
 var g_settingsRead = false;
