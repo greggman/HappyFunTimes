@@ -57,6 +57,7 @@ var HFTPlayer = function(netPlayer, game, gameDB) {
   netPlayer.addEventListener('getGameInfo', HFTPlayer.prototype.handleGetGameInfo.bind(this));
   netPlayer.addEventListener('install', HFTPlayer.prototype.handleInstall.bind(this));
   netPlayer.addEventListener('launch', HFTPlayer.prototype.handleLaunch.bind(this));
+  netPlayer.addEventListener('quit', HFTPlayer.prototype.handleQuit.bind(this));
 };
 
 HFTPlayer.prototype.disconnect = function() {
@@ -80,6 +81,11 @@ HFTPlayer.prototype.sendError = function(msg) {
   this.sendCmd("errorMsg", {
     msg: msg,
   });
+};
+
+HFTPlayer.prototype.handleQuit = function() {
+  console.log("exiting happyFunTimes");
+  process.exit(0);
 };
 
 HFTPlayer.prototype.handleGetGameInfo = function(data) {

@@ -1,6 +1,17 @@
+*   Make HFT launch browser
+*   Add Quit option
+*   Make upgrade work?
+*   Make shft live!
+    *   make registration server work
+    *   make minimal design
+
+
+
+*   Add options to HFT
 *   Figure out how to get HFT on start screen
 *   make --app-mode
     *   make small splash "HappyFunTimes Running ..."
+    *   check if it's installed. (config exists), if not make it.
 *   make way to quit HFT from browser.
 *   make hft exe launch in default browser but ask for chrome or firefox
     *   osx

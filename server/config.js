@@ -69,6 +69,11 @@ var init = function() {
     fs.writeFileSync(g_configPath, JSON.stringify({
       installDir: path.resolve(path.normalize(path.join(__dirname, ".."))),
       gamesDir: path.resolve(path.normalize(path.join(__dirname, "..", "public", "games"))),
+      options: [
+        { name: "dns",          value: false, },
+        { name: "private",      value: false, },
+        { name: "phonecontrol", value: true,  },
+      ],
     }, undefined, "  "));
     console.log("Wrote config");
   }

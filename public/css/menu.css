@@ -144,7 +144,59 @@ h1 {
   -webkit-align-items: center;
   min-height: auto;
 }
+a:visited {
+    color: orange;
+}
+.hft-hidden {
+    display: none;
+}
 
+/* fill the screen with one centered thing. block out everthing else.
+
+  usage:
+  <div id="sompin" class="hft-hidden">
+     <div class="hft-fullscreencenter">
+        <div>Msg etc..</div>
+     </div>
+  </div>
+
+  #sompin>div {
+    text-align: center; // if you want the text centered vs the element
+    background-color: purple; // if you want some color other than white
+  }
+
+  // on some event
+  $("sompin").style.display = "block";
+*/
+.hft-fullscreencenter {
+  z-index: 5000;
+  background-color: white;
+  position: fixed;
+  top: 0px;
+  left: 0px;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  display: -webkit-flex;
+  flex-flow: column;
+  -webkit-flex-flow: column;
+  justify-content: center;
+  align-content: center;
+  align-items: center;
+  -webkit-justify-content: center;
+  -webkit-align-content: center;
+  -webkit-align-items: center;
+  min-height: auto;
+}
+#exited>div {
+    color: white;
+    text-align: center;
+    background-color: blue;
+}
+#disconnected>div {
+    text-align: center;
+    background-color: red;
+}
 #hft-settings {
   position: absolute;
   top: 0px;
@@ -169,6 +221,17 @@ h1 {
   display: table-cell;
   text-align: center;
   vertical-align: middle;
+}
+#hft-icons {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+}
+.hft-icon {
+    display: inline-block;
+    background-color: white;
+    border: 2px solid black;
+    border-radius: 5px;
 }
 
 /* Smartphones (portrait and landscape) ----------- */

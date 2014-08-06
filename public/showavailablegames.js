@@ -43,6 +43,11 @@ requirejs(
     Misc,
     Strings) {
 
+  var $ = document.getElementById.bind(document);
+  var g = {
+    elementToShowOnDisconnect: $("disconnected"),
+  };
+
   var handleCmdErrorMsg = function(data) {
     // TODO: change to html dialog.
     alert(data.msg);
@@ -52,15 +57,26 @@ requirejs(
     window.location.href = data.url;
   };
 
+  var handleDisconnect = function() {
+    g.elementToShowOnDisconnect.style.display = "block";
+  };
+
+  var params = Misc.parseUrlQuery();
+
   var client = new GameClient({
     gameId: "__hft__",
   });
 
   client.addEventListener('errorMsg', handleCmdErrorMsg);
   client.addEventListener('redirect', handleRedirectMsg);
+  client.addEventListener('disconnect', handleDisconnect);
 
-  var gamemenu = document.getElementById("gamemenu");
-  var params = Misc.parseUrlQuery();
+  $('quit').addEventListener('click', function() {
+    g.elementToShowOnDisconnect = $("exited");
+    client.sendCmd('quit');
+  }, false);
+
+  var gamemenu = $("gamemenu");
 
   var itemTemplateSuffix = "-item-template";
   var hiddenMsgSuffix = "-msg";
@@ -116,7 +132,7 @@ requirejs(
           continue;
         }
         var msgId = gameType.toLowerCase() + hiddenMsgSuffix;
-        var msgElement = document.getElementById(msgId);
+        var msgElement = $(msgId);
         if (!msgElement) {
           console.error("missing msg element: " + msgId);
           continue;
@@ -148,7 +164,7 @@ requirejs(
           continue;
         }
         var msgId = gameType.toLowerCase() + hiddenMsgSuffix;
-        var msgElement = document.getElementById(msgId);
+        var msgElement = $(msgId);
         if (!msgElement) {
           console.error("missing msg element: " + msgId);
           continue;
@@ -180,7 +196,7 @@ requirejs(
           // Yet another reason maybe we should just go directly to the game?
           window.history.replaceState({}, "", window.location.origin + window.location.pathname);
           var event = new Event('click');
-          var elem = document.getElementById(gameInfo.count + "-button");
+          var elem = $(gameInfo.count + "-button");
           elem.dispatchEvent(event);
         }
       }
