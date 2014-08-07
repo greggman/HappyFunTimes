@@ -1,4 +1,7 @@
-*   Make HFT launch browser
+*   Make it if launched twice it doesn't mess up. (needs to launch browser reguardless but not run server)
+*   Make HFT launch browser on --app-mode
+*   add option the choose browser to launch?
+*   Make HFT init config on --app-mode
 *   Add Quit option
 *   Make upgrade work?
 *   Make shft live!

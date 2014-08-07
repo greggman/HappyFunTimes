@@ -26,7 +26,9 @@
     "semver": "^2.3.1",
     "asks": "^1.0.2",
     "native-msg-box": "0.0.3",
-    "optionator": "^0.4.0"
+    "optionator": "^0.4.0",
+    "launchpad": "^0.3.0",
+    "launchpadlite": "^0.3.5"
   },
   "devDependencies": {
     "grunt": "^0.4.5",

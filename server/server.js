@@ -96,6 +96,7 @@ var express = require('express');
 var app = express();
 var HFTGame = require('./hftgame');
 var hftSite = require('./hftsite');
+var browser = require('./browser');
 
 var fileCache = new Cache();
 var relayServer;
@@ -575,6 +576,21 @@ for (var ii = 0; ii < ports.length; ++ii) {
 
 if (g.dns) {
   var dnsServer = new DNSServer({address: g.address});
+}
+
+//browser.getBrowsers().then(function(browsers) {
+//  console.log("browsers: " + browsers);
+//}, function(err) {
+//  console.error(err);
+//  if (err.stack) {
+//    console.error(err.stack);
+//  }
+//});
+if (args.appMode) {
+  browser.launch("http://localhost:8080/games.html", config.getConfig().preferredBrowser).then(function() {
+  }, function(err) {
+    console.error(err);
+  });
 }
 
 
