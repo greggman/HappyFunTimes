@@ -1,3 +1,4 @@
+*   Make games.html detect features and suggest a different browser
 *   Make it if launched twice it doesn't mess up. (needs to launch browser reguardless but not run server)
 *   Make HFT launch browser on --app-mode
 *   add option the choose browser to launch?

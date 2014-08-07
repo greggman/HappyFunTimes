@@ -79,6 +79,15 @@ var init = function() {
   }
 };
 
+/**
+ * Launches a browser with the "url"
+ *
+ * @param {string} url Url to launch
+ * @param {string?} opt_browserName name of browser you'd prefer
+ *        it to use. Not it will use any browser it can find if
+ *        this one is not available.
+ * @return {Promise} generic promise.
+ */
 var launchBrowser = function(url, opt_browserName) {
   var browserName = opt_browserName || "default";
 
@@ -102,7 +111,7 @@ var launchBrowser = function(url, opt_browserName) {
     var tries = browsersToTry.map(function(browser) {
       return function() {
         debug("trying: " + browser);
-        new Promise(function(fulfill, reject) {
+        return new Promise(function(fulfill, reject) {
           debug("launcher: " + browser + " -> " + url);
           g.launcher[browser](url, function(err, processInstance) {
             if (err) {
@@ -120,32 +129,42 @@ var launchBrowser = function(url, opt_browserName) {
     var skip = function() {
     };
 
-    tries.reduce(function(cur, next) {
-      return cur.then(skip, next);
-    }, Promise.reject()).then(function() {
+    tries.push(function() {
       if (success) {
-        console.log("launched: " + goodBrowser);
         return Promise.resolve();
       } else {
         return Promise.reject("could not launch browser. Tried: " + browsersToTry);
       }
     });
+
+    return tries.reduce(function(cur, next) {
+      return cur.then(skip, next);
+    }, Promise.reject());
   });
 };
 
+/**
+ * @callback {Browser~List}
+ * @param {string[]} list of names available browsers. Pass one
+ *      to launch if you want. empty list means none (can't
+ *      imagine that happening)
+ */
+
+/**
+ * @typedef {Promise} Browser~ListPromise
+ * @fulfill {Browser~List} callback for list of browsers.
+ */
+
+/**
+ * gets the available browsers.
+ * @returns {Browser~ListPromise} a promise that provides the
+ *        browser list.
+ */
 var getBrowsers = function() {
   return init().then(function() {
     return Promise.resolve(g.browsers);
   });
 };
-//      launcher["default"]('http://greggman.com', function(e, i) {
-//        if (e) {
-//          console.error("error launching browser");
-//        } else {
-//          console.log("launched?");
-//        }
-//        process.exit(0);
-//      });
 
 exports.launch = launchBrowser;
 exports.getBrowsers = getBrowsers;

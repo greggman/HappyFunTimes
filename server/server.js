@@ -77,26 +77,31 @@ for (var prop in args) {
 
 config.setup(args);
 
-var http = require('http');
-var debug = require('debug')('server');
-var url = require('url');
-var fs = require('fs');
-var sys = require('sys');
-var path = require('path');
-var util = require('util');
-var mime = require('mime');
-var querystring = require('querystring');
-var strings = require('./strings');
-var highResClock = require('./highresclock');
-var DNSServer = require('./dnsserver');
-var iputils = require('./iputils');
-var gameDB = require('./gamedb');
+if (args.appMode) {
+  config.init();  // makes the config file if it doesn't exist.
+}
+
+var browser = require('./browser');
 var Cache =  require('inmemfilecache');
+var debug = require('debug')('server');
+var DNSServer = require('./dnsserver');
 var express = require('express');
-var app = express();
+var fs = require('fs');
+var gameDB = require('./gamedb');
 var HFTGame = require('./hftgame');
 var hftSite = require('./hftsite');
-var browser = require('./browser');
+var highResClock = require('./highresclock');
+var http = require('http');
+var iputils = require('./iputils');
+var mime = require('mime');
+var path = require('path');
+var Promise = require('promise');
+var querystring = require('querystring');
+var strings = require('./strings');
+var sys = require('sys');
+var url = require('url');
+var util = require('util');
+var app = express();
 
 var fileCache = new Cache();
 var relayServer;
@@ -114,6 +119,8 @@ if (!g.address) {
 }
 console.log("using ip address: " + g.address);
 hftSite.setup(g);
+
+g.cwd = path.normalize(path.join(__dirname, ".."));
 
 function postHandler(request, callback) {
   var query_ = { };
@@ -251,10 +258,6 @@ var sendStringResponse = function(res, data, opt_mimeType) {
 
 var sendFileResponse = function(res, fullPath, opt_prepFn) {
   debug("path: " + fullPath);
-//  if (g.cwd != fullPath.substring(0, g.cwd.length)) {
-//    console.error("forbidden: " + fullPath + "\n");
-//    return send403(res);
-//  }
   var mimeType = mime.lookup(fullPath);
   if (mimeType) {
     fileCache.readFile(fullPath, function(err, data){
@@ -535,7 +538,8 @@ var tryStartRelayServer = function() {
   if (numResponsesNeeded == 0) {
     if (goodPorts.length == 0) {
       console.error("NO PORTS available. Tried port(s) " + ports.join(", "));
-      process.exit(1);
+      launchBrowser(true);
+      return;
     }
     var RelayServer = require('./relayserver.js');
     relayServer = new RelayServer(servers, {
@@ -549,6 +553,7 @@ var tryStartRelayServer = function() {
       gameDB: gameDB,
     });
     relayServer.assignAsClientForGame({gameId: "__hft__", showInList: false}, hftGame.getClientForGame());
+    launchBrowser(false);
   }
 };
 
@@ -586,10 +591,26 @@ if (g.dns) {
 //    console.error(err.stack);
 //  }
 //});
-if (args.appMode) {
-  browser.launch("http://localhost:8080/games.html", config.getConfig().preferredBrowser).then(function() {
+
+var launchBrowser = function(exit) {
+
+  var next = function() {
+    if (exit) {
+      process.exit(1);
+    }
+  };
+
+  var p;
+  if (args.appMode) {
+    p = browser.launch("http://localhost:" + g.port + "/games.html", config.getConfig().preferredBrowser);
+  } else {
+    p = Promise.resolve();
+  }
+  p.then(function() {
+     next();
   }, function(err) {
     console.error(err);
+    next();
   });
 }
 
