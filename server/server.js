@@ -81,6 +81,7 @@ if (args.appMode) {
   require('../management/games').init();
 }
 
+var AppleCaptivePortalHandler = require('./apple-captive-portal-handler');
 var browser = require('./browser');
 var Cache =  require('inmemfilecache');
 var debug = require('debug')('server');
@@ -254,7 +255,7 @@ var sendStringResponse = function(res, data, opt_mimeType) {
   });
   res.write(data);
   res.end();
-}
+};
 
 var sendFileResponse = function(res, fullPath, opt_prepFn) {
   debug("path: " + fullPath);
@@ -286,131 +287,12 @@ var sendFileResponse = function(res, fullPath, opt_prepFn) {
   }
 };
 
-/**
- * Object to try to encapulate dealing with Apple's captive
- * portal detector.
- *
- * Note: I'm sure there's a better way to do this but ... my
- * guess is most captive portal handling is done at a lower
- * level where the system tracking who can access the network
- * and who can't does so by tracking MAC addresses. A router can
- * do that but at the TCP/IP level of an app like this the MAC
- * address of a particular connection is not available AFAIK.
- *
- * So, we do random things like session ids. For the purpose of
- * HappyFunTimes our only goal is to connect the player to the
- * games through Apple's captive portal detector.
- *
- * By snooping the network it appears Apple's portal detector
- * will always set the `user-agent` and use some semi-random
- * looking UUID as the path. If we see that user agent then we
- * make up a sessionid from the path. The flow is something like
- * this
- *
- *   1. Recognize Apple's Captive Portal Detector (user-agent)
- *   2. Use UUID like path as sessionId
- *   3. Send /captive-portal.html with sessionid embeded in url
- *      to game-login.html and JS redirect to that url.
- *   4. when we serve game-login.html we recognize the session
- *      id and mark that session id as "loggedIn"
- *   5. Apple's captive portal detector will try again with the
- *      same session id, this time we'll return the response it
- *      expects. Apple's captive protal detector will think
- *      the system can access the net. It will change it's UI
- *      from "Cancel" to "Done" and any links displayed when
- *      clicked will launch Safari (or the user's default
- *      browser on OSX).
- *
- * @private
- */
-var AppleCaptivePortalHandler = function() {
-  // This is a total guess. I'm assuming iOS sends a unique URL. I can use that to hopefully
-  // return my redirection page the first time and apple's success page the second time
-  this.sessions = {};
-};
-
-/**
- * Check if this request has something to do with captive portal
- * handling and if so handle it.
- *
- * @param {!Request} req node request object
- * @param {!Response} res node response object
- * @return {boolean} true if handled, false if not.
- */
-AppleCaptivePortalHandler.prototype.check = function(req, res) {
-  var parsedUrl = url.parse(req.url, true);
-  var filePath = querystring.unescape(parsedUrl.pathname);
-  var sessionId = filePath;
-  var isCheckingForApple = req.headers["user-agent"] && strings.startsWith(req.headers["user-agent"], "CaptiveNetworkSupport");
-  var isLoginURL = (filePath == "/game-login.html");
-  var isIndexURL = (filePath == "/index.html" || filePath == "/" || filePath == "/enter-name.html");
-
-  if (isIndexURL) {
-    sessionId = parsedUrl.query.sessionId;
-    if (sessionId) {
-      delete this.sessions[sessionId];
-    }
-    return false;
-  }
-
-  if (isLoginURL && req.headers["referer"]) {
-    sessionId = querystring.unescape(url.parse(req.headers["referer"]).pathname);
-  }
-
-  var session = sessionId ? this.sessions[sessionId] : undefined;
-  if (session) {
-
-    if (isLoginURL) {
-      session.loggedIn = true;
-      this.sendCaptivePortalHTML(res, sessionId, "game-login.html");
-      return true;
-    }
-
-    // We've seen this device before. Either it's checking that it can connect or it's asking for a normal webpage.
-    if (isCheckingForApple) {
-      if (session.loggedIn) {
-        var data = "<HTML><HEAD><TITLE>Success</TITLE></HEAD><BODY>Success</BODY></HTML>";
-        sendStringResponse(res, data);
-        return true;
-      }
-    }
-    this.sendCaptivePortalHTML(res, sessionId);
-    return true;
-  }
-
-  if (!isCheckingForApple) {
-    return false;
-  }
-
-  // We are checking for apple for the first time so remember the path
-  this.sessions[sessionId] = {};
-  this.sendCaptivePortalHTML(res, sessionId);
-  return true;
-};
-
-/**
- * Sends captive-portal.html (or optionally a different html
- * file) but does substitutions
- *
- * @param {Response} res node's response object.
- * @param {string} sessionId some sessionid
- * @param {string} opt_path base path relative path of html file
- */
-AppleCaptivePortalHandler.prototype.sendCaptivePortalHTML = function(res, sessionId, opt_path) {
-  opt_path = opt_path || "captive-portal.html";
-  var fullPath = path.normalize(path.join(g.cwd, g.baseDir, opt_path));
-  sendFileResponse(res, fullPath, function(str) {
-    var params = {
-      sessionId: sessionId,
-      localhost: g.address + ":" + g.port,
-    };
-    str = strings.replaceParams(str, params);
-    return str;
-  });
-};
-
-
-var appleCaptivePortalHandler = new AppleCaptivePortalHandler();
+var appleCaptivePortalHandler = new AppleCaptivePortalHandler({
+  baseDir: path.join(g.cwd, g.baseDir),
+  address: g.address,
+  port: g.port,
+  sendFileFn: sendFileResponse,
+});
 
 var templatify = function(str) {
   return strings.replaceParams(str, {

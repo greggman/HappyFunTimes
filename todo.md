@@ -1,3 +1,4 @@
+
 *   Make HFT init config on --app-mode
 *   Make upgrade work?
 *   Make shft live!
@@ -6,6 +7,9 @@
 
 
 
+*   if --dns
+    *   require port 80, fail if we can't get it
+    *   print 'need sudo' or figure out how to ask for permission
 *   in app-mode, before launching browser, if we can't run server should we check that hft is already running?
 
     or, maybe we should even do that before trying to run the server at all.
