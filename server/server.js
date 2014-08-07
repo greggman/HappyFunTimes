@@ -78,7 +78,7 @@ for (var prop in args) {
 config.setup(args);
 
 if (args.appMode) {
-  config.init();  // makes the config file if it doesn't exist.
+  require('../management/games').init();
 }
 
 var browser = require('./browser');
@@ -597,6 +597,14 @@ var launchBrowser = function(exit) {
   var next = function() {
     if (exit) {
       process.exit(1);
+    } else {
+      if (args.appMode) {
+        console.log([
+          "",
+          "---==> HappyFunTimes Running <==---",
+          "",
+        ].join("\n"))
+      }
     }
   };
 

@@ -1,9 +1,4 @@
-*   Make games.html detect features and suggest a different browser
-*   Make it if launched twice it doesn't mess up. (needs to launch browser reguardless but not run server)
-*   Make HFT launch browser on --app-mode
-*   add option the choose browser to launch?
 *   Make HFT init config on --app-mode
-*   Add Quit option
 *   Make upgrade work?
 *   Make shft live!
     *   make registration server work
@@ -11,18 +6,19 @@
 
 
 
+*   in app-mode, before launching browser, if we can't run server should we check that hft is already running?
+
+    or, maybe we should even do that before trying to run the server at all.
+
+*   Make games.html detect features and suggest a different browser
+*   Have browser check if it's the default for hft. If not suggest to make it the default for hft.
+*   add option the choose browser to launch?
 *   Add options to HFT
 *   Figure out how to get HFT on start screen
 *   make --app-mode
     *   make small splash "HappyFunTimes Running ..."
     *   check if it's installed. (config exists), if not make it.
-*   make way to quit HFT from browser.
-*   make hft exe launch in default browser but ask for chrome or firefox
-    *   osx
-    *   win
-    *   linux
 *   make hft-exe update Info.plist version from hft version?
-*   separate inmemfilecache into cache vs filecache
 *   Optionally allow games to advertize they are running.
 
     Superhappyfuntimes can show games in your area. Think
@@ -34,7 +30,7 @@
 *   Need to make installer for hft
     *   Windows
     *   Mac
-    *   Linux
+    O   Linux
 *   how to migrate old happy fun times
 
     copy to other folder
@@ -747,6 +743,15 @@ hft-unitysimpleexample
 Done
 ----
 
+*   separate inmemfilecache into cache vs filecache
+*   Add Quit option
+*   make way to quit HFT from browser.
+*   Make HFT launch browser on --app-mode
+*   make hft exe launch in default browser but ask for chrome or firefox
+    *   osx
+    *   win
+    *   linux
+*   Make it if launched twice it doesn't mess up. (needs to launch browser reguardless but not run server)
 *   file bug with apple about canvas/photos.
 
     The issue is as of iOS7 at least you can request an photo
