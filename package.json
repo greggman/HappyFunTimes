@@ -28,7 +28,9 @@
     "native-msg-box": "0.0.3",
     "optionator": "^0.4.0",
     "launchpad": "^0.3.0",
-    "launchpadlite": "^0.3.5"
+    "launchpadlite": "^0.3.5",
+    "iniparser": "^1.0.5",
+    "rest-url": "0.0.4"
   },
   "devDependencies": {
     "grunt": "^0.4.5",

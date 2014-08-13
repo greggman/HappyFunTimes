@@ -82,28 +82,29 @@ if (args.appMode) {
 }
 
 var AppleCaptivePortalHandler = require('./apple-captive-portal-handler');
-var browser = require('./browser');
-var Cache =  require('inmemfilecache');
-var debug = require('debug')('server');
-var DNSServer = require('./dnsserver');
-var express = require('express');
-var fs = require('fs');
-var gameDB = require('./gamedb');
-var HFTGame = require('./hftgame');
-var hftSite = require('./hftsite');
-var highResClock = require('./highresclock');
-var http = require('http');
-var iputils = require('./iputils');
-var mime = require('mime');
-var path = require('path');
-var Promise = require('promise');
-var querystring = require('querystring');
-var strings = require('./strings');
-var sys = require('sys');
-var url = require('url');
-var util = require('util');
-var app = express();
+var browser                   = require('./browser');
+var Cache                     = require('inmemfilecache');
+var computerName              = require('./computername');
+var debug                     = require('debug')('server');
+var DNSServer                 = require('./dnsserver');
+var express                   = require('express');
+var fs                        = require('fs');
+var gameDB                    = require('./gamedb');
+var HFTGame                   = require('./hftgame');
+var hftSite                   = require('./hftsite');
+var highResClock              = require('./highresclock');
+var http                      = require('http');
+var iputils                   = require('./iputils');
+var mime                      = require('mime');
+var path                      = require('path');
+var Promise                   = require('promise');
+var querystring               = require('querystring');
+var strings                   = require('./strings');
+var sys                       = require('sys');
+var url                       = require('url');
+var util                      = require('util');
 
+var app = express();
 var fileCache = new Cache();
 var relayServer;
 
@@ -189,6 +190,7 @@ var handleHappyFunTimesPingRequest = function(query, res) {
   sendJSONResponse(res, {
     version: "0.0.0",
     id: "HappyFunTimes",
+    machine: computerName.get(),
   }, {
     'Access-Control-Allow-Origin': '*',
   });

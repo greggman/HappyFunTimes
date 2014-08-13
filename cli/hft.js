@@ -120,11 +120,16 @@ function printUsage() {
   });
   usage.push('');
   var o = optionator({
-    prepend: [,
+    prepend: [
       "usage: hft cmd [options]",
       "",
       usage.join("\n"),
       "global options:",
+    ].join("\n"),
+    append: [
+      "get command specific help with",
+      "",
+      "    hft <cmd> --help",
     ].join("\n"),
     options: globalOptions,
     helpStyle: helpStyle,

@@ -28,7 +28,10 @@
   },
 
   // The URL for the games API.
-  gamesUrl: "http://api.superhappyfuntimes.net/hftapi/v0/games"
+  gamesUrl: "http://api.superhappyfuntimes.net/hftapi/v0/games",
+
+  // The URL to add games to superhappyfuntimes.
+  manageEndpoint: "http://manage.superhappyfuntimes.net/api/v0/updateGame",
 }
 
 

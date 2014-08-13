@@ -95,7 +95,7 @@ var sendJSON = function(apiurl, obj, options, callback) {
           res.statusCode == 308) {
         sendJSON(res.headers["location"].toString(), obj, options, callCallback);
       } else if (res.statusCode >= 400 && res.statusCode < 600 || res.statusCode < 10) {
-        callCallback(new Error("StatusCode: " + res.statusCode + "\n" + data));
+        callCallback(new Error("StatusCode: " + res.statusCode + "\n" + JSON.stringify(data, undefined, "  ")));
       } else {
         try {
           // TODO: based on content-type parse differently?

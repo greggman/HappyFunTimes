@@ -30,28 +30,29 @@
  */
 "use strict";
 
-var asks = require('asks');
-var config = require('../server/config');
-var debug = require('debug')('release');
-var events = require('events');
-var fs = require('fs');
-var gameDB = require('../server/gamedb');
-var gameInfo = require('../server/gameinfo');
-var games = require('../management/games');
-var GitHubApi = require('github');
-var http = require('http');
-var https = require('https');
-var io = require('../server/io');
-var JSZip = require('jszip');
-var mkdirp = require('mkdirp');
-var path = require('path');
+var asks        = require('asks');
+var config      = require('../server/config');
+var debug       = require('debug')('release');
+var events      = require('events');
+var fs          = require('fs');
+var gameDB      = require('../server/gamedb');
+var gameInfo    = require('../server/gameinfo');
+var games       = require('../management/games');
+var GitHubApi   = require('github');
+var http        = require('http');
+var https       = require('https');
+var io          = require('../server/io');
+var JSZip       = require('jszip');
+var mkdirp      = require('mkdirp');
+var path        = require('path');
+var Promise     = require('promise');
+var restUrl     = require('rest-url');
 var readdirtree = require('../server/readdirtree');
-var Promise = require('promise');
-var semver = require('semver');
-var strings = require('../server/strings');
-var url = require('url');
-var utils = require('./utils');
-var ZipWriter = require("moxie-zip").ZipWriter;
+var semver      = require('semver');
+var strings     = require('../server/strings');
+var url         = require('url');
+var utils       = require('./utils');
+var ZipWriter   = require("moxie-zip").ZipWriter;
 
 var safeishName = function(gameId) {
   return gameId.replace(/[^a-zA-Z0-9-_]/g, '_');
@@ -921,12 +922,62 @@ var ReleaseManager = function() {
     });
   };
 
+  /**
+   * @typedef {Object} Register~Options
+   * @property {string} repoUrl url of repo of game to register
+   * @property {string?} endpoint url of server to contact
+   */
+
+  /**
+   * Registers the url of the repo of a game with
+   * superhappyfuntimes.net
+   *
+   * @param {Register~Options} options
+   */
+  var register = function(options) {
+    var log = options.verbose ? console.log.bind(console) : function() {};
+    var sendJSON = Promise.denodeify(io.sendJSON);
+    var endpoint = config.getSettings().manageEndpoint;
+    if (options.endpoint) {
+      endpoint = options.endpoint + url.parse(endpoint).path;
+    }
+
+    // this will be checked on the server but check it here in order
+    // tell the dev quickly.
+
+    var validRepoURL = (function() {
+      // We only support github at the moment.
+      var prefixes = [
+        "git://github.com/",
+        "https://github.com/",
+      ];
+      return function(v) {
+        for (var ii = 0; ii < prefixes.length; ++ii) {
+          var prefix = prefixes[ii];
+          if (v.substring(0, prefix.length) == prefix) {
+            return true;
+          }
+        }
+        return false;
+      };
+    }());
+
+    if (!validRepoURL(options.repoUrl)) {
+      return Promise.reject(new Error("not a supported url: " + options.repoUrl));
+    }
+
+    var registerUrl = restUrl.make(endpoint, { url: options.repoUrl });
+    log("using: " + registerUrl);
+    return sendJSON(registerUrl, {}, {});
+  };
+
   this.download = download.bind(this);
   this.downloadFile = downloadFile.bind(this);
   this.install = install.bind(this);
   this.uninstall = uninstall.bind(this);
   this.make = make.bind(this);
   this.publish = publish.bind(this);
+  this.register = register.bind(this);
 };
 
 

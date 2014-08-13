@@ -1,5 +1,9 @@
 
-*   Make HFT init config on --app-mode
+*   add winston
+    *   manage
+    *   site
+    *   hft.net
+*   CHOOSE THE PORT!
 *   Make upgrade work?
 *   Make shft live!
     *   make registration server work
@@ -13,6 +17,19 @@
 *   in app-mode, before launching browser, if we can't run server should we check that hft is already running?
 
     or, maybe we should even do that before trying to run the server at all.
+
+*   when listing mulitple HFTs running behind the same public IP address include
+    username and machine name?
+
+    hrm, that doesn't seem very secure. I wonder if it's
+    ok if I only send it to people on the same subnet? How would I know? Check the netmask?
+    The only phone needs this info. It's just some way to say.
+
+        Pick Game to Join:
+           jumpjump on sysg
+           boomboom on tami's mac
+
+    maybe machine name is good because it has less privacy issues?
 
 *   Make games.html detect features and suggest a different browser
 *   Have browser check if it's the default for hft. If not suggest to make it the default for hft.
@@ -745,8 +762,9 @@ hft-unitysimpleexample
     so it can be used in C# in general
 
 Done
-----
+====
 
+*   Make HFT init config on --app-mode
 *   separate inmemfilecache into cache vs filecache
 *   Add Quit option
 *   make way to quit HFT from browser.

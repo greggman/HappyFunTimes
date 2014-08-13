@@ -30,16 +30,47 @@
  */
 "use strict";
 
+var fs = require('fs');
+var release = require('../../management/release');
+var gameInfo = require('../../server/gameinfo');
+var iniparser = require('iniparser');
+var strings = require('../../server/strings');
+
 var register = function(args) {
-  console.log("register");
+  if (!args.repoUrl) {
+    try {
+      // Just read this because it might find errors.
+      gameInfo.readGameInfo(process.cwd());
+
+      // Now read the git/.config
+      var config = iniparser.parseSync(".git/config");
+      args.repoUrl = config['remote "origin"'].url;
+      var gitPrefix = "git@github.com:";
+      if (strings.startsWith(args.repoUrl, gitPrefix)) {
+        args.repoUrl = "https://github.com/" + args.repoUrl.substring(gitPrefix.length);
+      }
+    } catch (e) {
+      console.error("Could not figure out git repo. Are you sure this is a git repo and does it remote called 'origin'?");
+      console.error(e);
+      return false;
+    }
+  }
+  release.register(args).then(function() {
+    console.log("registered: " + args.repoUrl);
+  }, function(err) {
+    console.error(err);
+    process.exit(1);
+  });
 };
 
 exports.usage = {
   usage: "",
   prepend: [
-    "not yet implemented",
+    "register asks superhappyfuntimes to add/update your game its database",
   ],
   options: [
+    { option: 'repo-url', type: 'String', description: "url to repo. Uses 'origin' from current folder by default"},
+    { option: 'endpoint', type: 'String', description: "base url to use to contact server (eg. http://local.test.com)"},
   ],
 }
 exports.cmd = register;

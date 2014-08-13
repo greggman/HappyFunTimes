@@ -31,11 +31,11 @@
 
 "use strict";
 
-var sys = require('sys');
-var debug = require('debug')('relayserver');
-var Game = require('./game');
-var Player = require('./player');
-var WSServer = require('./websocketserver');
+var computerName = require('./computername');
+var debug        = require('debug')('relayserver');
+var Game         = require('./game');
+var Player       = require('./player');
+var WSServer     = require('./websocketserver');
 
 /**
  * RelayServer options
@@ -137,6 +137,7 @@ var RelayServer = function(servers, options) {
       if (game.hasClient() && game.showInList !== false) {
         gameList.push({
           gameId: id,
+          machine: computerName.get(),
           numPlayers: game.getNumPlayers(),
           controllerUrl: game.controllerUrl,
         });
