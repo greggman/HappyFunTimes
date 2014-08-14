@@ -34,7 +34,7 @@
 define(['./virtualsocket'], function(VirtualSocket) {
   /**
    * @typedef {Object} GameClient~Options
-   * @property {string} gameId id of game. This is how games and
+   * @property {string?} gameId id of game. This is how games and
    *           controller rendezvous.
    * @property {string?} url url of websocket server.
    */
@@ -52,9 +52,19 @@ define(['./virtualsocket'], function(VirtualSocket) {
    * @param {GameClient~Options} options options.
    */
   var GameClient = function(options) {
+    options = options || {};
     var g_socket;
     var g_sendQueue = [];
     var eventListeners = {};
+
+    if (!options.gameId) {
+      var m = /games\/([^\/]+)\//.exec(window.location.href);
+      if (m) {
+        options.gameId = m[1];
+      } else {
+        throw new Error("can't derive gameId");
+      }
+    }
 
     /**
      * returns the game's gameId

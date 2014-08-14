@@ -44,7 +44,7 @@ define(
 
   /**
    * @typedef {Object} GameServer~Options
-   * @property {string} gameId id of game needed to rendezvous
+   * @property {string?} gameId id of game needed to rendezvous
    *           with controllers.
    * @property {Socket?} socket Socket to use for communications
    */
@@ -55,9 +55,10 @@ define(
    *
    * @alias GameServer
    * @constructor
-   * @param {GameServer~Options} options options.
+   * @param {GameServer~Options?} options options.
    */
   var GameServer = function(options) {
+    options = options || {};
     var _connected = false;
     var _socket;
     // Used in case the game tries to send messages to the server before it's connected.
@@ -69,6 +70,14 @@ define(
     var _totalPlayerCount = 0;
     var _eventListeners = {};
 
+    if (!options.gameId) {
+      var m = /games\/([^\/]+)\//.exec(window.location.href);
+      if (m) {
+        options.gameId = m[1];
+      } else {
+        throw new Error("can't derive gameId");
+      }
+    }
 
     /**
      * Event that we've connected to the relaysever
