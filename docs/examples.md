@@ -62,69 +62,56 @@ On some games and some controllers `debug:true` will turn on onscreen status. On
 This can be very useful for quick iteration.
 
 
-SuperSimple
------------
-
-This is basically the one from the docs. It just sends pointermove events to the game (provided by handjs).
-The game moves a `div` element around for each player. If the player touches the **goal** a score
-is sent to the player.
-
-Simple
+[Simple](http://github.com/greggman/hft-simple)
 ------
-
-<img src="../public/examples/simple/simple-screenshot.png" />
 
 Basically the same as SuperSimple except uses normalized cooridinates and uses a canvas element to draw the game
 rather than HTML5 elements.
 
-PowPow
+[PowPow](http://github.com/greggman/hft-powpow)
 ------
 
-<img src="../public/examples/powpow/powpow-screenshot.png" />
+<img src="../images/scene-01-powpow.jpg" />
 
 A space wars style game. The first 6 players battle it out. If there are more than 6 players they wait
 in the *launch* queue. They collectively control a ghost ship they can use to try to kill other players
 so they can get back into the game.
 
-ShootShoot
+[ShootShoot](http://github.com/greggman/hft-shootshoot)
 ----------
-
-<img src="../public/examples/shootshoot/shootshoot-screenshot.png" />
 
 A Robotron like game.
 
 This demonstrates dual 8pad emulation on **controller**. In `haveServer:false` mode and if using
 a desktop PC as a **controller** ASWD are the move dpad and cursor keys the fire dpad.
 
-JumpJump
+[JumpJump]((http://github.com/greggman/hft-jumpjump))
 --------
 
-<img src="../public/examples/jumpjump/jumpjump-screenshot.png" />
+<img src="../images/scene-00-jumpjump.jpg" />
 
 A simple platformer. Players try to get the one coin.
 
-Bombbomb
+[Boomboom]((http://github.com/greggman/hft-boomboom)
 --------
 
-<img src="../public/examples/bombbomb/bombbomb-screenshot.png" />
+<img src="../image/scene-04-boomboom.jpg" />
 
 A bomberman like game. One thing it shows over other games is round based control. Players
 joining the game have to wait for the current round to finish before they are added.
 
-Deviceorientation
+[Deviceorientation](http://github.com/greggman/hft-deviceorientation)
 -----------------
-
-<img src="../public/examples/deviceorientation/deviceorientation-screenshot.png" />
 
 Orient a 3d ship to shoot a ball.
 
 Demonstrates using device orientation. The game is nearly impossible to play but it least
 demonstrates using device orientation as well as three.js
 
-JamJam
+[JamJam](http://github.com/greggman/hft-jamjam)
 ------
 
-<img src="../public/examples/jamjam/jamjam-screenshot.png" />
+<img src="../images/scene-02-jamjam.jpg" />
 
 A collective drum sequencer. Each player has one drum they can set the sequence for.
 All the machines are synced using a `SyncedClock`. Each player must turn on the volume
@@ -132,10 +119,10 @@ on their phone so everyone can hear their drum.
 
 Shows using the synced clock. Shows how to sync using the Web Audio API.
 
-UnityCharacterExample
+[UnityCharacterExample](http://github.com/greggman/hft-unitycharacterexample)
 ---------------------
 
-<img src="../public/examples/unitycharacterexample/unitycharacterexample-screenshot.png" />
+<img src="../images/scene-03-unity.jpg" />
 
 For each **controller** that connects to the **game** the game spawns a 3d unity character.
 The character is controlled by a *3rd person character contoller** which is a modified
@@ -154,7 +141,7 @@ relaysever?. (See above)
 
 Now connect a browser `http://localhost:8080` and pick the UnityCharacterExample
 
-UnitySimpleExample
+[UnitySimpleExample](http://github.com/greggman/hft-unitysimpleexample)
 ------------------
 
 This is the same as the *Simple* example above and users the same **controller**. Follow the
@@ -163,49 +150,6 @@ Unity3D/Examples/Scenes/HappyFunTimesSimpleExample
 
 This one shows using HappyFunTimes in C# with Unity.
 
-Common UI
-=========
-
-There is a common UI for all the samples. To facilitate this there's a build script which
-you can run by typing `./build.py` or `python build.py` on Windows. For controllers it
-inserts `public/examples/<nameofgame>/contoller.html` into `templates/controller.index.html`
-and writes the result to `public/examples/<nameofgame>/index.html`. For games it
-inserts `public/examples/<nameofgame>/game.html` into `templates/game.gameview.html`
-and writes the result to `public/examples/<nameofgame>/gameview.html`
-
-Games
------
-
-For games the common code is in `public/examples/scripts/gamesupport.js`. it handles disconnecting,
-turning on debug elements, and the main game loop and clock.
-
-Controllers
------------
-
-For controllers the common code is in `public/examples/scripts/exampleui.js`. It sets up
-name editing, handling disconnecting, turning on debug elements, and implementing a menu on the side.
-When a game disconnects the code will wait 1/2 a second and check if the game is running again. If
-so it reloads the controller. If only one game is running it goes to that game. If more than one
-game is running it redirects to "/".
-
-/index.html
------------
-Shows a list of running games. The idea is that one server can handle relaying messages for more
-than one game. Users can connect to `http://ipaddress/` and choose a game. The list is updated
-live every few seconds. If there is only one game running it will automatically go to that game.
-
-/games.html
------------
-This page exist solely to make it easy for the person running the game to pick a game. They
-don't have to type long paths.
-
-Because of the way controllers work (see above), if you are having a party and running just
-one game at a time you go to `http://ipaddress/games.index` and tell you users to go to
-`http://ipaddress/`.  You choose a game and it will redirect to that game's controller.
-
-When you want to play another game you press *back* in the browser and pick another game. The user's
-smartphone screens will automatically exit the current contoller and redirect to the new game's
-controller. If there are 2 games running they will be taken to the menu so they can choose a game.
 
 
 
