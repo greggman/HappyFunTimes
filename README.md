@@ -1,6 +1,10 @@
 HappyFunTimes
 =============
 
+[Install On Windows]()
+
+[Install On OSX]()
+
 [Home Page](http://greggman.github.io/HappyFunTimes/).
 
 [Blog](http://blog.happyfuntimes.net).
@@ -9,7 +13,7 @@ HappyFunTimes
 
 <img id="test" src="images/scene-00-jumpjump.jpg" width="782" height="441" />
 
-[HappyFunTimes](http://greggman.github.io/HappyFunTimes/) is a library for making party games that are meant to be
+[HappyFunTimes](http://greggman.github.io/HappyFunTimes/) is a system for playing party games that are meant to be
 played with a bunch of people in the same room and 1 ideally large display.
 
 <img id="test" src="images/scene-04-boomboom.jpg" width="782" height="441" />
@@ -99,7 +103,7 @@ There's a Unity3D library if you'd like to make the game in Unity3D.
        }
 
     If the player disconnects or quits the `NetPlayer` will emit a `disconnect` event.
-    If we want to handle that we might go
+    If we want to handle that we might do something like
 
         Player = function(netPlayer) {
           this.netPlayer = netPlayer;  // remember this Player's NetPlayer
@@ -108,7 +112,7 @@ There's a Unity3D library if you'd like to make the game in Unity3D.
         };
 
         Player.prototype.remove = function() {
-          players.splice(players.indexOf(this), 1);  // remove ourselves from the array of players.
+          players.splice(players.indexOf(this), 1);  // remove ourselves from our array of players.
         };
 
     We can send events to the player's phone by calling `netPlayer.sendCmd` For example
@@ -118,7 +122,7 @@ There's a Unity3D library if you'd like to make the game in Unity3D.
         };
 
     That will cause an event `score` to be emitted on the player's phone. The player's phone
-    can has a correspondiing `sendCmd` function. When called an event will be emitted on that
+    has a correspondiing `sendCmd` function. When called an event will be emitted on that
     player's `NetPlayer` object.  Add listeners for any events you make up
 
         Player = function(netPlayer) {
@@ -173,15 +177,14 @@ There's a Unity3D library if you'd like to make the game in Unity3D.
     If online is false when the clock is created it will create a clock
     that returns the local time.
 
-Unity Version
--------------
+Making Games
+------------
 
-See [Unity Docs](docs/unitydocs.md)
+If you just want to play some games just [install it](http://superhappyfuntimes.net).
 
-Running the Examples
---------------------
+If you want to develop games follow [these instructions](docs/makinggames.md)
 
-*   Clone the repo
+
 *   Install [node.js](http://nodejs.org). I was using 0.10.26
 *   Open a shell/terminal/command prompt
 *   cd into the root of the repo you cloned (eg. `cd HappyFunTimes`)
@@ -206,10 +209,11 @@ you don't need to be on the same network. Of course there will be far more lag o
 the internet or especially over cellular networks but depending on the type of game that
 might be ok.
 
-Windows docs
-------------
+Unity Version
+-------------
 
-[Some Windows docs here](docs/windows.md)
+See [Unity Docs](docs/unitydocs.md)
+
 
 Making your own original game
 -----------------------------

@@ -94,22 +94,23 @@
 
 
 
-Runs Repo
-* hft-boomboom
-* hft-clocksync
-* hft-deviceorientation
-hft-flapflap
-* hft-jamjam
-hft-photopile
-* hft-powpow
-* hft-shootshoot
-* hft-simple
-hft-simplecamera
-hft-supersimple
-? hft-sync2d
-? hft-syncThreeJS
-hft-unitycharacterexample
-hft-unitysimpleexample
+Runs Repo noid
+*     *    *   hft-boomboom
+*     *    *   hft-clocksync
+*     *    *   hft-deviceorientation
+               hft-flapflap
+*     *    *   hft-jamjam
+*     *    *   hft-jumpjump
+               hft-photopile
+*     *    *   hft-powpow
+*     *    *   hft-shootshoot
+*     *    *   hft-simple
+           *   hft-simplecamera
+           *   hft-supersimple
+               ? hft-sync2d
+               ? hft-syncThreeJS
+      *        hft-unitycharacterexample
+               hft-unitysimpleexample
 
 *   add a hft.release.ignore array to package.json. if it doesn't exist
     have it be "src". Use it in release.make
