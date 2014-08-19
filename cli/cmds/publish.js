@@ -108,6 +108,7 @@ var publish = function(args) {
       username: answers.username,
       password: answers.password,
       bump: bump,
+      force: args['force'],
       version: args['version'],
     };
 
@@ -133,6 +134,7 @@ exports.usage = {
     { option: 'bump',    type: 'String',  description: "how to bump version (major, premajor, minor, preminor, patch, prepatch, prerelease), default: patch", },
     { option: 'repo',    type: 'String',  description: "name of github repo. If not supplied assumes it matches current working directory", },
     { option: 'src',     type: 'String',  description: "path to source. If not supplied assumes current working directory.", },
+    { option: 'force',   type: 'Boolean', description: "don't ask for conformation", },
     { option: 'version', type: 'String',  description: "set a specific version in semver format.", },
     { option: 'dry-run', type: 'Boolean', description: "don't write any files", },
   ],

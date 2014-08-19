@@ -868,7 +868,7 @@ var ReleaseManager = function() {
           return "    " + file.filename;
         }).join("\n"));
         console.log("as version: " + version);
-        return askPrompt([
+        return options.force ? Promise.resolve({confirmation: 'y'}) : askPrompt([
           {
              name: 'confirmation',
              type: 'input',
