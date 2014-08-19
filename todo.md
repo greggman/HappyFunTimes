@@ -1,4 +1,5 @@
 
+*   no websockets
 *   add winston
     *   manage
     *   site
@@ -643,6 +644,22 @@ Runs Repo noid
     *   platformer (jumpjump)
     *   8way shooter (shootshoot)
     *   octopie
+
+    *   Go Fish
+
+        Collect every pair of cards? There are 2 of each card. Walk aroudn the room and
+        exchange cards.
+
+        Need to know if I can do it.
+
+        Maybe you have to bump phones, then it says "paired with <name>". Then you can
+        ask "do you have any 4s?"  "Go fish!"  You each ask for a card, then it exchanges,
+        then it unpairs and you can't pair with the same person until you've paired with
+        someone else?
+
+        How can I make it social. I'd prefer if you can't cheat so you'd pick the card
+        on your screen you want to match. And it would tell you? Or maybe the other person
+        would have to answer but if they lie there's some penalty or something?
 
     *   Fist bump game
 

@@ -100,9 +100,7 @@ reference files.
           Misc.applyUrlSettings(globals);
           MobileHacks.fixHeightHack();
 
-          g_client = new GameClient({
-            gameId: "gamename",   // <==-- be sure to set this to your game's id.
-          });
+          g_client = new GameClient();
 
           CommonUI.setupStandardControllerUI(g_client, globals);
 

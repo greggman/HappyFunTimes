@@ -239,6 +239,55 @@ Tips
 
     It's part of [require.js](http://requirejs.org/). See [Why AMD](http://requirejs.org/docs/whyamd.html)?
 
+    The simple explaination is. There's a script tag (in HFTs case it's in the template) that looks like this
+
+        <script data-main="scripts/game.js" src="/3rdparty/require.js"></script>
+
+    This loads `require.js` which then asynchronously loads `scripts/games.js`. It calls `requirejs` from
+    that file. `requirejs` returns an array of dependencies and a function. The system starts loading the
+    dependinces. Each of those has a `define` function which itself has an optional list of dependencies
+    and a function. The system continues to load dependencies until all of them are loaded. It will load
+    each file only once. When all of them are loaded it will call the functions that each of them returned
+    in the correct order and pass whatever those functions returned into the functions the depend on them.
+
+    In other words.
+
+         // game.js
+         requirejs(['./somelib', './otherlib'], function(SomeLib, OtherLib) {
+            console.log(SomeLib.bar);
+            console.log(SomeLib.foo);
+         });
+
+         // somelib.js
+         define(['./yetanotherlib'], function(YetAnotherLib) {
+            return {
+               bar: YetAnotherLib.astrofy("abc");
+            }
+         });
+
+         // otherlib.js
+         define(['./yetanotherlib'], function(YetAnotherLib) {
+            return {
+               foo: YetAnotherLib.astrofy("123");
+            }
+         });
+
+         // yetanotherlib.js
+         define(function(YetAnotherLib) {
+            return {
+               astrofy: function(v) { return "**" + v + "**"; };
+            }
+         });
+
+    Would first load game.js and call `requirejs()` see it dependes on `./somelib` and `./otherlib` so it
+    would load `somelib.js` and `otherlib.js` and call `define()` in each. Each of those depend on
+    `./yetanotherlib` so it would load `yetanotherlib.js`. `yetanotherlib.js` has no dependencies.
+    Now it would call the function that was passed to `yetanotherlib.js:define()`. That funtion returns an
+    object with single property `astrofy`. The system then calls the fucntions that were passed to
+    `somelib.js:define` and `otherlib.js:define` passing in the object from `yetanotherlib`.
+    It finally calls the function that was passed to `game.js:requirejs`
+
+
 *   Disable caching in your browser
 
     Right now the relayserver tells the browser not to cache anything. Whether the browser
