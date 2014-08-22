@@ -191,14 +191,14 @@ If you want to develop games follow [these instructions](docs/makinggames.md)
 *   type `npm install` which will install needed node modules locally
 *   type `node server/server.js` which will start the server.
 
-Open a browser window and go to `http://localhost:8080/games.html` and choose a game.
-In other window (preferably a window, not a tab), go to `http://localhost:8080` and
+Open a browser window and go to `http://localhost:18679/games.html` and choose a game.
+In other window (preferably a window, not a tab), go to `http://localhost:18679` and
 choose the game.
 
 If you have other computers or smartphones on the same network look up the ip address of
 the machine running the game (see `ifconfig` on OSX/Linux, the Network Preferneces on OSX,
-or `ipconfig` on Windows) then go to `http://ipaddress:8080` from those machines.
-For example on my home network it was `http://192.168.2.9:8080`
+or `ipconfig` on Windows) then go to `http://ipaddress:18679` from those machines.
+For example on my home network it was `http://192.168.2.9:18679`
 
 You can simulate other machines joining the game by opening more windows
 or tabs in your browser.

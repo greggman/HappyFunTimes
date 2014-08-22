@@ -32,7 +32,7 @@
 "use strict";
 
 var g = {
-  port: 8080,
+  port: 18679,
   screenshotCount: 0,
   baseDir: "public",
   cwd: process.cwd(),
@@ -42,15 +42,15 @@ var g = {
 var config = require('./config');
 var optionator = require('optionator')({
   options: [
-    { option: 'help', alias: 'h', type: 'Boolean', description: 'displays help'},
-    { option: 'port', alias: 'p', type: 'Int',     description: 'port. Default 8080'},
-    { option: 'dns',              type: 'Boolean', description: 'enable dns server'},
-    { option: 'address',          type: 'String',  description: 'ip address for dns and controller url conversion'},
-    { option: 'config-path',      type: 'String',  description: 'config path'},
-    { option: 'settings-path',    type: 'String',  description: 'settings path'},
-    { option: 'hft-domain',       type: 'String',  description: 'domain for happyfuntimes site'},
-    { option: 'private-server',   type: 'Boolean', description: 'do not inform happyfuntimes.net about this server. Users will not be able to use happyfuntimes.net to connect to your games'},
-    { option: 'app-mode',         type: 'Boolean', description: 'run as an app'},
+    { option: 'help', alias: 'h', type: 'Boolean',    description: 'displays help'},
+    { option: 'port', alias: 'p', type: 'Int',        description: 'port. Default 18679'},
+    { option: 'dns',              type: 'Boolean',    description: 'enable dns server'},
+    { option: 'address',          type: 'String',     description: 'ip address for dns and controller url conversion'},
+    { option: 'config-path',      type: 'String',     description: 'config path'},
+    { option: 'settings-path',    type: 'String',     description: 'settings path'},
+    { option: 'hft-domain',       type: 'String',     description: 'domain for happyfuntimes site'},
+    { option: 'private-server',   type: 'Boolean',    description: 'do not inform happyfuntimes.net about this server. Users will not be able to use happyfuntimes.net to connect to your games'},
+    { option: 'app-mode',         type: 'Boolean',    description: 'run as an app'},
   ],
   helpStyle: {
     typeSeparator: '=',
@@ -406,9 +406,11 @@ app.options(/.*/, handleOPTIONS);
 
 var ports = [g.port];
 // If we're not trying port 80 then add it.
-if (g.port.toString() != "80") {
-  ports.push("80");
-}
+["80", "8080"].forEach(function(p) {
+  if (g.port.toString() != p) {
+    ports.push(p);
+  }
+});
 
 var numResponsesNeeded = ports.length;
 var servers = [];

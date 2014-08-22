@@ -198,7 +198,7 @@ These files are loaded into a template at runtime. The template provides the fol
     see as inputs from a controller.
 
     This means I can play the game just by going to the game's URL like
-    `http://localhost:8080/examples/jumpjump/gameview.html?settings={haveServer:false}`.
+    `http://localhost:18679/examples/jumpjump/gameview.html?settings={haveServer:false}`.
 
     When I want to test with real controllers I remove the `haveServer:false`. That
     way the game continues to run even when a controller window has the focus.
@@ -217,7 +217,7 @@ These files are loaded into a template at runtime. The template provides the fol
             Misc) {
 
           // You can set these from the URL with
-          // http://localhost:8080/games/<gameid>/gameview.html?settings={name:value,name:value}
+          // http://localhost:18679/games/<gameid>/gameview.html?settings={name:value,name:value}
           var globals = {
             haveServer: true,
             debug: false,

@@ -17,7 +17,7 @@ public class ExampleSimple : MonoBehaviour {
 
         GameServer.Options options = new GameServer.Options();
         options.gameId = "simple";
-        options.controllerUrl = "http://localhost:8080/examples/simple/index.html";
+        options.controllerUrl = "http://localhost:18679/examples/simple/index.html";
         m_server = new GameServer(options, gameObject);
         m_server.Init();
 

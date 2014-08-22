@@ -37,9 +37,7 @@ Integration with your app
 `GameServer`
 
 In some MonoBehaviour (in other words, Add a Script Component), make `GameServer` and
-call init. You can pass init an optional websocket URL. The default is "ws://localhost:8080"
-which means it assume the relayserver us running on the same machine as the game and
-is running on the default port.
+call init.
 
     GameServer.Options options = new GameServer.Options();
     options.gameId = "simple";

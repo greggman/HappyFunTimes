@@ -1,10 +1,11 @@
 
+*   add
 *   no websockets
 *   add winston
     *   manage
     *   site
     *   hft.net
-*   CHOOSE THE PORT!
+*   CHOOSE THE PORT! Picked 18679 which is 0x48f7. 0x48 = ascii 'H' so its Hf7  7 = T in leet.
 *   Make upgrade work?
 *   Make shft live!
     *   make registration server work
@@ -390,7 +391,7 @@ Runs Repo noid
 
     It started off as just a simple library to relay messages between game and controllers.
     But, as I added more games I started wanted to share code on the controllers. Then
-    I got tired of typing long urls like http://localhost:8080/examples/boomboom/index.html
+    I got tired of typing long urls like http://localhost:18679/examples/boomboom/index.html
     so I added a menu for the controllers. Then I realized I didn't want people to choose
     games that weren't running so I made that menu hide game that weren't running.
     Then, I realized when I quit a game, the shared code would put up a "disconnected" message
@@ -809,16 +810,16 @@ Done
 
     game would be served at
 
-    http://localhost:8080/name/
+    http://localhost:18679/name/
 
     instead of
 
-    http://localhost:8080/games/name/
+    http://localhost:18679/games/name/
 
     Is there a point?
 
     One other idea, allow the game to exist else where
-    but run at http://localhost:8080/games/name
+    but run at http://localhost:18679/games/name
 
     As it is games must exist inside hft. Should they
     exist outside hft? Would allow non-hft games

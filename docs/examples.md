@@ -139,7 +139,7 @@ First, See **Installation** in the [Unity Docs](unitydocs.md)
 Now run the game. If you see an error in the console maybe you didn't start the
 relaysever?. (See above)
 
-Now connect a browser `http://localhost:8080` and pick the UnityCharacterExample
+Now connect a browser `http://localhost:18679`
 
 [UnitySimpleExample](http://github.com/greggman/hft-unitysimpleexample)
 ------------------

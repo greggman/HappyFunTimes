@@ -55,10 +55,10 @@ public class GameServer {
     }
 
     public void Init() {
-        Init("ws://localhost:8080");
+        Init("ws://localhost:18679");
     }
 
-    public void Init(string url/* = "ws://localhost:8080" */) {
+    public void Init(string url/* = "ws://localhost:18679" */) {
 
         if (m_socket == null) {
             m_socket = new WebSocket(url);

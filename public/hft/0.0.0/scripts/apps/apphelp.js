@@ -34,7 +34,7 @@ define(['../gameclient'], function(GameClient) {
 
   var client = new GameClient({
     gameId: "__hft__",
-    url: "ws://localhost:8080",
+    url: "ws://localhost:18679",
   });
 
   // I"m not sure if this object should provide a higher level API
