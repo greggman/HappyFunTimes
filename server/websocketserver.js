@@ -86,6 +86,10 @@ var WSServer = function(server) {
       wss.on(eventName, fn);  // does this case exist?
     }
   };
+
+  this.close = function() {
+    wss.close();
+  };
 };
 
 module.exports = WSServer;

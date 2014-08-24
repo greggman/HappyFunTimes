@@ -73,6 +73,7 @@ var RelayServer = function(servers, options) {
   var g_nextSessionId = 1;
   var g_games = {};
   var g_numGames = 0;
+  var socketServers = [];
 
   // --- messages to relay server ---
   //
@@ -190,12 +191,22 @@ var RelayServer = function(servers, options) {
     var server = servers[ii];
     //var io = new SocketIOServer(server);
     var io = new WSServer(server);
+    socketServers.push(io);
 
     io.on('connection', function(client) {
         new Player(client, this, ++g_nextSessionId);
     }.bind(this));
   }
 
+  /**
+   * Close the relayserver
+   * @todo make it no-op after it's closed?
+   */
+  this.close = function() {
+    socketServers.forEach(function(server) {
+      server.close();
+    });
+  }.bind(this);
 };
 
 module.exports = RelayServer;
