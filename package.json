@@ -37,6 +37,8 @@
     "grunt-contrib-clean": "^0.5.0",
     "grunt-jsdoc": "^0.5.6",
     "ink-docstrap": "^0.4.5",
-    "mocha": "^1.20.1"
+    "mocha": "^1.20.1",
+    "phantomjs": "^1.9.7-15",
+    "mocha-phantomjs": "^3.5.0"
   }
 }
