@@ -1,4 +1,6 @@
 
+*   make shft tell you you need to upgrade hft
+*   refactor server.js so I we can call it from testing
 *   Move server/* to lib where appropriate
     *   Need to make sure shft stuff still works
 *   Add phantomjs based tests
