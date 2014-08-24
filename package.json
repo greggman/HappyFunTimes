@@ -39,6 +39,8 @@
     "ink-docstrap": "^0.4.5",
     "mocha": "^1.20.1",
     "phantomjs": "^1.9.7-15",
-    "mocha-phantomjs": "^3.5.0"
+    "mocha-phantomjs": "^3.5.0",
+    "request": "^2.40.0",
+    "should": "^4.0.4"
   }
 }

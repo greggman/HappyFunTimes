@@ -30,21 +30,87 @@
  */
 "use strict";
 
-var path = require('path');
+var assert    = require('assert');
+var HFTServer = require('../../server/hft-server');
+var path      = require('path');
+var Promise   = require('promise');
+var request   = require('request');
+var should    = require('should');
 
-var g_configPath             = path.join(__dirname, "..", "testconfig", "config.json");
-var g_installedGamesListPath = path.join(__dirname, "..", "testconfig", "installed-games.json");
+var g_configPath             = path.join(__dirname, "..", "testgames", "config.json");
+var g_installedGamesListPath = path.join(__dirname, "..", "testgames", "installed-games.json");
+
+var getP = function(url) {
+  return new Promise(function(fulfill, reject) {
+    request.get(url, function(err, res, body) {
+      if (err || res.statusCode != 200) {
+        reject(err || res.body.msg);
+      } else {
+        fulfill(res, body);
+      }
+    });
+  });
+};
 
 describe('game needs new hft', function() {
 
-  before(function() {
-    g_configPath             = path.join(__dirname, "..", "testareaconfig", "config.json");
-    g_installedGamesListPath = path.join(__dirname, "..", "testareaconfig", "installed-games.json");
+  var server;
 
+  var createServer = function() {
+    return new Promise(function(resolve, reject) {
+      var server = new HFTServer({
+        port: 8080,
+        extraPorts: [],
+        privateServer: true,
+      }, function(err) {
+        if (err) {
+          reject(err);
+        } else {
+          resolve(server);
+        }
+      });
+    });
+  };
+
+  before(function(done) {
+    var config = require('../../lib/config');
+    config.reset();
+    config.setup({
+      configPath: g_configPath,
+    });
+    var gamedb = require('../../lib/gamedb');
+    gamedb.reset();
+
+    createServer().then(function(result) {
+      server = result;
+      done();
+    }, function(err) {
+      console.error(err);
+      done();
+    });
   });
 
-  it.skip('serves game needs new hft template', function(done) {
-    setTimeout(done, 5);
+  it('has expected games', function() {
+    var gamedb = require('../../lib/gamedb');
+    assert.ok(gamedb.getGameById("hft-testgame1"));
+  });
+
+  it('serves message: game needs new hft template', function(done) {
+    getP("http://localhost:8080/games/hft-testgame1/gameview.html").then(function(res) {
+      res.body.should.containEql("new version of HappyFunTimes");
+    }).then(done, done);
+  });
+
+  it('serves message: controller needs new hft template', function(done) {
+    getP("http://localhost:8080/games/hft-testgame1/index.html").then(function(res) {
+      res.body.should.containEql("Please upgrade HappyFunTimes");
+    }).then(done, done);
+  });
+
+  after(function() {
+    if (server) {
+      server.close();
+    }
   });
 
 });

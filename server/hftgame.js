@@ -32,21 +32,26 @@
 "use strict";
 
 var requirejs = require('requirejs');
-
-var child_process = require('child_process');
-var fs = require('fs');
-var GameServer = requirejs('../public/hft/0.x.x/scripts/gameserver');
-var LoopbackClient = require('./loopbackclient');
-var msgbox = require('native-msg-box');
-var os = require('os');
-var platform = os.platform().toLowerCase();
-var path = require('path');
-var Promise = require('promise');
-var release = require('../management/release');
+var path      = require('path');
 
 requirejs.config({
   nodeRequire: require,
+  paths: {
+    hft: path.join(__dirname, '../public/hft/0.x.x/scripts'),
+  },
 });
+
+var child_process  = require('child_process');
+var fs             = require('fs');
+var LoopbackClient = require('./loopbackclient');
+var msgbox         = require('native-msg-box');
+var os             = require('os');
+var Promise        = require('promise');
+var release        = require('../management/release');
+
+var GameServer     = requirejs('hft/gameserver');
+
+var platform = os.platform().toLowerCase();
 
 var HFTPlayer = function(netPlayer, game, gameDB) {
   this.netPlayer = netPlayer;

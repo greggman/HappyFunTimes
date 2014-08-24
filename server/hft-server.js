@@ -56,9 +56,30 @@ var sys                       = require('sys');
 var url                       = require('url');
 var util                      = require('util');
 
-var Server = function(options, startedCallback) {
+/**
+ * @typedef {Object} HFTServer~Options
+ * @property {number?} port port to listen on. Default 18679
+ * @property {number[]?} extraPorts other ports to listen on.
+ *           Default [80, 8080]
+ * @property {string?} hftDomain Domain to inform our internal
+ *           ip address. Default: "happyfuntimes.net"
+ * @property {string?} baseDir path to server files from
+ * @property {string} address ip address to bind to.
+ * @property {boolean} privateServer true = don't inform
+ *           rendezvous server
+ */
+
+/**
+ * HappyFunTimes Server
+ *
+ * @param {HFTServer~Options} options
+ * @param {function(err): void} startedCallback called with err
+ *        of error, undefined if successful.
+ */
+var HFTServer = function(options, startedCallback) {
   var g = {
     port: 18679,
+    extraPorts: [80, 8080],
     screenshotCount: 0,
     baseDir: "public",
     cwd: process.cwd(),
@@ -358,8 +379,7 @@ var Server = function(options, startedCallback) {
   app.options(/.*/, handleOPTIONS);
 
   var ports = [g.port];
-  // If we're not trying port 80 then add it.
-  ["80", "8080"].forEach(function(p) {
+  g.extraPorts.forEach(function(p) {
     if (g.port.toString() != p) {
       ports.push(p);
     }
@@ -432,5 +452,5 @@ var Server = function(options, startedCallback) {
   }.bind(this);
 };
 
-module.exports = Server;
+module.exports = HFTServer;
 
