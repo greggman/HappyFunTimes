@@ -1,8 +1,6 @@
 
 *   make shft tell you you need to upgrade hft
 *   refactor server.js so I we can call it from testing
-*   Move server/* to lib where appropriate
-    *   Need to make sure shft stuff still works
 *   Add phantomjs based tests
 *   Refactor gameInfo so it returns a runtimeInfo
 *   Make it work backward
@@ -787,6 +785,8 @@ Runs Repo noid
 Done
 ====
 
+*   Move server/* to lib where appropriate
+    *   Need to make sure shft stuff still works
 *   CHOOSE THE PORT! Picked 18679 which is 0x48f7. 0x48 = ascii 'H' so its Hf7  7 = T in leet.
 *   add winston
     *   manage
