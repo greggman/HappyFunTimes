@@ -11,7 +11,7 @@ function Start () {
 
     var options : HappyFunTimes.GameServer.Options = new HappyFunTimes.GameServer.Options();
     options.gameId = "unitycharacterexample";
-    options.controllerUrl = "http://localhost:18679/examples/unitycharacterexample/index.html";
+    options.controllerUrl = "http://localhost:8080/examples/unitycharacterexample/index.html";
     m_server = new HappyFunTimes.GameServer(options, gameObject);
     m_server.Init();
 

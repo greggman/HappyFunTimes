@@ -1,12 +1,14 @@
 
-*   add
-*   no websockets
-*   add winston
-    *   manage
-    *   site
-    *   hft.net
-*   CHOOSE THE PORT! Picked 18679 which is 0x48f7. 0x48 = ascii 'H' so its Hf7  7 = T in leet.
-*   Make upgrade work?
+*   Move server/* to lib where appropriate
+    *   Need to make sure shft stuff still works
+*   Add phantomjs based tests
+*   Refactor gameInfo so it returns a runtimeInfo
+*   Make it work backward
+*   Make game check for valid HFT
+    *   do hft add
+    *   do hft install
+
+*   Make upgrade game work?
 *   Make shft live!
     *   make registration server work
     *   make minimal design
@@ -783,6 +785,12 @@ Runs Repo noid
 Done
 ====
 
+*   CHOOSE THE PORT! Picked 18679 which is 0x48f7. 0x48 = ascii 'H' so its Hf7  7 = T in leet.
+*   add winston
+    *   manage
+    *   site
+    *   hft.net
+*   no websockets on shft
 *   Make HFT init config on --app-mode
 *   separate inmemfilecache into cache vs filecache
 *   Add Quit option

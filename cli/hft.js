@@ -7,11 +7,10 @@ process.title = "hft";
 
 var path = require('path');
 var fs = require('fs');
-var clc = require('cli-color');
 var utils = require('./utils');
 var config = require('../server/config');
+var log = require('../lib/log');
 var optionator = require('optionator');
-var showStackTrace;
 
 var globalOptions = [
   { option: 'help',    alias: 'h', type: 'Boolean', description: 'displays help'              },
@@ -21,22 +20,6 @@ var globalOptions = [
   { option: 'settings-path',       type: 'String',  description: 'settings path'              },
   { option: 'hft-dir',             type: 'String',  description: 'hft installation path'      },
 ];
-
-
-if (process.stderr.isTTY) {
-  console.error = function(originalError) {
-    return function() {
-      var args = Array.prototype.slice.apply(arguments);
-      args[0] = clc.red(args[0]);
-      originalError.apply(console, args);
-      if (showStackTrace) {
-        if (arguments[0].stack) {
-          console.error(arguments[0].stack);
-        }
-      }
-    };
-  }(console.error);
-}
 
 // simple command line parsing
 var args = { _: [] };
@@ -95,9 +78,7 @@ if (args.help) {
 
 try {
   args = optionator({options:cmdModule.usage.options.concat(globalOptions)}).parse(process.argv);
-  if (args.debug) {
-    showStackTrace = true;
-  }
+  log.config(args);
 } catch (e) {
   console.error(e);
   process.exit(1);

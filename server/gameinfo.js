@@ -31,13 +31,13 @@
 
 "use strict";
 
-var debug = require('debug')('gameinfo');
-var fs = require('fs');
-var path = require('path');
-var misc = require('./misc');
-var config = require('./config');
-var semver = require('semver');
+var debug       = require('debug')('gameinfo');
+var fs          = require('fs');
+var path        = require('path');
+var misc        = require('./misc');
+var config      = require('./config');
 var readdirtree = require('./readdirtree');
+var semver      = require('semver');
 
 var applyDefaultProperties = function(obj, defaults) {
   if (!defaults) {
@@ -234,12 +234,31 @@ GameInfo.prototype.parseGameInfo = function(contents, filePath) {
     }
 
     if (settings.hftGameTypeDefaults[hftInfo.gameType] === undefined) {
-      console.error("error: " + filePath + " unknown gameType " + hftInfo.gameType);
+      console.error("warning: " + filePath + " unknown gameType " + hftInfo.gameType);
       console.error("valid gameTypes: \n\t" + Object.keys(settings.hftGameTypeDefaults).join("\n\t"));
       return;
     }
 
-    hftInfo.versionSettings = settings.apiVersionSettings[hftInfo.apiVersion];
+    // NOTE(gman): It seems like I shouldn't be patching the info here so
+    // that I can write it back if I feel like it. I should probably wrap
+    // it some other object as in
+    // runtimeInfo = {
+    //    gameInfo: <contents of package.json>,
+    //    runTimeThing1: ...,
+    //    runTimething2: ...,
+    //    ...,
+    // };
+
+    var availableVersions = Object.keys(settings.apiVersionSettings);
+    var need = '^' + hftInfo.apiVersion;
+    var bestVersion = semver.maxSatisfying(availableVersions, need);
+    if (!bestVersion) {
+      console.warn("error: " + filePath + " requires unsupported api version: you probably need to upgrade happyFunTimes");
+      bestVersion = "0.0.0-unsupportedApiVersion";
+      hftInfo.needNewHFT = true;
+    }
+
+    hftInfo.versionSettings = settings.apiVersionSettings[bestVersion];
     if (hftInfo.versionSettings === undefined) {
       console.error("error: " + filePath + " unknown apiVersion " + hftInfo.apiVersion);
       console.error("valid apiVersions: \n\t" + Object.keys(settings.apiVersionSettings).join("\n\t"));
@@ -259,6 +278,8 @@ GameInfo.prototype.parseGameInfo = function(contents, filePath) {
 //      console.error(e);
 //      return;
 //    }
+
+
 
 // REMOVE THIS!!
     // Fix some urls.

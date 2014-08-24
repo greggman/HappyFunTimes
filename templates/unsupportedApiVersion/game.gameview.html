@@ -34,39 +34,23 @@
 <html>
 <head>
   <meta charset="utf-8">
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta property="og:title" content="HappyFunTimes %(name)s" />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="http://greggman.github.io/HappyFunTimes/" />
+  <meta property="og:description" content="HappyFunTimes is a library for making party games that are meant to be played with a bunch of people in the same room and 1 ideally large display" />
 
-  <meta name="HandheldFriendly" content="True">
-  <meta name="MobileOptimized" content="320">
-  <meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0, maximum-scale=1, user-scalable=no, minimal-ui">
-  <meta name="format-detection" content="telephone=no" />
-  <title>HappyFunTimes Example Games</title>
-  <link rel="stylesheet" href="css/menu.css">
+  <title>%(name)s</title>
   <link href="/hft-icon.png" rel="shortcut icon" type="image/png">
-  <script id="item-template" type="not-javascript">
-<div class="game"><a href="%(controllerUrl)s"><div>%(name)s</div><img src="%(screenshotUrl)s" /></a></div>
-  </script>
+  <link rel="stylesheet" href="../../css/games.css">
 </head>
 <body>
-<h1>HappyFunTimes</h1>
-<div id="gamemenu">
-</div>
-<div class="hidden-msg" id="nogames">
-  <div>
-    <div>
-      <p>Waiting for Game</p>
+  <div class="hft-fullcenter">
+    <div class="hft-instruction hft-center">
+      <div>This game needs a new version of HappyFunTimes</div>
+      <div><a href="http://superhappyfuntimes.net/install">Please upgrade HappyFunTimes</a></div>
     </div>
   </div>
-</div>
 </body>
-<script data-main="showgames.js" src="3rdparty/require.js"></script>
-<script>
-requirejs.config({
-  paths: {
-    hft: './hft/0.x.x/scripts',
-  },
-});
-</script>
 </html>
+
 

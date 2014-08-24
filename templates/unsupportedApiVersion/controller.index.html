@@ -34,60 +34,20 @@
 <html>
 <head>
   <meta charset="utf-8">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
   <meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0, maximum-scale=1, user-scalable=no, minimal-ui">
-  <title>HappyFunTimes Games</title>
-  <link rel="stylesheet" href="css/menu.css">
-  <style>
-  </style>
-  <script class="item-template" id="unity3d-item-template" type="not-javascript">
-<div class="game"><a class="launch-button" id="%(count)s-button"><div>%(name)s</div><img src="%(happyFunTimes.screenshotUrl)s" /></a></div>
-  </script>
-  <script class="item-template" id="html-item-template" type="not-javascript">
-<div class="game"><a href="%(happyFunTimes.gameUrl)s" id="%(count)s-button"><div>%(name)s</div><img src="%(happyFunTimes.screenshotUrl)s" /></a></div>
-  </script>
+  <meta name="format-detection" content="telephone=no" />
+  <title>%(name)s Controls</title>
+  <link rel="stylesheet" href="../../css/controllers.css">
+  <link href="/hft-icon.png" rel="shortcut icon" type="image/png">
 </head>
 <body>
-<div id="hft-icons">
-    <div class="hft-icon"><a href="options.html"><img src="/hft/assets/gear-icon.svg"></a></div>
-    <div class="hft-icon" id="quit"><img src="/hft/assets/power-icon.svg"></div>
-</div>
-<h1>Games</h1>
-<div id="gamemenu">
-</div>
-<div class="hidden-msg" id="unity3d-msg">
-  <div>
-    <div>
-      <p>Unity Games Must Currently Be Run From Unity.</p>
-      <blockquote>
-        <ol>
-          <li>Launch Unity</li>
-          <li>Load the Game</li>
-          <li>Pick Run</li>
-          <li>When done, Stop the game before coming back here</li>
-        </ol>
-        <div class="button-like">Okay</div>
-      </blockquote>
-    </div>
+  <div class="hft-fullcenter">
+    <div class="hft-instruction">Please upgrade HappyFunTimes</div>
   </div>
-</div>
-<div id="disconnected" class="hft-hidden">
-  <div class="hft-fullscreencenter">
-     <div>Disconnected<br/>(please re-start HappyFunTimes)</div>
-  </div>
-</div>
-<div id="exited" class="hft-hidden">
-  <div class="hft-fullscreencenter">
-    <div>Exited<br/>(over and out!)<br/><a href="http://superhappyfuntimes.net">SuperHappyFunTimes</a></div>
-  </div>
-</div>
 </body>
-<script data-main="showavailablegames.js" src="3rdparty/require.js"></script>
-<script>
-requirejs.config({
-  paths: {
-    hft: './hft/0.x.x/scripts',
-  },
-});
-</script>
 </html>
-

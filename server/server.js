@@ -39,7 +39,8 @@ var g = {
   hftDomain: "happyfuntimes.net",
 };
 
-var config = require('./config');
+var config     = require('./config');
+var log        = require('../lib/log');
 var optionator = require('optionator')({
   options: [
     { option: 'help', alias: 'h', type: 'Boolean',    description: 'displays help'},
@@ -51,6 +52,8 @@ var optionator = require('optionator')({
     { option: 'hft-domain',       type: 'String',     description: 'domain for happyfuntimes site'},
     { option: 'private-server',   type: 'Boolean',    description: 'do not inform happyfuntimes.net about this server. Users will not be able to use happyfuntimes.net to connect to your games'},
     { option: 'app-mode',         type: 'Boolean',    description: 'run as an app'},
+    { option: 'debug',            type: 'Boolean',    description: 'check more things'},
+    { option: 'verbose',          type: 'Boolean',    description: 'print more stuff'},
   ],
   helpStyle: {
     typeSeparator: '=',
@@ -75,6 +78,7 @@ for (var prop in args) {
   g[prop] = args[prop];
 }
 
+log.config(args);
 config.setup(args);
 
 if (args.appMode) {

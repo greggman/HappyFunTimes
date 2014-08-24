@@ -35,7 +35,7 @@ var requirejs = require('requirejs');
 
 var child_process = require('child_process');
 var fs = require('fs');
-var GameServer = requirejs('../public/hft/0.0.0/scripts/gameserver');
+var GameServer = requirejs('../public/hft/0.x.x/scripts/gameserver');
 var LoopbackClient = require('./loopbackclient');
 var msgbox = require('native-msg-box');
 var os = require('os');

@@ -203,6 +203,9 @@ html, body {
   font-size: xx-large;
   font-weight: bold;
 }
+.hft-center {
+  text-align: center;
+}
 #hft-github {
   position: absolute;
   top: 0;

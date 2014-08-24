@@ -19,10 +19,22 @@
   },
 
   apiVersionSettings: {
-    "0.0.0": {
+    "0.0.0-unsupportedApiVersion": {
       templates: {
-        controller: "templates/0.0.0/controller.index.html",
-        game: "templates/0.0.0/game.gameview.html",
+        controller: "templates/unsupportedApiVersion/controller.index.html",
+        game: "templates/unsupportedApiVersion/game.gameview.html",
+      },
+    },
+    "0.0.1": {
+      templates: {
+        controller: "templates/0.x.x/controller.index.html",
+        game: "templates/0.x.x/game.gameview.html",
+      },
+    },
+    "1.0.0": {
+      templates: {
+        controller: "templates/0.x.x/controller.index.html",
+        game: "templates/0.x.x/game.gameview.html",
       },
     },
   },

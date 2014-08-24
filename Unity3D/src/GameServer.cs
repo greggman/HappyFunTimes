@@ -55,7 +55,7 @@ public class GameServer {
     }
 
     public void Init() {
-        Init("ws://localhost:18679");
+        Init("ws://localhost:8080");
     }
 
     public void Init(string url/* = "ws://localhost:18679" */) {
