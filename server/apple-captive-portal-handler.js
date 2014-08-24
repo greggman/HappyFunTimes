@@ -31,11 +31,11 @@
 
 "use strict";
 
-var debug = require('debug')('server');
-var path = require('path');
+var debug       = require('debug')('server');
+var path        = require('path');
 var querystring = require('querystring');
-var strings = require('./strings');
-var url = require('url');
+var strings     = require('../lib/strings');
+var url         = require('url');
 
 /**
  * Object to try to encapulate dealing with Apple's captive

@@ -33,8 +33,8 @@
 var fs      = require('fs');
 var path    = require('path');
 var JSZip   = require('jszip');
-var strings = require('../../server/strings');
-var utils   = require('../../management/utils');
+var strings = require('../../lib/strings');
+var utils   = require('../../lib/utils');
 
 var g_configPath             = path.join(__dirname, "..", "testconfig", "config.json");
 var g_installedGamesListPath = path.join(__dirname, "..", "testconfig", "installed-games.json");

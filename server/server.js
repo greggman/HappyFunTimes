@@ -39,7 +39,7 @@ var g = {
   hftDomain: "happyfuntimes.net",
 };
 
-var config     = require('./config');
+var config     = require('../lib/config');
 var log        = require('../lib/log');
 var optionator = require('optionator')({
   options: [
@@ -86,24 +86,24 @@ if (args.appMode) {
 }
 
 var AppleCaptivePortalHandler = require('./apple-captive-portal-handler');
-var browser                   = require('./browser');
+var browser                   = require('../lib/browser');
 var Cache                     = require('inmemfilecache');
-var computerName              = require('./computername');
+var computerName              = require('../lib/computername');
 var debug                     = require('debug')('server');
 var DNSServer                 = require('./dnsserver');
 var express                   = require('express');
 var fs                        = require('fs');
-var gameDB                    = require('./gamedb');
+var gameDB                    = require('../lib/gamedb');
 var HFTGame                   = require('./hftgame');
 var hftSite                   = require('./hftsite');
-var highResClock              = require('./highresclock');
+var highResClock              = require('../lib/highresclock');
 var http                      = require('http');
-var iputils                   = require('./iputils');
+var iputils                   = require('../lib/iputils');
 var mime                      = require('mime');
 var path                      = require('path');
 var Promise                   = require('promise');
 var querystring               = require('querystring');
-var strings                   = require('./strings');
+var strings                   = require('../lib/strings');
 var sys                       = require('sys');
 var url                       = require('url');
 var util                      = require('util');

@@ -32,8 +32,8 @@
 
 var fs = require('fs');
 var path = require('path');
-var gameInfo = require('../server/gameinfo');
-var hftConfig = require('../server/config');
+var gameInfo = require('../lib/gameinfo');
+var hftConfig = require('../lib/config');
 
 var InstalledGamesList = function() {
   var p_installedGamesPath;
@@ -121,7 +121,7 @@ var InstalledGamesList = function() {
     try {
       getInstalledGames();
       var gamePath;
-      var info = require('../server/gamedb').getGameById(gamePathOrId);
+      var info = require('../lib/gamedb').getGameById(gamePathOrId);
       if (info) {
         gamePath = info.happyFunTimes.basePath;
       } else {
@@ -147,7 +147,7 @@ var InstalledGamesList = function() {
    * Gets all the installed games
    */
   var list = function() {
-    return require('../server/gamedb').getGames();
+    return require('../lib/gamedb').getGames();
   };
 
   this.add = add.bind(this);

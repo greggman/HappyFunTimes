@@ -31,7 +31,7 @@
 
 "use strict";
 
-var io = require('./io');
+var io = require('../lib/io');
 
 var g = {
 };

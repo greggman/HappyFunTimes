@@ -32,9 +32,9 @@
 
 var fs = require('fs');
 var release = require('../../management/release');
-var gameInfo = require('../../server/gameinfo');
+var gameInfo = require('../../lib/gameinfo');
 var iniparser = require('iniparser');
-var strings = require('../../server/strings');
+var strings = require('../../lib/strings');
 
 var register = function(args) {
   if (!args.repoUrl) {

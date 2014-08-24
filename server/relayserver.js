@@ -31,7 +31,7 @@
 
 "use strict";
 
-var computerName = require('./computername');
+var computerName = require('../lib/computername');
 var debug        = require('debug')('relayserver');
 var Game         = require('./game');
 var Player       = require('./player');

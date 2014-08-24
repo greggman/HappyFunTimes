@@ -31,27 +31,27 @@
 "use strict";
 
 var asks        = require('asks');
-var config      = require('../server/config');
+var config      = require('../lib/config');
 var debug       = require('debug')('release');
 var events      = require('events');
 var fs          = require('fs');
-var gameDB      = require('../server/gamedb');
-var gameInfo    = require('../server/gameinfo');
+var gameDB      = require('../lib/gamedb');
+var gameInfo    = require('../lib/gameinfo');
 var games       = require('../management/games');
 var GitHubApi   = require('github');
 var http        = require('http');
 var https       = require('https');
-var io          = require('../server/io');
+var io          = require('../lib/io');
 var JSZip       = require('jszip');
 var mkdirp      = require('mkdirp');
 var path        = require('path');
 var Promise     = require('promise');
 var restUrl     = require('rest-url');
-var readdirtree = require('../server/readdirtree');
+var readdirtree = require('../lib/readdirtree');
 var semver      = require('semver');
-var strings     = require('../server/strings');
+var strings     = require('../lib/strings');
 var url         = require('url');
-var utils       = require('./utils');
+var utils       = require('../lib/utils');
 var ZipWriter   = require("moxie-zip").ZipWriter;
 
 var safeishName = function(gameId) {

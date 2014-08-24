@@ -8,7 +8,7 @@ process.title = "hft";
 var path = require('path');
 var fs = require('fs');
 var utils = require('./utils');
-var config = require('../server/config');
+var config = require('../lib/config');
 var log = require('../lib/log');
 var optionator = require('optionator');
 
