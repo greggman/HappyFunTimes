@@ -30,17 +30,17 @@
  */
 "use strict";
 
-var fs = require('fs');
-var path = require('path');
-var JSZip = require('jszip');
+var fs      = require('fs');
+var path    = require('path');
+var JSZip   = require('jszip');
 var strings = require('../../server/strings');
-var utils = require('../../management/utils');
+var utils   = require('../../management/utils');
 
-var g_configPath = path.join(__dirname, "..", "testconfig", "config.json");
+var g_configPath             = path.join(__dirname, "..", "testconfig", "config.json");
 var g_installedGamesListPath = path.join(__dirname, "..", "testconfig", "installed-games.json");
-var g_fakeGamePath = path.join(__dirname, '..', 'fakegame');
-var g_fakeUnityGamePath = path.join(__dirname, '..', 'fakeunitygame');
-var g_testGameInstallDir = path.join(__dirname, '..', 'testgameinstalldir');
+var g_fakeGamePath           = path.join(__dirname, '..', 'fakegame');
+var g_fakeUnityGamePath      = path.join(__dirname, '..', 'fakeunitygame');
+var g_testGameInstallDir     = path.join(__dirname, '..', 'testgameinstalldir');
 
 var hftcli = function(cmd, args, callback) {
    utils.execute('node', [path.join(__dirname, "..", "..", "cli", "hft.js"), cmd, "--config-path=" + g_configPath].concat(args), function(err, result) {
@@ -71,10 +71,11 @@ var getInstalledGames = function() {
 };
 
 var assert = require("assert");
+describe('hft-cli', function() {
 describe('init', function() {
 
   before(function() {
-    g_configPath = path.join(__dirname, "..", "testareaconfig", "config.json");
+    g_configPath             = path.join(__dirname, "..", "testareaconfig", "config.json");
     g_installedGamesListPath = path.join(__dirname, "..", "testareaconfig", "installed-games.json");
   });
 
@@ -414,5 +415,6 @@ describe('release unity3d', function() {
       });
     });
   });
+});
 });
 
