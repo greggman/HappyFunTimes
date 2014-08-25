@@ -1,9 +1,8 @@
 
 *   make shft tell you you need to upgrade hft
-*   refactor server.js so I we can call it from testing
 *   Add phantomjs based tests
 *   Refactor gameInfo so it returns a runtimeInfo
-*   Make it work backward
+*   Make it work backward?
 *   Make game check for valid HFT
     *   do hft add
     *   do hft install
@@ -785,6 +784,16 @@ Runs Repo noid
 Done
 ====
 
+*   remove live/programs/client/assets
+*   fix manage to put files in live/program/client/assets
+*   make backup script for mongodb and live/program/client/assets
+*   make release script for hft-exe. Have it update shft/install
+*   make shft/install check if you have hft running and if you need to upgrade.
+*   add "blurb" to entire thing.
+    *   package.json
+    *   manage
+    *   site
+*   refactor server.js so I we can call it from testing
 *   Move server/* to lib where appropriate
     *   Need to make sure shft stuff still works
 *   CHOOSE THE PORT! Picked 18679 which is 0x48f7. 0x48 = ascii 'H' so its Hf7  7 = T in leet.
