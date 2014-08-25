@@ -128,6 +128,7 @@ define(['./virtualsocket'], function(VirtualSocket) {
     var disconnected_ = function() {
       console.log("disconnected");
       sendEvent_('disconnect');
+      eventListeners = {};
     }.bind(this);
 
     var processMessage_ = function(msg) {
