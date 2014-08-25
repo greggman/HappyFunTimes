@@ -32,73 +32,17 @@
 
 define(['../gameclient'], function(GameClient) {
 
-  var client = new GameClient({
-    gameId: "__hft__",
-    url: "ws://localhost:18679",
-  });
+  var createClient = function() {
+    return new GameClient({
+      gameId: "__hft__",
+      url: "ws://localhost:18679",
+    });
+  };
 
   // I"m not sure if this object should provide a higher level API
   // or just return the raw GameClient.
-
-//  var onConnect = function() {
-//    console.log("connected to __hft__");
-//  };
-//
-//  var onDisconnect = function() {
-//    console.log("disconnected from __hft__");
-//  };
-//
-//  client.addEventListener('connect', onConnect);
-//  client.addEventListener('disconnect', onDisconnect);
-//
-//  // This seems kind of dumb given it's just an array.
-//  // Maybe the point is it limits the API and hides
-//  // the impl so you can't cheat with things like slice,
-//  // splice, direct indexing, length, etc...?
-//  var Queue = function() {
-//    var queue = [];
-//    this.add = function(value) {
-//      queue.push(value);
-//    };
-//    this.remove = function() {
-//      return queue.shift();
-//    };
-//  };
-//
-//  var EventCallbackQueue = function(client, id) {
-//    var queue = new Queue();
-//    this.add = queue.add;
-//    client.addEventListener(id, function(data) {
-//      var cb = queue.remove();
-//      if (cb) {
-//        cb(null, data);
-//      }
-//    });
-//  };
-//
-//  var addEventToCallbackQueue = (function() {
-//    var callbackQueues = {
-//    };
-//
-//    return function(client, id, callback) {
-//      var eventCallbackQueue = callbackQueues[id];
-//      if (!eventCallbackQueue) {
-//        eventCallbackQueue = new EventCallbackQueue(client, id);
-//        callbackQueues = eventCallbackQueue;
-//      }
-//      return eventCallbackQueue.add(callback);
-//    };
-//  }());
-//
-//  var getInstalledGameInfo = function(gameId, callback) {
-//    addEventToCallbackQueue(client, "getGameInstalledInfo", callback);
-//    client.sendCmd('getGameInstalledInfo', {gameId: gameId});
-//  };
-//
-//  return {
-//    getInstalledGameInfo: getInstalledGameInfo,
-//  };
-//
-  return client;
+  return {
+    createClient: createClient,
+  };
 });
 
