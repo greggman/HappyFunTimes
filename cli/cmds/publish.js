@@ -135,7 +135,7 @@ exports.usage = {
     { option: 'repo',    type: 'String',  description: "name of github repo. If not supplied assumes it matches current working directory", },
     { option: 'src',     type: 'String',  description: "path to source. If not supplied assumes current working directory.", },
     { option: 'force',   type: 'Boolean', description: "don't ask for conformation", },
-    { option: 'version', type: 'String',  description: "set a specific version in semver format.", },
+    { option: 'version', type: 'String',  description: "set a specific version in semver format. (eg: --version=1.2.3)", },
     { option: 'dry-run', type: 'Boolean', description: "don't write any files", },
   ],
 };
