@@ -81,6 +81,7 @@ try {
   log.config(args);
 } catch (e) {
   console.error(e);
+  utils.printUsage(globalOptions, cmdModule.usage, cmdModule.name);
   process.exit(1);
 }
 if (cmdModule.cmd(args) === false) {
