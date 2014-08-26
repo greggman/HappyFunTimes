@@ -22,7 +22,7 @@
     "jszip": "^2.3.0",
     "moxie-zip": "0.0.3",
     "cli-color": "^0.3.2",
-    "github": "git+https://github.com/greggman/node-github.git#2c620a64b9f0000eed04591ef3f53eeae4c8c741",
+    "github": "git+https://github.com/greggman/node-github.git#46a5e454079d2e1ee6f378ade6aaef39bd64da93",
     "semver": "^2.3.1",
     "asks": "^1.0.2",
     "native-msg-box": "0.0.3",
