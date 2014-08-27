@@ -801,11 +801,12 @@ var ReleaseManager = function() {
       // Make sure it's a game!
       var runtimeInfo = gameInfo.readGameInfo(gamePath);
       if (!runtimeInfo) {
-        reject(new Error(gamePath + " doesn't appear to be a game"));
+        reject(new Error(gamePath + " doesn't appear to be a game. Couldn't read or parse package.json"));
         return;
       }
 
-      var info = runtimeInfo;
+      var info = runtimeInfo.info;
+      var hftInfo = info.happyFunTimes;
       var github = new GitHubApi({
           // required
           version: "3.0.0",
@@ -827,7 +828,24 @@ var ReleaseManager = function() {
       var listReleases   = Promise.denodeify(github.releases.listReleases);
       var createRelease  = Promise.denodeify(github.releases.createRelease);
       var uploadAsset    = Promise.denodeify(github.releases.uploadAsset);
-      var highestVersion = '0.0.0';
+
+      var askOrForce = function(question) {
+        return options.force ? Promise.resolve() : askPrompt([
+          {
+             name: 'confirmation',
+             type: 'input',
+             message: question,
+             default: 'n',
+          }
+        ]).then(function(answers) {
+          if (answers.confirmation.toLowerCase() != 'y') {
+            return Promise.reject(new Error("aborted"));
+          }
+          return Promise.resolve();
+        });
+      };
+
+      var highestVersion;
       var version = options.version || '0.0.0';
       var filesToUpload;
 
@@ -841,26 +859,54 @@ var ReleaseManager = function() {
           var release = res[ii];
           if (semver.valid(release.name)) {
             console.log("found existing release: " + release.name);
-            if (semver.gt(release.name, highestVersion)) {
+            if (!highestVersion || semver.gt(release.name, highestVersion)) {
               highestVersion = release.name;
             }
           }
         }
+
+        // If we specified a version, make sure it's higher than the highest published version
         if (options.version) {
-          if (semver.lte(version, highestVersion)) {
-            return Promise.reject(new Error("version '" + version + "' is less than highest version: " + highestVersion));
+          if (highestVersion && semver.lte(version, highestVersion)) {
+            return Promise.reject(new Error("version '" + version + "' is less than highest released version: " + highestVersion));
+          }
+
+          // Make sure this verison is >= package.json
+          if (semver.lt(version, info.version)) {
+            return Promise.reject(new Error("version '" + version + "' is less than package.json version: " + info.version));
           }
         } else {
+          // If there is no published version just use version in package.json
+          if (!highestVersion) {
+            version = info.version;
+            return Promise.resolve();
+          }
+
           version = semver.inc(highestVersion, options.bump);
           if (!version) {
             return Promise.reject(new Error("bad bump type: '" + options.bump + "'"));
           }
+
+          if (semver.lt(version, info.version)) {
+            version = info.version;
+          }
+        }
+
+        // check if version in package.json matches. If not ask
+        if (!semver.eq(version, info.version)) {
+          return askOrForce('update package.json to version:' + version).then(function() {
+            runtimeInfo.info.version = version;
+            gameInfo.writeGameInfo(runtimeInfo);
+            console.warn("don't forgot to commit the new updated package.json");
+            return Promise.resolve();
+          });
         }
 
         if (version.charAt(0) != 'v') {
           version = "v" + version;
         }
-
+        return Promise.resolve();
+      }).then(function() {
         return utils.getTempFolder({unsafeCleanup: true});  // deletes the folder on exit.
       }).then(function(filePath) {
         return make(gamePath, filePath);
@@ -869,19 +915,9 @@ var ReleaseManager = function() {
         console.log("Upload:\n" + files.map(function(file) {
           return "    " + file.filename;
         }).join("\n"));
-        console.log("as version: " + version);
-        return options.force ? Promise.resolve({confirmation: 'y'}) : askPrompt([
-          {
-             name: 'confirmation',
-             type: 'input',
-             message: 'release y/N?',
-             default: 'n',
-          }
-        ]);
-      }).then(function(answers) {
-        if (answers.confirmation.toLowerCase() != 'y') {
-          return Promise.reject(new Error("aborted"));
-        }
+        console.log("publish as version: " + version);
+        return askOrForce('release y/N?');
+      }).then(function() {
         console.log("creating release...");
         auth();
         return createRelease({
@@ -918,7 +954,7 @@ var ReleaseManager = function() {
         }
         console.log("release uploaded");
         fulfill();
-      },function(err) {
+      }, function(err) {
         reject(err)
       });
     });
