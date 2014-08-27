@@ -407,10 +407,15 @@ var ReleaseManager = function() {
         console.error("game " + gameId + " already installed at: " + installedGame.basePath);
         return false;
       }
-      destBasePath = installedGame.basePath
-    } else {
-      // make the dir after we're sure we're ready to install
-      destBasePath = path.join(config.getConfig().gamesDir, info.happyFunTimes.gameId);
+      // Was it "installed" or just added?
+      if (installedGame.files) {
+        destBasePath = installedGame.basePath;
+      }
+    }
+
+    if (!destBasePath) {
+        // make the dir after we're sure we're ready to install
+        destBasePath = path.join(config.getConfig().gamesDir, info.happyFunTimes.gameId);
     }
 
     destBasePath = opt_destPath ? opt_destPath : destBasePath;

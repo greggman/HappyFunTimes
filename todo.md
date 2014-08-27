@@ -1,4 +1,17 @@
 
+*   maybe shft should not install ever. It should just redirect to hft.
+
+    So, clicking "install" on say powpow would redirect to `http://localhost:18679/install.html?id=powpow`
+
+    or
+
+    maybe SHFT should redirect for games so if you're running HFT then clicking a game would go
+    to `http://localhost:18689/game/powpow`. If you're not running HFT it would go to
+    `http://shft.net/game/powpow`
+
+    Just thinking out loud.
+
+
 *   consider install using an per platform installer app
 
     the installer app would be a generic app. It could either take an argument like `--path=pathToZip`

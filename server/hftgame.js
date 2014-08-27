@@ -63,6 +63,7 @@ var HFTPlayer = function(netPlayer, game, gameDB) {
   netPlayer.addEventListener('disconnect', HFTPlayer.prototype.disconnect.bind(this));
   netPlayer.addEventListener('getGameInfo', HFTPlayer.prototype.handleGetGameInfo.bind(this));
   netPlayer.addEventListener('install', HFTPlayer.prototype.handleInstall.bind(this));
+  netPlayer.addEventListener('upgrade', HFTPlayer.prototype.handleUpgrade.bind(this));
   netPlayer.addEventListener('launch', HFTPlayer.prototype.handleLaunch.bind(this));
   netPlayer.addEventListener('quit', HFTPlayer.prototype.handleQuit.bind(this));
 
@@ -121,9 +122,10 @@ HFTPlayer.prototype.handleGetGameInfo = function(data) {
   this.sendCmd("gameInfo", gameInfo);
 };
 
-HFTPlayer.prototype.download = function(gameId) {
+HFTPlayer.prototype.download = function(gameId, upgrade) {
   var emitter = release.download(gameId, undefined, {
     verbose: true,
+    overwrite: upgrade,
   });
   var size = 0;
   var bytesDownloaded = 0;
@@ -146,7 +148,6 @@ HFTPlayer.prototype.download = function(gameId) {
 };
 
 HFTPlayer.prototype.handleInstall = function(data) {
-  var upgrade = data.upgrade;
   var gameId = data.gameId;
 
   msgbox.prompt({
@@ -157,6 +158,26 @@ HFTPlayer.prototype.handleInstall = function(data) {
       case msgbox.Result.YES:
         this.sendInstallProgress(gameId, 0, 0, "starting install");
         this.download(gameId);
+        break;
+      case msgbox.Result.NO:
+        this.sendCmd("installCancelled", {gameId: gameId});
+        break;
+    }
+  }.bind(this));
+
+};
+
+HFTPlayer.prototype.handleUpgrade = function(data) {
+  var gameId = data.gameId;
+
+  msgbox.prompt({
+    msg: "Upgrade '" + gameId + "'?",
+    title: "HappyFunTimes"
+  }, function(err, result) {
+    switch (result) {
+      case msgbox.Result.YES:
+        this.sendInstallProgress(gameId, 0, 0, "starting upgrade");
+        this.download(gameId, true);
         break;
       case msgbox.Result.NO:
         this.sendCmd("installCancelled", {gameId: gameId});
