@@ -81,6 +81,23 @@ var askPrompt = function(questions) {
   });
 };
 
+var validRepoURL = (function() {
+  // We only support github at the moment.
+  var prefixes = [
+    "git://github.com/",
+    "https://github.com/",
+  ];
+  return function(v) {
+    for (var ii = 0; ii < prefixes.length; ++ii) {
+      var prefix = prefixes[ii];
+      if (v.substring(0, prefix.length) == prefix) {
+        return true;
+      }
+    }
+    return false;
+  };
+}());
+
 var ReleaseManager = function() {
 
   var goodNameRE = /^[a-zA-Z0-9_ \.\\\/-]+$/;
@@ -770,9 +787,15 @@ var ReleaseManager = function() {
    * @property {boolean?} verbose print extra info
    * @property {boolean?} dryRun true = don't write any files or
    *           make any folders.
-   * @property {string?} repo github repo
    * @property {string?} username github username
    * @property {string?} password github password
+   * @property {string?} bump how to bump version. See semver.inc
+   * @property {boolean?} force set to true to skip all
+   *           confirmations
+   * @property {string?} version set to a specific version
+   * @property {string} repoUrl url of repo of game to register
+   * @property {string?} endpoint base url to register game. eg
+   *           http://foo.com
    */
 
   /**
@@ -803,6 +826,15 @@ var ReleaseManager = function() {
       if (!runtimeInfo) {
         reject(new Error(gamePath + " doesn't appear to be a game. Couldn't read or parse package.json"));
         return;
+      }
+
+      if (!validRepoURL(options.repoUrl)) {
+        return Promise.reject(new Error("not a supported url: " + options.repoUrl));
+      }
+
+      var repoName = path.basename(options.repoUrl);
+      if (strings.endsWith(repoName, ".git")) {
+        repoName = repoName.substring(0, repoName.length - 4);
       }
 
       var info = runtimeInfo.info;
@@ -853,7 +885,7 @@ var ReleaseManager = function() {
       // AND, all releases should be less than this one
       listReleases({
         owner: options.username,
-        repo: options.repo,
+        repo: repoName,
       }).then(function(res) {
         for (var ii = 0; ii < res.length; ++ii) {
           var release = res[ii];
@@ -902,11 +934,11 @@ var ReleaseManager = function() {
           });
         }
 
+        return Promise.resolve();
+      }).then(function() {
         if (version.charAt(0) != 'v') {
           version = "v" + version;
         }
-        return Promise.resolve();
-      }).then(function() {
         return utils.getTempFolder({unsafeCleanup: true});  // deletes the folder on exit.
       }).then(function(filePath) {
         return make(gamePath, filePath);
@@ -922,7 +954,7 @@ var ReleaseManager = function() {
         auth();
         return createRelease({
           owner: options.username,
-          repo: options.repo,
+          repo: repoName,
           tag_name: version,
           target_commitish: "master",
           name: version,
@@ -934,7 +966,7 @@ var ReleaseManager = function() {
           auth();
           promises.push(uploadAsset({
             owner: options.username,
-            repo: options.repo,
+            repo: repoName,
             id: releaseInfo.id,
             name: path.basename(file.filename),
             filePath: file.filename,
@@ -952,7 +984,14 @@ var ReleaseManager = function() {
             return Promise.reject(new Error("upload size for '" + uploadResult.name + "' is " + uploadResult.size + " but should be " + localSize));
           }
         }
-        console.log("release uploaded");
+        console.log(hftInfo.gameId + ": release uploaded");
+
+        return register({
+          repoUrl: options.repoUrl,
+          endpoint: options.endpoint,
+        })
+      }).then(function() {
+        console.log(hftInfo.gameId + ": registered");
         fulfill();
       }, function(err) {
         reject(err)
@@ -963,7 +1002,8 @@ var ReleaseManager = function() {
   /**
    * @typedef {Object} Register~Options
    * @property {string} repoUrl url of repo of game to register
-   * @property {string?} endpoint url of server to contact
+   * @property {string?} endpoint base url to register game. eg
+   *           http://foo.com
    */
 
   /**
@@ -982,23 +1022,6 @@ var ReleaseManager = function() {
 
     // this will be checked on the server but check it here in order
     // tell the dev quickly.
-
-    var validRepoURL = (function() {
-      // We only support github at the moment.
-      var prefixes = [
-        "git://github.com/",
-        "https://github.com/",
-      ];
-      return function(v) {
-        for (var ii = 0; ii < prefixes.length; ++ii) {
-          var prefix = prefixes[ii];
-          if (v.substring(0, prefix.length) == prefix) {
-            return true;
-          }
-        }
-        return false;
-      };
-    }());
 
     if (!validRepoURL(options.repoUrl)) {
       return Promise.reject(new Error("not a supported url: " + options.repoUrl));

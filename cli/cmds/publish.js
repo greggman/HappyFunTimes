@@ -30,11 +30,12 @@
  */
 "use strict";
 
-var path = require('path');
-var utils = require('../utils');
-var Promise = require('promise');
-var release = require('../../management/release');
-var asks = require('asks');
+var asks     = require('asks');
+var gitUtils = require('../../lib/git-utils.js');
+var path     = require('path');
+var Promise  = require('promise');
+var release  = require('../../management/release');
+var utils    = require('../utils');
 
 var bumpTypes = ['major', 'premajor', 'minor', 'preminor', 'patch', 'prepatch', 'prerelease'];
 
@@ -65,6 +66,15 @@ var publish = function(args) {
   }
 
   var srcPath = args.src ? path.resolve(args.src) : process.cwd();
+
+  try {
+    args.repoUrl = gitUtils.getGitRepoUrlFromFolder(srcPath);
+  } catch (e) {
+    console.error("Could not figure out git repo. Are you sure this is a git repo and does it have a remote called 'origin'?");
+    return false;
+  }
+
+  console.log("found repo: " + args.repoUrl);
 
   var username;
   var password;
@@ -104,12 +114,13 @@ var publish = function(args) {
     var options = {
       dryRun: args['dryRun'],
       verbose: args['verbose'],
-      repo: args['repo'] || path.basename(process.cwd()),
       username: answers.username,
       password: answers.password,
       bump: bump,
       force: args['force'],
       version: args['version'],
+      repoUrl: args['repoUrl'],
+      endpoint: args['endpoint'],
     };
 
     return release.publish(srcPath, options);
@@ -130,13 +141,13 @@ exports.usage = {
     "   hft publish",
   ],
   options: [
-    { option: 'user',    type: 'String',  description: "github username or username:password", },
-    { option: 'bump',    type: 'String',  description: "how to bump version (major, premajor, minor, preminor, patch, prepatch, prerelease), default: patch", },
-    { option: 'repo',    type: 'String',  description: "name of github repo. If not supplied assumes it matches current working directory", },
-    { option: 'src',     type: 'String',  description: "path to source. If not supplied assumes current working directory.", },
-    { option: 'force',   type: 'Boolean', description: "don't ask for conformation", },
-    { option: 'version', type: 'String',  description: "set a specific version in semver format. (eg: --version=1.2.3)", },
-    { option: 'dry-run', type: 'Boolean', description: "don't write any files", },
+    { option: 'user',     type: 'String',  description: "github username or username:password", },
+    { option: 'bump',     type: 'String',  description: "how to bump version (major, premajor, minor, preminor, patch, prepatch, prerelease), default: patch", },
+    { option: 'src',      type: 'String',  description: "path to source. If not supplied assumes current working directory.", },
+    { option: 'force',    type: 'Boolean', description: "don't ask for conformation", },
+    { option: 'version',  type: 'String',  description: "set a specific version in semver format. (eg: --version=1.2.3)", },
+    { option: 'dry-run',  type: 'Boolean', description: "don't write any files", },
+    { option: 'endpoint', type: 'String',  description: "base url to use to register server (eg. http://local.test.com)"},
   ],
 };
 exports.cmd = publish;

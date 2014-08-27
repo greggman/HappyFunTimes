@@ -30,25 +30,17 @@
  */
 "use strict";
 
-var fs = require('fs');
-var release = require('../../management/release');
-var gameInfo = require('../../lib/gameinfo');
-var iniparser = require('iniparser');
-var strings = require('../../lib/strings');
+var fs        = require('fs');
+var release   = require('../../management/release');
+var gameInfo  = require('../../lib/gameinfo');
+var gitUtils  = require('../../lib/git-utils.js');
 
 var register = function(args) {
   if (!args.repoUrl) {
     try {
       // Just read this because it might find errors.
       gameInfo.readGameInfo(process.cwd());
-
-      // Now read the git/.config
-      var config = iniparser.parseSync(".git/config");
-      args.repoUrl = config['remote "origin"'].url;
-      var gitPrefix = "git@github.com:";
-      if (strings.startsWith(args.repoUrl, gitPrefix)) {
-        args.repoUrl = "https://github.com/" + args.repoUrl.substring(gitPrefix.length);
-      }
+      args.repoUrl = gitUtils.getGitRepoUrlFromFolder();
     } catch (e) {
       console.error("Could not figure out git repo. Are you sure this is a git repo and does it remote called 'origin'?");
       console.error(e);
