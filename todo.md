@@ -1,4 +1,14 @@
 
+*   consider install using an per platform installer app
+
+    the installer app would be a generic app. It could either take an argument like `--path=pathToZip`
+    or it could just install itself and uninstall itself. The point would be a real installer
+    would ask for real OS level permission to run rather than my hacked msgbox.
+
+    In the case of taking an argument it would install the zip. In the case of just being a no-op
+    installer we'd just check for success or failure. On failure we wouldn't install the zip.
+    On success we'd use the current install process.
+
 *   Make upgrade game work?
 *   Make shft live!
     *   make registration server work
