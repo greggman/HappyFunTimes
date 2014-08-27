@@ -33,6 +33,8 @@
 
 var requirejs = require('requirejs');
 var path      = require('path');
+var config    = require('../lib/config');
+var semver    = require('semver');
 
 requirejs.config({
   nodeRequire: require,
@@ -63,6 +65,17 @@ var HFTPlayer = function(netPlayer, game, gameDB) {
   netPlayer.addEventListener('install', HFTPlayer.prototype.handleInstall.bind(this));
   netPlayer.addEventListener('launch', HFTPlayer.prototype.handleLaunch.bind(this));
   netPlayer.addEventListener('quit', HFTPlayer.prototype.handleQuit.bind(this));
+
+  var highestVersion = Object.keys(config.getSettings().apiVersionSettings).sort(function(a, b) {
+    if (a == b) {
+      return 0;
+    }
+    return semver.lt(a, b) ? 1 : -1;
+  })[0];
+
+  this.sendCmd('hftInfo', {
+    version: highestVersion,
+  });
 };
 
 HFTPlayer.prototype.disconnect = function() {
@@ -98,8 +111,10 @@ HFTPlayer.prototype.handleGetGameInfo = function(data) {
   if (!gameInfo) {
     // No version means game is not installed.
     gameInfo = {
-      happyFunTimes: {
-        gameId: data.gameId,
+      info: {
+        happyFunTimes: {
+          gameId: data.gameId,
+        }
       }
     };
   }
