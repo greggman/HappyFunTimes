@@ -177,6 +177,28 @@ There's a Unity3D library if you'd like to make the game in Unity3D.
     If online is false when the clock is created it will create a clock
     that returns the local time.
 
+Limitations
+-----------
+
+The number of players that can connect to a game is limited by your networking
+equipment. With enough access points there's no limit to the number of player
+that could connect that I know of but of course 1000s of players would require
+lots of access points and lots of bandwidth and a game design that lets 1000s of people
+actually participate.
+
+Another limit in the default mode is players must be on the same network behind
+a NAT. This is standard for most if not all home routers. It's probably less standard in
+office setups. In this mode you start HappyFunTimes, tell your users to connect to
+your WiFi and then have them go to `happyfuntimes.net`.
+
+HappyFunTimes has the option to run it's own DNS which is another option but
+requires configuring your router. This option is probably more suited to
+events, installations, and things like that. In this mode, players connect
+to the WiFi specificaly setup to run HappyFunTimes. iOS devices will automatically
+find HappyFunTimes once connected to the WiFi, no other interaction required by the user.
+Android devices require the user to first connect to the WiFi and then go to any random
+url like `hft.com` or `h.com`
+
 Making Games
 ------------
 
@@ -185,15 +207,14 @@ If you just want to play some games just [install it](http://superhappyfuntimes.
 If you want to develop games follow [these instructions](docs/makinggames.md)
 
 
-*   Install [node.js](http://nodejs.org). I was using 0.10.26
+*   Install [node.js](http://nodejs.org). I was using 0.10.29
 *   Open a shell/terminal/command prompt
 *   cd into the root of the repo you cloned (eg. `cd HappyFunTimes`)
 *   type `npm install` which will install needed node modules locally
 *   type `node server/server.js` which will start the server.
 
 Open a browser window and go to `http://localhost:18679/games.html` and choose a game.
-In other window (preferably a window, not a tab), go to `http://localhost:18679` and
-choose the game.
+In other window (preferably a window, not a tab), go to `http://localhost:18679`.
 
 If you have other computers or smartphones on the same network look up the ip address of
 the machine running the game (see `ifconfig` on OSX/Linux, the Network Preferneces on OSX,

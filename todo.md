@@ -1,83 +1,29 @@
 
-*   add hft check which just checks the package.json in the current
-    folder
-*   Add 'what is this' to hft.net
-*   Add a support field, default to github issues
-*   publish needs to check package info and make it match.
-
-    how automated should it be? Ask to bump version? Complain if
-    package.json is newer than online version? Should we check
-    online package version?
-
-    A problem I'm running into. There's the package.json. It has
-    a version. The *correct* way to make a release would be
-
-    1.  git commit latest code
-    2.  edit version in package.json
-    3.  git commit package.json
-    4.  git tag with same version
-    5.  push with tags to github
-    6.  publish
-
-    That's too many steps IMO especially for noobs. I feel like
-    it should just be "step 6: publish".
-
-    But then the question is what to do with steps 1-5.
-    It seems wrong to automatically update package.json AND
-    check it in, AND tag it, AND push it. Plus, the tags
-    can get out of sync.
-
-    So, what if I just use the tags. I don't care about
-    the version on package.json.  But then the question
-    is where to store that version number.
-
-    *   I could edit the package.json when I create the package
-
-        That feels wrong becauase that file won't match the one
-        checked in. Does it matter?
-
-    *   I could store it in a separate file
-
-        So say `version.json`. That has the problem that that
-        file won't exist when developing so you'll get a different
-        version.
-
-        It also has the problem that currently making the release
-        zip files is a separate step from publishing them. Which
-        means the version is not known when the release files
-        are made. Maybe that's when the version should be set?
-
-    *   I could store it in the list of installed games.
-
-        The problem there is it's not saved so if you did
-
-            cd gamedir
-            hft remove
-            hft add
-
-        The version would change.
-
-    *   Maybe I should force you to do the 6 steps?
-
-        When you publish I'll check the package.json version is
-        greater than the current version. I can even bump it for you
-        It will be up to you to commit.
-
-
-*   make shft recover from hft stop/start
-*   make install screen only show your OS. Link to "other versions"
-*   make shft tell you you need to upgrade hft
-*   Add phantomjs based tests
-*   Refactor gameInfo so it returns a runtimeInfo
-*   Make it work backward?
-*   Make game check for valid HFT
-    *   do hft add
-    *   do hft install
-
 *   Make upgrade game work?
 *   Make shft live!
     *   make registration server work
     *   make minimal design
+
+*   make shft tell you you need to upgrade hft
+*   Add 'what is this' to hft.net
+*   Add a support field, default to github issues
+*   Figure out if it's possible to make HFT.net work on more networks
+
+    HFT.net currently requires NAT based networks like home routers.
+    Could it work on a corp network?
+
+    Maybe HFT should just report on the game, no scanning. If no game
+    exists or it's older than N (I think I trim already) then it should
+    report "no games".
+
+    That way users will know immediately.
+
+*   make install screen only show your OS. Link to "other versions"
+*   Add phantomjs based tests
+*   Refactor gameInfo so it returns a runtimeInfo
+*   Make game check for valid HFT (I don't remember what this means)
+    *   do hft add
+    *   do hft install
 
 
 
@@ -851,6 +797,9 @@ Runs Repo noid
 Done
 ====
 
+*   make shft recover from hft stop/start
+*   add hft check which just checks the package.json in the current
+    folder
 *   make shft say "install" instead of "..checking.."
 *   make backup script for mongodb and live/program/client/assets
 *   make release script for hft-exe. Have it update shft/install using manage
