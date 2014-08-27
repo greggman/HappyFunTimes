@@ -101,7 +101,6 @@ requirejs(
       if (exception) {
         throw exception;
       }
-console.log(JSON.stringify(obj, undefined, "  "));
 
       var html = [];
       var gamesById = {};
