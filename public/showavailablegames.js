@@ -101,20 +101,23 @@ requirejs(
       if (exception) {
         throw exception;
       }
+console.log(JSON.stringify(obj, undefined, "  "));
 
       var html = [];
       var gamesById = {};
       for (var ii = 0; ii < obj.length; ++ii) {
-        var gameInfo = obj[ii];
-        gamesById[gameInfo.happyFunTimes.gameId] = gameInfo;
-        gameInfo.count = ii;
-        var templateId = gameInfo.happyFunTimes.gameType.toLowerCase();
+        var runtimeInfo = obj[ii];
+        var gameInfo = runtimeInfo.info;
+        var hftInfo = gameInfo.happyFunTimes;
+        gamesById[hftInfo.gameId] = gameInfo;
+        runtimeInfo.count = ii;
+        var templateId = hftInfo.gameType.toLowerCase();
         var template = templates[templateId];
         if (!template) {
           console.error("missing template: " + templateId);
           continue;
         }
-        html.push(Strings.replaceParams(template, gameInfo));
+        html.push(Strings.replaceParams(template, runtimeInfo));
       }
 
       gamemenu.innerHTML = html.join("");
@@ -125,8 +128,10 @@ requirejs(
         var elem = elements[ii];
         var buttonId = elem.id;
         var count = parseInt(buttonId.substr(0, buttonId.length - buttonIdSuffix.length));
-        var gameInfo = obj[count];
-        var gameType = gameInfo.happyFunTimes.gameType;
+        var runtimeInfo = obj[count];
+        var gameInfo = runtimeInfo.info;
+        var hftInfo = gameInfo.happyFunTimes;
+        var gameType = hftInfo.gameType;
         if (!gameType) {
           console.warn("missing happyFunTimes.gameType in package.json")
           continue;
@@ -157,8 +162,10 @@ requirejs(
         var elem = elements[ii];
         var buttonId = elem.id;
         var count = parseInt(buttonId.substr(0, buttonId.length - buttonIdSuffix.length));
-        var gameInfo = obj[count];
-        var gameType = gameInfo.happyFunTimes.gameType;
+        var runtimeInfo = obj[count];
+        var gameInfo = runtimeInfo.info;
+        var hftInfo = gameInfo.happyFunTimes;
+        var gameType = hftInfo.gameType;
         if (!gameType) {
           console.warn("missing happyFunTimes.gameType in package.json")
           continue;
@@ -175,7 +182,7 @@ requirejs(
             msgElement.style.display = "block";
             client.sendCmd('launch', {gameId: gameId});
           };
-        }(msgElement, gameInfo.happyFunTimes.gameId), false);
+        }(msgElement, hftInfo.gameId), false);
         msgElement.addEventListener('click', function(msgElement) {
           return function(e) {
             e.preventDefault(true);
@@ -188,15 +195,15 @@ requirejs(
       // NOTE: this is kind of wonky. Seems like we should just go directly
       // instead of waiting
       if (params.gameId) {
-        var gameInfo = gamesById[params.gameId];
-        if (!gameInfo) {
+        var runtimeInfo = gamesById[params.gameId];
+        if (!runtimeInfo) {
           console.error("unknown gameId: " + params.gameId);
         } else {
           // LOL. If we don't replace the history then pressing back will just end up going forward again :P
           // Yet another reason maybe we should just go directly to the game?
           window.history.replaceState({}, "", window.location.origin + window.location.pathname);
           var event = new Event('click');
-          var elem = $(gameInfo.count + "-button");
+          var elem = $(runtimeInfo.count + "-button");
           elem.dispatchEvent(event);
         }
       }

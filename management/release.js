@@ -149,14 +149,14 @@ var ReleaseManager = function() {
     });
   };
 
-  var makeHTML = function(info, gamePath, destFolder) {
-    var hftInfo = info.happyFunTimes;
+  var makeHTML = function(runtimeInfo, gamePath, destFolder) {
+    var hftInfo = runtimeInfo.info.happyFunTimes;
     var destPath = path.join(destFolder, safeishName(hftInfo.gameId) + "-html.zip");
     return makeZip(hftInfo.gameId, gamePath, destPath);
   };
 
-  var makeUnity3d = function(info, gamePath, destFolder) {
-    var hftInfo = info.happyFunTimes;
+  var makeUnity3d = function(runtimeInfo, gamePath, destFolder) {
+    var hftInfo = runtimeInfo.info.happyFunTimes;
     var gameId = hftInfo.gameId;
 
     var platforms = [
@@ -307,24 +307,24 @@ var ReleaseManager = function() {
    */
   var make = function(gamePath, destFolder) {
     // Make sure it's a game!
-    var info = gameInfo.readGameInfo(gamePath);
-    if (!info) {
+    var runtimeInfo = gameInfo.readGameInfo(gamePath);
+    if (!runtimeInfo) {
       return Promise.reject(Error("not a game: " + gamePath));
     }
 
-    var hftInfo = info.happyFunTimes;
+    var hftInfo = runtimeInfo.info.happyFunTimes;
     var maker = makers[hftInfo.gameType.toLowerCase()];
     if (!maker) {
       return Promise.reject(new Error("unsupported game type:" + hftInfo.gameType));
     }
 
     try {
-      gameInfo.checkRequiredFiles(info, gamePath);
+      gameInfo.checkRequiredFiles(runtimeInfo, gamePath);
     } catch (e) {
       return Promise.reject(new Error(e.toString()));
     }
 
-    return maker(info, gamePath, destFolder);
+    return maker(runtimeInfo, gamePath, destFolder);
   };
 
   /**
@@ -357,7 +357,7 @@ var ReleaseManager = function() {
     var zip = new JSZip();
     zip.load(fs.readFileSync(releasePath));
     var entries = Object.keys(zip.files).sort().map(function(key) { return zip.files[key]; });
-    var info;
+    var runtimeInfo;
     var packageBasePath;
 
     try {
@@ -367,7 +367,7 @@ var ReleaseManager = function() {
         var baseName = path.basename(entry.name);
         var dirName = path.dirname(entry.name);
         if (dirName.indexOf("/") < 0 && baseName == "package.json") {
-          info = gameInfo.parseGameInfo(entry.asText(), path.join(releasePath, entry.name));
+          runtimeInfo = gameInfo.parseGameInfo(entry.asText(), path.join(releasePath, entry.name));
           packageBasePath = dirName;
           break;
         }
@@ -378,6 +378,7 @@ var ReleaseManager = function() {
       return false;
     }
 
+    var info = runtimeInfo.info;
     var hftInfo = info.happyFunTimes;
     var gameId = hftInfo.gameId;
     var destBasePath;
@@ -386,10 +387,10 @@ var ReleaseManager = function() {
     var installedGame = gameDB.getGameById(gameId);
     if (installedGame) {
       if (!options.overwrite) {
-        console.error("game " + gameId + " already installed at: " + installedGame.happyFunTimes.basePath);
+        console.error("game " + gameId + " already installed at: " + installedGame.basePath);
         return false;
       }
-      destBasePath = installedGame.happyFunTimes.basePath
+      destBasePath = installedGame.basePath
     } else {
       // make the dir after we're sure we're ready to install
       destBasePath = path.join(config.getConfig().gamesDir, info.happyFunTimes.gameId);
@@ -475,7 +476,7 @@ var ReleaseManager = function() {
       var gamePath = path.resolve(gameIdOrPath);
       for (var ii = 0; ii < gameList.length; ++ii) {
         var game = gameList[ii];
-        if (game.happyFunTimes.basePath == gamePath) {
+        if (game.basePath == gamePath) {
           installedGame = game;
           break;
         }
@@ -487,10 +488,10 @@ var ReleaseManager = function() {
       return false;
     }
 
-    var hftInfo = installedGame.happyFunTimes;
+    var hftInfo = installedGame.info.happyFunTimes;
     var gameId = hftInfo.gameId;
-    var gamePath = hftInfo.basePath;
-    var files = hftInfo.files || [];
+    var gamePath = installedGame.basePath;
+    var files = installedGame.files || [];
 
     var failCount = 0;
     var folders = [gamePath];
@@ -798,12 +799,13 @@ var ReleaseManager = function() {
       var log = options.verbose ? console.log.bind(console) : function() {};
 
       // Make sure it's a game!
-      var info = gameInfo.readGameInfo(gamePath);
-      if (!info) {
+      var runtimeInfo = gameInfo.readGameInfo(gamePath);
+      if (!runtimeInfo) {
         reject(new Error(gamePath + " doesn't appear to be a game"));
         return;
       }
 
+      var info = runtimeInfo;
       var github = new GitHubApi({
           // required
           version: "3.0.0",

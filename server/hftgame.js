@@ -153,19 +153,19 @@ HFTPlayer.prototype.handleInstall = function(data) {
 
 HFTPlayer.prototype.handleLaunch = function(data) {
   var gameId = data.gameId;
-  var info = this.gameDB.getGameById(gameId);
+  var runtimeInfo = this.gameDB.getGameById(gameId);
 
-  if (!info) {
+  if (!runtimeInfo) {
     this.sendError("no such game: " + gameId);
     return;
   }
 
   var nativeName;
   var launcher;
-  var hftInfo = info.happyFunTimes;
+  var hftInfo = runtimeInfo.info.happyFunTimes;
   switch (hftInfo.gameType.toLowerCase()) {
     case 'html':
-      this.sendCmd('redirect', { url: hftInfo.gameUrl });
+      this.sendCmd('redirect', { url: runtimeInfo.gameUrl });
       break;
     case 'unity3d':
       if (platform == 'darwin') {
@@ -183,7 +183,7 @@ HFTPlayer.prototype.handleLaunch = function(data) {
   }
 
   if (nativeName) {
-    var nativePath = path.join(hftInfo.basePath, "bin", nativeName);
+    var nativePath = path.join(runtimeInfo.basePath, "bin", nativeName);
     if (!fs.existsSync(nativePath)) {
       this.sendError("native game does not exist: " + nativePath);
       return;

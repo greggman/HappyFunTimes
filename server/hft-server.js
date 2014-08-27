@@ -280,10 +280,10 @@ var HFTServer = function(options, startedCallback) {
   var sendGameRequestedFile = function(req, res) {
     var gamePrefixLength = 8;  // "/games/" + the slash after the id
     var gameId = req.params[0];
-    var gameInfo = gameDB.getGameById(gameId);
+    var runtimeInfo = gameDB.getGameById(gameId);
     var parsedUrl = url.parse(req.url);
     var filePath = parsedUrl.pathname;
-    var fullPath = path.normalize(path.join(gameInfo.happyFunTimes.basePath, filePath.substr(gamePrefixLength + gameId.length)));
+    var fullPath = path.normalize(path.join(runtimeInfo.basePath, filePath.substr(gamePrefixLength + gameId.length)));
     sendRequestedFileFullPath(req, res, fullPath);
   };
 
@@ -341,17 +341,18 @@ var HFTServer = function(options, startedCallback) {
   var addTemplateInsertedPath = function(app, pathRegex, templateName, contentPath) {
     app.get(pathRegex, function(req, res) {
       var gameId = req.params[0];
-      var gameInfo = gameDB.getGameById(gameId);
+      var runtimeInfo = gameDB.getGameById(gameId);
+      var gameInfo = runtimeInfo.info;
 
-      if (!gameInfo.happyFunTimes.useTemplate[templateName]) {
+      if (!runtimeInfo.useTemplate[templateName]) {
         sendRequestedGameFile(req, res);
         return;
       }
 
-      var templatePath = gameInfo.happyFunTimes.versionSettings.templates[templateName];
+      var templatePath = runtimeInfo.versionSettings.templates[templateName];
       templatePath = path.normalize(path.join(g.cwd, templatePath));
 
-      var contentFullPath = path.normalize(path.join(gameInfo.happyFunTimes.basePath, contentPath));
+      var contentFullPath = path.normalize(path.join(runtimeInfo.basePath, contentPath));
 
       fileCache.readFile(templatePath, function(err, templateData) {
         if (err) {
@@ -360,7 +361,7 @@ var HFTServer = function(options, startedCallback) {
         }
         sendFileResponse(res, contentFullPath, function(str) {
           var result = strings.replaceParams(templateData.toString(), [
-            gameInfo,
+            runtimeInfo,
             {
               content: str,
             }

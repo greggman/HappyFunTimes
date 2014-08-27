@@ -147,7 +147,7 @@ describe('games', function() {
       hftcli("list", ["--full"], function(err, result) {
         var list = JSON.parse(result.stdout);
         assert.equal(list.length, 1);
-        assert.equal(list[0].happyFunTimes.gameId, "fakegame");
+        assert.equal(list[0].info.happyFunTimes.gameId, "fakegame");
         done();
       });
     });

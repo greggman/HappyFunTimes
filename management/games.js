@@ -93,7 +93,7 @@ var InstalledGamesList = function() {
       if (!info) {
         throw "";
       }
-      gameInfo.checkRequiredFiles(info, info.happyFunTimes.basePath);
+      gameInfo.checkRequiredFiles(info, info.basePath);
 
       getInstalledGames();
       var index = indexByPath(gamePath);
@@ -121,9 +121,9 @@ var InstalledGamesList = function() {
     try {
       getInstalledGames();
       var gamePath;
-      var info = require('../lib/gamedb').getGameById(gamePathOrId);
-      if (info) {
-        gamePath = info.happyFunTimes.basePath;
+      var runtimeInfo = require('../lib/gamedb').getGameById(gamePathOrId);
+      if (runtimeInfo) {
+        gamePath = runtimeInfo.basePath;
       } else {
         gamePath = path.resolve(gamePathOrId);
       }
