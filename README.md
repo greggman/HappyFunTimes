@@ -1,13 +1,10 @@
 HappyFunTimes
 =============
 
-[Install On Windows]()
-
-[Install On OSX]()
-
-[Home Page](http://greggman.github.io/HappyFunTimes/).
-
-[Blog](http://blog.happyfuntimes.net).
+*   [Install](http://superhappyfuntimes.net/Install)
+*   [Home Page](http://greggman.github.io/HappyFunTimes/).
+*   [Developer Mailing List](https://groups.google.com/d/forum/hft-dev)
+*   [Blog](http://blog.happyfuntimes.net).
 
 [![Build Status](https://travis-ci.org/greggman/HappyFunTimes.svg?branch=master)](https://travis-ci.org/greggman/HappyFunTimes)
 
@@ -202,7 +199,7 @@ url like `hft.com` or `h.com`
 Making Games
 ------------
 
-If you just want to play some games just [install it](http://superhappyfuntimes.net).
+If you just want to play some games just [install it](http://superhappyfuntimes.net/install).
 
 If you want to develop games follow [these instructions](docs/makinggames.md)
 
