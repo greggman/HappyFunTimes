@@ -35,6 +35,7 @@ var computerName = require('../lib/computername');
 var debug        = require('debug')('relayserver');
 var Game         = require('./game');
 var gameInfo     = require('../lib/gameinfo');
+var path         = require('path');
 var Player       = require('./player');
 var WSServer     = require('./websocketserver');
 
@@ -184,7 +185,19 @@ var RelayServer = function(servers, options) {
    * @param {Client} client Websocket client object.
    */
   this.assignAsClientForGame = function(data, client) {
-    var gameId = data.cwd ? gameInfo.makeRuntimeGameId(data.gameId, data.cwd) : data.gameId;
+    var gameId = data.gameId;
+    var cwd = data.cwd;
+    if (cwd) {
+      // Not clear where this belongs. Unity can be in bin
+      // so should we fix it in unity or here? Seems like
+      // here since Unity isn't aware. It's HFT that specifies
+      // the 'bin' convension
+      if (path.basename(cwd) == "bin") {
+        cwd = path.dirname(cwd);
+      }
+      gameId = gameInfo.makeRuntimeGameId(gameId, cwd);
+    }
+    debug("starting game: " + gameId);
     var game = getGame(gameId);
     game.assignClient(client, this, data);
   }.bind(this);

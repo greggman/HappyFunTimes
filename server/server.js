@@ -93,6 +93,7 @@ if (!args.address) {
 }
 console.log("using ip address: " + args.address);
 
+var server;
 var launchBrowser = function(err) {
   var next = function() {
     if (err) {
@@ -111,7 +112,7 @@ var launchBrowser = function(err) {
 
   var p;
   if (args.appMode) {
-    p = browser.launch("http://localhost:" + g.port + "/games.html", config.getConfig().preferredBrowser);
+    p = browser.launch("http://localhost:" + server.getSettings().port + "/games.html", config.getConfig().preferredBrowser);
   } else {
     p = Promise.resolve();
   }
@@ -123,7 +124,7 @@ var launchBrowser = function(err) {
   });
 }
 
-var server = new HFTServer(args, launchBrowser);
+server = new HFTServer(args, launchBrowser);
 
 if (args.dns) {
   var dnsServer = new DNSServer({address: args.address});

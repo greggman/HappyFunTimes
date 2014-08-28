@@ -451,6 +451,10 @@ var HFTServer = function(options, startedCallback) {
     });
 
   }.bind(this);
+
+  this.getSettings = function() {
+    return g;
+  };
 };
 
 module.exports = HFTServer;

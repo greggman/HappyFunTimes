@@ -31,6 +31,7 @@
 
 "use strict";
 
+var debug = require('debug')('hftsite');
 var io = require('../lib/io');
 
 var g = {
@@ -40,7 +41,7 @@ var g = {
 var inform = function() {
   if (!g.privateServer) {
     var url = "http://" + g.hftDomain + "/api/inform?hftip=" + g.address + "&hftport=" + g.port;
-    console.log("ping: " + url);
+    debug("ping: " + url);
     io.sendJSON(url, {}, {}, function(err, result) {
       // do I care?
       if (err) {

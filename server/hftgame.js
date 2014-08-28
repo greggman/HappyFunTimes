@@ -204,13 +204,14 @@ HFTPlayer.prototype.handleLaunch = function(data) {
       this.sendCmd('redirect', { url: runtimeInfo.gameUrl });
       break;
     case 'unity3d':
+      var originalGameId = runtimeInfo.originalGameId;
       if (platform == 'darwin') {
-        nativeName = gameId + "-osx.app";
+        nativeName = originalGameId + "-osx.app";
         launcher = "open"
       } else if (platform.substr(0, 3) == "win") {
-        nativeName = gameId + "-win.exe";
+        nativeName = originalGameId + "-win.exe";
       } else {
-        nativeName = gameId + "-linux";
+        nativeName = originalGameId + "-linux";
       }
       break;
     default:
