@@ -41,7 +41,7 @@ var list = function(args) {
   } else {
     if (gameList.length > 0) {
       console.log(gameList.map(function(game) {
-        return "id: " + game.happyFunTimes.gameId + "\tpath: " + game.happyFunTimes.basePath;
+        return "id: " + game.originalGameId + "\tpath: " + game.basePath;
       }).join("\n"));
     } else {
       console.log("no games installed");

@@ -31,8 +31,8 @@
 
 "use strict";
 
-var debug = require('debug')('Game');
-var hftSite = require('./hftsite');
+var debug    = require('debug')('Game');
+var hftSite  = require('./hftsite');
 
 /**
  * @typedef {object} Game~Options
@@ -159,9 +159,9 @@ Game.prototype.forEachPlayer = function(fn) {
 
 /**
  * @typedef {Object} Game~GameOptions
- * @property {string} gameId id of game (not used here
- * @property {string?} controllerUrl url of controller.
- * @property {boolean} disconnectPlayersOnGameDisconnects.
+ * @property {string} gameId id of game (not used here)
+ * @property {string?} controllerUrl url of controller(not used)
+ * @property {boolean} disconnectPlayersIfGameDisconnects.
  *           Default = true.
  */
 
@@ -180,9 +180,9 @@ Game.prototype.assignClient = function(client, relayserver, data) {
     console.error("this game already has a client!");
   }
   this.client = client;
-  if (data.controllerUrl) {
-    this.controllerUrl = data.controllerUrl.replace(/http:\/\/localhost(?:\:\d+)*/, this.options.baseUrl);
-  }
+//  if (data.controllerUrl) {
+//    this.controllerUrl = data.controllerUrl.replace(/http:\/\/localhost(?:\:\d+)*/, this.options.baseUrl);
+//  }
 
   this.disconnectPlayersIfGameDisconnects = data.disconnectPlayersIfGameDisconnects === undefined ? true : data.disconnectPlayersIfGameDisconnects;
   this.showInList = data.showInList;

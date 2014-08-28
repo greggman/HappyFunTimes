@@ -1,4 +1,24 @@
 
+*   back to the 'id' issues
+
+    so a dev has gameId="mygame". They want to test installing it from the store.
+    The store downloads it, installs it. There's now 2 games with gameId="myGame"
+
+    Solutions:
+
+    *   iOS/Android solution must change id. No exceptions.
+
+    *   I could try to change the name. ids installed by hft (in the gamesDir) get their normal id
+        games outside get prefixed or suffixed by (dev).
+
+        I could do this in readGameInfo. For running that would work except for unity. It would
+        break all building. On top of that it's not a generic solution. Maybe you want
+        multiple versions of the same game for testing.
+
+        I could prefix with the entire path? Then if you had more than one you'd get
+        multiple
+
+
 *   maybe shft should not install ever. It should just redirect to hft.
 
     So, clicking "install" on say powpow would redirect to `http://localhost:18679/install.html?id=powpow`

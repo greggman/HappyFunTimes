@@ -34,6 +34,7 @@
 var computerName = require('../lib/computername');
 var debug        = require('debug')('relayserver');
 var Game         = require('./game');
+var gameInfo     = require('../lib/gameinfo');
 var Player       = require('./player');
 var WSServer     = require('./websocketserver');
 
@@ -183,7 +184,8 @@ var RelayServer = function(servers, options) {
    * @param {Client} client Websocket client object.
    */
   this.assignAsClientForGame = function(data, client) {
-    var game = getGame(data.gameId);
+    var gameId = data.cwd ? gameInfo.makeRuntimeGameId(data.gameId, data.cwd) : data.gameId;
+    var game = getGame(gameId);
     game.assignClient(client, this, data);
   }.bind(this);
 

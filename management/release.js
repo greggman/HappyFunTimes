@@ -168,13 +168,13 @@ var ReleaseManager = function() {
 
   var makeHTML = function(runtimeInfo, gamePath, destFolder) {
     var hftInfo = runtimeInfo.info.happyFunTimes;
-    var destPath = path.join(destFolder, safeishName(hftInfo.gameId) + "-html.zip");
-    return makeZip(hftInfo.gameId, gamePath, destPath);
+    var destPath = path.join(destFolder, safeishName(runtimeInfo.originalGameId) + "-html.zip");
+    return makeZip(runtimeInfo.originalGameId, gamePath, destPath);
   };
 
   var makeUnity3d = function(runtimeInfo, gamePath, destFolder) {
     var hftInfo = runtimeInfo.info.happyFunTimes;
-    var gameId = hftInfo.gameId;
+    var gameId = runtimeInfo.originalGameId;
 
     var platforms = [
       { platform: "Windows",
@@ -223,7 +223,7 @@ var ReleaseManager = function() {
       }
 
       if (!missing) {
-        var datePath = path.join(gamePath, "bin", gameId + strings.replaceParams(platform.dateCheck, {gameId:gameId}));
+        var datePath = path.join(gamePath, "bin", gameId + strings.replaceParams(platform.dateCheck, {gameId: gameId}));
         var stat = fs.statSync(datePath);
         platInfos.push({platform: platform, binPath: binPath, dirPath: dirPath, stat: stat});
       }
@@ -268,10 +268,10 @@ var ReleaseManager = function() {
       platInfos.forEach(function(platInfo) {
         var destPath = path.join(destFolder, safeishName(gameId) + platInfo.platform.zipSuffix);
         var binStart = "bin/";
-        var srcPath = "src/";
+        var excludeRE = /^(src|Assets|Library|ProjectSettings|Temp)\//i;
         var filter = function(filename) {
           filename = filename.replace(/\\/g, '/');
-          if (strings.startsWith(filename, srcPath)) {
+          if (excludeRE.test(filename)) {
             return false;
           }
           if (strings.startsWith(filename, binStart)) {
@@ -397,7 +397,7 @@ var ReleaseManager = function() {
 
     var info = runtimeInfo.info;
     var hftInfo = info.happyFunTimes;
-    var gameId = hftInfo.gameId;
+    var gameId = runtimeInfo.originalGameId;
     var destBasePath;
 
     // is it already installed?
@@ -415,7 +415,7 @@ var ReleaseManager = function() {
 
     if (!destBasePath) {
         // make the dir after we're sure we're ready to install
-        destBasePath = path.join(config.getConfig().gamesDir, info.happyFunTimes.gameId);
+        destBasePath = path.join(config.getConfig().gamesDir, gameId);
     }
 
     destBasePath = opt_destPath ? opt_destPath : destBasePath;
@@ -511,7 +511,6 @@ var ReleaseManager = function() {
     }
 
     var hftInfo = installedGame.info.happyFunTimes;
-    var gameId = hftInfo.gameId;
     var gamePath = installedGame.basePath;
     var files = installedGame.files || [];
 
@@ -833,6 +832,8 @@ var ReleaseManager = function() {
         return;
       }
 
+      var gameId = runtimeInfo.originalGameId;
+
       if (!validRepoURL(options.repoUrl)) {
         return Promise.reject(new Error("not a supported url: " + options.repoUrl));
       }
@@ -989,14 +990,14 @@ var ReleaseManager = function() {
             return Promise.reject(new Error("upload size for '" + uploadResult.name + "' is " + uploadResult.size + " but should be " + localSize));
           }
         }
-        console.log(hftInfo.gameId + ": release uploaded");
+        console.log(gameId + ": release uploaded");
 
         return register({
           repoUrl: options.repoUrl,
           endpoint: options.endpoint,
         })
       }).then(function() {
-        console.log(hftInfo.gameId + ": registered");
+        console.log(gameId + ": registered");
         fulfill();
       }, function(err) {
         reject(err)
