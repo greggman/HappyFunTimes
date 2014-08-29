@@ -88,16 +88,25 @@ define(function() {
         break;
       case 'message':
         _socket.onmessage = function(event) {
+          // Respond to ping.
+          if (event.data == 'P') {
+            sendLowLevel('P');
+            return;
+          }
           fn(JSON.parse(event.data));
         };
         break;
       }
     };
 
-    this.send = function(msg) {
+    var sendLowLevel = function(str) {
       if (_socket.readyState == WebSocket.OPEN) {
-        _socket.send(JSON.stringify(msg));
+        _socket.send(str);
       }
+    };
+
+    this.send = function(msg) {
+      sendLowLevel(JSON.stringify(msg));
     };
   };
 

@@ -31,7 +31,8 @@
 
 "use strict";
 
-var debug = require('debug')('websocketserver');
+var debug        = require('debug')('websocketserver');
+var HeartMonitor = require('./heart-monitor');
 
 var WSServer = function(server) {
   debug("Using WebSockets directly");
@@ -41,16 +42,34 @@ var WSServer = function(server) {
 
   var WSClient = function(client) {
     this.client = client;
+
     var eventHandlers = { };
+    var heartMonitor;
 
     this.send = function(msg) {
       var str = JSON.stringify(msg);
       this.client.send(str);
     };
 
+    var emit = function(event, data) {
+      var handler = eventHandlers[event];
+      if (handler) {
+        handler(data);
+      }
+    };
+
     this.on = function(eventName, fn) {
       if (eventName == 'disconnect') {
         eventName = 'close';
+        // Wrap close event so it only happens once.
+        if (fn) {
+          fn = function (origFn) {
+            return function() {
+              eventHandlers[eventName] = undefined;
+              origFn();
+            };
+          }(fn);
+        }
       }
 
       if (!eventHandlers[eventName]) {
@@ -63,17 +82,36 @@ var WSServer = function(server) {
       }
 
       if (eventName == 'message') {
-        var origFn = fn;
-        fn = function(data, flags) {
-          origFn(JSON.parse(data));
-        };
+        fn = function(origFn) {
+          return function(data, flags) {
+            if (data == 'P') {
+              heartMonitor.acknowledgePing();
+              return;
+            }
+            if (origFn) {
+              origFn(JSON.parse(data));
+            }
+          };
+        }(fn);
       }
       eventHandlers[eventName] = fn;
     };
 
     this.close = function() {
+      debug("close wsclient")
+      heartMonitor.close();
       this.client.close();
     };
+
+    var heartMonitor = new HeartMonitor({
+      onDead: function() {
+        debug("dead: closed");
+        this.close();
+      }.bind(this),
+      pingFn: function() {
+        this.client.send('P');
+      }.bind(this),
+    });
   };
 
   this.on = function(eventName, fn) {

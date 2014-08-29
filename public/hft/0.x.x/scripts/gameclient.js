@@ -167,11 +167,6 @@ define(['./virtualsocket'], function(VirtualSocket) {
       });
     };
 
-    var acknowledgePing = function() {
-      sendCmdLowLevel('pong', {});
-    }.bind(this);
-
-    this.addEventListener('__ping__', acknowledgePing);
     connect_();
     sendCmdLowLevel('join', options);
   };

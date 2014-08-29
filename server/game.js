@@ -31,8 +31,8 @@
 
 "use strict";
 
-var debug    = require('debug')('Game');
-var hftSite  = require('./hftsite');
+var debug        = require('debug')('Game');
+var hftSite      = require('./hftsite');
 
 /**
  * @typedef {object} Game~Options
@@ -220,6 +220,9 @@ Game.prototype.assignClient = function(client, relayserver, data) {
   }.bind(this);
 
   var onDisconnect = function() {
+    if (this.client) {
+      this.client.close();
+    }
     this.client = undefined;
     if (this.disconnectPlayersIfGameDisconnects) {
       this.relayServer.removeGame(this.gameId);

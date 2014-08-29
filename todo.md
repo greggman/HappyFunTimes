@@ -1,27 +1,7 @@
 
 *   fix test broadcast gameserver.js line 278
-*   fix game ping. move it lower level?
+*   fix unity dialog in games.html
 *   automate exporting unity
-*   back to the 'id' issues
-
-    so a dev has gameId="mygame". They want to test installing it from the store.
-    The store downloads it, installs it. There's now 2 games with gameId="myGame"
-
-    Solutions:
-
-    *   iOS/Android solution must change id. No exceptions.
-
-    *   I could try to change the name. ids installed by hft (in the gamesDir) get their normal id
-        games outside get prefixed or suffixed by (dev).
-
-        I could do this in readGameInfo. For running that would work except for unity. It would
-        break all building. On top of that it's not a generic solution. Maybe you want
-        multiple versions of the same game for testing.
-
-        I could prefix with the entire path? Then if you had more than one you'd get
-        multiple
-
-
 *   maybe shft should not install ever. It should just redirect to hft.
 
     So, clicking "install" on say powpow would redirect to `http://localhost:18679/install.html?id=powpow`
@@ -842,6 +822,70 @@ Runs Repo noid
 
 Done
 ====
+
+*   fix game ping. move it lower level?
+
+    This is hilarious. I had Player, the server side object that
+    tracks the connection to a smartphone for a single player, have a
+    heartbeat ping because often
+    players would just stop playing on their phone by having their browser
+    go into the background. In such a case they aren't disconnected
+    from the server. So there's this idle player in the game waiting for
+    a networking message. Maybe "waiting" is the wrong word, rather it's
+    as though the player is making no input.
+
+    I wanted to remove those players so I have a heart beat. If no input
+    from the player comes in 5 seconds I ping the player. If no message
+    comes back in 1 second I kill the player because his browser is
+    likely no longer active.
+
+    So, I'm trying to ship. I test Unity. Then the unity game quits
+    the players are not disconnected. My (bad) intuition says "hmm,
+    the socket must not be getting disconnected by unity. I try
+    disconnected it manually using OnApplicationExit. No change. I figure
+    given that the C# websocket stuff I'm using is multi-threaded it
+    must be that it's not actually getting executed before the app quits.
+
+    Fine, I'll add a heartbeat to the game as well as the player. I
+    try refactoring the code to work and run into issues. Revert all
+    that and decide to implement it separately. Run into issues again
+    and revert all that.
+
+    I figure that my heartbeat should go at a lower level than it was.
+    I implement that. Spend 60-90 minutes debugging. It finally works.
+    I go back to my Unity sample and test again. Controllers
+    still don't get disconnected when the game exists even though
+    I know the ping is working.
+
+    I finally realise the issue has nothing to do with that. The issue
+    is there's a flag the game can pass `disconnectPlayersIfGameDisconnects`.
+    In JavaScript it has 3 values. `undefined` (the default), `true` and `false`.
+    Just a couple of days ago I added it to C#/Unity. It defaults to `false` in C#!
+    DOH!!!!
+
+    All that work adding a ping at a lower level had nothing to do with
+    anything. Well, let's hope that's better anyway :P
+
+
+
+*   back to the 'id' issues
+
+    so a dev has gameId="mygame". They want to test installing it from the store.
+    The store downloads it, installs it. There's now 2 games with gameId="myGame"
+
+    Solutions:
+
+    *   iOS/Android solution must change id. No exceptions.
+
+    *   I could try to change the name. ids installed by hft (in the gamesDir) get their normal id
+        games outside get prefixed or suffixed by (dev).
+
+        I could do this in readGameInfo. For running that would work except for unity. It would
+        break all building. On top of that it's not a generic solution. Maybe you want
+        multiple versions of the same game for testing.
+
+        I could prefix with the entire path? Then if you had more than one you'd get
+        multiple. This worked!
 
 *   make shft recover from hft stop/start
 *   add hft check which just checks the package.json in the current
