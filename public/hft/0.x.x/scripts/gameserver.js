@@ -226,7 +226,7 @@ define(
           break;
         }
       }
-      connect_();
+      setTimeout(connect_, 2000);
     }.bind(this);
 
     var send_ = function(msg) {
