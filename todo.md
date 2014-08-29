@@ -1,4 +1,7 @@
 
+*   fix test broadcast gameserver.js line 278
+*   fix game ping. move it lower level?
+*   automate exporting unity
 *   back to the 'id' issues
 
     so a dev has gameId="mygame". They want to test installing it from the store.
