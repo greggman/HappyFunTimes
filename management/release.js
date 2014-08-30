@@ -30,29 +30,30 @@
  */
 "use strict";
 
-var asks        = require('asks');
-var config      = require('../lib/config');
-var debug       = require('debug')('release');
-var events      = require('events');
-var fs          = require('fs');
-var gameDB      = require('../lib/gamedb');
-var gameInfo    = require('../lib/gameinfo');
-var games       = require('../management/games');
-var GitHubApi   = require('github');
-var http        = require('http');
-var https       = require('https');
-var io          = require('../lib/io');
-var JSZip       = require('jszip');
-var mkdirp      = require('mkdirp');
-var path        = require('path');
-var Promise     = require('promise');
-var restUrl     = require('rest-url');
-var readdirtree = require('../lib/readdirtree');
-var semver      = require('semver');
-var strings     = require('../lib/strings');
-var url         = require('url');
-var utils       = require('../lib/utils');
-var ZipWriter   = require("moxie-zip").ZipWriter;
+var asks         = require('asks');
+var config       = require('../lib/config');
+var debug        = require('debug')('release');
+var events       = require('events');
+var fs           = require('fs');
+var gameDB       = require('../lib/gamedb');
+var gameInfo     = require('../lib/gameinfo');
+var games        = require('../management/games');
+var GitHubApi    = require('github');
+var http         = require('http');
+var https        = require('https');
+var io           = require('../lib/io');
+var JSZip        = require('jszip');
+var mkdirp       = require('mkdirp');
+var path         = require('path');
+var platformInfo = require('../lib/platform-info');
+var Promise      = require('promise');
+var restUrl      = require('rest-url');
+var readdirtree  = require('../lib/readdirtree');
+var semver       = require('semver');
+var strings      = require('../lib/strings');
+var url          = require('url');
+var utils        = require('../lib/utils');
+var ZipWriter    = require("moxie-zip").ZipWriter;
 
 var safeishName = function(gameId) {
   return gameId.replace(/[^a-zA-Z0-9-_]/g, '_');
@@ -166,15 +167,25 @@ var ReleaseManager = function() {
     });
   };
 
-  var makeHTML = function(runtimeInfo, gamePath, destFolder) {
+  var makeHTML = function(runtimeInfo, gamePath, destFolder, options) {
     var hftInfo = runtimeInfo.info.happyFunTimes;
     var destPath = path.join(destFolder, safeishName(runtimeInfo.originalGameId) + "-html.zip");
     return makeZip(runtimeInfo.originalGameId, gamePath, destPath);
   };
 
-  var makeUnity3d = function(runtimeInfo, gamePath, destFolder) {
+  var makeUnity3d = function(runtimeInfo, gamePath, destFolder, options) {
     var hftInfo = runtimeInfo.info.happyFunTimes;
     var gameId = runtimeInfo.originalGameId;
+
+    var executeP = Promise.denodeify(utils.execute);
+
+    var makeExecPromise = function(id, cmd, args) {
+      return function() {
+        console.log("exporting for: " + id);
+        return executeP(cmd, args);
+        // TODO: add then to check log for success
+      }
+    };
 
     var platforms = [
       { platform: "Windows",
@@ -182,115 +193,164 @@ var ReleaseManager = function() {
         binSuffix: "-win.exe",
         dirSuffix: "-win_Data",
         dateCheck: "-win.exe",
+        unityTarget: '-buildWindowsPlayer',
       },
       { platform: "Mac",
         zipSuffix: "-osx.zip",
-        binSuffix: undefined,
+        binSuffix: "-osx.app",
         dirSuffix: "-osx.app",
         dateCheck: "-osx.app/Contents/MacOS/%(gameId)s-osx",
+        unityTarget: '-buildOSXPlayer',
       },
       { platform: "Linux",
         zipSuffix: "-linux.zip",
         binSuffix: "-linux.x86",
         dirSuffix: "-linux_Data",
         dateCheck: "-linux.x86",
+        unityTarget: '-buildLinux32Player',
       },
     ];
 
-    var platInfos = [];
-    platforms.forEach(function(platform) {
-      var missing = false;
-      var binPath;
-      var dirPath;
-      if (platform.binSuffix) {
-        binPath = path.join("bin", gameId + platform.binSuffix);
-        var localBinPath = path.join(gamePath, binPath);
-        if (!fs.existsSync(localBinPath)) {
-          missing = true;
-          console.log("no binary for " + platform.platform);
-          console.log("expected: " + localBinPath);
-        }
-      }
-
-      if (!missing) {
-        dirPath = path.join("bin", gameId + platform.dirSuffix);
-        var localDirPath = path.join(gamePath, dirPath);
-        if (!fs.existsSync(localDirPath)) {
-          missing = true;
-          console.log("no data folder for " + platform.platform);
-          console.log("expected: " + localDirPath);
-        }
-      }
-
-      if (!missing) {
-        var datePath = path.join(gamePath, "bin", gameId + strings.replaceParams(platform.dateCheck, {gameId: gameId}));
-        var stat = fs.statSync(datePath);
-        platInfos.push({platform: platform, binPath: binPath, dirPath: dirPath, stat: stat});
-      }
-    });
-
-    var tooOld = false;
-    if (platInfos.length > 1) {
-      platInfos.sort(function(a, b) {
-        return a.stat.mtime == b.stat.mtime ? 0 : (a.stat.mtime < b.stat.mtime ? -1 : 1);
-      });
-
-      var newest = platInfos[platInfos.length - 1];
-      var oldest = platInfos[0];
-
-      var timeDiff = newest.stat.mtime - oldest.stat.mtime;
-      if (timeDiff > 1000 * 60 * 120) {
-        console.log("oldest executable (" + oldest.platform.platform + ") is more than 2 hours older than newest (" + newest.platform.platform + ")");
-        tooOld = true;
-      }
-    }
-
     var promise;
-    if (!tooOld && platInfos.length == platforms.length) {
-      promise = Promise.resolve({confirmation: 'y'});
-    } else {
-      promise = askPrompt([
-        {
-          name: 'confirmation',
-          type: 'input',
-          message: 'continue y/N?',
-          default: 'n',
+    if (options.export) {
+      var binFolder = path.join(gamePath, "bin");
+      if (!fs.existsSync(binFolder)) {
+        fs.mkdir(binFolder);
+      }
+      promise = new Promise(function(resolve, reject) {
+        var exporterPath = options.exporterPath || platformInfo.exporterPath;
+        if (!fs.existsSync(exporterPath)) {
+          reject(new Error("could not find exporter at: " + exporterPath));
         }
-      ]);
-    }
 
-    return promise.then(function(answers) {
-      if (answers.confirmation.toLowerCase() != 'y') {
-        return Promise.reject(new Error("aborted"));
+        // /Applications/Unity/Unity.app/Contents/MacOS/Unity
+        //   -batchmode
+        //   -buildWindowsPlayer /Users/gregg/src/hft-unitycharacterexample/bin/unitycharacterexample-win.exe
+        //   -logFile $T/unity.log -projectPath /Users/gregg/src/hft-unitycharacterexample
+        //   -quit -nographics
+
+        var promises = [];
+        platforms.forEach(function(platInfo) {
+
+          var binPath = path.join(binFolder, gameId + (platInfo.binSuffix ? platInfo.binSuffix : ""));
+          var logPath = binPath + ".log";
+
+          promises.push(makeExecPromise(platInfo.platform, exporterPath, [
+            '-batchmode',
+            platInfo.unityTarget, binPath,
+            '-logFile', logPath,
+            '-projectPath', gamePath,
+            '-quit',
+            '-nographics',
+          ]));
+        });
+
+        promises.reduce(function(cur, next) {
+          return cur.then(next);
+        }, Promise.resolve()).then(function() {
+          resolve();
+        }, reject);
+      });
+    } else {
+      promise = Promise.resolve();
+    };
+
+    return promise.then(function() {
+      var platInfos = [];
+      platforms.forEach(function(platform) {
+        var missing = false;
+        var binPath;
+        var dirPath;
+        if (platform.binSuffix) {
+          binPath = path.join("bin", gameId + platform.binSuffix);
+          var localBinPath = path.join(gamePath, binPath);
+          if (!fs.existsSync(localBinPath)) {
+            missing = true;
+            console.log("no binary for " + platform.platform);
+            console.log("expected: " + localBinPath);
+          }
+        }
+
+        if (!missing) {
+          dirPath = path.join("bin", gameId + platform.dirSuffix);
+          var localDirPath = path.join(gamePath, dirPath);
+          if (!fs.existsSync(localDirPath)) {
+            missing = true;
+            console.log("no data folder for " + platform.platform);
+            console.log("expected: " + localDirPath);
+          }
+        }
+
+        if (!missing) {
+          var datePath = path.join(gamePath, "bin", gameId + strings.replaceParams(platform.dateCheck, {gameId: gameId}));
+          var stat = fs.statSync(datePath);
+          platInfos.push({platform: platform, binPath: binPath, dirPath: dirPath, stat: stat});
+        }
+      });
+
+      var tooOld = false;
+      if (platInfos.length > 1) {
+        platInfos.sort(function(a, b) {
+          return a.stat.mtime == b.stat.mtime ? 0 : (a.stat.mtime < b.stat.mtime ? -1 : 1);
+        });
+
+        var newest = platInfos[platInfos.length - 1];
+        var oldest = platInfos[0];
+
+        var timeDiff = newest.stat.mtime - oldest.stat.mtime;
+        if (timeDiff > 1000 * 60 * 120) {
+          console.log("oldest executable (" + oldest.platform.platform + ") is more than 2 hours older than newest (" + newest.platform.platform + ")");
+          tooOld = true;
+        }
       }
 
-      var promises = [];
-      platInfos.forEach(function(platInfo) {
-        var destPath = path.join(destFolder, safeishName(gameId) + platInfo.platform.zipSuffix);
-        var binStart = "bin/";
-        var excludeRE = /^(src|Assets|Library|ProjectSettings|Temp)\//i;
-        var filter = function(filename) {
-          filename = filename.replace(/\\/g, '/');
-          if (excludeRE.test(filename)) {
-            return false;
+      var promise;
+      if (!tooOld && platInfos.length == platforms.length) {
+        promise = Promise.resolve({confirmation: 'y'});
+      } else {
+        promise = askPrompt([
+          {
+            name: 'confirmation',
+            type: 'input',
+            message: 'continue y/N?',
+            default: 'n',
           }
-          if (strings.startsWith(filename, binStart)) {
-            if (platInfo.binPath && filename == platInfo.binPath) {
-              return true;
+        ]);
+      }
+
+      return promise.then(function(answers) {
+        if (answers.confirmation.toLowerCase() != 'y') {
+          return Promise.reject(new Error("aborted"));
+        }
+
+        var promises = [];
+        platInfos.forEach(function(platInfo) {
+          var destPath = path.join(destFolder, safeishName(gameId) + platInfo.platform.zipSuffix);
+          var binStart = "bin/";
+          var excludeRE = /^(src|Assets|Library|ProjectSettings|Temp)\//i;
+          var filter = function(filename) {
+            filename = filename.replace(/\\/g, '/');
+            if (excludeRE.test(filename)) {
+              return false;
             }
-            if (platInfo.dirPath && strings.startsWith(filename, platInfo.dirPath)) {
-              return true;
+            if (strings.startsWith(filename, binStart)) {
+              if (platInfo.binPath && filename == platInfo.binPath) {
+                return true;
+              }
+              if (platInfo.dirPath && strings.startsWith(filename, platInfo.dirPath)) {
+                return true;
+              }
+              return false;
             }
-            return false;
-          }
-          return true;
-        };
-        promises.push(makeZip(gameId, gamePath, destPath, filter));
+            return true;
+          };
+          promises.push(makeZip(gameId, gamePath, destPath, filter));
+        });
+        return Promise.all(promises);
+      }).then(function(zipFiles) {
+        var result = Array.prototype.concat.apply([], zipFiles);
+        return Promise.resolve(result);
       });
-      return Promise.all(promises);
-    }).then(function(zipFiles) {
-      var result = Array.prototype.concat.apply([], zipFiles);
-      return Promise.resolve(result);
     });
   };
 
@@ -298,6 +358,14 @@ var ReleaseManager = function() {
     html: makeHTML,
     unity3d: makeUnity3d,
   };
+
+  /**
+   * @typedef {object} Make~Options
+   * @property {boolean} export true = run exporters for native
+   *           apps.
+   * @property {string} exporterPath Path to exporter. We check
+   *           default paths if this is not specified.
+   */
 
   /**
    * @typedef {object} Make~FileInfo
@@ -320,9 +388,12 @@ var ReleaseManager = function() {
    *
    * @param {string} gamePath path to folder of game
    * @param {string} destFolder path to save release files.
+   * @param {Make~Options?} options
    * @returns {Make~Promise}
    */
-  var make = function(gamePath, destFolder) {
+  var make = function(gamePath, destFolder, options) {
+    options = options || {};
+
     // Make sure it's a game!
     var runtimeInfo = gameInfo.readGameInfo(gamePath);
     if (!runtimeInfo) {
@@ -341,7 +412,7 @@ var ReleaseManager = function() {
       return Promise.reject(new Error(e.toString()));
     }
 
-    return maker(runtimeInfo, gamePath, destFolder);
+    return maker(runtimeInfo, gamePath, destFolder, options);
   };
 
   /**
