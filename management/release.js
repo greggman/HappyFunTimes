@@ -1018,7 +1018,10 @@ var ReleaseManager = function() {
         }
         return utils.getTempFolder({unsafeCleanup: true});  // deletes the folder on exit.
       }).then(function(filePath) {
-        return make(gamePath, filePath);
+        return make(gamePath, filePath, {
+          exporterPath: options.exporterPath,
+          export: true,
+        });
       }).then(function(files) {
         filesToUpload = files;
         console.log("Upload:\n" + files.map(function(file) {
