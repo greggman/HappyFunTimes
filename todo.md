@@ -1,7 +1,20 @@
+To Do
+=====
 
+*   should make-release check API version?
+*   consider making HFT work with old games?
+*   make varnish cache the pages
+    *   can I verify
+    *   can I automate clearing the cache
+*   Make upgrade game work?
+*   Make shft live!
+    *   make registration server work
+    *   make minimal design
+
+*   make installing a game add in realtime
 *   fix test broadcast gameserver.js line 278
 *   fix unity dialog in games.html
-*   automate exporting unity
+    *   make it exit unity game
 *   maybe shft should not install ever. It should just redirect to hft.
 
     So, clicking "install" on say powpow would redirect to `http://localhost:18679/install.html?id=powpow`
@@ -24,11 +37,6 @@
     In the case of taking an argument it would install the zip. In the case of just being a no-op
     installer we'd just check for success or failure. On failure we wouldn't install the zip.
     On success we'd use the current install process.
-
-*   Make upgrade game work?
-*   Make shft live!
-    *   make registration server work
-    *   make minimal design
 
 *   make shft tell you you need to upgrade hft
 *   Add 'what is this' to hft.net
@@ -823,6 +831,7 @@ Runs Repo noid
 Done
 ====
 
+*   automate exporting unity
 *   fix game ping. move it lower level?
 
     This is hilarious. I had Player, the server side object that
