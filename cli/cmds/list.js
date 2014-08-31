@@ -32,6 +32,7 @@
 
 var path = require('path');
 var games = require('../../management/games');
+var sprintf = require('sprintf-js').sprintf;
 
 var list = function(args) {
   var gameList = games.list();
@@ -40,8 +41,14 @@ var list = function(args) {
     console.log(JSON.stringify(gameList, undefined, "  "));
   } else {
     if (gameList.length > 0) {
+      var longestIdLength = gameList.reduce(function(previous, current) {
+        return Math.max(previous, current.originalGameId.length);
+      }, 0);
       console.log(gameList.map(function(game) {
-        return "id: " + game.originalGameId + "\tpath: " + game.basePath;
+        return sprintf("id: %-" + (longestIdLength) + "s  dev: %s  path: %s",
+            game.originalGameId,
+            game.originalGameId != game.info.happyFunTimes.gameId ? "*" : " ",
+            game.basePath);
       }).join("\n"));
     } else {
       console.log("no games installed");
