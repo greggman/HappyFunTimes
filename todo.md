@@ -1,20 +1,33 @@
 To Do
 =====
 
-*   should make-release check API version?
-*   consider making HFT work with old games?
-*   make varnish cache the pages
-    *   can I verify
-    *   can I automate clearing the cache
+Super Alpha
+-----------
+
 *   Make upgrade game work?
+*   Make unity register work
+*   Make shft update-exe
+    *   runs hft-exe (or requires versions) (look into using vmware -- after alpha?)
+    *   posts to github
+    *   updates shft/install
 *   Make shft live!
     *   make registration server work
     *   make minimal design
+*   in app-mode, before launching browser, if we can't run server should we check that hft is already running?
+
+    or, maybe we should even do that before trying to run the server at all.
+
 
 *   make installing a game add in realtime
 *   fix test broadcast gameserver.js line 278
 *   fix unity dialog in games.html
     *   make it exit unity game
+
+After First Release
+-------------------
+
+*   get rid of meteor
+*   should make-release check API version?
 *   maybe shft should not install ever. It should just redirect to hft.
 
     So, clicking "install" on say powpow would redirect to `http://localhost:18679/install.html?id=powpow`
@@ -54,20 +67,15 @@ To Do
 
 *   make install screen only show your OS. Link to "other versions"
 *   Add phantomjs based tests
-*   Refactor gameInfo so it returns a runtimeInfo
 *   Make game check for valid HFT (I don't remember what this means)
     *   do hft add
     *   do hft install
 
 
-
 *   if --dns
     *   require port 80, fail if we can't get it
     *   print 'need sudo' or figure out how to ask for permission
-*   in app-mode, before launching browser, if we can't run server should we check that hft is already running?
-
-    or, maybe we should even do that before trying to run the server at all.
-
+    *   show "setting up ... animated screen" because it takes time for /etc/resolve
 *   when listing mulitple HFTs running behind the same public IP address include
     username and machine name?
 
@@ -86,9 +94,6 @@ To Do
 *   add option the choose browser to launch?
 *   Add options to HFT
 *   Figure out how to get HFT on start screen
-*   make --app-mode
-    *   make small splash "HappyFunTimes Running ..."
-    *   check if it's installed. (config exists), if not make it.
 *   make hft-exe update Info.plist version from hft version?
 *   Optionally allow games to advertize they are running.
 
@@ -831,6 +836,18 @@ Runs Repo noid
 Done
 ====
 
+*   make varnish cache the pages
+    *   can I verify
+    *   can I automate clearing the cache
+
+    Read up on meteor. You can't do this with meteor :(
+
+*   consider making HFT work with old games?
+    *    no, because I need to be able to update the templates as HFT adds to features. Old games won't do that.
+*   make --app-mode
+    *   make small splash "HappyFunTimes Running ..."
+    *   check if it's installed. (config exists), if not make it.
+*   Refactor gameInfo so it returns a runtimeInfo
 *   automate exporting unity
 *   fix game ping. move it lower level?
 
