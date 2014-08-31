@@ -32,7 +32,6 @@
 
 var path = require('path');
 var utils = require('../utils');
-var release = require('../../management/release');
 
 var makeRelease = function(args) {
   if (args._.length < 2) {
@@ -46,7 +45,7 @@ var makeRelease = function(args) {
   var destPath = path.resolve(args._[1]);
   var fullPath = args.src ? path.resolve(args.src) : process.cwd();
 
-  release.make(fullPath, destPath, args).then(function(files) {
+  require('../../management/make').make(fullPath, destPath, args).then(function(files) {
     if (args.json) {
       console.log(JSON.stringify(files, undefined, "  "));
     } else {

@@ -32,7 +32,6 @@
 
 var path = require('path');
 var utils = require('../utils');
-var release = require('../../management/release');
 
 var install = function(args) {
   if (args._.length < 2) {
@@ -50,7 +49,7 @@ var install = function(args) {
 
   var srcPath = path.resolve(args._[1]);
 
-  return release.install(srcPath, args.dst, options);
+  return require('../../management/install').install(srcPath, args.dst, options);
 };
 
 exports.usage = {

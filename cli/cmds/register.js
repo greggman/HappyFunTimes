@@ -31,7 +31,6 @@
 "use strict";
 
 var fs        = require('fs');
-var release   = require('../../management/release');
 var gameInfo  = require('../../lib/gameinfo');
 var gitUtils  = require('../../lib/git-utils.js');
 
@@ -47,7 +46,7 @@ var register = function(args) {
       return false;
     }
   }
-  release.register(args).then(function() {
+  require('../../management/register').register(args).then(function() {
     console.log("registered: " + args.repoUrl);
   }, function(err) {
     console.error(err);

@@ -33,7 +33,6 @@
 var path = require('path');
 var sys = require('sys');
 var utils = require('../utils');
-var release = require('../../management/release');
 
 var downloadFile = function(args) {
   if (args._.length < 2) {
@@ -53,7 +52,7 @@ var downloadFile = function(args) {
   var log = options.verbose ? console.log.bind(console) : function() { };
   var print = options.verbose ? sys.print.bind(sys) : function() { };
 
-  var emitter = release.downloadFile(url, destPath);
+  var emitter = require('../../management/download').downloadFile(url, destPath);
   emitter.on('start', function(e) {
     log("getting: " + url + ", size: " + e.size);
   });

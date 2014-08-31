@@ -32,7 +32,6 @@
 
 var path = require('path');
 var utils = require('../utils');
-var release = require('../../management/release');
 
 var uninstall = function(args) {
   if (args._.length < 2) {
@@ -50,7 +49,7 @@ var uninstall = function(args) {
 
   var gamePathOrId = args._[1];
 
-  return release.uninstall(gamePathOrId, options);
+  return require('../../management/uninstall').uninstall(gamePathOrId, options);
 };
 
 exports.usage = {

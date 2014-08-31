@@ -34,7 +34,6 @@ var asks     = require('asks');
 var gitUtils = require('../../lib/git-utils.js');
 var path     = require('path');
 var Promise  = require('promise');
-var release  = require('../../management/release');
 var utils    = require('../utils');
 
 var bumpTypes = ['major', 'premajor', 'minor', 'preminor', 'patch', 'prepatch', 'prerelease'];
@@ -124,7 +123,7 @@ var publish = function(args) {
       exporterPath: args['exporterPath'],
     };
 
-    return release.publish(srcPath, options);
+    return require('../../management/publish').publish(srcPath, options);
   }).then(function() {
   }, function(err) {
     console.error(err);

@@ -32,7 +32,6 @@
 
 var path = require('path');
 var utils = require('../utils');
-var release = require('../../management/release');
 
 var download = function(args) {
   if (args._.length < 2) {
@@ -51,7 +50,7 @@ var download = function(args) {
 
   var gameId = args._[1];
 
-  var emitter = release.download(gameId, args.dst, options);
+  var emitter = require('../../management/download').download(gameId, args.dst, options);
   emitter.on('status', function(e) {
     console.log("STATUS: " + e.status);
   });

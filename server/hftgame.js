@@ -49,7 +49,7 @@ var LoopbackClient = require('./loopbackclient');
 var msgbox         = require('native-msg-box');
 var os             = require('os');
 var Promise        = require('promise');
-var release        = require('../management/release');
+var download       = require('../management/download').download;
 
 var GameServer     = requirejs('hft/gameserver');
 
@@ -123,7 +123,7 @@ HFTPlayer.prototype.handleGetGameInfo = function(data) {
 };
 
 HFTPlayer.prototype.download = function(gameId, upgrade) {
-  var emitter = release.download(gameId, undefined, {
+  var emitter = download(gameId, undefined, {
     verbose: true,
     overwrite: upgrade,
   });
