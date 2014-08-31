@@ -30,42 +30,54 @@
  */
 "use strict";
 
-var asks         = require('asks');
-var config       = require('../lib/config');
-var debug        = require('debug')('release');
-var events       = require('events');
-var fs           = require('fs');
-var gameDB       = require('../lib/gamedb');
-var gameInfo     = require('../lib/gameinfo');
-var games        = require('../management/games');
-var GitHubApi    = require('github');
-var http         = require('http');
-var https        = require('https');
-var io           = require('../lib/io');
-var JSZip        = require('jszip');
-var mkdirp       = require('mkdirp');
-var path         = require('path');
-var platformInfo = require('../lib/platform-info');
-var Promise      = require('promise');
-var readdirtree  = require('../lib/readdirtree');
-var restUrl      = require('rest-url');
-var releaseUtils = require('./release-utils');
-var semver       = require('semver');
-var strings      = require('../lib/strings');
-var url          = require('url');
-var utils        = require('../lib/utils');
-var ZipWriter    = require("moxie-zip").ZipWriter;
-
-var ReleaseManager = function() {
-
-  this.register = require('./register').register;
-  this.publish = require('./publish').publish;
-  this.make = require('./make').make;
-  this.install = require('./install').install;
-  this.uninstall = require('./uninstall').uninstall;
-  this.download = require('./download').download;
-  this.downloadFile = require('./download').downloadFile;
+var safeishName = function(gameId) {
+  return gameId.replace(/[^a-zA-Z0-9-_]/g, '_');
 };
 
-module.exports = new ReleaseManager();
+var asyncError = function(callback, err) {
+  setTimeout(function() {
+    callback(err);
+  }, 0);
+};
+
+var logObject = function(label, obj) {
+  if (obj) {
+    console.log("---[ " + label + " ]---");
+  } else {
+    obj = label;
+  }
+  console.log(JSON.stringify(obj, undefined, "  "));
+};
+
+var askPrompt = function(questions) {
+  return new Promise(function(fulfill, reject) {
+    asks.prompt(questions, function(answers) {
+      fulfill(answers);
+    });
+  });
+};
+
+var validRepoURL = (function() {
+  // We only support github at the moment.
+  var prefixes = [
+    "git://github.com/",
+    "https://github.com/",
+  ];
+  return function(v) {
+    for (var ii = 0; ii < prefixes.length; ++ii) {
+      var prefix = prefixes[ii];
+      if (v.substring(0, prefix.length) == prefix) {
+        return true;
+      }
+    }
+    return false;
+  };
+}());
+
+exports.safeishName = safeishName;
+exports.asyncError = asyncError;
+exports.askPrompt = askPrompt;
+exports.logObject = logObject;
+exports.validRepoURL = validRepoURL;
+
 

@@ -4,6 +4,7 @@ To Do
 Super Alpha
 -----------
 
+*   have list show runtimeID and originalId
 *   Make upgrade game work?
 *   Make unity register work
 *   Make shft update-exe

@@ -30,42 +30,49 @@
  */
 "use strict";
 
-var asks         = require('asks');
 var config       = require('../lib/config');
-var debug        = require('debug')('release');
-var events       = require('events');
+var debug        = require('debug')('register');
 var fs           = require('fs');
-var gameDB       = require('../lib/gamedb');
-var gameInfo     = require('../lib/gameinfo');
-var games        = require('../management/games');
-var GitHubApi    = require('github');
-var http         = require('http');
-var https        = require('https');
 var io           = require('../lib/io');
-var JSZip        = require('jszip');
-var mkdirp       = require('mkdirp');
-var path         = require('path');
-var platformInfo = require('../lib/platform-info');
 var Promise      = require('promise');
-var readdirtree  = require('../lib/readdirtree');
 var restUrl      = require('rest-url');
 var releaseUtils = require('./release-utils');
-var semver       = require('semver');
-var strings      = require('../lib/strings');
 var url          = require('url');
-var utils        = require('../lib/utils');
-var ZipWriter    = require("moxie-zip").ZipWriter;
 
-var ReleaseManager = function() {
+/**
+ * @typedef {Object} Register~Options
+ * @property {string} repoUrl url of repo of game to register
+ * @property {string?} endpoint base url to register game. eg
+ *           http://foo.com
+ */
 
-  this.register = require('./register').register;
-  this.publish = require('./publish').publish;
-  this.make = require('./make').make;
-  this.install = require('./install').install;
-  this.uninstall = require('./uninstall').uninstall;
-  this.download = require('./download').download;
-  this.downloadFile = require('./download').downloadFile;
+/**
+ * Registers the url of the repo of a game with
+ * superhappyfuntimes.net
+ *
+ * @param {Register~Options} options
+ */
+var register = function(options) {
+  var log = options.verbose ? console.log.bind(console) : function() {};
+  var sendJSON = Promise.denodeify(io.sendJSON);
+  var endpoint = config.getSettings().manageEndpoint;
+  if (options.endpoint) {
+    endpoint = options.endpoint + url.parse(endpoint).path;
+  }
+
+  // this will be checked on the server but check it here in order
+  // tell the dev quickly.
+
+  if (!releaseUtils.validRepoURL(options.repoUrl)) {
+    return Promise.reject(new Error("not a supported url: " + options.repoUrl));
+  }
+
+  var registerUrl = restUrl.make(endpoint, { url: options.repoUrl });
+  log("using: " + registerUrl);
+  return sendJSON(registerUrl, {}, {});
 };
 
-module.exports = new ReleaseManager();
+exports.register = register;
+
+
 
