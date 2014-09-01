@@ -48,6 +48,7 @@ var fs             = require('fs');
 var LoopbackClient = require('./loopbackclient');
 var msgbox         = require('native-msg-box');
 var os             = require('os');
+var platformInfo   = require('../lib/platform-info.js');
 var Promise        = require('promise');
 var download       = require('../management/download').download;
 
@@ -205,14 +206,7 @@ HFTPlayer.prototype.handleLaunch = function(data) {
       break;
     case 'unity3d':
       var originalGameId = runtimeInfo.originalGameId;
-      if (platform == 'darwin') {
-        nativeName = originalGameId + "-osx.app";
-        launcher = "open"
-      } else if (platform.substr(0, 3) == "win") {
-        nativeName = originalGameId + "-win.exe";
-      } else {
-        nativeName = originalGameId + "-linux";
-      }
+      nativeName = originalGameId + platformInfo.exeSuffix;
       break;
     default:
       this.sendError("can not handle gameType: " + hftInfo.gameType);
@@ -227,6 +221,7 @@ HFTPlayer.prototype.handleLaunch = function(data) {
     }
 
     var args = [];
+    launcher = platformInfo.launcher;
     if (!launcher) {
       launcher = nativePath;
     } else {
