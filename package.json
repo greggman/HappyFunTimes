@@ -5,7 +5,7 @@
   "private": true,
   "scripts": {
     "test": "node node_modules/mocha/bin/mocha --recursive",
-    "start": "node server/server.js --dns"
+    "start": "node start.js --app-mode"
   },
   "dependencies": {
     "asks": "^1.0.2",
