@@ -4,7 +4,6 @@ To Do
 Super Alpha
 -----------
 
-*   have list show runtimeID and originalId
 *   Make upgrade game work?
 *   Make unity register work
 *   Make shft update-exe
@@ -837,6 +836,7 @@ Runs Repo noid
 Done
 ====
 
+*   have list show runtimeID and originalId
 *   make varnish cache the pages
     *   can I verify
     *   can I automate clearing the cache
