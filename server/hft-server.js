@@ -31,13 +31,11 @@
 
 "use strict";
 
-var config     = require('../lib/config');
-var log        = require('../lib/log');
-
 var AppleCaptivePortalHandler = require('./apple-captive-portal-handler');
 var browser                   = require('../lib/browser');
 var Cache                     = require('inmemfilecache');
 var computerName              = require('../lib/computername');
+var config                    = require('../lib/config');
 var debug                     = require('debug')('realserver');
 var DNSServer                 = require('./dnsserver');
 var express                   = require('express');
@@ -47,6 +45,7 @@ var HFTGame                   = require('./hftgame');
 var hftSite                   = require('./hftsite');
 var highResClock              = require('../lib/highresclock');
 var http                      = require('http');
+var log                       = require('../lib/log');
 var mime                      = require('mime');
 var path                      = require('path');
 var Promise                   = require('promise');
@@ -78,12 +77,11 @@ var util                      = require('util');
  */
 var HFTServer = function(options, startedCallback) {
   var g = {
-    port: 18679,
+    port: config.getSettings().settings.port,
     extraPorts: [80, 8080],
     screenshotCount: 0,
     baseDir: "public",
     cwd: process.cwd(),
-    hftDomain: "happyfuntimes.net",
   };
 
   Object.keys(options).forEach(function(prop) {

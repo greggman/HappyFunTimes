@@ -37,7 +37,9 @@ var fs           = require('fs');
 var http         = require('http');
 var https        = require('https');
 var io           = require('../lib/io');
+var install      = require('./install').install;
 var path         = require('path');
+var platformInfo = require('../lib/platform-info');
 var Promise      = require('promise');
 var releaseUtils = require('./release-utils');
 var semver       = require('semver');
@@ -68,10 +70,11 @@ var download = function(gameId, opt_destPath, options) {
   var log = options.verbose ? console.log.bind(console) : function() {};
   var eventEmitter = new events.EventEmitter();
   var sendJSON = Promise.denodeify(io.sendJSON);
-  var apiurl = options.gamesUrl || config.getSettings().gamesUrl;
+  var apiurl = options.gamesUrl || config.getSettings().settings.gamesUrl;
   var url = apiurl + "/" + gameId;
   var releaseUrl;
   setTimeout(function() {
+    log("getting url:" + url);
     eventEmitter.emit('status', {status: "Getting Game Info"});
     sendJSON(url, {}, {method:"GET"}).then(function(info) {
       log("gameInfo response:\n" + JSON.stringify(info, undefined, "  "));
@@ -87,6 +90,9 @@ var download = function(gameId, opt_destPath, options) {
       switch (info.gameType.toLowerCase()) {
         case "html":
           releaseUrl = version.releaseUrl;
+          break;
+        case "unity3d":
+          releaseUrl = version.releaseUrls[platformInfo.id];
           break;
         default:
           return Promise.reject("Unsupported gameType: " + info.gameType);
@@ -126,6 +132,7 @@ var download = function(gameId, opt_destPath, options) {
       eventEmitter.emit('status', {status: "Finished"});
       eventEmitter.emit('end', {status: "Done"});
     }, function(err) {
+      console.error(err);
       eventEmitter.emit('error', err);
     });
   }, 0);

@@ -4,8 +4,8 @@ To Do
 Super Alpha
 -----------
 
+*   set x chmod for unity download
 *   Make upgrade game work?
-*   Make unity register work
 *   Make shft update-exe
     *   runs hft-exe (or requires versions) (look into using vmware -- after alpha?)
     *   posts to github
@@ -21,11 +21,15 @@ Super Alpha
 *   make installing a game add in realtime
 *   fix test broadcast gameserver.js line 278
 *   fix unity dialog in games.html
+    *   use fixed CSS
     *   make it exit unity game
+    *   make it dismiss if unity game exits
 
 After First Release
 -------------------
 
+*   check if more stuff can go in platformInfo
+*   update .travis.yml back to 0.10 once they release 0.10.32 (0.10.31 has a core dump bug)
 *   get rid of meteor
 *   should make-release check API version?
 *   maybe shft should not install ever. It should just redirect to hft.

@@ -31,8 +31,10 @@
 
 "use strict";
 
-var debug = require('debug')('hftsite');
-var io = require('../lib/io');
+var config  = require('../lib/config');
+var debug   = require('debug')('hftsite');
+var io      = require('../lib/io');
+var restUrl = require('rest-url');
 
 var g = {
 };
@@ -40,7 +42,10 @@ var g = {
 // Sends the local ip address and port
 var inform = function() {
   if (!g.privateServer) {
-    var url = "http://" + g.hftDomain + "/api/inform?hftip=" + g.address + "&hftport=" + g.port;
+    var url = restUrl.make(config.getSettings().settings.rendezvousUrl, {
+      hftip: g.address,
+      hftport: g.port,
+    })
     debug("ping: " + url);
     io.sendJSON(url, {}, {}, function(err, result) {
       // do I care?
@@ -54,7 +59,6 @@ var inform = function() {
 var setup = function(options) {
   g.address = options.address;
   g.port = options.port;
-  g.hftDomain = options.hftDomain;
   g.privateServer = options.privateServer;
 };
 

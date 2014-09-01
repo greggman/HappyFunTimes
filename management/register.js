@@ -55,7 +55,7 @@ var url          = require('url');
 var register = function(options) {
   var log = options.verbose ? console.log.bind(console) : function() {};
   var sendJSON = Promise.denodeify(io.sendJSON);
-  var endpoint = config.getSettings().manageEndpoint;
+  var endpoint = config.getSettings().settings.manageEndpoint;
   if (options.endpoint) {
     endpoint = options.endpoint + url.parse(endpoint).path;
   }

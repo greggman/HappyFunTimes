@@ -31,9 +31,11 @@
 
 "use strict";
 
-var config     = require('../lib/config');
-var log        = require('../lib/log');
-var optionator = require('optionator')({
+var settingsOptionSpec = {
+      option: 'settings',         type: 'String',     description: 'settings: key=value, ',
+};
+
+var optionSpec = {
   options: [
     { option: 'help', alias: 'h', type: 'Boolean',    description: 'displays help'},
     { option: 'port', alias: 'p', type: 'Int',        description: 'port. Default 18679'},
@@ -41,18 +43,22 @@ var optionator = require('optionator')({
     { option: 'address',          type: 'String',     description: 'ip address for dns and controller url conversion'},
     { option: 'config-path',      type: 'String',     description: 'config path'},
     { option: 'settings-path',    type: 'String',     description: 'settings path'},
-    { option: 'hft-domain',       type: 'String',     description: 'domain for happyfuntimes site'},
     { option: 'private-server',   type: 'Boolean',    description: 'do not inform happyfuntimes.net about this server. Users will not be able to use happyfuntimes.net to connect to your games'},
     { option: 'app-mode',         type: 'Boolean',    description: 'run as an app'},
     { option: 'debug',            type: 'Boolean',    description: 'check more things'},
     { option: 'verbose',          type: 'Boolean',    description: 'print more stuff'},
+    settingsOptionSpec,
   ],
   helpStyle: {
     typeSeparator: '=',
     descriptionSeparator: ' : ',
     initialIndent: 4,
   },
-});
+};
+
+var config     = require('../lib/config');
+var log        = require('../lib/log');
+var optionator = require('optionator')(optionSpec);
 
 try {
   var args = optionator.parse(process.argv);
@@ -61,13 +67,36 @@ try {
   process.exit(1);
 }
 
-if (args.help) {
+var printHelp = function() {
+  var settings = [];
+  Object.keys(require('../lib/config').getSettings().settings).forEach(function(key) {
+    settings.push(key);
+  });
+  settingsOptionSpec.description += settings.join(", ");
+
   console.log(optionator.generateHelp());
   process.exit(0);
+};
+
+if (args.help) {
+  printHelp();
 }
 
 log.config(args);
 config.setup(args);
+if (args.settings) {
+  var settings = config.getSettings().settings
+  args.settings.split(",").forEach(function(setting) {
+    var keyValue = setting.split("=");
+    var key = keyValue[0];
+    var value = keyValue[1];
+    if (!settings[key]) {
+      console.error("no setting: '" + key + "'");
+      printHelp();
+    }
+    settings[key] = value;
+  });
+}
 
 if (args.appMode) {
   require('../management/games').init();
