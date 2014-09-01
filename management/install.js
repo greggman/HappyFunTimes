@@ -39,6 +39,7 @@ var games        = require('../management/games');
 var JSZip        = require('jszip');
 var mkdirp       = require('mkdirp');
 var path         = require('path');
+var platformInfo = require('../lib/platform-info');
 var Promise      = require('promise');
 var releaseUtils = require('./release-utils');
 var strings      = require('../lib/strings');
@@ -112,9 +113,11 @@ var install = function(releasePath, opt_destPath, opt_options) {
     }
   }
 
+  var safeGameId = releaseUtils.safeishName(gameId);
+
   if (!destBasePath) {
       // make the dir after we're sure we're ready to install
-      destBasePath = path.join(config.getConfig().gamesDir, gameId);
+      destBasePath = path.join(config.getConfig().gamesDir, safeGameId);
   }
 
   destBasePath = opt_destPath ? opt_destPath : destBasePath;
@@ -160,6 +163,19 @@ var install = function(releasePath, opt_destPath, opt_options) {
   if (bad) {
     // Should delete all work here?
     return false;
+  }
+
+  // Should this be in the zip?
+  if (hftInfo.gameType.toLowerCase() == "unity3d") {
+    var exePath = platformInfo.exePath;
+    if (exePath) {
+      exePath = path.join(destBasePath, strings.replaceParams(exePath, { gameId: safeGameId }));
+      if (!fs.existsSync(exePath)) {
+        console.error("path not found: " + exePath);
+        return false;
+      }
+      fs.chmodSync(exePath, (7 << 6) | (4 << 3) | 4);
+    }
   }
 
 
