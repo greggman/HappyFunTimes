@@ -31,7 +31,13 @@
 
 "use strict";
 
-var main = function(IO, Strings) {
+// Start the main app logic.
+requirejs(
+  [ 'hft/io',
+    'hft/misc/strings',
+  ], function(
+    IO,
+    Strings) {
 
   var $ = function(id) {
     return document.getElementById(id);
@@ -77,14 +83,6 @@ var main = function(IO, Strings) {
     });
   };
   getGames();
-};
-
-// Start the main app logic.
-requirejs(
-  [ 'hft/io',
-    'hft/misc/strings',
-  ],
-  main
-);
+});
 
 

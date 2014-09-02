@@ -4,8 +4,6 @@ To Do
 Super Alpha
 -----------
 
-*   Make upgrade game work?
-    *   merge files
 *   Make shft update-exe
     *   runs hft-exe (or requires versions) (look into using vmware -- after alpha?)
     *   posts to github
@@ -18,12 +16,14 @@ Super Alpha
     or, maybe we should even do that before trying to run the server at all.
 
 
-*   make installing a game add in realtime
 *   fix test broadcast gameserver.js line 278
 *   fix unity dialog in games.html
     *   use fixed CSS
     *   make it exit unity game
     *   make it dismiss if unity game exits
+*   make games run without hft
+    *   jumpjump
+    *   boomboom
 
 After First Release
 -------------------
@@ -53,6 +53,11 @@ After First Release
     In the case of taking an argument it would install the zip. In the case of just being a no-op
     installer we'd just check for success or failure. On failure we wouldn't install the zip.
     On success we'd use the current install process.
+
+*   just like games, games.html and options.html should maybe be put realtime in a template?
+
+    If nothing else there are common things like handling disconnect, reconnect, and maybe
+    handling quit as well as providing a common frame.
 
 *   make shft tell you you need to upgrade hft
 *   Add 'what is this' to hft.net
@@ -839,6 +844,9 @@ Runs Repo noid
 Done
 ====
 
+*   make installing a game add in realtime
+*   Make upgrade game work?
+    *   merge files
 *   set x chmod for unity download
 *   check if more stuff can go in platformInfo
 *   have list show runtimeID and originalId

@@ -57,15 +57,9 @@
 <div class="hidden-msg" id="unity3d-msg">
   <div>
     <div>
-      <p>Unity Games Must Currently Be Run From Unity.</p>
+      <p>Running Unity Game</p>
       <blockquote>
-        <ol>
-          <li>Launch Unity</li>
-          <li>Load the Game</li>
-          <li>Pick Run</li>
-          <li>When done, Stop the game before coming back here</li>
-        </ol>
-        <div class="button-like">Okay</div>
+        <div class="button-like">Exit</div>
       </blockquote>
     </div>
   </div>
@@ -81,11 +75,11 @@
   </div>
 </div>
 </body>
-<script data-main="showavailablegames.js" src="3rdparty/require.js"></script>
+<script data-main="scripts/showavailablegames.js" src="3rdparty/require.js"></script>
 <script>
 requirejs.config({
   paths: {
-    hft: './hft/0.x.x/scripts',
+    hft: '/hft/0.x.x/scripts',
   },
 });
 </script>
