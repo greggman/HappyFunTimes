@@ -34,6 +34,7 @@ var fs = require('fs');
 var path = require('path');
 var gameInfo = require('../lib/gameinfo');
 var hftConfig = require('../lib/config');
+var _ = require('underscore');
 
 var InstalledGamesList = function() {
   var p_installedGamesPath;
@@ -82,7 +83,8 @@ var InstalledGamesList = function() {
    * installed :p
    *
    * @param {string} gamePath path to game
-   * @param {string?} opt_fileList list file files relative to gamePath that were installed.
+   * @param {string[]?} opt_fileList list file files relative to
+   *        gamePath that were installed.
    */
   var add = function(gamePath, opt_fileList) {
     var fullGamePath = path.resolve(gamePath);
@@ -98,13 +100,18 @@ var InstalledGamesList = function() {
       getInstalledGames();
       var index = indexByPath(gamePath);
       if (index < 0) {
-        p_installedGamesList.push({path: gamePath, files: opt_fileList});
-        putInstalledGames();
+        index = p_installedGamesList.length;
+        p_installedGamesList.push({path: gamePath});
         console.log("added: " + gamePath);
-        // Need to notify GameDB to add game
       } else {
         console.warn(gamePath + " already installed");
       }
+      if (opt_fileList) {
+        var game = p_installedGamesList[index];
+        game.files = _.union(opt_fileList, game.files || [])
+      }
+      // Need to notify GameDB to add game
+      putInstalledGames();
       return true;
     } catch (e) {
       console.error(gamePath + " does not appear to be a happyFunTimes game");

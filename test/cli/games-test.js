@@ -39,6 +39,7 @@ var utils   = require('../../lib/utils');
 var g_configPath             = path.join(__dirname, "..", "testconfig", "config.json");
 var g_installedGamesListPath = path.join(__dirname, "..", "testconfig", "installed-games.json");
 var g_fakeGamePath           = path.join(__dirname, '..', 'fakegame');
+var g_fakeGame2Path          = path.join(__dirname, '..', 'fakegame2');
 var g_fakeUnityGamePath      = path.join(__dirname, '..', 'fakeunitygame');
 var g_testGameInstallDir     = path.join(__dirname, '..', 'testgameinstalldir');
 
@@ -185,7 +186,9 @@ describe('release html', function() {
   describe('making releases', function() {
 
     var destPath;
+    var destPath2;
     var tempDir;
+    var tempDir2;
     var expectedFileNames = [
       "fakegame/package.json",
       "fakegame/file1.html",
@@ -203,6 +206,9 @@ describe('release html', function() {
     before(function(done) {
       utils.getTempFolder().then(function(filePath) {
         tempDir = filePath;
+        return utils.getTempFolder();
+      }).then(function(filePath) {
+        tempDir2 = filePath;
         hftcli("init", [], function(err, result) {
           assert.equal(err, null);
           assert.ok(fs.existsSync(g_installedGamesListPath));
@@ -246,6 +252,45 @@ describe('release html', function() {
 
         assert.ok(fs.existsSync(path.join(g_testGameInstallDir, "fakegame")), "fakegame folder exists");
         expectedFileNames.forEach(function(fileName) {
+          assert.ok(fs.existsSync(path.join(g_testGameInstallDir, fileName)), fileName + " should exist");
+        });
+
+        var gameList = getInstalledGames();
+        assert.equal(gameList.length, 1);
+
+        done();
+      });
+    });
+
+    it('should make a release 2', function(done) {
+      hftcli('make-release', ["--src=" + g_fakeGame2Path, tempDir2, "--json"], function(err, result) {
+        assert.equal(err, null);
+
+        var files = JSON.parse(result.stdout);
+        assert.equal(files.length, 1);
+        destPath2 = files[0].filename;
+        assert.ok(fs.existsSync(destPath2));
+
+        var zip = new JSZip();
+        zip.load(fs.readFileSync(destPath2));
+
+        expectedFileNames.forEach(function(fileName) {
+          assert.ok(zip.files[fileName], fileName + " should be in zip");
+        });
+
+        assert.ok(zip.files["fakegame/.adotfile"] === undefined, ".adotfile is not in .zip file");
+
+        done();
+      });
+    });
+
+    it('should upgrade release', function(done) {
+
+      hftcli('install', [destPath2, "--upgrade", "--verbose"], function(err, result) {
+        assert.equal(err, null);
+
+        assert.ok(fs.existsSync(path.join(g_testGameInstallDir, "fakegame")), "fakegame folder exists");
+        expectedFileNames.concat(["fakegame/notinfakegame.txt"]).forEach(function(fileName) {
           assert.ok(fs.existsSync(path.join(g_testGameInstallDir, fileName)), fileName + " should exist");
         });
 

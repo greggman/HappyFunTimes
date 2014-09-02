@@ -47,7 +47,7 @@ var strings      = require('../lib/strings');
 /**
  * @typedef {Object} Install~Options
  * @property {boolean?} overwrite default false. Install even if
- *           already installed. (not implemented)
+ *           already installed.
  * @property {boolean?} verbose print extra info
  * @property {boolean?} dryRun true = don't write any files or
  *           make any folders.

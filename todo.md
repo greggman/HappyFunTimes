@@ -4,8 +4,8 @@ To Do
 Super Alpha
 -----------
 
-*   set x chmod for unity download
 *   Make upgrade game work?
+    *   merge files
 *   Make shft update-exe
     *   runs hft-exe (or requires versions) (look into using vmware -- after alpha?)
     *   posts to github
@@ -28,7 +28,6 @@ Super Alpha
 After First Release
 -------------------
 
-*   check if more stuff can go in platformInfo
 *   update .travis.yml back to 0.10 once they release 0.10.32 (0.10.31 has a core dump bug)
 *   get rid of meteor
 *   should make-release check API version?
@@ -840,6 +839,8 @@ Runs Repo noid
 Done
 ====
 
+*   set x chmod for unity download
+*   check if more stuff can go in platformInfo
 *   have list show runtimeID and originalId
 *   make varnish cache the pages
     *   can I verify

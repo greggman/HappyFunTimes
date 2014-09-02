@@ -45,6 +45,7 @@ var install = function(args) {
   var options = {
     dryRun: args['dryRun'],
     verbose: args['verbose'],
+    overwrite: args['upgrade'],
   };
 
   var srcPath = path.resolve(args._[1]);
@@ -62,6 +63,7 @@ exports.usage = {
   options: [
     { option: 'dst',     type: 'String',  description: "path to install to. If not supplied will be installed to default games folder"},
     { option: 'dry-run', type: 'Boolean', description: "don't write any files"},
+    { option: 'upgrade', type: 'Boolean', description: "allow upgrade"},
   ],
 };
 exports.cmd = install;
