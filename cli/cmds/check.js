@@ -44,7 +44,8 @@ var check = function(args) {
       return;
     }
     console.log("name       : " + runtimeInfo.info.name);
-    console.log("gameId     : " + runtimeInfo.info.happyFunTimes.gameId);
+    console.log("gameId     : " + runtimeInfo.originalGameId);
+    console.log("runtimeId  : " + runtimeInfo.info.happyFunTimes.gameId);
     console.log("type       : " + runtimeInfo.info.happyFunTimes.gameType);
     console.log("version    : " + runtimeInfo.info.version);
     console.log("api version: " + runtimeInfo.info.happyFunTimes.apiVersion);
