@@ -48,86 +48,95 @@ var askPrompt = function(questions) {
 
 
 var publish = function(args) {
-  if (args._.length != 1) {
-    utils.badArgs(module, "too many arguments");
-  }
-
-  var bump = 'patch';
-  if (args.bump) {
-    if (bumpTypes.indexOf(args.bump) < 0) {
-      utils.badArgs(module, "unknown bump type: '" + args.bump + "'.\nvalid types: " + bumpTypes.join(", "));
+  return new Promise(function(resolve, reject) {
+    if (args._.length != 1) {
+      utils.badArgs(module, "too many arguments");
+      reject();
+      return;
     }
-    bump = args.bump;
-  }
 
-  if (args.version && !semver.valid(args.version)) {
-    utils.badArgs(module, "version not valid semver: '" + version + "'");
-  }
+    var bump = 'patch';
+    if (args.bump) {
+      if (bumpTypes.indexOf(args.bump) < 0) {
+        utils.badArgs(module, "unknown bump type: '" + args.bump + "'.\nvalid types: " + bumpTypes.join(", "));
+        reject();
+        return;
+      }
+      bump = args.bump;
+    }
 
-  var srcPath = args.src ? path.resolve(args.src) : process.cwd();
+    if (args.version && !semver.valid(args.version)) {
+      utils.badArgs(module, "version not valid semver: '" + version + "'");
+      reject();
+      return;
+    }
 
-  try {
-    args.repoUrl = gitUtils.getGitRepoUrlFromFolder(srcPath);
-  } catch (e) {
-    console.error("Could not figure out git repo. Are you sure this is a git repo and does it have a remote called 'origin'?");
-    return false;
-  }
+    var srcPath = args.src ? path.resolve(args.src) : process.cwd();
 
-  console.log("found repo: " + args.repoUrl);
+    try {
+      args.repoUrl = gitUtils.getGitRepoUrlFromFolder(srcPath);
+    } catch (e) {
+      console.error("Could not figure out git repo. Are you sure this is a git repo and does it have a remote called 'origin'?");
+      reject();
+    }
 
-  var username;
-  var password;
-  if (args.user) {
-    username = args.user.split(":")[0];
-    password = args.user.split(":")[1];
-  }
+    console.log("found repo: " + args.repoUrl);
 
-  var promise;
-  if (!password) {
-    var questions = [{
-      name: 'password',
-      type: 'password',
-      message: 'github password:',
-    }];
-    if (!username) {
-      questions.unshift({
-        name: 'username',
-        type: 'input',
-        message: 'github username:',
+    var username;
+    var password;
+    if (args.user) {
+      username = args.user.split(":")[0];
+      password = args.user.split(":")[1];
+    }
+
+    var promise;
+    if (!password) {
+      var questions = [{
+        name: 'password',
+        type: 'password',
+        message: 'github password:',
+      }];
+      if (!username) {
+        questions.unshift({
+          name: 'username',
+          type: 'input',
+          message: 'github username:',
+        });
+      }
+      promise = askPrompt(questions).then(function(answers) {
+        return Promise.resolve({
+          username: answers.username || username,
+          password: answers.password,
+        });
+      });
+    } else {
+      promise = Promise.resolve({
+        username: username,
+        password: password,
       });
     }
-    promise = askPrompt(questions).then(function(answers) {
-      return Promise.resolve({
-        username: answers.username || username,
+
+    promise.then(function(answers) {
+      var options = {
+        dryRun: args['dryRun'],
+        verbose: args['verbose'],
+        username: answers.username,
         password: answers.password,
-      });
-    });
-  } else {
-    promise = Promise.resolve({
-      username: username,
-      password: password,
-    });
-  }
+        bump: bump,
+        force: args['force'],
+        version: args['version'],
+        repoUrl: args['repoUrl'],
+        endpoint: args['endpoint'],
+        exporterPath: args['exporterPath'],
+      };
 
-  promise.then(function(answers) {
-    var options = {
-      dryRun: args['dryRun'],
-      verbose: args['verbose'],
-      username: answers.username,
-      password: answers.password,
-      bump: bump,
-      force: args['force'],
-      version: args['version'],
-      repoUrl: args['repoUrl'],
-      endpoint: args['endpoint'],
-      exporterPath: args['exporterPath'],
-    };
-
-    return require('../../management/publish').publish(srcPath, options);
-  }).then(function() {
-  }, function(err) {
-    console.error(err);
-    process.exit(1);
+      return require('../../management/publish').publish(srcPath, options);
+    }).then(function() {
+      resolve();
+    }, function(err) {
+      console.error(err);
+      reject();
+    });
   });
 };
 

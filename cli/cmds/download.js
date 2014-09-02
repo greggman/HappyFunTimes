@@ -30,40 +30,48 @@
  */
 "use strict";
 
-var path = require('path');
-var utils = require('../utils');
+var path    = require('path');
+var Promise = require('promise');
+var utils   = require('../utils');
 
 var download = function(args) {
-  if (args._.length < 2) {
-    utils.badArgs(module, "missing gameId");
-  }
+  return new Promise(function(resolve, reject) {
+    if (args._.length < 2) {
+      utils.badArgs(module, "missing gameId");
+      reject();
+      return;
+    }
 
-  if (args._.length > 2) {
-    utils.badArgs(module, "too many arguments");
-  }
+    if (args._.length > 2) {
+      utils.badArgs(module, "too many arguments");
+      reject();
+      return;
+    }
 
-  var options = {
-    dryRun: args['dryRun'],
-    verbose: args['verbose'],
-    gamesUrl: args['gamesUrl'],
-  };
+    var options = {
+      dryRun: args['dryRun'],
+      verbose: args['verbose'],
+      gamesUrl: args['gamesUrl'],
+    };
 
-  var gameId = args._[1];
+    var gameId = args._[1];
 
-  var emitter = require('../../management/download').download(gameId, args.dst, options);
-  emitter.on('status', function(e) {
-    console.log("STATUS: " + e.status);
-  });
-  emitter.on('progress', function(e) {
-    console.log("downloaded: " + (e.bytesDownloaded / e.size * 100).toFixed() + "% (" + e.bytesDownloaded + "/" + e.size + ")");
-  });
-  emitter.on('error', function(e) {
-    console.error("ERROR downloading gameId: " + gameId);
-    console.error(e);
-    process.exit(1);
-  });
-  emitter.on('end', function(e) {
-    console.log("downloaded and installed:" + gameId);
+    var emitter = require('../../management/download').download(gameId, args.dst, options);
+    emitter.on('status', function(e) {
+      console.log("STATUS: " + e.status);
+    });
+    emitter.on('progress', function(e) {
+      console.log("downloaded: " + (e.bytesDownloaded / e.size * 100).toFixed() + "% (" + e.bytesDownloaded + "/" + e.size + ")");
+    });
+    emitter.on('error', function(e) {
+      console.error("ERROR downloading gameId: " + gameId);
+      console.error(e);
+      reject();
+    });
+    emitter.on('end', function(e) {
+      console.log("downloaded and installed:" + gameId);
+      resolve();
+    });
   });
 };
 

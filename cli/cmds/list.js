@@ -30,30 +30,34 @@
  */
 "use strict";
 
-var path = require('path');
+var path    = require('path');
+var Promise = require('promise');
 var sprintf = require('sprintf-js').sprintf;
 
 var list = function(args) {
-  var gamedb = require('../../lib/gamedb');
-  var gameList = gamedb.getGames();
+  return new Promise(function(resolve, reject) {
+    var gamedb = require('../../lib/gamedb');
+    var gameList = gamedb.getGames();
 
-  if (args.full) {
-    console.log(JSON.stringify(gameList, undefined, "  "));
-  } else {
-    if (gameList.length > 0) {
-      var longestIdLength = gameList.reduce(function(previous, current) {
-        return Math.max(previous, current.originalGameId.length);
-      }, 0);
-      console.log(gameList.map(function(game) {
-        return sprintf("id: %-" + (longestIdLength) + "s  dev: %s  path: %s",
-            game.originalGameId,
-            game.originalGameId != game.info.happyFunTimes.gameId ? "*" : " ",
-            game.basePath);
-      }).join("\n"));
+    if (args.full) {
+      console.log(JSON.stringify(gameList, undefined, "  "));
     } else {
-      console.log("no games installed");
+      if (gameList.length > 0) {
+        var longestIdLength = gameList.reduce(function(previous, current) {
+          return Math.max(previous, current.originalGameId.length);
+        }, 0);
+        console.log(gameList.map(function(game) {
+          return sprintf("id: %-" + (longestIdLength) + "s  dev: %s  path: %s",
+              game.originalGameId,
+              game.originalGameId != game.info.happyFunTimes.gameId ? "*" : " ",
+              game.basePath);
+        }).join("\n"));
+      } else {
+        console.log("no games installed");
+      }
     }
-  }
+    resolve();
+  });
 };
 
 exports.usage = {

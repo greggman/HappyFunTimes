@@ -30,27 +30,34 @@
  */
 "use strict";
 
-var path = require('path');
-var utils = require('../utils');
+var path    = require('path');
+var Promise = require('promise');
+var utils   = require('../utils');
 
 var install = function(args) {
-  if (args._.length < 2) {
-    utils.badArgs(module, "missing srcPath");
-  }
+  return new Promise(function(resolve, reject) {
+    if (args._.length < 2) {
+      utils.badArgs(module, "missing srcPath");
+    }
 
-  if (args._.length > 2) {
-    utils.badArgs(module, "too many arguments");
-  }
+    if (args._.length > 2) {
+      utils.badArgs(module, "too many arguments");
+    }
 
-  var options = {
-    dryRun: args['dryRun'],
-    verbose: args['verbose'],
-    overwrite: args['upgrade'],
-  };
+    var options = {
+      dryRun: args['dryRun'],
+      verbose: args['verbose'],
+      overwrite: args['upgrade'],
+    };
 
-  var srcPath = path.resolve(args._[1]);
+    var srcPath = path.resolve(args._[1]);
 
-  return require('../../management/install').install(srcPath, args.dst, options);
+    if (require('../../management/install').install(srcPath, args.dst, options) === false) {
+      reject();
+    } else {
+      resolve();
+    }
+  });
 };
 
 exports.usage = {

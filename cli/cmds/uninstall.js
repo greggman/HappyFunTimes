@@ -30,26 +30,37 @@
  */
 "use strict";
 
-var path = require('path');
-var utils = require('../utils');
+var path    = require('path');
+var Promise = require('promise');
+var utils   = require('../utils');
 
 var uninstall = function(args) {
-  if (args._.length < 2) {
-    utils.badArgs(module, "missing path or gameId");
-  }
+  return new Promise(function(resolve, reject) {
+    if (args._.length < 2) {
+      utils.badArgs(module, "missing path or gameId");
+      reject();
+      return;
+    }
 
-  if (args._.length > 2) {
-    utils.badArgs(module, "too many arguments");
-  }
+    if (args._.length > 2) {
+      utils.badArgs(module, "too many arguments");
+      reject();
+      return;
+    }
 
-  var options = {
-    dryRun: args['dry-run'],
-    verbose: args['verbose'],
-  };
+    var options = {
+      dryRun: args['dry-run'],
+      verbose: args['verbose'],
+    };
 
-  var gamePathOrId = args._[1];
+    var gamePathOrId = args._[1];
 
-  return require('../../management/uninstall').uninstall(gamePathOrId, options);
+    if (require('../../management/uninstall').uninstall(gamePathOrId, options) === false) {
+      reject();
+    } else {
+      resolve();
+    }
+  });
 };
 
 exports.usage = {

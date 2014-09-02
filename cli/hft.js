@@ -84,13 +84,13 @@ try {
   utils.printUsage(globalOptions, cmdModule.usage, cmdModule.name);
   process.exit(1);
 }
-if (cmdModule.cmd(args) === false) {
-  console.error("error running " + cmd);
-  process.exit(1);
-} else {
+cmdModule.cmd(args).then(function() {
   // We have to exit explicitly because there are event listeners for folders
   process.exit(0);
-}
+}, function() {
+  console.error("error running " + cmd);
+  process.exit(1);
+});
 
 function printUsage() {
   var usage = [];

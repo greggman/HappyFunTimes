@@ -30,23 +30,28 @@
  */
 "use strict";
 
-var path = require('path');
 var gameInfo = require('../../lib/gameinfo');
+var path     = require('path');
+var Promise  = require('promise');
 
 var check = function(args) {
-  try {
-    var runtimeInfo = gameInfo.readGameInfo(process.cwd());
-  } catch (e) {
-    console.error(e);
-    return false;
-  }
-  console.log("name       : " + runtimeInfo.info.name);
-  console.log("gameId     : " + runtimeInfo.info.happyFunTimes.gameId);
-  console.log("type       : " + runtimeInfo.info.happyFunTimes.gameType);
-  console.log("version    : " + runtimeInfo.info.version);
-  console.log("api version: " + runtimeInfo.info.happyFunTimes.apiVersion);
-  console.log("");
-  console.log("looks ok");
+  return new Promise(function(resolve, reject) {
+    try {
+      var runtimeInfo = gameInfo.readGameInfo(process.cwd());
+    } catch (e) {
+      console.error(e);
+      reject();
+      return;
+    }
+    console.log("name       : " + runtimeInfo.info.name);
+    console.log("gameId     : " + runtimeInfo.info.happyFunTimes.gameId);
+    console.log("type       : " + runtimeInfo.info.happyFunTimes.gameType);
+    console.log("version    : " + runtimeInfo.info.version);
+    console.log("api version: " + runtimeInfo.info.happyFunTimes.apiVersion);
+    console.log("");
+    console.log("looks ok");
+    resolve();
+  });
 };
 
 exports.usage = {

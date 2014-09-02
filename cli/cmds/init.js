@@ -30,16 +30,23 @@
  */
 "use strict";
 
-var path = require('path');
-var games = require('../../lib/games');
-var utils = require('../utils');
+var games   = require('../../lib/games');
+var path    = require('path');
+var Promise = require('promise');
+var utils   = require('../utils');
 
 var init = function(args) {
-  if (args._.length != 1) {
-    utils.badArgs(module, "bad args");
-  }
-
-  return games.init();
+  return new Promise(function(resolve, reject) {
+    if (args._.length != 1) {
+      utils.badArgs(module, "bad args");
+      reject();
+    }
+    if (games.init() === false) {
+      reject();
+    } else {
+      resolve();
+    }
+  });
 };
 
 exports.usage = {

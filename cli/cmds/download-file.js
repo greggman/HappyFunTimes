@@ -30,43 +30,51 @@
  */
 "use strict";
 
-var path = require('path');
-var sys = require('sys');
-var utils = require('../utils');
+var path    = require('path');
+var Promise = require('promise');
+var sys     = require('sys');
+var utils   = require('../utils');
 
 var downloadFile = function(args) {
-  if (args._.length < 2) {
-    utils.badArgs(module, "missing url and destPath");
-  }
+  return new Promise(function(resolve, reject) {
+    if (args._.length < 2) {
+      utils.badArgs(module, "missing url and destPath");
+      reject();
+      return;
+    }
 
-  if (args._.length < 3) {
-    utils.badArgs(module, "missing destPath");
-  }
+    if (args._.length < 3) {
+      utils.badArgs(module, "missing destPath");
+      reject();
+      return;
+    }
 
-  var options = {
-    verbose: args['verbose'],
-  };
+    var options = {
+      verbose: args['verbose'],
+    };
 
-  var url = args._[1];
-  var destPath = args._[2];
-  var log = options.verbose ? console.log.bind(console) : function() { };
-  var print = options.verbose ? sys.print.bind(sys) : function() { };
+    var url = args._[1];
+    var destPath = args._[2];
+    var log = options.verbose ? console.log.bind(console) : function() { };
+    var print = options.verbose ? sys.print.bind(sys) : function() { };
 
-  var emitter = require('../../management/download').downloadFile(url, destPath);
-  emitter.on('start', function(e) {
-    log("getting: " + url + ", size: " + e.size);
-  });
-  emitter.on('progress', function(e) {
-    print("downloaded: " + (e.bytesDownloaded / e.size * 100).toFixed() + "% (" + e.bytesDownloaded + "/" + e.size + ")\r");
-  });
-  emitter.on('end', function(e) {
-    print("\n");
-    console.log("downloaded " + e.size + " bytes to " + destPath);
-  })
-  emitter.on('error', function(e) {
-    console.error("ERROR downloading " + url + " to " + destPath);
-    console.error(e);
-    process.exit(1)
+    var emitter = require('../../management/download').downloadFile(url, destPath);
+    emitter.on('start', function(e) {
+      log("getting: " + url + ", size: " + e.size);
+    });
+    emitter.on('progress', function(e) {
+      print("downloaded: " + (e.bytesDownloaded / e.size * 100).toFixed() + "% (" + e.bytesDownloaded + "/" + e.size + ")\r");
+    });
+    emitter.on('end', function(e) {
+      print("\n");
+      console.log("downloaded " + e.size + " bytes to " + destPath);
+      resolve();
+    })
+    emitter.on('error', function(e) {
+      console.error("ERROR downloading " + url + " to " + destPath);
+      console.error(e);
+      reject();
+    });
   });
 };
 

@@ -30,12 +30,16 @@
  */
 "use strict";
 
-var path = require('path');
-var games = require('../../lib/games');
+var games   = require('../../lib/games');
+var path    = require('path');
+var Promise = require('promise');
 
 var remove = function(args) {
-  var fullPath = args._.length > 1 ? args._[1] : process.cwd();
-  games.remove(fullPath);
+  return new Promise(function(resolve, reject) {
+    var fullPath = args._.length > 1 ? args._[1] : process.cwd();
+    games.remove(fullPath);
+    resolve();
+  });
 };
 
 exports.usage = {

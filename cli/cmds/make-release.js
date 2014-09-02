@@ -30,32 +30,40 @@
  */
 "use strict";
 
-var path = require('path');
-var utils = require('../utils');
+var path    = require('path');
+var Promise = require('promise');
+var utils   = require('../utils');
 
 var makeRelease = function(args) {
-  if (args._.length < 2) {
-    utils.badArgs(module, "missing dstPath");
-  }
-
-  if (args._.length > 2) {
-    utils.badArgs(module, "too many arguments");
-  }
-
-  var destPath = path.resolve(args._[1]);
-  var fullPath = args.src ? path.resolve(args.src) : process.cwd();
-
-  require('../../management/make').make(fullPath, destPath, args).then(function(files) {
-    if (args.json) {
-      console.log(JSON.stringify(files, undefined, "  "));
-    } else {
-      files.forEach(function(file) {
-        console.log("created " + file.filename);
-      });
+  return new Promise(function(resolve, reject) {
+    if (args._.length < 2) {
+      utils.badArgs(module, "missing dstPath");
+      reject();
+      return;
     }
-  }, function(err) {
-    console.error(err);
-    process.exit(1);
+
+    if (args._.length > 2) {
+      utils.badArgs(module, "too many arguments");
+      reject();
+      return;
+    }
+
+    var destPath = path.resolve(args._[1]);
+    var fullPath = args.src ? path.resolve(args.src) : process.cwd();
+
+    require('../../management/make').make(fullPath, destPath, args).then(function(files) {
+      if (args.json) {
+        console.log(JSON.stringify(files, undefined, "  "));
+      } else {
+        files.forEach(function(file) {
+          console.log("created " + file.filename);
+        });
+      }
+      resolve();
+    }, function(err) {
+      console.error(err);
+      reject();
+    });
   });
 };
 

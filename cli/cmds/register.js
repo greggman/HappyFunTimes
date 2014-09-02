@@ -33,24 +33,29 @@
 var fs        = require('fs');
 var gameInfo  = require('../../lib/gameinfo');
 var gitUtils  = require('../../lib/git-utils.js');
+var Promise   = require('promise');
 
 var register = function(args) {
-  if (!args.repoUrl) {
-    try {
-      // Just read this because it might find errors.
-      gameInfo.readGameInfo(process.cwd());
-      args.repoUrl = gitUtils.getGitRepoUrlFromFolder();
-    } catch (e) {
-      console.error("Could not figure out git repo. Are you sure this is a git repo and does it remote called 'origin'?");
-      console.error(e);
-      return false;
+  return new Promise(function(resolve, reject) {
+    if (!args.repoUrl) {
+      try {
+        // Just read this because it might find errors.
+        gameInfo.readGameInfo(process.cwd());
+        args.repoUrl = gitUtils.getGitRepoUrlFromFolder();
+      } catch (e) {
+        console.error("Could not figure out git repo. Are you sure this is a git repo and does it remote called 'origin'?");
+        console.error(e);
+        reject();
+        return false;
+      }
     }
-  }
-  require('../../management/register').register(args).then(function() {
-    console.log("registered: " + args.repoUrl);
-  }, function(err) {
-    console.error(err);
-    process.exit(1);
+    require('../../management/register').register(args).then(function() {
+      console.log("registered: " + args.repoUrl);
+      resolve();
+    }, function(err) {
+      console.error(err);
+      reject();
+    });
   });
 };
 
