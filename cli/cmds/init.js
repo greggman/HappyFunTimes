@@ -31,7 +31,7 @@
 "use strict";
 
 var path = require('path');
-var games = require('../../management/games');
+var games = require('../../lib/games');
 var utils = require('../utils');
 
 var init = function(args) {

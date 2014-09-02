@@ -31,7 +31,7 @@
 "use strict";
 
 var path = require('path');
-var games = require('../../management/games');
+var games = require('../../lib/games');
 
 var remove = function(args) {
   var fullPath = args._.length > 1 ? args._[1] : process.cwd();

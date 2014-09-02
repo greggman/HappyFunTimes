@@ -31,7 +31,7 @@
 "use strict";
 
 var path = require('path');
-var games = require('../../management/games');
+var games = require('../../lib/games');
 var sprintf = require('sprintf-js').sprintf;
 
 var list = function(args) {

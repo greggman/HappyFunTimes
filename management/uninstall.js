@@ -33,7 +33,7 @@
 var debug        = require('debug')('uninstall');
 var fs           = require('fs');
 var gameDB       = require('../lib/gamedb');
-var games        = require('../management/games');
+var games        = require('../lib/games');
 var path         = require('path');
 var Promise      = require('promise');
 

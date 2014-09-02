@@ -99,7 +99,7 @@ if (args.settings) {
 }
 
 if (args.appMode) {
-  require('../management/games').init();
+  require('../lib/games').init();
 }
 
 var browser   = require('../lib/browser');
