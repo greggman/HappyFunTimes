@@ -31,11 +31,11 @@
 "use strict";
 
 var path = require('path');
-var games = require('../../lib/games');
 var sprintf = require('sprintf-js').sprintf;
 
 var list = function(args) {
-  var gameList = games.list();
+  var gamedb = require('../../lib/gamedb');
+  var gameList = gamedb.getGames();
 
   if (args.full) {
     console.log(JSON.stringify(gameList, undefined, "  "));

@@ -31,6 +31,7 @@
 
 "use strict";
 
+var debug     = require('debug')('hftgame');
 var requirejs = require('requirejs');
 var path      = require('path');
 var config    = require('../lib/config');
@@ -60,9 +61,11 @@ var HFTPlayer = function(netPlayer, game, gameDB) {
   this.netPlayer = netPlayer;
   this.game = game;
   this.gameDB = gameDB;
+  this.getAvailableGamesSubscribed = false;
 
   netPlayer.addEventListener('disconnect', HFTPlayer.prototype.disconnect.bind(this));
   netPlayer.addEventListener('getGameInfo', HFTPlayer.prototype.handleGetGameInfo.bind(this));
+  netPlayer.addEventListener('getAvailableGames', HFTPlayer.prototype.handleGetAvailableGames.bind(this));
   netPlayer.addEventListener('install', HFTPlayer.prototype.handleInstall.bind(this));
   netPlayer.addEventListener('upgrade', HFTPlayer.prototype.handleUpgrade.bind(this));
   netPlayer.addEventListener('launch', HFTPlayer.prototype.handleLaunch.bind(this));
@@ -121,6 +124,16 @@ HFTPlayer.prototype.handleGetGameInfo = function(data) {
     };
   }
   this.sendCmd("gameInfo", gameInfo);
+};
+
+HFTPlayer.prototype.handleGetAvailableGames = function(data) {
+  if (!this.getAvailableGamesSubscribed) {
+    this.getAvailableGamesSubscribed = true;
+    this.gameDB.on('changed', HFTPlayer.prototype.handleGetAvailableGames.bind(this));
+  }
+
+  debug("sending games");
+  this.sendCmd("availableGames", this.gameDB.getGames());
 };
 
 HFTPlayer.prototype.download = function(gameId, upgrade) {

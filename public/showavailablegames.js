@@ -96,125 +96,121 @@ requirejs(
     hiddenMsgs[elem.id.toLowerCase().substr(0, elem.id.length - hiddenMsgSuffix.length)] = elem;
   };
 
-  var getGames = function() {
-    IO.sendJSON(window.location.href, {cmd: 'listAvailableGames'}, function (exception, obj) {
-      if (exception) {
-        throw exception;
+  var handleAvailableGames = function(obj) {
+    var html = [];
+    var gamesById = {};
+    for (var ii = 0; ii < obj.length; ++ii) {
+      var runtimeInfo = obj[ii];
+      var gameInfo = runtimeInfo.info;
+      var hftInfo = gameInfo.happyFunTimes;
+      gamesById[hftInfo.gameId] = gameInfo;
+      runtimeInfo.count = ii;
+      var templateId = hftInfo.gameType.toLowerCase();
+      var template = templates[templateId];
+      if (!template) {
+        console.error("missing template: " + templateId);
+        continue;
       }
+      html.push(Strings.replaceParams(template, runtimeInfo));
+    }
 
-      var html = [];
-      var gamesById = {};
-      for (var ii = 0; ii < obj.length; ++ii) {
-        var runtimeInfo = obj[ii];
-        var gameInfo = runtimeInfo.info;
-        var hftInfo = gameInfo.happyFunTimes;
-        gamesById[hftInfo.gameId] = gameInfo;
-        runtimeInfo.count = ii;
-        var templateId = hftInfo.gameType.toLowerCase();
-        var template = templates[templateId];
-        if (!template) {
-          console.error("missing template: " + templateId);
-          continue;
-        }
-        html.push(Strings.replaceParams(template, runtimeInfo));
+    gamemenu.innerHTML = html.join("");
+
+    // change .msg-button elements to bring up message
+    var elements = document.querySelectorAll(".msg-button");
+    for (var ii = 0; ii < elements.length; ++ii) {
+      var elem = elements[ii];
+      var buttonId = elem.id;
+      var count = parseInt(buttonId.substr(0, buttonId.length - buttonIdSuffix.length));
+      var runtimeInfo = obj[count];
+      var gameInfo = runtimeInfo.info;
+      var hftInfo = gameInfo.happyFunTimes;
+      var gameType = hftInfo.gameType;
+      if (!gameType) {
+        console.warn("missing happyFunTimes.gameType in package.json")
+        continue;
       }
-
-      gamemenu.innerHTML = html.join("");
-
-      // change .msg-button elements to bring up message
-      var elements = document.querySelectorAll(".msg-button");
-      for (var ii = 0; ii < elements.length; ++ii) {
-        var elem = elements[ii];
-        var buttonId = elem.id;
-        var count = parseInt(buttonId.substr(0, buttonId.length - buttonIdSuffix.length));
-        var runtimeInfo = obj[count];
-        var gameInfo = runtimeInfo.info;
-        var hftInfo = gameInfo.happyFunTimes;
-        var gameType = hftInfo.gameType;
-        if (!gameType) {
-          console.warn("missing happyFunTimes.gameType in package.json")
-          continue;
-        }
-        var msgId = gameType.toLowerCase() + hiddenMsgSuffix;
-        var msgElement = $(msgId);
-        if (!msgElement) {
-          console.error("missing msg element: " + msgId);
-          continue;
-        }
-        elem.addEventListener('click', function(msgElement) {
-          return function(e) {
-            e.preventDefault(true)
-            msgElement.style.display = "block";
-          };
-        }(msgElement), false);
-        msgElement.addEventListener('click', function(msgElement) {
-          return function(e) {
-            e.preventDefault(true);
-            msgElement.style.display = "none";
-          }
-        }(msgElement), false);
+      var msgId = gameType.toLowerCase() + hiddenMsgSuffix;
+      var msgElement = $(msgId);
+      if (!msgElement) {
+        console.error("missing msg element: " + msgId);
+        continue;
       }
-
-      // change .launch-button elements to bring up message
-      var elements = document.querySelectorAll(".launch-button");
-      for (var ii = 0; ii < elements.length; ++ii) {
-        var elem = elements[ii];
-        var buttonId = elem.id;
-        var count = parseInt(buttonId.substr(0, buttonId.length - buttonIdSuffix.length));
-        var runtimeInfo = obj[count];
-        var gameInfo = runtimeInfo.info;
-        var hftInfo = gameInfo.happyFunTimes;
-        var gameType = hftInfo.gameType;
-        if (!gameType) {
-          console.warn("missing happyFunTimes.gameType in package.json")
-          continue;
+      elem.addEventListener('click', function(msgElement) {
+        return function(e) {
+          e.preventDefault(true)
+          msgElement.style.display = "block";
+        };
+      }(msgElement), false);
+      msgElement.addEventListener('click', function(msgElement) {
+        return function(e) {
+          e.preventDefault(true);
+          msgElement.style.display = "none";
         }
-        var msgId = gameType.toLowerCase() + hiddenMsgSuffix;
-        var msgElement = $(msgId);
-        if (!msgElement) {
-          console.error("missing msg element: " + msgId);
-          continue;
-        }
-        elem.addEventListener('click', function(msgElement, gameId) {
-          return function(e) {
-            e.preventDefault(true)
-            msgElement.style.display = "block";
-            client.sendCmd('launch', {gameId: gameId});
-          };
-        }(msgElement, hftInfo.gameId), false);
-        msgElement.addEventListener('click', function(msgElement) {
-          return function(e) {
-            e.preventDefault(true);
-            msgElement.style.display = "none";
-          }
-        }(msgElement), false);
-      }
+      }(msgElement), false);
+    }
 
-      // If we started with a gameId param just launch it?
-      // NOTE: this is kind of wonky. Seems like we should just go directly
-      // instead of waiting
-      if (params.gameId) {
-        var runtimeInfo = gamesById[params.gameId];
-        if (!runtimeInfo) {
-          console.error("unknown gameId: " + params.gameId);
-        } else {
-          // LOL. If we don't replace the history then pressing back will just end up going forward again :P
-          // Yet another reason maybe we should just go directly to the game?
-          window.history.replaceState({}, "", window.location.origin + window.location.pathname);
-          var event = new Event('click');
-          var elem = $(runtimeInfo.count + "-button");
-          elem.dispatchEvent(event);
+    // change .launch-button elements to bring up message
+    var elements = document.querySelectorAll(".launch-button");
+    for (var ii = 0; ii < elements.length; ++ii) {
+      var elem = elements[ii];
+      var buttonId = elem.id;
+      var count = parseInt(buttonId.substr(0, buttonId.length - buttonIdSuffix.length));
+      var runtimeInfo = obj[count];
+      var gameInfo = runtimeInfo.info;
+      var hftInfo = gameInfo.happyFunTimes;
+      var gameType = hftInfo.gameType;
+      if (!gameType) {
+        console.warn("missing happyFunTimes.gameType in package.json")
+        continue;
+      }
+      var msgId = gameType.toLowerCase() + hiddenMsgSuffix;
+      var msgElement = $(msgId);
+      if (!msgElement) {
+        console.error("missing msg element: " + msgId);
+        continue;
+      }
+      elem.addEventListener('click', function(msgElement, gameId) {
+        return function(e) {
+          e.preventDefault(true)
+          msgElement.style.display = "block";
+          client.sendCmd('launch', {gameId: gameId});
+        };
+      }(msgElement, hftInfo.gameId), false);
+      msgElement.addEventListener('click', function(msgElement) {
+        return function(e) {
+          e.preventDefault(true);
+          msgElement.style.display = "none";
         }
-      }
+      }(msgElement), false);
+    }
 
-      // If there's only one game just go to it.
-      if (obj.length == 1 && obj[0].controllerUrl) {
-        window.location.href = obj[0].controllerUrl;
-        return;
+    // If we started with a gameId param just launch it?
+    // NOTE: this is kind of wonky. Seems like we should just go directly
+    // instead of waiting
+    if (params.gameId) {
+      var runtimeInfo = gamesById[params.gameId];
+      if (!runtimeInfo) {
+        console.error("unknown gameId: " + params.gameId);
+      } else {
+        // LOL. If we don't replace the history then pressing back will just end up going forward again :P
+        // Yet another reason maybe we should just go directly to the game?
+        window.history.replaceState({}, "", window.location.origin + window.location.pathname);
+        var event = new Event('click');
+        var elem = $(runtimeInfo.count + "-button");
+        elem.dispatchEvent(event);
       }
-    });
+    }
+
+    // If there's only one game just go to it.
+    if (obj.length == 1 && obj[0].controllerUrl) {
+      window.location.href = obj[0].controllerUrl;
+      return;
+    }
   };
-  getGames();
+
+  client.addEventListener('availableGames', handleAvailableGames);
+  client.sendCmd('getAvailableGames');
 });
 
 
