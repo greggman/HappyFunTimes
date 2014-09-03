@@ -63,10 +63,11 @@ define(function() {
   };
 
   NetPlayer.prototype.addEventListener = function(eventType, handler) {
+    var self = this;
+
     switch (eventType) {
       case 'disconnect':
         handler = function(handler) {
-          var self = this;
           return function() {
              self.removeAllListeners();
              return handler.apply(this, arguments);

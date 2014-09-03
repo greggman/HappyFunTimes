@@ -33,6 +33,7 @@
 
 var computerName = require('../lib/computername');
 var debug        = require('debug')('relayserver');
+var events       = require('events');
 var Game         = require('./game');
 var gameInfo     = require('../lib/gameinfo');
 var path         = require('path');
@@ -76,6 +77,11 @@ var RelayServer = function(servers, options) {
   var g_games = {};
   var g_numGames = 0;
   var socketServers = [];
+  var eventEmitter = new events.EventEmitter();
+
+  this.on = eventEmitter.on.bind(eventEmitter);
+  this.addListener = this.on;
+  this.removeListener = eventEmitter.removeListener.bind(eventEmitter);
 
   // --- messages to relay server ---
   //
@@ -184,6 +190,7 @@ var RelayServer = function(servers, options) {
     }
     --g_numGames;
     debug("removed game: " + gameId + ", num games = " + g_numGames);
+    eventEmitter.emit('gameExited', {gameId: gameId});
     delete g_games[gameId];
   }.bind(this);
 
@@ -207,6 +214,7 @@ var RelayServer = function(servers, options) {
       gameId = gameInfo.makeRuntimeGameId(gameId, cwd);
     }
     debug("starting game: " + gameId);
+    eventEmitter.emit('gameStarted', {gameId: gameId});
     var game = getGame(gameId);
     game.assignClient(client, this, data);
   }.bind(this);

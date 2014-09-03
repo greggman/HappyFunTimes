@@ -75,6 +75,9 @@ var HFTPlayer = function(netPlayer, game, gameDB, relayServer) {
   netPlayer.addEventListener('quit',              HFTPlayer.prototype.handleQuit.bind(this));
   netPlayer.addEventListener('quitGame',          HFTPlayer.prototype.handleQuitGame.bind(this));
 
+  this.handleGameExited = HFTPlayer.prototype.handleGameExited.bind(this)
+  relayServer.on('gameExited', this.handleGameExited);
+
   var highestVersion = Object.keys(config.getSettings().apiVersionSettings).sort(function(a, b) {
     if (a == b) {
       return 0;
@@ -92,6 +95,7 @@ HFTPlayer.prototype.disconnect = function() {
     this.gameDB.removeListener('changed', this.gameAvailableGamesSubscribed);
     this.gameAvailableGamesSubscribed = undefined;
   }
+  this.relayServer.removeListener('gameExited', handleGameExited);
   this.netPlayer.removeAllListeners();
   this.game.removePlayer(this);
 };
@@ -259,6 +263,10 @@ HFTPlayer.prototype.handleQuitGame = function(data) {
   if (game) {
     game.sendQuit('exit', {});
   }
+};
+
+HFTPlayer.prototype.handleGameExited = function(data) {
+  this.sendCmd("gameExited", {gameId: data.gameId});
 };
 
 /**

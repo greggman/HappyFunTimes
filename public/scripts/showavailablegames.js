@@ -44,6 +44,7 @@ requirejs(
   var $ = document.getElementById.bind(document);
   var g = {
     elementToShowOnDisconnect: $("disconnected"),
+    gamesById: {},
   };
 
   var handleCmdErrorMsg = function(data) {
@@ -60,7 +61,13 @@ requirejs(
   };
 
   var handleGameExited = function(data) {
-console.log("gameExited: " + data.gameId);
+console.log("game exited:" + data.gameId);
+    var runtimeInfo = g.gamesById[data.gameId];
+console.log("runtimeInfo:" + runtimeInfo);
+    if (runtimeInfo && runtimeInfo.cleanupFn) {
+console.log("cleanup")
+      runtimeInfo.cleanupFn();
+    }
   };
 
   var params = Misc.parseUrlQuery();
@@ -106,6 +113,7 @@ console.log("gameExited: " + data.gameId);
   var handleAvailableGames = function(obj) {
     var html = [];
     var gamesById = {};
+    g.gamesById = gamesById;
     for (var ii = 0; ii < obj.length; ++ii) {
       var runtimeInfo = obj[ii];
       var gameInfo = runtimeInfo.info;
@@ -149,12 +157,18 @@ console.log("gameExited: " + data.gameId);
           element.style.display = "block";
         };
       }(msgElement), false);
-      msgElement.addEventListener('click', function(element) {
+      var cleanupFn = function() {
+        return function() {
+          element.style.display = "none";
+        };
+      }(msgElement);
+      msgElement.addEventListener('click', function(fn) {
         return function(e) {
           e.preventDefault(true);
-          element.style.display = "none";
+          fn();
         }
-      }(msgElement), false);
+      }(cleanupFn), false);
+      gamesById[hftInfo.gameId].cleanupFn = cleanUpFn;
     }
 
     // change .launch-button elements to bring up message
@@ -184,13 +198,19 @@ console.log("gameExited: " + data.gameId);
           client.sendCmd('launch', {gameId: gameId});
         };
       }(msgElement, hftInfo.gameId), false);
-      msgElement.addEventListener('click', function(element, gameId) {
+      var cleanupFn = function(element) {
+        return function() {
+          element.style.display = "none";
+        }
+      }(msgElement);
+      msgElement.addEventListener('click', function(fn, gameId) {
         return function(e) {
           e.preventDefault(true);
-          element.style.display = "none";
+          fn();
           quitGame(gameId);
         }
-      }(msgElement, hftInfo.gameId), false);
+      }(cleanupFn, hftInfo.gameId), false);
+      gamesById[hftInfo.gameId].cleanupFn = cleanupFn;
     }
 
     // If we started with a gameId param just launch it?
