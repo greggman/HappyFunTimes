@@ -46,6 +46,7 @@ requirejs.config({
 
 var child_process  = require('child_process');
 var fs             = require('fs');
+var gamedb         = require('../lib/gamedb');
 var LoopbackClient = require('./loopbackclient');
 var msgbox         = require('native-msg-box');
 var os             = require('os');
@@ -57,19 +58,22 @@ var GameServer     = requirejs('hft/gameserver');
 
 var platform = os.platform().toLowerCase();
 
-var HFTPlayer = function(netPlayer, game, gameDB) {
+var HFTPlayer = function(netPlayer, game, gameDB, relayServer) {
   this.netPlayer = netPlayer;
   this.game = game;
   this.gameDB = gameDB;
+  this.relayServer = relayServer;
   this.getAvailableGamesSubscribed = false;
 
-  netPlayer.addEventListener('disconnect', HFTPlayer.prototype.disconnect.bind(this));
-  netPlayer.addEventListener('getGameInfo', HFTPlayer.prototype.handleGetGameInfo.bind(this));
+  // Remember these must be safe.
+  netPlayer.addEventListener('disconnect',        HFTPlayer.prototype.disconnect.bind(this));
+  netPlayer.addEventListener('getGameInfo',       HFTPlayer.prototype.handleGetGameInfo.bind(this));
   netPlayer.addEventListener('getAvailableGames', HFTPlayer.prototype.handleGetAvailableGames.bind(this));
-  netPlayer.addEventListener('install', HFTPlayer.prototype.handleInstall.bind(this));
-  netPlayer.addEventListener('upgrade', HFTPlayer.prototype.handleUpgrade.bind(this));
-  netPlayer.addEventListener('launch', HFTPlayer.prototype.handleLaunch.bind(this));
-  netPlayer.addEventListener('quit', HFTPlayer.prototype.handleQuit.bind(this));
+  netPlayer.addEventListener('install',           HFTPlayer.prototype.handleInstall.bind(this));
+  netPlayer.addEventListener('upgrade',           HFTPlayer.prototype.handleUpgrade.bind(this));
+  netPlayer.addEventListener('launch',            HFTPlayer.prototype.handleLaunch.bind(this));
+  netPlayer.addEventListener('quit',              HFTPlayer.prototype.handleQuit.bind(this));
+  netPlayer.addEventListener('quitGame',          HFTPlayer.prototype.handleQuitGame.bind(this));
 
   var highestVersion = Object.keys(config.getSettings().apiVersionSettings).sort(function(a, b) {
     if (a == b) {
@@ -84,6 +88,11 @@ var HFTPlayer = function(netPlayer, game, gameDB) {
 };
 
 HFTPlayer.prototype.disconnect = function() {
+  if (this.getAvailableGamesSubscribed) {
+    this.gameDB.removeListener('changed', this.gameAvailableGamesSubscribed);
+    this.gameAvailableGamesSubscribed = undefined;
+  }
+  this.netPlayer.removeAllListeners();
   this.game.removePlayer(this);
 };
 
@@ -128,8 +137,8 @@ HFTPlayer.prototype.handleGetGameInfo = function(data) {
 
 HFTPlayer.prototype.handleGetAvailableGames = function(data) {
   if (!this.getAvailableGamesSubscribed) {
-    this.getAvailableGamesSubscribed = true;
-    this.gameDB.on('changed', HFTPlayer.prototype.handleGetAvailableGames.bind(this));
+    this.getAvailableGamesSubscribed = HFTPlayer.prototype.handleGetAvailableGames.bind(this);
+    this.gameDB.on('changed', this.getAvailableGamesSubscribed);
   }
 
   debug("sending games");
@@ -243,7 +252,13 @@ HFTPlayer.prototype.handleLaunch = function(data) {
     var child = child_process.spawn(launcher, args);
     child.unref();
   }
+};
 
+HFTPlayer.prototype.handleQuitGame = function(data) {
+  var game = this.relayServer.getGameById(data.gameId);
+  if (game) {
+    game.sendQuit('exit', {});
+  }
 };
 
 /**
@@ -253,6 +268,7 @@ HFTPlayer.prototype.handleLaunch = function(data) {
  */
 var HFTGame = function(options) {
   var gameDB = options.gameDB;
+  var relayServer = options.relayServer;
   var players = [];
   var client = new LoopbackClient();
   var server = new GameServer({
@@ -261,7 +277,7 @@ var HFTGame = function(options) {
   });
 
   server.addEventListener('playerconnect', function(netPlayer, name) {
-    players.push(new HFTPlayer(netPlayer, this, gameDB));
+    players.push(new HFTPlayer(netPlayer, this, gameDB, relayServer));
   }.bind(this));
 
   this.removePlayer = function(player) {

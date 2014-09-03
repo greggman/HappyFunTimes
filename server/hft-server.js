@@ -408,6 +408,7 @@ var HFTServer = function(options, startedCallback) {
       // Add management game
       var hftGame = new HFTGame({
         gameDB: gameDB,
+        relayServer: relayServer,
       });
       relayServer.assignAsClientForGame({gameId: "__hft__", showInList: false}, hftGame.getClientForGame());
       startedCallback();

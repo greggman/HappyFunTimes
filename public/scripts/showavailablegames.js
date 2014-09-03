@@ -33,12 +33,10 @@
 
 // Start the main app logic.
 requirejs(
-  [ 'hft/io',
-    'hft/gameclient',
+  [ 'hft/gameclient',
     'hft/misc/misc',
     'hft/misc/strings',
   ], function(
-    IO,
     GameClient,
     Misc,
     Strings) {
@@ -61,6 +59,10 @@ requirejs(
     g.elementToShowOnDisconnect.style.display = "block";
   };
 
+  var handleGameExited = function(data) {
+console.log("gameExited: " + data.gameId);
+  };
+
   var params = Misc.parseUrlQuery();
 
   var client = new GameClient({
@@ -70,6 +72,7 @@ requirejs(
   client.addEventListener('errorMsg', handleCmdErrorMsg);
   client.addEventListener('redirect', handleRedirectMsg);
   client.addEventListener('disconnect', handleDisconnect);
+  client.addEventListener('gameExited', handleGameExited);
 
   $('quit').addEventListener('click', function() {
     g.elementToShowOnDisconnect = $("exited");
@@ -94,6 +97,10 @@ requirejs(
   for (var ii = 0; ii < elements.length; ++ii) {
     var elem = elements[ii];
     hiddenMsgs[elem.id.toLowerCase().substr(0, elem.id.length - hiddenMsgSuffix.length)] = elem;
+  };
+
+  var quitGame = function(gameId) {
+    client.sendCmd('quitGame', {gameId: gameId});
   };
 
   var handleAvailableGames = function(obj) {
@@ -136,16 +143,16 @@ requirejs(
         console.error("missing msg element: " + msgId);
         continue;
       }
-      elem.addEventListener('click', function(msgElement) {
+      elem.addEventListener('click', function(element) {
         return function(e) {
           e.preventDefault(true)
-          msgElement.style.display = "block";
+          element.style.display = "block";
         };
       }(msgElement), false);
-      msgElement.addEventListener('click', function(msgElement) {
+      msgElement.addEventListener('click', function(element) {
         return function(e) {
           e.preventDefault(true);
-          msgElement.style.display = "none";
+          element.style.display = "none";
         }
       }(msgElement), false);
     }
@@ -170,19 +177,20 @@ requirejs(
         console.error("missing msg element: " + msgId);
         continue;
       }
-      elem.addEventListener('click', function(msgElement, gameId) {
+      elem.addEventListener('click', function(element, gameId) {
         return function(e) {
           e.preventDefault(true)
-          msgElement.style.display = "block";
+          element.style.display = "block";
           client.sendCmd('launch', {gameId: gameId});
         };
       }(msgElement, hftInfo.gameId), false);
-      msgElement.addEventListener('click', function(msgElement) {
+      msgElement.addEventListener('click', function(element, gameId) {
         return function(e) {
           e.preventDefault(true);
-          msgElement.style.display = "none";
+          element.style.display = "none";
+          quitGame(gameId);
         }
-      }(msgElement), false);
+      }(msgElement, hftInfo.gameId), false);
     }
 
     // If we started with a gameId param just launch it?

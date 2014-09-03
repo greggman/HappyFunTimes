@@ -129,6 +129,15 @@ var RelayServer = function(servers, options) {
   }.bind(this);
 
   /**
+   * Gets a game by id.
+   * @param {string} gameId id of game
+   * @return {Game?} Game for game.
+   */
+  this.getGameById = function(gameId) {
+    return g_games[gameId];
+  };
+
+  /**
    * Gets an array of game currently running.
    * @method
    * @returns {RelayServer~GameEntry[]}

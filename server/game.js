@@ -255,5 +255,13 @@ Game.prototype.assignClient = function(client, relayserver, data) {
   this.sendQueue = [];
 };
 
+Game.prototype.sendSystemCmd_ = function(cmd, data) {
+  this.send(null, {cmd: "system", data: {cmd: cmd, id: -1, data: data}});
+};
+
+Game.prototype.sendQuit = function() {
+  this.sendSystemCmd_('exit', {});
+};
+
 module.exports = Game;
 
