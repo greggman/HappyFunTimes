@@ -84,7 +84,7 @@ describe('game needs new hft', function() {
     createServer().then(function(result) {
       server = result;
       done();
-    }, function(err) {
+    }).catch(function(err) {
       console.error(err);
       done();
     });

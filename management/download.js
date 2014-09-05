@@ -131,7 +131,7 @@ var download = function(gameId, opt_destPath, options) {
     }).then(function() {
       eventEmitter.emit('status', {status: "Finished"});
       eventEmitter.emit('end', {status: "Done"});
-    }, function(err) {
+    }).catch(function(err) {
       console.error(err);
       eventEmitter.emit('error', err);
     });

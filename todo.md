@@ -8,24 +8,35 @@ Super Alpha
     *   runs hft-exe (or requires versions) (look into using vmware -- after alpha?)
     *   posts to github
     *   updates shft/install
-*   Make shft live!
-    *   make registration server work
-    *   make minimal design
+*   Check publising works.
+
+    I think publishing checks the online package.json but it should be checking the local one?
+    Except that maybe that's not what it should do?
+
+    Issue is I zip up the local files which is fine. Those are the local state. But,
+    manage.shft looks at package.json that's not inside the zip. Maybe I should
+    upload that as a release file so I can download it? Would also have to upload screenshots
+    and icon. I can then point to them?
+
 *   in app-mode, before launching browser, if we can't run server should we check that hft is already running?
 
     or, maybe we should even do that before trying to run the server at all.
 
-*   fix test broadcast gameserver.js line 278
-*   fix unity dialog in games.html
-    *   use fixed CSS
-    *   make it exit unity game
-    *   make it dismiss if unity game exits
-*   make games run without hft
-    *   jumpjump
-    *   boomboom
+*   Make shft live!
+    *   make registration server work
+    *   make minimal design
 
 After First Release
 -------------------
+
+*   make games run without hft
+
+    *   jumpjump
+    *   boomboom
+    *   powpow
+
+    I'm not sure what to do. I think I'll try to add stuff to cdnjs? Problem, they want a minified
+    version. I can concat stuff? Not sure how I do just part of it.
 
 *   update .travis.yml back to 0.10 once they release 0.10.32 (0.10.31 has a core dump bug)
 *   get rid of meteor
@@ -843,6 +854,14 @@ Runs Repo noid
 Done
 ====
 
+*   fix test broadcast gameserver.js line 278
+
+    note sure what I was smoking. This looks fine
+
+*   fix unity dialog in games.html
+    *   use fixed CSS
+    *   make it exit unity game
+    *   make it dismiss if unity game exits
 *   make installing a game add in realtime
 *   Make upgrade game work?
     *   merge files

@@ -87,8 +87,11 @@ try {
 cmdModule.cmd(args).then(function() {
   // We have to exit explicitly because there are event listeners for folders
   process.exit(0);
-}, function() {
+}).catch(function(e) {
   console.error("error running " + cmd);
+  if (e) {
+    console.error(e);
+  }
   process.exit(1);
 });
 

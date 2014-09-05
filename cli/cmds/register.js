@@ -52,7 +52,7 @@ var register = function(args) {
     require('../../management/register').register(args).then(function() {
       console.log("registered: " + args.repoUrl);
       resolve();
-    }, function(err) {
+    }).catch(function(err) {
       console.error(err);
       reject();
     });

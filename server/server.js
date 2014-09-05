@@ -147,7 +147,7 @@ var launchBrowser = function(err) {
   }
   p.then(function() {
      next();
-  }, function(err) {
+  }).catch(function(err) {
     console.error(err);
     next();
   });

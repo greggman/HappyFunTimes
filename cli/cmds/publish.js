@@ -133,7 +133,7 @@ var publish = function(args) {
       return require('../../management/publish').publish(srcPath, options);
     }).then(function() {
       resolve();
-    }, function(err) {
+    }).catch(function(err) {
       console.error(err);
       reject();
     });

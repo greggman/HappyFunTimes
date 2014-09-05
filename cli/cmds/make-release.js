@@ -60,7 +60,7 @@ var makeRelease = function(args) {
         });
       }
       resolve();
-    }, function(err) {
+    }).catch(function(err) {
       console.error(err);
       reject();
     });

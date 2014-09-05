@@ -257,7 +257,7 @@ var publish = function(gamePath, options) {
     }).then(function() {
       console.log(gameId + ": registered");
       fulfill();
-    }, function(err) {
+    }).catch(function(err) {
       reject(err)
     });
   });
