@@ -25,6 +25,9 @@ Super Alpha
 *   Make shft live!
     *   make registration server work
     *   make minimal design
+*   support 2 factor
+    *   publish
+    *   update-exe
 
 After First Release
 -------------------

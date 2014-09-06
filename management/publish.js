@@ -117,7 +117,6 @@ var publish = function(gamePath, options) {
         }
     };
 
-    auth();
     var listReleases   = Promise.denodeify(github.releases.listReleases);
     var createRelease  = Promise.denodeify(github.releases.createRelease);
     var uploadAsset    = Promise.denodeify(github.releases.uploadAsset);
@@ -226,7 +225,8 @@ var publish = function(gamePath, options) {
     }).then(function(releaseInfo) {
       log("releaseInfo", releaseInfo);
       var promises = [];
-      filesToUpload.forEach(function(file) {
+      var results = [];
+      filesToUpload.forEach(function(file, ndx) {
         auth();
         promises.push(uploadAsset({
           owner: options.username,
@@ -234,20 +234,18 @@ var publish = function(gamePath, options) {
           id: releaseInfo.id,
           name: path.basename(file.filename),
           filePath: file.filename,
+        }).then(function(result) {
+          if (result.state != 'uploaded') {
+            return Promise.reject(new Error("upload state for '" + result.name + "' is '" + result.state + "'"));
+          }
+          var localSize = fs.statSync(file.filename).size;
+          if (result.size != localSize) {
+            return Promise.reject(new Error("upload size for '" + result.name + "' is " + result.size + " but should be " + localSize));
+          }
         }));
       });
       return Promise.all(promises);
-    }).then(function(uploadResults) {
-      for (var ii = 0; ii < uploadResults; ++ii) {
-        var uploadResult = uploadResults[ii];
-        if (uploadResult.state != 'uploaded') {
-          return Promise.reject(new Error("upload state for '" + uploadResult.name + "' is '" + uploadResult.state + "'"));
-        }
-        var localSize = fs.statSync(filesToUpload[ii].filename).size;
-        if (uploadResult.size != localSize) {
-          return Promise.reject(new Error("upload size for '" + uploadResult.name + "' is " + uploadResult.size + " but should be " + localSize));
-        }
-      }
+    }).then(function() {
       console.log(gameId + ": release uploaded");
 
       return register({
