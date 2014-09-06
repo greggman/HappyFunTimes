@@ -119,6 +119,7 @@ console.log("cleanup")
       var gameInfo = runtimeInfo.info;
       var hftInfo = gameInfo.happyFunTimes;
       gamesById[hftInfo.gameId] = runtimeInfo;
+      runtimeInfo.dev = (runtimeInfo.originalGameId != hftInfo.gameId) ? "(*)" : "";
       runtimeInfo.count = ii;
       var templateId = hftInfo.gameType.toLowerCase();
       var template = templates[templateId];

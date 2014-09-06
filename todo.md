@@ -4,9 +4,6 @@ To Do
 Super Alpha
 -----------
 
-*   add super alpha
-*   add link to shft on games.html
-    *   launch from shft to game isn't working
 *   install from front page goes to window. Remove it?
 *   Make shft update-exe
     *   runs hft-exe (or requires versions) (look into using vmware -- after alpha?)
@@ -861,6 +858,9 @@ Runs Repo noid
 Done
 ====
 
+*   add link to shft on games.html
+*   add super alpha
+*   launch from shft to game isn't working
 *   fix test broadcast gameserver.js line 278
 
     note sure what I was smoking. This looks fine

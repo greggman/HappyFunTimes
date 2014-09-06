@@ -43,23 +43,51 @@ html, body {
     font-family: Helvetica, Arial, sans-serif;
     font-size: xx-large;
     font-weight: bold;
-    background-color: #666;
+    background-color: #46F;
 }
 h1 {
-    background: linear-gradient(to bottom, #f2f6f8 0%,#d8e1e7 88%,#b5c6d0 91%,#e0eff9 100%);
+    gbackground: linear-gradient(to bottom, #4296f8 0%,#3881e7 88%,#2566d0 91%,#408fe9 100%);
     border-top: 10px solid black;
     border-bottom: 10px solid black;
-    background-color:red;
+    background-color: #6AF;
     color: white;
-    padding: 0.5em;
+    padding: 0.15em 0px 0.35em 0px;
+    margin: 10px 0px 10px 0px;
+    text-shadow: 0px 0px 0 rgb(91,144,236),-1px 1px 0 rgb(81,134,226),-2px 2px 0 rgb(71,124,216),-3px 3px 0 rgb(60,113,205),-4px 4px 0 rgb(50,103,195),-5px 5px 0 rgb(40,93,185),-6px 6px 0 rgb(30,83,175),-7px 7px 0 rgb(20,73,165),-8px 8px 0 rgb(10,63,155),-9px 9px 0 rgb(-1,52,144),-10px 10px 0 rgb(-11,42,134),-11px 11px 0 rgb(-21,32,124), -12px 12px 0 rgb(-31,22,114),-13px 13px 12px rgba(0,0,0,0.8),-13px 13px 1px rgba(0,0,0,0.5),0px 0px 12px rgba(0,0,0,.2);
+}
+h1>span {
+    position: relative;
+}
+h2 {
+    text-align: center;
+    margin: 0px;
+}
+h2>a {
+    display: inline-block;
+    background-color: white;
+    color: black;
+    border: 10px;
+    border-radius: 40px;
+    padding: 10px 20px 10px 20px;
+    font-size: xx-large;
+}
+h2 a:link,
+h2 a:visited,
+h2 a:active,
+h2 a:hover {
+    color: inherit;
+    text-decoration: none;
+}
+h2 a:hover {
+    background-color: #ACF;
 }
 #version {
     position: absolute;
     text-transform: none;
-    right: -2em;
-    top: 0.5em;
-    background-color: red;
-    border: 10px solid red;
+    right: -3em;
+    top: -0.5em;
+    background-color: blue;
+    border: 10px solid blue;
     border-radius: 20px;
     font-size: medium;
     text-shadow: none;
