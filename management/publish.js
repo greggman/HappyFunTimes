@@ -34,8 +34,10 @@ var debug        = require('debug')('publish');
 var fs           = require('fs');
 var gameInfo     = require('../lib/gameinfo');
 var GitHubApi    = require('github');
+var make         = require('./make');
 var path         = require('path');
 var Promise      = require('promise');
+var register     = require('./register');
 var releaseUtils = require('./release-utils');
 var semver       = require('semver');
 var strings      = require('../lib/strings');
@@ -201,7 +203,7 @@ var publish = function(gamePath, options) {
       }
       return utils.getTempFolder({unsafeCleanup: true});  // deletes the folder on exit.
     }).then(function(filePath) {
-      return make(gamePath, filePath, {
+      return make.make(gamePath, filePath, {
         exporterPath: options.exporterPath,
         export: true,
       });
@@ -248,7 +250,7 @@ var publish = function(gamePath, options) {
     }).then(function() {
       console.log(gameId + ": release uploaded");
 
-      return register({
+      return register.register({
         repoUrl: options.repoUrl,
         endpoint: options.endpoint,
       })

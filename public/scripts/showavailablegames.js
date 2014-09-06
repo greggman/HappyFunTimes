@@ -118,7 +118,7 @@ console.log("cleanup")
       var runtimeInfo = obj[ii];
       var gameInfo = runtimeInfo.info;
       var hftInfo = gameInfo.happyFunTimes;
-      gamesById[hftInfo.gameId] = gameInfo;
+      gamesById[hftInfo.gameId] = runtimeInfo;
       runtimeInfo.count = ii;
       var templateId = hftInfo.gameType.toLowerCase();
       var template = templates[templateId];

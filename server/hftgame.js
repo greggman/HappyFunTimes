@@ -92,10 +92,10 @@ var HFTPlayer = function(netPlayer, game, gameDB, relayServer) {
 
 HFTPlayer.prototype.disconnect = function() {
   if (this.getAvailableGamesSubscribed) {
-    this.gameDB.removeListener('changed', this.gameAvailableGamesSubscribed);
+    this.gameDB.removeListener('changed', this.getAvailableGamesSubscribed);
     this.gameAvailableGamesSubscribed = undefined;
   }
-  this.relayServer.removeListener('gameExited', handleGameExited);
+  this.relayServer.removeListener('gameExited', this.handleGameExited);
   this.netPlayer.removeAllListeners();
   this.game.removePlayer(this);
 };

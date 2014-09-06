@@ -30,6 +30,9 @@
  */
 "use strict";
 
+var asks    = require('asks');
+var Promise = require('promise');
+
 var safeishName = function(gameId) {
   return gameId.replace(/[^a-zA-Z0-9-_]/g, '_');
 };

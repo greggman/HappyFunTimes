@@ -51,8 +51,20 @@ h1 {
     border-bottom: 10px solid black;
     background-color:red;
     color: white;
-    padding: 1em;
+    padding: 0.5em;
 }
+#version {
+    position: absolute;
+    text-transform: none;
+    right: -2em;
+    top: 0.5em;
+    background-color: red;
+    border: 10px solid red;
+    border-radius: 20px;
+    font-size: medium;
+    text-shadow: none;
+}
+
 .hidden-msg {
     position: fixed;
     left: 0px;
