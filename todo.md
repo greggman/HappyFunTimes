@@ -4,7 +4,6 @@ To Do
 Super Alpha
 -----------
 
-*   install from front page goes to window. Remove it?
 *   Make shft update-exe
     *   runs hft-exe (or requires versions) (look into using vmware -- after alpha?)
     *   posts to github
@@ -26,13 +25,13 @@ Super Alpha
 *   Make shft live!
     *   make registration server work
     *   make minimal design
-*   support 2 factor
-    *   publish
-    *   update-exe
 
 After First Release
 -------------------
 
+*   support 2 factor for publish
+    *   publish
+    *   update-exe
 *   make games run without hft
 
     *   jumpjump
@@ -858,6 +857,7 @@ Runs Repo noid
 Done
 ====
 
+*   install from front page goes to window. Remove it? No, fixed it.
 *   add link to shft on games.html
 *   add super alpha
 *   launch from shft to game isn't working
