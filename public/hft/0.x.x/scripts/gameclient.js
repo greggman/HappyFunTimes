@@ -113,6 +113,8 @@ define(['./virtualsocket'], function(VirtualSocket) {
       var fn = eventListeners[eventType];
       if (fn) {
         fn.apply(this, args);
+      } else {
+        console.error("unknown event: " + eventType);
       }
     }.bind(this);
 
