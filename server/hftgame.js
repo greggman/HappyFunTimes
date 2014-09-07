@@ -46,7 +46,6 @@ requirejs.config({
 
 var child_process  = require('child_process');
 var fs             = require('fs');
-var gamedb         = require('../lib/gamedb');
 var LoopbackClient = require('./loopbackclient');
 var msgbox         = require('native-msg-box');
 var os             = require('os');

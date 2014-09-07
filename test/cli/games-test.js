@@ -44,11 +44,12 @@ var g_fakeUnityGamePath      = path.join(__dirname, '..', 'fakeunitygame');
 var g_testGameInstallDir     = path.join(__dirname, '..', 'testgameinstalldir');
 
 var hftcli = function(cmd, args, callback) {
-   utils.execute('node', [
+   var cmdArgs = [
      path.join(__dirname, "..", "..", "cli", "hft.js"),
      cmd,
      "--config-path=" + g_configPath,
-   ].concat(args), function(err, result) {
+   ].concat(args);
+   utils.execute('node', cmdArgs, function(err, result) {
      if (err != null) {
        console.log("cmd: " + cmd + " " + args.join(" "));
        console.log("stdout:" + result.stdout);
@@ -77,6 +78,7 @@ var getInstalledGames = function() {
 
 var assert = require("assert");
 describe('hft-cli', function() {
+  this.timeout(6000);
 describe('init', function() {
 
   before(function() {

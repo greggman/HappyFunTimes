@@ -40,7 +40,6 @@ var debug                     = require('debug')('realserver');
 var DNSServer                 = require('./dnsserver');
 var express                   = require('express');
 var fs                        = require('fs');
-var gameDB                    = require('../lib/gamedb');
 var HFTGame                   = require('./hftgame');
 var hftSite                   = require('./hftsite');
 var highResClock              = require('../lib/highresclock');
@@ -82,6 +81,7 @@ var HFTServer = function(options, startedCallback) {
     screenshotCount: 0,
     baseDir: "public",
     cwd: process.cwd(),
+    gameDB: require('../lib/gamedb'),
   };
 
   Object.keys(options).forEach(function(prop) {
@@ -155,7 +155,7 @@ var HFTServer = function(options, startedCallback) {
   };
 
   var handleListAvailableGamesRequest = function(query, res) {
-    sendJSONResponse(res, gameDB.getGames());
+    sendJSONResponse(res, g.gameDB.getGames());
   };
 
   var handleHappyFunTimesPingRequest = function(query, res) {
@@ -278,7 +278,7 @@ var HFTServer = function(options, startedCallback) {
   var sendGameRequestedFile = function(req, res) {
     var gamePrefixLength = 8;  // "/games/" + the slash after the id
     var gameId = req.params[0];
-    var runtimeInfo = gameDB.getGameById(gameId);
+    var runtimeInfo = g.gameDB.getGameById(gameId);
     var parsedUrl = url.parse(req.url);
     var filePath = parsedUrl.pathname;
     var fullPath = path.normalize(path.join(runtimeInfo.basePath, filePath.substr(gamePrefixLength + gameId.length)));
@@ -296,7 +296,7 @@ var HFTServer = function(options, startedCallback) {
   var sendRequestedFileFullPath = function(req, res, fullPath) {
     var parsedUrl = url.parse(req.url);
     var filePath = parsedUrl.pathname;
-    var isTemplate = gameDB.getTemplateUrls().indexOf(filePath) >= 0;
+    var isTemplate = g.gameDB.getTemplateUrls().indexOf(filePath) >= 0;
     var isQuery = parsedUrl.query !== null;
     var isAnchor = parsedUrl.hash !== null;
     if (!isQuery && !isAnchor) {
@@ -339,7 +339,7 @@ var HFTServer = function(options, startedCallback) {
   var addTemplateInsertedPath = function(app, pathRegex, templateName, contentPath) {
     app.get(pathRegex, function(req, res) {
       var gameId = req.params[0];
-      var runtimeInfo = gameDB.getGameById(gameId);
+      var runtimeInfo = g.gameDB.getGameById(gameId);
       var gameInfo = runtimeInfo.info;
 
       if (!runtimeInfo.useTemplate[templateName]) {
@@ -407,7 +407,7 @@ var HFTServer = function(options, startedCallback) {
 
       // Add management game
       var hftGame = new HFTGame({
-        gameDB: gameDB,
+        gameDB: g.gameDB,
         relayServer: relayServer,
       });
       relayServer.assignAsClientForGame({gameId: "__hft__", showInList: false}, hftGame.getClientForGame());
