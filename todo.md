@@ -4,6 +4,7 @@ To Do
 Super Alpha
 -----------
 
+*   fix names in powpow?
 *   Make shft update-exe
     *   runs hft-exe (or requires versions) (look into using vmware -- after alpha?)
     *   posts to github
@@ -29,6 +30,16 @@ Super Alpha
 After First Release
 -------------------
 
+*   Add repo link to game screen on shft
+*   write unity docs
+    *   UnityScript
+    *   C#
+    *   JavaScript
+    *   File Layout
+    *   Git
+    *   Publish
+    *   Test on Windows
+*   publish unity plugin
 *   support 2 factor for publish
     *   publish
     *   update-exe

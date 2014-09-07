@@ -61,13 +61,14 @@ requirejs(
   };
 
   var handleGameExited = function(data) {
-console.log("game exited:" + data.gameId);
     var runtimeInfo = g.gamesById[data.gameId];
-console.log("runtimeInfo:" + runtimeInfo);
     if (runtimeInfo && runtimeInfo.cleanupFn) {
-console.log("cleanup")
       runtimeInfo.cleanupFn();
     }
+  };
+
+  var handleHFTInfo = function(data) {
+    $("versionnum").innerHTML = "v" + data.version;
   };
 
   var params = Misc.parseUrlQuery();
@@ -76,10 +77,12 @@ console.log("cleanup")
     gameId: "__hft__",
   });
 
+  client.addEventListener('connect', function() {});
   client.addEventListener('errorMsg', handleCmdErrorMsg);
   client.addEventListener('redirect', handleRedirectMsg);
   client.addEventListener('disconnect', handleDisconnect);
   client.addEventListener('gameExited', handleGameExited);
+  client.addEventListener('hftInfo', handleHFTInfo);
 
   $('quit').addEventListener('click', function() {
     g.elementToShowOnDisconnect = $("exited");
