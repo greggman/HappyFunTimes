@@ -35,6 +35,7 @@ var computerName = require('../lib/computername');
 var debug        = require('debug')('relayserver');
 var events       = require('events');
 var Game         = require('./game');
+var gamedb       = require('../lib/gamedb');
 var gameInfo     = require('../lib/gameinfo');
 var path         = require('path');
 var Player       = require('./player');
@@ -158,6 +159,7 @@ var RelayServer = function(servers, options) {
           machine: computerName.get(),
           numPlayers: game.getNumPlayers(),
           controllerUrl: game.controllerUrl,
+          runtimeInfo: gamedb.getGameById(id),
         });
       }
     }
