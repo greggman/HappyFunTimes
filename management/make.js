@@ -269,16 +269,16 @@ var makeUnity3d = function(runtimeInfo, gamePath, destFolder, options) {
         var destPath = path.join(destFolder, releaseUtils.safeishName(gameId) + platInfo.platform.zipSuffix);
         var binStart = "bin/";
         var excludeRE = /^(src|Assets|Library|ProjectSettings|Temp)\//i;
-        var filter = function(filename) {
-          filename = filename.replace(/\\/g, '/');
+        var filter = function(nativeFilename) {
+          var filename = nativeFilename.replace(/\\/g, '/');
           if (excludeRE.test(filename)) {
             return false;
           }
           if (strings.startsWith(filename, binStart)) {
-            if (platInfo.binPath && filename == platInfo.binPath) {
+            if (platInfo.binPath && nativeFilename == platInfo.binPath) {
               return true;
             }
-            if (platInfo.dirPath && strings.startsWith(filename, platInfo.dirPath)) {
+            if (platInfo.dirPath && strings.startsWith(nativeFilename, platInfo.dirPath)) {
               return true;
             }
             return false;
