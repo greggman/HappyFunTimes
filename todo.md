@@ -30,6 +30,7 @@ Super Alpha
 After First Release
 -------------------
 
+*   make --export for make-release the default
 *   Add repo link to game screen on shft
 *   write unity docs
     *   UnityScript
