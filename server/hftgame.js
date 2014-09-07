@@ -86,7 +86,8 @@ var HFTPlayer = function(netPlayer, game, gameDB, relayServer) {
   })[0];
 
   this.sendCmd('hftInfo', {
-    version: highestVersion,
+    version: config.getPackageInfo().version,
+    apiVersion: highestVersion,
   });
 };
 
