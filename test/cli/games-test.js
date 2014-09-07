@@ -410,8 +410,13 @@ describe('release unity3d', function() {
             }
           });
 
+console.log("---");
+console.log(Object.keys(zip.files).join("\n"));
+console.log("---");
+
           var expected = expectedFileNames.concat.apply(expectedFileNames, expected);
           expected.forEach(function(fileName) {
+console.log("checking " + fileName);
             assert.ok(zip.files[fileName], fileName + " should be in zip " + destPath);
           });
 
