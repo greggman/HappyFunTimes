@@ -30,6 +30,10 @@ Super Alpha
 After First Release
 -------------------
 
+*   check that first installed game works
+*   when the last page disconnects from __hft__ shutdown?
+*   add purge request to manage gamedb for icon and screenshots
+*   fix shft update-exe so username:password works
 *   make --export for make-release the default
 *   Add repo link to game screen on shft
 *   write unity docs
