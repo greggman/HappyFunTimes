@@ -1,4 +1,345 @@
-*   file bug with apple about canvas/photos
+To Do
+=====
+
+Super Alpha
+-----------
+
+*   fix names in powpow?
+*   Make shft update-exe
+    *   runs hft-exe (or requires versions) (look into using vmware -- after alpha?)
+    *   posts to github
+    *   updates shft/install
+*   Check publising works.
+
+    I think publishing checks the online package.json but it should be checking the local one?
+    Except that maybe that's not what it should do?
+
+    Issue is I zip up the local files which is fine. Those are the local state. But,
+    manage.shft looks at package.json that's not inside the zip. Maybe I should
+    upload that as a release file so I can download it? Would also have to upload screenshots
+    and icon. I can then point to them?
+
+*   in app-mode, before launching browser, if we can't run server should we check that hft is already running?
+
+    or, maybe we should even do that before trying to run the server at all.
+
+*   Make shft live!
+    *   make registration server work
+    *   make minimal design
+
+After First Release
+-------------------
+
+*   check that first installed game works
+*   when the last page disconnects from __hft__ shutdown?
+*   add purge request to manage gamedb for icon and screenshots
+*   fix shft update-exe so username:password works
+*   make --export for make-release the default
+*   Add repo link to game screen on shft
+*   write unity docs
+    *   UnityScript
+    *   C#
+    *   JavaScript
+    *   File Layout
+    *   Git
+    *   Publish
+    *   Test on Windows
+*   publish unity plugin
+*   support 2 factor for publish
+    *   publish
+    *   update-exe
+*   make games run without hft
+
+    *   jumpjump
+    *   boomboom
+    *   powpow
+
+    I'm not sure what to do. I think I'll try to add stuff to cdnjs? Problem, they want a minified
+    version. I can concat stuff? Not sure how I do just part of it.
+
+*   update .travis.yml back to 0.10 once they release 0.10.32 (0.10.31 has a core dump bug)
+*   get rid of meteor
+*   should make-release check API version?
+*   maybe shft should not install ever. It should just redirect to hft.
+
+    So, clicking "install" on say powpow would redirect to `http://localhost:18679/install.html?id=powpow`
+
+    or
+
+    maybe SHFT should redirect for games so if you're running HFT then clicking a game would go
+    to `http://localhost:18689/game/powpow`. If you're not running HFT it would go to
+    `http://shft.net/game/powpow`
+
+    Just thinking out loud.
+
+
+*   consider install using an per platform installer app
+
+    the installer app would be a generic app. It could either take an argument like `--path=pathToZip`
+    or it could just install itself and uninstall itself. The point would be a real installer
+    would ask for real OS level permission to run rather than my hacked msgbox.
+
+    In the case of taking an argument it would install the zip. In the case of just being a no-op
+    installer we'd just check for success or failure. On failure we wouldn't install the zip.
+    On success we'd use the current install process.
+
+*   just like games, games.html and options.html should maybe be put realtime in a template?
+
+    If nothing else there are common things like handling disconnect, reconnect, and maybe
+    handling quit as well as providing a common frame.
+
+*   make shft tell you you need to upgrade hft
+*   Add 'what is this' to hft.net
+*   Add a support field, default to github issues
+*   Figure out if it's possible to make HFT.net work on more networks
+
+    HFT.net currently requires NAT based networks like home routers.
+    Could it work on a corp network?
+
+    Maybe HFT should just report on the game, no scanning. If no game
+    exists or it's older than N (I think I trim already) then it should
+    report "no games".
+
+    That way users will know immediately.
+
+*   make install screen only show your OS. Link to "other versions"
+*   Add phantomjs based tests
+*   Make game check for valid HFT (I don't remember what this means)
+    *   do hft add
+    *   do hft install
+
+
+*   if --dns
+    *   require port 80, fail if we can't get it
+    *   print 'need sudo' or figure out how to ask for permission
+    *   show "setting up ... animated screen" because it takes time for /etc/resolve
+*   when listing mulitple HFTs running behind the same public IP address include
+    username and machine name?
+
+    hrm, that doesn't seem very secure. I wonder if it's
+    ok if I only send it to people on the same subnet? How would I know? Check the netmask?
+    The only phone needs this info. It's just some way to say.
+
+        Pick Game to Join:
+           jumpjump on sysg
+           boomboom on tami's mac
+
+    maybe machine name is good because it has less privacy issues?
+
+*   Make games.html detect features and suggest a different browser
+*   Have browser check if it's the default for hft. If not suggest to make it the default for hft.
+*   add option the choose browser to launch?
+*   Add options to HFT
+*   Figure out how to get HFT on start screen
+*   make hft-exe update Info.plist version from hft version?
+*   Optionally allow games to advertize they are running.
+
+    Superhappyfuntimes can show games in your area. Think
+
+        15 people playing jumpjump at Joe's Bar in Maintown, MA
+        17 people playing shootshoot at Big Burger in Anywhere, USA
+        etc..
+
+*   Need to make installer for hft
+    *   Windows
+    *   Mac
+    O   Linux
+*   how to migrate old happy fun times
+
+    copy to other folder
+    add .gitignore
+    git init
+    git add
+    git commit
+    edit package.json
+      only fields should be
+      "gameUrl": "gameview.html",
+      "screenshotUrl": "screenshot.png",
+      "gameType": "html",
+      "minPlayers": 2,
+      "category": "game"
+    copy a bower.json?
+    edit bower.json
+      "name"
+      "deps"
+      private: true // this is not itself a bower package
+    run `bower install`
+    make an icon.png/jpg/gif (64x64 or 128x128)
+
+    delete gameview.html // assuming you were using templating
+    delete index.html  // assuming you were using templating
+    edit all your scripts
+
+    define([ ])
+    requirejs([])
+    if you were referencing tdl as
+       '../../../3rdparty/tdl/???' -> '../bower_components/tdl/tdl/??
+       '../../../scripts' -> 'hft'
+       '../../scripts' -> '../bower_components/hft-utils/dist'
+       imageprocess -> imageutils
+
+    add README.md?
+
+    make repo on github
+    git remote add origin git@github.com:<githubname>/<reponame>.git
+    git push -u origin master
+
+
+
+Runs Repo noid
+*     *    *   hft-boomboom
+*     *    *   hft-clocksync
+*     *    *   hft-deviceorientation
+               hft-flapflap
+*     *    *   hft-jamjam
+*     *    *   hft-jumpjump
+               hft-photopile
+*     *    *   hft-powpow
+*     *    *   hft-shootshoot
+*     *    *   hft-simple
+           *   hft-simplecamera
+           *   hft-supersimple
+               ? hft-sync2d
+               ? hft-syncThreeJS
+      *        hft-unitycharacterexample
+               hft-unitysimpleexample
+
+*   add a hft.release.ignore array to package.json. if it doesn't exist
+    have it be "src". Use it in release.make
+
+*   make sync examples work. Where should they show up?
+
+*   should I switch all of the gamedb to meteor?
+
+    No, as their's no database? But I can run it through collections.
+
+*   use github oauth2 authentication.
+
+    save the token in like .happyfuntimes/repoauth or something? Is it safe to save that token?
+
+    Then, subsequent commands can use the old token. If error re-auth
+
+*   Can we make Unity plugin find the port? It could look in ~/.happyfuntimes/config or something.
+
+    I worry that it might not work in some other platform
+
+*   add loggly or other logging both client and server. Make sure you can opt in/out.
+*   make it possible to pass description to publish which becomes the "body" field.
+*   Use 'unconnected' collection to handle installed games? Copy gameDB into Collection?
+*   Is it possible to put meteor into hft so I can use it for local game sys?
+*   games installing status needs to be per game like play/itunes because 2+ games
+    could be being installed at the same time.
+*   when making a package for a native game warn if EXEs are not near same date
+*   move username/password prompt to func
+*   install meteor browser policy
+*   turn off meteor websockets and live updating
+*   make "pubish-file"? that adds a specific file to a release?
+
+    basically I want someone to be able to make an executable on
+    a particular platform and then add it to the release
+
+    maybe call it "add-to-release"?
+
+*   make hft notify
+
+    notifes the gallery of an update.
+
+*   make 'fix' command that removes games that don't exist anymore
+*   could make hft optionally register ip:port with happyfuntimes.net
+
+    If ip address is not in one of the 'normal' class ips that are scanned by happyfuntimes
+    then it could be added. Also, happyfuntimes.net could check the ip address of hft
+    and the ip address of users and match them up since they'd all be behind the same
+    nat?
+
+    Maybe hft could check netmask, if class B then do extra stuff?
+
+*   need to figure out how to handle 2+ hft's on same network.
+
+    maybe happyfuntimes.net shows 2 and game being played?
+
+*   stop using gameIds in certain ways.
+
+    *   remove the need for gameids?
+
+        I started with gameIds used for connecting contollers to games. Now I'm also using
+        them at install time. The problem is a I have a DB of gameId -> game but if you are
+        doing dev you might have 2 games with the same id. The one installed and one sitting
+        in your dev folder.
+
+        For connecting a game to a controller, I could make the server handle it. At startup
+        it knows, based on the folder it's serving the files from, which game they belong to
+        so it can send some made up id to each game.
+
+        That leaves the id only for the gallery. In which case I only care above apps installed
+        in the HFT games folder (non-dev). Meaning an id is a gallery<->installed game mapping.
+        But nothing else.
+
+        Actually that doesn't work because unity is not launched by the server when in dev
+        so it won't have a way for the server to give it an id.
+
+        So instead, there's 2 ways of mapping ids
+
+        1.  id to installed game. This is GameDB.getGameById
+
+            This is useful for install/uninstall
+
+        2.  id to running game. This is something the relayserver does. In that case
+            I don't care about installed ids. I only care to connect a controller to the
+            running game.
+
+        Except... :(  In the case of unity I don't know which controller to run because
+        it's by default http://localhost:port/games/<gameid>/controller.html when it really
+        and that's not enough info to map <gameid> to one real folder or another.
+
+
+*   remove adm-zip and replace with something else. Ideally something that streams
+    so the entire file doesn't have to be in memory. Maybe zipstream?
+
+*   fix queuing of messages. They queue objects but should queue strings.?.
+*   have server start __hft__ game.
+    *   have it mark that as not listable? (what's the point of the lists?)
+    *   make an install command
+    *   figure out what happens if disconnected
+
+*   Have SuperHappyFunTimes check that HappyFunTimes is running and request to run it. gray out install buttons
+    until it's running. Use game to run it?
+*   Sanatize msgs to native-msg-box
+*   Make sure SuperHappyFunTimes can be indexed.  enable meteor spiderable
+
+*   look into openframewords.cc's http://ofxaddons.com/ how it watches github tags
+*   switch port to something less likley to be in use. How about 8123 for now. We can register one later if we get users.
+*   refactor client side js so no requirejs needed? (though still supported)
+*   need to store LRU for games somewhere. ~/.happyfuntimes
+*   In installed version
+    *   Make page shows games, tab for gallery, tab for settings
+    *   settings
+        *   allow contollers to change games (so a bar can make it so people can't change games?), only
+            the person at the computer can.
+*   Main UX (/games.html)
+
+    *   Needs to have XBox/PS like UX. At a minimum
+        *   Show recently played games
+        *   Provide UI to find games
+            *   By alphabet
+            *   Search
+        *   Should be controllable from phone. (how do we handle 25 people trying to control it?)
+        *   gallery Tab/selection
+        *   Should we have a recently updated section?
+            *   For stress on servers maybe it should be like XBox/PS. Updates are only checked if
+                you launch the game?
+        *   Should have a 'new' and 'updated' feed from public db.
+
+*   package.json needs
+    *   "gameId"
+    *   "apiVersion"  min version needed. Use it in template
+        * api version should look up defaults?
+    *   "platforms"  array of platforms support
+    *   remove "useControllerTemplate". Make the default but maybe override?
+    *   remove "screenshot.png". Make the default
+    *   use name for gameId? no. Name is unsafe, any char, id is safe? Or could gen safe id.
+    *   if controller needs certain features? WebGL, getMedia, etc. Can tell if will run on phone
+*   jumpjump: reset coin on level reset.
 *   make games.html msgs show up even when scrolled down
 *   fix docs
 *   fix localhost replacement so it includes port
@@ -140,7 +481,7 @@
 
     It started off as just a simple library to relay messages between game and controllers.
     But, as I added more games I started wanted to share code on the controllers. Then
-    I got tired of typing long urls like http://localhost:8080/examples/boomboom/index.html
+    I got tired of typing long urls like http://localhost:18679/examples/boomboom/index.html
     so I added a menu for the controllers. Then I realized I didn't want people to choose
     games that weren't running so I made that menu hide game that weren't running.
     Then, I realized when I quit a game, the shared code would put up a "disconnected" message
@@ -202,9 +543,9 @@
 
             *   step 2, provide a web interface to do the same
 
-            *   step 3, add a store
+            *   step 3, add a gallery
 
-            Could have games.html show recently played, recently installed, link for store,
+            Could have games.html show recently played, recently installed, link for gallery,
             promoted games, ... (promoted games only works if using real net.)
 
         *   How about making hardware. For example an android stick with HFT pre-installed
@@ -393,6 +734,23 @@
     *   boomboom
     *   platformer (jumpjump)
     *   8way shooter (shootshoot)
+    *   octopie
+
+    *   Go Fish
+
+        Collect every pair of cards? There are 2 of each card. Walk aroudn the room and
+        exchange cards.
+
+        Need to know if I can do it.
+
+        Maybe you have to bump phones, then it says "paired with <name>". Then you can
+        ask "do you have any 4s?"  "Go fish!"  You each ask for a card, then it exchanges,
+        then it unpairs and you can't pair with the same person until you've paired with
+        someone else?
+
+        How can I make it social. I'd prefer if you can't cheat so you'd pick the card
+        on your screen you want to match. And it would tell you? Or maybe the other person
+        would have to answer but if they lie there's some penalty or something?
 
     *   Fist bump game
 
@@ -513,8 +871,219 @@
     so it can be used in C# in general
 
 Done
-----
+====
 
+*   install from front page goes to window. Remove it? No, fixed it.
+*   add link to shft on games.html
+*   add super alpha
+*   launch from shft to game isn't working
+*   fix test broadcast gameserver.js line 278
+
+    note sure what I was smoking. This looks fine
+
+*   fix unity dialog in games.html
+    *   use fixed CSS
+    *   make it exit unity game
+    *   make it dismiss if unity game exits
+*   make installing a game add in realtime
+*   Make upgrade game work?
+    *   merge files
+*   set x chmod for unity download
+*   check if more stuff can go in platformInfo
+*   have list show runtimeID and originalId
+*   make varnish cache the pages
+    *   can I verify
+    *   can I automate clearing the cache
+
+    Read up on meteor. You can't do this with meteor :(
+
+*   consider making HFT work with old games?
+    *    no, because I need to be able to update the templates as HFT adds to features. Old games won't do that.
+*   make --app-mode
+    *   make small splash "HappyFunTimes Running ..."
+    *   check if it's installed. (config exists), if not make it.
+*   Refactor gameInfo so it returns a runtimeInfo
+*   automate exporting unity
+*   fix game ping. move it lower level?
+
+    This is hilarious. I had Player, the server side object that
+    tracks the connection to a smartphone for a single player, have a
+    heartbeat ping because often
+    players would just stop playing on their phone by having their browser
+    go into the background. In such a case they aren't disconnected
+    from the server. So there's this idle player in the game waiting for
+    a networking message. Maybe "waiting" is the wrong word, rather it's
+    as though the player is making no input.
+
+    I wanted to remove those players so I have a heart beat. If no input
+    from the player comes in 5 seconds I ping the player. If no message
+    comes back in 1 second I kill the player because his browser is
+    likely no longer active.
+
+    So, I'm trying to ship. I test Unity. Then the unity game quits
+    the players are not disconnected. My (bad) intuition says "hmm,
+    the socket must not be getting disconnected by unity. I try
+    disconnected it manually using OnApplicationExit. No change. I figure
+    given that the C# websocket stuff I'm using is multi-threaded it
+    must be that it's not actually getting executed before the app quits.
+
+    Fine, I'll add a heartbeat to the game as well as the player. I
+    try refactoring the code to work and run into issues. Revert all
+    that and decide to implement it separately. Run into issues again
+    and revert all that.
+
+    I figure that my heartbeat should go at a lower level than it was.
+    I implement that. Spend 60-90 minutes debugging. It finally works.
+    I go back to my Unity sample and test again. Controllers
+    still don't get disconnected when the game exists even though
+    I know the ping is working.
+
+    I finally realise the issue has nothing to do with that. The issue
+    is there's a flag the game can pass `disconnectPlayersIfGameDisconnects`.
+    In JavaScript it has 3 values. `undefined` (the default), `true` and `false`.
+    Just a couple of days ago I added it to C#/Unity. It defaults to `false` in C#!
+    DOH!!!!
+
+    All that work adding a ping at a lower level had nothing to do with
+    anything. Well, let's hope that's better anyway :P
+
+
+
+*   back to the 'id' issues
+
+    so a dev has gameId="mygame". They want to test installing it from the store.
+    The store downloads it, installs it. There's now 2 games with gameId="myGame"
+
+    Solutions:
+
+    *   iOS/Android solution must change id. No exceptions.
+
+    *   I could try to change the name. ids installed by hft (in the gamesDir) get their normal id
+        games outside get prefixed or suffixed by (dev).
+
+        I could do this in readGameInfo. For running that would work except for unity. It would
+        break all building. On top of that it's not a generic solution. Maybe you want
+        multiple versions of the same game for testing.
+
+        I could prefix with the entire path? Then if you had more than one you'd get
+        multiple. This worked!
+
+*   make shft recover from hft stop/start
+*   add hft check which just checks the package.json in the current
+    folder
+*   make shft say "install" instead of "..checking.."
+*   make backup script for mongodb and live/program/client/assets
+*   make release script for hft-exe. Have it update shft/install using manage
+*   make shft/install check if you have hft running and if you need to upgrade.
+*   add "blurb" to entire thing.
+    *   package.json
+    *   manage
+    *   site
+*   refactor server.js so I we can call it from testing
+*   Move server/* to lib where appropriate
+    *   Need to make sure shft stuff still works
+*   CHOOSE THE PORT! Picked 18679 which is 0x48f7. 0x48 = ascii 'H' so its Hf7  7 = T in leet.
+*   add winston
+    *   manage
+    *   site
+    *   hft.net
+*   no websockets on shft
+*   Make HFT init config on --app-mode
+*   separate inmemfilecache into cache vs filecache
+*   Add Quit option
+*   make way to quit HFT from browser.
+*   Make HFT launch browser on --app-mode
+*   make hft exe launch in default browser but ask for chrome or firefox
+    *   osx
+    *   win
+    *   linux
+*   Make it if launched twice it doesn't mess up. (needs to launch browser reguardless but not run server)
+*   file bug with apple about canvas/photos.
+
+    The issue is as of iOS7 at least you can request an photo
+    in HTML with `<input type="file" accept="image/*" />` but you can't then actually
+    use that image beacuse iOS Safari's canvas implementation doesn't allow images that large.
+    In other words, I'd like to let the user take a picture, draw that picture into a smaller
+    canvas with something like `ctx.drawImage(photoImage, 0, 0, ctx.canvas.width, ctx.canvas.height)`
+    but that fails because Safari iOS canvas 2d implementation doesn't allow images the size
+    taken by the camera. Smaller sizes work fine. Here's hoping Apple will fix this (though given
+    no response on the bug I'm not hopeful).
+
+    https://bugs.webkit.org/show_bug.cgi?id=133570
+
+*   consider making server serve games flatter?
+
+    game would be served at
+
+    http://localhost:18679/name/
+
+    instead of
+
+    http://localhost:18679/games/name/
+
+    Is there a point?
+
+    One other idea, allow the game to exist else where
+    but run at http://localhost:18679/games/name
+
+    As it is games must exist inside hft. Should they
+    exist outside hft? Would allow non-hft games
+    to support hft easier?
+
+    This is basically done
+
+*   make hft insert controller.html
+*   implement simple in-memory file cache that checks if files are loaded
+    *   rather than check if a file has changed with stat, use events to check if files have changed.
+*   check that bower git: doesn't need to be https:/
+*   make games install anywhere and use ~./happyfuntimes/games.json
+*   make hft command line
+
+    hft should call into happyfuntimes some how. I guess it should be a 'dev' function?
+    Need to figure that out. I guess HappyFunTimes could write to ~/.happyfuntimes/config.json
+    which the localtion of Happyfuntimes, then HFT could use that.
+
+    *   hft add - adds to ~/.happyfuntimes/installed-games.json
+    *   hft remove - removes from ~/.happyfuntimes/installed-games.json
+    *   hft install - installs a game from the net.
+    *   hft init - make a new template for a controller (and optionally a game?)
+    *   htf build - inserts the template stuff into the game/controller? or maybe we should do that automatically
+
+*   Fix uses of IO that are result,err ot err,result
+*   when creating zip check names are ascii, not too long?, and no case sensitive duplicates
+*   make hft-cli have publish command. It looks at package.json, based on type
+    it checks various things can complains if wrong. Examples.
+
+    gameType: "html"
+
+        * update version (ask, allow no ask via cmd line (--auto), and skip (--no version))
+        * make release on github
+        * zip up entire folder
+        * update to github
+
+    gameType: "native"
+
+        * update version (ask, allow no ask via cmd line (--auto), and skip (--no version))
+        * check for platforms
+        * warn about missing platforms (ask?)
+        * update package.json if it doesn't match for missing platforms
+        * zip up release folders, one for each platform? Two one per platform and one for assets?
+        * upload releases to git
+
+*   Check failure on native-msg-box
+    in particular check if native parts don't run that we don't return OK or YES
+*   If game is installed button should say "Run"
+*   make all hft commands have --config so you can point to a different config.
+*   make hft-config configure config.js
+*   implement hft download <gameId>
+
+    dowloads and installs a game by id.
+
+*   on install add files that were written to installed list. on uninstall on delete those files?
+*   look up best practices for user:pass
+*   if --user=name has no colon prompt for password
+*   FIX GEAR ICON!!!
+*   fix hft init so it works from scratch. Add npm test!
 *   make gameviews template based so we can make disconnect behavior common
 
     - [x] boomboom
@@ -843,6 +1412,34 @@ Done
 
 Rejected
 --------
+
+*   look into nsis has the installer solution
+    *   windows only.
+*   Need to make installer creator for hft games
+
+    All this needs to do is unzip some files and run a script. Unfortunately
+    it also needs to work cross platform. By that speifically I mean someone
+    who makes a game on Mac needs to be able to make an installer for Windows
+    and someone who makes a game on Windows needs to be able to make an installer
+    for mac
+
+    Ideas:
+
+    *   Can use xar/mkbom for cross platform mac pkg creation
+    *   Windows can maybe use 7zip which is open source so maybe can compile on mac (I can dream)
+
+    Or, I could make the games install through HFT. Basically you'd need to have HFT running, you'd
+    click an "install me" link on the website, that would somehow trigger HFT to download a zip.
+
+    What I don't like about that is it *feels* less secure. It's not really less secure. Installing
+    anything on any machine is not secure. But, given you could install with a single click
+    and no permission escalation I'd be worried about bad games or bad code pretending to be games
+    etc.  Maybe I shouldn't worry about that? Does steam? Do indie game devs? We just all assume
+    they aren't being evil.
+
+    I could try to make sure only links from HFT can trigger an install. Could also put up a
+    "Are you sure you want to install?" message.
+
 
 *   switch to vertex shader based tilemaps.
 

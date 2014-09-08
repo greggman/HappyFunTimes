@@ -2,12 +2,12 @@ Making It Simple For Players To Get Started
 ===========================================
 
 Asking players to connect to a local network and then type in some obscure URL like
-`http://169.234.174.30:8080` is arguably too many steps.
+`http://169.234.174.30:18679` is arguably too many steps.
 
 One solution. Use a QR code. Unfortunately iOS doesn't have a built in reader.
 
 Another solution. Use a URL shortener. Not sure if `http://goo.gl/D3BfG4` is better or
-worse than `http://169.234.174.30:8080`
+worse than `http://169.234.174.30:18679`
 
 I've come up with 2 solutions so far.
 

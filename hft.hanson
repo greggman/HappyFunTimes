@@ -1,0 +1,57 @@
+{
+  hftDefaults: {
+    useTemplate: {
+      "controller": true,
+    },
+    screenshotUrl: "screenshot.png",
+  },
+
+  hftGameTypeDefaults: {
+    html: {
+      useTemplate: {
+        "game": true,
+      },
+      gameUrl: "gameview.html",
+    },
+    Unity3D: {
+      gameExecutable: "unitygame",
+    },
+  },
+
+  apiVersionSettings: {
+    "0.0.0-unsupportedApiVersion": {
+      templates: {
+        controller: "templates/unsupportedApiVersion/controller.index.html",
+        game: "templates/unsupportedApiVersion/game.gameview.html",
+      },
+    },
+    "0.0.1": {
+      templates: {
+        controller: "templates/0.x.x/controller.index.html",
+        game: "templates/0.x.x/game.gameview.html",
+      },
+    },
+    "1.0.0": {
+      templates: {
+        controller: "templates/0.x.x/controller.index.html",
+        game: "templates/0.x.x/game.gameview.html",
+      },
+    },
+  },
+
+  settings: {
+    // The default port. Note, lots of places have this hardcoded :(
+    port: 18679,
+
+    // The URL for the rendezvous server
+    rendezvousUrl: "http://happyfuntimes.net/api/inform",
+
+    // The URL for the games API.
+    gamesUrl: "http://api.superhappyfuntimes.net/hftapi/v0/games",
+
+    // The URL to add games to superhappyfuntimes.
+    manageEndpoint: "http://manage.superhappyfuntimes.net/api/v0/updateGame",
+  },
+}
+
+

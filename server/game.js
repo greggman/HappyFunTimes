@@ -31,7 +31,13 @@
 
 "use strict";
 
-var debug = require('debug')('Game');
+var debug        = require('debug')('Game');
+var hftSite      = require('./hftsite');
+
+/**
+ * @typedef {object} Game~Options
+ * @property {string} baseUrl the base url used to make urls
+ */
 
 /**
  * Represents one game running through the relaysever.
@@ -41,13 +47,17 @@ var debug = require('debug')('Game');
  * @param {string} gameId id of game
  * @param {!RelayServer} relayServer relaysever managing
  *        communication for this game.
+ * @param {Game~Options} options
  */
-var Game = function(gameId, relayServer) {
+var Game = function(gameId, relayServer, options) {
+  options = options || {};
   this.gameId = gameId;
   this.relayServer = relayServer;
   this.players = {};
   this.numPlayers = 0;
   this.sendQueue = [];
+  this.options = options;
+  this.controllerUrl = options.baseUrl + "/games/" + gameId + "/index.html";
 };
 
 /**
@@ -125,6 +135,9 @@ Game.prototype.send = function(owner, msg) {
     } catch (e) {
       // This happens if the game disconnects where there are messages to send?
       console.warn("Attempt to send message to game failed: " + e.toString());
+      if (e.stack) {
+        console.warn(e.stack);
+      }
     }
   } else {
     this.sendQueue.push({owner: owner, msg: msg});
@@ -146,9 +159,9 @@ Game.prototype.forEachPlayer = function(fn) {
 
 /**
  * @typedef {Object} Game~GameOptions
- * @property {string} gameId id of game (not used here
- * @property {string} controllerUrl url of controller.
- * @property {boolean} disconnectPlayersOnGameDisconnects.
+ * @property {string} gameId id of game (not used here)
+ * @property {string?} controllerUrl url of controller(not used)
+ * @property {boolean} disconnectPlayersIfGameDisconnects.
  *           Default = true.
  */
 
@@ -162,12 +175,17 @@ Game.prototype.forEachPlayer = function(fn) {
  *        includes
  */
 Game.prototype.assignClient = function(client, relayserver, data) {
+  hftSite.inform();
   if (this.client) {
     console.error("this game already has a client!");
   }
   this.client = client;
-  this.controllerUrl = data.controllerUrl;
+//  if (data.controllerUrl) {
+//    this.controllerUrl = data.controllerUrl.replace(/http:\/\/localhost(?:\:\d+)*/, this.options.baseUrl);
+//  }
+
   this.disconnectPlayersIfGameDisconnects = data.disconnectPlayersIfGameDisconnects === undefined ? true : data.disconnectPlayersIfGameDisconnects;
+  this.showInList = data.showInList;
 
   var sendMessageToPlayer = function(id, message) {
     var player = this.players[id];
@@ -202,6 +220,9 @@ Game.prototype.assignClient = function(client, relayserver, data) {
   }.bind(this);
 
   var onDisconnect = function() {
+    if (this.client) {
+      this.client.close();
+    }
     this.client = undefined;
     if (this.disconnectPlayersIfGameDisconnects) {
       this.relayServer.removeGame(this.gameId);
@@ -232,6 +253,14 @@ Game.prototype.assignClient = function(client, relayserver, data) {
     this.client.send(msg.msg);
   }.bind(this));
   this.sendQueue = [];
+};
+
+Game.prototype.sendSystemCmd_ = function(cmd, data) {
+  this.send(null, {cmd: "system", data: {cmd: cmd, id: -1, data: data}});
+};
+
+Game.prototype.sendQuit = function() {
+  this.sendSystemCmd_('exit', {});
 };
 
 module.exports = Game;

@@ -1,4 +1,6 @@
 node_modules
+public/games
+public/examples
 .DS_Store
 *~
 *.swp

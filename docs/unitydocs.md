@@ -21,6 +21,7 @@ Installation
 7.  Copy Unity3d/Examples to Assets/Scripts/HappyFunTimes
 8.  Open the scene Unity3D/Examples/Scenes/HappyFunTimesCharacterExample
 9.  Pick Edit->Project Settings->Player and check "Run in Background"
+10. Build Settings window (File > Build Settings) go to Player Settings. Then in the Inspector, change Display Resolution Dialog to Disabled.
 
 Note: These instructions include the sample projects. If all you want is
 the minimum required to do your own thing with HappyFunTimes skip steps #3, #7, and #8
@@ -36,9 +37,7 @@ Integration with your app
 `GameServer`
 
 In some MonoBehaviour (in other words, Add a Script Component), make `GameServer` and
-call init. You can pass init an optional websocket URL. The default is "ws://localhost:8080"
-which means it assume the relayserver us running on the same machine as the game and
-is running on the default port.
+call init.
 
     GameServer.Options options = new GameServer.Options();
     options.gameId = "simple";

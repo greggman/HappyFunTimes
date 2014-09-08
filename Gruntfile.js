@@ -8,25 +8,25 @@ module.exports = function(grunt) {
         src: ['server/*.js'],
         options: {
           destination: 'docs/relayserver',
+          configure: 'jsdoc.conf.json',
+          template: 'node_modules/ink-docstrap/template',
         },
       },
       game: {
-        src: ['public/scripts/*.js'],
+        src: [
+          'public/hft/0.0.0/scripts/*.js',
+          'public/hft/0.0.0/scripts/misc/*.js',
+        ],
         options: {
           destination: 'docs/hft',
-        },
-      },
-      controller: {
-        src: ['public/examples/scripts/*.js'],
-        options: {
-          destination: 'docs/misc',
+          configure: 'jsdoc.conf.json',
+          template: 'node_modules/ink-docstrap/template',
         },
       },
     },
     clean: [
         'docs/relayserver',
-        'docs/game',
-        'docs/controller',
+        'docs/hft',
     ],
   });
 

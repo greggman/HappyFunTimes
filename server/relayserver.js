@@ -31,11 +31,15 @@
 
 "use strict";
 
-var sys = require('sys');
-var debug = require('debug')('relayserver');
-var Game = require('./game');
-var Player = require('./player');
-var WSServer = require('./websocketserver');
+var computerName = require('../lib/computername');
+var debug        = require('debug')('relayserver');
+var events       = require('events');
+var Game         = require('./game');
+var gamedb       = require('../lib/gamedb');
+var gameInfo     = require('../lib/gameinfo');
+var path         = require('path');
+var Player       = require('./player');
+var WSServer     = require('./websocketserver');
 
 /**
  * RelayServer options
@@ -73,6 +77,12 @@ var RelayServer = function(servers, options) {
   var g_nextSessionId = 1;
   var g_games = {};
   var g_numGames = 0;
+  var socketServers = [];
+  var eventEmitter = new events.EventEmitter();
+
+  this.on = eventEmitter.on.bind(eventEmitter);
+  this.addListener = this.on;
+  this.removeListener = eventEmitter.removeListener.bind(eventEmitter);
 
   // --- messages to relay server ---
   //
@@ -117,13 +127,22 @@ var RelayServer = function(servers, options) {
     }
     var game = g_games[gameId];
     if (!game) {
-      game = new Game(gameId, this);
+      game = new Game(gameId, this, { baseUrl: options.baseUrl });
       g_games[gameId] = game;
       ++g_numGames;
       debug("added game: " + gameId + ", num games = " + g_numGames);
     }
     return game;
   }.bind(this);
+
+  /**
+   * Gets a game by id.
+   * @param {string} gameId id of game
+   * @return {Game?} Game for game.
+   */
+  this.getGameById = function(gameId) {
+    return g_games[gameId];
+  };
 
   /**
    * Gets an array of game currently running.
@@ -134,11 +153,13 @@ var RelayServer = function(servers, options) {
     var gameList = [];
     for (var id in g_games) {
       var game = g_games[id];
-      if (game.hasClient()) {
+      if (game.hasClient() && game.showInList !== false) {
         gameList.push({
           gameId: id,
+          machine: computerName.get(),
           numPlayers: game.getNumPlayers(),
           controllerUrl: game.controllerUrl,
+          runtimeInfo: gamedb.getGameById(id),
         });
       }
     }
@@ -153,6 +174,7 @@ var RelayServer = function(servers, options) {
    * @returns {Game} game that player was added to
    */
   this.addPlayerToGame = function(player, gameId) {
+    debug("adding player to game: " + gameId);
     var game = getGame(gameId);
     game.addPlayer(player);
     return game;
@@ -170,6 +192,7 @@ var RelayServer = function(servers, options) {
     }
     --g_numGames;
     debug("removed game: " + gameId + ", num games = " + g_numGames);
+    eventEmitter.emit('gameExited', {gameId: gameId});
     delete g_games[gameId];
   }.bind(this);
 
@@ -180,10 +203,21 @@ var RelayServer = function(servers, options) {
    * @param {Client} client Websocket client object.
    */
   this.assignAsClientForGame = function(data, client) {
-    var game = getGame(data.gameId);
-    if (data.controllerUrl && options.address) {
-      data.controllerUrl = data.controllerUrl.replace("localhost", options.address);
+    var gameId = data.gameId;
+    var cwd = data.cwd;
+    if (cwd) {
+      // Not clear where this belongs. Unity can be in bin
+      // so should we fix it in unity or here? Seems like
+      // here since Unity isn't aware. It's HFT that specifies
+      // the 'bin' convension
+      if (path.basename(cwd) == "bin") {
+        cwd = path.dirname(cwd);
+      }
+      gameId = gameInfo.makeRuntimeGameId(gameId, cwd);
     }
+    debug("starting game: " + gameId);
+    eventEmitter.emit('gameStarted', {gameId: gameId});
+    var game = getGame(gameId);
     game.assignClient(client, this, data);
   }.bind(this);
 
@@ -191,12 +225,22 @@ var RelayServer = function(servers, options) {
     var server = servers[ii];
     //var io = new SocketIOServer(server);
     var io = new WSServer(server);
+    socketServers.push(io);
 
-    io.on('connection', function(client){
+    io.on('connection', function(client) {
         new Player(client, this, ++g_nextSessionId);
     }.bind(this));
   }
 
+  /**
+   * Close the relayserver
+   * @todo make it no-op after it's closed?
+   */
+  this.close = function() {
+    socketServers.forEach(function(server) {
+      server.close();
+    });
+  }.bind(this);
 };
 
 module.exports = RelayServer;

@@ -31,7 +31,7 @@
 
 "use strict";
 
-var debug = require('debug')('player');
+var debug        = require('debug')('player');
 
 /**
  * A Player in a game.
@@ -47,32 +47,8 @@ var Player = function(client, relayServer, id) {
   this.client = client;
   this.relayServer = relayServer;
   this.id = id;
-  this.intervalId;
-  this.timeout = 5; // 5 seconds
-  this.timeoutCheckInterval = 2; // check every 2 seconds
-  this.waitingForPing = false;
 
-  var getTime = function() {
-    return Date.now() * 0.001;
-  };
-
-  var checkTimeout = function() {
-    // How much time has passed since last message
-    var now = getTime();
-    var elapsedTime = getTime() - this.timeOfLastMessageFromPlayer;
-    if (elapsedTime >= this.timeout) {
-      if (this.waitingForPing) {
-        // No ping from player. Kill this
-        this.game.removePlayer(this);
-        this.disconnect();
-      } else {
-        // send ping
-        this.waitingForPing = true;
-        this.send({cmd: '__ping__'});
-      }
-    }
-  }.bind(this);
-  this.intervalId = setInterval(checkTimeout, this.timeoutCheckInterval * 1000);
+  debug("" + id + ": start player");
 
   var addPlayerToGame = function(data) {
     var game = this.relayServer.addPlayerToGame(this, data.gameId);
@@ -80,14 +56,12 @@ var Player = function(client, relayServer, id) {
   }.bind(this);
 
   var assignAsServerForGame = function(data) {
-    // Seems like player should stop existing at this point?
-    //this.client('onmessage', undefined);
-    //this.client('ondisconnect', undefined);
+    this.client.on('message', undefined);
+    this.client.on('disconnect', undefined);
     this.relayServer.assignAsClientForGame(data, this.client);
   }.bind(this);
 
   var passMessageFromPlayerToGame = function(data) {
-    this.timeOfLastMessageFromPlayer = getTime();
     this.game.send(this, {
       cmd: 'update',
       id: this.id,
@@ -95,16 +69,10 @@ var Player = function(client, relayServer, id) {
     });
   }.bind(this);
 
-  var pingAcknowledged = function(data) {
-    this.timeOfLastMessageFromPlayer = getTime();
-    this.waitingForPing = false;
-  }.bind(this);
-
   var messageHandlers = {
     'join':   addPlayerToGame,
     'server': assignAsServerForGame,
     'update': passMessageFromPlayerToGame,
-    'pong':   pingAcknowledged,
   };
 
   var onMessage = function(message) {
@@ -137,7 +105,8 @@ Player.prototype.send = function(msg) {
   try {
     this.client.send(msg);
   } catch (e) {
-    console.error("error sending to client: " + e);
+    console.error("error sending to client");
+    console.error(e);
     console.error("disconnecting");
     this.disconnect();
   }
@@ -158,7 +127,6 @@ Player.prototype.sendToGame = function(msg) {
  * Disconnect this player. Drop their WebSocket connection.
  */
 Player.prototype.disconnect = function() {
-  clearInterval(this.intervalId);
   this.client.on('message', undefined);
   this.client.on('disconnect', undefined);
   this.client.close();

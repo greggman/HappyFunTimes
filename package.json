@@ -1,20 +1,48 @@
 {
   "name": "happyfuntimes",
   "description": "happyfuntimes framework",
-  "version": "0.0.2",
+  "version": "0.0.5",
   "private": true,
   "scripts": {
-    "test": "exit 0"
+    "test": "node node_modules/mocha/bin/mocha --recursive",
+    "start": "node start.js --app-mode"
   },
   "dependencies": {
+    "asks": "^1.0.2",
+    "cli-color": "^0.3.2",
     "debug": "0.7.4",
-    "minimist": "0.0.8",
+    "express": "^4.4.1",
+    "github": "git+https://github.com/greggman/node-github.git#46a5e454079d2e1ee6f378ade6aaef39bd64da93",
+    "hanson": "^1.1.1",
+    "iniparser": "^1.0.5",
+    "inmemfilecache": "0.0.5",
+    "jszip": "^2.3.0",
+    "launchpad": "^0.3.0",
+    "launchpadlite": "^0.3.5",
     "mime": "1.2.11",
-    "ws": "0.4.31",
-    "native-dns": "0.4.1"
+    "mkdirp": "^0.5.0",
+    "moxie-zip": "0.0.3",
+    "native-dns": "0.4.1",
+    "native-msg-box": "0.0.3",
+    "optionator": "^0.4.0",
+    "promise": "^5.0.0",
+    "requirejs": "^2.1.14",
+    "rest-url": "0.0.4",
+    "semver": "^2.3.1",
+    "sprintf-js": "0.0.7",
+    "tmp": "0.0.23",
+    "underscore": "^1.7.0",
+    "ws": "0.4.31"
   },
   "devDependencies": {
     "grunt": "^0.4.5",
     "grunt-contrib-clean": "^0.5.0"
+    "grunt-jsdoc": "^0.5.6",
+    "ink-docstrap": "^0.4.5",
+    "mocha": "^1.20.1",
+    "phantomjs": "^1.9.7-15",
+    "mocha-phantomjs": "^3.5.0",
+    "request": "^2.40.0",
+    "should": "^4.0.4"
   }
 }
