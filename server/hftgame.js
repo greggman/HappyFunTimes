@@ -151,7 +151,7 @@ HFTPlayer.prototype.handleGetAvailableGames = function(data) {
 
 HFTPlayer.prototype.download = function(gameId, upgrade) {
   var emitter = download(gameId, undefined, {
-    verbose: true,
+    //verbose: true,
     overwrite: upgrade,
   });
   var size = 0;
