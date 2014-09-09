@@ -1,14 +1,7 @@
 To Do
 =====
 
-Super Alpha
------------
-
-*   fix names in powpow?
-*   Make shft update-exe
-    *   runs hft-exe (or requires versions) (look into using vmware -- after alpha?)
-    *   posts to github
-    *   updates shft/install
+*   make publish upload package.info. Use that one in manage
 *   Check publising works.
 
     I think publishing checks the online package.json but it should be checking the local one?
@@ -19,17 +12,11 @@ Super Alpha
     upload that as a release file so I can download it? Would also have to upload screenshots
     and icon. I can then point to them?
 
-*   in app-mode, before launching browser, if we can't run server should we check that hft is already running?
-
-    or, maybe we should even do that before trying to run the server at all.
-
-*   Make shft live!
-    *   make registration server work
-    *   make minimal design
 
 After First Release
 -------------------
 
+*   fix names in powpow?
 *   make code send API version
 
     for HTML that might be hard because we don't know the API version until after
@@ -886,6 +873,17 @@ Runs Repo noid
 Done
 ====
 
+*   Make shft live!
+    *   make registration server work
+    *   make minimal design
+*   in app-mode, before launching browser, if we can't run server should we check that hft is already running?
+
+    or, maybe we should even do that before trying to run the server at all.
+
+*   Make shft update-exe
+    *   runs hft-exe (or requires versions) (look into using vmware -- after alpha?)
+    *   posts to github
+    *   updates shft/install
 *   install from front page goes to window. Remove it? No, fixed it.
 *   add link to shft on games.html
 *   add super alpha
