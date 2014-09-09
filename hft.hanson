@@ -31,7 +31,7 @@
         game: "templates/0.x.x/game.gameview.html",
       },
     },
-    "1.0.1": {
+    "1.1.0": {
       templates: {
         controller: "templates/0.x.x/controller.index.html",
         game: "templates/0.x.x/game.gameview.html",
