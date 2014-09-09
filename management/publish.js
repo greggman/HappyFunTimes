@@ -100,6 +100,13 @@ var publish = function(gamePath, options) {
       repoName = repoName.substring(0, repoName.length - 4);
     }
 
+    var stuffToDelete = [];
+    var cleanup = function() {
+      stuffToDelete.forEach(function(filePath) {
+        utils.deleteNoFail(filePath);
+      });
+    };
+
     var info = runtimeInfo.info;
     var hftInfo = info.happyFunTimes;
     var github = new GitHubApi({
@@ -208,6 +215,9 @@ var publish = function(gamePath, options) {
         export: true,
       });
     }).then(function(files) {
+      files.forEach(function(file) {
+        stuffToDelete.push(file.filename);
+      });
       filesToUpload = files;
       console.log("Upload:\n" + files.map(function(file) {
         return "    " + file.filename;
@@ -228,6 +238,7 @@ var publish = function(gamePath, options) {
       log("releaseInfo", releaseInfo);
       var promises = [];
       var results = [];
+      filesToUpload.push({filename: path.join(runtimeInfo.basePath, "package.json")});
       filesToUpload.forEach(function(file, ndx) {
         auth();
         promises.push(uploadAsset({
@@ -256,9 +267,11 @@ var publish = function(gamePath, options) {
       })
     }).then(function() {
       console.log(gameId + ": registered");
+      cleanup();
       fulfill();
     }).catch(function(err) {
       reject(err)
+      cleanup();
     });
   });
 };
