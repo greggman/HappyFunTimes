@@ -30,6 +30,18 @@ Super Alpha
 After First Release
 -------------------
 
+*   make code send API version
+
+    for HTML that might be hard because we don't know the API version until after
+    most of the code as loaded. We need to know what startup code to server
+    and we know that from the package.json
+
+    For Unity nothing happens until the game starts so we could at least check
+    and adjust? Should we complain if the package.json doesn't match? We need
+    it in the package.json so we can know before downloading if it's going
+    to work.  But, while developing you might forget? I guess it should at
+    least print a warning
+
 *   check that first installed game works
 *   when the last page disconnects from __hft__ shutdown?
 *   add purge request to manage gamedb for icon and screenshots
