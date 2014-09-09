@@ -36,15 +36,18 @@ requirejs(
   [ 'hft/gameclient',
     'hft/misc/misc',
     'hft/misc/strings',
+    './semver',
   ], function(
     GameClient,
     Misc,
-    Strings) {
+    Strings,
+    semver) {
 
   var $ = document.getElementById.bind(document);
   var g = {
     elementToShowOnDisconnect: $("disconnected"),
     gamesById: {},
+    hftData: {},
   };
 
   var handleCmdErrorMsg = function(data) {
@@ -68,6 +71,7 @@ requirejs(
   };
 
   var handleHFTInfo = function(data) {
+    g.hftData = data;
     $("versionnum").innerHTML = "v" + data.version;
   };
 
@@ -96,18 +100,14 @@ requirejs(
   var buttonIdSuffix = "-button";
 
   var templates = {};
-  var elements = document.querySelectorAll(".item-template");
-  for (var ii = 0; ii < elements.length; ++ii) {
-    var elem = elements[ii];
+  Array.prototype.forEach.call(document.querySelectorAll(".item-template"), function(elem) {
     templates[elem.id.toLowerCase().substr(0, elem.id.length - itemTemplateSuffix.length)] = elem.text;
-  };
+  });
 
   var hiddenMsgs = {};
-  var elements = document.querySelectorAll(".hidden-msg");
-  for (var ii = 0; ii < elements.length; ++ii) {
-    var elem = elements[ii];
+  Array.prototype.forEach.call(document.querySelectorAll(".hidden-msg"), function(elem) {
     hiddenMsgs[elem.id.toLowerCase().substr(0, elem.id.length - hiddenMsgSuffix.length)] = elem;
-  };
+  });
 
   var quitGame = function(gameId) {
     client.sendCmd('quitGame', {gameId: gameId});
@@ -117,105 +117,95 @@ requirejs(
     var html = [];
     var gamesById = {};
     g.gamesById = gamesById;
-    for (var ii = 0; ii < obj.length; ++ii) {
-      var runtimeInfo = obj[ii];
+    obj.forEach(function(runtimeInfo, ndx) {
       var gameInfo = runtimeInfo.info;
       var hftInfo = gameInfo.happyFunTimes;
       gamesById[hftInfo.gameId] = runtimeInfo;
       runtimeInfo.dev = (runtimeInfo.originalGameId != hftInfo.gameId) ? "(*)" : "";
-      runtimeInfo.count = ii;
-      var templateId = hftInfo.gameType.toLowerCase();
+      if (g.hftData.apiVersion) {
+        if (semver.gt(hftInfo.apiVersion, g.hftData.apiVersion)) {
+          runtimeInfo.needsUpgrade = true;
+        }
+      }
+      runtimeInfo.count = ndx;
+      var templateId = runtimeInfo.needsUpgrade ? "upgrade" : hftInfo.gameType.toLowerCase();
       var template = templates[templateId];
       if (!template) {
         console.error("missing template: " + templateId);
-        continue;
+        return;
       }
       html.push(Strings.replaceParams(template, runtimeInfo));
-    }
+    });
 
     gamemenu.innerHTML = html.join("");
 
     // change .msg-button elements to bring up message
-    var elements = document.querySelectorAll(".msg-button");
-    for (var ii = 0; ii < elements.length; ++ii) {
-      var elem = elements[ii];
-      var buttonId = elem.id;
-      var count = parseInt(buttonId.substr(0, buttonId.length - buttonIdSuffix.length));
-      var runtimeInfo = obj[count];
-      var gameInfo = runtimeInfo.info;
-      var hftInfo = gameInfo.happyFunTimes;
-      var gameType = hftInfo.gameType;
-      if (!gameType) {
-        console.warn("missing happyFunTimes.gameType in package.json")
-        continue;
-      }
-      var msgId = gameType.toLowerCase() + hiddenMsgSuffix;
-      var msgElement = $(msgId);
-      if (!msgElement) {
-        console.error("missing msg element: " + msgId);
-        continue;
-      }
-      elem.addEventListener('click', function(element) {
-        return function(e) {
-          e.preventDefault(true)
-          element.style.display = "block";
-        };
-      }(msgElement), false);
-      var cleanupFn = function() {
-        return function() {
-          element.style.display = "none";
-        };
-      }(msgElement);
-      msgElement.addEventListener('click', function(fn) {
-        return function(e) {
-          e.preventDefault(true);
-          fn();
-        }
-      }(cleanupFn), false);
-      gamesById[hftInfo.gameId].cleanupFn = cleanUpFn;
-    }
 
-    // change .launch-button elements to bring up message
-    var elements = document.querySelectorAll(".launch-button");
-    for (var ii = 0; ii < elements.length; ++ii) {
-      var elem = elements[ii];
-      var buttonId = elem.id;
-      var count = parseInt(buttonId.substr(0, buttonId.length - buttonIdSuffix.length));
-      var runtimeInfo = obj[count];
-      var gameInfo = runtimeInfo.info;
-      var hftInfo = gameInfo.happyFunTimes;
-      var gameType = hftInfo.gameType;
-      if (!gameType) {
-        console.warn("missing happyFunTimes.gameType in package.json")
-        continue;
-      }
-      var msgId = gameType.toLowerCase() + hiddenMsgSuffix;
-      var msgElement = $(msgId);
-      if (!msgElement) {
-        console.error("missing msg element: " + msgId);
-        continue;
-      }
-      elem.addEventListener('click', function(element, gameId) {
-        return function(e) {
-          e.preventDefault(true)
-          element.style.display = "block";
-          client.sendCmd('launch', {gameId: gameId});
-        };
-      }(msgElement, hftInfo.gameId), false);
-      var cleanupFn = function(element) {
-        return function() {
-          element.style.display = "none";
+    var forEachElementOnSelector = function(selector, fn) {
+      Array.prototype.forEach.call(document.querySelectorAll(selector), function(elem) {
+        var buttonId = elem.id;
+        var count = parseInt(buttonId.substr(0, buttonId.length - buttonIdSuffix.length));
+        var runtimeInfo = obj[count];
+        fn(elem, runtimeInfo);
+      });
+    };
+
+    var addOverlayMessgaeOnClickToSelector = function(selector, onDisplay, onHide) {
+      forEachElementOnSelector(selector, function(elem, runtimeInfo) {
+        var gameInfo = runtimeInfo.info;
+        var hftInfo = gameInfo.happyFunTimes;
+        var gameType = hftInfo.gameType;
+        if (!gameType) {
+          console.warn("missing happyFunTimes.gameType in package.json")
+          return;
         }
-      }(msgElement);
-      msgElement.addEventListener('click', function(fn, gameId) {
-        return function(e) {
-          e.preventDefault(true);
-          fn();
-          quitGame(gameId);
+        var msgId = (runtimeInfo.needsUpgrade ? "upgrade" : gameType.toLowerCase()) + hiddenMsgSuffix;
+        var msgElement = $(msgId);
+        if (!msgElement) {
+          console.error("missing msg element: " + msgId);
+          return;
         }
-      }(cleanupFn, hftInfo.gameId), false);
-      gamesById[hftInfo.gameId].cleanupFn = cleanupFn;
-    }
+        elem.addEventListener('click', function(element, runtimeInfo) {
+          return function(e) {
+            e.preventDefault(true)
+            element.style.display = "block";
+            onDisplay(element, runtimeInfo);
+          };
+        }(msgElement, runtimeInfo), false);
+        var cleanupFn = function(element) {
+          return function() {
+            element.style.display = "none";
+          };
+        }(msgElement);
+        msgElement.addEventListener('click', function(fn, element, runtimeInfo) {
+          return function(e) {
+            e.preventDefault(true);
+            fn();
+            onHide(element, runtimeInfo);
+          }
+        }(cleanupFn, msgElement, runtimeInfo), false);
+        gamesById[hftInfo.gameId].cleanupFn = cleanupFn;
+      });
+    };
+
+    var noop = function() { };
+
+    addOverlayMessgaeOnClickToSelector(".msg-button", noop, noop);
+
+    var launch = function(element, runtimeInfo) {
+      client.sendCmd('launch', {gameId: runtimeInfo.info.happyFunTimes.gameId});
+    };
+    var quit = function(element, runtmeInfo) {
+      quitGame(runtimeInfo.info.happyFunTimes.gameId);
+    };
+
+    addOverlayMessgaeOnClickToSelector(".launch-button", launch, quit);
+
+    forEachElementOnSelector(".upgrade-hft", function(elem, runtimeInfo) {
+      elem.addEventListener('click', function() {
+        window.location.href = "http://superhappyfuntimes.net/install";
+      });
+    });
 
     // If we started with a gameId param just launch it?
     // NOTE: this is kind of wonky. Seems like we should just go directly
