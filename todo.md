@@ -42,6 +42,7 @@ After First Release
     to work.  But, while developing you might forget? I guess it should at
     least print a warning
 
+*   make hft-exe write over old version? Should ask? --force?
 *   check that first installed game works
 *   when the last page disconnects from __hft__ shutdown?
 *   add purge request to manage gamedb for icon and screenshots
