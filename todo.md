@@ -1,18 +1,6 @@
 To Do
 =====
 
-*   make publish upload package.info. Use that one in manage
-*   Check publising works.
-
-    I think publishing checks the online package.json but it should be checking the local one?
-    Except that maybe that's not what it should do?
-
-    Issue is I zip up the local files which is fine. Those are the local state. But,
-    manage.shft looks at package.json that's not inside the zip. Maybe I should
-    upload that as a release file so I can download it? Would also have to upload screenshots
-    and icon. I can then point to them?
-
-
 After First Release
 -------------------
 
@@ -872,6 +860,19 @@ Runs Repo noid
 
 Done
 ====
+
+*   make publish upload package.info. Use that one in manage
+*   Check publising works.
+
+    I think publishing checks the online package.json but it should be checking the local one?
+    Except that maybe that's not what it should do?
+
+    Issue is I zip up the local files which is fine. Those are the local state. But,
+    manage.shft looks at package.json that's not inside the zip. Maybe I should
+    upload that as a release file so I can download it? Would also have to upload screenshots
+    and icon. I can then point to them?
+
+    Solution: Upload package.json to release.
 
 *   Make shft live!
     *   make registration server work
