@@ -4,11 +4,28 @@ To Do
 After First Release
 -------------------
 
+*   make HFT start with a overlay that explains how to play "users must be on same net, go to hft.net"
+
+    *   add option to hide it? ([x] show help on startup)
+
+*   make hft.net fail if there's no matching IP
+
+    right now it falls back to the first impl which as to scan. But scanning takes
+    forever and seems mostly pointless. Maybe I can make hft.net/scan or scan.hft.net
+    for those people who don't want hft to ping hft.net? Although using hft.net to
+    deliver the scanning code seems like the same thing so what's the point? Just
+    remove the scanning code.
+
+    When if fails it should effectively say
+
+    > are you sure you're on the same network? Connect your phone to the
+    > same network and click "try again".  help.
+
 *   fix names in powpow?
 *   make code send API version
 
     for HTML that might be hard because we don't know the API version until after
-    most of the code as loaded. We need to know what startup code to server
+    most of the code as loaded. We need to know what startup code to serve
     and we know that from the package.json
 
     For Unity nothing happens until the game starts so we could at least check
@@ -134,43 +151,49 @@ After First Release
     O   Linux
 *   how to migrate old happy fun times
 
-    copy to other folder
-    add .gitignore
-    git init
-    git add
-    git commit
-    edit package.json
-      only fields should be
-      "gameUrl": "gameview.html",
-      "screenshotUrl": "screenshot.png",
-      "gameType": "html",
-      "minPlayers": 2,
-      "category": "game"
-    copy a bower.json?
-    edit bower.json
-      "name"
-      "deps"
-      private: true // this is not itself a bower package
-    run `bower install`
-    make an icon.png/jpg/gif (64x64 or 128x128)
+    *   copy to other folder
+    *   add .gitignore
+    *   git init
+    *   git add
+    *   git commit
+    *   edit package.json
 
-    delete gameview.html // assuming you were using templating
-    delete index.html  // assuming you were using templating
-    edit all your scripts
+        only fields should be
 
-    define([ ])
-    requirejs([])
-    if you were referencing tdl as
-       '../../../3rdparty/tdl/???' -> '../bower_components/tdl/tdl/??
-       '../../../scripts' -> 'hft'
-       '../../scripts' -> '../bower_components/hft-utils/dist'
-       imageprocess -> imageutils
+            "gameUrl": "gameview.html",
+            "screenshotUrl": "screenshot.png",
+            "gameType": "html",
+            "minPlayers": 2,
+            "category": "game"
 
-    add README.md?
+    *   copy a bower.json?
+    *   edit bower.json
 
-    make repo on github
-    git remote add origin git@github.com:<githubname>/<reponame>.git
-    git push -u origin master
+           "name"
+           "deps"
+           private: true // this is not itself a bower package
+
+    *   run `bower install`
+    *   make an icon.png/jpg/gif (64x64 or 128x128)
+    *
+    *   delete gameview.html // assuming you were using templating
+    *   delete index.html  // assuming you were using templating
+    *   edit all your scripts
+
+            define([ ])
+            requirejs([])
+
+        if you were referencing tdl as
+
+            '../../../3rdparty/tdl/???' -> '../bower_components/tdl/tdl/??
+            '../../../scripts' -> 'hft'
+            '../../scripts' -> '../bower_components/hft-utils/dist'
+            imageprocess -> imageutils
+
+    *    add README.md?
+    *    make repo on github
+    *    git remote add origin git@github.com:<githubname>/<reponame>.git
+    *    git push -u origin master
 
 
 
