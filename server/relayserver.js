@@ -213,7 +213,14 @@ var RelayServer = function(servers, options) {
       if (path.basename(cwd) == "bin") {
         cwd = path.dirname(cwd);
       }
-      gameId = gameInfo.makeRuntimeGameId(gameId, cwd);
+      try {
+        var runtimeInfo = gameInfo.readGameInfo(path.join(cwd));
+        if (runtimeInfo) {
+          gameId = runtimeInfo.info.happyFunTimes.gameId;
+        }
+      } catch (e) {
+        gameId = gameInfo.makeRuntimeGameId(gameId, cwd);
+      }
     }
     debug("starting game: " + gameId);
     eventEmitter.emit('gameStarted', {gameId: gameId});
