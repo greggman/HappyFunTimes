@@ -52,6 +52,7 @@ var download = function(args) {
       dryRun: args['dryRun'],
       verbose: args['verbose'],
       gamesUrl: args['gamesUrl'],
+      overwrite: args['overwrite'],
     };
 
     var gameId = args._[1];
@@ -83,9 +84,10 @@ exports.usage = {
     "   hft download jumpjump",
   ],
   options: [
-    { option: "dst",      type: 'String',   description: "path to install to. If not supplied will be installed to default games folder", },
-    { option: "dry-run",  type: 'Boolean',  description: "don't write any files", },
-    { option: "games-url",type: 'String',   description: "get game info from url", },
+    { option: "dst",       type: 'String',   description: "path to install to. If not supplied will be installed to default games folder", },
+    { option: "dry-run",   type: 'Boolean',  description: "don't write any files", },
+    { option: "games-url", type: 'String',   description: "get game info from url", },
+    { option: 'overwrite', type: 'Boolean',  description: "overwrite if already installed"},
   ],
 };
 exports.cmd = download;

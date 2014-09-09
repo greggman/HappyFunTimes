@@ -73,6 +73,14 @@ var download = function(gameId, opt_destPath, options) {
   var apiurl = options.gamesUrl || config.getSettings().settings.gamesUrl;
   var url = apiurl + "/" + gameId;
   var releaseUrl;
+  var zipFilePath;
+
+  var cleanup = function() {
+    if (zipFilePath) {
+      utils.deleteNoFail(zipFilePath);
+    }
+  };
+
   setTimeout(function() {
     log("getting url:" + url);
     eventEmitter.emit('status', {status: "Getting Game Info"});
@@ -101,6 +109,7 @@ var download = function(gameId, opt_destPath, options) {
       // Yea, I know I probably shouldn't rely on the extension.
       return utils.getTempFilename({postfix: path.extname(releaseUrl)});
     }).then(function(destName) {
+      zipFilePath = destName;
       return new Promise(function(fulfill, reject) {
         eventEmitter.emit('status', {status: "Downloading Game..."});
         var downloadEmitter = downloadFile(releaseUrl, destName);
@@ -129,10 +138,12 @@ var download = function(gameId, opt_destPath, options) {
       }
       return Promise.resolve();
     }).then(function() {
+      cleanup();
       eventEmitter.emit('status', {status: "Finished"});
       eventEmitter.emit('end', {status: "Done"});
     }).catch(function(err) {
       console.error(err);
+      cleanup();
       eventEmitter.emit('error', err);
     });
   }, 0);
