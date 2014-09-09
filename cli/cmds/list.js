@@ -30,9 +30,11 @@
  */
 "use strict";
 
+var home    = require('../../lib/home');
 var path    = require('path');
 var Promise = require('promise');
 var sprintf = require('sprintf-js').sprintf;
+var strings = require('../../lib/strings');
 
 var list = function(args) {
   return new Promise(function(resolve, reject) {
@@ -43,14 +45,37 @@ var list = function(args) {
       console.log(JSON.stringify(gameList, undefined, "  "));
     } else {
       if (gameList.length > 0) {
-        var longestIdLength = gameList.reduce(function(previous, current) {
-          return Math.max(previous, current.originalGameId.length);
+        var longest = {
+          id: 0,
+          version: 7,
+          apiVersion: 3,
+        };
+        gameList.forEach(function(runtimeInfo) {
+          longest.id         = Math.max(longest.id        , runtimeInfo.originalGameId.length);
+          longest.version    = Math.max(longest.version   , runtimeInfo.info.version.length);
+          longest.apiVersion = Math.max(longest.apiVersion, runtimeInfo.info.happyFunTimes.apiVersion.length);
         }, 0);
+        var format = strings.replaceParams("%-%(id)ss  %3s  %%(version)ss  %%(apiVersion)ss  %s", longest);
+        console.log(sprintf(format,
+           "id",
+           "dev",
+           "version",
+           "api",
+           "path"));
+        console.log("------------------------------------------------------------------------------");
         console.log(gameList.map(function(game) {
-          return sprintf("id: %-" + (longestIdLength) + "s  dev: %s  path: %s",
+          var basePath = game.basePath;
+          if (process.platform.substring(0, 3).toLowerCase() != "win") {
+            if (strings.startsWith(basePath, home.homeDir)) {
+              basePath = basePath.replace(home.homeDir, "~");
+            }
+          }
+          return sprintf(format,
               game.originalGameId,
               game.originalGameId != game.info.happyFunTimes.gameId ? "*" : " ",
-              game.basePath);
+              game.info.version,
+              game.info.happyFunTimes.apiVersion,
+              basePath);
         }).join("\n"));
       } else {
         console.log("no games installed");
