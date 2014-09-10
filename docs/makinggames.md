@@ -38,6 +38,24 @@ I'm sorry there's so many steps. It's not as hard as it looks. Trust me.
 
 *   Install HappyFunTimes (http://superhappyfuntimes.net/install)
 
+    **IMPORTANT** You can **NOT** have 2 installations of happyFunTimes.
+
+    So, if you install above do NOT clone the happyfuntimes repo.
+
+    If you clone the repo do NOT install happyfuntimes with the installer.
+
+    Note: There is no reason to clone the repo AFAIK unless you want to
+    contribute to happyfuntimes itself. To making games installing
+    is fine.
+
+    If you accidentally install twice you'll need to delete the configuration
+    files because they'll be pointing to one installation.
+
+        OSX: ~/Library/Application Support/HappyFunTimes
+        Windows: /Users/<name>/AppData/Local/Greggman/HappyFunTimes or
+             or  /Users/<name>/AppData/Roaming/Greggman/HappyFunTimes
+        Linux: ~/.happyfuntimes
+
 *   Install [node.js](http://nodejs.org).
 
     I was using 0.10.29 (note: 0.10.31 has a bug. Don't use that version!)

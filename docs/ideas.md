@@ -17,6 +17,46 @@ or find stuff.
 So some random ideas I'd like to explore if I have time. Maybe they'll trigger some
 ideas for you
 
+*   Balance platforms with balls melodic.
+
+    Each player controls one platform they can place and rotate with their phone. Balls bounce off them,
+    Or rain producing sounds. Think elektroplancton
+
+*   Bucket brigade
+
+    Players have to pass things from player to player either on the big screen or on their own
+
+
+*   Given at least 4 players divide into groups.
+
+    Make up phone configuration in gamer. Tell users to arrange their phones.
+
+    Put a number on each phone and a diagram
+
+        +----+
+        |    |    +----+
+        | 1  +----+    |
+        |    |    | 3  |
+        +----+ 2  |    |
+             |    +----+
+             +----+
+
+    Then, players push a character from on phone to the next or flick a ball.
+    Teams that make the most laps win or points win
+
+*   Number the phones, have players stand in a circle by number.
+
+    Play some Kind of pass the ball game where the server passes things around
+    the circle and players have to forward them. Maybe like pong ?
+    Maybe with orientation ? Maybe catch with basket then throw?
+
+    If players stand I circle could let players target each other because can guess
+    where they are in relation to each other
+
+    Could limit to groups of ~12, split groups?
+
+*   Game that players lineup their screens to figure out code. Maybe color background by team/group
+
 
 *   Go Fish
 

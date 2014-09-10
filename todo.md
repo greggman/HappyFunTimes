@@ -20,12 +20,26 @@ To Do
     > are you sure you're on the same network? Connect your phone to the
     > same network and click "try again".  help.
 
+
+*   if hft is not running, have shft save a cookie if you choose a game to install.
+
+    when hft starts it can open an iframe to shft which will read the cookie and
+    trigger and install question
+
 *   genreate min/concat version of hft libs. Allow you to select that style in package.json
 
     so no requirejs
 
 *   make hft newgame make a folder, ask the gametype etc.?
 *   fix names in powpow?
+*   make shft tell you you need to upgrade hft
+*   Add 'what is this' to hft.net
+*   Add a support field, default to github issues
+*   make hft-exe write over old version? Should ask? --force?
+*   check that first installed game works
+*   add purge request to manage gamedb for icon and screenshots
+*   fix shft update-exe so username:password works
+*   make --export for make-release the default
 *   make code send API version
 
     for HTML that might be hard because we don't know the API version until after
@@ -38,14 +52,6 @@ To Do
     to work.  But, while developing you might forget? I guess it should at
     least print a warning
 
-*   make shft tell you you need to upgrade hft
-*   Add 'what is this' to hft.net
-*   Add a support field, default to github issues
-*   make hft-exe write over old version? Should ask? --force?
-*   check that first installed game works
-*   add purge request to manage gamedb for icon and screenshots
-*   fix shft update-exe so username:password works
-*   make --export for make-release the default
 *   if --dns
     *   require port 80, fail if we can't get it
     *   print 'need sudo' or figure out how to ask for permission
@@ -140,54 +146,6 @@ To Do
         15 people playing jumpjump at Joe's Bar in Maintown, MA
         17 people playing shootshoot at Big Burger in Anywhere, USA
         etc..
-
-*   how to migrate old happy fun times
-
-    *   copy to other folder
-    *   add .gitignore
-    *   git init
-    *   git add
-    *   git commit
-    *   edit package.json
-
-        only fields should be
-
-            "gameUrl": "gameview.html",
-            "screenshotUrl": "screenshot.png",
-            "gameType": "html",
-            "minPlayers": 2,
-            "category": "game"
-
-    *   copy a bower.json?
-    *   edit bower.json
-
-           "name"
-           "deps"
-           private: true // this is not itself a bower package
-
-    *   run `bower install`
-    *   make an icon.png/jpg/gif (64x64 or 128x128)
-    *
-    *   delete gameview.html // assuming you were using templating
-    *   delete index.html  // assuming you were using templating
-    *   edit all your scripts
-
-            define([ ])
-            requirejs([])
-
-        if you were referencing tdl as
-
-            '../../../3rdparty/tdl/???' -> '../bower_components/tdl/tdl/??
-            '../../../scripts' -> 'hft'
-            '../../scripts' -> '../bower_components/hft-utils/dist'
-            imageprocess -> imageutils
-
-    *    add README.md?
-    *    make repo on github
-    *    git remote add origin git@github.com:<githubname>/<reponame>.git
-    *    git push -u origin master
-
-
 
 Runs Repo noid
 *     *    *   hft-boomboom
@@ -563,9 +521,9 @@ Runs Repo noid
 
             You could serve the page that does that from htf.com or something like that.
 
-
-
-
+*   powpow
+    *   make controller say "control ghost ship"
+    *
 *   boomboom
     *   implement kick (comment in kickCrate in boomboomgame globals to make powerup appear, then implement in player.js)
     *   "Hurry!!!"
