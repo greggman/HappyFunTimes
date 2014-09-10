@@ -49,18 +49,21 @@ var list = function(args) {
           id: 0,
           version: 7,
           apiVersion: 3,
+          category: 8,
         };
         gameList.forEach(function(runtimeInfo) {
           longest.id         = Math.max(longest.id        , runtimeInfo.originalGameId.length);
           longest.version    = Math.max(longest.version   , runtimeInfo.info.version.length);
+          longest.category   = Math.max(longest.category  , runtimeInfo.info.happyFunTimes.category.length);
           longest.apiVersion = Math.max(longest.apiVersion, runtimeInfo.info.happyFunTimes.apiVersion.length);
         }, 0);
-        var format = strings.replaceParams("%-%(id)ss  %3s  %%(version)ss  %%(apiVersion)ss  %s", longest);
+        var format = strings.replaceParams("%-%(id)ss  %3s  %%(version)ss  %%(apiVersion)ss  %-%(category)ss %s", longest);
         console.log(sprintf(format,
            "id",
            "dev",
            "version",
            "api",
+           "category",
            "path"));
         console.log("------------------------------------------------------------------------------");
         console.log(gameList.map(function(game) {
@@ -75,6 +78,7 @@ var list = function(args) {
               game.originalGameId != game.info.happyFunTimes.gameId ? "*" : " ",
               game.info.version,
               game.info.happyFunTimes.apiVersion,
+              game.info.happyFunTimes.category,
               basePath);
         }).join("\n"));
       } else {
