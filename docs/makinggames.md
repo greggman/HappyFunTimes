@@ -45,8 +45,8 @@ I'm sorry there's so many steps. It's not as hard as it looks. Trust me.
     If you clone the repo do NOT install happyfuntimes with the installer.
 
     Note: There is no reason to clone the repo AFAIK unless you want to
-    contribute to happyfuntimes itself. To making games installing
-    is fine.
+    contribute to happyfuntimes itself. For making games installing
+    with the installer is fine.
 
     If you accidentally install twice you'll need to delete the configuration
     files because they'll be pointing to one installation.
@@ -55,6 +55,10 @@ I'm sorry there's so many steps. It's not as hard as it looks. Trust me.
         Windows: /Users/<name>/AppData/Local/Greggman/HappyFunTimes or
              or  /Users/<name>/AppData/Roaming/Greggman/HappyFunTimes
         Linux: ~/.happyfuntimes
+
+    After that either run happyfuntimes from the installer to make that
+    the installation or type `node start.js --app-mode` from the
+    cloned folder if you're using a cloned repo.
 
 *   Install [node.js](http://nodejs.org).
 
