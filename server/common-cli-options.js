@@ -32,9 +32,10 @@
 "use strict";
 
 exports.options = [
-    { option: 'port', alias: 'p', type: 'Int',        description: 'port. Default 18679'},
-    { option: 'dns',              type: 'Boolean',    description: 'enable dns server'},
-    { option: 'address',          type: 'String',     description: 'ip address for dns and controller url conversion'},
-    { option: 'app-mode',         type: 'Boolean',    description: 'run as an app'},
+  { option: 'port', alias: 'p', type: 'Int',        description: 'port. Default 18679'},
+  { option: 'dns',              type: 'Boolean',    description: 'enable dns server'},
+  { option: 'address',          type: 'String',     description: 'ip address for dns and controller url conversion'},
+  { option: 'app-mode',         type: 'Boolean',    description: 'run as an app'},
+  { option: 'show',             type: 'String',     description: 'html file to launch, default "games"'},
 ];
 

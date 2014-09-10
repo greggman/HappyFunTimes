@@ -136,8 +136,9 @@ var launchBrowser = function(err) {
   };
 
   var p;
-  if (args.appMode) {
-    p = browser.launch("http://localhost:" + server.getSettings().port + "/games.html", config.getConfig().preferredBrowser);
+  if (args.appMode || args.show) {
+    var name = args.show || "games";
+    p = browser.launch("http://localhost:" + server.getSettings().port + "/" + name + ".html", config.getConfig().preferredBrowser);
   } else {
     p = Promise.resolve();
   }
