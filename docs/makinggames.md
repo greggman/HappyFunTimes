@@ -6,17 +6,28 @@ Making games with HappyFunTimes
 *   **[Setting up for devlopment](#setting-up-for-development)**
 *   **[Running Games During Development](#running-games-during-development)**
 *   **[Writing Games](#writing-games)**
-*   **[Making the controller (phone part)](#making-the-controller)**
-*   **[requirejs](#requirejs)**
-*   **[controller.js](#controller-js)**
-*   **[Dealing with different phone sizes](#dealing-with-different-phone-sizes)**
+    *   **[Making the controller (phone part)](#making-the-controller)**
+    *   **[requirejs](#requirejs)**
+    *   **[controller.js](#controller-js)**
+    *   **[Dealing with different phone sizes](#dealing-with-different-phone-sizes)**
 *   **[Games in JavaScript](#making-a-game)**
-*   **[game.js](#game-js)**
-*   **[Handling Players](#handling-players)**
+    *   **[game.js](#game-js)**
+    *   **[Handling Players](#handling-players)**
 *   **[package.json](#packagejson)**
-*   **[Required Fields](#required-fields)**
+    *   **[Required Fields](#required-fields)**
 *   **[Other Languages](#other-languages)**
-*   **[hft commands](#hft-commands)**
+    *   **[hft commands](#hft-commands)**
+    *   **[hft add](#hft-add)
+    *   **[hft check](#hft-check)
+    *   **[hft download](#hft-download-gameId)
+    *   **[hft install](#hft-install-srcpath)
+    *   **[hft list](#hft-list)
+    *   **[hft make-release](#hft-make-release-dstpath)
+    *   **[hft publish](#hft-publish)
+    *   **[hft register](#hft-register)
+    *   **[hft remove](#hft-remove)
+    *   **[hft start](#hft-start)
+    *   **[hft uninstall](#hft-uninstall-gameid)
 *   **[Ideas](ideas.md)**
 *   **[Misc](#misc)**
 *   **[Future Features](future.md)**
@@ -525,7 +536,7 @@ A standard package.json looks like this
     *   `example` Not a game, not really meant to be played, just an example
     *   `demo` Not a game, something else like an exhibit, possibly not playable without more stuff
 
-##hft Commands
+## hft Commands
 
 `hft` is a command to help manage happyfuntimes for developers. For the basics typing `hft`
 will list all the commands. Typing `hft cmd --help` will list the help for a specific command.

@@ -6,12 +6,12 @@ Unity Docs for HappyFunTimes
 *   **[Unity by cloning an existing project](#unity-by-cloning-an-existing-project)**
 *   **[Unity from Scratch](#unity-from-scratch)**
 *   **[Making the Game](#making-the-game)**
-*   **[Spawning Player GameObjects](#spawning-player-gameobjects)**
-*   **[Getting Input From Phones](#getting-input-from-phones)**
-*   **[Sending messages to the Phone](#sending-messages-to-the-phone)**
+    *   **[Spawning Player GameObjects](#spawning-player-gameobjects)**
+    *   **[Getting Input From Phones](#getting-input-from-phones)**
+    *   **[Sending messages to the Phone](#sending-messages-to-the-phone)**
 *   **[Publishing](#publishing)**
-*   **[Testing](#testing)**
-*   **[Publish](#publish)**
+    *   **[Testing](#testing)**
+    *   **[Publish](#publish)**
 *   **[Ideas](ideas.md)**
 *   **[Future Features](future.md)**
 

@@ -1,7 +1,7 @@
 Migrating Older Games
 =====================
 
-*  [Migrating from 0.x.x to 1.x.x](#migrate-from-0xx-to-1xx)
+*   [Migrating from 0.x.x to 1.x.x](#migrate-from-0xx-to-1xx)
 
 ## Migrating from 0.x.x to 1.x.x
 
@@ -190,5 +190,9 @@ here are some of the steps you need to take.
         git push -u origin master
 
 If you can't get it to commit it github and send me a link. I'll try to fork it, fix it, and submit a pull request.
+
+Once it works you can publish it as well. [For html games see](makinggames.md#hft-publish).
+[For Unity3D games see](unitydocs.md#publishing).
+
 
 
