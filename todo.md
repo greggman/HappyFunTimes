@@ -1,20 +1,12 @@
 To Do
 =====
 
-After First Release
--------------------
-
-*   document unity3d
-*   document hft cmds
-*   genreate min/concat version of hft libs. Allow you to select that style in package.json
-
-    so no requirejs
-
-*   make hft init make a folder, ask the gametype etc.?
 *   make HFT start with a overlay that explains how to play "users must be on same net, go to hft.net"
 
     *   add option to hide it? ([x] show help on startup)
 
+*   publish unity plugin
+*   figure out why unitycharacterexample is not exiting when hft asks it to.
 *   make hft.net fail if there's no matching IP
 
     right now it falls back to the first impl which as to scan. But scanning takes
@@ -28,6 +20,11 @@ After First Release
     > are you sure you're on the same network? Connect your phone to the
     > same network and click "try again".  help.
 
+*   genreate min/concat version of hft libs. Allow you to select that style in package.json
+
+    so no requirejs
+
+*   make hft newgame make a folder, ask the gametype etc.?
 *   fix names in powpow?
 *   make code send API version
 
@@ -41,13 +38,18 @@ After First Release
     to work.  But, while developing you might forget? I guess it should at
     least print a warning
 
+*   make shft tell you you need to upgrade hft
+*   Add 'what is this' to hft.net
+*   Add a support field, default to github issues
 *   make hft-exe write over old version? Should ask? --force?
 *   check that first installed game works
-*   when the last page disconnects from __hft__ shutdown?
 *   add purge request to manage gamedb for icon and screenshots
 *   fix shft update-exe so username:password works
 *   make --export for make-release the default
-*   Add repo link to game screen on shft
+*   if --dns
+    *   require port 80, fail if we can't get it
+    *   print 'need sudo' or figure out how to ask for permission
+    *   show "setting up ... animated screen" because it takes time for /etc/resolve
 *   write unity docs
     *   UnityScript
     *   C#
@@ -56,7 +58,6 @@ After First Release
     *   Git
     *   Publish
     *   Test on Windows
-*   publish unity plugin
 *   support 2 factor for publish
     *   publish
     *   update-exe
@@ -100,9 +101,6 @@ After First Release
     If nothing else there are common things like handling disconnect, reconnect, and maybe
     handling quit as well as providing a common frame.
 
-*   make shft tell you you need to upgrade hft
-*   Add 'what is this' to hft.net
-*   Add a support field, default to github issues
 *   Figure out if it's possible to make HFT.net work on more networks
 
     HFT.net currently requires NAT based networks like home routers.
@@ -116,15 +114,7 @@ After First Release
 
 *   make install screen only show your OS. Link to "other versions"
 *   Add phantomjs based tests
-*   Make game check for valid HFT (I don't remember what this means)
-    *   do hft add
-    *   do hft install
-
-
-*   if --dns
-    *   require port 80, fail if we can't get it
-    *   print 'need sudo' or figure out how to ask for permission
-    *   show "setting up ... animated screen" because it takes time for /etc/resolve
+*   make a test game for unit tests
 *   when listing mulitple HFTs running behind the same public IP address include
     username and machine name?
 
@@ -142,9 +132,8 @@ After First Release
 *   Have browser check if it's the default for hft. If not suggest to make it the default for hft.
 *   add option the choose browser to launch?
 *   Add options to HFT
-*   Figure out how to get HFT on start screen
 *   make hft-exe update Info.plist version from hft version?
-*   Optionally allow games to advertize they are running.
+*   Optionally allow games to advertise they are running.
 
     Superhappyfuntimes can show games in your area. Think
 
@@ -152,10 +141,6 @@ After First Release
         17 people playing shootshoot at Big Burger in Anywhere, USA
         etc..
 
-*   Need to make installer for hft
-    *   Windows
-    *   Mac
-    O   Linux
 *   how to migrate old happy fun times
 
     *   copy to other folder
@@ -755,6 +740,17 @@ Runs Repo noid
 Done
 ====
 
+*   Need to make installer for hft
+    *   Windows
+    *   Mac
+    O   Linux
+*   Add repo link to game screen on shft
+*   when the last page disconnects from __hft__ shutdown?
+
+    I'm worried there are times when no game is connected. Also during dev
+
+*   document unity3d
+*   document hft cmds
 *   make publish upload package.info. Use that one in manage
 *   Check publising works.
 

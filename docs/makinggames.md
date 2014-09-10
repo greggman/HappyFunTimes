@@ -13,7 +13,7 @@ Making games with HappyFunTimes
 *   **[Games in JavaScript](#making-a-game)**
 *   **[game.js](#game-js)**
 *   **[Handling Players](#handling-players)**
-*   **[package.json](#package.json)**
+*   **[package.json](#packagejson)**
 *   **[Required Fields](#required-fields)**
 *   **[Other Languages](#other-languages)**
 *   **[hft commands](#hft-commands)**

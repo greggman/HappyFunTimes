@@ -13,6 +13,7 @@ HappyFunTimes
 *   [Example Descriptions](docs/examples.md)
 *   [Setting Up for Party or Installation](docs/network.md)
 *   [Notes](#notes)
+*   [Migrating from 0.x.x to 1.x.x](docs/migration.md#migrate-from-0xx-to-1xx)
 
 [![Build Status](https://travis-ci.org/greggman/HappyFunTimes.svg?branch=master)](https://travis-ci.org/greggman/HappyFunTimes)
 
