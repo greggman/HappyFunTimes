@@ -4,6 +4,13 @@ To Do
 After First Release
 -------------------
 
+*   document unity3d
+*   document hft cmds
+*   genreate min/concat version of hft libs. Allow you to select that style in package.json
+
+    so no requirejs
+
+*   make hft init make a folder, ask the gametype etc.?
 *   make HFT start with a overlay that explains how to play "users must be on same net, go to hft.net"
 
     *   add option to hide it? ([x] show help on startup)

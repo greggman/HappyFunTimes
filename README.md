@@ -1,7 +1,7 @@
 HappyFunTimes
 =============
 
-*   [Install](http://superhappyfuntimes.net/Install)
+*   [Install](http://superhappyfuntimes.net/install)
 *   [Home Page](http://greggman.github.io/HappyFunTimes/).
 *   [Developer Mailing List](https://groups.google.com/d/forum/hft-dev)
 *   [Blog](http://blog.happyfuntimes.net).
@@ -78,7 +78,7 @@ There's a Unity3D library if you'd like to make the game in Unity3D.
 
     Games create a `GameServer` object
 
-       var server = new GameServer({gameId: "myAwesomeGame"});
+       var server = new GameServer();
 
     From that point on anytime a player connects the GameServer will emit an event
     `playerconnect`
@@ -141,7 +141,7 @@ There's a Unity3D library if you'd like to make the game in Unity3D.
 
     On the phone we create a `GameClient`
 
-        var client = new GameClient({gameId: "myAwesomeGame"});
+        var client = new GameClient();
 
     Just like `NetPlayer` above we can listen for events.
 
@@ -194,7 +194,7 @@ events, installations, and things like that. In this mode, players connect
 to the WiFi specificaly setup to run HappyFunTimes. iOS devices will automatically
 find HappyFunTimes once connected to the WiFi, no other interaction required by the user.
 Android devices require the user to first connect to the WiFi and then go to any random
-url like `hft.com` or `h.com`
+url like `hft.com` or `h.com`.
 
 Making Games
 ------------
@@ -203,35 +203,10 @@ If you just want to play some games just [install it](http://superhappyfuntimes.
 
 If you want to develop games follow [these instructions](docs/makinggames.md)
 
-
-*   Install [node.js](http://nodejs.org). I was using 0.10.29
-*   Open a shell/terminal/command prompt
-*   cd into the root of the repo you cloned (eg. `cd HappyFunTimes`)
-*   type `npm install` which will install needed node modules locally
-*   type `node server/server.js` which will start the server.
-
-Open a browser window and go to `http://localhost:18679/games.html` and choose a game.
-In other window (preferably a window, not a tab), go to `http://localhost:18679`.
-
-If you have other computers or smartphones on the same network look up the ip address of
-the machine running the game (see `ifconfig` on OSX/Linux, the Network Preferneces on OSX,
-or `ipconfig` on Windows) then go to `http://ipaddress:18679` from those machines.
-For example on my home network it was `http://192.168.2.9:18679`
-
-You can simulate other machines joining the game by opening more windows
-or tabs in your browser.
-
-Note: There is no reason the machine running the relayserver needs to be the same as the
-machine running the game. Also, if the machine is accessable from the internet
-you don't need to be on the same network. Of course there will be far more lag over
-the internet or especially over cellular networks but depending on the type of game that
-might be ok.
-
 Unity Version
 -------------
 
 See [Unity Docs](docs/unitydocs.md)
-
 
 Making your own original game
 -----------------------------
@@ -244,39 +219,10 @@ Example Notes and tips
 Here's [a few notes on the provided examples](docs/examples.md) as well as [a few tips](docs/tips.md)
 that have come up while making the examples.
 
-Setting up for a Party
+Setting up for a Party or Installation
 -------------------------------------------
 
 See [Making It Simple For Players To Get Started](docs/network.md)
-
-Folder structure
-----------------
-
-    +-server   // code for node based relayserver
-    |
-    +-public   // the folder served by the relayserver
-    | |
-    | +-scripts  // The HappyFunTime JavaScript Library
-    | |
-    | +-3rdparty  // Various 3rdparty JavaScript libs
-    | |
-    | +-examples  // the examples
-    |   |
-    |   +-scripts  // libraries shared by some of the examples, not part of HappyFunTimes
-    |   |
-    |   +-<example> // each example
-    |     |
-    |     +-scripts  // scripts specific to this example
-    |     |
-    |     +-assets   // assets for the specific example
-    |
-    +-Unity3D  // Unity3D lib
-      |
-      +-Examples  // Unity3D examples
-      |
-      +-Extras    // Other files the examples need but that aren't part of HappyFunTimes
-      |
-      +-src       // The HappyFunTimes library for Unity3D
 
 Notes
 -----
