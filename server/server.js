@@ -38,17 +38,13 @@ var settingsOptionSpec = {
 var optionSpec = {
   options: [
     { option: 'help', alias: 'h', type: 'Boolean',    description: 'displays help'},
-    { option: 'port', alias: 'p', type: 'Int',        description: 'port. Default 18679'},
-    { option: 'dns',              type: 'Boolean',    description: 'enable dns server'},
-    { option: 'address',          type: 'String',     description: 'ip address for dns and controller url conversion'},
     { option: 'config-path',      type: 'String',     description: 'config path'},
     { option: 'settings-path',    type: 'String',     description: 'settings path'},
     { option: 'private-server',   type: 'Boolean',    description: 'do not inform happyfuntimes.net about this server. Users will not be able to use happyfuntimes.net to connect to your games'},
-    { option: 'app-mode',         type: 'Boolean',    description: 'run as an app'},
     { option: 'debug',            type: 'Boolean',    description: 'check more things'},
     { option: 'verbose',          type: 'Boolean',    description: 'print more stuff'},
     settingsOptionSpec,
-  ],
+  ].concat(require('./common-cli-options').options),
   helpStyle: {
     typeSeparator: '=',
     descriptionSeparator: ' : ',
