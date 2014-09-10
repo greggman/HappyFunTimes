@@ -2,22 +2,23 @@ Making games with HappyFunTimes
 ===============================
 
 ### Table of Contents
-**[Setting up for devlopment](#setting-up-for-development)**
-**[Running Games During Development](#running-games-during-development)**
-**[Writing Games](#writing-games)**
-**[Making the controller (phone part)](#making-the-controller)**
-**[requirejs](#requirejs)**
-**[controller.js](#controller-js)**
-**[Dealing with different phone sizes](#dealing-with-different-phone-sizes)**
-**[Games in JavaScript](#making-a-game)**
-**[game.js](#game-js)**
-**[Handling Players](#handling-players)**
-**[package.json](#package.json)**
-**[Required Fields](#required-fields)**
-**[Other Languages](#other-languages)**
-**[hft commands](#hft-commands)**
-**[Misc](#misc)**
-**[Future Features](future.md)**
+
+*   **[Setting up for devlopment](#setting-up-for-development)**
+*   **[Running Games During Development](#running-games-during-development)**
+*   **[Writing Games](#writing-games)**
+*   **[Making the controller (phone part)](#making-the-controller)**
+*   **[requirejs](#requirejs)**
+*   **[controller.js](#controller-js)**
+*   **[Dealing with different phone sizes](#dealing-with-different-phone-sizes)**
+*   **[Games in JavaScript](#making-a-game)**
+*   **[game.js](#game-js)**
+*   **[Handling Players](#handling-players)**
+*   **[package.json](#package.json)**
+*   **[Required Fields](#required-fields)**
+*   **[Other Languages](#other-languages)**
+*   **[hft commands](#hft-commands)**
+*   **[Misc](#misc)**
+*   **[Future Features](future.md)**
 
 I'm sorry there's so many steps. It's not as hard as it looks. Trust me.
 
