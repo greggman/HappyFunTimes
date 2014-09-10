@@ -26,6 +26,11 @@ To Do
     when hft starts it can open an iframe to shft which will read the cookie and
     trigger and install question
 
+*   add es6 support
+
+    *   make it so files with ".js6" get transpiled on the fly. Use cache so they
+        don't get transpiled more than once
+
 *   genreate min/concat version of hft libs. Allow you to select that style in package.json
 
     so no requirejs
