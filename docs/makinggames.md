@@ -17,6 +17,7 @@ Making games with HappyFunTimes
 *   **[Required Fields](#required-fields)**
 *   **[Other Languages](#other-languages)**
 *   **[hft commands](#hft-commands)**
+*   **[Ideas](ideas.md)**
 *   **[Misc](#misc)**
 *   **[Future Features](future.md)**
 

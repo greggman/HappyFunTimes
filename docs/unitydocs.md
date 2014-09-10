@@ -12,6 +12,7 @@ Unity Docs for HappyFunTimes
 *   **[Publishing](#publishing)**
 *   **[Testing](#testing)**
 *   **[Publish](#publish)**
+*   **[Ideas](ideas.md)**
 *   **[Future Features](future.md)**
 
 ### Unity by cloning an existing project

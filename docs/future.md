@@ -41,7 +41,7 @@ That means if the contoller is landscape and phone is portrait the controller
 will just show up funny. Up to now I've worked around this by using CSS
 to show a "Turn the phone" msg when held in the wrong orientation for the game.
 Unfortunately many people have their phone locked and so they rotate their phone
-and nothing happen. Some of them realize they have to unlock the orientation
+and nothing happens. Some of them realize they have to unlock the orientation
 but if I switched to rendering in a canvas I could just detect the orientation
 and render rotated 90 degrees and that problem would be solved. No need to unlock.
 

@@ -8,6 +8,7 @@ HappyFunTimes
 *   [Blog](http://blog.happyfuntimes.net)
 *   [Making Games](docs/makinggames.md)
 *   [Making Games in Unity3D](docs/unitydocs.md)
+*   [Inspiring Ideas for Games](docs/ideas.md)
 *   [Dev Tips](docs/tips.md)
 *   [Example Descriptions](docs/examples.md)
 *   [Setting Up for Party or Installation](docs/network.md)
