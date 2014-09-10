@@ -17,6 +17,7 @@ Making games with HappyFunTimes
 **[Other Languages](#other-languages)**
 **[hft commands](#hft-commands)**
 **[Misc](#misc)**
+**[Future Features](future.md)**
 
 I'm sorry there's so many steps. It's not as hard as it looks. Trust me.
 
@@ -54,7 +55,8 @@ I'm sorry there's so many steps. It's not as hard as it looks. Trust me.
 
 *   type `bower install` which will install needed node modules locally
 
-    This step is only needed for some games.
+    This step is only needed for some games. If there is no `bower.json`
+    in the folder you can skip this step.
 
 *   edit the `package.json` file and change the "gameId" to something unique.
 
@@ -562,7 +564,10 @@ will list all the commands. Typing `hft cmd --help` will list the help for a spe
    unity since this will launch unity to export your game.
 
    Note that your game must have a repo on github and the current folder must
-   be where you checked it out.
+   be where you checked it out. Be aware, once you register a game it is
+   **permanently** associated with the github repo from your current folder.
+   You can publish new versions of the game but they must come from the same
+   repo you first published from.
 
 ### `hft register`
 

@@ -1,10 +1,17 @@
 HappyFunTimes
 =============
 
-*   [Install](http://superhappyfuntimes.net/install)
-*   [Home Page](http://greggman.github.io/HappyFunTimes/).
+*   [Installer](http://superhappyfuntimes.net/install)
+*   [Playing Games](http://superhappyfuntimes.net/about)
+*   [Home Page](http://greggman.github.io/HappyFunTimes/)
 *   [Developer Mailing List](https://groups.google.com/d/forum/hft-dev)
-*   [Blog](http://blog.happyfuntimes.net).
+*   [Blog](http://blog.happyfuntimes.net)
+*   [Making Games](docs/makinggames.md)
+*   [Making Games in Unity3D](docs/unitydocs.md)
+*   [Dev Tips](docs/tips.md)
+*   [Example Descriptions](docs/examples.md)
+*   [Setting Up for Party or Installation](docs/network.md)
+*   [Notes](#notes)
 
 [![Build Status](https://travis-ci.org/greggman/HappyFunTimes.svg?branch=master)](https://travis-ci.org/greggman/HappyFunTimes)
 
@@ -174,8 +181,7 @@ There's a Unity3D library if you'd like to make the game in Unity3D.
     If online is false when the clock is created it will create a clock
     that returns the local time.
 
-Limitations
------------
+## Limitations
 
 The number of players that can connect to a game is limited by your networking
 equipment. With enough access points there's no limit to the number of player
@@ -195,34 +201,6 @@ to the WiFi specificaly setup to run HappyFunTimes. iOS devices will automatical
 find HappyFunTimes once connected to the WiFi, no other interaction required by the user.
 Android devices require the user to first connect to the WiFi and then go to any random
 url like `hft.com` or `h.com`.
-
-Making Games
-------------
-
-If you just want to play some games just [install it](http://superhappyfuntimes.net/install).
-
-If you want to develop games follow [these instructions](docs/makinggames.md)
-
-Unity Version
--------------
-
-See [Unity Docs](docs/unitydocs.md)
-
-Making your own original game
------------------------------
-
-[See Making Games](docs/makinggames.md)
-
-Example Notes and tips
-----------------------
-
-Here's [a few notes on the provided examples](docs/examples.md) as well as [a few tips](docs/tips.md)
-that have come up while making the examples.
-
-Setting up for a Party or Installation
--------------------------------------------
-
-See [Making It Simple For Players To Get Started](docs/network.md)
 
 Notes
 -----
