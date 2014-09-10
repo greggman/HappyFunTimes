@@ -30,7 +30,9 @@
  */
 "use strict";
 
+var buildInfo    = require('./build-info');
 var debug        = require('debug')('make');
+var exporter     = require('./exporter');
 var fs           = require('fs');
 var gameInfo     = require('../lib/gameinfo');
 var path         = require('path');
@@ -118,86 +120,16 @@ var makeUnity3d = function(runtimeInfo, gamePath, destFolder, options) {
   var hftInfo = runtimeInfo.info.happyFunTimes;
   var gameId = runtimeInfo.originalGameId;
 
-  var executeP = Promise.denodeify(utils.execute);
-
-  var makeExecPromise = function(id, cmd, args) {
-    return function() {
-      console.log("exporting for: " + id);
-      return executeP(cmd, args);
-      // TODO: add then to check log for success
-    }
-  };
-
-  var platforms = [
-    { platform: "Windows",
-      zipSuffix: "-win.zip",
-      binSuffix: "-win.exe",
-      dirSuffix: "-win_Data",
-      dateCheck: "-win.exe",
-      unityTarget: '-buildWindowsPlayer',
-    },
-    { platform: "Mac",
-      zipSuffix: "-osx.zip",
-      binSuffix: "-osx.app",
-      dirSuffix: "-osx.app",
-      dateCheck: "-osx.app/Contents/MacOS/%(gameId)s-osx",
-      unityTarget: '-buildOSXPlayer',
-    },
-    { platform: "Linux",
-      zipSuffix: "-linux.zip",
-      binSuffix: "-linux.x86",
-      dirSuffix: "-linux_Data",
-      dateCheck: "-linux.x86",
-      unityTarget: '-buildLinux32Player',
-    },
-  ];
-
   var promise;
   if (options.export) {
-    var binFolder = path.join(gamePath, "bin");
-    if (!fs.existsSync(binFolder)) {
-      fs.mkdir(binFolder);
-    }
-    promise = new Promise(function(resolve, reject) {
-      var exporterPath = options.exporterPath || platformInfo.exporterPath;
-      if (!fs.existsSync(exporterPath)) {
-        reject(new Error("could not find exporter at: " + exporterPath));
-      }
-
-      // /Applications/Unity/Unity.app/Contents/MacOS/Unity
-      //   -batchmode
-      //   -buildWindowsPlayer /Users/gregg/src/hft-unitycharacterexample/bin/unitycharacterexample-win.exe
-      //   -logFile $T/unity.log -projectPath /Users/gregg/src/hft-unitycharacterexample
-      //   -quit -nographics
-
-      var promises = [];
-      platforms.forEach(function(platInfo) {
-
-        var binPath = path.join(binFolder, gameId + (platInfo.binSuffix ? platInfo.binSuffix : ""));
-        var logPath = binPath + ".log";
-
-        promises.push(makeExecPromise(platInfo.platform, exporterPath, [
-          '-batchmode',
-          platInfo.unityTarget, binPath,
-          '-logFile', logPath,
-          '-projectPath', gamePath,
-          '-quit',
-          '-nographics',
-        ]));
-      });
-
-      promises.reduce(function(cur, next) {
-        return cur.then(next);
-      }, Promise.resolve()).then(function() {
-        resolve();
-      }, reject);
-    });
+    promise = exporter.exporter(runtimeInfo, { exporterPath: options.exporterPath });
   } else {
     promise = Promise.resolve();
   };
 
   return promise.then(function() {
     var platInfos = [];
+    var platforms = buildInfo.get().platforms;
     platforms.forEach(function(platform) {
       var missing = false;
       var binPath;
@@ -349,9 +281,13 @@ var make = function(gamePath, destFolder, options) {
 
   try {
     gameInfo.checkRequiredFiles(runtimeInfo, gamePath);
+    if (!fs.existsSync(destFolder)) {
+      fs.mkdirSync(destFolder);
+    }
   } catch (e) {
     return Promise.reject(new Error(e.toString()));
   }
+
 
   return maker(runtimeInfo, gamePath, destFolder, options);
 };
