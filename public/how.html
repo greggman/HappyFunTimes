@@ -35,19 +35,10 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0, maximum-scale=1, user-scalable=no, minimal-ui">
-  <title>HappyFunTimes Games</title>
+  <title>HappyFunTimes</title>
   <link rel="stylesheet" href="css/menu.css">
   <style>
   </style>
-  <script class="item-template" id="upgrade-item-template" type="not-javascript">
-<div class="game"><a class="upgrade-button" title="%(info.happyFunTimes.gameId)s" id="%(count)s-button"><div>%(dev)s%(info.name)s</div><img src="%(screenshotUrl)s" /></a><div class="upgrade-hft">Needs new HappyFunTimes</div></div>
-  </script>
-  <script class="item-template" id="unity3d-item-template" type="not-javascript">
-<div class="game"><a class="launch-button" title="%(info.happyFunTimes.gameId)s" id="%(count)s-button"><div>%(dev)s%(info.name)s</div><img src="%(screenshotUrl)s" /></a></div>
-  </script>
-  <script class="item-template" id="html-item-template" type="not-javascript">
-<div class="game"><a href="%(gameUrl)s" title="%(info.happyFunTimes.gameId)s" id="%(count)s-button"><div>%(dev)s%(info.name)s</div><img src="%(screenshotUrl)s" /></a></div>
-  </script>
 </head>
 <body>
 <div id="hft-icons">
@@ -56,15 +47,17 @@
     <div class="hft-icon" id="quit"><img src="/hft/assets/power-icon.svg"></div>
 </div>
 <h1><span id="versionnum"></span><span>HappyFunTimes<span id="version">super-alpha</span></span></h1>
-<h2><a href="http://superhappyfuntimes.net">visit superhappyfuntimes.net for more games</a></h2>
-<div id="gamemenu">
-</div>
-<div class="hidden-msg" id="unity3d-msg">
+<div class="unhidden-msg" target="games.html">
   <div>
     <div>
-      <p>Running Unity Game</p>
+      <p>How To Play</p>
+      <p>
+      All players must connect their phones to <span class="strong">
+      the same WiFi</span> as this computer then go to
+      <span class="strong">happyfuntimes.net</span>
+      </p>
       <blockquote>
-        <div class="button-like">Exit</div>
+        <div class="button-like">Got It!</div>
       </blockquote>
     </div>
   </div>

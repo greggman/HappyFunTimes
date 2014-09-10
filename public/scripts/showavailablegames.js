@@ -231,8 +231,19 @@ requirejs(
     }
   };
 
-  client.addEventListener('availableGames', handleAvailableGames);
-  client.sendCmd('getAvailableGames');
+  if (gamemenu) {
+    client.addEventListener('availableGames', handleAvailableGames);
+    client.sendCmd('getAvailableGames');
+  }
+
+  (function() {
+    var elem = document.querySelector(".unhidden-msg");
+    if (elem) {
+      elem.addEventListener('click', function() {
+        window.location.href = elem.getAttribute("target");
+      }, false);
+    }
+  }());
 });
 
 

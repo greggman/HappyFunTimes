@@ -116,16 +116,21 @@ h2 a:hover {
     justify-content: center;
     align-items: center;
 }
-.hidden-msg {
+.hidden-msg,
+.unhidden-msg {
     position: fixed;
     z-index: 10;
     left: 0px;
     top: 0px;
     width: 100%;
     height: 100%;
+}
+.hidden-msg {
     display: none;
 }
-.hidden-msg>div {
+
+.hidden-msg>div,
+.unhidden-msg>div {
     position: absolute;
     left: 0px;
     top: 0px;
@@ -146,11 +151,26 @@ h2 a:hover {
     align-content: center;
     align-items: center;
 }
-.hidden-msg>div>div {
+.hidden-msg>div>div,
+.unhidden-msg>div>div {
+    width: 80%;
     background-color: #68F;
     color: white;
     padding: 2em;
     border-radius: 2em;
+}
+.hidden-msg .strong,
+.unhidden-msg .strong {
+    color: #F44;
+    text-shadow:
+       -0.1em -0.1em 0 #000,
+        0.1em -0.1em 0 #000,
+       -0.1em  0.1em 0 #000,
+        0.1em  0.1em 0 #000,
+       -0.1em  0.0em 0 #000,
+        0.1em  0.0em 0 #000,
+        0.0em -0.1em 0 #000,
+        0.0em  0.1em 0 #000;
 }
 .button-like {
     text-align: center;
