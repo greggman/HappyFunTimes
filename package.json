@@ -1,7 +1,7 @@
 {
   "name": "happyfuntimes",
   "description": "happyfuntimes framework",
-  "version": "0.0.8",
+  "version": "0.0.9",
   "private": true,
   "scripts": {
     "test": "node node_modules/mocha/bin/mocha --recursive",
@@ -31,6 +31,7 @@
     "semver": "^2.3.1",
     "sprintf-js": "0.0.7",
     "tmp": "0.0.23",
+    "traceur": "0.0.61",
     "underscore": "^1.7.0",
     "ws": "0.4.31"
   },

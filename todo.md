@@ -1,26 +1,8 @@
 To Do
 =====
 
-*   make HFT start with a overlay that explains how to play "users must be on same net, go to hft.net"
-
-    *   add option to hide it? ([x] show help on startup)
-
 *   publish unity plugin
 *   figure out why unitycharacterexample is not exiting when hft asks it to.
-*   make hft.net fail if there's no matching IP
-
-    right now it falls back to the first impl which as to scan. But scanning takes
-    forever and seems mostly pointless. Maybe I can make hft.net/scan or scan.hft.net
-    for those people who don't want hft to ping hft.net? Although using hft.net to
-    deliver the scanning code seems like the same thing so what's the point? Just
-    remove the scanning code.
-
-    When if fails it should effectively say
-
-    > are you sure you're on the same network? Connect your phone to the
-    > same network and click "try again".  help.
-
-
 *   if hft is not running, have shft save a cookie if you choose a game to install.
 
     when hft starts it can open an iframe to shft which will read the cookie and
@@ -35,10 +17,10 @@ To Do
 
     so no requirejs
 
+*   make install dialog pop to top
 *   make hft newgame make a folder, ask the gametype etc.?
 *   fix names in powpow?
 *   make shft tell you you need to upgrade hft
-*   Add 'what is this' to hft.net
 *   Add a support field, default to github issues
 *   make hft-exe write over old version? Should ask? --force?
 *   check that first installed game works
@@ -143,6 +125,7 @@ To Do
 *   Have browser check if it's the default for hft. If not suggest to make it the default for hft.
 *   add option the choose browser to launch?
 *   Add options to HFT
+*   add option to hide it? ([x] show help on startup)
 *   make hft-exe update Info.plist version from hft version?
 *   Optionally allow games to advertise they are running.
 
@@ -703,6 +686,21 @@ Runs Repo noid
 Done
 ====
 
+*   Add 'what is this' to hft.net
+*   make hft.net fail if there's no matching IP
+
+    right now it falls back to the first impl which as to scan. But scanning takes
+    forever and seems mostly pointless. Maybe I can make hft.net/scan or scan.hft.net
+    for those people who don't want hft to ping hft.net? Although using hft.net to
+    deliver the scanning code seems like the same thing so what's the point? Just
+    remove the scanning code.
+
+    When if fails it should effectively say
+
+    > are you sure you're on the same network? Connect your phone to the
+    > same network and click "try again".  help.
+
+*   make HFT start with a overlay that explains how to play "users must be on same net, go to hft.net"
 *   Need to make installer for hft
     *   Windows
     *   Mac

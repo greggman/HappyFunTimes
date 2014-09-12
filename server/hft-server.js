@@ -38,6 +38,7 @@ var computerName              = require('../lib/computername');
 var config                    = require('../lib/config');
 var debug                     = require('debug')('realserver');
 var DNSServer                 = require('./dnsserver');
+var ES6Support                = require('./es6-support');
 var express                   = require('express');
 var fs                        = require('fs');
 var HFTGame                   = require('./hftgame');
@@ -53,6 +54,8 @@ var strings                   = require('../lib/strings');
 var sys                       = require('sys');
 var url                       = require('url');
 var util                      = require('util');
+
+mime.define({'application/javascript': ["js6"]});
 
 /**
  * @typedef {Object} HFTServer~Options
@@ -88,8 +91,10 @@ var HFTServer = function(options, startedCallback) {
     g[prop] = options[prop];
   });
 
+  var es6Support = new ES6Support();
+  var fileCache = new Cache({fileSystem: es6Support.fileSystem});
+
   var app = express();
-  var fileCache = new Cache();
   var relayServer;
 
   hftSite.setup(g);
@@ -299,6 +304,10 @@ var HFTServer = function(options, startedCallback) {
     var isTemplate = g.gameDB.getTemplateUrls().indexOf(filePath) >= 0;
     var isQuery = parsedUrl.query !== null;
     var isAnchor = parsedUrl.hash !== null;
+    if (es6Support.isES6(fullPath)) {
+      var mapFile = parsedUrl.pathname + ".map";
+      res.setHeader("X-SourceMap", mapFile);
+    }
     if (!isQuery && !isAnchor) {
       // Add "/" if it's a folder.
       if (!strings.endsWith(filePath, "/") && isFolder(fullPath)) {
@@ -373,6 +382,10 @@ var HFTServer = function(options, startedCallback) {
   addTemplateInsertedPath(app, /^\/games\/(.*?)\/index.html$/, "controller", "controller.html");
   addTemplateInsertedPath(app, /^\/games\/(.*?)\/gameview.html$/, "game", "game.html");
   app.get(/^\/games\/(.*?)\//, sendGameRequestedFile);
+  app.get(/^\/traceur-runtime.js$/, function(req, res) {
+    var fullPath = path.join(__dirname, "..", "node_modules", "traceur", "bin", "traceur-runtime.js");
+    sendRequestedFileFullPath(req, res, fullPath);
+  });
   app.get(/.*/, sendSystemRequestedFile);
   app.post(/.*/, handlePOST);
   app.options(/.*/, handleOPTIONS);
