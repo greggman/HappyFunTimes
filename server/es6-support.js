@@ -43,7 +43,13 @@ var strings = require('../lib/strings');
 var ES6Support = function(options) {
   options = options || {};
 
+  var enabled = true;
+
   var srcMaps = {};
+
+  this.enable = function(enable) {
+    enabled = enable;
+  }
 
   /**
    * @typedef {Object} Compile~Result
@@ -73,11 +79,11 @@ var ES6Support = function(options) {
   };
 
   var isES6 = function(filename) {
-    return path.extname(filename) == ".js6";
+    return enabled && path.extname(filename) == ".js6";
   };
 
   var isES6Map = function(filename) {
-    return strings.endsWith(filename, ".js6.map");
+    return enabled && strings.endsWith(filename, ".js6.map");
   };
 
   var getSrcMap = function(filename) {
@@ -117,6 +123,7 @@ var ES6Support = function(options) {
   }
 
   fileSystem.readFile = function() {
+    var enable = enabled; // save off the enabled flag.
     var args = Array.prototype.slice.call(arguments);
     var filename = args[0];
     var callback = args.pop();
@@ -134,7 +141,7 @@ var ES6Support = function(options) {
         callback(err);
       } else {
         try {
-          var content = translate(data, filename);
+          var content = enabled ? translate(data, filename) : data;
         } catch (e) {
           callback(e);
           return;

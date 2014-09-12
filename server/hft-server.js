@@ -236,10 +236,13 @@ var HFTServer = function(options, startedCallback) {
     res.end();
   };
 
-  var sendFileResponse = function(res, fullPath, opt_prepFn) {
+  var sendFileResponse = function(res, fullPath, opt_prepFn, runtimeInfo) {
     debug("path: " + fullPath);
     var mimeType = mime.lookup(fullPath);
     if (mimeType) {
+      // This is scary. If there's any async between here and
+      // the actual read we could get the wrong enable.
+      es6Support.enable(runtimeInfo ? runtimeInfo.features.es6 : true);
       fileCache.readFile(fullPath, function(err, data){
         if (err) {
           console.error("error: " + err + ": " + fullPath );
@@ -287,7 +290,7 @@ var HFTServer = function(options, startedCallback) {
     var parsedUrl = url.parse(req.url);
     var filePath = parsedUrl.pathname;
     var fullPath = path.normalize(path.join(runtimeInfo.basePath, filePath.substr(gamePrefixLength + gameId.length)));
-    sendRequestedFileFullPath(req, res, fullPath);
+    sendRequestedFileFullPath(req, res, fullPath, runtimeInfo);
   };
 
   // Send a file from the HFT system
@@ -298,13 +301,13 @@ var HFTServer = function(options, startedCallback) {
     sendRequestedFile(req, res);
   };
 
-  var sendRequestedFileFullPath = function(req, res, fullPath) {
+  var sendRequestedFileFullPath = function(req, res, fullPath, runtimeInfo) {
     var parsedUrl = url.parse(req.url);
     var filePath = parsedUrl.pathname;
     var isTemplate = g.gameDB.getTemplateUrls().indexOf(filePath) >= 0;
     var isQuery = parsedUrl.query !== null;
     var isAnchor = parsedUrl.hash !== null;
-    if (es6Support.isES6(fullPath)) {
+    if (runtimeInfo && runtimeInfo.features.es6 && es6Support.isES6(fullPath)) {
       var mapFile = parsedUrl.pathname + ".map";
       res.setHeader("X-SourceMap", mapFile);
     }
@@ -323,7 +326,7 @@ var HFTServer = function(options, startedCallback) {
         fullPath += "index.html";
       }
     }
-    sendFileResponse(res, fullPath, isTemplate ? templatify : undefined);
+    sendFileResponse(res, fullPath, isTemplate ? templatify : undefined, runtimeInfo);
   };
 
   var sendRequestedFile = function(req, res) {
