@@ -10,6 +10,7 @@ HappyFunTimes
 *   [Making Games in Unity3D](docs/unitydocs.md)
 *   [Inspiring Ideas for Games](docs/ideas.md)
 *   [Dev Tips](docs/tips.md)
+*   [API Versions](docs/api-versions.md)
 *   [Example Descriptions](docs/examples.md)
 *   [Setting Up for Party or Installation](docs/network.md)
 *   [Notes](#notes)
