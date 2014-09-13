@@ -31,42 +31,14 @@
 "use strict";
 
 var assert    = require('assert');
-var HFTServer = require('../../server/hft-server');
 var path      = require('path');
 var Promise   = require('promise');
 var request   = require('request');
 var should    = require('should');
+var testUtils = require('../../lib/test/test-utils');
 
 var g_configPath             = path.join(__dirname, "..", "testgames", "config.json");
 var g_installedGamesListPath = path.join(__dirname, "..", "testgames", "installed-games.json");
-
-var getP = function(url) {
-  return new Promise(function(fulfill, reject) {
-    request.get(url, function(err, res, body) {
-      if (err || res.statusCode != 200) {
-        reject(err || res.body.msg);
-      } else {
-        fulfill(res, body);
-      }
-    });
-  });
-};
-
-var createServer = function() {
-  return new Promise(function(resolve, reject) {
-    var server = new HFTServer({
-      port: 8087,
-      extraPorts: [],
-      privateServer: true,
-    }, function(err) {
-      if (err) {
-        reject(err);
-      } else {
-        resolve(server);
-      }
-    });
-  });
-};
 
 describe('server versions', function() {
 
@@ -81,7 +53,7 @@ describe('server versions', function() {
     var gamedb = require('../../lib/gamedb');
     gamedb.reset();
 
-    createServer().then(function(result) {
+    testUtils.createServer().then(function(result) {
       server = result;
       done();
     }).catch(function(err) {
@@ -102,13 +74,13 @@ describe('server versions', function() {
   describe('game needs new hft', function() {
 
     it('serves message: game needs new hft template', function(done) {
-      getP("http://localhost:8087/games/hft-testgame1/gameview.html").then(function(res) {
+      testUtils.getP("http://localhost:8087/games/hft-testgame1/gameview.html").then(function(res) {
         res.body.should.containEql("new version of HappyFunTimes");
       }).then(done, done);
     });
 
     it('serves message: controller needs new hft template', function(done) {
-      getP("http://localhost:8087/games/hft-testgame1/index.html").then(function(res) {
+      testUtils.getP("http://localhost:8087/games/hft-testgame1/index.html").then(function(res) {
         res.body.should.containEql("Please upgrade HappyFunTimes");
       }).then(done, done);
     });
@@ -117,12 +89,12 @@ describe('server versions', function() {
 
   describe('game v1.1.0', function() {
     it('game can not use v1.2.0 functions', function(done) {
-      getP("http://localhost:8087/games/hft-testgame-v1_1_0/gameview.html").then(function(res) {
+      testUtils.getP("http://localhost:8087/games/hft-testgame-v1_1_0/gameview.html").then(function(res) {
         res.body.should.not.containEql("traceur");
       }).then(done, done);
     });
     it('controller can not use v1.2.0 functions', function(done) {
-      getP("http://localhost:8087/games/hft-testgame-v1_1_0/index.html").then(function(res) {
+      testUtils.getP("http://localhost:8087/games/hft-testgame-v1_1_0/index.html").then(function(res) {
         res.body.should.not.containEql("traceur");
       }).then(done, done);
     });
@@ -130,22 +102,22 @@ describe('server versions', function() {
 
   describe('game v1.2.0', function() {
     it('game can use v1.2.0 functions', function(done) {
-      getP("http://localhost:8087/games/hft-testgame-v1_2_0/gameview.html").then(function(res) {
+      testUtils.getP("http://localhost:8087/games/hft-testgame-v1_2_0/gameview.html").then(function(res) {
         res.body.should.containEql("traceur-runtime.js");
       }).then(done, done);
     });
     it('controller can use v1.2.0 functions', function(done) {
-      getP("http://localhost:8087/games/hft-testgame-v1_2_0/index.html").then(function(res) {
+      testUtils.getP("http://localhost:8087/games/hft-testgame-v1_2_0/index.html").then(function(res) {
         res.body.should.containEql("traceur-runtime.js");
       }).then(done, done);
     });
     it('game can not use v1.3.0 functions', function(done) {
-      getP("http://localhost:8087/games/hft-testgame-v1_2_0-using-v1_3_0/gameview.html").then(function(res) {
+      testUtils.getP("http://localhost:8087/games/hft-testgame-v1_2_0-using-v1_3_0/gameview.html").then(function(res) {
         res.body.should.not.containEql("hft-min.js");
       }).then(done, done);
     });
     it('controller can not use v1.3.0 functions', function(done) {
-      getP("http://localhost:8087/games/hft-testgame-v1_2_0-using-v1_3_0/index.html").then(function(res) {
+      testUtils.getP("http://localhost:8087/games/hft-testgame-v1_2_0-using-v1_3_0/index.html").then(function(res) {
         res.body.should.not.containEql("hft-min.js");
       }).then(done, done);
     });
@@ -153,13 +125,13 @@ describe('server versions', function() {
 
   describe('game v1.3.0', function() {
     it('game can use v1.3.0 functions', function(done) {
-      getP("http://localhost:8087/games/hft-testgame-v1_3_0/gameview.html").then(function(res) {
+      testUtils.getP("http://localhost:8087/games/hft-testgame-v1_3_0/gameview.html").then(function(res) {
         res.body.should.containEql("traceur-runtime.js");
         res.body.should.containEql("hft-min.js");
       }).then(done, done);
     });
     it('controller can use v1.3.0 functions', function(done) {
-      getP("http://localhost:8087/games/hft-testgame-v1_3_0/index.html").then(function(res) {
+      testUtils.getP("http://localhost:8087/games/hft-testgame-v1_3_0/index.html").then(function(res) {
         res.body.should.containEql("traceur-runtime.js");
         res.body.should.containEql("hft-min.js");
       }).then(done, done);
