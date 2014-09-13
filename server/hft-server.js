@@ -397,13 +397,15 @@ var HFTServer = function(options, startedCallback) {
 
   addTemplateInsertedPath(app, /^\/games\/(.*?)\/index.html$/, "controller", "controller.html");
   addTemplateInsertedPath(app, /^\/games\/(.*?)\/gameview.html$/, "game", "game.html");
-  app.get(/^\/runtime-scripts\/traceur-runtime.js$/, function(req, res) {
+  app.get(/^\/games\/(.*?)\/runtime-scripts\/traceur-runtime.js$/, function(req, res) {
+    var gameId = req.params[0];
     var fullPath = path.join(__dirname, "..", "node_modules", "traceur", "bin", "traceur-runtime.js");
     sendRequestedFileFullPath(req, res, fullPath);
   });
   var nonPath = path.join(__dirname, "..", "temp", "non-require-v1.3.0.js");
   nonRequire.addPath(nonPath);
-  app.get(/^\/runtime-scripts\/hft-min.js$/, function(req, res) {
+  app.get(/^\/games\/(.*?)\/runtime-scripts\/hft-min.js$/, function(req, res) {
+    var gameId = req.params[0];
     sendRequestedFileFullPath(req, res, nonPath);
   });
   app.get(/^\/games\/(.*?)\//, sendGameRequestedFile);
