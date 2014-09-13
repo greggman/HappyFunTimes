@@ -36,7 +36,7 @@ var browser                   = require('../lib/browser');
 var Cache                     = require('inmemfilecache');
 var computerName              = require('../lib/computername');
 var config                    = require('../lib/config');
-var debug                     = require('debug')('realserver');
+var debug                     = require('debug')('hft-server');
 var DNSServer                 = require('./dnsserver');
 var ES6Support                = require('./es6-support');
 var express                   = require('express');
@@ -47,6 +47,7 @@ var highResClock              = require('../lib/highresclock');
 var http                      = require('http');
 var log                       = require('../lib/log');
 var mime                      = require('mime');
+var NonRequire                = require('./non-require');
 var path                      = require('path');
 var Promise                   = require('promise');
 var querystring               = require('querystring');
@@ -91,8 +92,11 @@ var HFTServer = function(options, startedCallback) {
     g[prop] = options[prop];
   });
 
-  var es6Support = new ES6Support();
+  var nonRequire = new NonRequire();
+  var es6Support = new ES6Support({fileSystem: nonRequire.fileSystem});
   var fileCache = new Cache({fileSystem: es6Support.fileSystem});
+//  var fileCache = new Cache({fileSystem: nonRequire.fileSystem});
+//  var fileCache = new Cache();
 
   var app = express();
   var relayServer;
@@ -336,9 +340,10 @@ var HFTServer = function(options, startedCallback) {
     sendRequestedFileFullPath(req, res, fullPath);
   };
 
-  var send404 = function(res) {
+  var send404 = function(res, msg) {
+    var msg = msg || ""
     res.writeHead(404);
-    res.write('404');
+    res.write('404<br/>' + msg);
     res.end();
   };
 
@@ -352,6 +357,14 @@ var HFTServer = function(options, startedCallback) {
     app.get(pathRegex, function(req, res) {
       var gameId = req.params[0];
       var runtimeInfo = g.gameDB.getGameById(gameId);
+      if (!runtimeInfo) {
+        var msg = [
+          "unknown gameId: " + gameId,
+          "have you run `hft add` for the game in " + path.dirname(contentPath),
+        ].join("\n");
+        console.error(msg);
+        return send404(res, msg);
+      }
       var gameInfo = runtimeInfo.info;
 
       if (!runtimeInfo.useTemplate[templateName]) {
@@ -384,11 +397,17 @@ var HFTServer = function(options, startedCallback) {
 
   addTemplateInsertedPath(app, /^\/games\/(.*?)\/index.html$/, "controller", "controller.html");
   addTemplateInsertedPath(app, /^\/games\/(.*?)\/gameview.html$/, "game", "game.html");
-  app.get(/^\/games\/(.*?)\//, sendGameRequestedFile);
-  app.get(/^\/traceur-runtime.js$/, function(req, res) {
+  app.get(/^\/runtime-scripts\/traceur-runtime.js$/, function(req, res) {
     var fullPath = path.join(__dirname, "..", "node_modules", "traceur", "bin", "traceur-runtime.js");
     sendRequestedFileFullPath(req, res, fullPath);
   });
+  var nonPath = path.join(__dirname, "..", "temp", "non-require-v1.3.0.js");
+  nonRequire.addPath(nonPath);
+  app.get(/^\/runtime-scripts\/hft-min.js$/, function(req, res) {
+    sendRequestedFileFullPath(req, res, nonPath);
+  });
+  app.get(/^\/games\/(.*?)\//, sendGameRequestedFile);
+
   app.get(/.*/, sendSystemRequestedFile);
   app.post(/.*/, handlePOST);
   app.options(/.*/, handleOPTIONS);

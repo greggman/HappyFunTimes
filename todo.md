@@ -39,6 +39,19 @@ To Do
     to work.  But, while developing you might forget? I guess it should at
     least print a warning
 
+*   refractor hft-server
+
+    like I'll ever have time to do this but it's kind of spaghetti. It might be possible
+    to refactor it to be more like express middleware where each handler has a (req, res, next)
+    where next is the next handler and you can chain them?
+
+    Maybe the cache should also move to the top of that chain? You'd basically want the
+    first handler to see if it's cached. If not next() all the other handlers and somehow
+    wrap `res` so you can capture the response.
+
+    Should probably look at other caches
+
+
 *   if --dns
     *   require port 80, fail if we can't get it
     *   print 'need sudo' or figure out how to ask for permission

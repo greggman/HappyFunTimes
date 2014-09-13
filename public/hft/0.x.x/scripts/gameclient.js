@@ -139,7 +139,7 @@ define(['./virtualsocket'], function(VirtualSocket) {
 
     var connect_ = function() {
       g_sendQueue = [];
-      g_socket = new VirtualSocket(options);
+      g_socket = options.socket || new VirtualSocket(options);
       g_socket.on('connect', connected_.bind(this));
       g_socket.on('message', processMessage_.bind(this));
       g_socket.on('disconnect', disconnected_.bind(this));

@@ -18,26 +18,29 @@ the correct version
 
 *   v1.1.0
 
-    Unity no longer needs a gameId in the code.
+    *   Unity no longer needs a gameId in the code.
 
 *   v1.2.0
 
-    Supports es6 features. This feature is not extensively
-    tested but, if you name a file ending in `.es6` happyFunTimes
-    will automatically transpile it into es5 at runtime
+    *   Supports es6 features. This feature is not extensively
+        tested but, if you name a file ending in `.es6` happyFunTimes
+        will automatically transpile it into es5 at runtime
 
-    So for example to use you might do
+        So for example to use you might do
 
-        requirejs([
-          './some-es5-file.js`,
-          './some-es6.file.js6`,
-        ], function(
-          SomeES6File,
-          SomeES6File) {
-          ..
-        });
+            requirejs([
+              './some-es5-file.js`,
+              './some-es6.file.js6`,
+            ], function(
+              SomeES6File,
+              SomeES6File) {
+              ..
+            });
 
-    Warning: es6 has not shipped yet which means the spec can
-    change. HappyFunTimes is using [google-traceur](https://github.com/google/traceur-compiler)
-    to supply this feature.
+        Warning: es6 has not shipped yet which means the spec can
+        change. HappyFunTimes is using [google-traceur](https://github.com/google/traceur-compiler)
+        to supply this feature.
+
+*   v1.3.0
+
 
