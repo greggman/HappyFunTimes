@@ -31,39 +31,59 @@
 "use strict";
 
 var debug = require('debug')('dns-server');
+var fs    = require('fs');
 
 // This DNS server just servers the same ip address for all domains.
 // options:
 //   address: ip address to report
 var DNSServer = function(options) {
   options = options || { };
-  var dns = require('native-dns');
-  var server = dns.createServer();
 
-  var port = 53;
+  var start = function() {
+    var dns = require('native-dns');
+    var server = dns.createServer();
 
-  var address = options.address;
+    var port = 53;
 
-  server.on('request', function (request, response) {
-    debug("response: " + address + " : " + request.question[0].name);
-    response.answer.push(dns.A({
-      name: request.question[0].name,
-      address: address,
-      ttl: 1,
-    }));
-    response.send();
-  });
+    var address = options.address;
 
-  server.on('error', function (err, buff, req, res) {
-    console.error(err);
-    console.error(err.stack);
-  });
+    server.on('request', function (request, response) {
+      debug("response: " + address + " : " + request.question[0].name);
+      response.answer.push(dns.A({
+        name: request.question[0].name,
+        address: address,
+        ttl: 1,
+      }));
+      response.send();
+    });
 
-  try {
-    console.log("serving dns to: " + address);
-    server.serve(port);
-  } catch (e) {
-    console.error(e);
+    server.on('error', function (err, buff, req, res) {
+      console.error(err);
+    });
+
+    try {
+      console.log("serving dns to: " + address);
+      server.serve(port);
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
+  if (process.platform == 'darwin') {
+    // Wait for /etc/resolv.conf to exist
+    // Apparently this file is written by the OS but, at least with my own router,
+    // it can take a 10-30 seconds until it's written. It's probably some kind of timeout.
+    var checkForEtcResolvConf = function() {
+      if (fs.existsSync("/etc/resolv.conf")) {
+        start();
+        return;
+      }
+      console.log("waiting for /etc/resolv.conf");
+      setTimeout(checkForEtcResolvConf, 2000);
+    };
+    checkForEtcResolvConf();
+  } else {
+    start();
   }
 };
 
