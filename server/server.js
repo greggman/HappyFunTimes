@@ -154,6 +154,13 @@ server = new HFTServer(args, launchBrowser);
 
 if (args.dns) {
   var dnsServer = new DNSServer({address: args.address});
+  server.on('ports', function(ports) {
+    if (ports.indexOf("80") < 0 && ports.indexOf(80) < 0) {
+      console.error("You specified --dns but happyFunTimes could not use port 80.");
+      console.error("Do you need to run this as admin or use sudo?");
+      process.exit(1);
+    }
+  });
 }
 
 
