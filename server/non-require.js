@@ -35,17 +35,26 @@ var debug     = require('debug')('non-require');
 var path      = require('path');
 var requirejs = require('requirejs');
 var fsWrapper = require('../lib/fs-wrapper');
+var utils     = require('../lib/utils');
 
 var NonRequire = function(options) {
   options = options || {};
   var fs = options.fileSystem || require('fs');
   var enabled = true;
-  var tempPath = path.join(__dirname, "..", "temp");
+  var tempPath;
   var validPaths = {};
+  var tempFiles = {};
 
-  if (!fs.existsSync(tempPath)) {
-    fs.mkdirSync(tempPath);
-  }
+  utils.getTempFolder().then(function(filePath) {
+    tempPath = filePath;
+    tempFiles[filePath] = true;
+  });
+
+  process.on('exit', function() {
+    Object.keys(tempFiles).forEach(function(filePath) {
+      utils.deleteNoFail(filePath);
+    });
+  });
 
   this.enable = function(enable) {
     enabled = enable;
@@ -63,6 +72,7 @@ var NonRequire = function(options) {
     var out = path.join(tempPath, path.basename(filename));
     debug("include : " + include);
     debug("out     : " + out);
+    tempFiles[out] = true;
     var config = {
       baseUrl: path.join(__dirname, ".."),
       name:    "node_modules/almond/almond.js",
