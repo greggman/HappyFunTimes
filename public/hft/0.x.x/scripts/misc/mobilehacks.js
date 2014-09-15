@@ -60,9 +60,17 @@ define(function() {
 
   // Prevents the browser from sliding the page when the user slides their finger.
   // At least on iOS.
-  document.body.addEventListener('touchmove', function(e) {
-    e.preventDefault();
-  }, false);
+  var stopSliding = function() {
+    if (!document.body) {
+      setTimeout(stopSliding, 4);
+    } else {
+      document.body.addEventListener('touchmove', function(e) {
+        e.preventDefault();
+      }, false);
+    }
+  };
+  stopSliding();
+
 
   // This DOESN'T WORK! I'm leaving it here so I can revisit it.
   // The issue is all kinds of things mess up. Events are not rotated,
