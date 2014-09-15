@@ -231,7 +231,7 @@ var RelayServer = function(servers, options) {
   for (var ii = 0; ii < servers.length; ++ii) {
     var server = servers[ii];
     //var io = new SocketIOServer(server);
-    var io = new WSServer(server);
+    var io = options.WebSocketServer ? new options.WebSocketServer(server) : new WSServer(server);
     socketServers.push(io);
 
     io.on('connection', function(client) {
