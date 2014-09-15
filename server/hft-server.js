@@ -39,6 +39,7 @@ var config                    = require('../lib/config');
 var debug                     = require('debug')('hft-server');
 var DNSServer                 = require('./dnsserver');
 var ES6Support                = require('./es6-support');
+var events                    = require('events');
 var express                   = require('express');
 var fs                        = require('fs');
 var HFTGame                   = require('./hftgame');
@@ -92,6 +93,7 @@ var HFTServer = function(options, startedCallback) {
     g[prop] = options[prop];
   });
 
+  var eventEmitter = new events.EventEmitter();
   var nonRequire = new NonRequire();
   var es6Support = new ES6Support({fileSystem: nonRequire.fileSystem});
   var fileCache = new Cache({fileSystem: es6Support.fileSystem});
@@ -441,6 +443,7 @@ var HFTServer = function(options, startedCallback) {
         baseUrl: "http://" + g.address + ":" + g.port,
       });
       sys.print("Listening on port(s): " + goodPorts.join(", ") + "\n");
+      eventEmitter.emit('ports', goodPorts);
 
       // Add management game
       var hftGame = new HFTGame({
@@ -490,6 +493,18 @@ var HFTServer = function(options, startedCallback) {
 
   this.getSettings = function() {
     return g;
+  };
+
+  this.on = function() {
+    eventEmitter.on.apply(eventEmitter, arguments);
+  };
+
+  this.addListener = function() {
+    eventEmitter.addListener.apply(eventEmitter, arguments);
+  };
+
+  this.removeListener = function() {
+    eventEmitter.removeListener.apply(eventEmitter, arguments);
   };
 };
 
