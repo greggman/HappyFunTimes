@@ -30,6 +30,8 @@
  */
 "use strict";
 
+var debug = require('debug')('dns-server');
+
 // This DNS server just servers the same ip address for all domains.
 // options:
 //   address: ip address to report
@@ -43,6 +45,7 @@ var DNSServer = function(options) {
   var address = options.address;
 
   server.on('request', function (request, response) {
+    debug("response: " + address + " : " + request.question[0].name);
     response.answer.push(dns.A({
       name: request.question[0].name,
       address: address,
@@ -52,10 +55,12 @@ var DNSServer = function(options) {
   });
 
   server.on('error', function (err, buff, req, res) {
-    console.log(err.stack);
+    console.error(err);
+    console.error(err.stack);
   });
 
   try {
+    console.log("serving dns to: " + address);
     server.serve(port);
   } catch (e) {
     console.error(e);
