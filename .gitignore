@@ -1,6 +1,9 @@
 node_modules
 public/games
 public/examples
+docs/hft
+docs/relayserver
+images/src
 .DS_Store
 *~
 *.swp
