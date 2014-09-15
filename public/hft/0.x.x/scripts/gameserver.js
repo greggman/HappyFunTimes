@@ -230,7 +230,7 @@ define(
     }.bind(this);
 
     var send_ = function(msg) {
-      if (globalObject.WebSocket && _connected == globalObject.WebSocket.CONNECTING) {
+      if (!_socket.isConnected()) {
         _sendQueue.push(msg);
       } else {
         _socket.send(msg);

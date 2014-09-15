@@ -79,6 +79,10 @@ var LoopbackServerSide = function() {
 
   this.close = function() {
   };
+
+  this.isConnected = function() {
+    return true;
+  };
 };
 
 var LoopbackClient = function() {
@@ -110,6 +114,10 @@ var LoopbackClient = function() {
 
   this.send = function(msg) {
     server.emitEvent('message',{data:JSON.stringify(msg)});
+  };
+
+  this.isConnected = function() {
+    return true;
   };
 };
 

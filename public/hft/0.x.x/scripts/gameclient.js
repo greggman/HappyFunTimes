@@ -150,7 +150,7 @@ define(['./virtualsocket'], function(VirtualSocket) {
         cmd: cmd,
         data: data,
       };
-      if (g_socket.readyState == WebSocket.CONNECTING) {
+      if (!g_socket.isConnected()) {
         g_sendQueue.push(msg);
       } else {
         g_socket.send(msg);

@@ -36,6 +36,7 @@ define(function() {
     options = options || {};
     console.log("Using direct Socket.io");
     var _socket;
+    var _connected = false;
 
     if (!window.io) {
       console.log("no socket io");
@@ -49,9 +50,9 @@ define(function() {
     console.log("connecting to: " + url);
     _socket = io.connect(url);
 
-    this.__defineGetter__("readyState", function() {
-      return _socket.readyState;
-    });
+    this.isConnected = function() {
+      return _socket.readyState == WebSocket.OPEN;
+    };
 
     this.on = function(eventName, fn) {
       _socket.on(eventName, fn);
@@ -74,6 +75,10 @@ define(function() {
     this.__defineGetter__("readyState", function() {
       return _socket.readyState;
     });
+
+    this.isConnected = function() {
+      return _socket.readyState == WebSocket.OPEN;
+    };
 
     this.on = function(eventName, fn) {
       switch (eventName) {
