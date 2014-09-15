@@ -52,18 +52,23 @@ var NonRequire = function(options) {
   };
 
   this.addPath = function(filePath) {
+    filePath = filePath.replace(/\\/g, "/");
+    debug("addPath: " + filePath)
     validPaths[filePath] = true;
   };
 
   var combine = function(filename, callback) {
+    debug("combining filename: " + filename);
     var include = path.relative(path.join(__dirname, ".."), filename);
     var out = path.join(tempPath, path.basename(filename));
-console.log("include: " + include);
-console.log("out    : " + out);;
+    debug("include : " + include);
+    debug("out     : " + out);
     var config = {
       baseUrl: path.join(__dirname, ".."),
       name:    "node_modules/almond/almond.js",
       include: include,
+      insertRequire: [include],
+      optimize: "none",
       out:     out,
       wrap:    true,
       paths: {
@@ -84,11 +89,12 @@ console.log("out    : " + out);;
 
   var fileSystem = fsWrapper.createReadOnlyWrapper({
     fileSystem: fs,
+    readContent: false,
     isEnabledFn: function(filename) {
+      filename = filename.replace(/\\/g, "/");
       return enabled && validPaths[filename];
     },
     readFileImpl: function(filename, content, callback) {
-      debug("combining for: " + filename);
       return combine(filename, callback);
     },
   });

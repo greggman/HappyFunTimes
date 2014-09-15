@@ -249,7 +249,7 @@ var HFTServer = function(options, startedCallback) {
       es6Support.enable(runtimeInfo ? runtimeInfo.features.es6 : true);
       fileCache.readFile(fullPath, function(err, data){
         if (err) {
-          console.error("error: " + err + ": " + fullPath );
+          console.error("error: " + err + ": " + fullPath);
           return send404(res);
         }
         if (opt_prepFn) {
@@ -402,7 +402,7 @@ var HFTServer = function(options, startedCallback) {
     var fullPath = path.join(__dirname, "..", "node_modules", "traceur", "bin", "traceur-runtime.js");
     sendRequestedFileFullPath(req, res, fullPath);
   });
-  var nonPath = path.join(__dirname, "..", "temp", "non-require-v1.3.0.js");
+  var nonPath = path.join(__dirname, "..", "templates", "0.x.x", "non-require-v1.3.0.js");
   nonRequire.addPath(nonPath);
   app.get(/^\/games\/(.*?)\/runtime-scripts\/hft-min.js$/, function(req, res) {
     var gameId = req.params[0];
