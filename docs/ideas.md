@@ -197,4 +197,10 @@ ideas for you
     "Walk forward", "turn left", "jump", "wave", "tap the person on your right"
     or longer "You're the spy. Try to find the player with the red screen and press it"
 
+*   Grab for all
+
+    Just put stuff on the screen, people grab it as fast as they can (same controls as simple?)
+    or maybe a grid of buttons? Characters that rotate and jump? Highest score wins. Bombs
+    fail
+
 
