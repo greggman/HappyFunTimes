@@ -251,7 +251,7 @@ var HFTServer = function(options, startedCallback) {
       es6Support.enable(runtimeInfo ? runtimeInfo.features.es6 : true);
       fileCache.readFile(fullPath, function(err, data){
         if (err) {
-          console.error("error: " + err + ": " + fullPath);
+          console.error("" + err + ": " + fullPath);
           return send404(res);
         }
         if (opt_prepFn) {
@@ -381,7 +381,7 @@ var HFTServer = function(options, startedCallback) {
 
       fileCache.readFile(templatePath, function(err, templateData) {
         if (err) {
-          console.error("error: " + err + ": " + templatePath);
+          console.error("" + err + ": " + templatePath);
           return send404(res);
         }
         sendFileResponse(res, contentFullPath, function(str) {
