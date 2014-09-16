@@ -203,4 +203,16 @@ ideas for you
     or maybe a grid of buttons? Characters that rotate and jump? Highest score wins. Bombs
     fail
 
+*   Skeet ball or mega bowling
+
+    Everyone uses their phone to flick their ball up the screen trying to get more points or knock over more pins
+
+*   Nation ball / Dodge Ball
+
+    players in the middle must dog things. Players knocked out throw things in to knock other players out
+
+*   Go on adventure in the room.
+
+    Your phone lists what you need to find and what you have to give. People go around the room
+    trying to find the next thing in their fetch quest
 
