@@ -43,4 +43,32 @@ the correct version
 
 *   v1.3.0
 
+    *   Supports using `<script>` tags instead of [require.js](http://requirejs.org).
+
+        I really like [require.js](http://requirejs.org) style of modules. It encourages
+        dependency injection, it also suppots module independence. But, for many it's non
+        standard.
+
+        So, if you want to just use standard script tags make sure your `package.json` has its
+        `happyFunTimes.apiVersion` set to `1.3.0` or higher and add the flag `happyFunTimes.useScriptTag` set
+        to `true`. Example:
+
+            {
+              ...
+              "happyFunTimes": {
+                ...
+                "apiVersion": "1.3.0",
+                "useScriptTag": true,
+                ...
+              }
+            }
+
+        The `<script>` tags for HappyFunTimes are automatically
+        added for you and so is the script tag that includes `scripts/game.js` for your game and
+        `scripts/controller.js` for your controller. If you need any other scripts add script tags to
+        either `game.html` or `controller.html`.  The HappyFunTimes libraries will be inserted before
+        those tags. The `game.js` or `controller.js` will be inserted after.
+
+        For a working example see [http://github.com/greggman/hft-simple-script](http://github.com/greggman/hft-simple-script)
+
 
