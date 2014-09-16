@@ -1,6 +1,13 @@
 To Do
 =====
 
+*   add optional player timeout?
+
+    I already have the ping but maybe I should also have an input timeout.
+    No input for N seconds = disconnect. Useful for installtaions as I suspect
+    people might walk away and leave their phone connected. If there's no
+    input for a while we'll assume they are no longer participating?
+
 *   publish unity plugin
 *   figure out why unitycharacterexample is not exiting when hft asks it to.
 *   if hft is not running, have shft save a cookie if you choose a game to install.
@@ -8,25 +15,19 @@ To Do
     when hft starts it can open an iframe to shft which will read the cookie and
     trigger and install question
 
-*   add es6 support
-
-    *   make it so files with ".js6" get transpiled on the fly. Use cache so they
-        don't get transpiled more than once
-
-*   genreate min/concat version of hft libs. Allow you to select that style in package.json
-
-    so no requirejs
-
 *   make install dialog pop to top
 *   make hft newgame make a folder, ask the gametype etc.?
 *   fix names in powpow?
 *   make shft tell you you need to upgrade hft
 *   Add a support field, default to github issues
 *   make hft-exe write over old version? Should ask? --force?
-*   check that first installed game works
 *   add purge request to manage gamedb for icon and screenshots
+*   consider porting shft to Google App Engine or something else that scales with no work.
 *   fix shft update-exe so username:password works
 *   make --export for make-release the default
+*   make option for manage to email github repo user results of registering
+*   Unity plugin can run editor script that looks for HFT. If not found forwards you to shft.
+    *   Once installed can use hft newgame to setup new projects
 *   make code send API version
 
     for HTML that might be hard because we don't know the API version until after
@@ -38,6 +39,12 @@ To Do
     it in the package.json so we can know before downloading if it's going
     to work.  But, while developing you might forget? I guess it should at
     least print a warning
+
+*   Add testing using mock request and mock websockets
+
+    I think the mock websockets will be easy as I already basically have mock websockets
+    for the __hft__ game. For request there's got to be some express/request mock already
+    out there.
 
 *   refractor hft-server
 
@@ -51,11 +58,14 @@ To Do
 
     Should probably look at other caches
 
+*   On mac make terminal visible or at least provide some kind of window/icon that users
+    can use to quit.
 
-*   if --dns
-    *   require port 80, fail if we can't get it
-    *   print 'need sudo' or figure out how to ask for permission
-    *   show "setting up ... animated screen" because it takes time for /etc/resolve
+*   make UX option to turn on DNS
+
+    *   Needs to ask for sudo permission or at least some how get port 80. Maybe it could reboot?
+    *   needs to show status (trying `/etc/resolv.conf`)
+
 *   write unity docs
     *   UnityScript
     *   C#
@@ -78,6 +88,10 @@ To Do
 
 *   update .travis.yml back to 0.10 once they release 0.10.32 (0.10.31 has a core dump bug)
 *   get rid of meteor
+
+    could port to app engine or similar for scalabiliy. Or at least consider making it a big
+    static site that just get's rebuilt when a new game is added?
+
 *   should make-release check API version?
 *   maybe shft should not install ever. It should just redirect to hft.
 
@@ -698,6 +712,23 @@ Runs Repo noid
 
 Done
 ====
+
+*   if --dns
+    *   require port 80, fail if we can't get it
+    *   print 'need sudo' or figure out how to ask for permission
+    *   show "setting up ... animated screen" because it takes time for /etc/resolve
+*   check that first installed game works.
+
+    Works for me :)   :(
+
+*   add es6 support
+
+    *   make it so files with ".js6" get transpiled on the fly. Use cache so they
+        don't get transpiled more than once
+
+*   genreate min/concat version of hft libs. Allow you to select that style in package.json
+
+    so no requirejs
 
 *   Add 'what is this' to hft.net
 *   make hft.net fail if there's no matching IP
