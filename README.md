@@ -226,27 +226,23 @@ Notes
     That said if there's anything easy and performant you'd like to suggest
     submit a pull request.
 
-*   Does it work on Windows and Linux?
+*   Does it work on Windows, OSX, and Linux?
 
-    The clients of course run in any modern browser. The game also runs in
+    The controllers of course run in any modern browser. Games run in
     whatever environment you've created them for. Most of the samples here
     are HTML and so should run in any modern browser on any platform.
 
-    As for the relayserver I've run it on OSX, Linux and Windows with
+    As for happyFunTimes I've run it on OSX, Linux and Windows with
     no problems.
 
 *   Why not WebRTC?
 
     WebRTC would possibly allow the phones to talk directly the game rather than through
-    the relayserver. The relayserver would need to setup a rendevous between the 2 machines
+    the happyfuntimes. happyfuntimes would need to setup a rendevous between the 2 machines
     but after that the conncetion should be peer to peer.... Or so I'm lead to believe.
+    WebRTC still doesn't currently exist in iOS Safari as of iOS8. It does exist in Chrome.
 
     Feel free to submit a pull request ;-)
-
-Attribution
------------
-
-See [attribution](docs/attribution.md)
 
 To Do
 -----
