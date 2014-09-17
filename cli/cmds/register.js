@@ -65,8 +65,10 @@ exports.usage = {
     "register asks superhappyfuntimes to add/update your game its database",
   ],
   options: [
-    { option: 'repo-url', type: 'String', description: "url to repo. Uses 'origin' from current folder by default"},
-    { option: 'endpoint', type: 'String', description: "base url to use to contact server (eg. http://local.test.com)"},
+    { option: 'repo-url',   type: 'String',  description: "url to repo. Uses 'origin' from current folder by default"},
+    { option: 'endpoint',   type: 'String',  description: "base url to use to contact server (eg. http://local.test.com)"},
+    { option: 'email',      type: 'String',  description: "email address to mail notification to. Must match address from last new commits on github. If no address given the email from the latest commit is used."},
+    { option: 'send-email', type: 'Boolean', description: "email notification.", default: "true"},
   ],
 }
 exports.cmd = register;

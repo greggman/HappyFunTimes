@@ -44,6 +44,9 @@ var url          = require('url');
  * @property {string} repoUrl url of repo of game to register
  * @property {string?} endpoint base url to register game. eg
  *           http://foo.com
+ * @property {string?} email email address to send notification.
+ *           If none given newest email in commits is used
+ * @property {boolean?} sendEmail email notification
  */
 
 /**
@@ -67,7 +70,18 @@ var register = function(options) {
     return Promise.reject(new Error("not a supported url: " + options.repoUrl));
   }
 
-  var registerUrl = restUrl.make(endpoint, { url: options.repoUrl });
+  var args = {
+    url: options.repoUrl,
+  };
+
+  if (options.sendEmail) {
+    args.sendEmail = options.sendEmail;
+    if (options.email) {
+      args.email = options.email;
+    }
+  }
+
+  var registerUrl = restUrl.make(endpoint, args);
   log("using: " + registerUrl);
   return sendJSON(registerUrl, {}, {});
 };

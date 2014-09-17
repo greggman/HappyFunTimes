@@ -128,6 +128,8 @@ var publish = function(args) {
         repoUrl: args['repoUrl'],
         endpoint: args['endpoint'],
         exporterPath: args['exporterPath'],
+        email: args['email'],
+        sendEmail: args['sendEmail'],
       };
 
       return require('../../management/publish').publish(srcPath, options);
@@ -158,6 +160,8 @@ exports.usage = {
     { option: 'dry-run',       type: 'Boolean', description: "don't write any files", },
     { option: 'endpoint',      type: 'String',  description: "base url to use to register server (eg. http://local.test.com)"},
     { option: 'exporter-path', type: 'String',  description: "path to exporter. For example path to unity3d."},
+    { option: 'email',         type: 'String',  description: "email address to mail notification to. Must match address from last new commits on github. If no address given the email from the latest commit is used."},
+    { option: 'send-email',    type: 'Boolean', description: "send email", default: "true"},
   ],
 };
 exports.cmd = publish;

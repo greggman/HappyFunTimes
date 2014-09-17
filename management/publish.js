@@ -57,6 +57,9 @@ var utils        = require('../lib/utils');
  * @property {string} repoUrl url of repo of game to register
  * @property {string?} endpoint base url to register game. eg
  *           http://foo.com
+ * @property {string?} email email address to send notification.
+ *           If none given newest email in commits is used
+ * @property {boolean?} sendEmail email notification
  */
 
 /**
@@ -264,6 +267,8 @@ var publish = function(gamePath, options) {
       return register.register({
         repoUrl: options.repoUrl,
         endpoint: options.endpoint,
+        email: options.email,
+        sendEmail: options.sendEmail,
       })
     }).then(function() {
       console.log(gameId + ": registered");
