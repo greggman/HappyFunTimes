@@ -14,7 +14,9 @@ here are some of the steps you need to take.
 
 *   First, [install happyfuntimes](http://superhappyfuntimes.net/install) and run it at least once.
 
-*   copy everything to a new folder outside of happyfuntimes
+*   Install the hft command. Type `npm install -g hft-cli`
+
+*   copy or move your game to a new folder outside of happyfuntimes
 
     pre version 1 all games existed side happyfuntimes in `public/examples/gameid` or
     `public/games/gameid`. Now they should be completely outside of happyfuntimes
@@ -24,7 +26,7 @@ here are some of the steps you need to take.
     so for example if it's a unity game [use this one](https://github.com/greggman/hft-unitycharacterexample/blob/master/.gitignore).
     If it's an html5 game [try this one](https://github.com/greggman/hft-boomboom/blob/master/.gitignore).
 
-*   inside that the folder type `.git init`
+*   inside that the folder type `git init`
 
 *   edit `package.json'
 
@@ -103,7 +105,7 @@ here are some of the steps you need to take.
 
 *   For a unity game (close unity)
 
-    *   Move all the files from your project to game folder. It should end up like this
+    *   Move all the files from your project to the game folder. It should end up like this
 
             Assets
             ProjectSettings
@@ -189,7 +191,7 @@ here are some of the steps you need to take.
         git remote add origin git@github.com:<githubname>/<reponame>.git
         git push -u origin master
 
-If you can't get it to commit it github and send me a link. I'll try to fork it, fix it, and submit a pull request.
+If you can't get your old game to work, commit it github and send me a link. I'll fork it, fix it, and submit a pull request.
 
 Once it works you can publish it as well. [For html games see](makinggames.md#hft-publish).
 [For Unity3D games see](unitydocs.md#publishing).

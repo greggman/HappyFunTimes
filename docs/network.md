@@ -10,12 +10,14 @@ The moment they connect to to the WiFi they are instantly directed to the
 game, nothing to type. On Android they can type any url, for example,
 `h.com` and they'll get connected to the game.
 
+No internet connection is needed in this mode.
+
 Setup
 -----
 
 First, get a router. You probably have an old one sitting around or if you want to be portable I
 recommend the [TP-Link TL-WR702N](http://google.com/#q=TP-Link+TL-WR702N) though
-it will only handle 13-14 players.
+it will only handle 13-14 players and it's under $20.
 
 Go to your router's admin page and find the DHCP settings. Somewhere there
 should be a place that lets you assign a specfiic IP address to a specific MAC
@@ -95,7 +97,8 @@ means the main computer running the game and 14 players.
 [Netgear claims their dual band routers can support 64 devices](http://kb.netgear.com/app/answers/detail/a_id/24043/~/how-many-clients-can-you-connect-wirelessly-to-a-netgear-router%3F).
 Unfortunatly netgear routers don't allow you to change the DNS server their DHCP server reports
 so avoid them. They always report themsevles and/or they always look on the WAN for resolution
-instead of the LAN. If you're lucky you can install a different firmware but otherwise avoid them.
+instead of the LAN. You can install a different firmware like DD-WRT if you're adventurous but
+otherwise choose something else.
 
 [Apple claims 50 devices with the Airport Extreme](http://www.apple.com/airport-extreme/specs/)
 though it's ambigous if that means 50 wifi devices or something else.
@@ -108,4 +111,8 @@ on what's best. Especially given the specfic needs of HappyFunTimes. We're not s
 or dowloading torrents so for example, rather than buying the top end routers consumer routers
 maybe it's better to by 2 to 4 cheap home routers and set all but one of them into AP mode (Access Point)?
 Or should we go to business routers? Unfortunately at this time I have no idea.
+
+If you try this setup with a different router please post your results. Add to this doc or file an issue
+or something so that others can learn how to configure their routers.
+
 

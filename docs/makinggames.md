@@ -32,11 +32,27 @@ Making games with HappyFunTimes
 *   **[Misc](#misc)**
 *   **[Future Features](future.md)**
 
-I'm sorry there's so many steps. It's not as hard as it looks. Trust me.
 
 ## Setting up for development
 
+I'm sorry there's so many steps. It's not as hard as it looks. Trust me.
+
+### TL;DR version
+
+    *   install happyfuntimes (http://superhappyfuntimes.net/install)
+    *   run happyfuntimes (it must be run once)
+    *   install node.js (http://nodejs.org/download/)
+    *   install bower `sudo npm install -g bower` (no sudo on windows)
+    *   install hft-cli `sudo npm install -g hft-cli` (no sudo on windows)
+    *   clone a game
+    *   edit `package.json`, change `gameId` and `name`
+    *   type `hft-add`
+
+### Verbose vesrion
+
 *   Install HappyFunTimes (http://superhappyfuntimes.net/install)
+
+    On Windows you might run into security issues: See here
 
     **IMPORTANT** You can **NOT** have 2 installations of happyFunTimes.
 
@@ -60,7 +76,7 @@ I'm sorry there's so many steps. It's not as hard as it looks. Trust me.
     the installation or type `node start.js --app-mode` from the
     cloned folder if you're using a cloned repo.
 
-*   Install [node.js](http://nodejs.org).
+*   Install [node.js](http://nodejs.org/download/).
 
     I was using 0.10.29 (note: 0.10.31 has a bug. Don't use that version!)
 
@@ -93,7 +109,8 @@ I'm sorry there's so many steps. It's not as hard as it looks. Trust me.
     This step is only needed for some games. If there is no `bower.json`
     in the folder you can skip this step.
 
-*   edit the `package.json` file and change the "gameId" to something unique.
+*   edit the `package.json` file and change the "gameId" to something unique and
+    the `name`
 
 *   add the game to happyfuntimes
 
