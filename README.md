@@ -12,7 +12,7 @@ HappyFunTimes
 *   [Dev Tips](docs/tips.md)
 *   [API Versions](docs/api-versions.md)
 *   [Example Descriptions](docs/examples.md)
-*   [Setting Up for Party or Installation](docs/network.md)
+*   [Setting Up for a Museum or Installation](docs/network.md)
 *   [Notes](#notes)
 *   [Migrating from 0.x.x to 1.x.x](docs/migration.md#migrate-from-0xx-to-1xx)
 
