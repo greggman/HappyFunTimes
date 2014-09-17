@@ -28,6 +28,37 @@ To Do
 *   make option for manage to email github repo user results of registering
 *   Unity plugin can run editor script that looks for HFT. If not found forwards you to shft.
     *   Once installed can use hft newgame to setup new projects
+*   try more CSS
+
+    can we get things to position left bottom relative etc...?
+
+        position: absolute;
+        right: ??
+        bottom:
+
+    what about groups of stuff?
+
+    One problem without scaling
+
+        +----------------+
+        |                |
+        | B U T T O N 1  |
+        |                |
+        |  B U T T O N 2 |
+        |                |
+        +----------------+
+
+    can end up as
+
+        +----------------+
+        |                |
+        | BBUUTTTTOONN12 |
+        |                |
+        +----------------+
+
+    maybe now that iOS8 is out we can forget about iOS6? I doubt it.
+    Too many iPhone4/4Ss still out there.
+
 *   make code send API version
 
     for HTML that might be hard because we don't know the API version until after
