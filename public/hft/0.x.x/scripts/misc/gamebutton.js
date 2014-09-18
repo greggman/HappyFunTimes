@@ -32,35 +32,8 @@
 "use strict";
 
 define(function() {
-  /**
-   * Manages a button.
-   *
-   * You often want to know when a button transitions from
-   * released to pressed. This class tracks the state of a button
-   * including those transitions
-   *
-   * I don't know if this is overkill or not. In most games I've
-   * written in the past they are local player games. I'd have
-   * a joypad library that reads that pads and has flags for
-   * which buttons are currently held down and which buttons
-   * where pressed this frame.
-   *
-   * In this case though I have N players that join at random.
-   * Seems kind of silly to have a class/object per button per
-   * player but it does make it simple to use
-   *
-   * Similarly the fact that it assumes entitySystem exists
-   * and actually uses it to "process" seems overkill but
-   * at the same time to removes the need for the user of
-   * this class to have to manually call some `update` function.
-   *
-   * I could make it so calling 'on' or 'justOn' does the processing
-   * but that also seems like it might be hard for the user to remember
-   * he can only call `on' or 'justOn` once per frame and only
-   * one or the other.
-   *
-   */
   var GameButton = function(entitySystem) {
+    console.warn("GameButton embedded in HappyFunTimes is deprecated. Use http://github.com/greggman/hft-utils")
     entitySystem.addEntity(this);
     var currentState = false;
     var lastState = false;
