@@ -35,8 +35,6 @@ define(function() {
   /**
    * Shell class for offline use.
    *
-   * @constructor
-   *
    * You can use this class as a substitute for NetPlayer when
    * offline. It provides a no-op version of sendCmd so when
    * your game tries to send a message to the contoller nothing
@@ -45,17 +43,15 @@ define(function() {
    * It also provides a sendEvent method you can use to trigger
    * events in your game as though they were from the controller.
    *
-   * Example:
+   * @constructor
+   * @example
    *   if (offline) {
-   *     // We're testing locally so just manually create //
-   *     players.
+   *     // We're testing locally so just manually create a
+   *     // player.
    *
    *     var localNetPlayer1 = new LocalNetPlayer();
-   *     var localNetPlayer2 = new LocalNetPlayer();
    *     var player1 = new MyPlayer(localNetPlayer1);
-   *     var player2 = new MyPlayer(localNetPlayer2);
    *     addPlayer(player1);
-   *     addPlayer(player2);
    *
    *     // pretend player1 one got a message from the
    *     // controller when a key is pressed

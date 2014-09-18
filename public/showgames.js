@@ -32,8 +32,14 @@
 "use strict";
 
 var main = function(IO, Strings) {
-  var gamemenu = document.getElementById("gamemenu");
-  var template = document.getElementById("item-template").text;
+
+  var $ = function(id) {
+    return document.getElementById(id);
+  };
+
+  var gamemenu = $("gamemenu");
+  var nogames  = $("nogames");
+  var template = $("item-template").text;
   var oldHtml = "";
 
   var getGames = function() {
@@ -58,6 +64,8 @@ var main = function(IO, Strings) {
         oldHtml = html;
         gamemenu.innerHTML = html;
       }
+
+      nogames.style.display = items.length ? "none" : "block";
 
       // If there's only one game just go to it.
       if (obj.length == 1 && obj[0].controllerUrl) {

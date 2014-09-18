@@ -1,0 +1,71 @@
+html, body {
+  gfont-family: sans-serif;
+  gcolor: white;
+  gfont-size: 20px;
+}
+#outer {
+  width: 100%;
+  height: 100%;
+}
+#main {
+  float: left;
+  width: 85%;
+  height: 100%;
+}
+#canvas {
+  width: 100%;
+  height: 100%;
+  background-color: black;
+  gbackground-image: url(assets/background.jpg);
+  gbackground-size: 100%;
+}
+#status {
+  float: right;
+  width: 15%;
+  background-color: red;
+  height: 100%;
+}
+#highscore, #queue {
+  white-space: nowrap;
+  background-color: #008;
+
+  -webkit-flex: 1 0 auto;
+  flex: 1 0 auto;
+}
+@keyframes color_change {
+  from { background-color: blue; }
+  to { background-color: red; }
+}
+#highscores-outer, #queue-outer {
+  overflow: hidden;
+  width: 100%;
+  height: 50%;
+  background-color: blue;
+
+  display: -webkit-flex;
+  display: flex;
+
+  -webkit-flex-flow: column;
+  flex-flow: column;
+
+  -webkit-justify-content: flex-start;
+  -webkit-align-content: stretch;
+  -webkit-align-items: stretch;
+
+  justify-content: flex-start;
+  align-content: stretch;
+  align-items: stretch;
+}
+.headline {
+  -webkit-flex: 0 0 auto;
+  flex: 0 0 auto;
+  font-size: x-large;
+  font-weight: bold;
+  color: white;
+  padding: 5px 5px 5px 5px;
+}
+#queue-canvas {
+  width: 100%;
+  height: 100%;
+}
+

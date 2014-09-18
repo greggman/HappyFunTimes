@@ -41,15 +41,64 @@ html, body {
     margin: 0px;
     padding: 0px;
     font-family: Helvetica, Arial, sans-serif;
-    font-size: x-large;
+    font-size: xx-large;
     font-weight: bold;
     background-color: #666;
 }
 h1 {
     background: linear-gradient(to bottom, #f2f6f8 0%,#d8e1e7 88%,#b5c6d0 91%,#e0eff9 100%);
-    font-size: x-large;
-    padding: 0.5em;
+    border-top: 10px solid black;
+    border-bottom: 10px solid black;
+    background-color:red;
+    color: white;
+    padding: 1em;
 }
+.hidden-msg {
+    position: absolute;
+    left: 0px;
+    top: 0px;
+    width: 100%;
+    height: 100%;
+    display: none;
+}
+.hidden-msg>div {
+    position: absolute;
+    left: 0px;
+    top: 0px;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.7);
+
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: flex;
+
+    -webkit-box-pack: justify;
+    -webkit-justify-content: center;
+    -webkit-align-content: center;
+    -webkit-align-items: center;
+
+    justify-content: center;
+    align-content: center;
+    align-items: center;
+}
+.hidden-msg>div>div {
+    background-color: #68F;
+    color: white;
+    padding: 2em;
+    border-radius: 2em;
+}
+.button-like {
+    text-align: center;
+    background-color: #CCC;
+    color: black;
+    padding: 0.5em;
+    border-radius: 1em;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+
 #gamemenu {
     text-align: center;
 }
@@ -120,14 +169,13 @@ h1 {
   display: table-cell;
   text-align: center;
   vertical-align: middle;
-  font-size: xx-large;
-  font-weight: bold;
 }
 
 /* Smartphones (portrait and landscape) ----------- */
 @media only screen and (min-device-width : 320px) and (max-device-width : 480px) {
 /* Styles */
-    .game {
+    html, body {
+        font-size: medium;
     }
 }
 
@@ -156,7 +204,6 @@ h1 {
         width: 320px;
     }
     h1 {
-        font-size: xx-large;
         text-align: center;
     }
 }

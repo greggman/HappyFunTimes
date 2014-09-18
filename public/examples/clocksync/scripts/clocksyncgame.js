@@ -31,7 +31,11 @@
 
 "use strict";
 
-var main = function(GameServer, ClockSyncImpl) {
+var main = function(GameServer, GameSupport, ClockSyncImpl) {
+
+  var globals = {
+    haveServer: true,
+  };
 
   var noop = function() {
   };
@@ -46,9 +50,8 @@ var main = function(GameServer, ClockSyncImpl) {
   var server = new GameServer({
     gameId: "clocksync",
   });
-  server.addEventListener('connect', noop);
-  server.addEventListener('disconnect', noop);
   server.addEventListener('playerconnect', setupPlayer);
+  GameSupport.init(server, globals);
 
   ClockSyncImpl(arguments);
 };
@@ -56,6 +59,7 @@ var main = function(GameServer, ClockSyncImpl) {
 // Start the main app logic.
 requirejs(
   [ '../../../scripts/gameserver',
+    '../../scripts/gamesupport',
     'clocksyncimpl',
   ],
   main

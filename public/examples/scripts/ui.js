@@ -39,7 +39,7 @@ define(function() {
 
   var elemNum = 1;
 
-  var addRange = function(parent, label, obj, id, min, max) {
+  var addRange = function(parent, label, obj, id, min, max, opt_fn) {
     if (!(id instanceof Array)) {
       id = [id];
     }
@@ -55,6 +55,8 @@ define(function() {
     input.id = elemId;
     input.value = Math.floor((obj[id[0]] - min) * 100 / (max - min));
 
+    parent.appendChild(input);
+
     var updateNode = function(value) {
       node.nodeValue = label + ": " + value.toFixed(3);
     };
@@ -66,6 +68,9 @@ define(function() {
         obj[id[ii]] = value;
       }
       updateNode(value);
+      if (opt_fn) {
+        opt_fn(value);
+      }
     }, false);
 
     updateNode(obj[id[0]]);

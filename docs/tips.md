@@ -147,19 +147,22 @@ Tips
     Then in your CSS something like
 
         #turnthescreen {
-           display: none;
+            display: none;
         }
 
-        @media only screen
-        and (max-width : 320px) {
+        @media only screen and (max-width : 360px) {
         /* Styles */
-           position: absolute;
-           left: 0px;
-           top: 0px;
-           width: 100%;
-           height: 100%;
-           display: block;
-           z-index: 1000;
+            #turnthescreen {
+                position: absolute;
+                left: 0px;
+                top: 0px;
+                width: 100%;
+                height: 100%;
+                display: block;
+                z-index: 1000;
+                background-color: red;
+                color: white;
+            }
         }
 
 *   Use HandJS

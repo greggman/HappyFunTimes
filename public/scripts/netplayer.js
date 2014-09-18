@@ -31,8 +31,6 @@
 
 "use strict";
 
-// TODO: replace console stuff
-
 define(function() {
 
   var emptyMsg = {};
@@ -42,7 +40,7 @@ define(function() {
    *
    * @constructor
    *
-   * @param {!GameServer} server
+   * @param {GameServer} server
    * @param {number} id
    * @param {string} name
    */

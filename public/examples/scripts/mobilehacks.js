@@ -100,6 +100,8 @@ define(function() {
     window.addEventListener('resize', detectPortrait, false);
   };
 
+  window.scrollTo(0, 0);
+
   return {
     fixHeightHack: fixHeightHack,
     forceLandscape: forceLandscape,

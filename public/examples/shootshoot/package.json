@@ -5,9 +5,11 @@
   "private": false,
   "dependencies": {
   },
-  "gameUrl": "gameview.html",
-  "screenshotUrl": "shootshoot-screenshot.png",
-  "gameType": "html",
-  "useControllerTemplate": true,
-  "useGameTemplate": true
+  "happyFunTimes": {
+    "gameUrl": "gameview.html",
+    "screenshotUrl": "shootshoot-screenshot.png",
+    "gameType": "html",
+    "useControllerTemplate": true,
+    "useGameTemplate": true
+  }
 }

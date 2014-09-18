@@ -35,11 +35,46 @@ html, body {
   position: absolute;
   left: 0px;
   top: 0px;
+  width: 100%;
+  height: 100%;
+
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: flex;
+
+  -webkit-box-orient: horizontal;
+  -webkit-flex-flow: row;
+  flex-flow: row;
+
+  -webkit-box-align: center;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+  -webkit-align-content: stretch;
+  -webkit-align-items: stretch;
+
+  justify-content: center;
+  align-content: stretch;
+  align-items: stretch;
 }
 #playfield {
-  position: absolute;
-  left: 0px;
-  top: 0px;
+  -webkit-box-flex: 1;
+  -webkit-flex: 1 0 auto;
+  flex: 1 0 auto;
+}
+#score {
+  background-color: rgb(39, 93, 136);
+  padding: 0.5em;
+  -webkit-box-flex: 0;
+  -webkit-flex: 0 0 auto;
+  flex: 0 0 auto;
+  width: 16em;
+  overflow: hidden;
+}
+#score>div { /* line */
+}
+#score>div>div { /* info */
+}
+#score>div>span { /* img */
 }
 #outer {
   z-index: 4;

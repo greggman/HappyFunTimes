@@ -29,13 +29,40 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+/** @module io */
 define({
-  sendJSON: function(url, jsonObject, callback) {
+  /**
+   * @typedef {Object} SendJSONOptions
+   * @property {Number} timeout timeout in seconds to abort
+   *           request. Default = no-timeout
+   */
+
+  /**
+   * @callback SendJSONCallback
+   * @param {Object=} object object from json parsed jsons
+   * @param {string=} error error or null if no error
+   */
+
+  /**
+   * sends a JSON 'POST' request, returns JSON repsonse
+   * @static
+   * @param {String} url url to POST to.
+   * @param {Object} jsonObject JavaScript object on which to call
+   *        JSON.stringify.
+   * @param {SendJSONCallback} callback Function to call on
+   *        success or failure. If successful error will be null
+   * @param {SendJSONOptions=} opt_options Optional
+   *     options. {number} timeout: timeout in ms to abort
+   *     request. Default = no-timeout
+   */
+  sendJSON: function(url, jsonObject, callback, opt_options) {
+    opt_options = opt_options || { };
     var error = 'sendJSON failed to load url "' + url + '"';
     var request = new XMLHttpRequest();
     if (request.overrideMimeType) {
       request.overrideMimeType('text/plain');
     }
+    request.timeout = opt_options.timeout || 0;
     request.open('POST', url, true);
     var js = JSON.stringify(jsonObject);
     var finish = function() {
@@ -61,7 +88,7 @@ define({
       request.setRequestHeader("Content-type", "application/json");
       request.send(js);
     } catch (e) {
-      callback(null, 'could not load: ' + url);
+      setTimeout(function() { callback(null, 'could not load: ' + url) }, 0);
     }
   },
 });

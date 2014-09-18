@@ -33,11 +33,13 @@
 define([
     './3rdparty/stats/stats.min',
     './gameclock',
+    './hft-splash',
     './logger',
     './misc',
   ], function(
     StatsJS,
     GameClock,
+    HFTSplash,
     Logger,
     Misc) {
 
@@ -118,6 +120,7 @@ define([
   //
   var run = function(globals, fn) {
     var clock = new GameClock();
+    globals.frameCount = 0;
 
     var requestId;
     var loop = function() {

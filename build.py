@@ -35,8 +35,25 @@ import sys
 import json
 from optparse import OptionParser
 
+class Replacer(object):
+
+  def __init__ (self, params):
+    self.params = params
+
+  def repl(self, m):
+    id = m.group(1);
+    keys = id.split('.')
+    obj = self.params
+    for key in keys:
+      if not key in obj:
+        return id
+      obj = obj[key]
+    return obj
+
 
 class Builder(object):
+
+  replace_params_re = re.compile(r"%\(([^\)]+)\)s")
 
   def __init__ (self):
     self.file_db = {}
@@ -87,13 +104,17 @@ class Builder(object):
     str = str % extra
     str = str.replace('__PERCENT__', '%')
 
+  def ReplaceParams(self, s, params):
+    r = Replacer(params)
+    return Builder.replace_params_re.sub(r.repl, s)
+
   def ApplyTemplate(self, template_path, params):
     template = self.ReadFile(template_path)
-    return template % params
+    return self.ReplaceParams(template, params)
 
   def ApplyTemplateToString(self, template_path, out_file_name, params):
     template = self.ReadFile(template_path)
-    output = template % params
+    output = self.ReplaceParams(template, params)
     self.WriteFileIfChanged(out_file_name, output)
 
   def ApplyTemplateToFile(self, template_path, content_file_name, out_file_name, extra = {}):
@@ -133,19 +154,27 @@ class Builder(object):
 
         contents = self.ReadFile(filename)
         try:
-          game = json.loads(contents)
+          package = json.loads(contents)
+          game = package["happyFunTimes"]
+
+          if not "gameType" in game:
+            continue
+          gameType = game["gameType"]
+          if len(gameType) == 0:
+            continue
+
           game["filebasename"] = folder.lower()
           game["screenshotPath"] = os.path.join(dirname, game["screenshotUrl"]).replace("\\", "/")
 
           if "useGameTemplate" in game and game["useGameTemplate"]:
             gameview_src_name = os.path.join(dirname, "game.html")
             gameview_dst_name = os.path.join(dirname, "gameview.html")
-            self.ApplyTemplateToFile("templates/game.gameview.html", gameview_src_name, gameview_dst_name, game)
+            self.ApplyTemplateToFile("templates/game.gameview.html", gameview_src_name, gameview_dst_name, package)
 
           if "useControllerTemplate" in game and game["useControllerTemplate"]:
             index_src_name = os.path.join(dirname, "controller.html")
             index_dst_name = os.path.join(dirname, "index.html")
-            self.ApplyTemplateToFile("templates/controller.index.html", index_src_name, index_dst_name, game)
+            self.ApplyTemplateToFile("templates/controller.index.html", index_src_name, index_dst_name, package)
 
         except:
           print "ERROR: reading ", filename

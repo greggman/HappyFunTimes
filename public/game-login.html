@@ -43,12 +43,30 @@
   <meta name="format-detection" content="telephone=no" />
   <title>HappyFunTimes Redirect</title>
   <link rel="stylesheet" href="/css/menu.css">
+  <style>
+  #start {
+    width: 80%;
+    border: 1px solid blue;
+  }
+  #start>div {
+    width: 100%;
+    border: 1px solid red;
+    display: block;
+  }
+  a {
+    display: block;
+    width: 100%;
+    height: 100%;
+    border: 1px solid black;
+    margin: 0px;
+  }
+  </style>
 </head>
 <body>
   <h1>HappyFunTimes</h1>
   <div id="hft-settings">
     <div class="hft-fullcenter">
-      <div class="hft-menubutton"><div><a href="http://hft.org/?sessionId=%(sessionId)s">Start</a></div></div>
+      <div id="start" class="hft-menubutton"><div><a href="http://%(localhost)s/enter-name.html?sessionId=%(sessionId)s">Start</a></div></div>
     </div>
   </div>
 </body>

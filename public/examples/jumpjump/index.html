@@ -63,15 +63,8 @@ requirejs.config({
 </head>
 <body>
 <div id="hft-everything">
-  <div id="hft-container">
-    <div id="hft-header">
-      <form id="hft-nameform">
-        <input type="text" id="hft-name" autocorrect="off" spellcheck="false" />
-      </form>
-      <div id="hft-menu"><img src="../assets/gear-icon.svg"></div>
-    </div>
-    <div id="hft-content">
-      <!-- this is inserted into index.html by build.py -->
+  <div id="hft-content">
+        <!-- this is inserted into index.html by build.py -->
     <div id="buttons" class="hft-fullsize">
       <div class="button" id="left">◀</div>
       <div class="button" id="right">▶</div>
@@ -90,21 +83,29 @@ requirejs.config({
     </div>
 
 
-      <div id="hft-disconnected">
-        <div class="hft-fullcenter">
-          <div class="hft-instruction">Disconnected</div>
-          <!--
-          <div class="hft-menubutton" id="hft-reload"><div>Restart</div></div>
-          <div class="hft-menubutton" id="hft-mainmenu"><div>Main Menu</div></div>
-          -->
-        </div>
-      </div>
-      <div id="hft-debug">
-        <pre id="hft-status"></pre>
-        <div id="hft-console"></div>
+    <div id="hft-menu"><img src="../assets/gear-icon.svg"></div>
+    <div id="hft-disconnected">
+      <div class="hft-fullcenter">
+        <div class="hft-instruction">Disconnected</div>
+        <!--
+        <div class="hft-menubutton" id="hft-reload"><div>Restart</div></div>
+        <div class="hft-menubutton" id="hft-mainmenu"><div>Main Menu</div></div>
+        -->
       </div>
     </div>
+    <div id="hft-debug">
+      <pre id="hft-status"></pre>
+      <div id="hft-console"></div>
+    </div>
   </div>
+  <!-- name entry -->
+  <div id="hft-nameentry">
+    <form id="hft-nameform">
+      <div><label for="hft-name">Enter A Name:<label></div>
+      <input type="text" id="hft-name" maxlength="16" autocorrect="off" spellcheck="false" />
+    </form>
+  </div>
+  <!-- settings menu -->
   <div id="hft-settings">
     <div class="hft-fullcenter">
       <div id="hft-setname" class="hft-menubutton"><div>Set Name</div></div>

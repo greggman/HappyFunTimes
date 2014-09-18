@@ -88,6 +88,7 @@ define([
         var radiusSq = 16 * 16;
         if (distSq < radiusSq) {
           this.setState("collected");
+          player.addPoints(1);
           return true;
         }
       }.bind(this);

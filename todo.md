@@ -1,3 +1,103 @@
+*   fix localhost replacement so it includes port
+*   add timeout for input. No input from player for n seconds = disconnect?
+
+    Right now we ping and expect a response. No repsonse = player is offline. But,
+    often there's a separate tab running for whatever reason and that tab is kept
+    alive and inserted into the game so for example only 3 people are playing but
+    there are 4 players because one player happens to have an extra tab.
+
+    Ideally that tab would disconnect. Not sure how to fix that. Could try to allow
+    one connection per IP address? Or could timeout if no input for n seconds. Problems
+    with timeout is that some games are round based (like boomboom). If you die early
+    you might be waiting 2 minutes so the timeout would need to be like 3 minutes. But
+    what if some other game has a 3 minute timeout?
+
+    The problem with both ideas is that during testing I often have multiple tabs
+    open. I'd need an option to allow multiple users if I filter by ip.
+
+*   make controllers check for other games if the game has not yet connected?
+
+    There's an issue where sometimes a controller will be waiting for a game since
+    controllers can join first. Maybe controllers should check for other games until
+    they are sure they are connected to a running game. If the see a different game
+    they can switch to it.
+
+*   make it easier to use
+
+    I've been thinking like an experienced engineer. Just passing the messages is enough,
+    people will see how to connect them up. But, I can make this much easier for the simple cases.
+
+    On the controller side, some library that takes and/or setup the client and then lets you just
+    define buttons, dpads, orientations, and it deals with the messages
+
+    On the game side some library that give a similar definition gives you similar messages
+    and/or tracks state you can just read
+
+    Can I just do it based on HTML and tags to classes
+
+        <div class="hft-dpad" />
+        <div class="hft-button" />
+        <div class="hft-area" />
+        <div class="hft-deviceorientation" />
+
+    Then on the client side just figure it out? Problem for C# / Static languages? Could write script
+    to generate class for static languagues. Could make api string based HTF.getState("dpad")
+
+    So the problems I ran into when first trying to do this
+
+    1.  I first tried to do jumpjump. The L - R buttons though act as a pair because I wanted it if
+        you happened to be using 2 fingers and you press L, while olding L you press R, then left off R
+        the direction should go back to L. All that is sent to the game is the current direction -1, 0, 1.
+        The controller is doing filtering of the 2 buttons.
+
+        The question is what to do.
+
+        *   Move the filtering to the game.
+
+            The controller just sends L up, L down, R up, R down messages. The game decides on a direction.
+            Maybe that's the best thing?
+
+        *   Figure out how to specify two buttons are connected
+
+        *   Consider the L - R buttons just a version of a DPad controller with no up or down.
+
+    2.  There's 3 parts in CSS/HTML which make this more complicated
+
+        *   The visual representation of the button
+
+        *   The element, often invisible, that defines the hit area of the button
+
+        *   The full document size element that actually receives the input from touching
+
+        I'm not sure if there's a way to make that easier. Maybe I should insert the full document size
+        element so the developer doesn't have to do that? On top of that often you'd like the visual
+        representation to change based on user input. How would I do that or maybe I shouldn't care for
+        now or make that some optional setting?!??
+
+*   Change jumpjump and powpow L - R buttons to something that looks like you can slide your finger across it.
+
+    Watching players play I've noticed many try to press those as two separate buttons where as it's
+    actually designed so you just slide your finger. Maybe drawing a rocker button or one long button
+    would help?
+
+*   Consider providing a game side library for name images/textures
+
+    The issue is a name can currently be 16 characters. That's pretty long, especially in Japanese.
+    The library would make an image of the name, optionally with background color? And format it
+    either breaking at space or scaling if too long or something.
+
+*   Make buttons on Jumpjump, PowPow full height.
+    *   add option to show buttons?
+*   Make random color pickers based on color perseption.
+
+    Currently random color are based on HSL. They often look too similar.
+
+*   Change powpow to use more ship colors
+*   Need to figure out auto-docs
+*   Need to figure out how to test. Maybe Jest would help?
+*   If UI is not part of examples but a part of HFT then need to figure out which .js file should be shared (ie, moved to public/shared/scripts) or something.
+*   change games.html title to be ip address or instructions
+*   make server serve "chose another WiFi network to browse internet"
 *   use particles for coin
 *   use particles for boomboom death
 *   Fix collisions for jumpjujmp
@@ -8,19 +108,13 @@
 
     Ideally I should separate the collision checking into some lib/utility
 
-*   refactor sprite code to have offset (current assumes center of image is center)
+*   refactor sprite code to have offset (currently assumes center of image is origin)
 
     jumpjump could use this.
 
 *   Make game maker plugin
 *   Make C++ version of lib
 *   touch code already debounces pressed so remove similar code from controllers?
-*   add settimeout/setinterval to game support
-
-    Why? Because when debugging I have the games pause automatically but
-    timeouts/intervals don't pause. Basing them off the game clock would fix that.
-
-*   now that we have game URLs make main menu generated at runtime
 
 *   Game service / package installer?
 
@@ -95,6 +189,32 @@
     controller would see the game is not running and go to the main menu
     or to whichever other game is running.
 
+    *   other ideas
+
+        *   what about making it into a virtual console
+
+        *   using packages (think npm/package.json) could make it easy to find and install games
+
+            *   step 1, make it so you can type `htf install somegame`
+
+            *   step 2, provide a web interface to do the same
+
+            *   step 3, add a store
+
+            Could have games.html show recently played, recently installed, link for store,
+            promoted games, ... (promoted games only works if using real net.)
+
+        *   How about making hardware. For example an android stick with HFT pre-installed
+
+            I could boot directly into HFT. I could either be the WiFi or it could connect
+            to your home WiFi. Unfortunately with your home WiFi there's no way I can
+            think of for the phones to find the HFT machine through the browser?
+
+            One idea, use the WebRTC api (not available in iOS yet :()) to get your local ip.
+            From that you use XHR to try to contact all class C ip addresses searching for the
+            HTF server
+
+            You could serve the page that does that from htf.com or something like that.
 
 
 
@@ -103,6 +223,13 @@
     *   implement kick (comment in kickCrate in boomboomgame globals to make powerup appear, then implement in player.js)
     *   "Hurry!!!"
     *   close off edges at 30 second point?
+    *   try to make real AI.
+
+        I don't think this would have a point for HFT but I guess it would just be fine to try.
+        Especially to see if it can be fast enough in JS for 400+ AI players. They'd have to
+        probably get one AI tick for every N players. They'd probably only be able to look
+        within some small range of tiles to decide what to do?
+
     *   figure out what players waiting can do
     *   walking speed should start at 48 and progres to 64?
     *   consider showing map "radar" on controller when game starts and point to player
@@ -151,25 +278,6 @@
     inside a div. Just draw what you want. I swear I waste 1-3 hrs per controller
     futsuing with CSS :(
 
-*   remove auto registering of MessageCmdData classes
-
-    this is easier said than done. The reason they are pre-registered
-    is that controllers can start before games. So, controller sends a
-    message to the game, the game deserializes it but because the types
-    would not be registered until the NetPlayer starts it doesn't know
-    how to deserialize them yet. Auto registering means it does know.
-
-    An alternative would be if it can't find the correct type to deserialize to Dict<Object>
-    then put the message in a queue. Another idea would be to put all messages
-    in queues in the net player. Right now they are deserilized in the
-    websocket thread but they could just be queued there? Actually that doesn't
-    help as they have to be deserizlied before we can figure out which
-    player they belong to.
-
-    The problem now is the scanner check ALL scripts in Assets (I guess that's
-    because Unity includes all scripts). So, there will be conflict if 2 different
-    scripts define objects with the same CmdName
-
 *   Consider deciding the ExampleUI etc is part of HappyFunTimes
 
     Originally I thought HappyFunTimes was just the relayserver and the libraries to
@@ -214,9 +322,8 @@
 
 *   update unitydocs with UnityScript
 *   fix camera on unitycharacter example so
-    * it works for 1 player
-    * it doesn't swing around so much
-*   make server serve "chose another WiFi network to browse internet"
+    *   it works for 1 player
+    *   it doesn't swing around so much
 *   unity: see if we can figure out a way so controllers don't get disconnected if script is updated.
 
 *   **Issue:** Anyone can go to the gameview.html for a game.
@@ -239,13 +346,15 @@
     as in http://ipaddress/example/jumpjump/gameview.html?settings={password:"foobar"}. Since
     the griefer doesn't know the password they can't start games.
 
+    Could also make games only served on localhost or similarly ip restricted.
+
     Of course sadly griefers can easily break games. Maybe I should fix this? They can break games
     by sending bogus messages. Example. `sendCmd('move', {dir: "foo"})` will end up in the code as
 
         position += msg.foo;  // exception? ... or actually position becomes NaN :(
 
     I could put a try/catch when I call events. Unfortunately you'd like to be able to catch
-    the exceptions in the debugger when debugger. Maybe again this should be an option in
+    the exceptions in the debugger when debugging. Maybe again this should be an option in
     starting a game as in `...?settings={trycatchevents:true}`
 
     That wouldn't prevent griefing. See NaN above.
@@ -257,6 +366,16 @@
 
 *   Have better splash if no games running
 *   make gameviews template based so we can make disconnect behavior common
+
+    - [x] boomboom
+    - [x] clocksync
+    - [ ] deviceorientation
+    - [x] jamjam
+    - [x] jumpjump
+    - [x] powpow
+    - [x] shootshoot
+    - [ ] simple
+
 *   stop sliding fingers from selecting stuff.
 *   make bird quack if you click him (consider random speed)
 *   fix flex css (remove need for fixHeightHack)
@@ -279,8 +398,66 @@
 *   make sample games
 
     *   boomboom
-    *   platformer
-    *   8way shooter
+    *   platformer (jumpjump)
+    *   8way shooter (shootshoot)
+
+    *   Fist bump game
+
+        using accelermeters and synced clock maybe we can tell when
+        two people fist bump? Heck, maybe if 3 or more people have
+        the same time stamp we can assume all of them bumped?
+
+        Players have to fist bump everyone?
+
+    *   Games with physical movements
+
+        Players must turn around (use compass / device orientation).
+        Of course players can just turn their phones. Maybe they have
+        to hold them level (put dot on the screen with a circle, keep
+        circle in the dot as they are instructed to turn left, turn right,
+        jump, etc...
+
+    *   Just press button most times?
+
+        various track and field / hyper bishi bashi games
+
+    *   Find your name on other person's phone. Fist bump.
+
+    *   Find your picture on other person's phone.
+
+    *   game where players have to find matching piece of puzzle.
+
+        Example for groups of 3 players they might see
+
+            +---+  +---+  +---+   Picture of 3 phones side by side.
+            |   |  |   |  |   |   with some image that fits just those
+            | <-|  |-O-|  |-> |   3 phones.
+            |   |  |   |  |   |
+            |   |  |   |  |   |
+            +---+  +---+  +---+
+
+        You have to walk around the room and find your matching partners.
+        Maybe make it easier by matching background colors. First find all the red players,
+        then figure how to align the phones to see the image.
+
+        Not sure what you'd do at that point. Type the message that's across N
+        displays. Or maybe trace some line across all 3? Hard to do unless you
+        set the phones down.
+
+    *   game where you slide character from one phone to the other by sliding finger across both phones
+
+        Variation of above idea. If you know 2 phones are partners then you could slide
+        your finger from one to the other to drag a character across screens. The game would
+        know the 2 controllers belong together and based on time (syncedclock) and where fingers
+        are dragged could tell if you dragged from the the correct N phones.
+
+    *   Racing up or down screen using device orientation for steering
+
+    *   Use device orientation like a paddle controller. Tilting left
+        right moves basket across screen. Pressing button puts your
+        basket high for a moment. Try to catch more falling things than other
+        players?
+
     *   drawing game.
 
         Player's draw on their phone, add drawing to level? Maybe Crayon Physics like?
@@ -331,6 +508,12 @@
 
     *   Use device motion to play tennis like Wii (shake controller to return ball)
 
+    *   Use the Speech Synthesis API
+
+        Players plug in headphones and put them in just one ear. The game sends commands/advice/direction
+        to the controller which instructs each player secretly using the speech API. This way they
+        can look at the game (the TV) and still get individual and private instruction on what to do.
+
 *   abstract out Unity3D parts of C#
 
     Currently the C# version of the library is Unity3d specific. Should be easy to abstract that out
@@ -338,6 +521,48 @@
 
 Done
 ----
+
+*   move package.json stuff to happyfuntimes sub
+*   Make start on game-login use whole area.
+*   Change Powpow so outline version of ship is 2x or 3x thicker
+*   remove mobile stuff from games.html
+*   Make max name 16 chars
+*   Fix name editing on controllers. (jumping down 1/2 screen)
+*   add "if you like this code, here's the repo?" like Mozilla
+*   fix name flow
+    *   captive portal and hft.net should go to enter-name.html
+    *   enter-name.html should accept ?name=
+    *   enter-name.html should try to contact hft.net with like hft.net/savename.html?name= which saves a cookie
+    *   hft.net should read cookie so next time it can go to enter-name.htmk?name=
+    *   enter-name.html, if no name should ask for name. If name should go to index.html
+
+*   remove auto registering of MessageCmdData classes
+
+    this is easier said than done. The reason they are pre-registered
+    is that controllers can start before games. So, controller sends a
+    message to the game, the game deserializes it but because the types
+    would not be registered until the NetPlayer starts it doesn't know
+    how to deserialize them yet. Auto registering means it does know.
+
+    An alternative would be if it can't find the correct type to deserialize to Dict<Object>
+    then put the message in a queue. Another idea would be to put all messages
+    in queues in the net player. Right now they are deserilized in the
+    websocket thread but they could just be queued there? Actually that doesn't
+    help as they have to be deserizlied before we can figure out which
+    player they belong to.
+
+    The problem now is the scanner check ALL scripts in Assets (I guess that's
+    because Unity includes all scripts). So, there will be conflict if 2 different
+    scripts define objects with the same CmdName
+
+*   make games.html use game type for link. This way it can tell you to run unity games manually.
+
+*   now that we have game URLs make main menu generated at runtime
+
+*   add settimeout/setinterval to game support
+
+    Why? Because when debugging I have the games pause automatically but
+    timeouts/intervals don't pause. Basing them off the game clock would fix that.
 
 *   figure out why no sound from powpow controller?
 *   refactor sprite code so drawPrep is only called once.
@@ -394,6 +619,13 @@ Done
     it just works. Unity can connect to ws://localhost:8080 and games can connect to http://ipaddress/foo/bar/somecontroller.html
 
 *   boomboom
+    *   make it so you can lob bombs from the side after death
+    *   make sure bombs get reset before next level
+    *   show num bombs and flame size on controller
+    *   add reappear sound
+    *   add bounce sound
+    *   let you throw bombs further? (hold button?)
+    *   make lobbed bombs explode if on flame
     *   fix explosion at crate/bush with nothing on other side. should be tip.
     *   fix explosion on crates
     *   show names (limit to size?). Maybe only show it larger if player clicks avatar
@@ -402,7 +634,7 @@ Done
     *   fix so more than R*C players
     *   blow up bushes.
     *   Music
-        * main
+        *   main
         *   fast? with faster music? I wonder if I can do that easily in WebAudio? (yes!)
     *   controller
         *   handle 'waitForPlayers' {waitTime: seconds} msg
@@ -533,7 +765,7 @@ Done
 
 *   Make reload work on all controllers.
 
-    * consider making reload to go /index.html for game selection?
+    *   consider making reload to go /index.html for game selection?
 
 *   make dpad controller renderer
 
@@ -576,11 +808,11 @@ Done
 *   Figure out what to do when game disconnects.
 *   relayserver should tell clients when game connects/disconnects?
 *   give each game an id so one relayserver can run multiple games
-    * hard coded id means one instance of each game
-    * generated id means can handle multiple instances BUT, need way to pick instance?
-    * relayserver needs to create a new player when switching games. Probably handled
-      automatically as leaving the other game's controller panel will kill the connection.
-    * controller could have a menu button to go back to game selection screen?
+    *   hard coded id means one instance of each game
+    *   generated id means can handle multiple instances BUT, need way to pick instance?
+    *   relayserver needs to create a new player when switching games. Probably handled
+        automatically as leaving the other game's controller panel will kill the connection.
+    *   controller could have a menu button to go back to game selection screen?
 *   fix server to re-direct foo to foo/
 *   fix server to load index.html from foo/
 *   make hitshield in mp3
