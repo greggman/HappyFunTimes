@@ -31,8 +31,8 @@
 "use strict";
 
 /**
- * A module for strings
- * @module strings
+ * Miscellaneous string functions
+ * @module Strings
  */
 define(function() {
 
@@ -70,6 +70,7 @@ define(function() {
    * @param {number} len number of characters to pad to
    * @param {string} padChar character to pad with
    * @returns {string} padded string.
+   * @memberOf module:Strings
    */
   var padRight = function(str, len, padChar) {
     str = stringIt(str);
@@ -86,6 +87,7 @@ define(function() {
    * @param {number} len number of characters to pad to
    * @param {string} padChar character to pad with
    * @returns {string} padded string.
+   * @memberOf module:Strings
    */
   var padLeft = function(str, len, padChar) {
     str = stringIt(str);
@@ -103,9 +105,11 @@ define(function() {
    * and an object like `{name:"Joe",user:{country:"USA"}}` would
    * return `"Hello Joe from USA"`.
    *
+   * @function
    * @param {string} str string to do replacements in
    * @param {Object|Object[]} params one or more objects.
    * @returns {string} string with replaced parts
+   * @memberOf module:Strings
    */
   var replaceParams = (function() {
     var replaceParamsRE = /%\(([^\)]+)\)s/g;
@@ -142,6 +146,7 @@ define(function() {
    * @param {String} str string to check for start
    * @param {String} prefix start value
    * @returns {Boolean} true if str starts with prefix
+   * @memberOf module:Strings
    */
   var startsWith = function(str, start) {
     return (str.length >= start.length &&
@@ -153,6 +158,7 @@ define(function() {
    * @param {String} str string to check for start
    * @param {String} suffix start value
    * @returns {Boolean} true if str starts with suffix
+   * @memberOf module:Strings
    */
   var endsWith = function(str, end) {
     return (str.length >= end.length &&
@@ -161,9 +167,11 @@ define(function() {
 
   /**
    * Make a string from unicode code points
+   * @function
    * @param {Number} codePoint one or more code points
-   * @return {string} unicode string. Note a single code point can
-   *         return a string with length > 1.
+   * @returns {string} unicode string. Note a single code point
+   *          can return a string with length > 1.
+   * @memberOf module:Strings
    */
   var fromCodePoint = String.fromCodePoint ? String.fromCodePoint : (function() {
     var stringFromCharCode = String.fromCharCode;
@@ -208,24 +216,8 @@ define(function() {
     return fromCodePoint;
   }());
 
-  /**
-   * @typedef {Object} strings:FooBar
-   * @property {string} burp
-   */
-
-  /**
-   * @alias module:strings
-   */
   var exports = {
     endsWith: endsWith,
-    /**
-     * Make a string from unicode code points
-     * @function
-     * @param {Number} codePoint one or more code points
-     * @param {FooBar} foo the foobar
-     * @return {string} unicode string. Note a single code point can
-     *         return a string with length > 1.
-     */
     fromCodePoint: fromCodePoint,
     padLeft: padLeft,
     padRight: padRight,

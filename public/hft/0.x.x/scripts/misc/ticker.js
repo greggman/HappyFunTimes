@@ -32,6 +32,18 @@
 
 define(function() {
 
+  /**
+   * An object that calls a funciton once every N second for Y seconds
+   *
+   * Example: You want a flashing light that flashes 5 times a second
+   * and continues to flash for 10 seconds
+   *
+   *     var ticker = new Ticker();
+   *     ticker.tick(10, 1/5, flashTheLight);
+   *
+   * @constructor
+   * @alias Ticker
+   */
   var Ticker = function() {
     var intervalId = undefined;
     var timeoutId = undefined;
@@ -47,8 +59,18 @@ define(function() {
       }
     };
 
+    /**
+     * Cancels the ticker before it's done
+     * @func
+     */
     this.cancel = cancel;
 
+    /**
+     * Starts the ticker
+     * @param {number} durationInSeconds duration in seconds to tick.
+     * @param {number} intervalInSeconds duration of a single tick
+     * @param {callback} fn function to call at each tick.
+     */
     this.tick = function(durationInSeconds, intervalInSeconds, fn) {
       cancel();
       intervalId = setInterval(fn, intervalInSeconds * 1000);

@@ -30,8 +30,17 @@
  */
 "use strict";
 
+/**
+ * Various functions to help with user input
+ * @module Input
+ */
 define(['./misc'], function(Misc) {
 
+  /**
+   * The cursor key values. Can be used to register keys
+   * @enum {number}
+   * @memberOf module:Input
+   */
   var cursorKeys = {
     kLeft: 37,
     kRight: 39,
@@ -39,16 +48,40 @@ define(['./misc'], function(Misc) {
     kDown: 40,
   };
 
-  // You can use these to make your own options for setupKeyboardDPadKeys
+  /**
+   * You can use these to make your own options for setupKeyboardDPadKeys
+   * @const {number[]} kCursorKeys
+   * @memberOf module:Input
+   */
   var kCursorKeys = [37, 39, 38, 40];
+  /**
+   * You can use these to make your own options for setupKeyboardDPadKeys
+   * @const {number[]} kASWDKeys
+   * @memberOf module:Input
+   */
   var kASWDKeys = [65, 68, 87, 83];
 
-  // You can pass these into setupKeyboardDPadKeys
+  /**
+   * You can use these to make your own options for setupKeyboardDPadKeys
+   *
+   *     Input.setupKeyboardDPadKeys(callback, Input.kASWDPadOnly);
+   *
+   * @const {module:Input.DPadKeys~Options} kASWDPadOnly
+   * @memberOf module:Input
+   */
   var kASWDPadOnly = {
     pads: [
       { keys: kASWDKeys, },
     ],
   };
+  /**
+   * You can use these to make your own options for setupKeyboardDPadKeys
+   *
+   *     Input.setupKeyboardDPadKeys(callback, Input.kCursorPadOnly);
+   *
+   * @const {module:Input.DPadKeys~Options} kCursorPadOnly
+   * @memberOf module:Input
+   */
   var kCursorPadOnly = {
     pads: [
       { keys: kCursorKeys, },
@@ -69,6 +102,27 @@ define(['./misc'], function(Misc) {
   var UP = 0x4;
   var DOWN = 0x8;
 
+  /**
+   * Various info for a given 8 direction direction.
+   *
+   *        2     -1 = no touch
+   *      3 | 1
+   *       \|/
+   *     4--+--0
+   *       /|\
+   *      5 | 7
+   *        6
+   *
+   * @typedef {Object} DirectionInfo
+   * @memberOf module:Input
+   * @property {number} direction -1 to 7
+   * @property {number} dx -1, 0, or 1
+   * @property {number} dy -1, 0, or 1
+   * @property {number} bits where `R = 0x1, L = 0x2, U = 0x4, D =
+   *           0x8`
+   * @property {string} unicode arrow simple for direction.
+   */
+
   var dirInfo = { };
   dirInfo[-1] = { direction: -1, dx:  0, dy:  0, bits: 0           , symbol: String.fromCharCode(0x2751), };
   dirInfo[ 0] = { direction:  0, dx:  1, dy:  0, bits: RIGHT       , symbol: String.fromCharCode(0x2192), }; // right
@@ -80,6 +134,19 @@ define(['./misc'], function(Misc) {
   dirInfo[ 6] = { direction:  6, dx:  0, dy: -1, bits: DOWN        , symbol: String.fromCharCode(0x2193), }; // down
   dirInfo[ 7] = { direction:  7, dx:  1, dy: -1, bits: DOWN | RIGHT, symbol: String.fromCharCode(0x2198), }; // down-right
 
+  /**
+   * @typedef {Object} EventInfo
+   * @property {number} pad the pad id 0, 1, 2, etc.
+   * @property {module:Input~DirectionInfo} info the direction
+   *           info for the event.
+   * @memberOf module:Input
+   */
+
+  /**
+   * Creates an EventInfo for a given padId
+   * @returns {module:Input.EventInfo}
+   * @memberOf module:Input
+   */
   var createDirectionEventInfo = function(padId) {
     return {
       pad: padId,
@@ -87,6 +154,15 @@ define(['./misc'], function(Misc) {
     };
   };
 
+  /**
+   * @param {number} padId id of pad. eg. 0, 1, 2
+   * @param {number} direction direction pad is being pressed -1
+   *        to 7.
+   * @param {EventInfo} eventInfo from createDirectionEventInfo.
+   * @param {callback} callback to pass eventInfo once it's been
+   *        filled out.
+   * @memberOf module:Input
+   */
   var emitDirectionEvent = function(padId, direction, eventInfo, callback) {
     var info = dirInfo[direction];
     eventInfo.pad = padId;
@@ -94,10 +170,31 @@ define(['./misc'], function(Misc) {
     callback(eventInfo);
   };
 
+  /**
+   * Given a direction returns a direction info
+   * @param {number} direction -1 to 7
+   * @return {module:Input.DirectionInfo}
+   * @memberOf module:Input
+   */
   var getDirectionInfo = function(direction) {
     return dirInfo[direction];
   };
 
+  /**
+   * @typedef {Object} Coordinate
+   * @property {number} x the x coordinate
+   * @property {number} y the y coordinate
+   * @memberOf module:Input
+   */
+
+  /**
+   * Gets the relative coordinates for an event
+   * @func
+   * @param {HTMLElement} reference html elemetn to reference
+   * @param {Event} event from HTML mouse event
+   * @returns {module:Input.Coordinate} the relative position
+   * @memberOf module:Input
+   */
   var getRelativeCoordinates = (function(window, undefined) {
     return function(reference, event) {
       // Use absolute coordinates
@@ -108,6 +205,16 @@ define(['./misc'], function(Misc) {
     };
   }());
 
+  /**
+   * Sets up controller key functions
+   * @param {callback(code, down)} keyDownFn a function to be
+   *        called when a key is pressed. It's passed the keycode
+   *        and true.
+   * @param {callback(code, down)} keyUpFn a function to be called
+   *        when a key is released. It's passed the keycode and
+   *        false.
+   * @memberOf module:Input
+   */
   var setupControllerKeys = function(keyDownFn, keyUpFn) {
     var g_keyState = {};
     var g_oldKeyState = {};
@@ -136,35 +243,57 @@ define(['./misc'], function(Misc) {
     window.addEventListener("keydown", keyDown, false);
   };
 
-  // Simulates N virtual dpads using keys
-  // asdw for pad 0, arrow keys for pad 1
-  //
-  // For each change in direction callback will be
-  // called with pad id (0 left, 1 right) and direction
-  // where
-  //
-  //    2     -1 = not pressed
-  //  3 | 1
-  //   \|/
-  // 4--+--0
-  //   /|\
-  //  5 | 7
-  //    6
-  //
-  // Note: this matches trig functions you can do this
-  //
-  //     var angle = dir * Math.PI / 4;
-  //     var dx    = Math.cos(angle);
-  //     var dy    = Math.sin(angle);
-  //
-  // for +y up (ie, normal for 3d)
-  //
-  // In 2d you'd probably want
-  //
-  //     var angle =  dir * Math.PI / 4;
-  //     var dx    =  Math.cos(angle);
-  //     var dy    = -Math.sin(angle);
-  //
+  /**
+   * @typedef {Object} DPadKeys
+   * @property {number[]} keys Array of 4 key codes that make a
+   *           keyboard dpad in LRUD order.
+   * @memberOf module:Input
+   */
+
+  /**
+   * @typedef {Object} DPadKeys~Options
+   * @property {module:Input.DPadKeys[]} pads Array of dpad keys
+   * @memberOf module:Input
+   */
+
+  /**
+   * Simulates N virtual dpads using keys
+   * asdw for pad 0, arrow keys for pad 1
+   *
+   * For each change in direction callback will be
+   * called with pad id (0 left, 1 right) and direction
+   * where
+   *
+   *        2     -1 = not pressed
+   *      3 | 1
+   *       \|/
+   *     4--+--0
+   *       /|\
+   *      5 | 7
+   *        6
+   *
+   * Note: this matches trig functions you can do this
+   *
+   *     var angle = dir * Math.PI / 4;
+   *     var dx    = Math.cos(angle);
+   *     var dy    = Math.sin(angle);
+   *
+   * for +y up (ie, normal for 3d)
+   *
+   * In 2d you'd probably want
+   *
+   *     var angle =  dir * Math.PI / 4;
+   *     var dx    =  Math.cos(angle);
+   *     var dy    = -Math.sin(angle);
+   *
+   *
+   * @param {callback} callback callback will be called with
+   *        EventInfo objects when pads change their direction
+   * @param {module:Input.DPadKeys~Options?} options If no options
+   *        are passed in assumes 2 DPads one on ASWD the other on
+   *        the cursor keys
+   * @memberOf module:Input
+   */
   var setupKeyboardDPadKeys = function(callback, options) {
     if (!options) {
       options = {
@@ -261,7 +390,30 @@ define(['./misc'], function(Misc) {
     setupControllerKeys(keyDown, keyUp);
   };
 
-  //
+  /**
+   * @typedef {Object} KeyEvent
+   * @property {number} keyCode
+   * @property {boolean} pressed true if pressed, false if
+   *           released
+   * @memberOf module:Input
+   */
+
+  /**
+   * Sets up handlers for specific keys
+   * @memberOf module:Input
+   * @param {Object.<string, callback>} array of keys to handler
+   *        functions. Handlers are called with a KeyEvent
+   *
+   * @example
+   *
+   *      var keys = { };
+   *      keys["Z".charCodeAt(0)] = handleJump;
+   *      keys["X".charCodeAt(0)] = handleShow
+   *      keys["C".charCodeAt(0)] = handleTestSound;
+   *      keys[Input.cursorKeys.kRight] = handleMoveRight;
+   *      Input.setupKeys(keys);
+   *
+   */
   var setupKeys = function(keys) {
     var keyCodes = {};
 

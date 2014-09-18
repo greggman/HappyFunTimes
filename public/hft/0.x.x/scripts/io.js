@@ -29,28 +29,40 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+/**
+ * Misc IO functions
+ * @module IO
+ */
 define(function() {
   var log = function() { };
   //var log = console.log.bind(console);
 
   /**
+   * @typedef {Object} SendJson~Options
+   * @memberOf module:IO
+   * @property {number?} timeout. Timeout in ms to abort.
+   *        Default = no-timeout
+   */
+
+  /**
    * sends a JSON 'POST' request, returns JSON repsonse
+   * @memberOf module:IO
    * @param {string} url url to POST to.
-   * @param {!object} jsonObject JavaScript object on which to call JSON.stringify.
+   * @param {Object=} jsonObject JavaScript object on which to
+   *        call JSON.stringify.
    * @param {!function(error, object)} callback Function to call
    *        on success or failure. If successful error will be
-   *        null
-   * @param {!object} opt_options Optional options.
-   *     {number} timeout: timeout in ms to abort request. Default = no-timeout
+   *        null, object will be json result from request.
+   * @param {module:IO~SendJson~Options?} options
    */
-  var sendJSON = function(url, jsonObject, callback, opt_options) {
-    opt_options = opt_options || { };
+  var sendJSON = function(url, jsonObject, callback, option) {
+    option = option || { };
     var error = 'sendJSON failed to load url "' + url + '"';
     var request = new XMLHttpRequest();
     if (request.overrideMimeType) {
       request.overrideMimeType('text/plain');
     }
-    var timeout = opt_options.timeout || 0;
+    var timeout = option.timeout || 0;
     request.timeout = timeout;
     log("set timeout to: " + request.timeout);
     request.open('POST', url, true);

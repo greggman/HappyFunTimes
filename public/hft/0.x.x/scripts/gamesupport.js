@@ -30,6 +30,17 @@
  */
 "use strict";
 
+/**
+ * Implements the common parts of HappyFunTimes games written in
+ * JavaScript.
+ *
+ * It provides a render loop with frame count and game clock as
+ * well as handles pausing the game during development so as
+ * not to deplete the battries on your laptop. It can also show
+ * the framerate and display debugging info.
+ *
+ * @module GameSupport
+ */
 define([
     '../../../3rdparty/stats/stats.min',
     './misc/gameclock',
@@ -55,17 +66,32 @@ define([
   var statusNode;
   var logger = new Logger.NullLogger();
 
-  // options:
-  //   showFPS: true adds a fps display
-  //   debug: un-hides the debug html elements
-  //   numConsoleLines: number of lines to show for the debug console.
-  //
-  // You can add text to the debug console with
-  // `GameSupport.log(msg)` or `GameSupport.error(msg)`
-  // which are no-ops if `debug` is false.
-  //
-  // Similarly you can display status with
-  // `GameSupport.setStatus("foo\nbar");`
+  /**
+   * @typedef {Object} GameSupport~InitOptions
+   * @property {boolean?} showFPS true adds a fps display
+   * @property {boolean?} debug un-hides the debug html elements
+   * @property {number?} numConsoleLines number of lines to show for the debug console.
+   * @property {boolean?} haveServer false This is bad name but
+   *           it's used to suggest you don't want to connect to
+   *           happyFunTimes
+   * @memberOf module:GameSupport
+   *
+   * You can add text to the debug console with
+   * `GameSupport.log(msg)` or `GameSupport.error(msg)`
+   * which are no-ops if `debug` is false.
+   *
+   * Similarly you can display status with
+   * `GameSupport.setStatus("foo\nbar");`
+   */
+
+  /**
+   * Initializes the game support
+   * @param {GameServer?} server The GameServer you created for
+   *        the game.
+   * @param {module:GameSupport.GameSupport~InitOptions} options
+   * @memberOf module:GameSupport
+   *
+   */
   var init = function(server, options) {
     var showConnected = function() {
       $('hft-disconnected').style.display = "none";
@@ -110,14 +136,30 @@ define([
     }
   };
 
-  // globals that are checked/effected
-  //
-  //   elapsedTime: time elapsed in seconds since last frame
-  //   frameCount:  count of frames
-  //   haveServer:  if false will pause when it doens't have the focus.
-  //   pauseOnBlur: if true will pause when it doesn't have the focus.
-  //   step:        if true will step one tick for each mouse click
-  //
+  /**
+   * @typedef {Object} GameSupport~RunGlobals
+   *
+   * @param {number} elapsedTime time elapsed in seconds since
+   *        last frame
+   * @param {number} frameCount count of frames since the game
+   *        started
+   * @param {boolean?} haveServer if false will pause when it
+   *        doens't have the focus.
+   * @param {boolean?} pauseOnBlur if true will pause when it
+   *        doesn't have the focus.
+   * @param {boolean?} step:        if true will step one tick for
+   *        each mouse click
+   */
+
+  /**
+   * Starts the render loop.
+   * @memberOf module:GameSupport
+   * @param {module:GameSupport.GameSupport~RunGlobals} globals
+   * @param {callback} fn This function will be called once every
+   *        60th of a second but may be paused if haveServer =
+   *        false or pauseOnBlur = true when the window does not
+   *        have the focus.
+   */
   var run = function(globals, fn) {
     var clock = new GameClock();
     globals.frameCount = 0;
@@ -182,16 +224,34 @@ define([
     }
   };
 
+  /**
+   * Sets the content of the status element. Only visible of debug
+   * is true.
+   * @memberOf module:GameSupport
+   * @param {string} str value to set the status
+   */
   var setStatus = function(str) {
     if (statusNode) {
       statusNode.nodeValue = str;
     }
   };
 
+  /**
+   * Logs a msg to the HTML based console that is only visible
+   * when debug = true.
+   * @memberOf module:GameSupport
+   * @param {string} str msg to add to log
+   */
   var log = function(str) {
     logger.log(str);
   };
 
+  /**
+   * Logs an error to the HTML based console that is only visible
+   * when debug = true.
+   * @memberOf module:GameSupport
+   * @param {string} str msg to add to log
+   */
   var error = function(str) {
     logger.error(str);
   };

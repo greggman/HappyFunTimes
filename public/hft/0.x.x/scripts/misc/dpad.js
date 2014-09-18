@@ -62,7 +62,21 @@ define(
     }
   };
 
-  // Renders a Dpad
+  /**
+   * @typedef {Object} DPad~Options
+   * @property {HTMLElement} elemnt element to put dpad inside.
+   *           DPad will be resized to fit this element or to the
+   *           size specified
+   * @property {number} size size in CSS pixels to make DPad
+   */
+
+  /**
+   * Renders a Dpad
+   *
+   * @constructor
+   * @alias DPad
+   * @param {DPad~Options} options
+   */
   var DPad = function(options) {
     this.element = options.element;
     this.size = options.size;
@@ -74,6 +88,10 @@ define(
     this.drawBits(0);
   };
 
+  /**
+   * Gets the size of the dpad
+   * @return {number} size of dpad in CSS pixels
+   */
   DPad.prototype.getSize = function() {
     var size = this.size;
     if (!size) {
@@ -82,6 +100,11 @@ define(
     return size;
   };
 
+  /**
+   * Draws the dpad given a set of bits
+   * @param {number} bits where 0x1 is right, 0x2 is left, 0x4 is
+   *        up and 0x8 is down.
+   */
   DPad.prototype.drawBits = function(bits) {
     var size = this.getSize();
     var w6 = Math.floor(size / 6.5);
@@ -114,10 +137,18 @@ define(
     ctx.restore();
   };
 
+  /**
+   * Draws the dpad given a DirInfo
+   * @param {DirInfo} dirInfo
+   */
   DPad.prototype.draw = function(dirInfo) {
     this.drawBits(dirInfo.bits);
   };
 
+  /**
+   * Resizes the DPad to match its container or to the size
+   * specified at creation time
+   */
   DPad.prototype.resize = function() {
     var size = this.size;
     if (!size) {

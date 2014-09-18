@@ -29,6 +29,11 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+/**
+ * Functions for parsing CSS
+ *
+ * @module CSSParse
+ */
 define(function() {
 
   var s_colorData = {
@@ -190,15 +195,27 @@ define(function() {
   var s_rgbaRE = /\s*rgba\s*\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)\s*,\s*(.+)\)\s*/;
   var s_nameRE = /\s*(\w+)\s*/;
 
-  // given a CSS color string, returns an array of 4 integers [r, g, b, a] in the range 0 to 255.
-  // if opt_0to1 is passed in the values will be 0 to 1.
-  var parseCSSColor = function(s, opt_0to1) {
-    // I have no idea what all the color formats are. The ones here are
-    // name:         red,              green,            purple
-    // #RGB:         #F00,             #0F0,             #F0F
-    // #RRGGBB       #FF0000,          #00FF00,          #FF00FF
-    // rgb(r,g,b)    rgb(255,0,0)      rgb(0,255,0),     rgb(255,0,255)
-    // rgba(r,g,b,a) rgba(255,0,0,1.0) rgba(0,255,0,1.0) rgba(255,0,255,1.0)
+  /**
+   * given a CSS color string, returns an array of 4 integers
+   * `[r, g, b, a]` in the range 0 to 255.
+   *
+   * Examples of css colors
+   *
+   *     name:         red,              green,            purple
+   *     #RGB:         #F00,             #0F0,             #F0F
+   *     #RRGGBB       #FF0000,          #00FF00,          #FF00FF
+   *     rgb(r,g,b)    rgb(255,0,0)      rgb(0,255,0),     rgb(255,0,255)
+   *     rgba(r,g,b,a) rgba(255,0,0,1.0) rgba(0,255,0,1.0) rgba(255,0,255,1.0)
+   *
+   *
+   * @memberOf module:CSSParse
+   * @param {string} s css color
+   * @param {boolean?} opt_0to1 if true the values will be 0 to 1
+   *        instead of 0 to 255 which is useful for WebGL.
+   * @return {number[]} array of numbers `[r, g, b, a]` that match
+   *         color.
+   */
+   var parseCSSColor = function(s, opt_0to1) {
 
     var m;
     var c;

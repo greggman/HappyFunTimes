@@ -44,8 +44,9 @@ define(function() {
    * events in your game as though they were from the controller.
    *
    * @constructor
+   * @alias LocalNetPlayer
    * @example
-   *   if (offline) {
+   *   if (!globals.haveServer) {
    *     // We're testing locally so just manually create a
    *     // player.
    *
@@ -54,7 +55,7 @@ define(function() {
    *     addPlayer(player1);
    *
    *     // pretend player1 one got a message from the
-   *     // controller when a key is pressed
+   *     // controller when any key is pressed
    *
    *     window.addEventListner('keypress', function() {
    *       localNetPlayer1.sendEvent('jump', { power: 10 });
@@ -78,14 +79,23 @@ define(function() {
     }
   }());
 
+  /**
+   * @see NetPlayer.addEventListener
+   */
   LocalNetPlayer.prototype.addEventListener = function(eventType, handler) {
     this.eventHandlers[eventType] = handler;
   };
 
+  /**
+   * @see NetPlayer.removeEventListener
+   */
   LocalNetPlayer.prototype.removeEventListener = function(eventType) {
     this.eventHandlers[eventType] = undefined;
   };
 
+  /**
+   * @see NetPlayer.removeAllListeners
+   */
   LocalNetPlayer.prototype.removeAllListeners = function() {
     this.eventHanders = { };
   };
@@ -94,6 +104,17 @@ define(function() {
     // No-op because this is a local player.
   };
 
+  /**
+   * Sends an event to this netplayer.
+   *
+   * Use this to emit synthetic events into the game. Effectively
+   * whatever messages you're sending from your controller you can
+   * send here based on events on the computer. In other words to
+   * simulate having a phone connected you can emit events based
+   * on mouse movement or keypressed that correspond to the same
+   * events that would have been emitted if a phone was actually
+   * connected and programmed to send similar events.
+   */
   LocalNetPlayer.prototype.sendEvent = function(eventType, data) {
     var fn = this.eventHandlers[eventType];
     if (fn) {

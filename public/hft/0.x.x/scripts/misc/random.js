@@ -30,8 +30,34 @@
  */
 "use strict";
 
+/**
+ * Random functions
+ * @module Random
+ */
 define(function() {
 
+  /**
+   * A pseudo random number generator.
+   * This can be use to repeat a sequence of semi random numbers.
+   * Call reset when you want to start the sequence over.
+   *
+   * As an example if you wanted to draw random stars in a game
+   * you'd have to either make a table of random star positions
+   * or you could just do this every frame, no storage needed.
+   *
+   *     // at init time
+   *     var r = new Random.PseudoRandomGenerator();
+   *
+   *     // at draw time
+   *     r.reset();
+   *     for (var ii = 0; ii < numStars; ++ii) {
+   *        drawStar(r.randomInt(width), r.randomInt(height));
+   *     }
+   *
+   * @constructor
+   * @alias PseudoRandomGenerator
+   * @memberOf module:Random
+   */
   var PseudoRandomGenerator = function() {
     var s_randomSeed = 0;
     var RANDOM_RANGE = Math.pow(2, 32);
@@ -42,22 +68,71 @@ define(function() {
               RANDOM_RANGE) / RANDOM_RANGE;
     };
 
+    /**
+     * Generates a pseudo random int between 0 and 2~32
+     * @func
+     * @returns a pseudo random int between 0 and 2~32
+     */
     this.random = random;
 
+    /**
+     * Starts the pseudo random sequence over.
+     */
     this.reset = function() {
       s_randomSeed = 0;
     };
 
+    /**
+     * Generates a pseudo random number between min and max
+     * @param {number} min min value
+     * @param {number} max max value
+     * @returns a pseudo random number between min and max
+     */
     this.randomRange = function(min, max) {
       return min + random() * (max - min);
     };
 
+    /**
+     * Generates a pseudo random number from 0 to max
+     * @param {number} range max value
+     * @returns a pseudo random number from 0 to max
+     */
     this.randomInt = function(range) {
       return random() * range | 0;
     };
   };
 
   var def = new PseudoRandomGenerator();
+
+  /**
+   * Generates a pseudo random int between 0 and 2~32
+   * @func pseudoRandom
+   * @memberOf module:Random
+   * @returns a pseudo random int between 0 and 2~32
+   */
+
+  /**
+   * Generates a pseudo random number between min and max
+   * @func pseudoRandomRange
+   * @memberOf module:Random
+   * @param {number} min min value
+   * @param {number} max max value
+   * @returns a pseudo random number between min and max
+   */
+
+  /**
+   * Generates a pseudo random number from 0 to max
+   * @func pseudoRandomInt
+   * @memberOf module:Random
+   * @param {number} range max value
+   * @returns a pseudo random number from 0 to max
+   */
+
+  /**
+   * Starts the pseudo random sequence over.
+   * @func resetPseudoRandom
+   * @memberOf module:Random
+   */
 
   return {
     PseudoRandomGenerator: PseudoRandomGenerator,

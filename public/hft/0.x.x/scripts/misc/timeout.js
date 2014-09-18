@@ -31,6 +31,16 @@
 
 "use strict";
 
+/**
+ * A module or provide `setTimeout` and `setInterval` like functionality
+ * but that's based on a clock provided by the game. This is useful
+ * especially during debugging because you might pause in the debugger.
+ * normal timeouts and intervals will not pause. These will. Similarly
+ * if you slowed the clock down (bullet time) these timers could slow
+ * down too.
+ *
+ * @module Timeout
+ */
 define(function() {
 
   var s_nextId = 0;
@@ -86,6 +96,13 @@ define(function() {
     timeout.timeToTrigger = s_clockInMs + timeInMs;
   };
 
+  /**
+   * Same as normal setTimeout
+   * @param {callback} callback function to call when it times out
+   * @param {number} timeInMs duration of timeout
+   * @return {number} id for timeout
+   * @memberOf module:Timeout
+   */
   var setTimeout = function(callback, timeInMs) {
     var timeout = makeTimeout(callback);
     setTriggerTime(timeout, timeInMs);
@@ -93,6 +110,13 @@ define(function() {
     return timeout.id;
   };
 
+  /**
+   * Same as normal setInterval
+   * @param {callback} callback function to call at each interval
+   * @param {number} timeInMs duration of internval
+   * @return {number} id for interval
+   * @memberOf module:Timeout
+   */
   var setInterval = function(callback, timeInMs) {
     var timeout = makeTimeout(function() {
       setTriggerTime(timeout, timeout.timeInMs);
@@ -104,14 +128,42 @@ define(function() {
     return timeout.id;
   };
 
+  /**
+   * Same as normal clearTimeout
+   * @param {number} id of timeout to clear.
+   * @memberOf module:Timeout
+   */
   var clearTimeout = function(id) {
     s_timeoutsToRemoveById.push(id);
   };
 
+  /**
+   * Same as normal clearInterval
+   * @param {number} id of interval to clear.
+   * @memberOf module:Timeout
+   */
   var clearInterval = function(id) {
     s_timeoutsToRemoveById.push(id);
   };
 
+  /**
+   * Processes the intervals and timeouts
+   *
+   * This is how you control the clock for the timouts
+   *
+   * A typical usage might be
+   *
+   *
+   *     var g = {};
+   *     GameSupport.run(g, mainloop);
+   *
+   *     function mainloop() {
+   *       Timeout.process(globals.elapsedTime);
+   *     };
+   *
+   * @param {number} elapsedTimeInSeconds number of seconds to advance the clock.
+   * @memberOf module:Timeout
+   */
   var process = function(elapsedTimeInSeconds) {
     // insert any unscheduled timeouts
     if (s_timeoutsToInsert.length) {

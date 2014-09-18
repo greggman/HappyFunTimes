@@ -34,9 +34,18 @@
 define(['./virtualsocket'], function(VirtualSocket) {
   /**
    * @typedef {Object} GameClient~Options
-   * @property {string?} gameId id of game. This is how games and
-   *           controller rendezvous.
-   * @property {string?} url url of websocket server.
+   */
+
+  /**
+   * Event that we've connected to happyFunTimes
+   *
+   * @event GameClient#connected
+   */
+
+  /**
+   * Event that we've been disconnected from happyFunTimes
+   *
+   * @event GameClient#disconnected
    */
 
   /**
@@ -44,7 +53,7 @@ define(['./virtualsocket'], function(VirtualSocket) {
    * game's GameServer.
    *
    * Messages sent with `sendCmd` get sent to the game. Messages
-   * from the game are delivered to callbacks registerd with
+   * from the game are delivered to callbacks registered with
    * `addEventListener`.
    *
    * @constructor
@@ -161,6 +170,12 @@ define(['./virtualsocket'], function(VirtualSocket) {
      * Sends a command to the game
      * @param {string} cmd name of command
      * @param {Object=} data any jsonifyable object.
+     * @example
+     *
+     *     client.sendCmd('position', {
+     *        x: 123,
+     *        y: 456,
+     *     });
      */
     this.sendCmd = function(cmd, data) {
       sendCmdLowLevel('update', {

@@ -36,10 +36,22 @@ define(function() {
   var emptyMsg = {};
 
   /**
+   * Event that the player has left.
+   *
+   * @event NetPlayer#disconnected
+   */
+
+  /**
    * Manages a player across the net.
    *
-   * @constructor
+   * **NOTE: YOU DO NOT CREATE THESE DIRECTLY**. They are created
+   * by the `GameServer` whenever a new player joins your game.
+   * They are passed to you in the 'playerconnect' event from
+   * `GameServer`
    *
+   * @private
+   * @constructor
+   * @alias NetPlayer
    * @param {GameServer} server
    * @param {number} id
    * @param {string} name
@@ -53,7 +65,8 @@ define(function() {
   /**
    * Sends a message to this player.
    *
-   * @param msg
+   * @param {string} cmd
+   * @param {object?} msg a jsonifyable object.
    */
   NetPlayer.prototype.sendCmd = function(cmd, msg) {
     if (msg === undefined) {
@@ -62,6 +75,29 @@ define(function() {
     this.server.sendCmd("client", this.id, {cmd: cmd, data: msg});
   };
 
+  /**
+   * Adds an event listener
+   *
+   * You make up these events. Calling
+   *
+   *     GameClient.sendCmd('someEvent', { foo: 123});
+   *
+   * In the controller (the phone) will emit an event `someEvent`
+   * which will end up calling the handler. That handler will be
+   * passed the data. In the example above that data is
+   * `{foo:123}`
+   *
+   *     function handleSomeEvent(data) {
+   *       console.log("foo = " + data.foo);
+   *     }
+   *
+   *     someNetPlayer.addEventListener('someEvent', handleSomeEvent);
+   *
+   *
+   * @param {string} eventType name of event.
+   * @param {function(object)} handler function to call when event
+   *        arrives
+   */
   NetPlayer.prototype.addEventListener = function(eventType, handler) {
     var self = this;
 
@@ -78,10 +114,17 @@ define(function() {
     this.eventHandlers[eventType] = handler;
   };
 
+  /**
+   * Removes an event listener
+   * @param {string} eventType name of event to remove
+   */
   NetPlayer.prototype.removeEventListener = function(eventType) {
     this.eventHandlers[eventType] = undefined;
   };
 
+  /**
+   * Removes all listeners
+   */
   NetPlayer.prototype.removeAllListeners = function() {
     this.eventHanders = { };
   };

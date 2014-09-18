@@ -30,6 +30,11 @@
  */
 "use strict";
 
+/**
+ * Implements the common UI parts of HappyFunTimes for
+ * contollers.
+ * @module CommonUI
+ */
 define([
     './io',
     './hft-splash',
@@ -45,6 +50,27 @@ define([
     return document.getElementById(id);
   };
 
+  /**
+   * @typedef {Object} ControllerUI~Options
+   * @property {callback?} function to call when controller
+   *           connects to HappyFunTimes
+   * @property {callback?} function to call when controller is
+   *           disconncted from game.
+   * @property {boolean?} debug True displays a status and debug
+   *           html element
+   * @memberOf module:CommonUI
+   */
+
+  /**
+   * Sets up the standard UI for a happyFunTimes controller
+   * (phone). Including handling being disconnected from the
+   * current game and switching to new games as well as name
+   * input and the gear menu.
+   *
+   * @param {GameClient} client The `GameClient` for the phone
+   * @param {module:CommonUI.ControllerUI~Options} options
+   * @memberOf module:CommonUI
+   */
   var setupStandardControllerUI = function(client, options) {
     var menu = $("hft-menu");
     var settings = $("hft-settings");
@@ -134,7 +160,7 @@ define([
         });
       };
 
-      // Give the game a moment to restart and connect to the relayserver
+      // Give the game a moment to restart and connect to happyFunTimes
       setTimeout(checkForGame, 1000);
     });
 

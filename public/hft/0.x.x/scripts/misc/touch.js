@@ -30,84 +30,102 @@
  */
 "use strict";
 
+/**
+ * Various functions for touch input.
+ *
+ * @module Touch
+ */
 define(
   [ '../../../../3rdparty/handjs/hand-1.3.7',
     './input',
     './misc',
   ], function(HandJS, Input, Misc) {
 
-  // Simulates N virtual dpads using touch events
-  //
-  // For each change in direction callback will be
-  // called with an event info where
-  //
-  // pad = (index of pad)
-  // direction =
-  //
-  //
-  //    2     -1 = no touch
-  //  3 | 1
-  //   \|/
-  // 4--+--0
-  //   /|\
-  //  5 | 7
-  //    6
-  //
-  // dx   = -1, 0, 1
-  // dy   = -1, 0, 1
-  // bits = 1 for right, 2 for left, 4 for up, 8 for down
-  //
-  // Note: this matches trig functions you can do this
-  //
-  //     var angle = dir * Math.PI / 4;
-  //     var dx    = Math.cos(angle);
-  //     var dy    = Math.sin(angle);
-  //
-  // for +y up (ie, normal for 3d)
-  //
-  // In 2d you'd probably want
-  //
-  //     var angle =  dir * Math.PI / 4;
-  //     var dx    =  Math.cos(angle);
-  //     var dy    = -Math.sin(angle);
-  //
+  /**
+   * @typedef {Object} PadInfo
+   * @property {HTMLElement} referenceElement element that is reference for position of pad
+   * @property {number} offsetX offset from left of reference element to center of pad
+   * @property {number} offsetY offset from top of reference element to center of pad
+   * @memberOf module:Touch
+   */
 
-  // options:
-  //
-  // inputElement: element used to capture input (for example window, body,)
-  // callback: callback to pass event
-  // fixedCenter: true = center stays the same place, false = each time finger touches a new center is picked
-  // deadSpaceRadius: size of dead area in center of pad.
-  // axisSize: use axis.
-  // pads: Array
-  //   referenceElement: element that is reference for position of pad
-  //   offsetX: offset from left of reference element to center of pad
-  //   offsetY: offset from top of reference element to center of pad
+  /**
+   * @typedef {Object} TouchDPad~Options
+   * @property {HTMLElement} inputElement element used to capture input (for example window, body,)
+   * @property {callback} callback callback to pass event
+   * @property {boolean?} fixedCenter true = center stays the same place, false = each time finger touches a new center is picked
+   * @property {number?} deadSpaceRadius size of dead area in center of pad.
+   * @property {number?} axisSize use axis.
+   * @property {module:Touch~PadInfo[]} pads array of PadInfos, one for each DPad
+   * @memberOf module:Touch
+   */
 
-  // The default way of figuring out the direction is to take the angle from the center to
-  // the place of touch, compute an angle, divide a circle into octants, which ever octant is the direction
-  //
-  // If axisSize is passed in then instead the space is divided into 3x3 boxes. Which ever box the finger is
-  // in is the direction. axisSize determines the width height of the axis boxes
-  //
-  //      | ax |
-  //      | is |
-  // -----+----+-----
-  //      |    | axis
-  // -----+----+-----
-  //      |    |
-  //      |    |
-  //
-  // if `divisions: 4` is passed in then instead of getting 8 directions decided
-  // by octant you get 4 decided by quadrant as in
-  //
-  //        2
-  //     \  |  /
-  //      \ | /
-  // 4 <---   ---> 0
-  //      / | \
-  //     /  V  \
-  //        6
+  /**
+   * Simulates N virtual dpads using touch events
+   *
+   * For each change in direction callback will be
+   * called with an event info where
+   *
+   *     pad = (index of pad)
+   *     direction =
+   *
+   *
+   *        2     -1 = no touch
+   *      3 | 1
+   *       \|/
+   *     4--+--0
+   *       /|\
+   *      5 | 7
+   *        6
+   *
+   *     dx   = -1, 0, 1
+   *     dy   = -1, 0, 1
+   *     bits = 1 for right, 2 for left, 4 for up, 8 for down
+   *
+   * Note: this matches trig functions you can do this
+   *
+   *     var angle = dir * Math.PI / 4;
+   *     var dx    = Math.cos(angle);
+   *     var dy    = Math.sin(angle);
+   *
+   * for +y up (ie, normal for 3d)
+   *
+   * In 2d you'd probably want
+   *
+   *     var angle =  dir * Math.PI / 4;
+   *     var dx    =  Math.cos(angle);
+   *     var dy    = -Math.sin(angle);
+   *
+   *
+   *
+   * The default way of figuring out the direction is to take the angle from the center to
+   * the place of touch, compute an angle, divide a circle into octants, which ever octant is the direction
+   *
+   * If axisSize is passed in then instead the space is divided into 3x3 boxes. Which ever box the finger is
+   * in is the direction. axisSize determines the width height of the axis boxes
+   *
+   *          | ax |
+   *          | is |
+   *     -----+----+-----
+   *          |    | axis
+   *     -----+----+-----
+   *          |    |
+   *          |    |
+   *
+   * if `divisions: 4` is passed in then instead of getting 8 directions decided
+   * by octant you get 4 decided by quadrant as in
+   *
+   *            2
+   *         \  |  /
+   *          \ | /
+   *     4 <---   ---> 0
+   *          / | \
+   *         /  V  \
+   *            6
+   *
+   * @param {module:Touch.TouchDPad~Options} options
+   * @memberOf module:Touch
+   */
 
   var setupVirtualDPads = function(options) {
     var callback = options.callback;
@@ -309,13 +327,42 @@ define(
     container.addEventListener('pointerout', onPointerUp, false);
   };
 
-  //
-  // options:
-  //  inputElement: element that receives all input. Should be above all buttons
-  //  buttons: Array of object where
-  //    element: element that represents area of buttton (need not be visible)
-  //    callback: function to call when button is pressed or released
-  //
+  /**
+   * @typedef {Object} ButtonInfo
+   * @property {HTMLElement} element element that represents area of buttton (need not be visible)
+   * @property {callback} callback function to call when button is pressed or released
+   * @memberOf module:Touch
+   */
+
+  /**
+   * @typedef {Object} Buttons~Options
+   * @property {HTMLElement} inputElement element that receives all input. Should be above all buttons
+   * @property {module:Touch.ButtonInfo[]} buttons The buttons
+   * @memberOf module:Touch
+   */
+
+  /**
+   * Sets up touch buttons.
+   *
+   * For example
+   *
+   *     var $ = document.getElementById.bind(document);
+   *
+   *     Touch.setupButtons({
+   *       inputElement: $("buttons"),
+   *       buttons: [
+   *         { element: $("abuttoninput"), callback: handleAbutton, },
+   *         { element: $("avatarinput"),  callback: handleShow, },
+   *       ],
+   *     });
+   *
+   * The code above sets up 2 buttons. The HTML elements "abuttoninput" and "avatarinput".
+   * The actual touch input events come from an HTML element "buttons" which is an div
+   * that covers the entire display.
+   *
+   * @param {module:Touch.Buttons~Options} options
+   * @memberOf module:Touch
+   */
   var setupButtons = function(options) {
     var buttonInfos = [];
     var buttons = options.buttons;

@@ -14,8 +14,8 @@ module.exports = function(grunt) {
       },
       game: {
         src: [
-          'public/hft/0.0.0/scripts/*.js',
-          'public/hft/0.0.0/scripts/misc/*.js',
+          'public/hft/0.x.x/scripts/*.js',
+          'public/hft/0.x.x/scripts/misc/*.js',
         ],
         options: {
           destination: 'docs/hft',

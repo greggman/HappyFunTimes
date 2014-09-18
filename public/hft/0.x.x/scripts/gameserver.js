@@ -44,17 +44,14 @@ define(
 
   /**
    * @typedef {Object} GameServer~Options
-   * @property {string?} gameId id of game needed to rendezvous
-   *           with controllers.
    * @property {Socket?} socket Socket to use for communications
    */
 
   /**
    * GameServer is used by a game to talk to the various
-   * controllers of the people playing the game.
-   *
-   * @alias GameServer
+   * controllers (phones) of the people playing the game.
    * @constructor
+   * @alias GameServer
    * @param {GameServer~Options?} options options.
    */
   var GameServer = function(options) {
@@ -80,13 +77,13 @@ define(
     }
 
     /**
-     * Event that we've connected to the relaysever
+     * Event that we've connected to happyFunTimes
      *
      * @event GameServer#connected
      */
 
     /**
-     * Event that we've been disconnected from the relaysever
+     * Event that we've been disconnected from happyFunTimes
      *
      * @event GameServer#disconnected
      */
@@ -101,7 +98,7 @@ define(
 
     /**
      * Adds an event listener for the given event type. Valid
-     * commands include 'connect' (we connected to the relayserver),
+     * commands include 'connect' (we connected to happyFunTimes),
      * 'disconnect' we were disconnected from the relaysefver,
      * 'playerconnect' a new player has joined the game.
      *
@@ -191,7 +188,7 @@ define(
     }.bind(this);
 
     /**
-     * True if we're connected to the relayserver
+     * True if we're connected to happyFunTimes
      * @returns {Boolean} true if were connected.
      */
     this.isConnected = function() {
@@ -238,7 +235,7 @@ define(
     }.bind(this);
 
     /**
-     * This sends a command to the 'relayserver'. The relaysever uses 'cmd' to figure out what to do
+     * This sends a command to the 'happyFunTimes'. happyFunTimes uses 'cmd' to figure out what to do
      *  and 'id' to figure out which client this is for. 'data' will be delieved to that client.
      *
      * Only NetPlayer should call this.
@@ -265,7 +262,7 @@ define(
      * It's effectively the same as iterating over all NetPlayers
      * returned in playerconnect events and calling sendCmd on each
      * one. The difference is only one message is sent from the
-     * server (here) to the relayserver. The relayserver then sends
+     * server (here) to happyFunTimes. happyFunTimes then sends
      * the same message to each client.
      *
      * @param {String} cmd name of command to send

@@ -30,12 +30,33 @@
  */
 "use strict";
 
+/**
+ * Various hacks to try to get mobile browsers to do what I want but that
+ * probably wouldn't be needed if I actually understood the platform.
+ *
+ * @module MobileHacks
+ */
 define(function() {
 
   var $ = function(id) {
     return document.getElementById(id);
   };
 
+  /**
+   * resets the height of any element with CSS class "fixeight"
+   * by setting its hight to the cliehgtHeight of its parent
+   *
+   * The problem this is trying to solve is sometimes you have
+   * an element set to 100% but when the phone rotates
+   * the browser does not reset the size of the element even
+   * though it's parent has been resized.
+   *
+   * This will be called automatically when the phone rotates
+   * or the window is resized but I found I often needed to
+   * call it manually at the start of a controller
+   *
+   * @memberOf module:MobileHacks
+   */
   var fixHeightHack = function() {
     // Also fix all fucked up sizing
     var elements = document.querySelectorAll(".fixheight");

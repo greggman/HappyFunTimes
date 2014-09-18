@@ -30,6 +30,9 @@
  */
 "use strict";
 
+/**
+ * @module Misc
+ */
 define(function() {
   /**
    * Copies properties from obj to dst recursively.
@@ -92,10 +95,13 @@ define(function() {
   };
 
 
-  // Reads the query values from a URL like string.
-  // @param {String} url URL like string eg. http://foo?key=value
-  // @param {Object=} opt_obj Object to attach key values to
-  // @return {Object} Object with key values from URL
+  /**
+   * Reads the query values from a URL like string.
+   * @param {String} url URL like string eg. http://foo?key=value
+   * @param {Object=} opt_obj Object to attach key values to
+   * @return {Object} Object with key values from URL
+   * @memberOf module:Misc
+   */
   var parseUrlQueryString = function(str, opt_obj) {
     var dst = opt_obj || {};
     try {
@@ -118,21 +124,28 @@ define(function() {
     return dst;
   };
 
-  // Reads the query values from the current URL.
-  // @param {Object=} opt_obj Object to attach key values to
-  // @return {Object} Object with key values from URL
+  /**
+   * Reads the query values from the current URL.
+   * @param {Object=} opt_obj Object to attach key values to
+   * @return {Object} Object with key values from URL
+   * @memberOf module:Misc
+   */
   var parseUrlQuery = function(opt_obj) {
     return parseUrlQueryString(window.location.href, opt_obj);
   };
 
-  // Read `settings` from URL. Assume settings it a
-  // JSON like URL as in http://foo?settings={key:value},
-  // Note that unlike real JSON we don't require quoting
-  // keys if they are alpha_numeric.
-  //
-  // @param {Object=} opt_obj object to apply settings to.
-  // @param {String=} opt_argumentName name of key for settings, default = 'settings'.
-  // @return {Object} object with settings
+  /**
+   * Read `settings` from URL. Assume settings it a
+   * JSON like URL as in http://foo?settings={key:value},
+   * Note that unlike real JSON we don't require quoting
+   * keys if they are alpha_numeric.
+   *
+   * @param {Object=} opt_obj object to apply settings to.
+   * @param {String=} opt_argumentName name of key for settings, default = 'settings'.
+   * @return {Object} object with settings
+   * @func applyUrlSettings
+   * @memberOf module:Misc
+   */
   var fixKeysRE = new RegExp("([a-zA-Z0-9_]+)\:", "g");
 
   var applyUrlSettings = function(opt_obj, opt_argumentName) {
@@ -147,10 +160,22 @@ define(function() {
     return dst;
   };
 
+  /**
+   * get a random int
+   * @param {number} value max value exclusive. 5 = random 0 to 4
+   * @return {number} random int
+   * @memberOf module:Misc
+   */
   var randInt = function(value) {
     return Math.floor(Math.random() * value);
   };
 
+  /**
+   * get a random CSS color
+   * @param {function(number): number?) opt_randFunc function to generate random numbers
+   * @return {string} random css color
+   * @memberOf module:Misc
+   */
   var randCSSColor = function(opt_randFunc) {
     var randFunc = opt_randFunc || randInt;
     var strong = randFunc(3);
@@ -161,6 +186,12 @@ define(function() {
     return "rgb(" + colors.join(",") + ")";
   };
 
+  /**
+   * get a random 32bit color
+   * @param {function(number): number?) opt_randFunc function to generate random numbers
+   * @return {string} random 32bit color
+   * @memberOf module:Misc
+   */
   var rand32BitColor = function(opt_randFunc) {
     var randFunc = opt_randFunc || randInt;
     var strong = randFunc(3);
@@ -171,6 +202,12 @@ define(function() {
     return color;
   };
 
+  /**
+   * finds a CSS rule.
+   * @param {string} selector
+   * @return {Rule?} matching css rule
+   * @memberOf module:Misc
+   */
   var findCSSStyleRule = function(selector) {
     for (var ii = 0; ii < document.styleSheets.length; ++ii) {
       var styleSheet = document.styleSheets[ii];
@@ -186,6 +223,12 @@ define(function() {
     }
   };
 
+  /**
+   * Inserts a text node into an element
+   * @param {HTMLElement} element element to have text node insert
+   * @return {HTMLTextNode} the created text node
+   * @memberOf module:Misc
+   */
   var createTextNode = function(element) {
     var txt = document.createTextNode("");
     element.appendChild(txt);
@@ -197,7 +240,8 @@ define(function() {
    * @param {HTMLElement} element The element to get a position
    *        for.
    * @returns {Object} An object containing x and y as the
-   *   absolute position of the given element.
+   *        absolute position of the given element.
+   * @memberOf module:Misc
    */
   var getAbsolutePosition = function(element) {
     var r = { x: element.offsetLeft, y: element.offsetTop };
@@ -215,6 +259,7 @@ define(function() {
    * @param {Number} min min value to clamp to
    * @param {Number} max max value to clamp to
    * @returns {Number} v clamped to min and max.
+   * @memberOf module:Misc
    */
   var clamp = function(v, min, max) {
     return Math.max(min, Math.min(max, v));
@@ -227,6 +272,7 @@ define(function() {
    * @param {Number} v value to clamp
    * @param {Number} max max value to clamp to
    * @returns {Number} v clamped to -max and max.
+   * @memberOf module:Misc
    */
   var clampPlusMinus = function(v, max) {
     return clamp(v, -max, max);
@@ -237,6 +283,7 @@ define(function() {
    *
    * @param {Number} v value
    * @returns {Number} -1 if v < 0, 1 if v > 0, 0 if v == 0
+   * @memberOf module:Misc
    */
   var sign = function(v) {
     return v < 0 ? -1 : (v > 0 ? 1 : 0);
@@ -250,6 +297,7 @@ define(function() {
    * @param {Number} min min value to use if v is less then -min
    *        or greater than +min
    * @returns {Number} min or v, which ever is closer to zero
+   * @memberOf module:Misc
    */
   var minToZero = function(v, min) {
     return Math.abs(v) < Math.abs(min) ? v : min;
@@ -266,6 +314,7 @@ define(function() {
    * @param {Number} v value to flip.
    * @param {Number} max range to flip inside.
    * @returns {Number} flipped value.
+   * @memberOf module:Misc
    */
   var invertPlusMinusRange = function(v, max) {
     return sign(v) * (max - Math.min(max, Math.abs(v)));
@@ -276,6 +325,7 @@ define(function() {
    *
    * @param {Number} d value in degrees
    * @returns {Number} d in radians
+   * @memberOf module:Misc
    */
   var degToRad = function(d) {
     return d * Math.PI / 180;
@@ -285,6 +335,7 @@ define(function() {
    * Converts radians to degrees
    * @param {Number} r value in radians
    * @returns {Number} r in degrees
+   * @memberOf module:Misc
    */
   var radToDeg = function(r) {
     return r * 180 / Math.PI;
@@ -293,8 +344,9 @@ define(function() {
   /**
    * Resizes a cavnas to match its CSS displayed size.
    * @param {Canvas} canvas canvas to resize.
-   * @param {Boolean=} use_devicePixelRatio if true canvas will be
+   * @param {boolean?} use_devicePixelRatio if true canvas will be
    *        created to match devicePixelRatio.
+   * @memberOf module:Misc
    */
   var resize = function(canvas, use_devicePixelRatio) {
     var mult = use_devicePixelRatio ? window.devicePixelRatio : 1;

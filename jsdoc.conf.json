@@ -3,13 +3,13 @@
 		"allowUnknownTags" : true
 	},
 	"plugins"   : ["plugins/markdown"],
-
+	"private"   : false,
 	"templates" : {
 		"cleverLinks"           : false,
-		"monospaceLinks"        : false,
+		"monospaceLinks"        : true,
 		"dateFormat"            : "ddd MMM Do YYYY",
-		"outputSourceFiles"     : true,
-		"outputSourcePath"      : true,
+		"outputSourceFiles"     : false,
+		"outputSourcePath"      : false,
 		"systemName"            : "HappyFunTimes",
 		"footer"                : "",
 		"copyright"             : "copyright Gregg Tavares",

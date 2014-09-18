@@ -39,6 +39,15 @@ define(function() {
     };
   };
 
+  /**
+   * A clock that returns the time elapsed since the last time it
+   * was queried
+   * @constructor
+   * @alias GameClock
+   * @param {Clock?} The clock to use for this GameClock (pass it
+   *        a SyncedClock of you want the clock to be synced or
+   *        nothing if you just want a local clock.
+   */
   var GameClock = function(clock) {
     clock = clock || new LocalClock();
 
@@ -47,6 +56,15 @@ define(function() {
 
     var then = clock.getTime();
 
+    /**
+     * Gets the time elapsed in seconds since the last time this was
+     * called
+     * @return {number} The time elapsed in seconds since this was
+     *     last called. Note will never return a time more than
+     *     1/20th of second. This is to help prevent giant time
+     *     range that might overflow the math on a game.
+     *
+     */
     this.getElapsedTime = function() {
       ++this.callCount;
 

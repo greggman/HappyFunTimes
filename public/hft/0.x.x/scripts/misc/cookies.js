@@ -31,15 +31,33 @@
 "use strict";
 
 define(function() {
-  // This is an object, that way you set the name just once so calling set or get you
-  // don't have to worry about getting the name wrong.
-  //
-  //     var fooCookie = new Cookie("foo");
-  //     var value = fooCookie.get();
-  //     fooCookie.set(newValue);
-  //     fooCookie.erase();
+  /**
+   * Represents a cookie.
+   *
+   * This is an object, that way you set the name just once so
+   * calling set or get you don't have to worry about getting the
+   * name wrong.
+   *
+   * @example
+   *     var fooCookie = new Cookie("foo");
+   *     var value = fooCookie.get();
+   *     fooCookie.set(newValue);
+   *     fooCookie.erase();
+   *
+   * @constructor
+   * @alias Cookie
+   * @param {string} name of cookie
+   * @param {string?} opt_path path for cookie. Default "/"
+   */
   var Cookie = function(name, opt_path) {
     var path = opt_path || "/";
+
+    /**
+     * Sets the cookie
+     * @param {string} value value for cookie
+     * @param {number?} opt_days number of days until cookie
+     *        expires. Default = none
+     */
     this.set = function(value, opt_days) {
       var expires = "";
       if (opt_days !== undefined) {
@@ -51,6 +69,10 @@ define(function() {
       document.cookie = cookie;
     };
 
+    /**
+     * Gets the value of the cookie
+     * @return {string?} value of cookie
+     */
     this.get = function() {
       var nameEQ = encodeURIComponent(name) + "=";
       var ca = document.cookie.split(';');
@@ -65,6 +87,9 @@ define(function() {
       }
     };
 
+    /**
+     * Erases the cookie.
+     */
     this.erase = function() {
       document.cookie = this.set(" ", -1);
     };
