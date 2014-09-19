@@ -68,6 +68,7 @@ var HFTPlayer = function(netPlayer, game, gameDB, relayServer) {
   netPlayer.addEventListener('disconnect',        HFTPlayer.prototype.disconnect.bind(this));
   netPlayer.addEventListener('getGameInfo',       HFTPlayer.prototype.handleGetGameInfo.bind(this));
   netPlayer.addEventListener('getAvailableGames', HFTPlayer.prototype.handleGetAvailableGames.bind(this));
+  netPlayer.addEventListener('getRunningGames',   HFTPlayer.prototype.handleGetRunningGames.bind(this));
   netPlayer.addEventListener('install',           HFTPlayer.prototype.handleInstall.bind(this));
   netPlayer.addEventListener('upgrade',           HFTPlayer.prototype.handleUpgrade.bind(this));
   netPlayer.addEventListener('launch',            HFTPlayer.prototype.handleLaunch.bind(this));
@@ -147,6 +148,10 @@ HFTPlayer.prototype.handleGetAvailableGames = function(data) {
 
   debug("sending games");
   this.sendCmd("availableGames", this.gameDB.getGames());
+};
+
+HFTPlayer.prototype.handleGetRunningGames = function(data) {
+  this.sendCmd("runningGames", this.relayServer.getGames());
 };
 
 HFTPlayer.prototype.download = function(gameId, upgrade) {
