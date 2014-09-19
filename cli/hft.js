@@ -84,6 +84,7 @@ try {
   utils.printUsage(globalOptions, cmdModule.usage, cmdModule.name);
   process.exit(1);
 }
+args._.shift(); // remove cmd
 cmdModule.cmd(args).then(function() {
   // We have to exit explicitly because there are event listeners for folders
   process.exit(0);

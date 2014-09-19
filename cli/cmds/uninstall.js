@@ -53,7 +53,7 @@ var uninstall = function(args) {
       verbose: args['verbose'],
     };
 
-    var gamePathOrId = args._[1];
+    var gamePathOrId = args._[0];
 
     if (require('../../management/uninstall').uninstall(gamePathOrId, options) === false) {
       reject();

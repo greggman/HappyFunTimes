@@ -48,7 +48,7 @@ var makeRelease = function(args) {
       return;
     }
 
-    var destPath = path.resolve(args._[1]);
+    var destPath = path.resolve(args._[0]);
     var fullPath = args.src ? path.resolve(args.src) : process.cwd();
 
     require('../../management/make').make(fullPath, destPath, args).then(function(files) {

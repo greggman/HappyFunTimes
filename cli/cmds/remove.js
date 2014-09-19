@@ -36,7 +36,7 @@ var Promise = require('promise');
 
 var remove = function(args) {
   return new Promise(function(resolve, reject) {
-    var fullPath = args._.length > 1 ? args._[1] : process.cwd();
+    var fullPath = args._.length > 0 ? args._[0] : process.cwd();
     games.remove(fullPath);
     resolve();
   });

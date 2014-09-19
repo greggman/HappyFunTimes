@@ -55,7 +55,7 @@ var download = function(args) {
       overwrite: args['overwrite'],
     };
 
-    var gameId = args._[1];
+    var gameId = args._[0];
 
     var emitter = require('../../management/download').download(gameId, args.dst, options);
     emitter.on('status', function(e) {

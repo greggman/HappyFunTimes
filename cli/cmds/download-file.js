@@ -53,8 +53,8 @@ var downloadFile = function(args) {
       verbose: args['verbose'],
     };
 
-    var url = args._[1];
-    var destPath = args._[2];
+    var url = args._[0];
+    var destPath = args._[1];
     var log = options.verbose ? console.log.bind(console) : function() { };
     var print = options.verbose ? sys.print.bind(sys) : function() { };
 

@@ -50,7 +50,7 @@ var install = function(args) {
       overwrite: args['upgrade'],
     };
 
-    var srcPath = path.resolve(args._[1]);
+    var srcPath = path.resolve(args._[0]);
 
     if (require('../../management/install').install(srcPath, args.dst, options) === false) {
       reject();
