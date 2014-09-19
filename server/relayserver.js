@@ -34,6 +34,7 @@
 var computerName = require('../lib/computername');
 var debug        = require('debug')('relayserver');
 var events       = require('events');
+var fs           = require('fs');
 var Game         = require('./game');
 var gamedb       = require('../lib/gamedb');
 var gameInfo     = require('../lib/gameinfo');
@@ -206,12 +207,20 @@ var RelayServer = function(servers, options) {
     var gameId = data.gameId;
     var cwd = data.cwd;
     if (cwd) {
-      debug("cwd:" + cwd);
+      debug("cwd: " + cwd);
       // Not clear where this belongs. Unity can be in bin
       // so should we fix it in unity or here? Seems like
       // here since Unity isn't aware. It's HFT that specifies
       // the 'bin' convension
-      if (path.basename(cwd) == "bin") {
+      for (;;) {
+        if (path.dirname(cwd).length < 10) {
+          break;
+        }
+        var testPath = path.join(cwd, "package.json");
+        if (fs.existsSync(testPath)) {
+          debug("found game at: " + cwd);
+          break;
+        }
         cwd = path.dirname(cwd);
       }
       try {
@@ -222,6 +231,11 @@ var RelayServer = function(servers, options) {
       } catch (e) {
         gameId = gameInfo.makeRuntimeGameId(gameId, cwd);
       }
+    }
+    if (!gameId) {
+      console.error("unknown game id. Can not start game");
+      eventEmitter.emit('gameStartFailed');
+      return;
     }
     debug("starting game: " + gameId);
     eventEmitter.emit('gameStarted', {gameId: gameId});
