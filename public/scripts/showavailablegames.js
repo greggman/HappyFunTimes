@@ -110,6 +110,7 @@ requirejs(
   });
 
   var quitGame = function(gameId) {
+    console.log("sending quitGame: " + gameId);
     client.sendCmd('quitGame', {gameId: gameId});
   };
 
@@ -195,7 +196,7 @@ requirejs(
     var launch = function(element, runtimeInfo) {
       client.sendCmd('launch', {gameId: runtimeInfo.info.happyFunTimes.gameId});
     };
-    var quit = function(element, runtmeInfo) {
+    var quit = function(element, runtimeInfo) {
       quitGame(runtimeInfo.info.happyFunTimes.gameId);
     };
 
