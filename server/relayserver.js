@@ -206,6 +206,7 @@ var RelayServer = function(servers, options) {
     var gameId = data.gameId;
     var cwd = data.cwd;
     if (cwd) {
+      debug("cwd:" + cwd);
       // Not clear where this belongs. Unity can be in bin
       // so should we fix it in unity or here? Seems like
       // here since Unity isn't aware. It's HFT that specifies
@@ -214,7 +215,7 @@ var RelayServer = function(servers, options) {
         cwd = path.dirname(cwd);
       }
       try {
-        var runtimeInfo = gameInfo.readGameInfo(path.join(cwd));
+        var runtimeInfo = gameInfo.readGameInfo(cwd);
         if (runtimeInfo) {
           gameId = runtimeInfo.info.happyFunTimes.gameId;
         }

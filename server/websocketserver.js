@@ -48,7 +48,11 @@ var WSServer = function(server) {
 
     this.send = function(msg) {
       var str = JSON.stringify(msg);
-      this.client.send(str);
+      try {
+        this.client.send(str);
+      } catch (e) {
+        console.error(e);
+      }
     };
 
     var emit = function(event, data) {
@@ -109,7 +113,11 @@ var WSServer = function(server) {
         this.close();
       }.bind(this),
       pingFn: function() {
-        this.client.send('P');
+        try {
+          this.client.send('P');
+        } catch (e) {
+          console.error(e);
+        }
       }.bind(this),
     });
   };
