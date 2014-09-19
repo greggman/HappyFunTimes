@@ -49,7 +49,7 @@ var askPrompt = function(questions) {
 
 var publish = function(args) {
   return new Promise(function(resolve, reject) {
-    if (args._.length != 1) {
+    if (args._.length != 0) {
       utils.badArgs(module, "too many arguments");
       reject();
       return;

@@ -71,4 +71,12 @@ the correct version
 
         For a working example see [http://github.com/greggman/hft-simple-script](http://github.com/greggman/hft-simple-script)
 
+    *   Fix for Unity Games on Windows
+
+        You need to upgrade old Unity Games to the latest .dlls.
+        [Download the .dll here](https://github.com/greggman/hft-unity3d/releases)
+        You'll also need the latest version of happyFunTimes. At least verison 0.0.9.
+        [Download here](http://superhappyfuntimes.net/install)
+
+
 

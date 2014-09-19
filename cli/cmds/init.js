@@ -37,7 +37,7 @@ var utils   = require('../utils');
 
 var init = function(args) {
   return new Promise(function(resolve, reject) {
-    if (args._.length != 1) {
+    if (args._.length != 0) {
       utils.badArgs(module, "bad args");
       reject();
     }

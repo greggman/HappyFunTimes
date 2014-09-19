@@ -30,13 +30,13 @@
  */
 "use strict";
 
-var assert              = require('assert');
-var path                = require('path');
-var should              = require('should');
-var testUtils           = require('../../lib/test/test-utils');
-var TestWebSocketClient = require('../../lib/test/test-websocketclient');
-var TestGame            = require('../../lib/test/test-game');
-var TestController      = require('../../lib/test/test-controller');
+var assert          = require('assert');
+var path            = require('path');
+var should          = require('should');
+var testUtils       = require('../../lib/test/test-utils');
+var TestGame        = require('../../lib/test/test-game');
+var TestController  = require('../../lib/test/test-controller');
+var WebSocketClient = require('../../lib/websocketclient');
 
 var g_configPath             = path.join(__dirname, "..", "testgames", "config.json");
 var g_installedGamesListPath = path.join(__dirname, "..", "testgames", "installed-games.json");
@@ -60,11 +60,11 @@ describe('roundtrip', function() {
 //
 //    testUtils.createServer().then(function(result) {
 //      server = result;
-//      gameSocket = new TestWebSocketClient({url: "ws://localhost:8087"});
+//      gameSocket = new WebSocketClient({url: "ws://localhost:8087"});
 //      game = new TestGame({
 //        socket: gameSocket,
 //      });
-//      controllerSocket = new TestWebSocketClient({url: "ws://localhost:8087"});
+//      controllerSocket = new WebSocketClient({url: "ws://localhost:8087"});
 //      controller = new TestController({
 //        socket: controllerSocket,
 //      });

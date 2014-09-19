@@ -36,7 +36,7 @@ var Promise = require('promise');
 
 var add = function(args) {
   return new Promise(function(resolve, reject) {
-    var fullPath = args._.length > 1 ? path.resolve(args._[1]) : process.cwd();
+    var fullPath = args._.length > 0 ? path.resolve(args._[0]) : process.cwd();
     if (games.add(fullPath) === false) {
       reject();
     } else {

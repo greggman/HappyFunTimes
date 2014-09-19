@@ -36,13 +36,13 @@ var utils   = require('../utils');
 
 var uninstall = function(args) {
   return new Promise(function(resolve, reject) {
-    if (args._.length < 2) {
+    if (args._.length < 1) {
       utils.badArgs(module, "missing path or gameId");
       reject();
       return;
     }
 
-    if (args._.length > 2) {
+    if (args._.length > 1) {
       utils.badArgs(module, "too many arguments");
       reject();
       return;
