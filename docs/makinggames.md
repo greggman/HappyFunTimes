@@ -42,6 +42,7 @@ I'm sorry there's so many steps. It's not as hard as it looks. Trust me.
     *   install happyfuntimes (http://superhappyfuntimes.net/install)
     *   run happyfuntimes (it must be run once)
     *   install node.js (http://nodejs.org/download/)
+    *   if on windows install msysgit (http://msysgit.github.io/)
     *   install bower `sudo npm install -g bower` (no sudo on windows)
     *   install hft-cli `sudo npm install -g hft-cli` (no sudo on windows)
     *   clone a game
@@ -52,7 +53,7 @@ I'm sorry there's so many steps. It's not as hard as it looks. Trust me.
 
 *   Install HappyFunTimes (http://superhappyfuntimes.net/install)
 
-    On Windows you might run into security issues: See here
+    On Windows you might run into security issues: [See here](windows.md).
 
     **IMPORTANT** You can **NOT** have 2 installations of happyFunTimes.
 
@@ -78,9 +79,13 @@ I'm sorry there's so many steps. It's not as hard as it looks. Trust me.
 
 *   Install [node.js](http://nodejs.org/download/).
 
-    I was using 0.10.29 (note: 0.10.31 has a bug. Don't use that version!)
+*   If on Windows install msysgit (http://msysgit.github.io/)
+
+    when asked choose to ["Use Git from the Windows Commmand Prompt"](../images/msysgit-option-01.png).
 
 *   Open a shell/terminal/command prompt
+
+    on Windows open a [node.js command prompt](../images/node-js-command-prompt.png).
 
 *   Install Bower.
 
