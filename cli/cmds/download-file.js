@@ -37,13 +37,13 @@ var utils   = require('../utils');
 
 var downloadFile = function(args) {
   return new Promise(function(resolve, reject) {
-    if (args._.length < 2) {
+    if (args._.length < 1) {
       utils.badArgs(module, "missing url and destPath");
       reject();
       return;
     }
 
-    if (args._.length < 3) {
+    if (args._.length < 2) {
       utils.badArgs(module, "missing destPath");
       reject();
       return;
