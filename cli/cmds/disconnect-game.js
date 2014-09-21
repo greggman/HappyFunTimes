@@ -49,13 +49,13 @@ var exitgame = function(args) {
   };
 
   var client = new HFTGameClient();
-  return client.exitGame(filter);
+  return client.disconnectGame(filter);
 };
 
 exports.usage = {
-  prepend: "exits running games",
+  prepend: "disconnects running games",
   options: [
-    { option: 'all', type: 'Boolean', description: "exit all games", },
+    { option: 'all', type: 'Boolean', description: "disconnect all games", },
   ]
 };
 exports.cmd = exitgame;

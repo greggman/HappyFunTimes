@@ -30,35 +30,57 @@
  */
 "use strict";
 
-var debug           = require('debug')('exitgame');
-var HFTGameClient   = require('../../server/hftgame-client')
-var path            = require('path');
-var Promise         = require('promise');
+var debug         = require('debug')('exitgame');
+var HFTGameClient = require('../../server/hftgame-client')
+var sprintf       = require('sprintf-js').sprintf;
+var strings       = require('../../lib/strings');
 
-var exitgame = function(args) {
-
-  if (!args.all && !args._.length) {
-    return Promise.reject("no gameId specified");
-  }
-
-  var filter = args.all ? function() {
-    return true;
-  } : function(game) {
-    debug("checking: " + game.gameId);
-    return (args.all || args._.indexOf(game.runtimeInfo.originalGameId) >= 0 || args._.indexOf(game.gameId));
-  };
+var listRunningGames = function(args) {
 
   var client = new HFTGameClient();
-  return client.exitGame(filter);
+  return client.getRunningGames()
+  .then(function(games) {
+    if (args.full) {
+      console.log(JSON.stringify(games, undefined, "  "));
+    } else {
+      if (games.length > 0) {
+        var longest = {
+          id: 0,
+          numPlayers: 10,
+          serverName: 10,
+        };
+        games.forEach(function(game) {
+          longest.id         = Math.max(longest.id        , game.gameId.length);
+          longest.numPlayers = Math.max(longest.numPlayers, game.numPlayers.toString().length);
+          longest.serverName = Math.max(longest.serverName, game.serverName.length);
+        }, 0);
+        var format = strings.replaceParams("%-%(id)ss  %-%(numPlayers)ss  %s", longest);
+        console.log(sprintf(format,
+           "id",
+           "numPlayers",
+           "machine"));
+        console.log("------------------------------------------------------------------------------");
+        console.log(games.map(function(game) {
+          return sprintf(format,
+              game.gameId,
+              game.numPlayers,
+              game.serverName);
+        }).join("\n"));
+      } else {
+        console.log("no running games");
+      }
+    }
+  });
 };
 
 exports.usage = {
-  prepend: "exits running games",
+  prepend: "lists running games",
   options: [
-    { option: 'all', type: 'Boolean', description: "exit all games", },
+    { option: 'full', type: 'Boolean', description: "list entire data available as json", },
   ]
 };
-exports.cmd = exitgame;
+exports.cmd = listRunningGames;
+
 
 
 
