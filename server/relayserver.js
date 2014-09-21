@@ -35,8 +35,7 @@ var computerName = require('../lib/computername');
 var debug        = require('debug')('relayserver');
 var events       = require('events');
 var fs           = require('fs');
-var Game         = require('./game');
-var gamedb       = require('../lib/gamedb');
+var GameGroup    = require('./game-group');
 var gameInfo     = require('../lib/gameinfo');
 var path         = require('path');
 var Player       = require('./player');
@@ -76,8 +75,8 @@ var WSServer     = require('./websocketserver');
 var RelayServer = function(servers, options) {
 
   var g_nextSessionId = 1;
-  var g_games = {};
-  var g_numGames = 0;
+  var g_gameGroups = {};
+  var g_numGameGroups = 0;
   var socketServers = [];
   var eventEmitter = new events.EventEmitter();
 
@@ -121,19 +120,19 @@ var RelayServer = function(servers, options) {
   //      id: id of player to remove.
   //
 
-  var getGame = function(gameId) {
+  var getGameGroup = function(gameId) {
     if (!gameId) {
       console.error("no game id!")
       return;
     }
-    var game = g_games[gameId];
-    if (!game) {
-      game = new Game(gameId, this, { baseUrl: options.baseUrl });
-      g_games[gameId] = game;
-      ++g_numGames;
-      debug("added game: " + gameId + ", num games = " + g_numGames);
+    var gameGroup = g_gameGroups[gameId];
+    if (!gameGroup) {
+      gameGroup = new GameGroup(gameId, this, { baseUrl: options.baseUrl });
+      g_gameGroups[gameId] = gameGroup;
+      ++g_numGameGroups;
+      debug("added game group: " + gameId + ", num game groups = " + g_numGameGroups);
     }
-    return game;
+    return gameGroup;
   }.bind(this);
 
   /**
@@ -141,8 +140,8 @@ var RelayServer = function(servers, options) {
    * @param {string} gameId id of game
    * @return {Game?} Game for game.
    */
-  this.getGameById = function(gameId) {
-    return g_games[gameId];
+  this.getGameGroupById = function(gameId) {
+    return g_gameGroups[gameId];
   };
 
   /**
@@ -152,15 +151,15 @@ var RelayServer = function(servers, options) {
    */
   this.getGames = function() {
     var gameList = [];
-    for (var id in g_games) {
-      var game = g_games[id];
-      if (game.hasClient() && game.showInList !== false) {
+    for (var id in g_gameGroups) {
+      var gameGroup = g_gameGroups[id];
+      if (gameGroup.showInList()) {
         gameList.push({
           gameId: id,
-          machine: computerName.get(),
-          numPlayers: game.getNumPlayers(),
-          controllerUrl: game.controllerUrl,
-          runtimeInfo: gamedb.getGameById(id),
+          serverName: computerName.get().trim(),
+          numPlayers: gameGroup.getNumPlayers(),
+          controllerUrl: gameGroup.controllerUrl(),
+          runtimeInfo: gameGroup.runtimeInfo,
         });
       }
     }
@@ -168,7 +167,7 @@ var RelayServer = function(servers, options) {
   };
 
   /**
-   * Adds the given player to the game
+   * Adds the given player to the game group
    * @method
    * @param {Player} player the player to add
    * @param {String} gameId id of the game.
@@ -176,25 +175,24 @@ var RelayServer = function(servers, options) {
    */
   this.addPlayerToGame = function(player, gameId) {
     debug("adding player to game: " + gameId);
-    var game = getGame(gameId);
-    game.addPlayer(player);
-    return game;
+    var gameGroup = getGameGroup(gameId);
+    return gameGroup.addPlayer(player);
   }.bind(this);
 
   /**
-   * Removes a game from the games known by this relayserver
+   * Removes a game group from the game groups known by this relayserver
    * @method
-   * @param {String} gameId id of game to remove.
+   * @param {String} gameId id of game group to remove.
    */
-  this.removeGame = function(gameId) {
-    if (!g_games[gameId]) {
-      console.error("no game '" + gameId + "' to remove")
+  this.removeGameGroup = function(gameId) {
+    if (!g_gameGroups[gameId]) {
+      console.error("no game group '" + gameId + "' to remove")
       return;
     }
-    --g_numGames;
-    debug("removed game: " + gameId + ", num games = " + g_numGames);
+    --g_numGameGroups;
+    debug("removed game group: " + gameId + ", num game groups = " + g_numGameGroups);
     eventEmitter.emit('gameExited', {gameId: gameId});
-    delete g_games[gameId];
+    delete g_gameGroups[gameId];
   }.bind(this);
 
   /**
@@ -239,8 +237,8 @@ var RelayServer = function(servers, options) {
     }
     debug("starting game: " + gameId);
     eventEmitter.emit('gameStarted', {gameId: gameId});
-    var game = getGame(gameId);
-    game.assignClient(client, this, data);
+    var gameGroup = getGameGroup(gameId);
+    gameGroup.assignClient(client, data);
   }.bind(this);
 
   for (var ii = 0; ii < servers.length; ++ii) {

@@ -31,8 +31,9 @@
 
 "use strict";
 
-var debug        = require('debug')('Game');
+var debug        = require('debug')('game');
 var hftSite      = require('./hftsite');
+var gamedb       = require('../lib/gamedb');
 
 /**
  * @typedef {object} Game~Options
@@ -45,14 +46,14 @@ var hftSite      = require('./hftsite');
  * @constructor
  *
  * @param {string} gameId id of game
- * @param {!RelayServer} relayServer relaysever managing
- *        communication for this game.
+ * @param {GameGroup} gameGroup the group this game belongs to.
  * @param {Game~Options} options
  */
-var Game = function(gameId, relayServer, options) {
+var Game = function(gameId, gameGroup, options) {
   options = options || {};
   this.gameId = gameId;
-  this.relayServer = relayServer;
+  this.runtimeInfo = gamedb.getGameById(gameId);
+  this.gameGroup = gameGroup;
   this.players = {};
   this.numPlayers = 0;
   this.sendQueue = [];
@@ -169,15 +170,14 @@ Game.prototype.forEachPlayer = function(fn) {
  *
  * @param {!Client} client Websocket client that's connected to
  *        the game.
- * @param {!RelayServer} relayserver relayserver the game is
- *        connected to.
  * @param {Game~GameOptions} data Data sent from the game which
  *        includes
  */
-Game.prototype.assignClient = function(client, relayserver, data) {
+Game.prototype.assignClient = function(client, data) {
   hftSite.inform();
   if (this.client) {
     console.error("this game already has a client!");
+    this.client.close();
   }
   this.client = client;
 //  if (data.controllerUrl) {
@@ -220,12 +220,14 @@ Game.prototype.assignClient = function(client, relayserver, data) {
   }.bind(this);
 
   var onDisconnect = function() {
+    debug("closing");
     if (this.client) {
+      debug("closing client");
       this.client.close();
     }
     this.client = undefined;
+    this.gameGroup.removeGame(this);
     if (this.disconnectPlayersIfGameDisconnects) {
-      this.relayServer.removeGame(this.gameId);
       this.forEachPlayer(function(player) {
         this.removePlayer(player);
         player.disconnect();
@@ -253,6 +255,10 @@ Game.prototype.assignClient = function(client, relayserver, data) {
     this.client.send(msg.msg);
   }.bind(this));
   this.sendQueue = [];
+
+  this.close = function() {
+    onDisconnect();
+  };
 };
 
 Game.prototype.sendSystemCmd_ = function(cmd, data) {

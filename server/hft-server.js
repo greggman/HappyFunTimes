@@ -173,7 +173,7 @@ var HFTServer = function(options, startedCallback) {
     sendJSONResponse(res, {
       version: "0.0.0",
       id: "HappyFunTimes",
-      machine: computerName.get(),
+      serverName: computerName.get(),
     }, {
       'Access-Control-Allow-Origin': '*',
     });

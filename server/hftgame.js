@@ -74,6 +74,7 @@ var HFTPlayer = function(netPlayer, game, gameDB, relayServer) {
   netPlayer.addEventListener('launch',            HFTPlayer.prototype.handleLaunch.bind(this));
   netPlayer.addEventListener('quit',              HFTPlayer.prototype.handleQuit.bind(this));
   netPlayer.addEventListener('quitGame',          HFTPlayer.prototype.handleQuitGame.bind(this));
+  netPlayer.addEventListener('disconnectGame',    HFTPlayer.prototype.handleDisconnectGame.bind(this));
 
   this.handleGameExited = HFTPlayer.prototype.handleGameExited.bind(this)
   relayServer.on('gameExited', this.handleGameExited);
@@ -264,9 +265,16 @@ HFTPlayer.prototype.handleLaunch = function(data) {
 };
 
 HFTPlayer.prototype.handleQuitGame = function(data) {
-  var game = this.relayServer.getGameById(data.gameId);
-  if (game) {
-    game.sendQuit('exit', {});
+  var gameGroup = this.relayServer.getGameGroupById(data.gameId);
+  if (gameGroup) {
+    gameGroup.sendQuit();
+  }
+};
+
+HFTPlayer.prototype.handleDisconnectGame = function(data) {
+  var gameGroup = this.relayServer.getGameGroupById(data.gameId);
+  if (gameGroup) {
+    gameGroup.disconnectGames();
   }
 };
 

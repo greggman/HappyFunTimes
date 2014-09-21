@@ -56,6 +56,7 @@ define(
    */
   var GameServer = function(options) {
     options = options || {};
+    var log = options.quiet ? function() {} : console.log.bind(console);
     var _connected = false;
     var _socket;
     // Used in case the game tries to send messages to the server before it's connected.
@@ -172,10 +173,14 @@ define(
       }
     }.bind(this);
 
+    var systemMsg_ = function(msg) {
+    }.bind(this);
+
     var messageHandlers = {
       start: startPlayer_,
       update: updatePlayer_,
       remove: removePlayer_,
+      system: systemMsg_,
     };
 
     var processMessage_ = function(msg) {
@@ -204,7 +209,9 @@ define(
     }.bind(this);
 
     var connected_ = function() {
+      log("connected");
       _connected = true;
+      this.sendCmd("server", -1, options);
       for (var ii = 0; ii < _sendQueue.length; ++ii) {
         _socket.send(_sendQueue[ii]);
       }
@@ -213,6 +220,7 @@ define(
     }.bind(this);
 
     var disconnected_ = function() {
+      log("disconnected");
       _connected = false;
       sendEvent_('disconnect');
       while (_numPlayers > 0) {
@@ -223,7 +231,8 @@ define(
           break;
         }
       }
-      setTimeout(connect_, 2000);
+      // Why was this here? Most games can't recover.
+            setTimeout(connect_, 2000);
     }.bind(this);
 
     var send_ = function(msg) {
@@ -276,8 +285,6 @@ define(
     };
 
     connect_();
-
-    this.sendCmd("server", -1, options);
   };
 
   return GameServer;

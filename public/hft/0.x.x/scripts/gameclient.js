@@ -65,6 +65,7 @@ define(['./virtualsocket'], function(VirtualSocket) {
     var g_socket;
     var g_sendQueue = [];
     var eventListeners = {};
+    var log = options.quiet ? function() {} : console.log.bind(console);
 
     if (!options.gameId) {
       var m = /games\/([^\/]+)\//.exec(window.location.href);
@@ -132,12 +133,12 @@ define(['./virtualsocket'], function(VirtualSocket) {
         g_socket.send(g_sendQueue[ii]);
       }
       g_sendQueue = [];
-      console.log("connected");
+      log("connected");
       sendEvent_('connect');
     }.bind(this);
 
     var disconnected_ = function() {
-      console.log("disconnected");
+      log("disconnected");
       sendEvent_('disconnect');
       eventListeners = {};
     }.bind(this);
