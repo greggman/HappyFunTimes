@@ -173,6 +173,9 @@ For example to clone JumpJump you'd type
 
 This should clone game into the folder `hft-jumpjump`.
 
+Or alternatively click one of the links above and click "Download ZIP" on the right side of the page and
+then unzip it.
+
 After cloning you must edit `package.json`. At a minimum change the `gameId` to something original like
 
     "gameId": "MyAwesomePartyGame",
@@ -213,9 +216,11 @@ has handling of name editing, disconnecting, and auto switching to the new games
 
 ### requirejs
 
-Currently all JavaScript in HappyFunTimes use [requirejs](http://requirejs.org) to load and
+Currently most JavaScript in HappyFunTimes use [requirejs](http://requirejs.org) to load and
 reference files. Requirejs is awesome because it provides both dependency injection
 and a module system.
+
+If you'd prefer to use a more traditional `<script>` tags [see example](http://github.com/greggman/hft-simple-script/).
 
 ### controller.js
 
@@ -289,7 +294,8 @@ in Safari. On top fo that 3.5inch iPhones vs 4inch iPhones and newer provide a d
 And finally add Android on top of that and possibly iPad and other tablets and you can see
 this is the hardest part.
 
-Be sure to test before you demo! If you happen to be on a Mac the iOS Simulator is your friend.
+Be sure to test before you demo! If you happen to be on a Mac the iOS Simulator that
+comes with XCode is your friend.
 
 ## Games in JavaScript
 
@@ -424,7 +430,7 @@ game.html is loaded into a template at runtime. The template provides the follow
 
 ### Handling Players
 
-Notes the code above we register a function `someFunctionThatCreatesAPlayer` to be called
+Note in the code above we register a function `someFunctionThatCreatesAPlayer` to be called
 anytime a player connects. That function get's passed a `NetPlayer` object which represents
 the connction between your game and a player's phone.
 
@@ -456,7 +462,9 @@ Simple handling of players might be something like
 
 After that it's up to you. Add other event handlers for messages from the phone
 
+    ...
         netPlayer.addEventListener('move', Player.prototype.handleMove.bind(this));
+    ...
 
     Player.prototype.handleMove = function(data) {
       this.position.x += data.x;
@@ -479,7 +487,49 @@ And back in `controller.js`
        // do something with data.powerLevel
     }
 
-##package.json
+### handling names
+
+The CommonUI allows the player to choose name. That name is sent when the player connects
+but the player can set their name anytime by choosing the wrench menu and picking "Set Name".
+
+Two messages are sent, `busy` and `setName`.
+
+`busy` indicates the player is on system menu which means they are not playing at the moment.
+It will be passed an object with `busy:true` or `busy:false` when they enter and exit the system
+menus.
+
+Its up to you to decide if you care. For example maybe you'd like to remove them from the game when you
+receive the message something like
+
+        netPlayer.addEventListener('busy', Player.prototype.handleBusyMsg.bind(this));
+
+    Player.prototype.handleBusyMsg = function(data) {
+       if (data.busy) {
+          // the player is on the system menu
+          player.hidden = true;
+          player.collisionsOff = true;
+       } else {
+          player.hidden = false;
+          player.collisionsOn = true;
+       }
+    };
+
+`setName` indicates the player has chosen a new name. If the name is blank you can send a name
+back to the controller.
+
+        netPlayer.addEventListenter('setName', Player.prototype.handleSetNameMsg.bind(this));
+
+    Player.prototype.handleSetNameMsg = function(data) {
+      player.name = data.name || "The Unknown Solider";
+
+      // If we picked name send it back to the phone
+      if (!data.name) {
+        this.netPlayer.sendCmd('setName', {name: player.name});
+      }
+    };
+
+
+## package.json
 
 This file defines some data about your game. It is a JSON file and JSON has a very strict format.
 
@@ -520,7 +570,7 @@ A standard package.json looks like this
       "happyFunTimes": {
         "gameId": "jumpjump",
         "category": "game",
-        "apiVersion": "0.0.0",
+        "apiVersion": "1.3.0",
         "gameType": "html",
         "minPlayers": 1
       }
@@ -575,6 +625,38 @@ A standard package.json looks like this
     *   `game` A game
     *   `example` Not a game, not really meant to be played, just an example
     *   `demo` Not a game, something else like an exhibit, possibly not playable without more stuff
+
+*   `happyFunTimes.useScriptTag`
+
+    True indicates you don't want to use requirejs instead you want to use `<script>` tags. Your `apiVerison`
+    must be `1.3.0` or higher
+
+    I really like [require.js](http://requirejs.org) style of modules. It encourages
+    dependency injection, it also suppots module independence. But, for many it's non
+    standard and they're not used to it.
+
+    So, if you want to just use standard script tags make sure your `package.json` has its
+    `happyFunTimes.apiVersion` set to `1.3.0` or higher and add the flag `happyFunTimes.useScriptTag` set
+    to `true`. Example:
+
+        {
+          ...
+          "happyFunTimes": {
+            ...
+            "apiVersion": "1.3.0",
+            "useScriptTag": true,
+            ...
+          }
+        }
+
+    The `<script>` tags for HappyFunTimes are automatically
+    added for you and so is the script tag that includes `scripts/game.js` for your game and
+    `scripts/controller.js` for your controller. If you need any other scripts
+    (like three.js or pixi.js or jquery) add script tags to
+    either `game.html` or `controller.html`.  The HappyFunTimes libraries will be inserted before
+    those tags. The `game.js` or `controller.js` will be inserted after.
+
+    See example: http://github.com/hft-simple-script/
 
 ##Other Languages
 
