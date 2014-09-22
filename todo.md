@@ -1,6 +1,9 @@
 To Do
 =====
 
+*   handle multiple happyFunTimes on same network
+    *   Allow specifying name --machine?
+    *   let use pick
 *   add optional player timeout?
 
     I already have the ping but maybe I should also have an input timeout.
