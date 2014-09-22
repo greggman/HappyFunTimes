@@ -50,13 +50,16 @@
 var LoopbackServerSide = function() {
   var eventCallbacks = { };
   var client;
+  var connected = true;
 
   this.setClient = function(c) {
     client = c;
   };
 
   this.send = function(msg) {
-    client.emitEvent('message', {data:JSON.stringify(msg)});
+    if (connected) {
+      client.emitEvent('message', {data:JSON.stringify(msg)});
+    }
   };
 
   this.on = function(eventName, fn) {
@@ -77,16 +80,26 @@ var LoopbackServerSide = function() {
     }
   };
 
+  this.disconnect = function() {
+    if (connected) {
+      connected = false;
+      this.emitEvent('disconnect');
+      client.disconnect();
+    }
+  };
+
   this.close = function() {
+    this.disconnect();
   };
 
   this.isConnected = function() {
-    return true;
+    return connected;
   };
 };
 
 var LoopbackClient = function() {
   var eventCallbacks = { };
+  var connected = false;
 
   var server = new LoopbackServerSide();
   server.setClient(this);
@@ -113,11 +126,30 @@ var LoopbackClient = function() {
   };
 
   this.send = function(msg) {
-    server.emitEvent('message',{data:JSON.stringify(msg)});
+    if (connected) {
+      server.emitEvent('message',{data:JSON.stringify(msg)});
+    }
   };
 
   this.isConnected = function() {
-    return true;
+    return connected;
+  };
+
+  this.connect = function() {
+    connected = true;
+    this.emitEvent('connect');
+  };
+
+  this.disconnect = function() {
+    if (connected) {
+      connected = false;
+      this.emitEvent('disconnect');
+      server.disconnect();
+    }
+  };
+
+  this.close = function() {
+    this.disconnect();
   };
 };
 

@@ -87,6 +87,7 @@ var Player = function(client, relayServer, id) {
   }.bind(this);
 
   var onDisconnect = function() {
+    debug("" + this.id + ": disconnected");
     if (this.game) {
       this.game.removePlayer(this);
     }

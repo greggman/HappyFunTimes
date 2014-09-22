@@ -47,6 +47,8 @@ var WSServer     = require('./websocketserver');
  * @property {String} address - address that will
  *         replace "localhost" when a game's controllerUrl is
  *         passed in.
+ * @property {String?} baseUrl ???
+ * @property {WebSocketServer?} WebSocketServer constructor for WebSocketServer (for testing)
  */
 
 /**
@@ -74,7 +76,7 @@ var WSServer     = require('./websocketserver');
  */
 var RelayServer = function(servers, options) {
 
-  var g_nextSessionId = 1;
+  var g_nextSessionId = 0;
   var g_gameGroups = {};
   var g_numGameGroups = 0;
   var socketServers = [];
@@ -260,6 +262,10 @@ var RelayServer = function(servers, options) {
     socketServers.forEach(function(server) {
       server.close();
     });
+  }.bind(this);
+
+  this.getSocketServers = function() {
+    return socketServers.slice();
   }.bind(this);
 };
 

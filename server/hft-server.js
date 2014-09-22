@@ -70,6 +70,8 @@ mime.define({'application/javascript': ["js6"]});
  * @property {string} address ip address to bind to.
  * @property {boolean} privateServer true = don't inform
  *           rendezvous server
+ * @property {RelayServer?} relayServer relay server to use. (for testing)
+ * @property {HttpServer?} httpServer http server to use. (for testing)
  */
 
 /**
@@ -438,7 +440,7 @@ var HFTServer = function(options, startedCallback) {
         return;
       }
       var RelayServer = require('./relayserver.js');
-      relayServer = new RelayServer(servers, {
+      relayServer = options.relayServer || new RelayServer(servers, {
         address: g.address,
         baseUrl: "http://" + g.address + ":" + g.port,
       });
@@ -457,7 +459,7 @@ var HFTServer = function(options, startedCallback) {
 
   for (var ii = 0; ii < ports.length; ++ii) {
     var port = ports[ii];
-    var server = http.createServer(app);
+    var server = options.httpServer || http.createServer(app);
 
     server.once('error', function(port) {
       return function(err) {
@@ -505,6 +507,10 @@ var HFTServer = function(options, startedCallback) {
 
   this.removeListener = function() {
     eventEmitter.removeListener.apply(eventEmitter, arguments);
+  };
+
+  this.handleRequest = function(req, res) {
+    app(req, res);
   };
 };
 

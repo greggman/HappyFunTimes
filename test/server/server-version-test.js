@@ -30,12 +30,16 @@
  */
 "use strict";
 
-var assert    = require('assert');
-var path      = require('path');
-var Promise   = require('promise');
-var request   = require('request');
-var should    = require('should');
-var testUtils = require('../../lib/test/test-utils');
+var assert               = require('assert');
+var HFTServer            = require('../../server/hft-server.js');
+var LocalWebSocketServer = require('../../server/localwebsocketserver')
+var LoopbackClient       = require('../../server/loopbackclient');
+var path                 = require('path');
+var Promise              = require('promise');
+var RelayServer          = require('../../server/relayserver.js');
+var request              = require('request');
+var should               = require('should');
+var testUtils            = require('../../lib/test/test-utils');
 
 var g_configPath             = path.join(__dirname, "..", "testgames", "config.json");
 var g_installedGamesListPath = path.join(__dirname, "..", "testgames", "installed-games.json");
@@ -53,13 +57,19 @@ describe('server versions', function() {
     var gamedb = require('../../lib/gamedb');
     gamedb.reset();
 
-    testUtils.createServer().then(function(result) {
-      server = result;
-      done();
-    }).catch(function(err) {
-      console.error(err);
-      done();
+    server = testUtils.createMochHTTPServer();
+
+    relayServer = new RelayServer([httpServer], {
+      WebSocketServer: LocalWebSocketServer,
     });
+
+    hftServer = new HFTServer({
+      port: 0, // should not be used.
+      extraPorts: [],
+      privateServer: true,
+      httpServer: httpServer,
+      relayServer: relayServer,
+    }, done);
   });
 
   it('has expected games', function() {
@@ -139,9 +149,8 @@ describe('server versions', function() {
   });
 
   after(function() {
-    if (server) {
-      server.close();
-    }
+    server.close();
+    done();
   });
 
 });
