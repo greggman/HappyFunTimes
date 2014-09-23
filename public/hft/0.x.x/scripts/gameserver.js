@@ -169,8 +169,9 @@ define(
 
     var handleUpdatePlayer_ = function(msg) {
       var player = getPlayer_(msg.id);
-      if (!player)
+      if (!player) {
         return;
+      }
       player.sendEvent_(msg.data.cmd, [msg.data.data]); // FIX: Seems like gameserver should not know how to deal with this.
     }.bind(this);
 
