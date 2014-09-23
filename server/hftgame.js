@@ -147,11 +147,12 @@ HFTPlayer.prototype.handleGetAvailableGames = function(data) {
     this.gameDB.on('changed', this.getAvailableGamesSubscribed);
   }
 
-  debug("sending games");
+  debug("sending available games");
   this.sendCmd("availableGames", this.gameDB.getGames());
 };
 
 HFTPlayer.prototype.handleGetRunningGames = function(data) {
+  debug("sending running games");
   this.sendCmd("runningGames", this.relayServer.getGames());
 };
 
@@ -295,6 +296,7 @@ var HFTGame = function(options) {
   var server = new GameServer({
     gameId: "__hft__",
     socket: client,
+    quiet: true,
   });
 
   server.addEventListener('playerconnect', function(netPlayer, name) {
@@ -311,6 +313,8 @@ var HFTGame = function(options) {
   this.getClientForGame = function() {
     return client.server;
   };
+
+  client.connect();
 };
 
 
