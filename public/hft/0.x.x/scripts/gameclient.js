@@ -125,7 +125,6 @@ define(['./virtualsocket'], function(VirtualSocket) {
         fn.apply(this, args);
       } else {
         console.error("unknown event: " + eventType);
-console.log((new Error()).stack);
       }
     }.bind(this);
 
