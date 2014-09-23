@@ -43,9 +43,10 @@ requirejs.config({
   },
 });
 
-var HFTGameClient = function() {
+var HFTGameClient = function(options) {
+  options = options || {};
   var GameClient = requirejs('hft/gameclient');
-  var wsclient = new WebSocketClient({url: "ws://localhost:18679"});
+  var wsclient = options.socket || new WebSocketClient({url: "ws://localhost:18679"});
   var client = new GameClient({
     gameId: "__hft__",
     socket: wsclient,
@@ -80,8 +81,12 @@ var HFTGameClient = function() {
         resolve();
       };
 
+      var handleConnect = function() {
+        debug("connect");
+      };
+
       client.addEventListener('gameExited', handleGameExited);
-      client.addEventListener('connect', noop);
+      client.addEventListener('connect', handleConnect);
       client.addEventListener('disconnect', handleDisconnected);
       client.addEventListener('runningGames', handleRunningGames);
       client.sendCmd('getRunningGames');
@@ -127,10 +132,35 @@ var HFTGameClient = function() {
         resolve(data);
       };
 
-      client.addEventListener('connect', noop);
+      var handleConnect = function() {
+        debug("connect");
+      };
+
+      client.addEventListener('connect', handleConnect);
       client.addEventListener('disconnect', handleDisconnected);
       client.addEventListener('runningGames', handleRunningGames);
       client.sendCmd('getRunningGames');
+    });
+  };
+
+  this.getAvailableGames = function() {
+    return new Promise(function(resolve, reject) {
+      var handleDisconnected = function(data) {
+        reject("disconnected from hft");
+      };
+
+      var handleAvailableGames = function(data) {
+        resolve(data);
+      };
+
+      var handleConnect = function() {
+        debug("connect");
+      };
+
+      client.addEventListener('connect', handleConnect);
+      client.addEventListener('disconnect', handleDisconnected);
+      client.addEventListener('availableGames', handleAvailableGames);
+      client.sendCmd('getAvailableGames');
     });
   };
 };
