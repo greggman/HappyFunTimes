@@ -57,7 +57,9 @@ var Game = function(id, gameGroup, options) {
   this.numPlayers = 0;
   this.sendQueue = [];
   this.options = options;
-  this.controllerUrl = options.baseUrl + "/games/" + this.gameId + "/index.html";
+  if (this.runtimeInfo) {
+    this.controllerUrl = options.baseUrl + "/games/" + this.runtimeInfo.info.happyFunTimes.gameId + "/index.html";
+  }
   this.setGameId();
 };
 
