@@ -93,6 +93,7 @@ Game.prototype.hasClient = function() {
  * @param {!Player} player player to add.
  */
 Game.prototype.addPlayer = function(player) {
+  debug("addPlayer:" + player.id);
   var id = player.id;
   if (this.players[id]) {
     console.error("player " + id + " is already member of game " + this.gameId);
@@ -110,6 +111,7 @@ Game.prototype.addPlayer = function(player) {
  * @param {!Player} player player to remove.
  */
 Game.prototype.removePlayer = function(player) {
+  debug("removePlayer:" + player.id);
   var id = player.id;
   if (!this.players[id]) {
     console.error("player " + id + " is not a member of game " + this.gameId);
