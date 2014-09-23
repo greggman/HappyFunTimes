@@ -50,6 +50,7 @@ var GameGroup = function(gameId, relayServer, options) {
   this.runtimeInfo = gamedb.getGameById(gameId);
   this.relayServer = relayServer;
   this.games = [];  // first game is the "master"
+  this.nextGameId = 1;
 };
 
 GameGroup.prototype.removeGame = function(game) {
@@ -73,6 +74,22 @@ GameGroup.prototype.addPlayer = function(player) {
 };
 
 /**
+ * Adds a player to a specific game.
+ * @param {Player} player to add
+ * @param {string} id either game.id or game.subId
+ */
+GameGroup.prototype.addPlayerToGame = function(player, id) {
+  for (var ii = 0; ii < this.games.length; ++ii) {
+    var game = this.games[ii];
+    if (game.id == id || game.subId == id) {
+      game.addPlayer(player);
+      return;
+    }
+  }
+  console.error("no game with id/subid '" + id + "' in gamegroup: " + this.gameId);
+};
+
+/**
  *
  * @param {!Client} client Websocket client that's connected to
  *        the game.
@@ -85,7 +102,7 @@ GameGroup.prototype.assignClient = function(client, data) {
   // If there are no games make one
   // If multiple games are allowed make one
   // If multiple games are not allowed re-assign
-  var game = new Game(this.gameId, this, this.options);
+  var game = new Game(this.nextGameId++, this, this.options);
   this.games.push(game);
   if (this.games.length > 1 && !this.runtimeInfo.info.happyFunTimes.allowMultipleGames) {
     var oldGame = this.games.shift();

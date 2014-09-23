@@ -45,6 +45,8 @@ define(
   /**
    * @typedef {Object} GameServer~Options
    * @property {Socket?} socket Socket to use for communications
+   * @property {boolean?} quiet true = don't print any console messages
+   * @property {boolean?} reconnectOnDisconnect
    */
 
   /**
@@ -131,7 +133,16 @@ define(
       }
     }.bind(this);
 
-    var startPlayer_ = function(msg) {
+    var removePlayer_ = function(id) {
+      var player = _players[id];
+      if (player) {
+        player.sendEvent_('disconnect', []);
+        delete _players[id];
+        --_numPlayers;
+      }
+    };
+
+    var handleStartPlayer_ = function(msg) {
       var id = msg.id;
       var name = msg.name;
 
@@ -156,31 +167,25 @@ define(
       return player;
     }.bind(this);
 
-    var updatePlayer_ = function(msg) {
+    var handleUpdatePlayer_ = function(msg) {
       var player = getPlayer_(msg.id);
       if (!player)
         return;
       player.sendEvent_(msg.data.cmd, [msg.data.data]); // FIX: Seems like gameserver should not know how to deal with this.
     }.bind(this);
 
-    var removePlayer_ = function(msg) {
-      var id = msg.id;
-      var player = _players[id];
-      if (player) {
-        player.sendEvent_('disconnect', []);
-        delete _players[id];
-        --_numPlayers;
-      }
+    var handleRemovePlayer_ = function(msg) {
+      removePlayer_(msg.id);
     }.bind(this);
 
-    var systemMsg_ = function(msg) {
+    var handleSystemMsg_ = function(msg) {
     }.bind(this);
 
     var messageHandlers = {
-      start: startPlayer_,
-      update: updatePlayer_,
-      remove: removePlayer_,
-      system: systemMsg_,
+      start: handleStartPlayer_,
+      update: handleUpdatePlayer_,
+      remove: handleRemovePlayer_,
+      system: handleSystemMsg_,
     };
 
     var processMessage_ = function(msg) {
@@ -231,8 +236,10 @@ define(
           break;
         }
       }
-      // Why was this here? Most games can't recover.
-            setTimeout(connect_, 2000);
+
+      if (options.reconnectOnDisconnect) {
+        setTimeout(connect_, 2000);
+      }
     }.bind(this);
 
     var send_ = function(msg) {

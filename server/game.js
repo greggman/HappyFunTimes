@@ -33,7 +33,6 @@
 
 var debug        = require('debug')('game');
 var hftSite      = require('./hftsite');
-var gamedb       = require('../lib/gamedb');
 
 /**
  * @typedef {object} Game~Options
@@ -45,20 +44,25 @@ var gamedb       = require('../lib/gamedb');
  *
  * @constructor
  *
- * @param {string} gameId id of game
+ * @param {string} id id of game
  * @param {GameGroup} gameGroup the group this game belongs to.
  * @param {Game~Options} options
  */
-var Game = function(gameId, gameGroup, options) {
+var Game = function(id, gameGroup, options) {
   options = options || {};
-  this.gameId = gameId;
-  this.runtimeInfo = gamedb.getGameById(gameId);
+  this.id = id;
+  this.runtimeInfo = gameGroup.runtimeInfo;
   this.gameGroup = gameGroup;
   this.players = {};
   this.numPlayers = 0;
   this.sendQueue = [];
   this.options = options;
-  this.controllerUrl = options.baseUrl + "/games/" + gameId + "/index.html";
+  this.controllerUrl = options.baseUrl + "/games/" + this.gameId + "/index.html";
+  this.setGameId();
+};
+
+Game.prototype.setGameId = function() {
+  this.gameId = (this.runtimeInfo ? this.runtimeInfo.info.happyFunTimes.gameId : "") + (this.subId ? (" subId=" + this.subId) : "") + " id=" + this.id;
 };
 
 /**
@@ -162,8 +166,10 @@ Game.prototype.forEachPlayer = function(fn) {
  * @typedef {Object} Game~GameOptions
  * @property {string} gameId id of game (not used here)
  * @property {string?} controllerUrl url of controller(not used)
- * @property {boolean} disconnectPlayersIfGameDisconnects.
+ * @property {boolean?} disconnectPlayersIfGameDisconnects.
  *           Default = true.
+ * @property {boolean?} showInList
+ * @property {string?} subId can be used to switch player to another game
  */
 
 /**
@@ -176,7 +182,7 @@ Game.prototype.forEachPlayer = function(fn) {
 Game.prototype.assignClient = function(client, data) {
   hftSite.inform();
   if (this.client) {
-    console.error("this game already has a client!");
+    console.error("this game already has a client!" + this.gameId);
     this.client.close();
   }
   this.client = client;
@@ -186,6 +192,8 @@ Game.prototype.assignClient = function(client, data) {
 
   this.disconnectPlayersIfGameDisconnects = data.disconnectPlayersIfGameDisconnects === undefined ? true : data.disconnectPlayersIfGameDisconnects;
   this.showInList = data.showInList;
+  this.subId = data.subId;
+  this.setGameId();
 
   var sendMessageToPlayer = function(id, message) {
     var player = this.players[id];
@@ -202,9 +210,20 @@ Game.prototype.assignClient = function(client, data) {
     });
   }.bind(this);
 
+  var switchGame = function(id, data) {
+    var player = this.players[id];
+    if (!player) {
+      console.error("no player " + id + " for game " + this.gameId);
+      return;
+    }
+    this.removePlayer(player);
+    this.gameGroup.addPlayerToGame(player, data.gameId);
+  }.bind(this);
+
   var messageHandlers = {
     'client': sendMessageToPlayer,
     'broadcast': broadcast,
+    'switchGame': switchGame,
   };
 
   var onMessage = function(message) {
@@ -212,7 +231,7 @@ Game.prototype.assignClient = function(client, data) {
     var id = message.id;
     var handler = messageHandlers[cmd];
     if (!handler) {
-      console.error("unknown game message: " + cmd);
+      console.error("unknown game message: " + cmd + " for :" + this.gameId);
       return;
     }
 
@@ -220,12 +239,13 @@ Game.prototype.assignClient = function(client, data) {
   }.bind(this);
 
   var onDisconnect = function() {
-    debug("closing");
+    debug("closing:" + this.gameId);
     if (this.client) {
-      debug("closing client");
-      this.client.close();
+      var client = this.client;
+      this.client = undefined;
+      debug("closing client:" + this.gameId);
+      client.close();
     }
-    this.client = undefined;
     this.gameGroup.removeGame(this);
     if (this.disconnectPlayersIfGameDisconnects) {
       this.forEachPlayer(function(player) {

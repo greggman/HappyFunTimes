@@ -138,6 +138,13 @@ define(function() {
     }
   };
 
+  /**
+   * Moves this player to another game.
+   */
+  NetPlayer.prototype.switchGame = function(gameId) {
+    this.server.sendCmd("switchGame", this.id, {gameId: gameId});
+  };
+
   return NetPlayer;
 });
 

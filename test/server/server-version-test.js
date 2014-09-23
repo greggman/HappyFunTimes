@@ -30,14 +30,15 @@
  */
 "use strict";
 
-var assert    = require('assert');
-var fs        = require('fs');
-var path      = require('path');
-var Promise   = require('promise');
-var request   = require('request');
-var should    = require('should');
-var TestGame  = require('../../lib/test/test-game');
-var testUtils = require('../../lib/test/test-utils');
+var assert         = require('assert');
+var fs             = require('fs');
+var path           = require('path');
+var Promise        = require('promise');
+var request        = require('request');
+var should         = require('should');
+var TestController = require('../../lib/test/test-controller');
+var TestGame       = require('../../lib/test/test-game');
+var testUtils      = require('../../lib/test/test-utils');
 
 var g_testGamesPath          = path.join(__dirname, "..", "testgames");
 var g_configPath             = path.join(g_testGamesPath, "config.json");
@@ -147,12 +148,23 @@ describe('server versions', function() {
 
     it('game with allowMultipleGames can have multiple games', function(done) {
       var gameId = 'hft-testgame-v1_4_0-multiple-games';
-      var testGame1 = new TestGame({gameId: gameId, hftServer: hftServer});
+      var testGame1 = new TestGame({gameId: gameId, hftServer: hftServer, subId: "aaa"});
 
       testGame1.isConnected().should.be.ok;
-      var testGame2 = new TestGame({gameId: gameId, hftServer: hftServer});
+      var testGame2 = new TestGame({gameId: gameId, hftServer: hftServer, subId: "bbb"});
       testGame1.isConnected().should.be.ok;
       testGame2.isConnected().should.be.ok;
+
+      var testCtrl = new TestController({gameId: gameId, hftServer: hftServer});
+      testGame1.getNumPlayers().should.be.eql(1);
+      testGame2.getNumPlayers().should.be.eql(0);
+      var player = testGame1.getPlayers()[0];
+      player.switchGame("bbb");
+      testGame1.getNumPlayers().should.be.eql(0);
+      testGame2.getNumPlayers().should.be.eql(1);
+
+      testGame1.close();
+      testGame2.close();
       done();
     });
   });
