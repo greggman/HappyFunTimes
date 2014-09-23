@@ -38,6 +38,10 @@ var check = function(args) {
   return new Promise(function(resolve, reject) {
     try {
       var runtimeInfo = gameInfo.readGameInfo(process.cwd());
+      if (!runtimeInfo) {
+        throw "";
+      }
+      gameInfo.checkRequiredFiles(runtimeInfo, runtimeInfo.basePath);
     } catch (e) {
       console.error(e);
       reject();
