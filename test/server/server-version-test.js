@@ -47,6 +47,7 @@ var g_installedGamesListPath = path.join(g_testGamesPath, "installed-games.json"
 describe('server versions', function() {
 
   var hftServer;
+  var old = { };
 
   before(function(done) {
     var config = require('../../lib/config');
@@ -67,14 +68,11 @@ describe('server versions', function() {
     (gamedb.getGameById("hft-testgame-v1_2_0")).should.be.ok;
     (gamedb.getGameById("hft-testgame-v1_3_0")).should.be.ok;
     (gamedb.getGameById("hft-testgame-v1_4_0")).should.be.ok;
-    (gamedb.getGameById("hft-testgame-v1_4_0-multiple-games")).should.be.ok;
 
     // This doesn't really seem like a good test. The package.json could
     // fail to load for many reasons. Let's at least check the file is there.
     fs.existsSync(path.join(g_testGamesPath, "hft-testgame-v1.2.0-using-v1.3.0", "package.json")).should.be.true;
     (gamedb.getGameById("hft-testgame-v1_2_0-using-v1_3_0") === undefined).should.be.true;
-    fs.existsSync(path.join(g_testGamesPath, "hft-testgame-v1.3.0-using-v1.4.0", "package.json")).should.be.true;
-    (gamedb.getGameById("hft-testgame-v1_3_0-using-v1_4_0") === undefined).should.be.true;
   });
 
   describe('game needs new hft', function() {
@@ -130,6 +128,18 @@ describe('server versions', function() {
         res.body.should.containEql("hft-min.js");
       }).then(done, done);
     });
+    it('game can not use v1.4.0 functions', function(done) {
+      var gameId = 'hft-testgame-v1_3_0';
+      var testGame1 = new TestGame({gameId: gameId, hftServer: hftServer, allowMultipleGames: true});
+
+      testGame1.isConnected().should.be.ok;
+      var testGame2 = new TestGame({gameId: gameId, hftServer: hftServer, allowMultipleGames: true});
+      testGame1.isConnected().should.not.be.ok;
+      testGame2.isConnected().should.be.ok;
+      testGame1.close();
+      testGame2.close();
+      done();
+    });
   });
 
   describe('game v1.4.0', function() {
@@ -147,11 +157,11 @@ describe('server versions', function() {
     });
 
     it('game with allowMultipleGames can have multiple games', function(done) {
-      var gameId = 'hft-testgame-v1_4_0-multiple-games';
-      var testGame1 = new TestGame({gameId: gameId, hftServer: hftServer, subId: "aaa"});
+      var gameId = 'hft-testgame-v1_4_0';
+      var testGame1 = new TestGame({gameId: gameId, hftServer: hftServer, allowMultipleGames: true, subId: "aaa"});
 
       testGame1.isConnected().should.be.ok;
-      var testGame2 = new TestGame({gameId: gameId, hftServer: hftServer, subId: "bbb"});
+      var testGame2 = new TestGame({gameId: gameId, hftServer: hftServer, allowMultipleGames: true, subId: "bbb"});
       testGame1.isConnected().should.be.ok;
       testGame2.isConnected().should.be.ok;
 

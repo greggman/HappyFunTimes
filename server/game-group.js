@@ -31,9 +31,9 @@
 
 "use strict";
 
-var debug        = require('debug')('game-group');
-var Game         = require('./game');
-var gamedb       = require('../lib/gamedb');
+var debug  = require('debug')('game-group');
+var Game   = require('./game');
+var gamedb = require('../lib/gamedb');
 
 /**
  * Represents a group of games.
@@ -104,7 +104,15 @@ GameGroup.prototype.assignClient = function(client, data) {
   // If multiple games are not allowed re-assign
   var game = new Game(this.nextGameId++, this, this.options);
   this.games.push(game);
-  if (this.games.length > 1 && !this.runtimeInfo.info.happyFunTimes.allowMultipleGames) {
+  var allowMultipleGames = false;
+  if (data.allowMultipleGames) {
+    if (!this.runtimeInfo || !this.runtimeInfo.features.allowMultipleGames) {
+      console.error("allowMultipleGames requires apiVersion >= 1.4.0");
+    } else {
+      allowMultipleGames = true;
+    }
+  }
+  if (this.games.length > 1 && !allowMultipleGames) {
     var oldGame = this.games.shift();
     debug("tell old game to quit");
     oldGame.sendQuit();
