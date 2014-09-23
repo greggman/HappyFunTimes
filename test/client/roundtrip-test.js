@@ -50,19 +50,11 @@ describe('roundtrip', function() {
   });
 
   it('should be able to add and remove game and controller', function(done) {
-    var socketServer = hftServer.getSocketServer();
-    var gameLoopbackClient = new LoopbackClient();
-    var testGame = new TestGame({socket: gameLoopbackClient});
-    socketServer.emit('connection', gameLoopbackClient.server);
-    gameLoopbackClient.connect();
-
-    var ctrlLoopbackClient = new LoopbackClient();
-    var testCtrl = new TestController({socket: ctrlLoopbackClient});
-    socketServer.emit('connection', ctrlLoopbackClient.server);
-    ctrlLoopbackClient.connect();
+    var testGame = new TestGame({hftServer: hftServer});
+    var testCtrl = new TestController({hftServer: hftServer});
 
     testGame.getNumPlayers().should.be.eql(1);
-    ctrlLoopbackClient.close();
+    testCtrl.close();
     testGame.getNumPlayers().should.be.eql(0);
     done();
   });
