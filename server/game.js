@@ -165,10 +165,16 @@ Game.prototype.forEachPlayer = function(fn) {
 /**
  * @typedef {Object} Game~GameOptions
  * @property {string} gameId id of game (not used here)
- * @property {string?} controllerUrl url of controller(not used)
  * @property {boolean?} disconnectPlayersIfGameDisconnects.
  *           Default = true.
  * @property {boolean?} showInList
+ * @property {boolean?} allowMultipleGames. Normally if a new
+ *           game with the same id connects it will replace the
+ *           old game. With this set to true the old game will
+ *           remain, the new game will be added, players are
+ *           still added to the old game. Use
+ *           `NetPlayer.switchGame` to move a player between
+ *           games.
  * @property {string?} subId can be used to switch player to another game
  */
 
@@ -186,10 +192,6 @@ Game.prototype.assignClient = function(client, data) {
     this.client.close();
   }
   this.client = client;
-//  if (data.controllerUrl) {
-//    this.controllerUrl = data.controllerUrl.replace(/http:\/\/localhost(?:\:\d+)*/, this.options.baseUrl);
-//  }
-
   this.disconnectPlayersIfGameDisconnects = data.disconnectPlayersIfGameDisconnects === undefined ? true : data.disconnectPlayersIfGameDisconnects;
   this.showInList = data.showInList;
   this.subId = data.subId;
