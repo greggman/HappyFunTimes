@@ -31,15 +31,12 @@
 "use strict";
 
 var assert               = require('assert');
-var HFTServer            = require('../../server/hft-server.js');
 var LoopbackClient       = require('../../server/loopbackclient');
 var path                 = require('path');
-var RelayServer          = require('../../server/relayserver.js');
 var should               = require('should');
 var testUtils            = require('../../lib/test/test-utils');
 var TestGame             = require('../../lib/test/test-game');
 var TestController       = require('../../lib/test/test-controller');
-var LocalWebSocketServer = require('../../server/localwebsocketserver')
 
 var g_configPath             = path.join(__dirname, "..", "testgames", "config.json");
 var g_installedGamesListPath = path.join(__dirname, "..", "testgames", "installed-games.json");
@@ -47,27 +44,13 @@ var g_installedGamesListPath = path.join(__dirname, "..", "testgames", "installe
 describe('roundtrip', function() {
 
   var hftServer;
-  var httpServer;
-  var relayServer;
 
   before(function(done) {
-    httpServer = testUtils.createMockHTTPServer();
-
-    relayServer = new RelayServer([httpServer], {
-      WebSocketServer: LocalWebSocketServer,
-    });
-
-    hftServer = new HFTServer({
-      port: 0, // should not be used.
-      extraPorts: [],
-      privateServer: true,
-      httpServer: httpServer,
-      relayServer: relayServer,
-    }, done);
+    hftServer = testUtils.createHFTServerWithMocks(done);
   });
 
   it('should be able to add and remove game and controller', function(done) {
-    var socketServer = relayServer.getSocketServers()[0];
+    var socketServer = hftServer.getSocketServer();
     var gameLoopbackClient = new LoopbackClient();
     var testGame = new TestGame({socket: gameLoopbackClient});
     socketServer.emit('connection', gameLoopbackClient.server);
