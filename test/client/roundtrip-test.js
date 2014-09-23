@@ -30,13 +30,12 @@
  */
 "use strict";
 
-var assert               = require('assert');
-var LoopbackClient       = require('../../server/loopbackclient');
-var path                 = require('path');
-var should               = require('should');
-var testUtils            = require('../../lib/test/test-utils');
-var TestGame             = require('../../lib/test/test-game');
-var TestController       = require('../../lib/test/test-controller');
+var assert         = require('assert');
+var path           = require('path');
+var should         = require('should');
+var testUtils      = require('../../lib/test/test-utils');
+var TestGame       = require('../../lib/test/test-game');
+var TestController = require('../../lib/test/test-controller');
 
 var g_configPath             = path.join(__dirname, "..", "testgames", "config.json");
 var g_installedGamesListPath = path.join(__dirname, "..", "testgames", "installed-games.json");

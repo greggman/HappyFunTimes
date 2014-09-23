@@ -30,16 +30,18 @@
  */
 "use strict";
 
-var assert               = require('assert');
-var HFTServer            = require('../../server/hft-server.js');
-var path                 = require('path');
-var Promise              = require('promise');
-var request              = require('request');
-var should               = require('should');
-var testUtils            = require('../../lib/test/test-utils');
+var assert    = require('assert');
+var fs        = require('fs');
+var path      = require('path');
+var Promise   = require('promise');
+var request   = require('request');
+var should    = require('should');
+var TestGame  = require('../../lib/test/test-game');
+var testUtils = require('../../lib/test/test-utils');
 
-var g_configPath             = path.join(__dirname, "..", "testgames", "config.json");
-var g_installedGamesListPath = path.join(__dirname, "..", "testgames", "installed-games.json");
+var g_testGamesPath          = path.join(__dirname, "..", "testgames");
+var g_configPath             = path.join(g_testGamesPath, "config.json");
+var g_installedGamesListPath = path.join(g_testGamesPath, "installed-games.json");
 
 describe('server versions', function() {
 
@@ -59,11 +61,19 @@ describe('server versions', function() {
 
   it('has expected games', function() {
     var gamedb = require('../../lib/gamedb');
-    assert.ok(gamedb.getGameById("hft-testgame1"));
-    assert.ok(gamedb.getGameById("hft-testgame-v1_1_0"));
-    assert.ok(gamedb.getGameById("hft-testgame-v1_2_0"));
-    assert.ok(gamedb.getGameById("hft-testgame-v1_2_0-using-v1_3_0"));
-    assert.ok(gamedb.getGameById("hft-testgame-v1_3_0"));
+    (gamedb.getGameById("hft-testgame1")).should.be.ok;
+    (gamedb.getGameById("hft-testgame-v1_1_0")).should.be.ok;
+    (gamedb.getGameById("hft-testgame-v1_2_0")).should.be.ok;
+    (gamedb.getGameById("hft-testgame-v1_3_0")).should.be.ok;
+    (gamedb.getGameById("hft-testgame-v1_4_0")).should.be.ok;
+    (gamedb.getGameById("hft-testgame-v1_4_0-multiple-games")).should.be.ok;
+
+    // This doesn't really seem like a good test. The package.json could
+    // fail to load for many reasons. Let's at least check the file is there.
+    fs.existsSync(path.join(g_testGamesPath, "hft-testgame-v1.2.0-using-v1.3.0", "package.json")).should.be.true;
+    (gamedb.getGameById("hft-testgame-v1_2_0-using-v1_3_0") === undefined).should.be.true;
+    fs.existsSync(path.join(g_testGamesPath, "hft-testgame-v1.3.0-using-v1.4.0", "package.json")).should.be.true;
+    (gamedb.getGameById("hft-testgame-v1_3_0-using-v1_4_0") === undefined).should.be.true;
   });
 
   describe('game needs new hft', function() {
@@ -104,16 +114,6 @@ describe('server versions', function() {
         res.body.should.containEql("traceur-runtime.js");
       }).then(done, done);
     });
-    it('game can not use v1.3.0 functions', function(done) {
-      hftServer.getP("http://localhost:8087/games/hft-testgame-v1_2_0-using-v1_3_0/gameview.html").then(function(res) {
-        res.body.should.not.containEql("hft-min.js");
-      }).then(done, done);
-    });
-    it('controller can not use v1.3.0 functions', function(done) {
-      hftServer.getP("http://localhost:8087/games/hft-testgame-v1_2_0-using-v1_3_0/index.html").then(function(res) {
-        res.body.should.not.containEql("hft-min.js");
-      }).then(done, done);
-    });
   });
 
   describe('game v1.3.0', function() {
@@ -128,6 +128,32 @@ describe('server versions', function() {
         res.body.should.containEql("traceur-runtime.js");
         res.body.should.containEql("hft-min.js");
       }).then(done, done);
+    });
+  });
+
+  describe('game v1.4.0', function() {
+    it('game with out allowMultipleGames can not have multiple games', function(done) {
+      var gameId = 'hft-testgame-v1_4_0';
+      var testGame1 = new TestGame({gameId: gameId, hftServer: hftServer});
+
+      testGame1.isConnected().should.be.ok;
+      var testGame2 = new TestGame({gameId: gameId, hftServer: hftServer});
+      testGame1.isConnected().should.not.be.ok;
+      testGame2.isConnected().should.be.ok;
+      testGame1.close();
+      testGame2.close();
+      done();
+    });
+
+    it('game with allowMultipleGames can have multiple games', function(done) {
+      var gameId = 'hft-testgame-v1_4_0-multiple-games';
+      var testGame1 = new TestGame({gameId: gameId, hftServer: hftServer});
+
+      testGame1.isConnected().should.be.ok;
+      var testGame2 = new TestGame({gameId: gameId, hftServer: hftServer});
+      testGame1.isConnected().should.be.ok;
+      testGame2.isConnected().should.be.ok;
+      done();
     });
   });
 
