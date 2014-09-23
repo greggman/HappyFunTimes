@@ -31,7 +31,7 @@
 "use strict";
 
 var debug         = require('debug')('exitgame');
-var HFTGameClient = require('../../server/hftgame-client')
+var HFTGameClient = require('../../server/hftgame-client');
 var sprintf       = require('sprintf-js').sprintf;
 var strings       = require('../../lib/strings');
 
