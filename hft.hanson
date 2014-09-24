@@ -16,6 +16,12 @@
     Unity3D: {
       gameExecutable: "unitygame",
     },
+    "html-example": {
+      useTemplate: {
+        "game": true,
+      },
+      gameUrl: "gameview.html",
+    },
   },
 
   apiVersionSettings: {
