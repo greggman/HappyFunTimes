@@ -210,8 +210,10 @@ var HFTServer = function(options, startedCallback) {
       'Access-Control-Allow-Origin': '*',
       'Access-Control-Allow-Methods': 'GET,POST,OPTIONS',
       'Access-Control-Allow-Headers': 'X-Requested-With, X-HTTP-Method-Override, Content-Type, Accept',
+      'Access-Control-Allow-Credentials': false,
+      'Access-Control-Max-Age': 86400,
     });
-    res.end();
+    res.end("{}");
   };
 
   var isFolder = (function() {
