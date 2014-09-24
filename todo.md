@@ -1,10 +1,17 @@
 To Do
 =====
 
+*   support multiple games on the same gameId for shared games.
+
+    see hft-jumpabout
+
+*   if same subid remove old
 *   handle multiple happyFunTimes on same network
     *   Allow specifying name --machine?
     *   let use pick
+*   fix back button on shft game page. Only center is hot.
 *   make hft-publish work for html-example
+*   Add option to skip name input. hft start --no-ask-name
 *   add optional player timeout?
 
     I already have the ping but maybe I should also have an input timeout.
