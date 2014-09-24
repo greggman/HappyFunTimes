@@ -284,12 +284,6 @@ var HFTServer = function(options, startedCallback) {
     sendFileFn: sendFileResponse,
   });
 
-  var templatify = function(str) {
-    return strings.replaceParams(str, {
-      localhost: g.address,
-    });
-  };
-
   // Send a file from a game.
   var sendGameRequestedFile = function(req, res) {
     var gamePrefixLength = 8;  // "/games/" + the slash after the id
@@ -312,7 +306,7 @@ var HFTServer = function(options, startedCallback) {
   var sendRequestedFileFullPath = function(req, res, fullPath, runtimeInfo) {
     var parsedUrl = url.parse(req.url);
     var filePath = parsedUrl.pathname;
-    var isTemplate = g.gameDB.getTemplateUrls().indexOf(filePath) >= 0;
+    var isTemplate = runtimeInfo && runtimeInfo.templateUrls[filePath];
     var isQuery = parsedUrl.query !== null;
     var isAnchor = parsedUrl.hash !== null;
     if (runtimeInfo && runtimeInfo.features.es6 && es6Support.isES6(fullPath)) {
@@ -334,7 +328,12 @@ var HFTServer = function(options, startedCallback) {
         fullPath += "index.html";
       }
     }
-    sendFileResponse(res, fullPath, isTemplate ? templatify : undefined, runtimeInfo);
+    var prepFn = isTemplate ? function(str) {
+      return strings.replaceParams(str, [{
+        localhost: g.address,
+      }, runtimeInfo]);
+    } : undefined;
+    sendFileResponse(res, fullPath, prepFn, runtimeInfo);
   };
 
   var sendRequestedFile = function(req, res) {
@@ -363,6 +362,7 @@ var HFTServer = function(options, startedCallback) {
       var runtimeInfo = g.gameDB.getGameById(gameId);
       if (!runtimeInfo) {
         var msg = [
+          "url:" + req.url,
           "unknown gameId: " + gameId,
           "have you run `hft add` for the game in " + path.dirname(contentPath),
         ].join("\n");
