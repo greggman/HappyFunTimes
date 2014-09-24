@@ -146,9 +146,9 @@ define(function() {
   /**
    * Moves this player to another game.
    */
-  NetPlayer.prototype.switchGame = function(gameId) {
+  NetPlayer.prototype.switchGame = function(gameId, data) {
     if (this.connected) {
-      this.server.sendCmd("switchGame", this.id, {gameId: gameId});
+      this.server.sendCmd("switchGame", this.id, {gameId: gameId, data: data});
       this.connected = false;
     }
   };

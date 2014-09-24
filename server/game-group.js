@@ -77,12 +77,13 @@ GameGroup.prototype.addPlayer = function(player) {
  * Adds a player to a specific game.
  * @param {Player} player to add
  * @param {string} id either game.id or game.subId
+ * @param {Object?} data add to send in connect msg
  */
-GameGroup.prototype.addPlayerToGame = function(player, id) {
+GameGroup.prototype.addPlayerToGame = function(player, id, data) {
   for (var ii = 0; ii < this.games.length; ++ii) {
     var game = this.games[ii];
     if (game.id == id || game.subId == id) {
-      game.addPlayer(player);
+      game.addPlayer(player, data);
       return;
     }
   }

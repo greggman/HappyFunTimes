@@ -92,9 +92,10 @@ Game.prototype.hasClient = function() {
  * Adds a player to the game and sends a message to the game
  * informing the game of the new player.
  *
- * @param {!Player} player player to add.
+ * @param {Player} player player to add.
+ * @param {Object?} data data to send on connect
  */
-Game.prototype.addPlayer = function(player) {
+Game.prototype.addPlayer = function(player, data) {
   debug("addPlayer:" + player.id + " to game " + this.gameId);
   var id = player.id;
   if (this.players[id]) {
@@ -104,7 +105,7 @@ Game.prototype.addPlayer = function(player) {
   player.setGame(this);
   ++this.numPlayers;
   this.players[id] = player;
-  this.send(null, {cmd: 'start', id: id});
+  this.send(null, {cmd: 'start', id: id, data: data});
 };
 
 /**
@@ -224,7 +225,7 @@ Game.prototype.assignClient = function(client, data) {
       return;
     }
     this.removePlayer(player);
-    this.gameGroup.addPlayerToGame(player, data.gameId);
+    this.gameGroup.addPlayerToGame(player, data.gameId, data.data);
   }.bind(this);
 
   var messageHandlers = {

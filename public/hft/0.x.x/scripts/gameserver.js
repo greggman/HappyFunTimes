@@ -159,7 +159,7 @@ define(
       var player = new NetPlayer(this, id);
       _players[id] = player;
       ++_numPlayers;
-      sendEvent_('playerconnect', [player, name]);
+      sendEvent_('playerconnect', [player, name, msg.data]);
     }.bind(this);
 
     var getPlayer_ = function(id) {
