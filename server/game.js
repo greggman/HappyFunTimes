@@ -95,12 +95,13 @@ Game.prototype.hasClient = function() {
  * @param {!Player} player player to add.
  */
 Game.prototype.addPlayer = function(player) {
-  debug("addPlayer:" + player.id);
+  debug("addPlayer:" + player.id + " to game " + this.gameId);
   var id = player.id;
   if (this.players[id]) {
     console.error("player " + id + " is already member of game " + this.gameId);
     return;
   }
+  player.setGame(this);
   ++this.numPlayers;
   this.players[id] = player;
   this.send(null, {cmd: 'start', id: id});
@@ -113,7 +114,7 @@ Game.prototype.addPlayer = function(player) {
  * @param {!Player} player player to remove.
  */
 Game.prototype.removePlayer = function(player) {
-  debug("removePlayer:" + player.id);
+  debug("removePlayer:" + player.id + " from game " + this.gameId);
   var id = player.id;
   if (!this.players[id]) {
     console.error("player " + id + " is not a member of game " + this.gameId);
@@ -204,7 +205,7 @@ Game.prototype.assignClient = function(client, data) {
   var sendMessageToPlayer = function(id, message) {
     var player = this.players[id];
     if (!player) {
-      console.error("no player " + id + " for game " + this.gameId);
+      console.error("sendMessageToPlayer: no player " + id + " for game " + this.gameId);
       return;
     }
     player.send(message);
@@ -219,7 +220,7 @@ Game.prototype.assignClient = function(client, data) {
   var switchGame = function(id, data) {
     var player = this.players[id];
     if (!player) {
-      console.error("no player " + id + " for game " + this.gameId);
+      console.error("switchGame: no player " + id + " for game " + this.gameId);
       return;
     }
     this.removePlayer(player);
