@@ -52,6 +52,10 @@ var Player = function(client, relayServer, id) {
 
   var addPlayerToGame = function(data) {
     var game = this.relayServer.addPlayerToGame(this, data.gameId);
+    this.setGame(game);
+  }.bind(this);
+
+  this.setGame = function(game) {
     this.game = game;
   }.bind(this);
 
@@ -62,6 +66,10 @@ var Player = function(client, relayServer, id) {
   }.bind(this);
 
   var passMessageFromPlayerToGame = function(data) {
+    if (!this.game) {
+      console.warn("player " + this.id + " as no game");
+      return;
+    }
     this.game.send(this, {
       cmd: 'update',
       id: this.id,
