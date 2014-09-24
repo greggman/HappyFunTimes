@@ -60,6 +60,7 @@ define(function() {
     this.server = server;
     this.id = id;
     this.eventHandlers = { };
+    this.connected = true;
   };
 
   /**
@@ -69,6 +70,9 @@ define(function() {
    * @param {object?} msg a jsonifyable object.
    */
   NetPlayer.prototype.sendCmd = function(cmd, msg) {
+    if (!this.connected) {
+      return;
+    }
     if (msg === undefined) {
       msg = emptyMsg;
     }
@@ -106,6 +110,7 @@ define(function() {
         handler = function(handler) {
           return function() {
              self.removeAllListeners();
+             self.connected = false;
              return handler.apply(this, arguments);
           };
         }(handler);
@@ -142,7 +147,10 @@ define(function() {
    * Moves this player to another game.
    */
   NetPlayer.prototype.switchGame = function(gameId) {
-    this.server.sendCmd("switchGame", this.id, {gameId: gameId});
+    if (this.connected) {
+      this.server.sendCmd("switchGame", this.id, {gameId: gameId});
+      this.connected = false;
+    }
   };
 
   return NetPlayer;
