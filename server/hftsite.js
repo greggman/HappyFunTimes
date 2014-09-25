@@ -42,7 +42,7 @@ var g = {
 // Sends the local ip address and port
 var inform = function() {
   if (!g.privateServer) {
-    var url = restUrl.make(config.getSettings().settings.rendezvousUrl, {
+    var url = restUrl.make(process.env.HFT_RENDEZVOUS_URL || config.getSettings().settings.rendezvousUrl, {
       hftip: g.address,
       hftport: g.port,
     })
