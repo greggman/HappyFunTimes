@@ -19,6 +19,8 @@ To Do
     people might walk away and leave their phone connected. If there's no
     input for a while we'll assume they are no longer participating?
 
+*   add "hft remove --missing" and "--broken" to remove missing/broken ones
+*   consider using a fake inmem file system for testing, both reading and writing
 *   publish unity plugin
 *   figure out why unitycharacterexample is not exiting when hft asks it to.
 *   if hft is not running, have shft save a cookie if you choose a game to install.
@@ -755,6 +757,7 @@ Runs Repo noid
 Done
 ====
 
+*   allow local icon
 *   if --dns
     *   require port 80, fail if we can't get it
     *   print 'need sudo' or figure out how to ask for permission

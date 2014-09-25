@@ -15,6 +15,7 @@ Making games with HappyFunTimes
     *   **[Handling Players](#handling-players)**
 *   **[package.json](#packagejson)**
     *   **[Required Fields](#required-fields)**
+*   **[Files](#files)**
 *   **[HFT Commands](commands.md)**
 *   **[Other Languages](#other-languages)**
 *   **[Ideas](ideas.md)**
@@ -657,6 +658,13 @@ A standard package.json looks like this
     those tags. The `game.js` or `controller.js` will be inserted after.
 
     See example: http://github.com/hft-simple-script/
+
+##Files
+
+### Favicon
+
+If you have a `favicon.png/jpg/gif` in your game's root folder it will be used for your favicon.
+If it does not exist your `icon.png/jpg/gif` will be used.
 
 ##Other Languages
 
