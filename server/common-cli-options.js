@@ -37,5 +37,6 @@ exports.options = [
   { option: 'address',          type: 'String',     description: 'ip address for dns and controller url conversion'},
   { option: 'app-mode',         type: 'Boolean',    description: 'run as an app'},
   { option: 'show',             type: 'String',     description: 'html file to launch, default "games"'},
+  { option: 'system-name',      type: 'String',     description: 'name used if multiple happyFunTimes servers are running on the same network. Default = computer name'},
 ];
 

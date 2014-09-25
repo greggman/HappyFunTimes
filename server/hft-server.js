@@ -72,6 +72,9 @@ mime.define({'application/javascript': ["js6"]});
  *           rendezvous server
  * @property {RelayServer?} relayServer relay server to use. (for testing)
  * @property {HttpServer?} httpServer http server to use. (for testing)
+ * @property {string?} systemName name to use if mulitiple
+ *           happyFunTimes servers are running on the same
+ *           network.
  */
 
 /**
@@ -172,10 +175,12 @@ var HFTServer = function(options, startedCallback) {
   };
 
   var handleHappyFunTimesPingRequest = function(query, res) {
+    var games = relayServer.getGames();
+    var game = (games.length > 0) ? (": " + games[0].runtimeInfo.originalGameId) : "";
     sendJSONResponse(res, {
       version: "0.0.0",
       id: "HappyFunTimes",
-      serverName: computerName.get(),
+      serverName: (options.systemName || computerName.get()) + game,
     }, {
       'Access-Control-Allow-Origin': '*',
     });
