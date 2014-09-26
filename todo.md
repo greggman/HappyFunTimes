@@ -1,15 +1,7 @@
 To Do
 =====
 
-*   test broadcast
-*   support multiple games on the same gameId for shared games.
-
-    see hft-jumpabout
-
-    *   gameconnect?
-    *   unity support
-    *   if same subid remove old
-
+*   Add unity support for multiple games
 *   fix back button on shft game page. Only center is hot.
 *   make hft-publish work for html-example
 *   Add option to skip name input. hft start --no-ask-name
@@ -761,6 +753,15 @@ Runs Repo noid
 
 Done
 ====
+
+*   make subId the id. If not subId use a prefixed id like _hft_123
+*   test broadcast
+*   support multiple games on the same gameId for shared games.
+
+    see hft-jumpabout
+
+    *   gameconnect?
+    *   if same subid remove old
 
 *   handle multiple happyFunTimes on same network
     *   Allow specifying name --machine?
