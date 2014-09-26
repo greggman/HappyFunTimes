@@ -125,7 +125,7 @@ AppleCaptivePortalHandler.prototype.check = function(req, res) {
 
     if (isLoginURL) {
       session.loggedIn = true;
-      this.sendCaptivePortalHTML(res, sessionId, "game-login.html");
+      this.sendCaptivePortalHTML(req, res, sessionId, "game-login.html");
       return true;
     }
 
@@ -136,7 +136,7 @@ AppleCaptivePortalHandler.prototype.check = function(req, res) {
         return true;
       }
     }
-    this.sendCaptivePortalHTML(res, sessionId);
+    this.sendCaptivePortalHTML(req, res, sessionId);
     return true;
   }
 
@@ -146,7 +146,7 @@ AppleCaptivePortalHandler.prototype.check = function(req, res) {
 
   // We are checking for apple for the first time so remember the path
   this.sessions[sessionId] = {};
-  this.sendCaptivePortalHTML(res, sessionId);
+  this.sendCaptivePortalHTML(req, res, sessionId);
   return true;
 };
 
@@ -154,14 +154,15 @@ AppleCaptivePortalHandler.prototype.check = function(req, res) {
  * Sends captive-portal.html (or optionally a different html
  * file) but does substitutions
  *
+ * @param {Request} req node's request object.
  * @param {Response} res node's response object.
  * @param {string} sessionId some sessionid
  * @param {string} opt_path base path relative path of html file
  */
-AppleCaptivePortalHandler.prototype.sendCaptivePortalHTML = function(res, sessionId, opt_path) {
+AppleCaptivePortalHandler.prototype.sendCaptivePortalHTML = function(req, res, sessionId, opt_path) {
   opt_path = opt_path || "captive-portal.html";
   var fullPath = path.normalize(path.join(this.options.baseDir, opt_path));
-  this.options.sendFileFn(res, fullPath, function(str) {
+  this.options.sendFileFn(req, res, fullPath, function(str) {
     var params = {
       sessionId: sessionId,
       localhost: this.options.address + ":" + this.options.port,

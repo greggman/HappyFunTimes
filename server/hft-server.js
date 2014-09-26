@@ -251,7 +251,18 @@ var HFTServer = function(options, startedCallback) {
     res.end();
   };
 
-  var sendFileResponse = function(res, fullPath, opt_prepFn, runtimeInfo) {
+  var getRequestIpAddress = function(req) {
+    var ip = req.headers['x-forwarded-for'] ||
+         req.connection.remoteAddress ||
+         req.socket.remoteAddress ||
+         req.connection.socket.remoteAddress;
+    if (ip && ip.indexOf(',')) {
+      ip = ip.split(",")[0];
+    }
+    return ip;
+  };
+
+  var sendFileResponse = function(req, res, fullPath, opt_prepFn, runtimeInfo) {
     debug("path: " + fullPath);
     var mimeType = mime.lookup(fullPath);
     if (mimeType) {
@@ -261,6 +272,8 @@ var HFTServer = function(options, startedCallback) {
       fileCache.readFile(fullPath, function(err, data){
         if (err) {
           console.error("" + err + ": " + fullPath);
+          console.error("ip: " + getRequestIpAddress(req));
+          console.error(JSON.stringify(req.headers, undefined, "  "));
           return send404(res);
         }
         if (opt_prepFn) {
@@ -340,7 +353,7 @@ var HFTServer = function(options, startedCallback) {
         localhost: g.address,
       }, runtimeInfo]);
     } : undefined;
-    sendFileResponse(res, fullPath, prepFn, runtimeInfo);
+    sendFileResponse(req, res, fullPath, prepFn, runtimeInfo);
   };
 
   var sendRequestedFile = function(req, res) {
@@ -393,7 +406,7 @@ var HFTServer = function(options, startedCallback) {
           console.error("" + err + ": " + templatePath);
           return send404(res);
         }
-        sendFileResponse(res, contentFullPath, function(str) {
+        sendFileResponse(req, res, contentFullPath, function(str) {
           var result = strings.replaceParams(templateData.toString(), [
             runtimeInfo,
             {
