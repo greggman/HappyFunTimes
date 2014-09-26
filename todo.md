@@ -1,6 +1,7 @@
 To Do
 =====
 
+*   test broadcast
 *   support multiple games on the same gameId for shared games.
 
     see hft-jumpabout

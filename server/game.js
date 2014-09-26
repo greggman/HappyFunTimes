@@ -61,10 +61,11 @@ var Game = function(id, gameGroup, options) {
     this.controllerUrl = options.baseUrl + "/games/" + this.runtimeInfo.info.happyFunTimes.gameId + "/index.html";
   }
   this.setGameId();
+  debug("create game " + this.  gameId);
 };
 
 Game.prototype.setGameId = function() {
-  this.gameId = (this.runtimeInfo ? this.runtimeInfo.info.happyFunTimes.gameId : "") + (this.subId ? (" subId=" + this.subId) : "") + " id=" + this.id;
+  this.gameId = (this.runtimeInfo ? this.runtimeInfo.info.happyFunTimes.gameId : "") + " id=" + this.id;
 };
 
 /**
@@ -181,8 +182,8 @@ Game.prototype.forEachPlayer = function(fn) {
  *           still added to the old game. Use
  *           `NetPlayer.switchGame` to move a player between
  *           games.
- * @property {boolean?} receiveGameConnectEvents
- * @property {string?} subId can be used to switch player to another game
+ * @property {string?} id can be used to switch player to
+ *           another game
  */
 
 /**
@@ -201,7 +202,6 @@ Game.prototype.assignClient = function(client, data) {
   this.client = client;
   this.disconnectPlayersIfGameDisconnects = data.disconnectPlayersIfGameDisconnects === undefined ? true : data.disconnectPlayersIfGameDisconnects;
   this.showInList = data.showInList;
-  this.subId = data.subId;
   this.setGameId();
 
   var sendMessageToPlayer = function(id, message) {
@@ -242,7 +242,7 @@ Game.prototype.assignClient = function(client, data) {
     'broadcast': broadcast,
     'switchGame': switchGame,
     'peer': sendMessageToGame,
-    'broadcastToGames': broadcastToGames,
+    'bcastToGames': broadcastToGames,
   };
 
   var onMessage = function(message) {
@@ -277,6 +277,19 @@ Game.prototype.assignClient = function(client, data) {
   client.on('message', onMessage);
   client.on('disconnect', onDisconnect);
 
+  // Tell the game it's id
+  if (data.allowMultipleGames && !data.id) {
+    this.client.send({
+      cmd: 'upgame',
+      data: {
+        cmd: 'gameid',
+        data: {
+          id: this.id,
+        },
+      },
+    });
+  }
+
   // start each player
   this.forEachPlayer(function(player) {
     this.client.send({
@@ -308,20 +321,17 @@ Game.prototype.sendQuit = function() {
   this.sendSystemCmd_('exit', {});
 };
 
-Game.prototype.sendGameConnect = function(otherGame) {
-  this.client.send({
-    cmd: 'gameconnect',
-    id: otherGame.id,
-    subId: otherGame.subId,
-  });
-};
-
 Game.prototype.sendGameDisconnect = function(otherGame) {
-  this.client.send({
-    cmd: 'gamedisconnect',
-    id: otherGame.id,
-    subId: otherGame.subId,
-  });
+  if (this.client) {  // this check is needed because in GameGroup.assignClient the new game has been added to games but not yet assigned a client
+    this.client.send({
+      cmd: 'upgame',
+      id: otherGame.id,
+      data: {
+        cmd: 'gamedisconnect',
+        data: {},
+      },
+    });
+  }
 };
 
 module.exports = Game;

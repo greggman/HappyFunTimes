@@ -83,11 +83,11 @@ the correct version
     *   Support for multiple `GameServer`s on one game
 
         Normally if 2 `GameServer`s from the same game try to connect to HappyFunTimes
-        the second one will disconnect the first one and become the **1** GameServer
+        the second one will disconnect the first one and become the **one** GameServer
         running the game.
 
         The thinking there was if there is already a game running and HappyFunTimes
-        see anotehr try to start it probably means you left a window open somewhere
+        see another try to start it probably means you left a window open somewhere
         or some how the old game didn't get disconnected from HappyFunTimes so
         you probably want the new one to take charge.
 
@@ -96,18 +96,18 @@ the correct version
 
             var server = new GameServer({
               allowMultipleGames: true,
-              subId: "ABC",  // <= make this different for each GameServer
+              id: "ABC",  // <= OPTIONAL make this different for each GameServer
             });
 
         This will let 2 or more GameServers connect for a particular game.
         This is useful for example for running a game across multiple machines.
 
         Each game still runs on its own but it can pass players to other
-        games by calling `NetPlayer.switchPlayer(subId, data)` where
-        `subId` is the id of the game
+        games by calling `NetPlayer.switchPlayer(id, data)` where
+        `id` is the id of the game.
 
         The `NetPlayer` in this game will disconnect and a `playerconnect` message
-        will get emitted in the game corresponding to `subId`.
+        will get emitted in the game corresponding to `id`.
 
         Example: Imagine you have 3 machines AAA, BBB, and CCC. Imagine they
         are arranged next to each other like this
@@ -153,22 +153,86 @@ the correct version
 
         New players are always added to the first GameServer that connected to
         HappyFunTimes. After that it's up to you to decide how to pass the players
-        amoung games.
-
-        As for setting the `subId` I'd suggest passing one on the URL.
-
-        Note that
-        `subId` **should not be a number**. This is because HappyFunTimes
-        assigns a number to each GameServer. You can use that number as a `subId`
-        when calling `NetPlayer.switchGame` but you can't guarantee which
-        GameServer is using which number. At some point I'll probably add
-        a way to query what other `GameServer`s are available and you can
-        try to auto-configure your game but for now pass in your own unique
-        `subId` when creating each `GameServer` and use those `subId`s when
-        calling `NetPlayer.switchPlayer`.
+        among games.
 
         See [hft-jumpabout](http://github.com/greggman/hft-jumpabout/) for
         a working example
+
+        ### Setting the id for the game.
+
+        As for setting the `id` I'd suggest passing one on the URL. If you don't
+        pass in an id one will be assigned. The assigned id is passed
+        through the `gameid` message. You'll only get this message if you
+        don't assign your own id.
+
+            var server = new GameServer({
+              allowMultipleGames: true,
+            });
+
+            server.addEventListener({'gameid', function(data) {
+              console.log("this game's id is: ' + data.id);
+            });
+
+        Conversely, there can only be 1 game per id. So if you assign
+        your own ids anytime the same id is used the previous game using
+        that id will be disconnected.
+
+        ### Talking between games
+
+        Unlike players where there's a 'playerconnect' msg sent each time a
+        player connects and a `NetPlayer` object to represent that player, Games have
+        no corresponding events nor do they have an object.
+
+        If you'd like other games to know when a new game has connected have
+        that new game call `GameServer.broadcastCmdToGames` and a message
+        will be send to all games. Any message sent from a game to another
+        game will have the id of the sender as the second parameter to the
+        handler.
+
+        On Game AAA
+
+            var server = new GameServer({
+              allowMultipleGames: true,
+              id: "ABC",
+            });
+
+            server.broadcastCmdToGames('alive');
+
+        On Game BBB
+
+            server.addEventListener('alive', function(data, id) {
+              console.log("other game's id is: " + id);
+            });
+
+        Note you'll receive this message yourself
+        so you'll need to filter out matching ids.
+
+            var server = new GameServer({id: "foo"});
+            server.broadcastCmdToGame('alive');
+
+            var otherGameIds = {};
+            server.addEventListner('alive', function(data, id) {
+              if (id != "foo") {
+                otherGameIds[id] = true;
+              }
+            });
+
+        To find out when a game disconnects check for the `gamedisconnect`
+        message
+
+            server.addEventListener('gamedisconnect', function(data, id) {
+                delete otherGameIds[id];
+            });
+
+        Once you know an `id` of another game
+        you can send a message directly to that game by
+        calling `GameServer.sendCmdToGame(cmd, idOfGame, data)`
+
+        That command will arrive on the `GameServer` for that game.
+
+        Of course you're free to make your own tracking objects
+        if you want something similar to NetPlayer.
+        [I don't recommend it](http://blog.happyfuntimes.net/blog/why-no-netgame-object/).
 
     *   Support for more templated files
 

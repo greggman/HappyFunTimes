@@ -51,7 +51,6 @@ var GameGroup = function(gameId, relayServer, options) {
   this.relayServer = relayServer;
   this.games = [];  // first game is the "master"
   this.nextGameId = 1;
-  this.informOtherGames = false;
 };
 
 GameGroup.prototype.getGameById = function(id) {
@@ -70,11 +69,9 @@ GameGroup.prototype.removeGame = function(game) {
     this.games.splice(ndx, 1);
   }
 
-  if (this.informOtherGames) {
-    for (var ii = 0; ii < this.games.length; ++ii) {
-      var otherGame = this.games[ii];
-      otherGame.sendGameDisconnect(game);
-    }
+  for (var ii = 0; ii < this.games.length; ++ii) {
+    var otherGame = this.games[ii];
+    otherGame.sendGameDisconnect(game);
   }
 
   debug("remove game: num games = " + this.games.length);
@@ -101,7 +98,7 @@ GameGroup.prototype.addPlayer = function(player) {
 GameGroup.prototype.addPlayerToGame = function(player, id, data) {
   for (var ii = 0; ii < this.games.length; ++ii) {
     var game = this.games[ii];
-    if (game.id == id || game.subId == id) {
+    if (game.id == id) {
       game.addPlayer(player, data);
       return;
     }
@@ -122,7 +119,9 @@ GameGroup.prototype.assignClient = function(client, data) {
   // If there are no games make one
   // If multiple games are allowed make one
   // If multiple games are not allowed re-assign
-  var game = new Game(this.nextGameId++, this, this.options);
+  var game = new Game(data.id || ("_hft_" + this.nextGameId++), this, this.options);
+  // Add it to 'games' immediately because if we remove the old game games would go to 0
+  // for a moment and that would trigger this GameGroup getting removed because there'd be no games
   this.games.push(game);
   var allowMultipleGames = false;
   if (data.allowMultipleGames) {
@@ -135,13 +134,13 @@ GameGroup.prototype.assignClient = function(client, data) {
   if (this.games.length > 1) {
     var oldGame;
     if (!allowMultipleGames) {
-      oldGame = this.games.shift();
+      oldGame = this.games[0];
     } else {
-      // See if there is any game with the same subId
-      if (data.subId) {
+      // See if there is any game with the same id
+      if (data.id) {
         // Don't check the last game, that's the one we just added.
         for (var ii = 0; ii < this.games.length - 1; ++ii) {
-          if (this.games[ii].subId == data.subId) {
+          if (this.games[ii].id == data.id) {
             oldGame = this.games[ii];
             break;
           }
@@ -157,16 +156,6 @@ GameGroup.prototype.assignClient = function(client, data) {
 
   debug("add game: num games = " + this.games.length);
   game.assignClient(client, data);
-
-  // Tell all the other games about the new game?
-  if (this.informOtherGames || data.receiveGameConnectEvents) {
-    this.informOtherGames = this.informOtherGames || data.receiveGameConnectEvents;
-    for (var ii = 0; ii < this.games.length - 1; ++ii) {
-      var otherGame = this.games[ii];
-      otherGame.sendGameConnect(game);
-      game.sendGameConnect(otherGame);
-    }
-  }
 };
 
 GameGroup.prototype.hasClient = function() {
@@ -205,7 +194,7 @@ GameGroup.prototype.sendMessageToGame = function(senderId, receiverId, data) {
   // this is lame! should change to ids like player.
   var game = this.getGameById(receiverId);
   if (game) {
-    game.send(this, {cmd: 'togame', id: senderId, data: data});
+    game.send(this, {cmd: 'upgame', id: senderId, data: data});
   } else {
     console.warn("no game for id: " + receiverId);
   }
@@ -213,11 +202,7 @@ GameGroup.prototype.sendMessageToGame = function(senderId, receiverId, data) {
 
 GameGroup.prototype.broadcastMessageToGames = function(senderId, receiverId, data) {
   this.games.forEach(function(game) {
-    if (senderId != game.id) {
-      game.send(this, {cmd: 'togame', id: senderId, data: data});
-    } else {
-      game.send(this, {cmd: 'self', data: data});
-    }
+    game.send(this, {cmd: 'upgame', id: senderId, data: data});
   });
 };
 

@@ -34,11 +34,9 @@
 var globalObject = this;
 
 define([
-    './netgame',
     './netplayer',
     './virtualsocket',
   ], function(
-    NetGame,
     NetPlayer,
     VirtualSocket) {
 
@@ -71,8 +69,6 @@ define([
     var _sendQueue = [];
     var _numPlayers = 0;
     var _players = {};  // by id
-    var _numGames = 0;
-    var _games = {};    // by id;
     var _totalPlayerCount = 0;
     var _eventListeners = {};
 
@@ -148,15 +144,6 @@ define([
       }
     };
 
-    var removeGame_ = function(id) {
-      var game = _games[id];
-      if (game) {
-        game.sendEvent_('disconnect', []);
-        delete _games[id];
-        --_numGames;
-      }
-    };
-
     var handleStartPlayer_ = function(msg) {
       var id = msg.id;
       var name = msg.name;
@@ -182,11 +169,6 @@ define([
       return player;
     }.bind(this);
 
-    var getGame_ = function(id) {
-      var game = _games[id];
-      return game;
-    }.bind(this);
-
     var handleUpdatePlayer_ = function(msg) {
       var player = getPlayer_(msg.id);
       if (!player) {
@@ -202,29 +184,8 @@ define([
     var handleSystemMsg_ = function(msg) {
     }.bind(this);
 
-    var handleGameConnect_ = function(msg) {
-      var id = msg.id;
-      var subId = msg.subId;
-      var game = new NetGame(this, id, subId);
-      _games[id] = game;
-      ++_numGames;
-      sendEvent_('gameconnect', [game]);
-    }.bind(this);
-
-    var handleGameDisconnect_ = function(msg) {
-      removeGame_(msg.id);
-    };
-
-    var handleToGameMsg_ = function(msg) {
-      var game = getGame_(msg.id);
-      if (!game) {
-        return;
-      }
-      game.sendEvent_(msg.data.cmd, [msg.data.data]);
-    };
-
-    var handleMsgToSelf_ = function(msg) {
-      sendEvent_(msg.data.cmd, [msg.data.data]);
+    var handleGameMsg_ = function(msg) {
+      sendEvent_(msg.data.cmd, [msg.data.data, msg.id]);
     };
 
     var messageHandlers = {
@@ -232,10 +193,7 @@ define([
       update: handleUpdatePlayer_,
       remove: handleRemovePlayer_,
       system: handleSystemMsg_,
-      gameconnect: handleGameConnect_,
-      gamedisconnect: handleGameDisconnect_,
-      togame: handleToGameMsg_,
-      self: handleMsgToSelf_,
+      upgame: handleGameMsg_,
     };
 
     var processMessage_ = function(msg) {
@@ -338,8 +296,15 @@ define([
       if (data === undefined) {
         data = emptyMsg;
       }
-      this.sendCmd('broadcast', {cmd: cmd, data: data});
+      this.sendCmd('broadcast', -1, {cmd: cmd, data: data});
     };
+
+    this.sendCmdToGame = function(cmd, id, data) {
+      if (data === undefined) {
+        data = emptyMsg;
+      }
+      this.sendCmd('peer', id, {cmd: cmd, data: data});
+    }
 
     /**
      * Sends a command to all games, including yourself.
@@ -348,7 +313,7 @@ define([
       if (data === undefined) {
         data = emptyMsg;
       }
-      this.sendCmd('broadcastToGames', -1, {cmd: cmd, data: data});
+      this.sendCmd('bcastToGames', -1, {cmd: cmd, data: data});
     };
 
     connect_();
