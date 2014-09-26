@@ -131,13 +131,15 @@ describe('server versions', function() {
     it('game can not use v1.4.0 functions', function(done) {
       var gameId = 'hft-testgame-v1_3_0';
       var testGame1 = new TestGame({gameId: gameId, hftServer: hftServer, allowMultipleGames: true});
-
       testGame1.isConnected().should.be.ok;
-      var testGame2 = new TestGame({gameId: gameId, hftServer: hftServer, allowMultipleGames: true});
+
+      var testGame2 = new TestGame({gameId: gameId, subId: "foobar", hftServer: hftServer, allowMultipleGames: true});
       testGame1.isConnected().should.not.be.ok;
       testGame2.isConnected().should.be.ok;
+
       testGame1.close();
       testGame2.close();
+
       done();
     });
   });
@@ -158,14 +160,27 @@ describe('server versions', function() {
 
     it('game with allowMultipleGames can have multiple games', function(done) {
       var gameId = 'hft-testgame-v1_4_0';
-      var testGame1 = new TestGame({gameId: gameId, hftServer: hftServer, allowMultipleGames: true, subId: "aaa"});
+      var testGame1 = new TestGame({
+        gameId: gameId,
+        hftServer: hftServer,
+        allowMultipleGames: true,
+        subId: "aaa",
+      });
 
       testGame1.isConnected().should.be.ok;
-      var testGame2 = new TestGame({gameId: gameId, hftServer: hftServer, allowMultipleGames: true, subId: "bbb"});
+      var testGame2 = new TestGame({
+        gameId: gameId,
+        hftServer: hftServer,
+        allowMultipleGames: true,
+        subId: "bbb",
+      });
       testGame1.isConnected().should.be.ok;
       testGame2.isConnected().should.be.ok;
 
-      var testCtrl = new TestController({gameId: gameId, hftServer: hftServer});
+      var testCtrl = new TestController({
+        gameId: gameId,
+        hftServer: hftServer,
+      });
       testGame1.getNumPlayers().should.be.eql(1);
       testGame2.getNumPlayers().should.be.eql(0);
       var player = testGame1.getPlayers()[0];
@@ -173,10 +188,75 @@ describe('server versions', function() {
       testGame1.getNumPlayers().should.be.eql(0);
       testGame2.getNumPlayers().should.be.eql(1);
 
+      // No gameconnect events
+      testGame1.getNumGames().should.be.eql(0);
+
       testGame1.close();
       testGame2.close();
       done();
     });
+
+    it('game with allowMultipleGames and receiveGameConnectEvent gets gameconnect events', function(done) {
+      var gameId = 'hft-testgame-v1_4_0';
+      var testGame1 = new TestGame({
+        gameId: gameId,
+        hftServer: hftServer,
+        allowMultipleGames: true,
+        receiveGameConnectEvents: true,
+        subId: "aaa",
+      });
+
+      testGame1.isConnected().should.be.ok;
+      var testGame2 = new TestGame({
+        gameId: gameId,
+        hftServer: hftServer,
+        allowMultipleGames: true,
+        receiveGameConnectEvents: true,
+        subId: "bbb",
+      });
+      testGame1.isConnected().should.be.ok;
+      testGame2.isConnected().should.be.ok;
+
+      var testCtrl = new TestController({
+        gameId: gameId,
+        hftServer: hftServer,
+      });
+      testGame1.getNumPlayers().should.be.eql(1);
+      testGame2.getNumPlayers().should.be.eql(0);
+      var player = testGame1.getPlayers()[0];
+      player.switchGame("bbb");
+      testGame1.getNumPlayers().should.be.eql(0);
+      testGame2.getNumPlayers().should.be.eql(1);
+
+      // because of gameconnect events
+      testGame1.getNumGames().should.be.eql(1);
+      testGame2.getNumGames().should.be.eql(1);
+
+      var game2 = testGame1.getGames()[0];
+      var game1 = testGame2.getGames()[0];
+
+      game2.sendCmd('testmsg', {foo: "bar"});
+      var msgs = game1.getReceivedMessages();
+      msgs.should.containDeep([{cmd: 'testmsg', data: {foo: "bar"}}]);
+
+      game1.sendCmd('testmsg', {foo: "moo"});
+      var msgs = game2.getReceivedMessages();
+      msgs.should.containDeep([{cmd: 'testmsg', data: {foo: "moo"}}]);
+
+      // check broadcast
+      testGame1.broadcastCmdToGames('testmsg', {abc: "def"});
+      var msgs = game1.getReceivedMessages();
+      msgs.should.containDeep([{cmd: 'testmsg', data: {abc: "def"}}]);
+      var msgs = testGame1.getReceivedMessages();
+      msgs.should.containDeep([{cmd: 'testmsg', data: {abc: "def"}}]);
+
+      // check disconnect messages
+      testGame1.close();
+      testGame2.getNumGames().should.be.eql(0);
+      testGame2.close();
+      done();
+    });
+
   });
 
   after(function(done) {

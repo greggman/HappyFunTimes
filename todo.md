@@ -5,10 +5,10 @@ To Do
 
     see hft-jumpabout
 
-*   if same subid remove old
-*   handle multiple happyFunTimes on same network
-    *   Allow specifying name --machine?
-    *   let use pick
+    *   gameconnect?
+    *   unity support
+    *   if same subid remove old
+
 *   fix back button on shft game page. Only center is hot.
 *   make hft-publish work for html-example
 *   Add option to skip name input. hft start --no-ask-name
@@ -196,6 +196,10 @@ To Do
 *   Have browser check if it's the default for hft. If not suggest to make it the default for hft.
 *   add option the choose browser to launch?
 *   Add options to HFT
+    *   dns (see above)
+    *   system name (name to use if multiple machine)
+    *   private
+    *   phonecontrol
 *   add option to hide it? ([x] show help on startup)
 *   make hft-exe update Info.plist version from hft version?
 *   Optionally allow games to advertise they are running.
@@ -757,6 +761,9 @@ Runs Repo noid
 Done
 ====
 
+*   handle multiple happyFunTimes on same network
+    *   Allow specifying name --machine?
+    *   let user pick
 *   allow local icon
 *   if --dns
     *   require port 80, fail if we can't get it

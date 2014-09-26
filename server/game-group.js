@@ -51,6 +51,17 @@ var GameGroup = function(gameId, relayServer, options) {
   this.relayServer = relayServer;
   this.games = [];  // first game is the "master"
   this.nextGameId = 1;
+  this.informOtherGames = false;
+};
+
+GameGroup.prototype.getGameById = function(id) {
+  // This is LAME! Should switch to hash like players
+  for (var ii = 0; ii < this.games.length; ++ii) {
+    var game = this.games[ii];
+    if (game.id == id) {
+      return game;
+    }
+  }
 };
 
 GameGroup.prototype.removeGame = function(game) {
@@ -58,6 +69,14 @@ GameGroup.prototype.removeGame = function(game) {
   if (ndx >= 0) {
     this.games.splice(ndx, 1);
   }
+
+  if (this.informOtherGames) {
+    for (var ii = 0; ii < this.games.length; ++ii) {
+      var otherGame = this.games[ii];
+      otherGame.sendGameDisconnect(game);
+    }
+  }
+
   debug("remove game: num games = " + this.games.length);
   if (this.games.length == 0) {
     this.relayServer.removeGameGroup(this.gameId);
@@ -113,14 +132,41 @@ GameGroup.prototype.assignClient = function(client, data) {
       allowMultipleGames = true;
     }
   }
-  if (this.games.length > 1 && !allowMultipleGames) {
-    var oldGame = this.games.shift();
-    debug("tell old game to quit");
-    oldGame.sendQuit();
-    oldGame.close();
+  if (this.games.length > 1) {
+    var oldGame;
+    if (!allowMultipleGames) {
+      oldGame = this.games.shift();
+    } else {
+      // See if there is any game with the same subId
+      if (data.subId) {
+        // Don't check the last game, that's the one we just added.
+        for (var ii = 0; ii < this.games.length - 1; ++ii) {
+          if (this.games[ii].subId == data.subId) {
+            oldGame = this.games[ii];
+            break;
+          }
+        }
+      }
+    }
+    if (oldGame) {
+      debug("tell old game to quit");
+      oldGame.sendQuit();
+      oldGame.close();
+    }
   }
+
   debug("add game: num games = " + this.games.length);
   game.assignClient(client, data);
+
+  // Tell all the other games about the new game?
+  if (this.informOtherGames || data.receiveGameConnectEvents) {
+    this.informOtherGames = this.informOtherGames || data.receiveGameConnectEvents;
+    for (var ii = 0; ii < this.games.length - 1; ++ii) {
+      var otherGame = this.games[ii];
+      otherGame.sendGameConnect(game);
+      game.sendGameConnect(otherGame);
+    }
+  }
 };
 
 GameGroup.prototype.hasClient = function() {
@@ -152,6 +198,26 @@ GameGroup.prototype.sendQuit = function() {
 GameGroup.prototype.disconnectGames = function() {
   this.games.forEach(function(game) {
     game.close();
+  });
+};
+
+GameGroup.prototype.sendMessageToGame = function(senderId, receiverId, data) {
+  // this is lame! should change to ids like player.
+  var game = this.getGameById(receiverId);
+  if (game) {
+    game.send(this, {cmd: 'togame', id: senderId, data: data});
+  } else {
+    console.warn("no game for id: " + receiverId);
+  }
+};
+
+GameGroup.prototype.broadcastMessageToGames = function(senderId, receiverId, data) {
+  this.games.forEach(function(game) {
+    if (senderId != game.id) {
+      game.send(this, {cmd: 'togame', id: senderId, data: data});
+    } else {
+      game.send(this, {cmd: 'self', data: data});
+    }
   });
 };
 

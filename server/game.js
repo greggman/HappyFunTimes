@@ -181,6 +181,7 @@ Game.prototype.forEachPlayer = function(fn) {
  *           still added to the old game. Use
  *           `NetPlayer.switchGame` to move a player between
  *           games.
+ * @property {boolean?} receiveGameConnectEvents
  * @property {string?} subId can be used to switch player to another game
  */
 
@@ -228,10 +229,20 @@ Game.prototype.assignClient = function(client, data) {
     this.gameGroup.addPlayerToGame(player, data.gameId, data.data);
   }.bind(this);
 
+  var sendMessageToGame = function(id, data) {
+    this.gameGroup.sendMessageToGame(this.id, id, data);
+  }.bind(this);
+
+  var broadcastToGames = function(id, data) {
+    this.gameGroup.broadcastMessageToGames(this.id, id, data);
+  }.bind(this);
+
   var messageHandlers = {
     'client': sendMessageToPlayer,
     'broadcast': broadcast,
     'switchGame': switchGame,
+    'peer': sendMessageToGame,
+    'broadcastToGames': broadcastToGames,
   };
 
   var onMessage = function(message) {
@@ -295,6 +306,22 @@ Game.prototype.sendSystemCmd_ = function(cmd, data) {
 
 Game.prototype.sendQuit = function() {
   this.sendSystemCmd_('exit', {});
+};
+
+Game.prototype.sendGameConnect = function(otherGame) {
+  this.client.send({
+    cmd: 'gameconnect',
+    id: otherGame.id,
+    subId: otherGame.subId,
+  });
+};
+
+Game.prototype.sendGameDisconnect = function(otherGame) {
+  this.client.send({
+    cmd: 'gamedisconnect',
+    id: otherGame.id,
+    subId: otherGame.subId,
+  });
 };
 
 module.exports = Game;
