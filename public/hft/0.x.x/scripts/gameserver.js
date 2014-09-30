@@ -188,12 +188,17 @@ define([
       sendEvent_(msg.data.cmd, [msg.data.data, msg.id]);
     };
 
+    var handleGameStart_ = function(msg) {
+      sendEvent_('connect', [msg.data]);
+    };
+
     var messageHandlers = {
-      start: handleStartPlayer_,
+      gamestart: handleGameStart_,
       update: handleUpdatePlayer_,
-      remove: handleRemovePlayer_,
-      system: handleSystemMsg_,
       upgame: handleGameMsg_,
+      remove: handleRemovePlayer_,
+      start: handleStartPlayer_,
+      system: handleSystemMsg_,
     };
 
     var processMessage_ = function(msg) {
@@ -229,7 +234,6 @@ define([
         _socket.send(_sendQueue[ii]);
       }
       _sendQueue = [];
-      sendEvent_('connect');
     }.bind(this);
 
     var disconnected_ = function() {

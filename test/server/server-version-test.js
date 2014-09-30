@@ -263,11 +263,6 @@ describe('server versions', function() {
       testGame1.isConnected().should.be.ok;
       testGame2.isConnected().should.be.ok;
 
-      testGame1.getReceivedMessages().should.containDeep(
-        [{cmd: 'gameid', data: {}}]);
-      testGame2.getReceivedMessages().should.containDeep(
-        [{cmd: 'gameid', data: {}}]);
-
       var testGame1Id = testGame1.getId();
       var testGame2Id = testGame2.getId();
 

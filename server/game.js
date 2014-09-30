@@ -278,17 +278,12 @@ Game.prototype.assignClient = function(client, data) {
   client.on('disconnect', onDisconnect);
 
   // Tell the game it's id
-  if (data.allowMultipleGames && !data.id) {
-    this.client.send({
-      cmd: 'upgame',
-      data: {
-        cmd: 'gameid',
-        data: {
-          id: this.id,
-        },
-      },
-    });
-  }
+  this.client.send({
+    cmd: 'gamestart',
+    data: {
+      id: this.id,
+    },
+  });
 
   // start each player
   this.forEachPlayer(function(player) {
