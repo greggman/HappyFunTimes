@@ -92,7 +92,7 @@ GameGroup.prototype.addPlayer = function(player) {
 /**
  * Adds a player to a specific game.
  * @param {Player} player to add
- * @param {string} id either game.id or game.subId
+ * @param {string} id
  * @param {Object?} data add to send in connect msg
  */
 GameGroup.prototype.addPlayerToGame = function(player, id, data) {
@@ -103,7 +103,7 @@ GameGroup.prototype.addPlayerToGame = function(player, id, data) {
       return;
     }
   }
-  console.error("no game with id/subid '" + id + "' in gamegroup: " + this.gameId);
+  console.error("no game with id '" + id + "' in gamegroup: " + this.gameId);
 };
 
 /**
