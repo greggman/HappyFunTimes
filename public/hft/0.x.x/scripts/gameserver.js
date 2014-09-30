@@ -71,6 +71,12 @@ define([
     var _players = {};  // by id
     var _totalPlayerCount = 0;
     var _eventListeners = {};
+    var _id;
+    var _getters = {
+      id: function() {
+        throw "you can't read the id before you've connected";
+      },
+    };
 
     if (!options.gameId) {
       var m = /games\/([^\/]+)\//.exec(window.location.href);
@@ -80,6 +86,13 @@ define([
         throw new Error("can't derive gameId");
       }
     }
+
+    Object.defineProperty(this, 'id', {
+      get: function() { return _getters.id(); },
+      set: function() {},
+      enumerable: true,
+      configurable: true,
+    });
 
     /**
      * Event that we've connected to happyFunTimes
@@ -189,6 +202,10 @@ define([
     };
 
     var handleGameStart_ = function(msg) {
+      _id = msg.data.id;
+      _getters.id = function() {
+        return _id;
+      };
       sendEvent_('connect', [msg.data]);
     };
 
@@ -234,6 +251,17 @@ define([
         _socket.send(_sendQueue[ii]);
       }
       _sendQueue = [];
+
+      // This `preconnect` message is a kind of hack.
+      // This used to be a `connect` message but
+      // I needed to be able to pass an `id` back to the
+      // connect message. On top of that, GameSupport
+      // was using the `connect` message. In order to allow
+      // games using `GameSupport` to use the `connect` message
+      // I changed this to `_hft_preconnect`. Games can therefore
+      // receive teh `connect` message. I changed `GameSupport`
+      // to a watch for `_hft_preconnect`
+      sendEvent_('_hft_preconnect');
     }.bind(this);
 
     var disconnected_ = function() {

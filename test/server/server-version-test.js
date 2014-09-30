@@ -212,6 +212,11 @@ describe('server versions', function() {
       testGame1.isConnected().should.be.ok;
       testGame2.isConnected().should.be.ok;
 
+      testGame1.getId().should.be.eql("aaa");
+      testGame2.getId().should.be.eql("bbb");
+      testGame1.getId().should.be.eql(testGame1.getIdFromGameServer());
+      testGame2.getId().should.be.eql(testGame2.getIdFromGameServer());
+
       var testCtrl = new TestController({
         gameId: gameId,
         hftServer: hftServer,
@@ -265,6 +270,9 @@ describe('server versions', function() {
 
       var testGame1Id = testGame1.getId();
       var testGame2Id = testGame2.getId();
+
+      testGame1Id.should.be.eql(testGame1.getIdFromGameServer());
+      testGame2Id.should.be.eql(testGame2.getIdFromGameServer());
 
       var testCtrl = new TestController({
         gameId: gameId,
