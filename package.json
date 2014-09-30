@@ -1,7 +1,7 @@
 {
   "name": "happyfuntimes",
   "description": "happyfuntimes framework",
-  "version": "0.0.10",
+  "version": "0.0.11",
   "private": true,
   "scripts": {
     "test": "node node_modules/mocha/bin/mocha --recursive",
