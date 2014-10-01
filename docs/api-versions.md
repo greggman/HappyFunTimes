@@ -244,5 +244,10 @@ the correct version
         you'd like other files to have info inserted you can add a
         `happyFunTimes.templateUrls` field to your `package.json`
 
+    *   --no-ask-name
+
+        For installations where you don't need to display the user's name
+        you can add --no-ask-name when you start the system and players
+        will not be asked enter their name.
 
 

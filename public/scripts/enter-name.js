@@ -31,7 +31,18 @@
 
 "use strict";
 
-var main = function(Cookie, Misc, MobileHacks) {
+
+// Start the main app logic.
+requirejs(
+  [ 'hft/misc/cookies',
+    'hft/misc/misc',
+    'hft/misc/mobilehacks',
+    'hft/io',
+  ], function(
+    Cookie,
+    Misc,
+    MobileHacks,
+    IO) {
 
   var $ = function(id) {
     return document.getElementById(id);
@@ -98,17 +109,6 @@ var main = function(Cookie, Misc, MobileHacks) {
   }
 
 
-};
-
-// Start the main app logic.
-requirejs(
-  [ 'hft/misc/cookies',
-    'hft/misc/misc',
-    'hft/misc/mobilehacks',
-    'hft/io',
-  ],
-  main
-);
-
+});
 
 

@@ -29,15 +29,6 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-"use strict";
+window.location.href = "/";
 
-exports.options = [
-  { option: 'port', alias: 'p', type: 'Int',        description: 'port. Default 18679'},
-  { option: 'dns',              type: 'Boolean',    description: 'enable dns server'},
-  { option: 'address',          type: 'String',     description: 'ip address for dns and controller url conversion'},
-  { option: 'app-mode',         type: 'Boolean',    description: 'run as an app'},
-  { option: 'show',             type: 'String',     description: 'html file to launch, default "games"'},
-  { option: 'system-name',      type: 'String',     description: 'name used if multiple happyFunTimes servers are running on the same network. Default = computer name'},
-  { option: 'ask-name',         type: 'Boolean',    description: 'ask for name on start, use --no-ask-name to set to false', default: "true"},
-];
 

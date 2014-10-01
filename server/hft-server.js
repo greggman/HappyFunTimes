@@ -323,10 +323,21 @@ var HFTServer = function(options, startedCallback) {
     sendRequestedFile(req, res);
   };
 
-  var sendRequestedFileFullPath = function(req, res, fullPath, runtimeInfo) {
+  // Send Templated File
+  var sendTemplatedFile = function(req, res) {
+    sendRequestedFile(req, res, {
+      params: {
+        "enterNameScript": (options.askName ? "scripts/enter-name.js" : "scripts/go-to-index.js"),
+      },
+    });
+  };
+
+  // Blargs! What a mess. This needs to be cleaned up
+  var sendRequestedFileFullPath = function(req, res, fullPath, runtimeInfo, options) {
+    var options = options || {};
     var parsedUrl = url.parse(req.url);
     var filePath = parsedUrl.pathname;
-    var isTemplate = runtimeInfo && runtimeInfo.templateUrls[filePath];
+    var isTemplate = (runtimeInfo && runtimeInfo.templateUrls[filePath]) || options.params;
     var isQuery = parsedUrl.query !== null;
     var isAnchor = parsedUrl.hash !== null;
     if (runtimeInfo && runtimeInfo.features.es6 && es6Support.isES6(fullPath)) {
@@ -348,19 +359,32 @@ var HFTServer = function(options, startedCallback) {
         fullPath += "index.html";
       }
     }
-    var prepFn = isTemplate ? function(str) {
-      return strings.replaceParams(str, [{
+    var prepFn = isTemplate ? (function() {
+      var params = [{
         localhost: g.address,
-      }, runtimeInfo]);
-    } : undefined;
+      }];
+      if (runtimeInfo) {
+        params.push([runtimeInfo]);
+      }
+      if (options.params) {
+        if (options.params.length) {
+          params = params.concat(options.params);
+        } else {
+          params.push(options.params);
+        }
+      };
+      return function(str) {
+        return strings.replaceParams(str, params);
+      }
+    }()) : undefined;
     sendFileResponse(req, res, fullPath, prepFn, runtimeInfo);
   };
 
-  var sendRequestedFile = function(req, res) {
+  var sendRequestedFile = function(req, res, options) {
     var parsedUrl = url.parse(req.url);
     var filePath = parsedUrl.pathname;
     var fullPath = path.normalize(path.join(g.cwd, g.baseDir, filePath));
-    sendRequestedFileFullPath(req, res, fullPath);
+    sendRequestedFileFullPath(req, res, fullPath, undefined, options);
   };
 
   var send404 = function(res, msg) {
@@ -433,7 +457,7 @@ var HFTServer = function(options, startedCallback) {
     sendRequestedFileFullPath(req, res, nonPath);
   });
   app.get(/^\/games\/(.*?)\//, sendGameRequestedFile);
-
+  app.get(/^\/enter-name.html/, sendTemplatedFile);
   app.get(/.*/, sendSystemRequestedFile);
   app.post(/.*/, handlePOST);
   app.options(/.*/, handleOPTIONS);
