@@ -364,7 +364,7 @@ var HFTServer = function(options, startedCallback) {
         localhost: g.address,
       }];
       if (runtimeInfo) {
-        params.push([runtimeInfo]);
+        params.push(runtimeInfo);
       }
       if (options.params) {
         if (options.params.length) {
