@@ -213,7 +213,7 @@ Game.prototype.assignClient = function(client, data) {
     player.send(message);
   }.bind(this);
 
-  var broadcast = function(message) {
+  var broadcast = function(id, message) {
     this.forEachPlayer(function(player) {
       player.send(message);
     });
