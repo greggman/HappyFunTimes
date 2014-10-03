@@ -229,8 +229,8 @@ Game.prototype.assignClient = function(client, data) {
     this.gameGroup.addPlayerToGame(player, data.gameId, data.data);
   }.bind(this);
 
-  var sendMessageToGame = function(id, data) {
-    this.gameGroup.sendMessageToGame(this.id, id, data);
+  var sendMessageToGame = function(destId, data) {
+    this.gameGroup.sendMessageToGame(this.id, destId, data);
   }.bind(this);
 
   var broadcastToGames = function(id, data) {
