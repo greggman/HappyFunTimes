@@ -184,9 +184,12 @@ describe('server versions', function() {
       testGame1.getNumPlayers().should.be.eql(1);
       testGame2.getNumPlayers().should.be.eql(0);
       var player = testGame1.getPlayers()[0];
-      player.switchGame("bbb");
+      player.switchGame("bbb", {foo: "abc"});
       testGame1.getNumPlayers().should.be.eql(0);
       testGame2.getNumPlayers().should.be.eql(1);
+
+      testGame2.getPlayers()[0].getReceivedMessages().should.containDeep(
+        [{cmd: 'connect', data: {foo: "abc"}}]);
 
       testGame1.close();
       testGame2.close();

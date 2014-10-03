@@ -55,6 +55,37 @@ describe('roundtrip', function() {
     testGame.getNumPlayers().should.be.eql(1);
     testCtrl.close();
     testGame.getNumPlayers().should.be.eql(0);
+    testGame.close();
+    done();
+  });
+
+  it('should be able to send messages to abd from game to controllers', function(done) {
+    var testGame = new TestGame({hftServer: hftServer});
+    var testCtrl1 = new TestController({hftServer: hftServer});
+    var testCtrl2 = new TestController({hftServer: hftServer});
+
+    testGame.getNumPlayers().should.be.eql(2);
+
+    testGame.sendMessageToPlayers({foo: 123});
+    testCtrl1.getReceivedMessages().should.containDeep(
+      [{cmd: 'testmsg', data: {foo: 123}}]);
+    testCtrl2.getReceivedMessages().should.containDeep(
+      [{cmd: 'testmsg', data: {foo: 123}}]);
+
+    testGame.broadcastCmd('testmsg', {bar: 456});
+    testCtrl1.getReceivedMessages().should.containDeep(
+      [{cmd: 'testmsg', data: {bar: 456}}]);
+    testCtrl2.getReceivedMessages().should.containDeep(
+      [{cmd: 'testmsg', data: {bar: 456}}]);
+
+    testCtrl1.sendCmd('testmsg', {moo: 789});
+    testGame.getPlayers()[0].getReceivedMessages().should.containDeep(
+      [{cmd: 'testmsg', data: {moo: 789}}]);
+
+    testCtrl1.close();
+    testCtrl2.close();
+    testGame.getNumPlayers().should.be.eql(0);
+    testGame.close();
     done();
   });
 
