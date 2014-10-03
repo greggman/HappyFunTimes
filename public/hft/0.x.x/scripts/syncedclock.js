@@ -112,43 +112,49 @@ define(["./io"], function(IO) {
      * keep the clock synced to the server.
      * @constructor
      */
-    var SyncedClock = function(opt_syncRateSeconds, opt_callback) {
-      this.url = window.location.href;
-      this.syncRateMS = (opt_syncRateSeconds || 10) * 1000;
-      this.timeOffset = 0;
-      this.callback = opt_callback;
-      this.syncToServer();
-    };
+    var SyncedClock = function(opt_syncRateSeconds, callback) {
+      var url = window.location.href;
+      var syncRateMS = (opt_syncRateSeconds || 10) * 1000;
+      var timeOffset = 0;
+      var callback = opt_callback;
 
-    SyncedClock.prototype.syncToServer = function() {
-      var that = this;
-      var sendTime = getLocalTime();
-      IO.sendJSON(this.url, {cmd: 'time'}, function(exception, obj) {
-        if (exception) {
-          //g_services.logger.error("syncToServer: " + exception);
-        } else {
-          var receiveTime = getLocalTime();
-          var duration = receiveTime - sendTime;
-          var serverTime = obj.time + duration * 0.5;
-          that.timeOffset = serverTime - receiveTime;
-          if (that.callback) {
-            that.callback();
-            that.callback = undefined;
+      var syncToServer = function(queueNext) {
+        var sendTime = getLocalTime();
+        IO.sendJSON(url, {cmd: 'time'}, function(exception, obj) {
+          if (exception) {
+            //g_services.logger.error("syncToServer: " + exception);
+          } else {
+            var receiveTime = getLocalTime();
+            var duration = receiveTime - sendTime;
+            var serverTime = obj.time + duration * 0.5;
+            timeOffset = serverTime - receiveTime;
+            if (callback) {
+              callback();
+              callback = undefined;
+            }
+            //g_services.logger.log("duration: ", duration, " timeOff:", timeOffset);
           }
-          //g_services.logger.log("duration: ", duration, " timeOff:", that.timeOffset);
-        }
-        setTimeout(function() {
-            that.syncToServer();
-          }, that.syncRateMS);
-      });
-    };
 
-    /**
-     * Gets the current time in seconds.
-     * @private
-     */
-    SyncedClock.prototype.getTime = function() {
-      return getLocalTime() + this.timeOffset;
+          if (queueNext) {
+            setTimeout(function() {
+              syncToServer(true);
+            }, syncRateMS);
+          }
+        });
+      };
+      syncToServer(true);
+      setTimeout(function() {syncToServer(false)}, 1000);
+      setTimeout(function() {syncToServer(false)}, 2000);
+      setTimeout(function() {syncToServer(false)}, 4000);
+
+      /**
+       * Gets the current time in seconds.
+       * @private
+       */
+      this.getTime = function() {
+        return getLocalTime() + timeOffset;
+      };
+
     };
 
     return online ? new SyncedClock(opt_syncRateSeconds, opt_callback) : new LocalClock(opt_callback);
