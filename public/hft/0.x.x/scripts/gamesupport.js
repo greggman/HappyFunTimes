@@ -149,6 +149,11 @@ define([
    *        doesn't have the focus.
    * @param {boolean?} step:        if true will step one tick for
    *        each mouse click
+   * @param {number?} fixedFramerate If set will advance the clock
+   *        this amount each frame. Useful for debugging because
+   *        otherwise when you pause in the debugger the clock
+   *        keeps ticking and you get some larger timestep
+   *
    */
 
   /**
@@ -169,7 +174,7 @@ define([
     var loop = function() {
       stats.begin();
 
-      globals.elapsedTime = clock.getElapsedTime();
+      globals.elapsedTime = globals.fixedFramerate || clock.getElapsedTime();
       globals.gameTime += globals.elapsedTime;
       ++globals.frameCount;
 
