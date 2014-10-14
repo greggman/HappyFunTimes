@@ -200,6 +200,7 @@ Game.prototype.assignClient = function(client, data) {
     this.client.close();
   }
   this.client = client;
+  this.client.clearTimeout();
   this.disconnectPlayersIfGameDisconnects = data.disconnectPlayersIfGameDisconnects === undefined ? true : data.disconnectPlayersIfGameDisconnects;
   this.showInList = data.showInList;
   this.setGameId();

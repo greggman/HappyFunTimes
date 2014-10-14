@@ -92,6 +92,10 @@ var LoopbackServerSide = function() {
     this.disconnect();
   };
 
+  this.clearTimeout = function() {
+    // noop
+  };
+
   this.isConnected = function() {
     return connected;
   };

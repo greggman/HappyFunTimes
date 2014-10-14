@@ -101,6 +101,10 @@ var WSServer = function(server) {
       eventHandlers[eventName] = fn;
     };
 
+    this.clearTimeout = function() {
+      heartMonitor.close();
+    };
+
     this.close = function() {
       debug("close wsclient")
       heartMonitor.close();
