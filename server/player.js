@@ -67,7 +67,7 @@ var Player = function(client, relayServer, id) {
 
   var passMessageFromPlayerToGame = function(data) {
     if (!this.game) {
-      console.warn("player " + this.id + " as no game");
+      console.warn("player " + this.id + " has no game");
       return;
     }
     this.game.send(this, {
