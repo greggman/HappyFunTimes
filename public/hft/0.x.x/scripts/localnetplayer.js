@@ -124,6 +124,9 @@ define(function() {
     }
   };
 
+  LocalNetPlayer.prototype.switchGame = function(id, data) {
+  };
+
   return LocalNetPlayer;
 });
 
