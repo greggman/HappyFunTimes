@@ -108,7 +108,10 @@ I'm sorry there's so many steps. It's not as hard as it looks. Trust me.
     This step is only needed for some games. If there is no `bower.json`
     in the folder you can skip this step.
 
-*   edit the `package.json` file and change the `gameId` and `name` to something unique
+*   edit the `package.json` file and change the `gameId` and `name` to something unique.
+
+    Note: If you are collaborating on a game don't change this stuff. Only change it
+    if you're making a new game based off of an existing game.
 
 *   add the game to happyfuntimes
 
