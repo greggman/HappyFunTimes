@@ -46,8 +46,8 @@ var HeartMonitor = function(options) {
 
   var id = ++nextId;
   var intervalId;
-  var timeout = 5; // 5 seconds
-  var timeoutCheckInterval = 2; // check every 2 seconds
+  var timeout = 15; // 15 seconds
+  var timeoutCheckInterval = timeout / 2;
   var waitingForPing = false;
   var timeOfLastMessageFromPlayer;
 
