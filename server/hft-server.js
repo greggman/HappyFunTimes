@@ -252,10 +252,16 @@ var HFTServer = function(options, startedCallback) {
   };
 
   var getRequestIpAddress = function(req) {
-    var ip = req.headers['x-forwarded-for'] ||
-         req.connection.remoteAddress ||
-         req.socket.remoteAddress ||
-         req.connection.socket.remoteAddress;
+    var ip = req.headers['x-forwarded-for'];
+    if (!ip && req.connection) {
+      ip = req.connection.remoteAddress;
+    }
+    if (!ip && req.socket) {
+      ip = req.socket.remoteAddress;
+    }
+    if (!ip && req.connection && req.connction.socket) {
+      ip = req.connection.socket.remoteAddress;
+    }
     if (ip && ip.indexOf(',')) {
       ip = ip.split(",")[0];
     }
