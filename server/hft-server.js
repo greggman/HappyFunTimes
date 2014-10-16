@@ -441,6 +441,9 @@ var HFTServer = function(options, startedCallback) {
             runtimeInfo,
             {
               content: str,
+              hftSettings: "window.hftSettings = " + JSON.stringify({
+                menu: g.menu,
+              }),
             }
           ]);
           return result;

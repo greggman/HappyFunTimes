@@ -39,5 +39,6 @@ exports.options = [
   { option: 'show',             type: 'String',     description: 'html file to launch, default "games"'},
   { option: 'system-name',      type: 'String',     description: 'name used if multiple happyFunTimes servers are running on the same network. Default = computer name'},
   { option: 'ask-name',         type: 'Boolean',    description: 'ask for name on start, use --no-ask-name to set to false', default: "true"},
+  { option: 'menu',             type: 'Boolean',    description: 'show menu icon on controller, use --no-menu to turn off', default: "true"},
 ];
 

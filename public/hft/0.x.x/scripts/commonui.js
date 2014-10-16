@@ -72,15 +72,21 @@ define([
    * @memberOf module:CommonUI
    */
   var setupStandardControllerUI = function(client, options) {
+    var hftSettings = window.hftSettings || {};
     var menu = $("hft-menu");
     var settings = $("hft-settings");
     var disconnected = $("hft-disconnected");
 
+    if (!hftSettings.menu) {
+      menu.style.display = "none";
+    } else {
+      menu.addEventListener('click', function() {
+        settings.style.display = "block";
+      }, false);
+    }
+
     var playerNameHandler = new PlayerNameHandler(client, $("hft-name"));
 
-    menu.addEventListener('click', function() {
-      settings.style.display = "block";
-    }, false);
     $("hft-setname").addEventListener('click', function() {
       settings.style.display = "none";
       playerNameHandler.startNameEntry();
