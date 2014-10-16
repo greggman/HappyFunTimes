@@ -175,6 +175,8 @@ Game.prototype.forEachPlayer = function(fn) {
  * @property {boolean?} disconnectPlayersIfGameDisconnects.
  *           Default = true.
  * @property {boolean?} showInList
+ * @property {boolean?} master Make this game the game that
+ *           receives new players
  * @property {boolean?} allowMultipleGames. Normally if a new
  *           game with the same id connects it will replace the
  *           old game. With this set to true the old game will

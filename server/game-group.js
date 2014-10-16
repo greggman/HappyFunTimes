@@ -156,6 +156,13 @@ GameGroup.prototype.assignClient = function(client, data) {
 
   debug("add game: num games = " + this.games.length);
   game.assignClient(client, data);
+
+  // If this is the master make it the first one
+  if (data.master) {
+    var ndx = this.games.indexOf(game);
+    this.games.splice(ndx, 1);
+    this.games.unshift(game);
+  }
 };
 
 GameGroup.prototype.hasClient = function() {
