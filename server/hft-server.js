@@ -315,6 +315,9 @@ var HFTServer = function(options, startedCallback) {
     var gamePrefixLength = 8;  // "/games/" + the slash after the id
     var gameId = req.params[0];
     var runtimeInfo = g.gameDB.getGameById(gameId);
+    if (!runtimeInfo || !runtimeInfo.basePath) {
+      return send404(res, "unknown gameId: " + gameId);
+    }
     var parsedUrl = url.parse(req.url);
     var filePath = parsedUrl.pathname;
     var fullPath = path.normalize(path.join(runtimeInfo.basePath, filePath.substr(gamePrefixLength + gameId.length)));
@@ -465,6 +468,29 @@ var HFTServer = function(options, startedCallback) {
     var gameId = req.params[0];
     sendRequestedFileFullPath(req, res, nonPath);
   });
+
+  // TODO: figure out a way to add these later?
+  // The issue now is this only happens once so a game added or updated
+  // later won't get handled. On top of that express would require
+  // me to re-add these paths. Maybe it should just be anything that ends in -min?
+  //g.gameDB.getGames().forEach(function(game) {
+  //  var minfy = re
+  //});
+
+  app.get(/^\/games\/(.*?)\/scripts\/(.*?)-minify\.js$/, function(req, res) {
+    var gamePrefixLength = 8;  // "/games/" + the slash after the id
+    var gameId = req.params[0];
+    var runtimeInfo = g.gameDB.getGameById(gameId);
+    if (!runtimeInfo || !runtimeInfo.basePath) {
+      return send404(res, "unknown gameId: " + gameId);
+    }
+    var parsedUrl = url.parse(req.url);
+    var filePath = parsedUrl.pathname;
+    var fullPath = path.normalize(path.join(runtimeInfo.basePath, filePath.substr(gamePrefixLength + gameId.length)));
+    nonRequire.addPath(fullPath);
+    sendGameRequestedFile(req, res);
+  });
+
   app.get(/^\/games\/(.*?)\//, sendGameRequestedFile);
   app.get(/^\/enter-name.html/, sendTemplatedFile);
   app.get(/.*/, sendSystemRequestedFile);
