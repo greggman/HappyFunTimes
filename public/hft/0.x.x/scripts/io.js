@@ -63,8 +63,10 @@ define(function() {
       request.overrideMimeType('text/plain');
     }
     var timeout = option.timeout || 0;
-    request.timeout = timeout;
-    log("set timeout to: " + request.timeout);
+    if (timeout) {
+      request.timeout = timeout;
+      log("set timeout to: " + request.timeout);
+    }
     request.open('POST', url, true);
     var js = JSON.stringify(jsonObject);
     var callCallback = function(error, json) {
