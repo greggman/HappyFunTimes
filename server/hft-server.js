@@ -259,7 +259,7 @@ var HFTServer = function(options, startedCallback) {
     if (!ip && req.socket) {
       ip = req.socket.remoteAddress;
     }
-    if (!ip && req.connection && req.connction.socket) {
+    if (!ip && req.connection && req.connection.socket) {
       ip = req.connection.socket.remoteAddress;
     }
     if (ip && ip.indexOf(',')) {
