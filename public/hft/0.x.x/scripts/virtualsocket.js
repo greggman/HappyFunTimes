@@ -98,7 +98,14 @@ define(function() {
             sendLowLevel('P');
             return;
           }
-          fn(JSON.parse(event.data));
+          try {
+            var obj = JSON.parse(event.data);
+          } catch (e) {
+            console.log(e);
+          }
+          if (obj) {
+            fn(obj);
+          }
         };
         break;
       }

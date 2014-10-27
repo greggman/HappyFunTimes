@@ -93,7 +93,11 @@ var WSServer = function(server) {
               return;
             }
             if (origFn) {
-              origFn(JSON.parse(data));
+              try {
+                origFn(JSON.parse(data));
+              } catch (e) {
+                console.error(e);
+              }
             }
           };
         }(fn);
