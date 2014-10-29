@@ -1,6 +1,10 @@
 To Do
 =====
 
+*   send audio example
+*   move tiled support to hft-tiled?
+*   add tiled support to jumpjump
+*   make controllers only work if game is running, otherwise switch to other game
 *   make games use websockets to switch games instead of polling ajax
 *   Add unity support for multiple games
 *   fix back button on shft game page. Only center is hot.

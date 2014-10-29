@@ -122,13 +122,13 @@ var RelayServer = function(servers, options) {
   //      id: id of player to remove.
   //
 
-  var getGameGroup = function(gameId) {
+  var getGameGroup = function(gameId, makeGroup) {
     if (!gameId) {
       console.error("no game id!")
       return;
     }
     var gameGroup = g_gameGroups[gameId];
-    if (!gameGroup) {
+    if (!gameGroup && makeGroup) {
       gameGroup = new GameGroup(gameId, this, { baseUrl: options.baseUrl });
       g_gameGroups[gameId] = gameGroup;
       ++g_numGameGroups;
@@ -178,6 +178,9 @@ var RelayServer = function(servers, options) {
   this.addPlayerToGame = function(player, gameId) {
     debug("adding player to game: " + gameId);
     var gameGroup = getGameGroup(gameId);
+    if (!gameGroup) {
+      return;
+    }
     return gameGroup.addPlayer(player);
   }.bind(this);
 
@@ -239,7 +242,7 @@ var RelayServer = function(servers, options) {
     }
     debug("starting game: " + gameId);
     eventEmitter.emit('gameStarted', {gameId: gameId});
-    var gameGroup = getGameGroup(gameId);
+    var gameGroup = getGameGroup(gameId, true);
     gameGroup.assignClient(client, data);
   }.bind(this);
 

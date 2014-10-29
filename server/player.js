@@ -52,7 +52,13 @@ var Player = function(client, relayServer, id) {
 
   var addPlayerToGame = function(data) {
     var game = this.relayServer.addPlayerToGame(this, data.gameId);
-    this.setGame(game);
+    if (!game) {
+      // TODO: Make this URL set from some global so we can set it some place else.
+      debug("game does not exit");
+      this.sendCmd('_hft_redirect_', { url: "/" });
+    } else {
+      this.setGame(game);
+    }
   }.bind(this);
 
   this.setGame = function(game) {
@@ -120,6 +126,11 @@ Player.prototype.send = function(msg) {
     this.disconnect();
   }
 };
+
+Player.prototype.sendCmd = function(cmd, data) {
+  this.send({cmd: cmd, data: data});
+};
+
 
 /**
  * Sends a message to the game this player is in.

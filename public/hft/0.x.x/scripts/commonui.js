@@ -170,6 +170,10 @@ define([
       setTimeout(checkForGame, 1000);
     });
 
+    client.addEventListener('_hft_redirect_', function(data) {
+      window.location.href = data.url;
+    });
+
     if (options.debug) {
       var statusNode = document.createTextNode("");
       $("hft-status").appendChild(statusNode);
