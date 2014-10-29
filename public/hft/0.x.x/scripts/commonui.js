@@ -39,12 +39,14 @@ define([
     './io',
     './hft-splash',
     './hft-system',
+    './misc/fullscreen',
     './misc/misc',
     './misc/playername',
   ], function(
     IO,
     HFTSplash,
     HFTSystem,
+    FullScreen,
     Misc,
     PlayerNameHandler) {
 
@@ -75,22 +77,47 @@ define([
    */
   var setupStandardControllerUI = function(client, options) {
     var hftSettings = window.hftSettings || {};
-    var menu = $("hft-menu");
-    var settings = $("hft-settings");
-    var disconnected = $("hft-disconnected");
+    var menuElement = $("hft-menu");
+    var settingsElement = $("hft-settings");
+    var disconnectedElement = $("hft-disconnected");
+    var touchStartElement = $("hft-touchstart");
 
     if (!hftSettings.menu) {
-      menu.style.display = "none";
+      menuElement.style.display = "none";
     } else {
-      menu.addEventListener('click', function() {
-        settings.style.display = "block";
+      menuElement.addEventListener('click', function() {
+        settingsElement.style.display = "block";
       }, false);
+    }
+
+    // setup full screen support
+    var requestFullScreen = function() {
+      touchStartElement.removeEventListener('click', requestFullScreen, false);
+      touchStartElement.style.display = "none";
+      FullScreen.requestFullScreen(document.body);
+    };
+
+    var goFullScreenIfNotFullScreen = function(isFullScreen) {
+      if (!isFullScreen) {
+        touchStartElement.addEventListener('click', requestFullScreen, false);
+        touchStartElement.style.display = "block";
+      }
+    };
+    FullScreen.onFullScreenChange(document.body, goFullScreenIfNotFullScreen);
+
+    // Try to detect if we're on mobile. I'm assuming it's not
+    // common for window.innerWidth to match screen.availWidth
+    // on desktop but that it is on mobile.
+    var landscape = window.orientation == 90 || window.orientation == 270;
+    var effectiveWidth = landscape ? screen.height : screen.width;
+    if (window.innerWidth == effectiveWidth) {
+      goFullScreenIfNotFullScreen(false);
     }
 
     var playerNameHandler = new PlayerNameHandler(client, $("hft-name"));
 
     $("hft-setname").addEventListener('click', function() {
-      settings.style.display = "none";
+      settingsElement.style.display = "none";
       playerNameHandler.startNameEntry();
     }, false);
     $("hft-restart").addEventListener('click', function() {
@@ -100,7 +127,7 @@ define([
       window.location.href = "/";
     }, false);
     $("hft-back").addEventListener('click', function() {
-      settings.style.display = "none";
+      settingsElement.style.display = "none";
     });
 
 //    $("hft-mainmenu").addEventListener('click', function() {
@@ -115,14 +142,14 @@ define([
     // until the user connected but that's mostly
     // pointless.
     client.addEventListener('connect', function() {
-      disconnected.style.display = "none";
+      disconnectedElement.style.display = "none";
       if (options.connectFn) {
         options.connectFn();
       }
     });
 
     client.addEventListener('disconnect', function() {
-      disconnected.style.display = "block";
+      disconnectedElement.style.display = "block";
       if (options.disconnectFn) {
         options.disconnectFn();
       }

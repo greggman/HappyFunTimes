@@ -219,6 +219,16 @@ html, body {
   line-height: 1;
 }
 
+#hft-touchstart {
+    display: none;
+    z-index: 10000;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    left: 0px;
+    top: 0px;
+}
+
 @media only screen and (max-width : 360px) {
   #hft-portrait {
     position: absolute;

@@ -1,10 +1,27 @@
 To Do
 =====
 
-*   make games 'reload' if the server disconnects then reconnects
+*   make --go-direct
+*   add fullscreen to android
+*   add a session id to controller so you can continue where you left off
 
-    can we some how indicate to the game it's a reconnect? For example, set a local cookie.
-    On load read and clear the cookie. Set a flag on gameserver?
+    Of the top of my head, gameclient would get sent and id from hft
+    which it would write to a cookie? If the game is restarted that
+    id can be sent back to the game at start up to reconnect a player
+    with their previous state in the game.
+
+    This would only work for a controlled restart of a game. Basically
+    the game would need some way for a user to request it shutdown. It
+    would then save all needed state for current players associated
+    with their session ids. I could send these ids to the controllers
+    at that time.
+
+    On restarting the game the controller would send the id back so
+    the game could reconnect them to their state.
+
+    This is only needed because networking equipment sucks and has
+    to be rebooted from time to time. If we can get networking equipment
+    that never needs to be rebooted there is no need to implement this.
 
 *   send audio example
 *   move tiled support to hft-tiled?
@@ -759,6 +776,11 @@ Runs Repo noid
 
 Done
 ====
+
+*   make games 'reload' if the server disconnects then reconnects
+
+    can we some how indicate to the game it's a reconnect? For example, set a local cookie.
+    On load read and clear the cookie. Set a flag on gameserver?
 
 *   figure out why unitycharacterexample is not exiting when hft asks it to.
 *   Add option to skip name input. hft start --no-ask-name
