@@ -28,9 +28,22 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-"use strict";
 
+(function(global) {
 define(function() {
+
+  // If it node.js no cookies.
+  if (!global.document || !global.document.cookie) {
+    var noop = function() {};
+    return function() {
+      return {
+        set: noop,
+        get: noop,
+        erase: noop,
+      };
+    };
+  }
+
   /**
    * Represents a cookie.
    *
@@ -60,11 +73,10 @@ define(function() {
      */
     this.set = function(value, opt_days) {
       var expires = "";
-      if (opt_days !== undefined) {
-        var date = new Date();
-        date.setTime(Date.now() + (opt_days * 24 * 60 * 60 * 1000));
-        expires = "; expires=" + date.toGMTString();
-      }
+      opt_days = opt_days || 9999;
+      var date = new Date();
+      date.setTime(Date.now() + (opt_days * 24 * 60 * 60 * 1000) | 0);
+      expires = "; expires=" + date.toGMTString();
       var cookie = encodeURIComponent(name) + "=" + encodeURIComponent(value) + expires + "; path=" + path;
       document.cookie = cookie;
     };
@@ -97,5 +109,7 @@ define(function() {
 
   return Cookie;
 });
+
+}(this));
 
 

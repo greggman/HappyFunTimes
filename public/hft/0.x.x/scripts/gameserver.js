@@ -29,14 +29,14 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-(function() {
-
-var globalObject = this;
+(function(globalObject) {
 
 define([
+    './misc/cookies',
     './netplayer',
     './virtualsocket',
   ], function(
+    Cookie,
     NetPlayer,
     VirtualSocket) {
 
@@ -77,6 +77,21 @@ define([
         throw "you can't read the id before you've connected";
       },
     };
+    var _reloaded = false;
+
+    var readOldState = (function() {
+      var cookie = new Cookie("hft-state");
+      var content = cookie.get();
+      cookie.erase();
+
+      if (content) {
+        try {
+          var data = JSON.parse(content);
+          _reloaded = data.reload;
+        } catch (e) {
+        }
+      }
+    }());
 
     if (!options.gameId) {
       var m = /games\/([^\/]+)\//.exec(window.location.href);
@@ -235,6 +250,15 @@ define([
       return _connected;
     };
 
+    /**
+     * True if we were auto-reloaded after a disconnect.
+     * This happens if HFT stops running and then is re-started
+     * @return {Boolean} true if this is a reload.
+     */
+    this.isReloaded = function() {
+      return _reloaded;
+    };
+
     var connect_ = function() {
       _socket = options.socket || new VirtualSocket();
       _sendQueue = [];
@@ -354,5 +378,5 @@ define([
   return GameServer;
 });
 
-}());
+}(this));
 

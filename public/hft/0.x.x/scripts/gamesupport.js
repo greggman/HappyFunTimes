@@ -43,16 +43,20 @@
  */
 define([
     '../../../3rdparty/stats/stats.min',
+    './misc/cookies',
     './misc/gameclock',
     './misc/logger',
     './misc/misc',
     './hft-splash',
+    './hft-system',
   ], function(
     StatsJS,
+    Cookie,
     GameClock,
     Logger,
     Misc,
-    HFTSplash) {
+    HFTSplash,
+    HFTSystem) {
 
   var $ = function(id) {
     return document.getElementById(id);
@@ -93,17 +97,26 @@ define([
    *
    */
   var init = function(server, options) {
-    var showConnected = function() {
+    var handleConnected = function() {
       $('hft-disconnected').style.display = "none";
     }
 
-    var showDisconnected = function() {
+    var handleDisconnected = function() {
       $('hft-disconnected').style.display = "block";
+
+      var hftSystem = new HFTSystem();
+      hftSystem.on('connect', function() {
+        var cookie = new Cookie("hft-state");
+        cookie.set(JSON.stringify({
+          reload: true,
+        }), 1);
+        window.location.reload();
+      });
     }
 
     if (options.haveServer !== false && server) {
-      server.addEventListener('connect', showConnected);
-      server.addEventListener('disconnect', showDisconnected);
+      server.addEventListener('connect', handleConnected);
+      server.addEventListener('disconnect', handleDisconnected);
     }
 
     if (options.showGithub) {
