@@ -62,19 +62,20 @@ var HFTPlayer = function(netPlayer, game, gameDB, relayServer) {
   this.game = game;
   this.gameDB = gameDB;
   this.relayServer = relayServer;
-  this.getAvailableGamesSubscribed = false;
+  this.subscribedGetAvailableGames = false;
+  this.subscribedGetRunningGames = false;
 
   // Remember these must be safe.
-  netPlayer.addEventListener('disconnect',        HFTPlayer.prototype.disconnect.bind(this));
-  netPlayer.addEventListener('getGameInfo',       HFTPlayer.prototype.handleGetGameInfo.bind(this));
-  netPlayer.addEventListener('getAvailableGames', HFTPlayer.prototype.handleGetAvailableGames.bind(this));
-  netPlayer.addEventListener('getRunningGames',   HFTPlayer.prototype.handleGetRunningGames.bind(this));
-  netPlayer.addEventListener('install',           HFTPlayer.prototype.handleInstall.bind(this));
-  netPlayer.addEventListener('upgrade',           HFTPlayer.prototype.handleUpgrade.bind(this));
-  netPlayer.addEventListener('launch',            HFTPlayer.prototype.handleLaunch.bind(this));
-  netPlayer.addEventListener('quit',              HFTPlayer.prototype.handleQuit.bind(this));
-  netPlayer.addEventListener('quitGame',          HFTPlayer.prototype.handleQuitGame.bind(this));
-  netPlayer.addEventListener('disconnectGame',    HFTPlayer.prototype.handleDisconnectGame.bind(this));
+  netPlayer.addEventListener('disconnect',            HFTPlayer.prototype.disconnect.bind(this));
+  netPlayer.addEventListener('getGameInfo',           HFTPlayer.prototype.handleGetGameInfo.bind(this));
+  netPlayer.addEventListener('getAvailableGames',     HFTPlayer.prototype.handleGetAvailableGames.bind(this));
+  netPlayer.addEventListener('getRunningGames',       HFTPlayer.prototype.handleGetRunningGames.bind(this));
+  netPlayer.addEventListener('install',               HFTPlayer.prototype.handleInstall.bind(this));
+  netPlayer.addEventListener('upgrade',               HFTPlayer.prototype.handleUpgrade.bind(this));
+  netPlayer.addEventListener('launch',                HFTPlayer.prototype.handleLaunch.bind(this));
+  netPlayer.addEventListener('quit',                  HFTPlayer.prototype.handleQuit.bind(this));
+  netPlayer.addEventListener('quitGame',              HFTPlayer.prototype.handleQuitGame.bind(this));
+  netPlayer.addEventListener('disconnectGame',        HFTPlayer.prototype.handleDisconnectGame.bind(this));
 
   this.handleGameExited = HFTPlayer.prototype.handleGameExited.bind(this)
   relayServer.on('gameExited', this.handleGameExited);
@@ -93,8 +94,8 @@ var HFTPlayer = function(netPlayer, game, gameDB, relayServer) {
 };
 
 HFTPlayer.prototype.disconnect = function() {
-  if (this.getAvailableGamesSubscribed) {
-    this.gameDB.removeListener('changed', this.getAvailableGamesSubscribed);
+  if (this.subscribedGetAvailableGames) {
+    this.gameDB.removeListener('changed', this.subscribedGetAvailableGames);
     this.gameAvailableGamesSubscribed = undefined;
   }
   this.relayServer.removeListener('gameExited', this.handleGameExited);
@@ -142,9 +143,9 @@ HFTPlayer.prototype.handleGetGameInfo = function(data) {
 };
 
 HFTPlayer.prototype.handleGetAvailableGames = function(data) {
-  if (!this.getAvailableGamesSubscribed) {
-    this.getAvailableGamesSubscribed = HFTPlayer.prototype.handleGetAvailableGames.bind(this);
-    this.gameDB.on('changed', this.getAvailableGamesSubscribed);
+  if (!this.subscribedGetAvailableGames) {
+    this.subscribedGetAvailableGames = HFTPlayer.prototype.handleGetAvailableGames.bind(this);
+    this.gameDB.on('changed', this.subscribedGetAvailableGames);
   }
 
   debug("sending available games");
@@ -152,8 +153,19 @@ HFTPlayer.prototype.handleGetAvailableGames = function(data) {
 };
 
 HFTPlayer.prototype.handleGetRunningGames = function(data) {
+  this.subscribedGetRunningGames = true;
+  this.sendRunningGames();
+};
+
+HFTPlayer.prototype.sendRunningGames = function() {
   debug("sending running games");
   this.sendCmd("runningGames", this.relayServer.getGames());
+};
+
+HFTPlayer.prototype.sendRunningGamesIfSubscribed = function() {
+  if (this.subscribedGetRunningGames) {
+    this.sendRunningGames();
+  }
 };
 
 HFTPlayer.prototype.download = function(gameId, upgrade) {
@@ -302,6 +314,18 @@ var HFTGame = function(options) {
   server.addEventListener('playerconnect', function(netPlayer, name) {
     players.push(new HFTPlayer(netPlayer, this, gameDB, relayServer));
   }.bind(this));
+
+  relayServer.on('gameStarted', function() {
+    players.forEach(function(player) {
+      player.sendRunningGamesIfSubscribed();
+    });
+  });
+
+  relayServer.on('gameExited', function() {
+    players.forEach(function(player) {
+      player.sendRunningGamesIfSubscribed();
+    });
+  });
 
   this.removePlayer = function(player) {
     var index = players.indexOf(player);

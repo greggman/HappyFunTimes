@@ -241,9 +241,9 @@ var RelayServer = function(servers, options) {
       return;
     }
     debug("starting game: " + gameId);
-    eventEmitter.emit('gameStarted', {gameId: gameId});
     var gameGroup = getGameGroup(gameId, true);
     gameGroup.assignClient(client, data);
+    eventEmitter.emit('gameStarted', {gameId: gameId});
   }.bind(this);
 
   for (var ii = 0; ii < servers.length; ++ii) {

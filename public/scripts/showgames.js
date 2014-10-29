@@ -31,12 +31,11 @@
 
 "use strict";
 
-// Start the main app logic.
 requirejs(
-  [ 'hft/io',
+  [ 'hft/hft-system',
     'hft/misc/strings',
   ], function(
-    IO,
+    HFTSystem,
     Strings) {
 
   var $ = function(id) {
@@ -48,41 +47,36 @@ requirejs(
   var template = $("item-template").text;
   var oldHtml = "";
 
-  var getGames = function() {
-    IO.sendJSON(window.location.href, {cmd: 'listRunningGames'}, function (exception, obj) {
-      if (exception) {
-        setTimeout(getGames, 1000);
-        return;
-      }
+  var hftSystem = new HFTSystem();
+  hftSystem.on('runningGames', function(obj) {
+console.log(obj);
+    // If there's only one game just go to it.
+    if (obj.length == 1 && obj[0].controllerUrl) {
+      window.location.href = obj[0].controllerUrl;
+      return;
+    }
 
-      var items = [];
-      for (var ii = 0; ii < obj.length; ++ii) {
-        var game = obj[ii];
+    var items = [];
+    for (var ii = 0; ii < obj.length; ++ii) {
+      var game = obj[ii];
+      var runtimeInfo = game.runtimeInfo;
+      var hftInfo = runtimeInfo.info.happyFunTimes;
+      // Not sure how I should figure out the name and screenshot.
+      var basePath = game.controllerUrl.substring(0, game.controllerUrl.lastIndexOf('/') + 1);
+      var dev = (runtimeInfo.originalGameId != hftInfo.gameId) ? "(*)" : "";
+      game.name = dev + (hftInfo.name || runtimeInfo.originalGameId);
+      game.screenshotUrl = game.screenshotUrl;
+      items.push(Strings.replaceParams(template, game));
+    }
+    var html = items.join("");
+    if (html != oldHtml) {
+      oldHtml = html;
+      gamemenu.innerHTML = html;
+    }
 
-        // Not sure how I should figure out the name and screenshot.
-        var basePath = game.controllerUrl.substring(0, game.controllerUrl.lastIndexOf('/') + 1);
-        game.name = game.name || game.gameId;
-        game.screenshotUrl = game.screenshotUrl || (basePath + game.gameId + "-screenshot.png");
-        items.push(Strings.replaceParams(template, game));
-      }
-      var html = items.join("");
-      if (html != oldHtml) {
-        oldHtml = html;
-        gamemenu.innerHTML = html;
-      }
+    nogames.style.display = items.length ? "none" : "block";
 
-      nogames.style.display = items.length ? "none" : "block";
-
-      // If there's only one game just go to it.
-      if (obj.length == 1 && obj[0].controllerUrl) {
-        window.location.href = obj[0].controllerUrl;
-        return;
-      }
-
-      setTimeout(getGames, 5000);
-    });
-  };
-  getGames();
+  });
 });
 
 

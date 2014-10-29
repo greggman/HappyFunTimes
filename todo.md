@@ -1,15 +1,17 @@
 To Do
 =====
 
+*   make games 'reload' if the server disconnects then reconnects
+
+    can we some how indicate to the game it's a reconnect? For example, set a local cookie.
+    On load read and clear the cookie. Set a flag on gameserver?
+
 *   send audio example
 *   move tiled support to hft-tiled?
 *   add tiled support to jumpjump
-*   make controllers only work if game is running, otherwise switch to other game
-*   make games use websockets to switch games instead of polling ajax
 *   Add unity support for multiple games
 *   fix back button on shft game page. Only center is hot.
 *   make hft-publish work for html-example
-*   Add option to skip name input. hft start --no-ask-name
 *   add optional player timeout?
 
     I already have the ping but maybe I should also have an input timeout.
@@ -20,7 +22,6 @@ To Do
 *   add "hft remove --missing" and "--broken" to remove missing/broken ones
 *   consider using a fake inmem file system for testing, both reading and writing
 *   publish unity plugin
-*   figure out why unitycharacterexample is not exiting when hft asks it to.
 *   if hft is not running, have shft save a cookie if you choose a game to install.
 
     when hft starts it can open an iframe to shft which will read the cookie and
@@ -759,6 +760,10 @@ Runs Repo noid
 Done
 ====
 
+*   figure out why unitycharacterexample is not exiting when hft asks it to.
+*   Add option to skip name input. hft start --no-ask-name
+*   make controllers only work if game is running, otherwise switch to other game
+*   make games use websockets to switch games instead of polling ajax
 *   make subId the id. If not subId use a prefixed id like _hft_123
 *   test broadcast
 *   support multiple games on the same gameId for shared games.
