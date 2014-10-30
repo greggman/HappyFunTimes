@@ -81,6 +81,7 @@ var AppleCaptivePortalHandler = function(options) {
   // return my redirection page the first time and apple's success page the second time
   this.sessions = {};
   this.options = options;
+  this.firstPath = "/enter-name.html";
 };
 
 /**
@@ -91,6 +92,15 @@ var AppleCaptivePortalHandler = function(options) {
  * @property {string} port port for urls eg. 8080
  * @property {string} baseDir path to portal files
  */
+
+/**
+ * Sets the path we go to after the user picks `[Start]`
+ * @param {string} path path to go to . Default is
+ *        "/enter-name.html"
+ */
+AppleCaptivePortalHandler.prototype.setFirstPath = function(path) {
+  this.firstPath = path
+};
 
 /**
  * Check if this request has something to do with captive portal
@@ -106,7 +116,7 @@ AppleCaptivePortalHandler.prototype.check = function(req, res) {
   var sessionId = filePath;
   var isCheckingForApple = req.headers["user-agent"] && strings.startsWith(req.headers["user-agent"], "CaptiveNetworkSupport");
   var isLoginURL = (filePath == "/game-login.html");
-  var isIndexURL = (filePath == "/index.html" || filePath == "/" || filePath == "/enter-name.html");
+  var isIndexURL = (filePath == "/index.html" || filePath == "/" || filePath == this.firstPath);
 
   if (isIndexURL) {
     sessionId = parsedUrl.query.sessionId;
@@ -166,6 +176,7 @@ AppleCaptivePortalHandler.prototype.sendCaptivePortalHTML = function(req, res, s
     var params = {
       sessionId: sessionId,
       localhost: this.options.address + ":" + this.options.port,
+      firstPath: this.firstPath,
     };
     str = strings.replaceParams(str, params);
     return str;

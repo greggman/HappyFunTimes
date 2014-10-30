@@ -1,7 +1,9 @@
 To Do
 =====
 
-*   make --go-direct
+*   fix samsung
+*   fix android non-chrome?
+*   fix windows phone
 *   add fullscreen to android
 *   add a session id to controller so you can continue where you left off
 
@@ -777,6 +779,7 @@ Runs Repo noid
 Done
 ====
 
+*   make --kiosk
 *   make games 'reload' if the server disconnects then reconnects
 
     can we some how indicate to the game it's a reconnect? For example, set a local cookie.

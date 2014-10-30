@@ -310,6 +310,10 @@ var HFTServer = function(options, startedCallback) {
     sendFileFn: sendFileResponse,
   });
 
+  if (!options.askName) {
+    appleCaptivePortalHandler.setFirstPath("/index.html");
+  }
+
   // Send a file from a game.
   var sendGameRequestedFile = function(req, res) {
     var gamePrefixLength = 8;  // "/games/" + the slash after the id
@@ -527,6 +531,14 @@ var HFTServer = function(options, startedCallback) {
         relayServer: relayServer,
       });
       relayServer.assignAsClientForGame({gameId: "__hft__", showInList: false}, hftGame.getClientForGame());
+      relayServer.on('gameStarted', function(e) {
+        if (options.kiosk && !options.askName) {
+          var runtimeInfo = g.gameDB.getGameById(e.gameId);
+          if (runtimeInfo) {
+            appleCaptivePortalHandler.setFirstPath("/games/" + e.gameId + "/index.html");
+          }
+        }
+      });
       startedCallback();
     }
   };
