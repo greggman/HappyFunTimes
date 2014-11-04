@@ -33,7 +33,7 @@
 define(function() {
 
   // If it node.js no cookies.
-  if (!global.document || !global.document.cookie) {
+  if (global.document === undefined || global.document.cookie === undefined) {
     var noop = function() {};
     return function() {
       return {
@@ -75,7 +75,7 @@ define(function() {
       var expires = "";
       opt_days = opt_days || 9999;
       var date = new Date();
-      date.setTime(Date.now() + (opt_days * 24 * 60 * 60 * 1000) | 0);
+      date.setTime(Date.now() + Math.floor(opt_days * 24 * 60 * 60 * 1000));  // > 32bits. Don't use | 0
       expires = "; expires=" + date.toGMTString();
       var cookie = encodeURIComponent(name) + "=" + encodeURIComponent(value) + expires + "; path=" + path;
       document.cookie = cookie;
