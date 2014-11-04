@@ -216,3 +216,9 @@ ideas for you
     Your phone lists what you need to find and what you have to give. People go around the room
     trying to find the next thing in their fetch quest
 
+*   Use led tapes across room to visually display portals. Jump in portal on 1 computer, see light
+    go across tape. Arrive at other computer
+
+*   draw pattern, thing follows pattern
+
+*   sequence across phones. Each phone screams at random?

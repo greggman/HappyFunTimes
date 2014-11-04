@@ -1,11 +1,17 @@
 To Do
 =====
 
+*   move tiled support to hft-tiled?
+*   add tiled support to jumpjump
+*   add glow processing to powpow?
 *   fix samsung
 *   fix android non-chrome?
 *   fix windows phone
-*   add fullscreen to android
 *   add a session id to controller so you can continue where you left off
+
+    this can all happen automatically. GameServer playerconnect could include
+    the sessions id. At that point it's up the game to use it to save data in
+    localstorage or wherever.
 
     Of the top of my head, gameclient would get sent and id from hft
     which it would write to a cookie? If the game is restarted that
@@ -26,8 +32,6 @@ To Do
     that never needs to be rebooted there is no need to implement this.
 
 *   send audio example
-*   move tiled support to hft-tiled?
-*   add tiled support to jumpjump
 *   Add unity support for multiple games
 *   fix back button on shft game page. Only center is hot.
 *   make hft-publish work for html-example
@@ -779,6 +783,7 @@ Runs Repo noid
 Done
 ====
 
+*   add fullscreen to android
 *   make --kiosk
 *   make games 'reload' if the server disconnects then reconnects
 
