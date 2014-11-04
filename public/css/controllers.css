@@ -200,11 +200,11 @@ html, body {
 .hft-menubutton div {
   width: 100%;
   padding-left: 0.5em;
-  height: 2em;
+  height: 1.5em;
   display: table-cell;
   text-align: center;
   vertical-align: middle;
-  font-size: xx-large;
+  font-size: x-large;
   font-weight: bold;
 }
 #hft-portrait {
