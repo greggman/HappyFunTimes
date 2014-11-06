@@ -29,15 +29,15 @@ I'm sorry there's so many steps. It's not as hard as it looks. Trust me.
 
 ### TL;DR version
 
-*   install happyfuntimes (http://superhappyfuntimes.net/install) [info](#happyfuntimes)
+*   install happyfuntimes (http://superhappyfuntimes.net/install) [(info)](#happyfuntimes)
 *   run happyfuntimes (it must be run once)
-*   install node.js (http://nodejs.org/download/) [info](#nodejs)
-*   if on windows install msysgit (http://msysgit.github.io/) [info](#msysgit)
-*   install bower `sudo npm install -g bower` (no sudo on windows) [info](#bower)
-*   install hft-cli `sudo npm install -g hft-cli` (no sudo on windows) [info](#hftcli)
-*   clone a game [info](#clone)
-*   edit `package.json` inside the game you cloned, change `gameId` and `name` [info](#packagejson)
-*   type `hft add` [info](#hftadd)
+*   install node.js (http://nodejs.org/download/) [(info)](#nodejs)
+*   if on windows install msysgit (http://msysgit.github.io/) [(info)](#msysgit)
+*   install bower `sudo npm install -g bower` (no sudo on windows) [(info)](#bower)
+*   install hft-cli `sudo npm install -g hft-cli` (no sudo on windows) [(info)](#hftcli)
+*   clone a game [(info)](#clone)
+*   edit `package.json` inside the game you cloned, change `gameId` and `name` [(info)](#packagejson)
+*   type `hft add` [(info)](#hftadd)
 
 ### Verbose vesrion
 
