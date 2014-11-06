@@ -37,7 +37,7 @@ I'm sorry there's so many steps. It's not as hard as it looks. Trust me.
 *   install hft-cli `sudo npm install -g hft-cli` (no sudo on windows)
 *   clone a game
 *   edit `package.json`, change `gameId` and `name`
-*   type `hft-add`
+*   type `hft add`
 
 ### Verbose vesrion
 

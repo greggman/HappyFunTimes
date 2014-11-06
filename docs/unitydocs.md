@@ -22,7 +22,7 @@ when cloning a game choose either
 
 *   [Unitychararacterexample](http://github.com/greggman/hft-unitycharacterexample) A Unity3D example that spawns characters written in UnityScript.
 
-*   [Unitysimple](http://github.com/greggman/hft-simple) A Unity3D example that just positions a sphere for each player written in C#.
+*   [Unitysimple](http://github.com/greggman/hft-unitysimple) A Unity3D example that just positions a sphere for each player written in C#.
 
 ### Unity from Scratch
 

@@ -250,4 +250,17 @@ the correct version
         you can add --no-ask-name when you start the system and players
         will not be asked enter their name.
 
+* v1.5.0
+
+    *   MobileHacks.adjustCSSBasedOnPhone
+
+        iOS8 broke things because unlike iOS7, with the phone in landscape, if the user
+        touches the bottom 1/2 inch of the screen or the top 1/2 inch of the screen the
+        address bar and shortcut bar appear AND NEVER DISAPPEAR from that point on.
+
+        That means the usable area of the browser is much smaller than iOS7 and controllers
+        that were visible in iOS7 are now covered by the bottom bar. There is no way to
+        handle this in CSS so we needed a way to check for a specific phone and change
+        the CSS programatically.
+
 
