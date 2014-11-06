@@ -111,7 +111,7 @@ define([
     var landscape = window.orientation == 90 || window.orientation == 270;
     var effectiveWidth = landscape ? screen.height : screen.width;
     if (window.innerWidth == effectiveWidth) {
-      goFullScreenIfNotFullScreen(false);
+//      goFullScreenIfNotFullScreen(false);
     }
 
     var playerNameHandler = new PlayerNameHandler(client, $("hft-name"));
