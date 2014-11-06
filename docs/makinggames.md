@@ -29,19 +29,19 @@ I'm sorry there's so many steps. It's not as hard as it looks. Trust me.
 
 ### TL;DR version
 
-*   install happyfuntimes (http://superhappyfuntimes.net/install)
+*   install happyfuntimes (http://superhappyfuntimes.net/install) [info](#happyfuntimes)
 *   run happyfuntimes (it must be run once)
-*   install node.js (http://nodejs.org/download/)
-*   if on windows install msysgit (http://msysgit.github.io/)
-*   install bower `sudo npm install -g bower` (no sudo on windows)
-*   install hft-cli `sudo npm install -g hft-cli` (no sudo on windows)
-*   clone a game
-*   edit `package.json`, change `gameId` and `name`
-*   type `hft add`
+*   install node.js (http://nodejs.org/download/) [info](#nodejs)
+*   if on windows install msysgit (http://msysgit.github.io/) [info](#msysgit)
+*   install bower `sudo npm install -g bower` (no sudo on windows) [info](#bower)
+*   install hft-cli `sudo npm install -g hft-cli` (no sudo on windows) [info](#hftcli)
+*   clone a game [info](#clone)
+*   edit `package.json` inside the game you cloned, change `gameId` and `name` [info](#packagejson)
+*   type `hft add` [info](#hftadd)
 
 ### Verbose vesrion
 
-*   Install HappyFunTimes (http://superhappyfuntimes.net/install)
+*   <a id="happyfuntimes"/>Install HappyFunTimes (http://superhappyfuntimes.net/install)
 
     On Windows you might run into security issues: [See here](windows.md).
 
@@ -67,9 +67,9 @@ I'm sorry there's so many steps. It's not as hard as it looks. Trust me.
     the installation or type `node start.js --app-mode` from the
     cloned folder if you're using a cloned repo.
 
-*   Install [node.js](http://nodejs.org/download/).
+*   <a id="nodejs"/>Install [node.js](http://nodejs.org/download/).
 
-*   If on Windows install msysgit (http://msysgit.github.io/)
+*   <a id="msysgit"/>If on Windows install msysgit (http://msysgit.github.io/)
 
     when asked choose to ["Use Git from the Windows Commmand Prompt"](../images/msysgit-option-01.png).
 
@@ -77,19 +77,24 @@ I'm sorry there's so many steps. It's not as hard as it looks. Trust me.
 
     on Windows open a [node.js command prompt](../images/node-js-command-prompt.png).
 
-*   Install Bower.
+*   <a id="bower"/>Install Bower.
+
+    Bower is a program that downloads dependencies (libraries).
 
     Type `npm install -g bower`.
 
     Don't forget that `-g`. Also you might need `sudo` on OSX or Linux
 
-*   Install hft-cli.
+*   <a id="hftcli"/>Install hft-cli.
+
+    hft cli adds a bunch of commands you can type in the terminal to do development
+    with HappyFunTimes
 
     Type `npm install -g hft-cli`
 
     Don't forget that `-g`. Also you might need `sudo` on OSX or Linux
 
-*   Clone a game. [Pick one from the list](examples.md)
+*   <a id="clone"/>Clone a game. [Pick one from the list](examples.md)
 
     for example, assuming you have git installed
 
@@ -108,12 +113,12 @@ I'm sorry there's so many steps. It's not as hard as it looks. Trust me.
     This step is only needed for some games. If there is no `bower.json`
     in the folder you can skip this step.
 
-*   edit the `package.json` file and change the `gameId` and `name` to something unique.
+*   <a id="packagejson"/>edit the `package.json` file and change the `gameId` and `name` to something unique.
 
     Note: If you are collaborating on a game don't change this stuff. Only change it
     if you're making a new game based off of an existing game.
 
-*   add the game to happyfuntimes
+*   <a id="hftadd"/>add the game to happyfuntimes
 
     type `hft add`
 
@@ -161,9 +166,9 @@ The easist way to get started is to clone one of the existing games. Pick from
 
 *   [BoomBoom](http://github.com/greggman/hft-boomboom) A bomb placing game written in JavaScript using WebGL / TDL
 
-*   [PowPow](http://githib.com/greggman/hft-powpow) A space wars game written in JavaScript using WebGL / TDL
+*   [PowPow](http://github.com/greggman/hft-powpow) A space wars game written in JavaScript using WebGL / TDL
 
-*   [Simple](http://githib.com/greggman/hft-simple) The simplest example. Just moves dots around.
+*   [Simple](http://github.com/greggman/hft-simple) The simplest example. Just moves dots around.
 
 *   [Deviceorientation](http://github.com/greggman/hft-deviceorientation) A device orientation sample written in JavaScript using WebGL / Three.js
 
