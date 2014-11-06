@@ -42,6 +42,29 @@ define(function() {
     return document.getElementById(id);
   };
 
+  // shit hacks for iOS8 because iOS8 barfs toolbars on the screen and
+  // (a) the user can NOT dismiss them and (b) there is no way for the
+  // webpage to see they exist. This only happens on iPhone 4/4s/5/s.
+  var isIOS;
+  var shittyOldIPhoneWithShittyIOS8Plus = function() {
+    var iPhone4 = (window.screen.height == (960 / 2));
+    var iPhone5 = (window.screen.height == (1136 / 2));
+    var iOS8Plus = function() {
+      if (/iP(hone|od|ad)/.test(navigator.platform)) {
+        // supports iOS 2.0 and later: <http://bit.ly/TJjs1V>
+        var v = (navigator.appVersion).match(/OS (\d+)_(\d+)_?(\d+)?/);
+        isIOS = true;
+        return parseInt(v[1], 10) >= 8;
+      }
+    }();
+    return iOS8Plus && (iPhone4 || iPhone5);
+  }();
+
+  var isIOS8OrNewerAndiPhone4OrIPhone5 = function() {
+    return shittyOldIPhoneWithShittyIOS8Plus;
+  };
+
+
   /**
    * resets the height of any element with CSS class "fixeight"
    * by setting its hight to the cliehgtHeight of its parent
@@ -67,6 +90,30 @@ define(function() {
         element.style.height = parent.clientHeight + "px";
       }
     }
+  };
+
+  var adjustCSSBasedOnPhone = function(perPhoneClasses) {
+    perPhoneClasses.forEach(function(phone) {
+      if (phone.test()) {
+        Array.prototype.forEach.call(document.styleSheets, function(sheet) {
+          var classes = sheet.rules || document.sheet.cssRules;
+          Array.prototype.forEach.call(classes, function(c) {
+            var adjustments = phone.styles[c.selectorText];
+            if (adjustments) {
+              Object.keys(adjustments).forEach(function(key) {
+//console.log(key + ": old " + c.style[key]);
+                if (c.style.setProperty) {
+                  c.style.setProperty(key, adjustments[key]);
+                } else {
+                  c.style[key] = adjustments[key];
+                }
+//console.log(key + ": new " + c.style[key]);
+              });
+            }
+          });
+        });
+      }
+    });
   };
 
   var fixupAfterSizeChange = function() {
@@ -134,6 +181,8 @@ define(function() {
   return {
     fixHeightHack: fixHeightHack,
     forceLandscape: forceLandscape,
+    adjustCSSBasedOnPhone: adjustCSSBasedOnPhone,
+    isIOS8OrNewerAndiPhone4OrIPhone5: isIOS8OrNewerAndiPhone4OrIPhone5,
   };
 });
 
