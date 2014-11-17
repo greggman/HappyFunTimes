@@ -60,13 +60,16 @@ console.log(obj);
     for (var ii = 0; ii < obj.length; ++ii) {
       var game = obj[ii];
       var runtimeInfo = game.runtimeInfo;
-      var hftInfo = runtimeInfo.info.happyFunTimes;
-      // Not sure how I should figure out the name and screenshot.
-      var basePath = game.controllerUrl.substring(0, game.controllerUrl.lastIndexOf('/') + 1);
-      var dev = (runtimeInfo.originalGameId != hftInfo.gameId) ? "(*)" : "";
-      game.name = dev + (hftInfo.name || runtimeInfo.originalGameId);
-      game.screenshotUrl = game.screenshotUrl;
-      items.push(Strings.replaceParams(template, game));
+      if (!runtimeInfo) {
+      } else {
+        var hftInfo = runtimeInfo.info.happyFunTimes;
+        // Not sure how I should figure out the name and screenshot.
+        var basePath = game.controllerUrl.substring(0, game.controllerUrl.lastIndexOf('/') + 1);
+        var dev = (runtimeInfo.originalGameId != hftInfo.gameId) ? "(*)" : "";
+        game.name = dev + (hftInfo.name || runtimeInfo.originalGameId);
+        game.screenshotUrl = game.screenshotUrl;
+        items.push(Strings.replaceParams(template, game));
+      }
     }
     var html = items.join("");
     if (html != oldHtml) {
