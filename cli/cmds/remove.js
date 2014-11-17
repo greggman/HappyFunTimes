@@ -37,7 +37,7 @@ var Promise = require('promise');
 var remove = function(args) {
   return new Promise(function(resolve, reject) {
     var fullPath = args._.length > 0 ? args._[0] : process.cwd();
-    games.remove(fullPath);
+    games.remove(fullPath, args);
     resolve();
   });
 };
@@ -49,6 +49,7 @@ exports.usage = {
     "if no path or id is passed in current path is used.",
   ],
   options: [
+    { option: 'bad', type: 'Boolean',  description: "remove all that can't be loaded."},
   ],
 };
 exports.cmd = remove;
