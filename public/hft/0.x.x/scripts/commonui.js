@@ -40,6 +40,7 @@ define([
     './hft-splash',
     './hft-system',
     './misc/fullscreen',
+    './misc/logger',
     './misc/misc',
     './misc/playername',
   ], function(
@@ -47,11 +48,16 @@ define([
     HFTSplash,
     HFTSystem,
     FullScreen,
+    Logger,
     Misc,
     PlayerNameHandler) {
 
   var $ = function(id) {
     return document.getElementById(id);
+  };
+
+  var g = {
+    logger: new Logger.NullLogger(),
   };
 
   /**
@@ -62,6 +68,7 @@ define([
    *           disconncted from game.
    * @property {boolean?} debug True displays a status and debug
    *           html element
+   * @property {number?} numConsoleLines number of lines to show for the debug console.
    * @memberOf module:CommonUI
    */
 
@@ -185,14 +192,51 @@ define([
     });
 
     if (options.debug) {
-      var statusNode = document.createTextNode("");
-      $("hft-status").appendChild(statusNode);
+      g.statusNode = document.createTextNode("");
+      $("hft-status").appendChild(g.statusNode);
       var debugCSS = Misc.findCSSStyleRule("#hft-debug");
       debugCSS.style.display = "block";
+
+      g.logger = new Logger.HTMLLogger($("hft-console"), options.numConsoleLines);
     }
   };
 
+  /**
+   * Sets the content of the status element. Only visible of debug
+   * is true.
+   * @memberOf module:CommonUI
+   * @param {string} str value to set the status
+   */
+  var setStatus = function(msg) {
+    if (g.statusNode) {
+      g.statusNode.nodeValue = msg;
+    }
+  };
+
+  /**
+   * Logs a msg to the HTML based console that is only visible
+   * when debug = true.
+   * @memberOf module:CommonUI
+   * @param {string} str msg to add to log
+   */
+  var log = function(str) {
+    g.logger.log(str);
+  };
+
+  /**
+   * Logs an error to the HTML based console that is only visible
+   * when debug = true.
+   * @memberOf module:CommonUI
+   * @param {string} str msg to add to log
+   */
+  var error = function(str) {
+    g.logger.error(str);
+  };
+
   return {
+    log: log,
+    error: error,
+    setStatus: setStatus,
     setupStandardControllerUI: setupStandardControllerUI,
   };
 });

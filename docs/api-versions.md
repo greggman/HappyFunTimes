@@ -263,4 +263,10 @@ the correct version
         handle this in CSS so we needed a way to check for a specific phone and change
         the CSS programatically.
 
+* v1.6.0
+
+    *   CommonUI.setStatus, CommonUI.log, CommonUI.error
+
+        These work the same as the corresponding GameSupport functions
+        except for the controller.
 
