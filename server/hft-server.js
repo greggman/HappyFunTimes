@@ -32,6 +32,7 @@
 "use strict";
 
 var AppleCaptivePortalHandler = require('./apple-captive-portal-handler');
+var AvailableGames            = require('./available-games');
 var browser                   = require('../lib/browser');
 var Cache                     = require('inmemfilecache');
 var computerName              = require('../lib/computername');
@@ -91,7 +92,7 @@ var HFTServer = function(options, startedCallback) {
     screenshotCount: 0,
     baseDir: "public",
     cwd: process.cwd(),
-    gameDB: require('../lib/gamedb'),
+    gameDB: new AvailableGames(),
   };
 
   Object.keys(options).forEach(function(prop) {
@@ -521,6 +522,7 @@ var HFTServer = function(options, startedCallback) {
         address: g.address,
         baseUrl: "http://" + g.address + ":" + g.port,
         noMessageTimout: options.inactivityTimeout,
+        gameDB: g.gameDB,
       });
       sys.print("Listening on port(s): " + goodPorts.join(", ") + "\n");
       eventEmitter.emit('ports', goodPorts);

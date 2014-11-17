@@ -44,6 +44,7 @@ var WSServer     = require('./websocketserver');
 /**
  * RelayServer options
  * @typedef {Object} RelayServer~Options
+ * @property {AvailableGames} gameDB The game db
  * @property {String} address - address that will
  *         replace "localhost" when a game's controllerUrl is
  *         passed in.
@@ -81,6 +82,7 @@ var RelayServer = function(servers, options) {
   var g_numGameGroups = 0;
   var socketServers = [];
   var eventEmitter = new events.EventEmitter();
+  var gameDB = options.gameDB;
 
   this.on = eventEmitter.on.bind(eventEmitter);
   this.addListener = this.on;
@@ -129,7 +131,7 @@ var RelayServer = function(servers, options) {
     }
     var gameGroup = g_gameGroups[gameId];
     if (!gameGroup && makeGroup) {
-      gameGroup = new GameGroup(gameId, this, { baseUrl: options.baseUrl });
+      gameGroup = new GameGroup(gameId, this, { gameDB: gameDB, baseUrl: options.baseUrl });
       g_gameGroups[gameId] = gameGroup;
       ++g_numGameGroups;
       debug("added game group: " + gameId + ", num game groups = " + g_numGameGroups);
@@ -230,6 +232,7 @@ var RelayServer = function(servers, options) {
         var runtimeInfo = gameInfo.readGameInfo(cwd);
         if (runtimeInfo) {
           gameId = runtimeInfo.info.happyFunTimes.gameId;
+          gameDB.add(runtimeInfo);
         }
       } catch (e) {
         gameId = gameInfo.makeRuntimeGameId(gameId, cwd);

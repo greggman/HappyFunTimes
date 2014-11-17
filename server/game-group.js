@@ -33,7 +33,6 @@
 
 var debug  = require('debug')('game-group');
 var Game   = require('./game');
-var gamedb = require('../lib/gamedb');
 
 /**
  * Represents a group of games.
@@ -45,9 +44,10 @@ var gamedb = require('../lib/gamedb');
  */
 var GameGroup = function(gameId, relayServer, options) {
   options = options || {};
+  var gameDB = options.gameDB;
   this.options = options;
   this.gameId = gameId;
-  this.runtimeInfo = gamedb.getGameById(gameId);
+  this.runtimeInfo = gameDB.getGameById(gameId);
   this.relayServer = relayServer;
   this.games = [];  // first game is the "master"
   this.nextGameId = 1;
