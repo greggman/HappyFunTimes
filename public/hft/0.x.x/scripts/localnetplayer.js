@@ -120,7 +120,7 @@ define(function() {
     if (fn) {
       fn.call(this, data);
     } else {
-      console.error("Unknown Event: " + eventType);
+      console.error("LocalNetPlayer: Unknown Event: " + eventType);
     }
   };
 

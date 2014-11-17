@@ -51,7 +51,7 @@ var AvailableGames = function() {
 
   this.on = emitter.on.bind(emitter);
   this.addListener = this.on;
-  this.removeListender = emitter.removeListener.bind(emitter);
+  this.removeListener = emitter.removeListener.bind(emitter);
   this.reset = gameDB.reset.bind(gameDB);
 
   // When getting games only get what's installed

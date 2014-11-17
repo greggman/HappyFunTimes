@@ -124,7 +124,7 @@ define(['./virtualsocket'], function(VirtualSocket) {
       if (fn) {
         fn.apply(this, args);
       } else {
-        console.error("unknown event: " + eventType);
+        console.error("GameClient: unknown event: " + eventType);
       }
     }.bind(this);
 

@@ -73,6 +73,7 @@ mime.define({'application/javascript': ["js6"]});
  *           rendezvous server
  * @property {RelayServer?} relayServer relay server to use. (for testing)
  * @property {HttpServer?} httpServer http server to use. (for testing)
+ * @property {GameDB?} gameDB GameDB to use (for testing)
  * @property {string?} systemName name to use if mulitiple
  *           happyFunTimes servers are running on the same
  *           network.
@@ -92,12 +93,13 @@ var HFTServer = function(options, startedCallback) {
     screenshotCount: 0,
     baseDir: "public",
     cwd: process.cwd(),
-    gameDB: new AvailableGames(),
   };
 
   Object.keys(options).forEach(function(prop) {
     g[prop] = options[prop];
   });
+
+  g.gameDB = options.gameDB || new AvailableGames();
 
   var eventEmitter = new events.EventEmitter();
   var nonRequire = new NonRequire();

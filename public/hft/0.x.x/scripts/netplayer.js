@@ -139,7 +139,7 @@ define(function() {
     if (fn) {
       fn.apply(this, args);
     } else {
-      console.error("Unknown Event: " + eventType);
+      console.error("NetPlayer: Unknown Event: " + eventType);
     }
   };
 

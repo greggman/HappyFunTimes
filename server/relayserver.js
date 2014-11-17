@@ -76,7 +76,6 @@ var WSServer     = require('./websocketserver');
  * @params {RelayServer~Options} options
  */
 var RelayServer = function(servers, options) {
-
   var g_nextSessionId = 0;
   var g_gameGroups = {};
   var g_numGameGroups = 0;
