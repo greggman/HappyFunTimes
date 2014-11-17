@@ -173,7 +173,8 @@ html, body {
   width: 100%;
   height: 100%;
   display: none;
-  background-color: red;
+  background-color: blue;
+  color: white;
   text-align: center;
   z-index: 1000;
   font-size: 48pt;
