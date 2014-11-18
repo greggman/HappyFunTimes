@@ -99,7 +99,7 @@ var HFTServer = function(options, startedCallback) {
     g[prop] = options[prop];
   });
 
-  g.gameDB = options.gameDB || new AvailableGames();
+  g.gameDB = g.gameDB || new AvailableGames();
 
   var eventEmitter = new events.EventEmitter();
   var nonRequire = new NonRequire();
