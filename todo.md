@@ -1,7 +1,6 @@
 To Do
 =====
 
-*   figure out err msg for un-added games. As it is controllers just get JS errors.
 *   move tiled support to hft-tiled?
 *   add tiled support to jumpjump
 *   add glow processing to powpow?
@@ -783,6 +782,11 @@ Runs Repo noid
 
 Done
 ====
+
+*   figure out err msg for un-added games. As it is controllers just get JS errors.
+
+    Unadded games, which really only work for Unity, now work. They won't show up
+    on the games.html screen but controllers will connect.
 
 *   add fullscreen to android
 *   make --kiosk
