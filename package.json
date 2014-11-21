@@ -1,7 +1,7 @@
 {
   "name": "happyfuntimes",
   "description": "happyfuntimes framework",
-  "version": "0.0.21",
+  "version": "0.0.22",
   "private": true,
   "scripts": {
     "test": "node node_modules/mocha/bin/mocha --recursive",
@@ -24,7 +24,7 @@
     "mkdirp": "^0.5.0",
     "moxie-zip": "0.0.3",
     "native-dns": "0.4.1",
-    "native-msg-box": "0.1.4",
+    "native-msg-box": "0.1.5",
     "optionator": "^0.4.0",
     "promise": "^5.0.0",
     "requirejs": "^2.1.14",
