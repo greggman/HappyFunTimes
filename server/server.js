@@ -105,19 +105,6 @@ var iputils   = require('../lib/iputils');
 var Promise   = require('promise');
 var HFTServer = require('./hft-server');
 
-if (!args.address) {
-  var addresses = iputils.getIpAddress();
-
-  if (addresses.length < 1) {
-    console.error("No IP address found for DNS");
-  }
-  args.address = addresses[0];
-  if (addresses.length > 1) {
-    console.log("more than 1 IP address found: " + addresses);
-  }
-}
-console.log("using ip address: " + args.address);
-
 var server;
 var launchBrowser = function(err) {
   var next = function() {
@@ -153,7 +140,10 @@ var launchBrowser = function(err) {
 server = new HFTServer(args, launchBrowser);
 
 if (args.dns) {
-  var dnsServer = new DNSServer({address: args.address});
+  // This doesn't need to dynamicallly check for a change in ip address
+  // because it should only be used in a static ip address sitaution
+  // since DNS has to be static for our use-case.
+  var dnsServer = new DNSServer({address: args.address || iputils.getOneIpAddress()});
   server.on('ports', function(ports) {
     if (ports.indexOf("80") < 0 && ports.indexOf(80) < 0) {
       console.error("You specified --dns but happyFunTimes could not use port 80.");
