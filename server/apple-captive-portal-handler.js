@@ -74,14 +74,29 @@ var url         = require('url');
  *
  * @constructor
  * @private
- * @param {AppleCaptivePortalHandler~Options} sendFileFn
+ * @param {AppleCaptivePortalHandler~Options} options options
  */
 var AppleCaptivePortalHandler = function(options) {
   // This is a total guess. I'm assuming iOS sends a unique URL. I can use that to hopefully
   // return my redirection page the first time and apple's success page the second time
   this.sessions = {};
-  this.options = options;
+  this.options = {};
   this.firstPath = "/enter-name.html";
+  this.setOptions(options);
+};
+
+/**
+ * Sets options
+ *
+ * @param {AppleCaptivePortalHandler~Options} options options
+ */
+AppleCaptivePortalHandler.prototype.setOptions = function(options) {
+  ["sendFileFn", "address", "port", "baseDir"].forEach(function(key) {
+    var value = options[key];
+    if (value !== undefined) {
+      this.options[key] = value;
+    }
+  }.bind(this));
 };
 
 /**
