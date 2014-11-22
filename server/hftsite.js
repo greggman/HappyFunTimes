@@ -56,10 +56,25 @@ var inform = function() {
   }
 };
 
+/**
+ * @typedef {Object} HFTSite~Options
+ * @property {string?} address ip address eg. "1.2.3.4"
+ * @property {string?} port port eg "18679"
+ * @property {boolean?} privateServer true = don't send info to hftsite
+ */
+
+/**
+ * Set options for hftSize
+ *
+ * @param {HFTSite~Options} options
+ */
 var setup = function(options) {
-  g.address = options.address;
-  g.port = options.port;
-  g.privateServer = options.privateServer;
+  ["address", "port", "privateServer"].forEach(function(key) {
+    var value = options[key];
+    if (value !== undefined) {
+      g[key] = value;
+    }
+  });
 };
 
 exports.inform = inform;
