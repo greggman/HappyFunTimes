@@ -47,6 +47,7 @@ var HFTGame                   = require('./hftgame');
 var hftSite                   = require('./hftsite');
 var highResClock              = require('../lib/highresclock');
 var http                      = require('http');
+var iputils                   = require('../lib/iputils');
 var log                       = require('../lib/log');
 var mime                      = require('mime');
 var NonRequire                = require('./non-require');
@@ -99,6 +100,34 @@ var HFTServer = function(options, startedCallback) {
     g[prop] = options[prop];
   });
 
+  var updateIpAddress = function(address) {
+    if (relayServer) {
+      relayServer.setOptions({baseUrl: getBaseUrl()});
+    }
+    hftSite.setup({address: address});
+    if (appleCaptivePortalHandler) {
+      appleCaptivePortalHandler.setOptions({address: address});
+    }
+  };
+
+  var getAddress = (function() {
+    var oldAddress;
+
+    return function() {
+      var address = g.address || iputils.getOneIpAddress();
+      if (address !== oldAddress) {
+        oldAddress = address;
+        console.log("using ip address: " + address);
+        updateIpAddress(address);
+      }
+      return address;
+    };
+  }());
+
+  var getBaseUrl = function() {
+    return "http://" + getAddress() + ":" + g.port;
+  };
+
   g.gameDB = g.gameDB || new AvailableGames();
 
   var eventEmitter = new events.EventEmitter();
@@ -111,7 +140,11 @@ var HFTServer = function(options, startedCallback) {
   var app = express();
   var relayServer;
 
-  hftSite.setup(g);
+  hftSite.setup({
+    address: getAddress(),
+    port: g.port,
+    privateServer: g.privateServer,
+  });
 
   g.cwd = path.normalize(path.join(__dirname, ".."));
 
@@ -308,7 +341,7 @@ var HFTServer = function(options, startedCallback) {
 
   var appleCaptivePortalHandler = new AppleCaptivePortalHandler({
     baseDir: path.join(g.cwd, g.baseDir),
-    address: g.address,
+    address: getAddress(),
     port: g.port,
     sendFileFn: sendFileResponse,
   });
@@ -377,7 +410,7 @@ var HFTServer = function(options, startedCallback) {
     }
     var prepFn = isTemplate ? (function() {
       var params = [{
-        localhost: g.address,
+        localhost: getAddress(),
       }];
       if (runtimeInfo) {
         params.push(runtimeInfo);
@@ -521,8 +554,7 @@ var HFTServer = function(options, startedCallback) {
       }
       var RelayServer = require('./relayserver.js');
       relayServer = options.relayServer || new RelayServer(servers, {
-        address: g.address,
-        baseUrl: "http://" + g.address + ":" + g.port,
+        baseUrl: getBaseUrl(),
         noMessageTimout: options.inactivityTimeout,
         gameDB: g.gameDB,
       });

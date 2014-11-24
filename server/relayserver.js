@@ -45,9 +45,6 @@ var WSServer     = require('./websocketserver');
  * RelayServer options
  * @typedef {Object} RelayServer~Options
  * @property {AvailableGames} gameDB The game db
- * @property {String} address - address that will
- *         replace "localhost" when a game's controllerUrl is
- *         passed in.
  * @property {String?} baseUrl ???
  * @property {WebSocketServer?} WebSocketServer constructor for WebSocketServer (for testing)
  */
@@ -79,9 +76,21 @@ var RelayServer = function(servers, options) {
   var g_nextSessionId = 0;
   var g_gameGroups = {};
   var g_numGameGroups = 0;
+  var g_options = {};
   var socketServers = [];
   var eventEmitter = new events.EventEmitter();
   var gameDB = options.gameDB;
+
+  this.setOptions = function(options) {
+    ["baseUrl"].forEach(function(key) {
+      var value = options[key];
+      if (value !== undefined) {
+        g_options[key] = value;
+      }
+    });
+  };
+
+  this.setOptions(options);
 
   this.on = eventEmitter.on.bind(eventEmitter);
   this.addListener = this.on;
@@ -130,7 +139,7 @@ var RelayServer = function(servers, options) {
     }
     var gameGroup = g_gameGroups[gameId];
     if (!gameGroup && makeGroup) {
-      gameGroup = new GameGroup(gameId, this, { gameDB: gameDB, baseUrl: options.baseUrl });
+      gameGroup = new GameGroup(gameId, this, { gameDB: gameDB });
       g_gameGroups[gameId] = gameGroup;
       ++g_numGameGroups;
       debug("added game group: " + gameId + ", num game groups = " + g_numGameGroups);
@@ -161,7 +170,7 @@ var RelayServer = function(servers, options) {
           gameId: id,
           serverName: computerName.get().trim(),
           numPlayers: gameGroup.getNumPlayers(),
-          controllerUrl: gameGroup.controllerUrl(),
+          controllerUrl: gameGroup.getControllerUrl(g_options.baseUrl),
           runtimeInfo: gameGroup.runtimeInfo,
         });
       }

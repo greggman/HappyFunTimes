@@ -36,7 +36,6 @@ var hftSite      = require('./hftsite');
 
 /**
  * @typedef {object} Game~Options
- * @property {string} baseUrl the base url used to make urls
  */
 
 /**
@@ -57,11 +56,12 @@ var Game = function(id, gameGroup, options) {
   this.numPlayers = 0;
   this.sendQueue = [];
   this.options = options;
-  if (this.runtimeInfo) {
-    this.controllerUrl = options.baseUrl + "/games/" + this.runtimeInfo.info.happyFunTimes.gameId + "/index.html";
-  }
   this.setGameId();
   debug("create game " + this.  gameId);
+};
+
+Game.prototype.getControllerUrl = function(baseUrl) {
+  return this.runtimeInfo ? baseUrl + "/games/" + this.runtimeInfo.info.happyFunTimes.gameId + "/index.html" : undefined;
 };
 
 Game.prototype.setGameId = function() {

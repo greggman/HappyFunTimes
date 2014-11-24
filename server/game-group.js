@@ -181,8 +181,8 @@ GameGroup.prototype.getNumPlayers = function() {
   }, 0);
 };
 
-GameGroup.prototype.controllerUrl = function() {
-  return this.games.length > 0 ? this.games[0].controllerUrl : undefined;
+GameGroup.prototype.getControllerUrl = function(baseUrl) {
+  return this.games.length > 0 ? this.games[0].getControllerUrl(baseUrl) : undefined;
 };
 
 GameGroup.prototype.sendQuit = function() {
