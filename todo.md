@@ -11,6 +11,9 @@ To Do
         *   RegisterCmdHandler<type>(name, fn)
         *   RegisterCmdHandler(fn);
         *   Use RegisterCmdHandler(fn) for gamestart
+    *   can we make an hft bower that runs bower pre-installed?
+    *   can we make an hft git (no)... but pre-installed bower no need for node?
+*   should we get rid of bower?
 *   move tiled support to hft-tiled?
 *   add tiled support to jumpjump
 *   add glow processing to powpow?

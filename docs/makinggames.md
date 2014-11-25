@@ -30,11 +30,10 @@ I'm sorry there's so many steps. It's not as hard as it looks. Trust me.
 ### TL;DR version
 
 *   install happyfuntimes (http://superhappyfuntimes.net/install) [(info)](#happyfuntimes)
-*   run happyfuntimes (it must be run once)
+*   if on Windows run happyfuntimes (it must be run once on Windows)
 *   install node.js (http://nodejs.org/download/) [(info)](#nodejs)
 *   if on windows install msysgit (http://msysgit.github.io/) [(info)](#msysgit)
 *   install bower `sudo npm install -g bower` (no sudo on windows) [(info)](#bower)
-*   install hft-cli `sudo npm install -g hft-cli` (no sudo on windows) [(info)](#hftcli)
 *   clone a game [(info)](#clone)
 *   edit `package.json` inside the game you cloned, change `gameId` and `name` [(info)](#packagejson)
 *   type `hft add` [(info)](#hftadd)
@@ -79,7 +78,8 @@ I'm sorry there's so many steps. It's not as hard as it looks. Trust me.
 
 *   <a id="bower"/>Install Bower.
 
-    Bower is a program that downloads dependencies (libraries).
+    Bower is a program that downloads JavaScript libraries. For example
+    if a controller or game needs jquery or three.js bower handles that.
 
     Type `npm install -g bower`.
 
