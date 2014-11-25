@@ -105,6 +105,7 @@ var HFTServer = function(options, startedCallback) {
       relayServer.setOptions({baseUrl: getBaseUrl()});
     }
     hftSite.setup({address: address});
+    hftSite.inform();
     if (appleCaptivePortalHandler) {
       appleCaptivePortalHandler.setOptions({address: address});
     }
@@ -123,6 +124,8 @@ var HFTServer = function(options, startedCallback) {
       return address;
     };
   }());
+
+  var ipIntervalId = setInterval(getAddress, 15 * 1000);
 
   var getBaseUrl = function() {
     return "http://" + getAddress() + ":" + g.port;
@@ -612,7 +615,10 @@ var HFTServer = function(options, startedCallback) {
     servers.forEach(function(server) {
       server.close();
     });
-
+    if (ipIntervalId) {
+      clearInterval(ipIntervalId);
+      ipIntervalId = undefined;
+    }
   }.bind(this);
 
   this.getSettings = function() {

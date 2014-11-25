@@ -37,24 +37,44 @@ var io      = require('../lib/io');
 var restUrl = require('rest-url');
 
 var g = {
+  throttleTime: 1000
+};
+
+var getTime = function() {
+  return Date.now();
 };
 
 // Sends the local ip address and port
-var inform = function() {
-  if (!g.privateServer) {
-    var url = restUrl.make(process.env.HFT_RENDEZVOUS_URL || config.getSettings().settings.rendezvousUrl, {
-      hftip: g.address,
-      hftport: g.port,
-    })
-    debug("ping: " + url);
-    io.sendJSON(url, {}, {}, function(err, result) {
-      // do I care?
-      if (err) {
-        console.error(err);
+var inform = (function() {
+  var lastAddress;
+  var lastPort;
+  var lastTime = 0;
+
+  return function() {
+    if (!g.privateServer && g.port && g.address) {
+      var now = getTime();
+      var elapsedTime = now - lastTime;
+      if (lastAddress != g.address ||
+          lastPort != g.port ||
+          elapsedTime > g.throttleTime) {
+        lastTime = now;
+        lastAddress = g.address;
+        lastPort = g.port;
+        var url = restUrl.make(process.env.HFT_RENDEZVOUS_URL || config.getSettings().settings.rendezvousUrl, {
+          hftip: g.address,
+          hftport: g.port,
+        })
+        debug("ping: " + url);
+        io.sendJSON(url, {}, {}, function(err, result) {
+          // do I care?
+          if (err) {
+            console.error(err);
+          }
+        });
       }
-    });
-  }
-};
+    }
+  };
+}());
 
 /**
  * @typedef {Object} HFTSite~Options

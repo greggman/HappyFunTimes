@@ -1,6 +1,16 @@
 To Do
 =====
 
+*   unity plugin
+    *   make package.json editor
+    *   make "new project" button?
+    *   make "start HFT?" button (or should running it be enough)
+    *   make "location of HFT" button?
+    *   make stages of commands
+        *   cmd with cmd string RegisterCmdHandler<type>(fn)
+        *   RegisterCmdHandler<type>(name, fn)
+        *   RegisterCmdHandler(fn);
+        *   Use RegisterCmdHandler(fn) for gamestart
 *   move tiled support to hft-tiled?
 *   add tiled support to jumpjump
 *   add glow processing to powpow?
