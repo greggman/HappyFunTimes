@@ -139,7 +139,7 @@ define(
 
   /**
    * Draws the dpad given a DirInfo
-   * @param {DirInfo} dirInfo
+   * @param {module:Input.DirectionInfo} dirInfo
    */
   DPad.prototype.draw = function(dirInfo) {
     this.drawBits(dirInfo.bits);

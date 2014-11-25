@@ -78,7 +78,7 @@ Game.prototype.getNumPlayers = function() {
 
 /**
  * Game objects can exist without a 'game'. If controllers
- * connect to the relayserver before the game starts the
+ * connect to happyfuntimes before the game starts the
  * `Game` object will exist but no client (the websocket
  * connected to the game) will exist yet.
  *

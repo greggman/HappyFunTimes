@@ -137,7 +137,7 @@ define(['./misc'], function(Misc) {
   /**
    * @typedef {Object} EventInfo
    * @property {number} pad the pad id 0, 1, 2, etc.
-   * @property {module:Input~DirectionInfo} info the direction
+   * @property {module:Input.DirectionInfo} info the direction
    *           info for the event.
    * @memberOf module:Input
    */
