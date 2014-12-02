@@ -50,7 +50,7 @@ var GameGroup = function(gameId, relayServer, options) {
   this.runtimeInfo = gameDB.getGameById(gameId);
   this.relayServer = relayServer;
   this.games = [];  // first game is the "master"
-  this.nextGameId = 1;
+  this.nextGameId = 0;  // start at 0 because it's easy to switch games with (gameNum + numGames + dir) % numGames
 };
 
 GameGroup.prototype.getGameById = function(id) {
