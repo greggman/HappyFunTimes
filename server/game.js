@@ -57,7 +57,7 @@ var Game = function(id, gameGroup, options) {
   this.sendQueue = [];
   this.options = options;
   this.setGameId();
-  debug("create game " + this.  gameId);
+  debug("create game " + this.gameId);
 };
 
 Game.prototype.getControllerUrl = function(baseUrl) {
@@ -69,7 +69,7 @@ Game.prototype.setGameId = function() {
 };
 
 /**
- * Returns the number of players connected to this game.
+   * Returns the number of players connected to this game.
  * @return num of players connected to game.
  */
 Game.prototype.getNumPlayers = function() {
