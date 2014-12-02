@@ -2,6 +2,7 @@ To Do
 =====
 
 *   unity plugin
+    *   make it set run-in-background
     *   make package.json editor
     *   make "new project" button?
     *   make "start HFT?" button (or should running it be enough)
@@ -11,6 +12,8 @@ To Do
         *   RegisterCmdHandler<type>(name, fn)
         *   RegisterCmdHandler(fn);
         *   Use RegisterCmdHandler(fn) for gamestart
+        *   SendCmd(name, MessageCmdData)
+        *   SendCmd(name, Dict)
     *   can we make an hft bower that runs bower pre-installed?
     *   can we make an hft git (no)... but pre-installed bower no need for node?
 *   should we get rid of bower?

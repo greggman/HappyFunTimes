@@ -24,6 +24,10 @@ when cloning a game choose either
 
 *   [Unitysimple](http://github.com/greggman/hft-unitysimple) A Unity3D example that just positions a sphere for each player written in C#.
 
+*   [Unity2dplatformer](http://github.com/greggman/hft-unity2dplatformer) A Unity3D example that shows a 2d platformer written in C#
+
+*   [Unity-multi-game--example](http://github.com/greggman/hft-unity-multi-game-example) A Unity3D example that shows a 2d platformer written in C# that can span multiple computers (Advanced!)
+
 ### Unity from Scratch
 
 *   TBD
