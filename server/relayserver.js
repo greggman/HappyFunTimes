@@ -225,6 +225,9 @@ var RelayServer = function(servers, options) {
       // so should we fix it in unity or here? Seems like
       // here since Unity isn't aware. It's HFT that specifies
       // the 'bin' convension
+
+      // First check deeper
+      cwd = path.join(cwd, "WebPlayerTemplates/HappyFunTimes");
       for (;;) {
         if (path.dirname(cwd).length < 10) {
           break;

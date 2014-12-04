@@ -17,8 +17,6 @@ To Do
     *   can we make an hft bower that runs bower pre-installed?
     *   can we make an hft git (no)... but pre-installed bower no need for node?
 *   should we get rid of bower?
-*   move tiled support to hft-tiled?
-*   add tiled support to jumpjump
 *   add glow processing to powpow?
 *   fix samsung
 *   fix android non-chrome?
@@ -799,6 +797,8 @@ Runs Repo noid
 Done
 ====
 
+*   move tiled support to hft-tiled? (put it in hft-utils)
+*   add tiled support to jumpjump
 *   figure out err msg for un-added games. As it is controllers just get JS errors.
 
     Unadded games, which really only work for Unity, now work. They won't show up
