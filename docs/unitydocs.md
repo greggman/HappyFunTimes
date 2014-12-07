@@ -51,6 +51,7 @@ C# minimal code
 
     using UnityEngine;
     using HappyFunTimes;
+    using System;
 
     class MyPlayer : MonoBehaviour
     {
@@ -87,13 +88,13 @@ Now make a new GameObject and add a Script Component, HappyFunTimes->PlayerSpawn
 In the properties for the PlayerSpawner set the `prefab to spawn for player` to the
 prefab you just created. Leave `gameId` blank!
 
-    <img src="../images/unity/player-spawner-properties.png" width="279" height="94" />
+   <img src="../images/unity/player-spawner-properties.png" width="279" height="94" />
 
 If happyfuntimes is running, and you followed all the other instructions about editing
 `package.json` and running `hft add` etc, then if you run the game you should see the
 message
 
-    <img src="../images/unity/socket-opened.png" width="238" height="65" />
+   <img src="../images/unity/socket-opened.png" width="238" height="65" />
 
 If you open a browser window and go to `http://localhost:18679` you should see your
 prefab get spawned. Open more browser windows/tabs you'll see more get spawned. Close them
@@ -229,7 +230,7 @@ so.
     *   Run in Background (checked)
     *   Display Resolution Dialog (disabled)
 
-    <img src="../images/unity/player-settings.png" width="274" height="423" />
+   <img src="../images/unity/player-settings.png" width="274" height="423" />
 
 5.  Save the Scene and **Exit Unity**
 
