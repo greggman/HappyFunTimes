@@ -76,6 +76,7 @@ define(function() {
     return function() {
       this.id = ++_count;
       this.eventHandlers = { };
+      this.gameEventHandlers = { };
     }
   }());
 
@@ -100,8 +101,29 @@ define(function() {
     this.eventHanders = { };
   };
 
-  LocalNetPlayer.prototype.sendCmd = function() {
-    // No-op because this is a local player.
+  /**
+   */
+  LocalNetPlayer.prototype.addGameEventListener = function(eventType, handler) {
+    this.gameEventHandlers[eventType] = handler;
+  };
+
+  /**
+   */
+  LocalNetPlayer.prototype.removeGameEventListener = function(eventType) {
+    this.gameEventHandlers[eventType] = undefined;
+  };
+
+  /**
+   */
+  LocalNetPlayer.prototype.removeGameAllListeners = function() {
+    this.gameEventHanders = { };
+  };
+
+  LocalNetPlayer.prototype.sendCmd = function(cmd, data) {
+    var fn = this.gameEventHandlers[cmd];
+    if (fn) {
+      fn.call(this, data);
+    }
   };
 
   /**
