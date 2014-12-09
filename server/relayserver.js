@@ -220,6 +220,8 @@ var RelayServer = function(servers, options) {
     var gameId = data.gameId;
     var cwd = data.cwd;
     if (cwd) {
+      var origCwd = cwd;
+      var found = false;
       debug("cwd: " + cwd);
       // Not clear where this belongs. Unity can be in bin
       // so should we fix it in unity or here? Seems like
@@ -235,17 +237,24 @@ var RelayServer = function(servers, options) {
         var testPath = path.join(cwd, "package.json");
         if (fs.existsSync(testPath)) {
           debug("found game at: " + cwd);
+          found = true;
           break;
         }
         cwd = path.dirname(cwd);
       }
-      try {
-        var runtimeInfo = gameInfo.readGameInfo(cwd);
-        if (runtimeInfo) {
-          gameId = runtimeInfo.info.happyFunTimes.gameId;
-          gameDB.add(runtimeInfo);
+      var read = false;
+      if (found) {
+        try {
+          var runtimeInfo = gameInfo.readGameInfo(cwd);
+          if (runtimeInfo) {
+            gameId = runtimeInfo.info.happyFunTimes.gameId;
+            gameDB.add(runtimeInfo);
+            read = true;
+          }
+        } catch (e) {
         }
-      } catch (e) {
+      }
+      if (!read) {
         gameId = gameInfo.makeRuntimeGameId(gameId, cwd);
       }
     }

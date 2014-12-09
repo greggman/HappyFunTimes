@@ -270,3 +270,8 @@ the correct version
         These work the same as the corresponding GameSupport functions
         except for the controller.
 
+* v1.7.0
+
+    *   Can put controller files in Assets/WebPlayerTemplates/HappyFunTimes
+
+
