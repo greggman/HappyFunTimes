@@ -80,7 +80,7 @@ var install = function(releasePath, opt_destPath, opt_options) {
   var packageLocations = gameInfo.getPackageLocations();
   var checkPackageLocations = function(entry) {
     var safeDirName = entry.name.replace(/\\/g, "/");
-    var shortPath = safeDirName.substring(safeDirName.indexOf("/"));
+    var shortPath = safeDirName.substring(safeDirName.indexOf("/") + 1);
     for (var jj = 0; jj < packageLocations.length; ++jj) {
       var packageLocation = packageLocations[jj];
       if (shortPath == packageLocation) {
@@ -104,7 +104,7 @@ var install = function(releasePath, opt_destPath, opt_options) {
     if (!packageEntry) {
       throw new Error("no package.json found in " + releasePath);
     }
-    runtimeInfo = gameInfo.parseGameInfo(packageEntry.asText(), path.join(releasePath, entry.name), ".");
+    runtimeInfo = gameInfo.parseGameInfo(packageEntry.asText(), path.join(releasePath, packageEntry.name), ".");
     var packageBasePath = packageEntry.name.replace(/\\/g, "/");
     packageBasePath = packageBasePath.substring(0, packageBasePath.indexOf("/"));
 
