@@ -1,15 +1,10 @@
 To Do
 =====
 
-*   change basePath to htmlPath, packagePath, rootPath
-    *   check all calls to readGameInfo. They should pass in rootPath
-    *   check all calls to parseGameInfo
-    *   check all calls to writeGameInfo
+*   send all ip addresses to hft.net
 *   make windows install for all users (optionally?)
 *   remove connect/disconnect from simple and unitysimple examples
-*   Make make work with WebPlayerTemplates
 *   why do I scan tree in readInfo?
-*   compress hft.net!
 *   unity plugin
     *   Have LocalNewPlayer emit game msgs
     *   make it set project settings
@@ -815,6 +810,12 @@ Runs Repo noid
 Done
 ====
 
+*   Make make work with WebPlayerTemplates
+*   compress hft.net!
+*   change basePath to htmlPath, packagePath, rootPath
+    *   check all calls to readGameInfo. They should pass in rootPath
+    *   check all calls to parseGameInfo
+    *   check all calls to writeGameInfo
 *   move tiled support to hft-tiled? (put it in hft-utils)
 *   add tiled support to jumpjump
 *   figure out err msg for un-added games. As it is controllers just get JS errors.
