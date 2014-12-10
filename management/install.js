@@ -77,18 +77,37 @@ var install = function(releasePath, opt_destPath, opt_options) {
   var runtimeInfo;
   var packageBasePath;
 
-  try {
-    // Find the packageInfo
-    for (var ii = 0; ii < entries.length; ++ii) {
-      var entry = entries[ii];
-      var baseName = path.basename(entry.name);
-      var dirName = path.dirname(entry.name);
-      if (dirName.indexOf("/") < 0 && baseName == "package.json") {
-        runtimeInfo = gameInfo.parseGameInfo(entry.asText(), path.join(releasePath, entry.name));
-        packageBasePath = dirName;
-        break;
+  var packageLocations = gameInfo.getPackageLocations();
+  var checkPackageLocations = function(entry) {
+    var safeDirName = entry.name.replace(/\\/g, "/");
+    var shortPath = safeDirName.substring(safeDirName.indexOf("/"));
+    for (var jj = 0; jj < packageLocations.length; ++jj) {
+      var packageLocation = packageLocations[jj];
+      if (shortPath == packageLocation) {
+        return entry;
       }
     }
+  };
+
+  var findPackage = function(entries) {
+    for (var ii = 0; ii < entries.length; ++ii) {
+      var entry = checkPackageLocations(entries[ii]);
+      if (entry) {
+        return entry;
+      }
+    };
+  };
+
+  try {
+    // Find the packageInfo
+    var packageEntry = findPackage(entries);
+    if (!packageEntry) {
+      throw new Error("no package.json found in " + releasePath);
+    }
+    runtimeInfo = gameInfo.parseGameInfo(packageEntry.asText(), path.join(releasePath, entry.name), ".");
+    var packageBasePath = packageEntry.name.replace(/\\/g, "/");
+    packageBasePath = packageBasePath.substring(0, packageBasePath.indexOf("/"));
+
   } catch (e) {
     console.error("could not parse package.json. Maybe this is not a HappyFunTimes game?");
     console.error(e);
@@ -104,12 +123,12 @@ var install = function(releasePath, opt_destPath, opt_options) {
   var installedGame = gameDB.getGameById(gameId);
   if (installedGame) {
     if (!options.overwrite) {
-      console.error("game " + gameId + " already installed at: " + installedGame.basePath);
+      console.error("game " + gameId + " already installed at: " + installedGame.rootPath);
       return false;
     }
     // Was it "installed" or just added?
     if (installedGame.files) {
-      destBasePath = installedGame.basePath;
+      destBasePath = installedGame.rootPath;
     }
   }
 
@@ -141,7 +160,7 @@ var install = function(releasePath, opt_destPath, opt_options) {
       bad = true;
     } else {
       var isDir = entry.dir;
-      if (destPath.substr(-1) == "/" || destPath.substr(-1) == "//") {
+      if (destPath.substr(-1) == "/" || destPath.substr(-1) == "\\") {
         destPath = destPath.substr(0, destPath.length - 1);
         isDir = true;
       }
@@ -154,6 +173,11 @@ var install = function(releasePath, opt_destPath, opt_options) {
       } else {
         log("install: " + entry.name + " -> " + destPath);
         if (!options.dryRun) {
+          var dirPath = path.dirname(destPath);
+          if (!fs.existsSync(dirPath)) {
+            log("mkdir  : " + dirPath);
+            mkdirp.sync(dirPath);
+          }
           fs.writeFileSync(destPath, entry.asNodeBuffer());
         }
       };

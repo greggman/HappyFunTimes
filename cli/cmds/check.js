@@ -41,7 +41,7 @@ var check = function(args) {
       if (!runtimeInfo) {
         throw "";
       }
-      gameInfo.checkRequiredFiles(runtimeInfo, runtimeInfo.basePath);
+      gameInfo.checkRequiredFiles(runtimeInfo);
     } catch (e) {
       console.error(e);
       reject();

@@ -241,7 +241,7 @@ var publish = function(gamePath, options) {
       log("releaseInfo", releaseInfo);
       var promises = [];
       var results = [];
-      filesToUpload.push({filename: path.join(runtimeInfo.basePath, "package.json")});
+      filesToUpload.push({filename: runtimeInfo.packagePath});
       filesToUpload.forEach(function(file, ndx) {
         auth();
         promises.push(uploadAsset({

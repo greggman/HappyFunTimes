@@ -74,23 +74,17 @@ var exporter = function(runtimeInfo, options) {
   };
 
   var exportUnity3d = function(runtimeInfo, options) {
-    var basePath = runtimeInfo.basePath;
-    var gamePath = basePath;
+    var rootPath = runtimeInfo.rootPath;
+    var gamePath = rootPath;
 
     // Check for Assets. Should we check for ProjectSettings?
     var assetsPath = path.join(gamePath, "Assets");
     if (!fs.existsSync(assetsPath)) {
-      if (!(/WebPlayerTemplates/i).test(assetsPath)) {
-        return Promise.reject(new Error("Could not find WebPlayerTemplates folder"))
-      }
-      assetsPath = path.join(gamePath, "..", "..", "..", "Assets");
-      if (!fs.existsSync(assetsPath)) {
-        return Promise.reject(new Error("Could not find Assets : " + assetsPath))
-      }
+      return Promise.reject(new Error("Could not find Assets : " + assetsPath))
       gamePath = path.dirname(assetsPath);
     }
 
-    var binFolder = options.dstPath || path.join(basePath, "bin");
+    var binFolder = options.dstPath || path.join(gamePath, "bin");
     if (!fs.existsSync(binFolder)) {
       fs.mkdir(binFolder);
     }

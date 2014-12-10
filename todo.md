@@ -1,12 +1,28 @@
 To Do
 =====
 
+*   change basePath to htmlPath, packagePath, rootPath
+    *   check all calls to readGameInfo. They should pass in rootPath
+    *   check all calls to parseGameInfo
+    *   check all calls to writeGameInfo
+*   make windows install for all users (optionally?)
+*   remove connect/disconnect from simple and unitysimple examples
+*   Make make work with WebPlayerTemplates
+*   why do I scan tree in readInfo?
+*   compress hft.net!
 *   unity plugin
+    *   Have LocalNewPlayer emit game msgs
+    *   make it set project settings
+        *   Run in background
+        *   Start FullScreen
     *   make it set run-in-background
     *   make package.json editor
     *   make "new project" button?
     *   make "start HFT?" button (or should running it be enough)
     *   make "location of HFT" button?
+    *   add HFT->Export the exports all 3 to the correct palce
+    *   add HFT->Publish that does an export and then published? (needs git currently).
+    *   When running HFT from Unity don't bring up localhost../games.html
     *   make stages of commands
         *   cmd with cmd string RegisterCmdHandler<type>(fn)
         *   RegisterCmdHandler<type>(name, fn)
@@ -16,7 +32,9 @@ To Do
         *   SendCmd(name, Dict)
     *   can we make an hft bower that runs bower pre-installed?
     *   can we make an hft git (no)... but pre-installed bower no need for node?
-*   should we get rid of bower?
+*   Sign OSX pkg with account?
+*   Have LocalNewPlayer emit game msgs(JavaScript)
+*   should we get rid of bower?(yes!)
 *   add glow processing to powpow?
 *   fix samsung
 *   fix android non-chrome?

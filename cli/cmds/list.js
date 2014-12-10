@@ -70,10 +70,10 @@ var list = function(args) {
            "path"));
         console.log("------------------------------------------------------------------------------");
         console.log(gameList.map(function(game) {
-          var basePath = game.basePath;
+          var rootPath = game.rootPath;
           if (process.platform.substring(0, 3).toLowerCase() != "win") {
-            if (strings.startsWith(basePath, home.homeDir)) {
-              basePath = basePath.replace(home.homeDir, "~");
+            if (strings.startsWith(rootPath, home.homeDir)) {
+              rootPath = rootPath.replace(home.homeDir, "~");
             }
           }
           return sprintf(format,
@@ -83,7 +83,7 @@ var list = function(args) {
               game.info.happyFunTimes.apiVersion,
               game.info.happyFunTimes.gameType,
               game.info.happyFunTimes.category,
-              basePath);
+              rootPath);
         }).join("\n"));
       } else {
         console.log("no games installed");

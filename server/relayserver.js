@@ -39,6 +39,7 @@ var GameGroup    = require('./game-group');
 var gameInfo     = require('../lib/gameinfo');
 var path         = require('path');
 var Player       = require('./player');
+var strings      = require('../lib/strings');
 var WSServer     = require('./websocketserver');
 
 /**
@@ -210,6 +211,19 @@ var RelayServer = function(servers, options) {
     delete g_gameGroups[gameId];
   }.bind(this);
 
+  var findPackageJSON = function(dirPath) {
+    for (;;) {
+      if (path.dirname(dirPath).length < 10) {
+        break;
+      }
+      var testPath = path.join(dirPath, "package.json");
+      if (fs.existsSync(testPath)) {
+        return testPath;
+      }
+      dirPath = path.dirname(dirPath);
+    }
+  };
+
   /**
    * Assigns a client as the server for a specific game.
    * @method
@@ -221,7 +235,6 @@ var RelayServer = function(servers, options) {
     var cwd = data.cwd;
     if (cwd) {
       var origCwd = cwd;
-      var found = false;
       debug("cwd: " + cwd);
       // Not clear where this belongs. Unity can be in bin
       // so should we fix it in unity or here? Seems like
@@ -230,20 +243,26 @@ var RelayServer = function(servers, options) {
 
       // First check deeper
       cwd = path.join(cwd, "WebPlayerTemplates/HappyFunTimes");
-      for (;;) {
-        if (path.dirname(cwd).length < 10) {
-          break;
-        }
-        var testPath = path.join(cwd, "package.json");
-        if (fs.existsSync(testPath)) {
-          debug("found game at: " + cwd);
-          found = true;
-          break;
-        }
-        cwd = path.dirname(cwd);
+      cwd = findPackageJSON(cwd);
+      if (!cwd) {
+        cwd = findPackageJSON(path.join(origCwd, "../../../Assets/WebPlayerTemplates/HappyFunTimes"));
       }
+
       var read = false;
-      if (found) {
+      if (cwd) {
+        var suffixes = [
+          "Assets/WebPlayerTemplates/HappyFunTimes/package.json",
+          "HappyFunTimes/package.json",
+          "package.json",
+        ];
+        cwd = cwd.replace(/\\/g, "/");
+        for (var xx = 0; xx < suffixes.length; ++xx) {
+          var suffix = suffixes[ii];
+          if (strings.endsWith(cwd, suffix)) {
+            cwd = cwd.substring(0, cwd.length - suffix.length - 1);
+            break;
+          }
+        }
         try {
           var runtimeInfo = gameInfo.readGameInfo(cwd);
           if (runtimeInfo) {
@@ -255,7 +274,7 @@ var RelayServer = function(servers, options) {
         }
       }
       if (!read) {
-        gameId = gameInfo.makeRuntimeGameId(gameId, cwd);
+        gameId = gameInfo.makeRuntimeGameId(gameId, origCwd);
       }
     }
     if (!gameId) {

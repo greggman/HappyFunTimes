@@ -200,7 +200,7 @@ var makeUnity3d = function(runtimeInfo, gamePath, destFolder, options) {
       platInfos.forEach(function(platInfo) {
         var destPath = path.join(destFolder, releaseUtils.safeishName(gameId) + platInfo.platform.zipSuffix);
         var binStart = "bin/";
-        var excludeRE = /^(src|Assets|Library|ProjectSettings|Temp)\//i;
+        var excludeRE = /^(src|Assets(?!\/WebPlayerTemplates)|Library|ProjectSettings|Temp)\//i;
         var filter = function(nativeFilename) {
           var filename = nativeFilename.replace(/\\/g, '/');
           if (excludeRE.test(filename)) {

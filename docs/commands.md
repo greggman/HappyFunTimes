@@ -12,7 +12,7 @@ See [Setting up for devlopment](#setting-up-for-development) for details.
 *   **[hft download](#hft-download-gameId)**
 *   **[hft install](#hft-install-srcpath)**
 *   **[hft list](#hft-list)**
-*   **[hft make-release](#hft-make-release-dstpath)*8
+*   **[hft make-release](#hft-make-release-dstpath)**
 *   **[hft publish](#hft-publish)**
 *   **[hft register](#hft-register)**
 *   **[hft remove](#hft-remove)**

@@ -61,7 +61,7 @@ var uninstall = function(gameIdOrPath, opt_options) {
     var gamePath = path.resolve(gameIdOrPath);
     for (var ii = 0; ii < gameList.length; ++ii) {
       var game = gameList[ii];
-      if (game.basePath == gamePath) {
+      if (game.rootPath == gamePath) {
         installedGame = game;
         break;
       }
@@ -74,7 +74,7 @@ var uninstall = function(gameIdOrPath, opt_options) {
   }
 
   var hftInfo = installedGame.info.happyFunTimes;
-  var gamePath = installedGame.basePath;
+  var gamePath = installedGame.rootPath;
   var files = installedGame.files || [];
 
   var failCount = 0;
@@ -82,13 +82,15 @@ var uninstall = function(gameIdOrPath, opt_options) {
   files.forEach(function(file) {
     var fullPath = path.join(gamePath, file);
     try {
-      var stat = fs.statSync(fullPath);
-      if (stat.isDirectory()) {
-        folders.push(fullPath);
-      } else {
-        log("delete: " + fullPath)
-        if (!options.dryRun) {
-          fs.unlinkSync(fullPath)
+      if (fs.existsSync(fullPath)) {
+        var stat = fs.statSync(fullPath);
+        if (stat.isDirectory()) {
+          folders.push(fullPath);
+        } else {
+          log("delete: " + fullPath)
+          if (!options.dryRun) {
+            fs.unlinkSync(fullPath);
+          }
         }
       }
     } catch (e) {
@@ -112,12 +114,14 @@ var uninstall = function(gameIdOrPath, opt_options) {
   folders.reverse();
   folders.forEach(function(folder) {
     try {
-      // Should I try to delete system files? I think so
-      deleteNoFail(path.join(folder, ".DS_store"));
-      deleteNoFail(path.join(folder, "Thumbs.db"));
-      log("rmdir: " + folder);
-      if (!options.dryRun) {
-        fs.rmdirSync(folder);
+      if (fs.existsSync(folder)) {
+        // Should I try to delete system files? I think so
+        log("rmdir: " + folder);
+        if (!options.dryRun) {
+          deleteNoFail(path.join(folder, ".DS_store"));
+          deleteNoFail(path.join(folder, "Thumbs.db"));
+          fs.rmdirSync(folder);
+        }
       }
     } catch (e) {
       ++failCount;

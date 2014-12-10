@@ -358,12 +358,12 @@ var HFTServer = function(options, startedCallback) {
     var gamePrefixLength = 8;  // "/games/" + the slash after the id
     var gameId = req.params[0];
     var runtimeInfo = g.gameDB.getGameById(gameId);
-    if (!runtimeInfo || !runtimeInfo.basePath) {
+    if (!runtimeInfo || !runtimeInfo.htmlPath) {
       return send404(res, "unknown gameId: " + gameId);
     }
     var parsedUrl = url.parse(req.url);
     var filePath = parsedUrl.pathname;
-    var fullPath = path.normalize(path.join(runtimeInfo.basePath, filePath.substr(gamePrefixLength + gameId.length)));
+    var fullPath = path.normalize(path.join(runtimeInfo.htmlPath, filePath.substr(gamePrefixLength + gameId.length)));
     sendRequestedFileFullPath(req, res, fullPath, runtimeInfo);
   };
 
@@ -475,7 +475,7 @@ var HFTServer = function(options, startedCallback) {
       var templatePath = runtimeInfo.versionSettings.templates[templateName];
       templatePath = path.normalize(path.join(g.cwd, templatePath));
 
-      var contentFullPath = path.normalize(path.join(runtimeInfo.basePath, contentPath));
+      var contentFullPath = path.normalize(path.join(runtimeInfo.htmlPath, contentPath));
 
       fileCache.readFile(templatePath, function(err, templateData) {
         if (err) {
@@ -517,12 +517,12 @@ var HFTServer = function(options, startedCallback) {
       var gamePrefixLength = 8;  // "/games/" + the slash after the id
       var gameId = req.params[0];
       var runtimeInfo = g.gameDB.getGameById(gameId);
-      if (!runtimeInfo || !runtimeInfo.basePath) {
+      if (!runtimeInfo || !runtimeInfo.htmlPath) {
         return send404(res, "unknown gameId: " + gameId);
       }
       var parsedUrl = url.parse(req.url);
       var filePath = parsedUrl.pathname;
-      var fullPath = path.normalize(path.join(runtimeInfo.basePath, filePath.substr(gamePrefixLength + gameId.length)));
+      var fullPath = path.normalize(path.join(runtimeInfo.htmlPath, filePath.substr(gamePrefixLength + gameId.length)));
       nonRequire.addPath(fullPath);
       sendGameRequestedFile(req, res);
     });

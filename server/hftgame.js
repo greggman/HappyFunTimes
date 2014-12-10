@@ -259,7 +259,7 @@ HFTPlayer.prototype.handleLaunch = function(data) {
   }
 
   if (nativeName) {
-    var nativePath = path.join(runtimeInfo.basePath, "bin", nativeName);
+    var nativePath = path.join(runtimeInfo.rootPath, "bin", nativeName);
     if (!fs.existsSync(nativePath)) {
       this.sendError("native game does not exist: " + nativePath);
       return;
@@ -272,6 +272,7 @@ HFTPlayer.prototype.handleLaunch = function(data) {
     } else {
       args.push(nativePath);
     }
+
     var child = child_process.spawn(launcher, args);
     child.unref();
   }
