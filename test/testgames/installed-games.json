@@ -16,5 +16,11 @@
   },
   {
     "path": "hft-testgame-v1.4.0"
+  },
+  {
+    "path": "hft-testgame-v1.6.0-using-v1.7.0"
+  },
+  {
+    "path": "hft-testgame-v1.7.0"
   }
 ]

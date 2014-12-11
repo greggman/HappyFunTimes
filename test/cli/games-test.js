@@ -52,8 +52,10 @@ var hftcli = function(cmd, args, callback) {
    utils.execute('node', cmdArgs, function(err, result) {
      if (err != null) {
        console.log("cmd: " + cmd + " " + args.join(" "));
-       console.log("stdout:" + result.stdout);
-       console.log("stderr:" + result.stderr);
+       if (result) {
+         console.log("stdout:" + result.stdout);
+         console.log("stderr:" + result.stderr);
+       }
      }
      callback(err, result);
    });

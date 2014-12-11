@@ -75,7 +75,7 @@ var install = function(releasePath, opt_destPath, opt_options) {
   zip.load(fs.readFileSync(releasePath));
   var entries = Object.keys(zip.files).sort().map(function(key) { return zip.files[key]; });
   var runtimeInfo;
-  var packageBasePath;
+  var zipRootPath;
 
   var packageLocations = gameInfo.getPackageLocations();
   var checkPackageLocations = function(entry) {
@@ -83,7 +83,7 @@ var install = function(releasePath, opt_destPath, opt_options) {
     var shortPath = safeDirName.substring(safeDirName.indexOf("/") + 1);
     for (var jj = 0; jj < packageLocations.length; ++jj) {
       var packageLocation = packageLocations[jj];
-      if (shortPath == packageLocation) {
+      if (shortPath == packageLocation.packagePath) {
         return entry;
       }
     }
@@ -104,10 +104,10 @@ var install = function(releasePath, opt_destPath, opt_options) {
     if (!packageEntry) {
       throw new Error("no package.json found in " + releasePath);
     }
-    runtimeInfo = gameInfo.parseGameInfo(packageEntry.asText(), path.join(releasePath, packageEntry.name), ".");
-    var packageBasePath = packageEntry.name.replace(/\\/g, "/");
-    packageBasePath = packageBasePath.substring(0, packageBasePath.indexOf("/"));
-
+    zipRootPath = packageEntry.name.replace(/\\/g, "/");
+    zipRootPath = zipRootPath.substring(0, zipRootPath.indexOf("/"));
+    var packagePathFromRoot = packageEntry.name.substring(zipRootPath.length + 1);
+    runtimeInfo = gameInfo.parseGameInfo(packageEntry.asText(), packageEntry.name, zipRootPath);
   } catch (e) {
     console.error("could not parse package.json. Maybe this is not a HappyFunTimes game?");
     console.error(e);
@@ -152,7 +152,7 @@ var install = function(releasePath, opt_destPath, opt_options) {
     if (bad) {
       return;
     }
-    var filePath = entry.name.substring(packageBasePath.length + 1);
+    var filePath = entry.name.substring(zipRootPath.length + 1);
     files.push(filePath);
     var destPath = path.resolve(path.join(destBasePath, filePath));
     if (destPath.substring(0, destBasePath.length) != destBasePath) {

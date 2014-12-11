@@ -68,11 +68,14 @@ describe('server versions', function() {
     (gamedb.getGameById("hft-testgame-v1_2_0")).should.be.ok;
     (gamedb.getGameById("hft-testgame-v1_3_0")).should.be.ok;
     (gamedb.getGameById("hft-testgame-v1_4_0")).should.be.ok;
+    (gamedb.getGameById("hft-testgame-v1_7_0")).should.be.ok;
 
     // This doesn't really seem like a good test. The package.json could
     // fail to load for many reasons. Let's at least check the file is there.
     fs.existsSync(path.join(g_testGamesPath, "hft-testgame-v1.2.0-using-v1.3.0", "package.json")).should.be.true;
     (gamedb.getGameById("hft-testgame-v1_2_0-using-v1_3_0") === undefined).should.be.true;
+    fs.existsSync(path.join(g_testGamesPath, "hft-testgame-v1.6.0-using-v1.7.0", "Assets", "WebPlayerTemplates", "HappyFunTimes", "package.json")).should.be.true;
+    (gamedb.getGameById("hft-testgame-v1_6_0-using-v1_7_0") === undefined).should.be.true;
   });
 
   describe('game needs new hft', function() {
