@@ -34,10 +34,9 @@
 var config  = require('../lib/config');
 var debug   = require('debug')('hftsite');
 var io      = require('../lib/io');
-var restUrl = require('rest-url');
 
 var g = {
-  throttleTime: 1000
+  throttleTime: 1000,
 };
 
 var getTime = function() {
@@ -46,26 +45,23 @@ var getTime = function() {
 
 // Sends the local ip address and port
 var inform = (function() {
-  var lastAddress;
+  var lastAddressesAsStr;
   var lastPort;
   var lastTime = 0;
 
   return function() {
-    if (!g.privateServer && g.port && g.address) {
+    if (!g.privateServer && g.port && g.addresses) {
       var now = getTime();
       var elapsedTime = now - lastTime;
-      if (lastAddress != g.address ||
+      if (lastAddressesAsStr != g.addressesAsStr ||
           lastPort != g.port ||
           elapsedTime > g.throttleTime) {
         lastTime = now;
-        lastAddress = g.address;
+        lastAddressesAsStr = g.addressesAsStr;
         lastPort = g.port;
-        var url = restUrl.make(process.env.HFT_RENDEZVOUS_URL || config.getSettings().settings.rendezvousUrl, {
-          hftip: g.address,
-          hftport: g.port,
-        })
+        var url = process.env.HFT_RENDEZVOUS_URL || config.getSettings().settings.rendezvousUrl;
         debug("ping: " + url);
-        io.sendJSON(url, {}, {}, function(err, result) {
+        io.sendJSON(url, { addresses: g.addresses, port: g.port }, {}, function(err, result) {
           // do I care?
           if (err) {
             console.error(err);
@@ -78,23 +74,27 @@ var inform = (function() {
 
 /**
  * @typedef {Object} HFTSite~Options
- * @property {string?} address ip address eg. "1.2.3.4"
+ * @property {string?} addresses ip address eg. "1.2.3.4"
  * @property {string?} port port eg "18679"
  * @property {boolean?} privateServer true = don't send info to hftsite
  */
 
 /**
- * Set options for hftSize
+ * Set options for hftSite
  *
  * @param {HFTSite~Options} options
  */
 var setup = function(options) {
-  ["address", "port", "privateServer"].forEach(function(key) {
+  ["addresses", "port", "privateServer"].forEach(function(key) {
     var value = options[key];
     if (value !== undefined) {
       g[key] = value;
     }
   });
+
+  if (g.addresses) {
+    g.addressesAsStr = g.addresses.sort().join(",");
+  }
 };
 
 exports.inform = inform;

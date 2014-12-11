@@ -143,7 +143,7 @@ if (args.dns) {
   // This doesn't need to dynamicallly check for a change in ip address
   // because it should only be used in a static ip address sitaution
   // since DNS has to be static for our use-case.
-  var dnsServer = new DNSServer({address: args.address || iputils.getOneIpAddress()});
+  var dnsServer = new DNSServer({address: args.address || iputils.getIpAddresses()[0]});
   server.on('ports', function(ports) {
     if (ports.indexOf("80") < 0 && ports.indexOf(80) < 0) {
       console.error("You specified --dns but happyFunTimes could not use port 80.");

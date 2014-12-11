@@ -50,7 +50,7 @@
     port: 18679,
 
     // The URL for the rendezvous server
-    rendezvousUrl: "http://happyfuntimes.net/api/inform",
+    rendezvousUrl: "http://happyfuntimes.net/api/inform2",
 
     // The URL for the games API.
     gamesUrl: "http://api.superhappyfuntimes.net/hftapi/v0/games",

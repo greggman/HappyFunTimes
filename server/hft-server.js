@@ -100,28 +100,29 @@ var HFTServer = function(options, startedCallback) {
     g[prop] = options[prop];
   });
 
-  var updateIpAddress = function(address) {
+  var updateIpAddresses = function(addresses) {
     if (relayServer) {
       relayServer.setOptions({baseUrl: getBaseUrl()});
     }
-    hftSite.setup({address: address});
+    hftSite.setup({addresses: addresses});
     hftSite.inform();
     if (appleCaptivePortalHandler) {
-      appleCaptivePortalHandler.setOptions({address: address});
+      appleCaptivePortalHandler.setOptions({address: addresses[0]});
     }
   };
 
   var getAddress = (function() {
-    var oldAddress;
+    var oldAddressesAsStr;
 
     return function() {
-      var address = g.address || iputils.getOneIpAddress();
-      if (address !== oldAddress) {
-        oldAddress = address;
-        console.log("using ip address: " + address);
-        updateIpAddress(address);
+      var addresses = g.address ? [g.address] : iputils.getIpAddresses();
+      var addressesAsStr = addresses.join(",");
+      if (addressesAsStr !== oldAddressesAsStr) {
+        oldAddressesAsStr = addressesAsStr;
+        console.log("using ip address: " + addresses[0] + (addresses.length > 1 ? ". use --address=<ip> to pick one" : ""));
+        updateIpAddresses(addresses);
       }
-      return address;
+      return addresses[0];
     };
   }());
 
