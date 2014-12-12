@@ -62,7 +62,7 @@ var register = function(args) {
 exports.usage = {
   usage: "",
   prepend: [
-    "register asks superhappyfuntimes to add/update your game its database",
+    "register asks superhappyfuntimes to add/update your game in its database",
   ],
   options: [
     { option: 'repo-url',   type: 'String',  description: "url to repo. Uses 'origin' from current folder by default"},
