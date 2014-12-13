@@ -116,6 +116,9 @@ var HFTServer = function(options, startedCallback) {
 
     return function() {
       var addresses = g.address ? [g.address] : iputils.getIpAddresses();
+      if (addresses.length == 0) {
+        addresses = ["127.0.0.1"];
+      }
       var addressesAsStr = addresses.join(",");
       if (addressesAsStr !== oldAddressesAsStr) {
         oldAddressesAsStr = addressesAsStr;
