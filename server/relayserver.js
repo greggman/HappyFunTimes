@@ -257,7 +257,7 @@ var RelayServer = function(servers, options) {
         ];
         cwd = cwd.replace(/\\/g, "/");
         for (var xx = 0; xx < suffixes.length; ++xx) {
-          var suffix = suffixes[ii];
+          var suffix = suffixes[xx];
           if (strings.endsWith(cwd, suffix)) {
             cwd = cwd.substring(0, cwd.length - suffix.length - 1);
             break;
