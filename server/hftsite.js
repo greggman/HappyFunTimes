@@ -34,6 +34,7 @@
 var config  = require('../lib/config');
 var debug   = require('debug')('hftsite');
 var io      = require('../lib/io');
+var url     = require('url');
 
 var g = {
   throttleTime: 1000,
@@ -59,11 +60,13 @@ var inform = (function() {
         lastTime = now;
         lastAddressesAsStr = g.addressesAsStr;
         lastPort = g.port;
-        var url = process.env.HFT_RENDEZVOUS_URL || config.getSettings().settings.rendezvousUrl;
-        debug("ping: " + url);
-        io.sendJSON(url, { addresses: g.addresses, port: g.port }, {}, function(err, result) {
+        var hftUrl = process.env.HFT_RENDEZVOUS_URL || config.getSettings().settings.rendezvousUrl;
+        var parsedUrl = url.parse(hftUrl);
+        debug("ping: " + hftUrl);
+        io.sendJSON(hftUrl, { addresses: g.addresses, port: g.port }, {}, function(err, result) {
           // do I care?
           if (err) {
+            console.error("Could not contact: " + parsedUrl.host);
             console.error(err);
           }
         });
