@@ -83,12 +83,21 @@ describe('server versions', function() {
       hftServer.getP("http://localhost:8087/games/hft-testgame1/gameview.html").then(function(res) {
         res.body.should.containEql("new version of HappyFunTimes");
       }).then(done, done);
-    });
 
+    });
     it('serves message: controller needs new hft template', function(done) {
       hftServer.getP("http://localhost:8087/games/hft-testgame1/index.html").then(function(res) {
         res.body.should.containEql("Please upgrade HappyFunTimes");
       }).then(done, done);
+    });
+
+    it('gamestart message: needs new hft is true', function(done) {
+      var gameId = 'hft-testgame1';
+      var testGame1 = new TestGame({gameId: gameId, hftServer: hftServer});
+      testGame1.isConnected().should.be.ok;
+      testGame1.getNeedNewHFT().should.be.true;
+      testGame1.close();
+      done();
     });
   });
 

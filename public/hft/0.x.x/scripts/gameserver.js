@@ -71,12 +71,22 @@ define([
     var _players = {};  // by id
     var _totalPlayerCount = 0;
     var _eventListeners = {};
-    var _id;
-    var _getters = {
-      id: function() {
-        throw "you can't read the id before you've connected";
-      },
+    var _connectData = {
+      id: undefined,
+      needNewHFT: undefined,
     };
+    var _getters = {};
+    Object.keys(_connectData).forEach(function(key) {
+      _getters[key] = function() {
+        throw "you can't read " + key + " before you've connected";
+      };
+      Object.defineProperty(this, key, {
+        get: function() { return _getters[key](); },
+        set: function() {},
+        enumerable: true,
+        configurable: true,
+      });
+    }.bind(this));
     var _reloaded = false;
 
     var readOldState = (function() {
@@ -101,13 +111,6 @@ define([
         throw new Error("can't derive gameId");
       }
     }
-
-    Object.defineProperty(this, 'id', {
-      get: function() { return _getters.id(); },
-      set: function() {},
-      enumerable: true,
-      configurable: true,
-    });
 
     /**
      * Event that we've connected to happyFunTimes
@@ -217,10 +220,12 @@ define([
     };
 
     var handleGameStart_ = function(msg) {
-      _id = msg.data.id;
-      _getters.id = function() {
-        return _id;
-      };
+      Object.keys(_connectData).forEach(function(key) {
+        _connectData[key] = msg.data[key];
+        _getters[key] = function() {
+          return _connectData[key];
+        };
+      });
       sendEvent_('connect', [msg.data]);
     };
 
