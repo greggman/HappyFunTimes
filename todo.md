@@ -1,30 +1,28 @@
 To Do
 =====
 
-*   send all ip addresses to hft.net
-*   make windows install for all users (optionally?)
-*   remove connect/disconnect from simple and unitysimple examples
-*   why do I scan tree in readInfo?
+*   check 1.7.0 projects tell you you need new version of HFT
 *   unity plugin
-    *   Have LocalNewPlayer emit game msgs
+    *   make it warn you you need a new version of HFT.
+    .   Have LocalNewPlayer emit game msgs
     *   make it set project settings
         *   Run in background
         *   Start FullScreen
     *   make it set run-in-background
     *   make package.json editor
-    *   make "new project" button?
-    *   make "start HFT?" button (or should running it be enough)
-    *   make "location of HFT" button?
+    .   make "new project" button? (no need. Install plugin)
+    .   make "start HFT?" button (or should running it be enough)
+    .   make "location of HFT" button? (asks if can't run)
     *   add HFT->Export the exports all 3 to the correct palce
     *   add HFT->Publish that does an export and then published? (needs git currently).
-    *   When running HFT from Unity don't bring up localhost../games.html
+    .   When running HFT from Unity don't bring up localhost../games.html
     *   make stages of commands
-        *   cmd with cmd string RegisterCmdHandler<type>(fn)
-        *   RegisterCmdHandler<type>(name, fn)
-        *   RegisterCmdHandler(fn);
-        *   Use RegisterCmdHandler(fn) for gamestart
-        *   SendCmd(name, MessageCmdData)
-        *   SendCmd(name, Dict)
+        .   cmd with cmd string RegisterCmdHandler<type>(fn)
+        .   RegisterCmdHandler<type>(name, fn)
+        .   RegisterCmdHandler(fn);
+        .   Use RegisterCmdHandler(fn) for gamestart
+        .   SendCmd(name, MessageCmdData)
+        .   SendCmd(name, Dict)
     *   can we make an hft bower that runs bower pre-installed?
     *   can we make an hft git (no)... but pre-installed bower no need for node?
 *   Sign OSX pkg with account?
@@ -810,6 +808,10 @@ Runs Repo noid
 Done
 ====
 
+*   why do I scan tree in readInfo? (to find icon and screenshots)
+*   remove connect/disconnect from simple and unitysimple examples
+*   make windows install for all users (optionally?) (no, fixed permissions to "user")
+*   send all ip addresses to hft.net
 *   Make make work with WebPlayerTemplates
 *   compress hft.net!
 *   change basePath to htmlPath, packagePath, rootPath
