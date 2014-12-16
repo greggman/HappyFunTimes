@@ -30,7 +30,6 @@ I'm sorry there's so many steps. It's not as hard as it looks. Trust me.
 ### TL;DR version
 
 *   install happyfuntimes (http://superhappyfuntimes.net/install) [(info)](#happyfuntimes)
-*   if on Windows run happyfuntimes (it must be run once on Windows)
 *   install node.js (http://nodejs.org/download/) [(info)](#nodejs)
 *   if on windows install msysgit (http://msysgit.github.io/) [(info)](#msysgit)
 *   install bower `sudo npm install -g bower` (no sudo on windows) [(info)](#bower)
@@ -58,15 +57,12 @@ I'm sorry there's so many steps. It's not as hard as it looks. Trust me.
     files because they'll be pointing to one installation.
 
         OSX: ~/Library/Application Support/HappyFunTimes
-        Windows: /Users/<name>/AppData/Local/Greggman/HappyFunTimes or
-             or  /Users/<name>/AppData/Roaming/Greggman/HappyFunTimes
+        Windows: /Users/<name>/AppData/Local/HappyFunTimes
         Linux: ~/.happyfuntimes
 
-    After that either run happyfuntimes from the installer to make that
-    the installation or type `node start.js --app-mode` from the
+    After that either run happyfuntimes you installed using the installer to make that
+    the configured version, or, type `node start.js --app-mode` from the
     cloned folder if you're using a cloned repo.
-
-*   <a id="nodejs"/>Install [node.js](http://nodejs.org/download/).
 
 *   <a id="msysgit"/>If on Windows install msysgit (http://msysgit.github.io/)
 
@@ -85,16 +81,7 @@ I'm sorry there's so many steps. It's not as hard as it looks. Trust me.
 
     Don't forget that `-g`. Also you might need `sudo` on OSX or Linux
 
-*   <a id="hftcli"/>Install hft-cli.
-
-    hft cli adds a bunch of commands you can type in the terminal to do development
-    with HappyFunTimes
-
-    Type `npm install -g hft-cli`
-
-    Don't forget that `-g`. Also you might need `sudo` on OSX or Linux
-
-*   <a id="clone"/>Clone a game. [Pick one from the list](examples.md)
+*   <a id="clone"/>Download or Clone a game. [Pick one from the list](examples.md)
 
     for example, assuming you have git installed
 
@@ -104,7 +91,7 @@ I'm sorry there's so many steps. It's not as hard as it looks. Trust me.
     http://github.com/greggman/hft-simple you should see a "Download ZIP"
     button on the right side.
 
-*   cd into the root of the repo you cloned or you unzipped.
+*   If this is **not a unity** sample then cd into the root of the repo you cloned or you unzipped.
 
     (eg. `cd hft-simple`)
 
