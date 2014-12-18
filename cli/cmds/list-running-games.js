@@ -37,9 +37,7 @@ var strings       = require('../../lib/strings');
 
 var listRunningGames = function(args) {
 
-  var client = new HFTGameClient();
-  return client.getRunningGames()
-  .then(function(games) {
+  var printGames = function(games) {
     if (args.full) {
       console.log(JSON.stringify(games, undefined, "  "));
     } else {
@@ -70,6 +68,13 @@ var listRunningGames = function(args) {
         console.log("no running games");
       }
     }
+  };
+
+  var client = new HFTGameClient();
+  return client.getRunningGames()
+  .then(printGames)
+  .catch(function() {
+    printGames([]);
   });
 };
 

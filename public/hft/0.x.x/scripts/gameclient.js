@@ -138,14 +138,25 @@ define(['./virtualsocket'], function(VirtualSocket) {
     }.bind(this);
 
     var disconnected_ = function() {
-      log("disconnected");
-      sendEvent_('disconnect');
-      eventListeners = {};
+      if (g_socket) {
+        g_socket = undefined;
+        log("disconnected");
+        sendEvent_('disconnect');
+        eventListeners = {};
+      }
     }.bind(this);
 
     var processMessage_ = function(msg) {
       sendEvent_(msg.cmd, [msg.data]); // FIX: no need for this array?
     }.bind(this);
+
+    var handleError_ = function(err) {
+      sendEvent_('error');
+      if (g_socket) {
+        g_socket.close();
+      }
+      disconnected_();
+    };
 
     var connect_ = function() {
       g_sendQueue = [];
@@ -153,6 +164,7 @@ define(['./virtualsocket'], function(VirtualSocket) {
       g_socket.on('connect', connected_.bind(this));
       g_socket.on('message', processMessage_.bind(this));
       g_socket.on('disconnect', disconnected_.bind(this));
+      g_socket.on('error', handleError_.bind(this));
     }.bind(this);
 
     var sendCmdLowLevel = function(cmd, data) {
