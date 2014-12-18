@@ -59,6 +59,7 @@ var HFTGameClient = function(options) {
   var noop = function() { };
   client.addEventListener('hftInfo', noop);
   client.addEventListener('connect', noop);
+  client.addEventListener('error', noop);
 
   this.disconnectGame = function(filter) {
     return new Promise(function(resolve, reject) {
