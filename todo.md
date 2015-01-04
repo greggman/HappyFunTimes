@@ -10,6 +10,7 @@ To Do
         *   Start FullScreen
     *   make it set run-in-background
     *   make package.json editor
+    *   remove namespaces from samples
     .   make "new project" button? (no need. Install plugin)
     .   make "start HFT?" button (or should running it be enough)
     .   make "location of HFT" button? (asks if can't run)
