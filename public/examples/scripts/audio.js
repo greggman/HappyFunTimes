@@ -56,9 +56,9 @@ define([
       src.loop = opt_loop || false;
       src.connect(g_context.destination);
       if (src.start) {
-        src.start(opt_when);
+        src.start(opt_when || 0);
       } else {
-        src.noteOn(opt_when);
+        src.noteOn(opt_when || 0);
       }
       return src;
     };
