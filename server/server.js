@@ -29,7 +29,9 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-"use strict";
+/*eslint no-process-exit:0*/
+
+'use strict';
 
 var settingsOptionSpec = {
       option: 'settings',         type: 'String',     description: 'settings: key=value, ',
@@ -68,7 +70,7 @@ var printHelp = function() {
   Object.keys(require('../lib/config').getSettings().settings).forEach(function(key) {
     settings.push(key);
   });
-  settingsOptionSpec.description += settings.join(", ");
+  settingsOptionSpec.description += settings.join(', ');
 
   console.log(optionator.generateHelp());
   process.exit(0);
@@ -81,13 +83,13 @@ if (args.help) {
 log.config(args);
 config.setup(args);
 if (args.settings) {
-  var settings = config.getSettings().settings
-  args.settings.split(",").forEach(function(setting) {
-    var keyValue = setting.split("=");
+  var settings = config.getSettings().settings;
+  args.settings.split(',').forEach(function(setting) {
+    var keyValue = setting.split('=');
     var key = keyValue[0];
     var value = keyValue[1];
     if (!settings[key]) {
-      console.error("no setting: '" + key + "'");
+      console.error('no setting: "' + key + '"');
       printHelp();
     }
     settings[key] = value;
@@ -99,7 +101,6 @@ if (args.appMode) {
 }
 
 var browser   = require('../lib/browser');
-var debug     = require('debug')('server');
 var DNSServer = require('./dnsserver');
 var iputils   = require('../lib/iputils');
 var Promise   = require('promise');
@@ -114,18 +115,18 @@ var launchBrowser = function(err) {
     } else {
       if (args.appMode) {
         console.log([
-          "",
-          "---==> HappyFunTimes Running <==---",
-          "",
-        ].join("\n"))
+          '',
+          '---==> HappyFunTimes Running <==---',
+          '',
+        ].join('\n'));
       }
     }
   };
 
   var p;
   if (args.appMode || args.show) {
-    var name = args.show || "games";
-    p = browser.launch("http://localhost:" + server.getSettings().port + "/" + name + ".html", config.getConfig().preferredBrowser);
+    var name = args.show || 'games';
+    p = browser.launch('http://localhost:' + server.getSettings().port + '/' + name + '.html', config.getConfig().preferredBrowser);
   } else {
     p = Promise.resolve();
   }
@@ -135,7 +136,7 @@ var launchBrowser = function(err) {
     console.error(err);
     next();
   });
-}
+};
 
 server = new HFTServer(args, launchBrowser);
 
@@ -143,11 +144,13 @@ if (args.dns) {
   // This doesn't need to dynamicallly check for a change in ip address
   // because it should only be used in a static ip address sitaution
   // since DNS has to be static for our use-case.
-  var dnsServer = new DNSServer({address: args.address || iputils.getIpAddresses()[0]});
+  (function() {
+    return new DNSServer({address: args.address || iputils.getIpAddresses()[0]});
+  }());
   server.on('ports', function(ports) {
-    if (ports.indexOf("80") < 0 && ports.indexOf(80) < 0) {
-      console.error("You specified --dns but happyFunTimes could not use port 80.");
-      console.error("Do you need to run this as admin or use sudo?");
+    if (ports.indexOf('80') < 0 && ports.indexOf(80) < 0) {
+      console.error('You specified --dns but happyFunTimes could not use port 80.');
+      console.error('Do you need to run this as admin or use sudo?');
       process.exit(1);
     }
   });
