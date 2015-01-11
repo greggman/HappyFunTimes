@@ -54,8 +54,8 @@ var inform = (function() {
     if (!g.privateServer && g.port && g.addresses) {
       var now = getTime();
       var elapsedTime = now - lastTime;
-      if (lastAddressesAsStr != g.addressesAsStr ||
-          lastPort != g.port ||
+      if (lastAddressesAsStr !== g.addressesAsStr ||
+          lastPort !== g.port ||
           elapsedTime > g.throttleTime) {
         lastTime = now;
         lastAddressesAsStr = g.addressesAsStr;
@@ -63,7 +63,7 @@ var inform = (function() {
         var hftUrl = process.env.HFT_RENDEZVOUS_URL || config.getSettings().settings.rendezvousUrl;
         var parsedUrl = url.parse(hftUrl);
         debug("ping: " + hftUrl);
-        io.sendJSON(hftUrl, { addresses: g.addresses, port: g.port }, {}, function(err, result) {
+        io.sendJSON(hftUrl, { addresses: g.addresses, port: g.port }, {}, function(err) {
           // do I care?
           if (err) {
             console.error("Could not contact: " + parsedUrl.host);
