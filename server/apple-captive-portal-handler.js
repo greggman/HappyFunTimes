@@ -31,7 +31,6 @@
 
 "use strict";
 
-var debug       = require('debug')('server');
 var path        = require('path');
 var querystring = require('querystring');
 var strings     = require('../lib/strings');
@@ -114,7 +113,7 @@ AppleCaptivePortalHandler.prototype.setOptions = function(options) {
  *        "/enter-name.html"
  */
 AppleCaptivePortalHandler.prototype.setFirstPath = function(path) {
-  this.firstPath = path
+  this.firstPath = path;
 };
 
 /**
@@ -130,8 +129,8 @@ AppleCaptivePortalHandler.prototype.check = function(req, res) {
   var filePath = querystring.unescape(parsedUrl.pathname);
   var sessionId = filePath;
   var isCheckingForApple = req.headers["user-agent"] && strings.startsWith(req.headers["user-agent"], "CaptiveNetworkSupport");
-  var isLoginURL = (filePath == "/game-login.html");
-  var isIndexURL = (filePath == "/index.html" || filePath == "/" || filePath == this.firstPath);
+  var isLoginURL = (filePath === "/game-login.html");
+  var isIndexURL = (filePath === "/index.html" || filePath === "/" || filePath === this.firstPath);
 
   if (isIndexURL) {
     sessionId = parsedUrl.query.sessionId;

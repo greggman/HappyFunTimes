@@ -67,9 +67,9 @@ var ES6Support = function(options) {
       filename: filename + ".src",
       sourceMaps: true,
       // etc other Traceur options
-      modules: 'commonjs'
+      modules: 'commonjs',
     });
-    var src = compiler.compile(content)
+    var src = compiler.compile(content);
     var mapName = filename + ".map";
     debug("adding srcmap: " + mapName);
     var srcMap = compiler.getSourceMap();
@@ -78,7 +78,7 @@ var ES6Support = function(options) {
   };
 
   var isES6 = function(filename) {
-    return path.extname(filename) == ".js6";
+    return path.extname(filename) === ".js6";
   };
 
   var isES6Map = function(filename) {

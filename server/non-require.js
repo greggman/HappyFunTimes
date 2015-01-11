@@ -62,7 +62,7 @@ var NonRequire = function(options) {
 
   this.addPath = function(filePath) {
     filePath = filePath.replace(/\\/g, "/");
-    debug("addPath: " + filePath)
+    debug("addPath: " + filePath);
     validPaths[filePath] = true;
   };
 
@@ -86,7 +86,7 @@ var NonRequire = function(options) {
       },
     };
 
-    requirejs.optimize(config, function (buildResponse) {
+    requirejs.optimize(config, function(/*buildResponse*/) {
       //buildResponse is just a text output of the modules
       //included. Load the built file for the contents.
       //Use config.out to get the optimized file contents.
