@@ -166,7 +166,7 @@ Game.prototype.forEachPlayer = function(fn) {
   for (var id in this.players) {
     var player = this.players[id];
     fn(player);
-  };
+  }
 };
 
 /**
@@ -312,12 +312,12 @@ Game.prototype.assignClient = function(client, data) {
   };
 };
 
-Game.prototype.sendSystemCmd_ = function(cmd, data) {
+Game.prototype.sendSystemCmd = function(cmd, data) {
   this.send(null, {cmd: "system", data: {cmd: cmd, id: -1, data: data}});
 };
 
 Game.prototype.sendQuit = function() {
-  this.sendSystemCmd_('exit', {});
+  this.sendSystemCmd('exit', {});
 };
 
 Game.prototype.sendGameDisconnect = function(otherGame) {

@@ -57,7 +57,7 @@ GameGroup.prototype.getGameById = function(id) {
   // This is LAME! Should switch to hash like players
   for (var ii = 0; ii < this.games.length; ++ii) {
     var game = this.games[ii];
-    if (game.id == id) {
+    if (game.id === id) {
       return game;
     }
   }
@@ -75,7 +75,7 @@ GameGroup.prototype.removeGame = function(game) {
   }
 
   debug("remove game: num games = " + this.games.length);
-  if (this.games.length == 0) {
+  if (this.games.length === 0) {
     this.relayServer.removeGameGroup(this.gameId);
   }
 };
@@ -86,7 +86,7 @@ GameGroup.prototype.addPlayer = function(player) {
     return this.games[0];
   }
 
-  console.error("no games to add player to in gamegroup: " + this.gameId)
+  console.error("no games to add player to in gamegroup: " + this.gameId);
 };
 
 /**
@@ -98,7 +98,7 @@ GameGroup.prototype.addPlayer = function(player) {
 GameGroup.prototype.addPlayerToGame = function(player, id, data) {
   for (var ii = 0; ii < this.games.length; ++ii) {
     var game = this.games[ii];
-    if (game.id == id) {
+    if (game.id === id) {
       game.addPlayer(player, data);
       return;
     }
@@ -140,7 +140,7 @@ GameGroup.prototype.assignClient = function(client, data) {
       if (data.id) {
         // Don't check the last game, that's the one we just added.
         for (var ii = 0; ii < this.games.length - 1; ++ii) {
-          if (this.games[ii].id == data.id) {
+          if (this.games[ii].id === data.id) {
             oldGame = this.games[ii];
             break;
           }

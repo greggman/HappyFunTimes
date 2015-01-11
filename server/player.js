@@ -43,7 +43,6 @@ var debug        = require('debug')('player');
  * @param {string} id a unique id for this player.
  */
 var Player = function(client, relayServer, id) {
-  this.game;
   this.client = client;
   this.relayServer = relayServer;
   this.id = id;
@@ -98,7 +97,7 @@ var Player = function(client, relayServer, id) {
     }
 
     handler(message.data);
-  }.bind(this);
+  };
 
   var onDisconnect = function() {
     debug("" + this.id + ": disconnected");
