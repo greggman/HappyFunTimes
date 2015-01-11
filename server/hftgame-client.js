@@ -53,9 +53,6 @@ var HFTGameClient = function(options) {
     quiet: true,
   });
 
-  var handleConnected = function(data) {
-  };
-
   var noop = function() { };
   client.addEventListener('hftInfo', noop);
   client.addEventListener('connect', noop);
@@ -63,7 +60,7 @@ var HFTGameClient = function(options) {
 
   this.disconnectGame = function(filter) {
     return new Promise(function(resolve, reject) {
-      var handleDisconnected = function(data) {
+      var handleDisconnected = function(/* data */) {
         reject("disconnected from hft");
       };
 
@@ -96,7 +93,7 @@ var HFTGameClient = function(options) {
 
   this.exitGame = function(filter) {
     return new Promise(function(resolve, reject) {
-      var handleDisconnected = function(data) {
+      var handleDisconnected = function(/* data */) {
         reject("disconnected from hft");
       };
 
@@ -125,7 +122,7 @@ var HFTGameClient = function(options) {
 
   this.getRunningGames = function() {
     return new Promise(function(resolve, reject) {
-      var handleDisconnected = function(data) {
+      var handleDisconnected = function(/* data */) {
         reject("disconnected from hft");
       };
 
@@ -146,7 +143,7 @@ var HFTGameClient = function(options) {
 
   this.getAvailableGames = function() {
     return new Promise(function(resolve, reject) {
-      var handleDisconnected = function(data) {
+      var handleDisconnected = function(/* data */) {
         reject("disconnected from hft");
       };
 
