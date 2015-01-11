@@ -49,6 +49,7 @@ var DNSServer = function(options) {
 
     server.on('request', function (request, response) {
       debug("response: " + address + " : " + request.question[0].name);
+      /*eslint new-cap:0*/
       response.answer.push(dns.A({
         name: request.question[0].name,
         address: address,
@@ -57,7 +58,7 @@ var DNSServer = function(options) {
       response.send();
     });
 
-    server.on('error', function (err, buff, req, res) {
+    server.on('error', function (err /*, buff, req, res */) {
       console.error(err);
     });
 
@@ -69,7 +70,7 @@ var DNSServer = function(options) {
     }
   };
 
-  if (process.platform == 'darwin') {
+  if (process.platform === 'darwin') {
     // Wait for /etc/resolv.conf to exist
     // Apparently this file is written by the OS but, at least with my own router,
     // it can take a 10-30 seconds until it's written. It's probably some kind of timeout.

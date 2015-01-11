@@ -31,10 +31,6 @@
 
 "use strict";
 
-var debug = require('debug')('heart-monitor');
-
-var nextId = 0;
-
 /**
  * @typedef {Object} HeartMonitor~Options
  * @property {callback} onDead
@@ -44,7 +40,6 @@ var nextId = 0;
 
 var HeartMonitor = function(options) {
 
-  var id = ++nextId;
   var intervalId;
   var timeout = 15; // 15 seconds
   var timeoutCheckInterval = timeout / 2;
@@ -57,7 +52,7 @@ var HeartMonitor = function(options) {
 
   var resetTimeout = function() {
     timeOfLastMessageFromPlayer = getTime();
-  }.bind(this);
+  };
   this.stillAlive = resetTimeout();
 
   var checkTimeout = function() {
@@ -75,14 +70,14 @@ var HeartMonitor = function(options) {
         options.pingFn();
       }
     }
-  }.bind(this);
+  };
   intervalId = setInterval(checkTimeout, timeoutCheckInterval * 1000);
   resetTimeout();
 
-  var pingAcknowledged = function(data) {
+  var pingAcknowledged = function() {
     waitingForPing = false;
     resetTimeout();
-  }.bind(this);
+  };
   this.acknowledgePing = pingAcknowledged;
 
   this.close = function() {
