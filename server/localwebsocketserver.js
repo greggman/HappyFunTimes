@@ -31,13 +31,12 @@
 
 "use strict";
 
-var debug  = require('debug')('localwebsocketserver');
 var events = require('events');
 
 /**
  * A Mock WebSocketServer.
  */
-var LocalWebSocketServer = function(server) {
+var LocalWebSocketServer = function() {
   var eventEmitter = new events.EventEmitter();
 
   this.on = function(eventName, fn) {

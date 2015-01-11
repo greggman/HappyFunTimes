@@ -63,7 +63,7 @@ var LoopbackServerSide = function() {
   };
 
   this.on = function(eventName, fn) {
-    if (eventName == 'message') {
+    if (eventName === 'message') {
       fn = (function(fn) {
         return function(event) {
           fn(JSON.parse(event.data));
@@ -112,7 +112,7 @@ var LoopbackClient = function() {
   this.server = server;
 
   this.on = function(eventName, fn) {
-    if (eventName == 'message') {
+    if (eventName === 'message') {
       fn = (function(fn) {
         return function(event) {
           fn(JSON.parse(event.data));
@@ -131,7 +131,7 @@ var LoopbackClient = function() {
 
   this.send = function(msg) {
     if (connected) {
-      server.emitEvent('message',{data:JSON.stringify(msg)});
+      server.emitEvent('message', {data:JSON.stringify(msg)});
     }
   };
 
