@@ -29,13 +29,13 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-"use strict";
+'use strict';
 
 var debug        = require('debug')('websocketserver');
 var HeartMonitor = require('./heart-monitor');
 
 var WSServer = function(server) {
-  debug("Using WebSockets directly");
+  debug('Using WebSockets directly');
 
   var WebSocketServer = require('ws').Server;
   var wss = new WebSocketServer({server: server});
@@ -55,15 +55,8 @@ var WSServer = function(server) {
       }
     };
 
-    var emit = function(event, data) {
-      var handler = eventHandlers[event];
-      if (handler) {
-        handler(data);
-      }
-    };
-
     this.on = function(eventName, fn) {
-      if (eventName == 'disconnect') {
+      if (eventName === 'disconnect') {
         eventName = 'close';
         // Wrap close event so it only happens once.
         if (fn) {
@@ -85,10 +78,10 @@ var WSServer = function(server) {
         }.bind(this));
       }
 
-      if (eventName == 'message') {
+      if (eventName === 'message') {
         fn = function(origFn) {
-          return function(data, flags) {
-            if (data == 'P') {
+          return function(data) {
+            if (data === 'P') {
               heartMonitor.acknowledgePing();
               return;
             }
@@ -110,14 +103,14 @@ var WSServer = function(server) {
     };
 
     this.close = function() {
-      debug("close wsclient")
+      debug('close wsclient');
       heartMonitor.close();
       this.client.close();
     };
 
-    var heartMonitor = new HeartMonitor({
+    heartMonitor = new HeartMonitor({
       onDead: function() {
-        debug("dead: closed");
+        debug('dead: closed');
         this.close();
       }.bind(this),
       pingFn: function() {
@@ -131,7 +124,7 @@ var WSServer = function(server) {
   };
 
   this.on = function(eventName, fn) {
-    if (eventName == 'connection') {
+    if (eventName === 'connection') {
       wss.on(eventName, function(client) {
         var wrapper = new WSClient(client);
         fn(wrapper);

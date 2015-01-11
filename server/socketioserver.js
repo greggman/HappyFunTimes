@@ -29,12 +29,12 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-"use strict";
+'use strict';
 
 var debug = require('debug')('socketioserver');
 
 var SocketIOServer = function(server) {
-  debug("Using Socket.io");
+  debug('Using Socket.io');
 
   var sio = require('socket.io');
   var io = sio.listen(server);
@@ -48,7 +48,7 @@ var SocketIOServer = function(server) {
     };
 
     this.on = function(eventName, fn) {
-      if (!eventHandler[eventName]) {
+      if (!eventHandlers[eventName]) {
         this.client.on(eventName, function() {
           var fn = eventHandlers[eventName];
           if (fn) {
@@ -56,12 +56,12 @@ var SocketIOServer = function(server) {
           }
         }.bind(this));
       }
-      eventHandler[eventName] = fn;
+      eventHandlers[eventName] = fn;
     };
   };
 
   this.on = function(eventName, fn) {
-    if (eventName == 'connection') {
+    if (eventName === 'connection') {
       io.sockets.on(eventName, function(client) {
         var wrapper = new SIOClient(client);
         fn(wrapper);
