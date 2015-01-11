@@ -28,11 +28,24 @@ module.exports = function(grunt) {
         'docs/relayserver',
         'docs/hft',
     ],
+    eslint: {
+        target: ['server/hft-server.js'],
+        options: {
+            config: 'dev/conf/eslint.json',
+            //rulesdir: ['dev/rules'],
+            plugin: [
+                'eslint-plugin-google-camelcase',
+                'eslint-plugin-one-variable-per-var',
+                'eslint-plugin-require-trailing-comma',
+            ],
+        },
+    },
   });
 
   grunt.loadNpmTasks('grunt-contrib-clean');
   grunt.loadNpmTasks('grunt-jsdoc');
+  grunt.loadNpmTasks('grunt-eslint');
 
-  grunt.registerTask('default', ['clean', 'jsdoc']);
+  grunt.registerTask('default', ['eslint', 'clean', 'jsdoc']);
 };
 
