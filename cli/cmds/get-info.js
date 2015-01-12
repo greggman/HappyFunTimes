@@ -31,7 +31,6 @@
 "use strict";
 
 var fs      = require('fs');
-var path    = require('path');
 var Promise = require('promise');
 
 var getInfo = function(args) {
@@ -75,7 +74,7 @@ exports.usage = {
   usage: "[pathToGameOrId]",
   prepend: "get info for game",
   options: [
-  ]
+  ],
 };
 exports.cmd = getInfo;
 

@@ -45,9 +45,10 @@ function printUsage(globalOptions, cmdUsage, cmdName) {
     helpStyle: cmdUsage.helpStyle,
   });
   console.log(o.generateHelp());
-};
+}
 
 function badArgs(cmdModule, errorMsg) {
+  /*eslint no-process-exit:0*/
   console.error("ERROR: " + errorMsg);
   printUsage(cmdModule.exports.globalOptions, cmdModule.exports.usage, cmdModule.exports.name);
   process.exit(1);

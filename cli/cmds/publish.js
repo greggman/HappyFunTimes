@@ -39,7 +39,7 @@ var utils    = require('../utils');
 var bumpTypes = ['major', 'premajor', 'minor', 'preminor', 'patch', 'prepatch', 'prerelease'];
 
 var askPrompt = function(questions) {
-  return new Promise(function(fulfill, reject) {
+  return new Promise(function(fulfill /* , reject */) {
     asks.prompt(questions, function(answers) {
       fulfill(answers);
     });
@@ -49,7 +49,7 @@ var askPrompt = function(questions) {
 
 var publish = function(args) {
   return new Promise(function(resolve, reject) {
-    if (args._.length != 0) {
+    if (args._.length !== 0) {
       utils.badArgs(module, "too many arguments");
       reject();
       return;
@@ -91,11 +91,13 @@ var publish = function(args) {
 
     var promise;
     if (!password) {
-      var questions = [{
-        name: 'password',
-        type: 'password',
-        message: 'github password:',
-      }];
+      var questions = [
+        {
+          name: 'password',
+          type: 'password',
+          message: 'github password:',
+        },
+      ];
       if (!username) {
         questions.unshift({
           name: 'username',

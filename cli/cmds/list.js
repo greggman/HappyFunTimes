@@ -31,13 +31,12 @@
 "use strict";
 
 var home    = require('../../lib/home');
-var path    = require('path');
 var Promise = require('promise');
 var sprintf = require('sprintf-js').sprintf;
 var strings = require('../../lib/strings');
 
 var list = function(args) {
-  return new Promise(function(resolve, reject) {
+  return new Promise(function(resolve /* , reject */) {
     var gamedb = require('../../lib/gamedb');
     var gameList = gamedb.getGames();
 
@@ -71,14 +70,14 @@ var list = function(args) {
         console.log("------------------------------------------------------------------------------");
         console.log(gameList.map(function(game) {
           var rootPath = game.rootPath;
-          if (process.platform.substring(0, 3).toLowerCase() != "win") {
+          if (process.platform.substring(0, 3).toLowerCase() !== "win") {
             if (strings.startsWith(rootPath, home.homeDir)) {
               rootPath = rootPath.replace(home.homeDir, "~");
             }
           }
           return sprintf(format,
               game.originalGameId,
-              game.originalGameId != game.info.happyFunTimes.gameId ? "*" : " ",
+              game.originalGameId !== game.info.happyFunTimes.gameId ? "*" : " ",
               game.info.version,
               game.info.happyFunTimes.apiVersion,
               game.info.happyFunTimes.gameType,
@@ -97,7 +96,7 @@ exports.usage = {
   prepend: "list installed games",
   options: [
     { option: 'full', type: 'Boolean', description: "list entire contents of package for each game as json", },
-  ]
+  ],
 };
 exports.cmd = list;
 

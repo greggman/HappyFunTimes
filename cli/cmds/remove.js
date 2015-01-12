@@ -31,11 +31,10 @@
 "use strict";
 
 var games   = require('../../lib/games');
-var path    = require('path');
 var Promise = require('promise');
 
 var remove = function(args) {
-  return new Promise(function(resolve, reject) {
+  return new Promise(function(resolve /* , reject */) {
     var fullPath = args._.length > 0 ? args._[0] : process.cwd();
     games.remove(fullPath, args);
     resolve();

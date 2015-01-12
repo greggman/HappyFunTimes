@@ -30,6 +30,7 @@ module.exports = function(grunt) {
     ],
     eslint: {
         target: [
+          'cli',
           'lib',
           'management',
           'server',

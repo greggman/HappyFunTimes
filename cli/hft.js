@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-;(function () { // wrapper in case we're in module_context mode
+;(function () { /*eslint no-extra-semi:0 no-process-exit:0*/ // wrapper in case we're in module_context mode
 
 "use strict";
 
@@ -21,10 +21,46 @@ var globalOptions = [
   { option: 'hft-dir',             type: 'String',  description: 'hft installation path'      },
 ];
 
+var helpStyle = {
+  typeSeparator: '=',
+  descriptionSeparator: ' : ',
+  initialIndent: 4,
+};
+
+function printUsage() {
+  var usage = [];
+  var cmds = fs.readdirSync(path.join(__dirname, "cmds"));
+  cmds.forEach(function(cmd) {
+    if (cmd.substr(-3) !== ".js") {
+      return;
+    }
+
+    var cmdUsage = require('./cmds/' + cmd).usage;
+    usage.push("    hft " + cmd.substring(0, cmd.length - 3) + " " + (cmdUsage.usage || ''));
+  });
+  usage.push('');
+  var o = optionator({
+    prepend: [
+      "usage: hft cmd [options]",
+      "",
+      usage.join("\n"),
+      "global options:",
+    ].join("\n"),
+    append: [
+      "get command specific help with",
+      "",
+      "    hft <cmd> --help",
+    ].join("\n"),
+    options: globalOptions,
+    helpStyle: helpStyle,
+  });
+  console.log(o.generateHelp());
+};
+
 // simple command line parsing
 var args = { _: [] };
 process.argv.slice(2).forEach(function(arg) {
-  if (arg.substr(0, 2) == "--") {
+  if (arg.substr(0, 2) === "--") {
     var key = arg.substring(2);
     var value = true;
     var equalsIndex = arg.indexOf("=");
@@ -33,18 +69,12 @@ process.argv.slice(2).forEach(function(arg) {
       value = arg.substring(equalsIndex + 1);
     }
     args[key] = value;
-  } else if (arg.substr(0, 1) == "-") {
+  } else if (arg.substr(0, 1) === "-") {
     args[arg.substring(1)] = true;
   } else {
     args._.push(arg);
   }
 });
-
-var helpStyle = {
-  typeSeparator: '=',
-  descriptionSeparator: ' : ',
-  initialIndent: 4,
-};
 
 var cmd = args._[0];
 if (!cmd) {
@@ -95,37 +125,6 @@ cmdModule.cmd(args).then(function() {
   }
   process.exit(1);
 });
-
-function printUsage() {
-  var usage = [];
-  var cmds = fs.readdirSync(path.join(__dirname, "cmds"));
-  cmds.forEach(function(cmd) {
-    if (cmd.substr(-3) != ".js") {
-      return;
-    }
-
-    var cmdUsage = require('./cmds/' + cmd).usage;
-    usage.push("    hft " + cmd.substring(0, cmd.length - 3) + " " + (cmdUsage.usage || ''));
-  });
-  usage.push('');
-  var o = optionator({
-    prepend: [
-      "usage: hft cmd [options]",
-      "",
-      usage.join("\n"),
-      "global options:",
-    ].join("\n"),
-    append: [
-      "get command specific help with",
-      "",
-      "    hft <cmd> --help",
-    ].join("\n"),
-    options: globalOptions,
-    helpStyle: helpStyle,
-  });
-  console.log(o.generateHelp());
-};
-
 
 }());
 

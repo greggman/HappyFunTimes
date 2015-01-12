@@ -30,7 +30,6 @@
  */
 "use strict";
 
-var debug         = require('debug')('exitgame');
 var HFTGameClient = require('../../server/hftgame-client');
 var sprintf       = require('sprintf-js').sprintf;
 var strings       = require('../../lib/strings');
@@ -82,7 +81,7 @@ exports.usage = {
   prepend: "lists running games",
   options: [
     { option: 'full', type: 'Boolean', description: "list entire data available as json", },
-  ]
+  ],
 };
 exports.cmd = listRunningGames;
 

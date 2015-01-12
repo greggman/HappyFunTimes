@@ -30,7 +30,6 @@
  */
 "use strict";
 
-var path    = require('path');
 var Promise = require('promise');
 var utils   = require('../utils');
 
@@ -73,7 +72,7 @@ exports.usage = {
   ],
   options: [
     { option: 'dry-run', type: 'String', description: "don't delete any files", },
-  ]
+  ],
 };
 exports.cmd = uninstall;
 

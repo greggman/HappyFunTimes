@@ -30,7 +30,6 @@
  */
 "use strict";
 
-var fs        = require('fs');
 var gameInfo  = require('../../lib/gameinfo');
 var gitUtils  = require('../../lib/git-utils.js');
 var Promise   = require('promise');
@@ -70,7 +69,7 @@ exports.usage = {
     { option: 'email',      type: 'String',  description: "email address to mail notification to. Must match address from last new commits on github. If no address given the email from the latest commit is used."},
     { option: 'send-email', type: 'Boolean', description: "email notification.", default: "true"},
   ],
-}
+};
 exports.cmd = register;
 
 

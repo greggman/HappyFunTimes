@@ -55,7 +55,7 @@ exports.usage = {
     { option: 'exporter-path', type: 'String',  description: "path to exporter. For example path to unity3d."},
     { option: 'src-path',      type: 'String',  description: "path to export from. Default current folder"},
     { option: 'dst-path',      type: 'String',  description: "path to export to. Default whatever is appropriate"},
-  ]
+  ],
 };
 exports.cmd = exporter;
 
