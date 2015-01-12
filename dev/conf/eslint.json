@@ -8,7 +8,7 @@
     "comma-spacing": 0,
     "dot-notation": 0,
     "eol-last": [0],
-    "google-camelcase/google-camelcase": [2],
+    "hft-camelcase": [2],
     "key-spacing": [0],
     "no-comma-dangle": [0],
     "no-multi-spaces": [0],

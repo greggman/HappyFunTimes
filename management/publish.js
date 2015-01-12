@@ -227,7 +227,7 @@ var publish = function(gamePath, options) {
     }).then(function() {
       console.log("creating release...");
       auth();
-      /*eslint google-camelcase/google-camelcase:0*/
+      /*eslint hft-camelcase:0*/
       return createRelease({
         owner: options.username,
         repo: repoName,

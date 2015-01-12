@@ -34,12 +34,12 @@ module.exports = function(grunt) {
           'lib',
           'management',
           'server',
+          'test',
         ],
         options: {
             config: 'dev/conf/eslint.json',
-            //rulesdir: ['dev/rules'],
+            rulesdir: ['dev/rules'],
             plugin: [
-                'eslint-plugin-google-camelcase',
                 'eslint-plugin-one-variable-per-var',
                 'eslint-plugin-require-trailing-comma',
             ],

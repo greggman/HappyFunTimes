@@ -108,7 +108,7 @@ describe('init', function() {
     utils.deleteNoFail(g_installedGamesListPath);
     utils.deleteNoFail(g_configPath);
     utils.deleteNoFail(path.dirname(g_configPath));
-  })
+  });
 });
 
 describe('games', function() {
@@ -134,6 +134,7 @@ describe('games', function() {
 
     it('should list 0 game with empty list', function(done) {
       hftcli("list", ["--full"], function(err, result) {
+        assert.equal(err, null);
         var list = JSON.parse(result.stdout);
         assert.equal(list.length, 0);
         done();
@@ -150,6 +151,7 @@ describe('games', function() {
 
     it('should list 1 game', function(done) {
       hftcli("list", ["--full"], function(err, result) {
+        assert.equal(err, null);
         var list = JSON.parse(result.stdout);
         assert.equal(list.length, 1);
         assert.equal(list[0].originalGameId, "fakegame");
@@ -371,7 +373,7 @@ describe('release unity3d', function() {
           "fakeunitygame/bin/fakeunitygame-linux.x86",
           "fakeunitygame/bin/fakeunitygame-linux_Data/test.txt",
         ],
-      }
+      },
     };
 
 
@@ -412,12 +414,12 @@ describe('release unity3d', function() {
             }
           });
 
-          var expected = expectedFileNames.concat.apply(expectedFileNames, expected);
+          expected = expectedFileNames.concat.apply(expectedFileNames, expected);
           expected.forEach(function(fileName) {
             assert.ok(zip.files[fileName], fileName + " should be in zip " + destPath);
           });
 
-          var unexpected = unexpectedFileNames.concat.apply(unexpectedFileNames, unexpected);
+          unexpected = unexpectedFileNames.concat.apply(unexpectedFileNames, unexpected);
           unexpected.forEach(function(fileName) {
             assert.ok(zip.files[fileName] === undefined, fileName + " should not be in zip " + destPath);
           });
