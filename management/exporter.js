@@ -31,7 +31,6 @@
 "use strict";
 
 var buildInfo    = require('./build-info');
-var debug        = require('debug')('exporter');
 var fs           = require('fs');
 var path         = require('path');
 var platformInfo = require('../lib/platform-info');
@@ -65,7 +64,7 @@ var exporter = function(runtimeInfo, options) {
         return Promise.reject();
       });
       // TODO: add then to check log for success
-    }
+    };
   };
 
   var exportHtml = function() {
@@ -80,8 +79,7 @@ var exporter = function(runtimeInfo, options) {
     // Check for Assets. Should we check for ProjectSettings?
     var assetsPath = path.join(gamePath, "Assets");
     if (!fs.existsSync(assetsPath)) {
-      return Promise.reject(new Error("Could not find Assets : " + assetsPath))
-      gamePath = path.dirname(assetsPath);
+      return Promise.reject(new Error("Could not find Assets : " + assetsPath));
     }
 
     var binFolder = options.dstPath || path.join(gamePath, "bin");

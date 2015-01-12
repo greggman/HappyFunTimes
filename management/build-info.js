@@ -56,6 +56,8 @@ var buildInfo = {
   ],
 };
 
-exports.get = function() { return JSON.parse(JSON.stringify(buildInfo)); };
+exports.get = function() {
+  return JSON.parse(JSON.stringify(buildInfo));
+};
 
 
