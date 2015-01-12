@@ -31,29 +31,28 @@
 "use strict";
 
 var buildInfo    = require('./build-info');
-var debug        = require('debug')('make');
 var exporter     = require('./exporter');
 var fs           = require('fs');
 var gameInfo     = require('../lib/gameinfo');
 var path         = require('path');
-var platformInfo = require('../lib/platform-info');
 var Promise      = require('promise');
 var readdirtree  = require('../lib/readdirtree');
 var releaseUtils = require('./release-utils');
 var strings      = require('../lib/strings');
-var utils        = require('../lib/utils');
 var ZipWriter    = require("moxie-zip").ZipWriter;
 
 var goodNameRE = /^[a-zA-Z0-9_ \.\\\/-]+$/;
 
 var makeZip = function(gameId, baseSrcPath, destPath, filter) {
   if (filter === undefined) {
-    filter = function() { return true; }
+    filter = function() {
+      return true;
+    };
   } else if (filter instanceof RegExp) {
     filter = function(filter) {
       return function(filename) {
         return filter.test(filename);
-      }
+      };
     }(filter);
   }
 
@@ -61,9 +60,11 @@ var makeZip = function(gameId, baseSrcPath, destPath, filter) {
   fileNames = fileNames.filter(filter);
 
   // check there are no non-casesenative duplicates
-  var lowerCaseFileNames = fileNames.map(function(f) { return f.toLowerCase(); }).sort();
+  var lowerCaseFileNames = fileNames.map(function(f) {
+    return f.toLowerCase();
+  }).sort();
   for (var ii = 0; ii < lowerCaseFileNames.length - 1; ++ii) {
-    if (lowerCaseFileNames[ii] == lowerCaseFileNames[ii + 1]) {
+    if (lowerCaseFileNames[ii] === lowerCaseFileNames[ii + 1]) {
       return Promise.reject(new Error("two filenames are different only by case which won't work on some platforms: " + lowerCaseFileNames[ii]));
     }
   }
@@ -110,14 +111,12 @@ var makeZip = function(gameId, baseSrcPath, destPath, filter) {
   });
 };
 
-var makeHTML = function(runtimeInfo, gamePath, destFolder, options) {
-  var hftInfo = runtimeInfo.info.happyFunTimes;
+var makeHTML = function(runtimeInfo, gamePath, destFolder/*, options*/) {
   var destPath = path.join(destFolder, releaseUtils.safeishName(runtimeInfo.originalGameId) + "-html.zip");
   return makeZip(runtimeInfo.originalGameId, gamePath, destPath);
 };
 
 var makeUnity3d = function(runtimeInfo, gamePath, destFolder, options) {
-  var hftInfo = runtimeInfo.info.happyFunTimes;
   var gameId = runtimeInfo.originalGameId;
 
   var promise;
@@ -125,7 +124,7 @@ var makeUnity3d = function(runtimeInfo, gamePath, destFolder, options) {
     promise = exporter.exporter(runtimeInfo, { exporterPath: options.exporterPath });
   } else {
     promise = Promise.resolve();
-  };
+  }
 
   return promise.then(function() {
     var platInfos = [];
@@ -164,7 +163,7 @@ var makeUnity3d = function(runtimeInfo, gamePath, destFolder, options) {
     var tooOld = false;
     if (platInfos.length > 1) {
       platInfos.sort(function(a, b) {
-        return a.stat.mtime == b.stat.mtime ? 0 : (a.stat.mtime < b.stat.mtime ? -1 : 1);
+        return a.stat.mtime === b.stat.mtime ? 0 : (a.stat.mtime < b.stat.mtime ? -1 : 1);
       });
 
       var newest = platInfos[platInfos.length - 1];
@@ -178,7 +177,7 @@ var makeUnity3d = function(runtimeInfo, gamePath, destFolder, options) {
     }
 
     var promise;
-    if (!tooOld && platInfos.length == platforms.length) {
+    if (!tooOld && platInfos.length === platforms.length) {
       promise = Promise.resolve({confirmation: 'y'});
     } else {
       promise = releaseUtils.askPrompt([
@@ -187,12 +186,12 @@ var makeUnity3d = function(runtimeInfo, gamePath, destFolder, options) {
           type: 'input',
           message: 'continue y/N?',
           default: 'n',
-        }
+        },
       ]);
     }
 
     return promise.then(function(answers) {
-      if (answers.confirmation.toLowerCase() != 'y') {
+      if (answers.confirmation.toLowerCase() !== 'y') {
         return Promise.reject(new Error("aborted"));
       }
 
@@ -207,7 +206,7 @@ var makeUnity3d = function(runtimeInfo, gamePath, destFolder, options) {
             return false;
           }
           if (strings.startsWith(filename, binStart)) {
-            if (platInfo.binPath && nativeFilename == platInfo.binPath) {
+            if (platInfo.binPath && nativeFilename === platInfo.binPath) {
               return true;
             }
             if (platInfo.dirPath && strings.startsWith(nativeFilename, platInfo.dirPath)) {
@@ -270,7 +269,7 @@ var make = function(gamePath, destFolder, options) {
   // Make sure it's a game!
   var runtimeInfo = gameInfo.readGameInfo(gamePath);
   if (!runtimeInfo) {
-    return Promise.reject(Error("not a game: " + gamePath));
+    return Promise.reject(new Error("not a game: " + gamePath));
   }
 
   var hftInfo = runtimeInfo.info.happyFunTimes;
