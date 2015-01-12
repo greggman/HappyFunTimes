@@ -30,7 +30,6 @@
  */
 "use strict";
 
-var debug        = require('debug')('publish');
 var fs           = require('fs');
 var gameInfo     = require('../lib/gameinfo');
 var GitHubApi    = require('github');
@@ -111,7 +110,6 @@ var publish = function(gamePath, options) {
     };
 
     var info = runtimeInfo.info;
-    var hftInfo = info.happyFunTimes;
     var github = new GitHubApi({
         // required
         version: "3.0.0",
@@ -140,9 +138,9 @@ var publish = function(gamePath, options) {
            type: 'input',
            message: question,
            default: 'n',
-        }
+        },
       ]).then(function(answers) {
-        if (answers.confirmation.toLowerCase() != 'y') {
+        if (answers.confirmation.toLowerCase() !== 'y') {
           return Promise.reject(new Error("aborted"));
         }
         return Promise.resolve();
@@ -208,7 +206,7 @@ var publish = function(gamePath, options) {
 
       return Promise.resolve();
     }).then(function() {
-      if (version.charAt(0) != 'v') {
+      if (version.charAt(0) !== 'v') {
         version = "v" + version;
       }
       return utils.getTempFolder({unsafeCleanup: true});  // deletes the folder on exit.
@@ -230,6 +228,7 @@ var publish = function(gamePath, options) {
     }).then(function() {
       console.log("creating release...");
       auth();
+      /*eslint google-camelcase:0*/
       return createRelease({
         owner: options.username,
         repo: repoName,
@@ -240,9 +239,8 @@ var publish = function(gamePath, options) {
     }).then(function(releaseInfo) {
       log("releaseInfo", releaseInfo);
       var promises = [];
-      var results = [];
       filesToUpload.push({filename: runtimeInfo.packagePath});
-      filesToUpload.forEach(function(file, ndx) {
+      filesToUpload.forEach(function(file) {
         auth();
         promises.push(uploadAsset({
           owner: options.username,
@@ -251,11 +249,11 @@ var publish = function(gamePath, options) {
           name: path.basename(file.filename),
           filePath: file.filename,
         }).then(function(result) {
-          if (result.state != 'uploaded') {
+          if (result.state !== 'uploaded') {
             return Promise.reject(new Error("upload state for '" + result.name + "' is '" + result.state + "'"));
           }
           var localSize = fs.statSync(file.filename).size;
-          if (result.size != localSize) {
+          if (result.size !== localSize) {
             return Promise.reject(new Error("upload size for '" + result.name + "' is " + result.size + " but should be " + localSize));
           }
         }));
@@ -269,13 +267,13 @@ var publish = function(gamePath, options) {
         endpoint: options.endpoint,
         email: options.email,
         sendEmail: options.sendEmail,
-      })
+      });
     }).then(function() {
       console.log(gameId + ": registered");
       cleanup();
       fulfill();
     }).catch(function(err) {
-      reject(err)
+      reject(err);
       cleanup();
     });
   });

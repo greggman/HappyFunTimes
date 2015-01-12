@@ -30,8 +30,9 @@ module.exports = function(grunt) {
     ],
     eslint: {
         target: [
-          'server',
           'lib',
+          'management',
+          'server',
         ],
         options: {
             config: 'dev/conf/eslint.json',

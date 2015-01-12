@@ -53,7 +53,7 @@ var logObject = function(label, obj) {
 };
 
 var askPrompt = function(questions) {
-  return new Promise(function(fulfill, reject) {
+  return new Promise(function(fulfill/*, reject */) {
     asks.prompt(questions, function(answers) {
       fulfill(answers);
     });
@@ -69,7 +69,7 @@ var validRepoURL = (function() {
   return function(v) {
     for (var ii = 0; ii < prefixes.length; ++ii) {
       var prefix = prefixes[ii];
-      if (v.substring(0, prefix.length) == prefix) {
+      if (v.substring(0, prefix.length) === prefix) {
         return true;
       }
     }

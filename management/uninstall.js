@@ -30,12 +30,10 @@
  */
 "use strict";
 
-var debug        = require('debug')('uninstall');
 var fs           = require('fs');
 var gameDB       = require('../lib/gamedb');
 var games        = require('../lib/games');
 var path         = require('path');
-var Promise      = require('promise');
 
 /**
  * @typedef {Object} Uninstall~Options
@@ -58,10 +56,10 @@ var uninstall = function(gameIdOrPath, opt_options) {
   if (!installedGame) {
     // See if we can find it by path
     var gameList = gameDB.getGames();
-    var gamePath = path.resolve(gameIdOrPath);
+    var gPath = path.resolve(gameIdOrPath);
     for (var ii = 0; ii < gameList.length; ++ii) {
       var game = gameList[ii];
-      if (game.rootPath == gamePath) {
+      if (game.rootPath === gPath) {
         installedGame = game;
         break;
       }
@@ -73,7 +71,6 @@ var uninstall = function(gameIdOrPath, opt_options) {
     return false;
   }
 
-  var hftInfo = installedGame.info.happyFunTimes;
   var gamePath = installedGame.rootPath;
   var files = installedGame.files || [];
 
@@ -87,7 +84,7 @@ var uninstall = function(gameIdOrPath, opt_options) {
         if (stat.isDirectory()) {
           folders.push(fullPath);
         } else {
-          log("delete: " + fullPath)
+          log("delete: " + fullPath);
           if (!options.dryRun) {
             fs.unlinkSync(fullPath);
           }
@@ -95,7 +92,7 @@ var uninstall = function(gameIdOrPath, opt_options) {
       }
     } catch (e) {
       ++failCount;
-      console.error("Couldn't delete: " + fullPath)
+      console.error("Couldn't delete: " + fullPath);
     }
   });
 

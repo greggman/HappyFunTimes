@@ -31,8 +31,6 @@
 "use strict";
 
 var config       = require('../lib/config');
-var debug        = require('debug')('register');
-var fs           = require('fs');
 var io           = require('../lib/io');
 var Promise      = require('promise');
 var restUrl      = require('rest-url');
