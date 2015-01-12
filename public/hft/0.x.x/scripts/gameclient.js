@@ -135,7 +135,7 @@ define(['./virtualsocket'], function(VirtualSocket) {
       g_sendQueue = [];
       log("connected");
       sendEvent_('connect');
-    }.bind(this);
+    };
 
     var disconnected_ = function() {
       if (g_socket) {
@@ -144,13 +144,14 @@ define(['./virtualsocket'], function(VirtualSocket) {
         sendEvent_('disconnect');
         eventListeners = {};
       }
-    }.bind(this);
+    };
 
     var processMessage_ = function(msg) {
       sendEvent_(msg.cmd, [msg.data]); // FIX: no need for this array?
-    }.bind(this);
+    };
 
     var handleError_ = function(err) {
+      console.error(err);
       sendEvent_('error');
       if (g_socket) {
         g_socket.close();
@@ -177,7 +178,7 @@ define(['./virtualsocket'], function(VirtualSocket) {
       } else {
         g_socket.send(msg);
       }
-    }.bind(this);
+    };
 
     /**
      * Sends a command to the game

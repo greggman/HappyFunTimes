@@ -98,11 +98,11 @@ define([], function() {
     };
 
     this.on = addEventListener;
-    this.addEventListener = addEventListener
-    this.removeEventListener = removeEventListener
+    this.addEventListener = addEventListener;
+    this.removeEventListener = removeEventListener;
     this.removeAllEventListeners = removeAllEventListeners;
-    this.addListener = addEventListener
-    this.removeListener = removeEventListener
+    this.addListener = addEventListener;
+    this.removeListener = removeEventListener;
     this.removeAllListeners = removeAllEventListeners;
     this.emit = emit;
     this.listeners = listeners;

@@ -115,11 +115,11 @@ define([
     // Try to detect if we're on mobile. I'm assuming it's not
     // common for window.innerWidth to match screen.availWidth
     // on desktop but that it is on mobile.
-    var landscape = window.orientation === 90 || window.orientation === 270;
-    var effectiveWidth = landscape ? screen.height : screen.width;
-    if (window.innerWidth === effectiveWidth) {
+//    var landscape = window.orientation === 90 || window.orientation === 270;
+//    var effectiveWidth = landscape ? screen.height : screen.width;
+//    if (window.innerWidth === effectiveWidth) {
 //      goFullScreenIfNotFullScreen(false);
-    }
+//    }
 
     var playerNameHandler = new PlayerNameHandler(client, $("hft-name"));
 
