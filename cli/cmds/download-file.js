@@ -30,7 +30,6 @@
  */
 "use strict";
 
-var path    = require('path');
 var Promise = require('promise');
 var sys     = require('sys');
 var utils   = require('../utils');
@@ -69,7 +68,7 @@ var downloadFile = function(args) {
       print("\n");
       console.log("downloaded " + e.size + " bytes to " + destPath);
       resolve();
-    })
+    });
     emitter.on('error', function(e) {
       console.error("ERROR downloading " + url + " to " + destPath);
       console.error(e);
@@ -87,7 +86,7 @@ exports.usage = {
   ].join("\n"),
   options: [
   ],
-}
+};
 exports.cmd = downloadFile;
 
 

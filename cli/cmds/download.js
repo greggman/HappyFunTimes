@@ -30,7 +30,6 @@
  */
 "use strict";
 
-var path    = require('path');
 var Promise = require('promise');
 var utils   = require('../utils');
 
@@ -69,7 +68,7 @@ var download = function(args) {
       console.error(e);
       reject();
     });
-    emitter.on('end', function(e) {
+    emitter.on('end', function(/*e*/) {
       console.log("downloaded and installed:" + gameId);
       resolve();
     });

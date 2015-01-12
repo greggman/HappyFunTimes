@@ -31,10 +31,9 @@
 "use strict";
 
 var gameInfo = require('../../lib/gameinfo');
-var path     = require('path');
 var Promise  = require('promise');
 
-var check = function(args) {
+var check = function(/* args */) {
   return new Promise(function(resolve, reject) {
     try {
       var runtimeInfo = gameInfo.readGameInfo(process.cwd());
@@ -62,7 +61,7 @@ var check = function(args) {
 exports.usage = {
   prepend: "check's the game in the current folder some requirements",
   options: [
-  ]
+  ],
 };
 exports.cmd = check;
 

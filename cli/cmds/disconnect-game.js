@@ -31,8 +31,7 @@
 "use strict";
 
 var debug           = require('debug')('exitgame');
-var HFTGameClient   = require('../../server/hftgame-client')
-var path            = require('path');
+var HFTGameClient   = require('../../server/hftgame-client');
 var Promise         = require('promise');
 
 var exitgame = function(args) {
@@ -56,7 +55,7 @@ exports.usage = {
   prepend: "disconnects running games",
   options: [
     { option: 'all', type: 'Boolean', description: "disconnect all games", },
-  ]
+  ],
 };
 exports.cmd = exitgame;
 

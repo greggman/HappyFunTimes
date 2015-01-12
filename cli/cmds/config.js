@@ -32,7 +32,7 @@
 
 var Promise = require('promise');
 
-var config = function(args) {
+var config = function(/*args*/) {
   var config = require('../../lib/config');
   console.log(JSON.stringify(config.getConfig(), undefined, "  "));
   return Promise.resolve();
@@ -41,7 +41,7 @@ var config = function(args) {
 exports.usage = {
   prepend: "show config",
   options: [
-  ]
+  ],
 };
 exports.cmd = config;
 

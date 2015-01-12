@@ -52,7 +52,7 @@ exports.usage = {
     "assumes the current folder holds the game to be added.",
   ].join("\n"),
   options: [
-  ]
+  ],
 };
 exports.cmd = add;
 
