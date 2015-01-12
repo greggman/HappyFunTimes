@@ -31,7 +31,6 @@
 "use strict";
 
 var config       = require('../lib/config');
-var debug        = require('debug')('install');
 var fs           = require('fs');
 var gameDB       = require('../lib/gamedb');
 var gameInfo     = require('../lib/gameinfo');
@@ -40,7 +39,6 @@ var JSZip        = require('jszip');
 var mkdirp       = require('mkdirp');
 var path         = require('path');
 var platformInfo = require('../lib/platform-info');
-var Promise      = require('promise');
 var releaseUtils = require('./release-utils');
 var strings      = require('../lib/strings');
 
@@ -73,7 +71,9 @@ var install = function(releasePath, opt_destPath, opt_options) {
 
   var zip = new JSZip();
   zip.load(fs.readFileSync(releasePath));
-  var entries = Object.keys(zip.files).sort().map(function(key) { return zip.files[key]; });
+  var entries = Object.keys(zip.files).sort().map(function(key) {
+    return zip.files[key];
+  });
   var runtimeInfo;
   var zipRootPath;
 
@@ -83,7 +83,7 @@ var install = function(releasePath, opt_destPath, opt_options) {
     var shortPath = safeDirName.substring(safeDirName.indexOf("/") + 1);
     for (var jj = 0; jj < packageLocations.length; ++jj) {
       var packageLocation = packageLocations[jj];
-      if (shortPath == packageLocation.packagePath) {
+      if (shortPath === packageLocation.packagePath) {
         return entry;
       }
     }
@@ -95,7 +95,7 @@ var install = function(releasePath, opt_destPath, opt_options) {
       if (entry) {
         return entry;
       }
-    };
+    }
   };
 
   try {
@@ -106,7 +106,6 @@ var install = function(releasePath, opt_destPath, opt_options) {
     }
     zipRootPath = packageEntry.name.replace(/\\/g, "/");
     zipRootPath = zipRootPath.substring(0, zipRootPath.indexOf("/"));
-    var packagePathFromRoot = packageEntry.name.substring(zipRootPath.length + 1);
     runtimeInfo = gameInfo.parseGameInfo(packageEntry.asText(), packageEntry.name, zipRootPath);
   } catch (e) {
     console.error("could not parse package.json. Maybe this is not a HappyFunTimes game?");
@@ -155,12 +154,12 @@ var install = function(releasePath, opt_destPath, opt_options) {
     var filePath = entry.name.substring(zipRootPath.length + 1);
     files.push(filePath);
     var destPath = path.resolve(path.join(destBasePath, filePath));
-    if (destPath.substring(0, destBasePath.length) != destBasePath) {
+    if (destPath.substring(0, destBasePath.length) !== destBasePath) {
       console.error("ERROR: bad zip file. Path would write outside game folder");
       bad = true;
     } else {
       var isDir = entry.dir;
-      if (destPath.substr(-1) == "/" || destPath.substr(-1) == "\\") {
+      if (destPath.substr(-1) === "/" || destPath.substr(-1) === "\\") {
         destPath = destPath.substr(0, destPath.length - 1);
         isDir = true;
       }
@@ -180,7 +179,7 @@ var install = function(releasePath, opt_destPath, opt_options) {
           }
           fs.writeFileSync(destPath, entry.asNodeBuffer());
         }
-      };
+      }
     }
   });
 
@@ -190,7 +189,7 @@ var install = function(releasePath, opt_destPath, opt_options) {
   }
 
   // Should this be in the zip?
-  if (hftInfo.gameType.toLowerCase() == "unity3d") {
+  if (hftInfo.gameType.toLowerCase() === "unity3d") {
     var exePath = platformInfo.exePath;
     if (exePath) {
       exePath = path.join(destBasePath, strings.replaceParams(exePath, { gameId: safeGameId }));
