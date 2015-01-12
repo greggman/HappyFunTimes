@@ -29,7 +29,10 @@ module.exports = function(grunt) {
         'docs/hft',
     ],
     eslint: {
-        target: ['server'],
+        target: [
+          'server',
+          'lib',
+        ],
         options: {
             config: 'dev/conf/eslint.json',
             //rulesdir: ['dev/rules'],
