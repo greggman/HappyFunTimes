@@ -87,8 +87,7 @@ var publish = function(gamePath, options) {
     // Make sure it's a game!
     var runtimeInfo = gameInfo.readGameInfo(gamePath);
     if (!runtimeInfo) {
-      reject(new Error(gamePath + " doesn't appear to be a game. Couldn't read or parse package.json"));
-      return;
+      return reject(new Error(gamePath + " doesn't appear to be a game. Couldn't read or parse package.json"));
     }
 
     var gameId = runtimeInfo.originalGameId;
@@ -228,7 +227,7 @@ var publish = function(gamePath, options) {
     }).then(function() {
       console.log("creating release...");
       auth();
-      /*eslint google-camelcase:0*/
+      /*eslint google-camelcase/google-camelcase:0*/
       return createRelease({
         owner: options.username,
         repo: repoName,
