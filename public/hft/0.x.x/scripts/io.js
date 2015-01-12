@@ -29,6 +29,8 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+"use strict";
+
 /**
  * Misc IO functions
  * @module IO
@@ -57,7 +59,7 @@ define(function() {
    */
   var sendJSON = function(url, jsonObject, callback, option) {
     option = option || { };
-    var error = 'sendJSON failed to load url "' + url + '"';
+//    var error = 'sendJSON failed to load url "' + url + '"';
     var request = new XMLHttpRequest();
     if (request.overrideMimeType) {
       request.overrideMimeType('text/plain');
@@ -76,25 +78,25 @@ define(function() {
         callback = undefined;  // only call it once.
       }
     };
-    var handleAbort = function(e) {
-      log("--abort--");
-      callCallback("error (abort) sending json to " + url);
-    }
-    var handleError = function(e) {
+//    var handleAbort = function(e) {
+//      log("--abort--");
+//      callCallback("error (abort) sending json to " + url);
+//    }
+    var handleError = function(/*e*/) {
       log("--error--");
       callCallback("error sending json to " + url);
-    }
-    var handleTimeout = function(e) {
+    };
+    var handleTimeout = function(/*e*/) {
       log("--timeout--");
       callCallback("timeout sending json to " + url);
     };
-    var handleForcedTimeout = function(e) {
+    var handleForcedTimeout = function(/*e*/) {
       if (callback) {
         log("--forced timeout--");
         request.abort();
         callCallback("forced timeout sending json to " + url);
       }
-    }
+    };
     var handleFinish = function() {
       log("--finish--");
       var json = undefined;
@@ -102,7 +104,7 @@ define(function() {
       // success with zero. HTTP does not use zero as a status code (they
       // start at 100).
       // https://developer.mozilla.org/En/Using_XMLHttpRequest
-      var success = request.status == 200 || request.status == 0;
+      var success = request.status === 200 || request.status === 0;
       if (success) {
         try {
           json = JSON.parse(request.responseText);
@@ -125,7 +127,9 @@ define(function() {
       log("--sent: " + url);
     } catch (e) {
       log("--exception--");
-      setTimeout(function() { callCallback('could not load: ' + url, null) }, 0);
+      setTimeout(function() {
+        callCallback('could not load: ' + url, null);
+      }, 0);
     }
   };
 

@@ -29,7 +29,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-(function(globalObject) {
+"use strict";
 
 define([
     './misc/cookies',
@@ -39,8 +39,6 @@ define([
     Cookie,
     NetPlayer,
     VirtualSocket) {
-
-  "use strict";
 
   var emptyMsg = { };
 
@@ -81,27 +79,15 @@ define([
         throw "you can't read " + key + " before you've connected";
       };
       Object.defineProperty(this, key, {
-        get: function() { return _getters[key](); },
+        get: function() {
+          return _getters[key]();
+        },
         set: function() {},
         enumerable: true,
         configurable: true,
       });
     }.bind(this));
     var _reloaded = false;
-
-    var readOldState = (function() {
-      var cookie = new Cookie("hft-state");
-      var content = cookie.get();
-      cookie.erase();
-
-      if (content) {
-        try {
-          var data = JSON.parse(content);
-          _reloaded = data.reload;
-        } catch (e) {
-        }
-      }
-    }());
 
     if (!options.gameId) {
       var m = /games\/([^\/]+)\//.exec(window.location.href);
@@ -198,7 +184,7 @@ define([
     var getPlayer_ = function(id) {
       var player = _players[id];
       return player;
-    }.bind(this);
+    };
 
     var handleUpdatePlayer_ = function(msg) {
       var player = getPlayer_(msg.id);
@@ -206,14 +192,14 @@ define([
         return;
       }
       player.sendEvent_(msg.data.cmd, [msg.data.data]); // FIX: Seems like gameserver should not know how to deal with this.
-    }.bind(this);
+    };
 
     var handleRemovePlayer_ = function(msg) {
       removePlayer_(msg.id);
-    }.bind(this);
+    };
 
-    var handleSystemMsg_ = function(msg) {
-    }.bind(this);
+    var handleSystemMsg_ = function(/*msg*/) {
+    };
 
     var handleGameMsg_ = function(msg) {
       sendEvent_(msg.data.cmd, [msg.data.data, msg.id]);
@@ -245,7 +231,7 @@ define([
       } else {
         console.error("Unknown Message: " + msg.cmd);
       }
-    }.bind(this);
+    };
 
     /**
      * True if we're connected to happyFunTimes
@@ -264,6 +250,7 @@ define([
       return _reloaded;
     };
 
+    /*eslint no-use-before-define:0*/
     var connect_ = function() {
       _socket = options.socket || new VirtualSocket();
       _sendQueue = [];
@@ -309,7 +296,7 @@ define([
       if (options.reconnectOnDisconnect) {
         setTimeout(connect_, 2000);
       }
-    }.bind(this);
+    };
 
     var send_ = function(msg) {
       if (!_socket.isConnected()) {
@@ -317,7 +304,7 @@ define([
       } else {
         _socket.send(msg);
       }
-    }.bind(this);
+    };
 
     /**
      * This sends a command to the 'happyFunTimes'. happyFunTimes uses 'cmd' to figure out what to do
@@ -337,7 +324,7 @@ define([
       var msg = {
         cmd: cmd,
         id: id,
-        data: data
+        data: data,
       };
       send_(msg);
     };
@@ -365,7 +352,7 @@ define([
         data = emptyMsg;
       }
       this.sendCmd('peer', id, {cmd: cmd, data: data});
-    }
+    };
 
     /**
      * Sends a command to all games, including yourself.
@@ -383,5 +370,4 @@ define([
   return GameServer;
 });
 
-}(this));
 

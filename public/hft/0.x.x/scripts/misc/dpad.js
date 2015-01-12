@@ -33,23 +33,6 @@
 define(
   [ ], function() {
 
-  var RIGHT = 0x1;
-  var LEFT = 0x2;
-  var UP = 0x4;
-  var DOWN = 0x8;
-
-  var dirToBits = [
-    0,
-    RIGHT,
-    UP | RIGHT,
-    UP,
-    UP | LEFT,
-    LEFT,
-    DOWN |LEFT,
-    DOWN,
-    DOWN |RIGHT,
-  ];
-
   var drawCircle = function(ctx, x, y, radius, flags) {
     flags = flags || 1;
     ctx.beginPath();
@@ -127,8 +110,7 @@ define(
 
     ctx.fillStyle = "#CCC";
 
-    var width =  w6 * 2;
-    var height = w6 * 2;
+    /*eslint brace-style:0*/
     if (bits & 0x1) { drawCircle(ctx,  w - w6, 0, w6 * 0.8); } //ctx.fillRect(  w - w6 * 2, -w6         , w6 * 2, w6 * 2 ); }
     if (bits & 0x2) { drawCircle(ctx, -w + w6, 0, w6 * 0.8); } //ctx.fillRect( -w         , -w6         , w6 * 2, w6 * 2 ); }
     if (bits & 0x4) { drawCircle(ctx, 0, -w + w6, w6 * 0.8); } //ctx.fillRect( -w6        , -h          , w6 * 2, w6 * 2); }
@@ -154,8 +136,8 @@ define(
     if (!size) {
       size = Math.min(this.canvas.clientWidth, this.canvas.clientHeight);
     }
-    if (this.canvas.width != size ||
-        this.canvas.height != size) {
+    if (this.canvas.width !== size ||
+        this.canvas.height !== size) {
       this.canvas.width = size;
       this.canvas.height = size;
     }

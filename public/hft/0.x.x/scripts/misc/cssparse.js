@@ -29,6 +29,8 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+"use strict";
+
 /**
  * Functions for parsing CSS
  *
@@ -227,7 +229,7 @@ define(function() {
         parseInt(m[3], 16),
         255,
       ];
-    } else if (m = s_hexrgbRE.exec(s)) {
+    } else if ((m = s_hexrgbRE.exec(s))) {
       var r = parseInt(m[1], 16);
       var g = parseInt(m[2], 16);
       var b = parseInt(m[3], 16);
@@ -237,21 +239,21 @@ define(function() {
         b * 16 + b,
         255,
       ];
-    } else if (m = s_rgbRE.exec(s)) {
+    } else if ((m = s_rgbRE.exec(s))) {
       c = [
         parseInt(m[1]),
         parseInt(m[2]),
         parseInt(m[3]),
         255,
       ];
-    } else if (m = s_rgbaRE.exec(s)) {
+    } else if ((m = s_rgbaRE.exec(s))) {
       c = [
         parseInt(m[1]),
         parseInt(m[2]),
         parseInt(m[3]),
         Math.floor(parseFloat(m[4]) * 255),
       ];
-    } else if(m = s_nameRE.exec(s)) {
+    } else if ((m = s_nameRE.exec(s))) {
       var name = m[1].toLowerCase();
       var color = s_colorData[name];
       if (color !== undefined) {

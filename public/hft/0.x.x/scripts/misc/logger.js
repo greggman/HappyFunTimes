@@ -86,11 +86,11 @@ define(function() {
       var arg = args[ii];
       if (arg === undefined) {
         strs.push('undefined');
-      } else if (typeof arg == 'number') {
+      } else if (typeof arg === 'number') {
         if (lastArgWasNumber) {
           strs.push(", ");
         }
-        if (arg == Math.floor(arg)) {
+        if (arg === Math.floor(arg)) {
           strs.push(arg.toFixed(0));
         } else {
         strs.push(arg.toFixed(3));

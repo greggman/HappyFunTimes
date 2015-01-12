@@ -99,7 +99,7 @@ define([
   var init = function(server, options) {
     var handleConnected = function() {
       $('hft-disconnected').style.display = "none";
-    }
+    };
 
     var handleDisconnected = function() {
       $('hft-disconnected').style.display = "block";
@@ -112,7 +112,7 @@ define([
         }), 1);
         window.location.reload();
       });
-    }
+    };
 
     if (options.haveServer !== false && server) {
       server.addEventListener('connect', handleConnected);

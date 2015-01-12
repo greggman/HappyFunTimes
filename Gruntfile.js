@@ -33,6 +33,7 @@ module.exports = function(grunt) {
           'cli',
           'lib',
           'management',
+          'public',
           'server',
           'test',
         ],

@@ -77,7 +77,7 @@ define(function() {
       this.id = ++_count;
       this.eventHandlers = { };
       this.gameEventHandlers = { };
-    }
+    };
   }());
 
   /**
@@ -146,7 +146,7 @@ define(function() {
     }
   };
 
-  LocalNetPlayer.prototype.switchGame = function(id, data) {
+  LocalNetPlayer.prototype.switchGame = function(/*id, data*/) {
   };
 
   return LocalNetPlayer;

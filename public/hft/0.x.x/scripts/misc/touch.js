@@ -222,7 +222,7 @@ define(
 
     var computeDir = options.axisSize ? computeDirByAxis : computeDirByAngle;
 
-    if (options.divisions == 4) {
+    if (options.divisions === 4) {
       computeDir = computeDirByAngle4;
     }
 
@@ -240,7 +240,7 @@ define(
           pad.lastDir = newDir;
         }
       }
-      if (pad.dir != newDir) {
+      if (pad.dir !== newDir) {
         pad.dir = newDir;
         callCallback(padId, newDir);
       }
@@ -281,7 +281,7 @@ define(
         var dx = relPos.x - centerX;
         var dy = relPos.y - centerY;
         var distSq = dx * dx + dy * dy;
-        if (closestDist == undefined || distSq < closestDist) {
+        if (closestDist === undefined || distSq < closestDist) {
           closestDist = distSq;
           closestId = ii;
         }
@@ -297,7 +297,7 @@ define(
     var onPointerMove = function(e) {
       for (var ii = 0; ii < pads.length; ++ii) {
         var pad = pads[ii];
-        if (pad.pointerId == e.pointerId) {
+        if (pad.pointerId === e.pointerId) {
           var padOptions = options.pads[ii];
           var relPos = Input.getRelativeCoordinates(padOptions.referenceElement, e);
           var x = relPos.x - padOptions.offsetX;
@@ -313,7 +313,7 @@ define(
     var onPointerUp = function(e) {
       for (var ii = 0; ii < pads.length; ++ii) {
         var pad = pads[ii];
-        if (pad.pointerId == e.pointerId) {
+        if (pad.pointerId === e.pointerId) {
           pad.pointerId = -1;
           pad.vector.reset(0, 0);
           updatePad(pad, ii);
@@ -337,7 +337,6 @@ define(
   /**
    * @typedef {Object} Buttons~Options
    * @property {HTMLElement} inputElement element that receives all input. Should be above all buttons
-   * @property {module:Touch.ButtonInfo[]} buttons The buttons
    * @memberOf module:Touch
    */
 
@@ -366,7 +365,6 @@ define(
   var setupButtons = function(options) {
     var buttonInfos = [];
     var buttons = options.buttons;
-    var inputElement = options.inputElement;
 
     for (var ii = 0; ii < buttons.length; ++ii) {
       var button = buttons[ii];
@@ -378,9 +376,9 @@ define(
       buttonInfos.push(buttonInfo);
     }
 
-    var printButtonInfo = function(buttonInfo) {
-      console.log("button: " + buttonInfo.element.id + ", " + buttonInfo.numPointerIds);
-    };
+    // var printButtonInfo = function(buttonInfo) {
+    //   console.log("button: " + buttonInfo.element.id + ", " + buttonInfo.numPointerIds);
+    // };
 
     var addPointerId = function(buttonInfo, pointerId) {
       if (!buttonInfo.pointerIds[pointerId]) {
@@ -394,7 +392,7 @@ define(
       if (buttonInfo.pointerIds[pointerId]) {
         delete buttonInfo.pointerIds[pointerId];
         --buttonInfo.numPointerIds;
-        if (buttonInfo.numPointerIds == 0) {
+        if (buttonInfo.numPointerIds === 0) {
           buttonInfo.callback({pressed: false});
         } else if (buttonInfo.numPointerIds < 0) {
           throw ("numPointerIds went negative: how did I get here!?");
@@ -414,30 +412,29 @@ define(
       removePointerId(buttonInfo, e.pointerId);
     };
 
-    for (var ii = 0; ii < buttonInfos.length; ++ii) {
-      var buttonInfo = buttonInfos[ii];
+    buttonInfos.forEach(function(buttonInfo) {
       var elem = buttonInfo.element;
       elem.addEventListener('pointerdown', function(buttonInfo) {
         return function(e) {
           handleButtonDown(e, buttonInfo);
-        }
+        };
       }(buttonInfo), false);
       elem.addEventListener('pointermove', function(buttonInfo) {
         return function(e) {
           handleButtonMove(e, buttonInfo);
-        }
+        };
       }(buttonInfo), false);
       elem.addEventListener('pointerup', function(buttonInfo) {
         return function(e) {
           handleButtonOut(e, buttonInfo);
-        }
+        };
       }(buttonInfo), false);
       elem.addEventListener('pointerout', function(buttonInfo) {
         return function(e) {
           handleButtonOut(e, buttonInfo);
-        }
+        };
       }(buttonInfo), false);
-    }
+    });
   };
 
   return {

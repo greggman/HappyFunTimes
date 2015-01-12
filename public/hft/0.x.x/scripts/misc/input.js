@@ -195,15 +195,13 @@ define(['./misc'], function(Misc) {
    * @returns {module:Input.Coordinate} the relative position
    * @memberOf module:Input
    */
-  var getRelativeCoordinates = (function(window, undefined) {
-    return function(reference, event) {
-      // Use absolute coordinates
-      var pos = Misc.getAbsolutePosition(reference);
-      var x = event.pageX - pos.x;
-      var y = event.pageY - pos.y;
-      return { x: x, y: y };
-    };
-  }());
+  var getRelativeCoordinates = function(reference, event) {
+    // Use absolute coordinates
+    var pos = Misc.getAbsolutePosition(reference);
+    var x = event.pageX - pos.x;
+    var y = event.pageY - pos.y;
+    return { x: x, y: y };
+  };
 
   /**
    * Sets up controller key functions
@@ -221,7 +219,7 @@ define(['./misc'], function(Misc) {
 
     var updateKey = function(keyCode, state) {
       g_keyState[keyCode] = state;
-      if (g_oldKeyState != g_keyState) {
+      if (g_oldKeyState !== g_keyState) {
         g_oldKeyState = state;
         if (state) {
           keyDownFn(keyCode);
@@ -301,7 +299,7 @@ define(['./misc'], function(Misc) {
          { keys: kASWDKeys,   }, // LRUD
          { keys: kCursorKeys, }, // LRUD
         ],
-      }
+      };
     }
 
     var g_dirBits = [];
@@ -327,7 +325,7 @@ define(['./misc'], function(Misc) {
       for (var kk = 0; kk < 4; ++kk) {
         var bitInfo = bitInfos[kk];
         var keyInfo = { pad: ii, };
-        Misc.copyProperties(bitInfos[kk], keyInfo);
+        Misc.copyProperties(bitInfo, keyInfo);
         keyToBit[pad.keys[kk]] = keyInfo;
       }
     }
@@ -367,11 +365,11 @@ define(['./misc'], function(Misc) {
           g_excludeBits[pad] &= ~info.mask;
         }
         // If they've changed
-        if (bits != g_dirBits[pad]) {
+        if (bits !== g_dirBits[pad]) {
           g_dirBits[pad] = bits;
           var dir = bitsToDir[bits & ~g_excludeBits[pad]];
           // If the dir has changed.
-          if (dir != g_dir[pad]) {
+          if (dir !== g_dir[pad]) {
             g_dir[pad] = dir;
             emitDirectionEvent(pad, dir, g_eventInfos[pad], callback);
           }
@@ -421,7 +419,7 @@ define(['./misc'], function(Misc) {
     Object.keys(keys).forEach(function(key) {
       var value = keys[key];
       if (!isNumRE.test(key)) {
-        if (key.length != 1) {
+        if (key.length !== 1) {
           throw "bad key code: '" + key + "'";
         }
         key = key.charCodeAt(0);

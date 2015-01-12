@@ -115,9 +115,9 @@ define([
     // Try to detect if we're on mobile. I'm assuming it's not
     // common for window.innerWidth to match screen.availWidth
     // on desktop but that it is on mobile.
-    var landscape = window.orientation == 90 || window.orientation == 270;
+    var landscape = window.orientation === 90 || window.orientation === 270;
     var effectiveWidth = landscape ? screen.height : screen.width;
-    if (window.innerWidth == effectiveWidth) {
+    if (window.innerWidth === effectiveWidth) {
 //      goFullScreenIfNotFullScreen(false);
     }
 
@@ -166,7 +166,7 @@ define([
         // Is the game running
         for (var ii = 0; ii < obj.length; ++ii) {
           var game = obj[ii];
-          if (game.gameId == client.getGameId()) {
+          if (game.gameId === client.getGameId()) {
             // Yes! Reload
             window.location.reload();
             return;
@@ -174,7 +174,7 @@ define([
         }
 
         // Are any games running? If 1 game, go to it.
-        if (obj.length == 1 && obj[0].controllerUrl) {
+        if (obj.length === 1 && obj[0].controllerUrl) {
           window.location.href = obj[0].controllerUrl;
           return;
         }

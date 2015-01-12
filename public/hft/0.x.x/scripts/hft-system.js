@@ -75,6 +75,7 @@ define([
       g.eventEmitter.emit('runningGames', data);
     };
 
+    /*eslint no-use-before-define:0*/
     var tryToConnect = function() {
       // just read time so the next time we read it we'll get the time since this read.
       g.clock.getElapsedTime();

@@ -44,7 +44,7 @@ define([], function() {
     }
   };
 
-  var cancelFullScreen = function(element) {
+  var cancelFullScreen = function(/*element*/) {
     if (document.exitFullscreen) {
       document.exitFullscreen();
     } else if (document.msExitFullscreen) {
@@ -62,13 +62,13 @@ define([], function() {
              document.webkitFullscreenElement || document.msFullscreenElement ||
              document.mozFullScreen || document.webkitIsFullScreen;
     };
-    document.addEventListener('fullscreenchange', function(event) {
+    document.addEventListener('fullscreenchange', function(/*event*/) {
         callback(isFullScreen());
       });
-    element.addEventListener('webkitfullscreenchange', function(event) {
+    element.addEventListener('webkitfullscreenchange', function(/*event*/) {
         callback(isFullScreen());
       });
-    document.addEventListener('mozfullscreenchange', function(event) {
+    document.addEventListener('mozfullscreenchange', function(/*event*/) {
         callback(isFullScreen());
       });
   };

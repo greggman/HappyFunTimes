@@ -33,7 +33,7 @@
 
 define(function() {
   var GameButton = function(entitySystem) {
-    console.warn("GameButton embedded in HappyFunTimes is deprecated. Use http://github.com/greggman/hft-utils")
+    console.warn("GameButton embedded in HappyFunTimes is deprecated. Use http://github.com/greggman/hft-utils");
     entitySystem.addEntity(this);
     var currentState = false;
     var lastState = false;
@@ -46,7 +46,7 @@ define(function() {
     this.process = function() {
       justOn = (currentState && !lastState);
       lastState = currentState;
-    }
+    };
 
     this.on = function() {
       return currentState;
@@ -58,7 +58,7 @@ define(function() {
 
     this.destroy = function() {
       entitySystem.removeEntity(this);
-    }
+    };
   };
 
   return GameButton;

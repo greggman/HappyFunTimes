@@ -51,7 +51,7 @@ define(['./cookies'], function(Cookie) {
 
     var setName = function() {
       element.value = name;
-    }.bind(this);
+    };
 
     var handleSetNameMsg = function(msg) {
       name = msg.name;
@@ -62,13 +62,13 @@ define(['./cookies'], function(Cookie) {
       client.sendCmd('setName', {
           name: name,
       });
-    }.bind(this);
+    };
 
     var sendBusy = function(busy) {
       client.sendCmd('busy', {
           busy: busy,
       });
-    }.bind(this);
+    };
 
     var startEnteringName = function() {
       // Allow the game to help the player by, for example, removing her character
@@ -76,7 +76,7 @@ define(['./cookies'], function(Cookie) {
       // as in just before she's about to be hit she clicks the name. It's up the individual
       // game to decide if it want's to pay attention to the 'busy' event.
       sendBusy(true);
-    }.bind(this);
+    };
 
     var finishEnteringName = function(e) {
       // Unfortunately hiding the controls screwed up iOS Safari. After editing
@@ -93,15 +93,15 @@ define(['./cookies'], function(Cookie) {
       if (newName.length > 16) {
         newName = newName.substring(0, 16);
       }
-      if (newName.length == 0) {
+      if (newName.length === 0) {
         element.value = name;
-      } else if (newName != name) {
+      } else if (newName !== name) {
         name = newName;
         nameCookie.set(name, 700);
         sendName();
       }
       sendBusy(false);
-    }.bind(this);
+    };
 
     this.startNameEntry = function() {
       // Chrome on Android seems to really mess up here. Or rather my CSS-fu sucks
@@ -111,7 +111,7 @@ define(['./cookies'], function(Cookie) {
       nameentry.style.display = "block";
       content.style.display = "none";
       element.focus();
-    }.bind(this);
+    };
 
     // If the user's name is "" the game may send a name.
     client.addEventListener('setName', handleSetNameMsg);

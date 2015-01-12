@@ -69,16 +69,16 @@ define(function() {
     s_timeouts.splice(index, 0, timeout);
   };
 
-  var removeTimeout = function(timeout) {
-    var ndx = s_timeouts[timeout];
-    if (ndx >= 0) {
-      s_timeouts.splice(ndx, 1);
-    }
-  };
+  //var removeTimeout = function(timeout) {
+  //  var ndx = s_timeouts[timeout];
+  //  if (ndx >= 0) {
+  //    s_timeouts.splice(ndx, 1);
+  //  }
+  //};
 
   var removeTimeoutById = function(id) {
     for (var ii = 0; ii < s_timeouts.length; ++ii) {
-      if (s_timeouts[ii].id == id) {
+      if (s_timeouts[ii].id === id) {
         s_timeouts.splice(ii, 1);
         return;
       }
@@ -167,17 +167,13 @@ define(function() {
   var process = function(elapsedTimeInSeconds) {
     // insert any unscheduled timeouts
     if (s_timeoutsToInsert.length) {
-      for (var ii = 0; ii < s_timeoutsToInsert.length; ++ii) {
-        insertTimeout(s_timeoutsToInsert[ii]);
-      }
+      s_timeoutsToInsert.forEach(insertTimeout);
       s_timeoutsToInsert = [];
     }
 
     // Now remove any
     if (s_timeoutsToRemoveById.length) {
-      for (var ii = 0; ii < s_timeoutsToRemoveById.length; ++ii) {
-        removeTimeoutById(s_timeoutsToRemoveById[ii]);
-      }
+      s_timeoutsToRemoveById.forEach(removeTimeoutById);
       s_timeoutsToRemoveById = [];
     }
 
@@ -194,7 +190,7 @@ define(function() {
 
     // remove expired timeouts
     s_timeouts.splice(0, ii);
-  }
+  };
 
   return {
     clearInterval: clearInterval,

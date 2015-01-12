@@ -51,9 +51,9 @@ define(function() {
   //     var value = fooStorage.get();
   //     fooStorage.set(newValue);
   //     fooStorage.erase();
-  var Storage = itWorks ? function(name, opt_path) {
+  var Storage = itWorks ? function(name/*, opt_path*/) {
 
-    this.set = function(value, opt_days) {
+    this.set = function(value/*, opt_days*/) {
       window.localStorage.setItem(name, value);
     };
 

@@ -36,13 +36,9 @@
 requirejs(
   [ 'hft/misc/cookies',
     'hft/misc/misc',
-    'hft/misc/mobilehacks',
-    'hft/io',
   ], function(
     Cookie,
-    Misc,
-    MobileHacks,
-    IO) {
+    Misc) {
 
   var $ = function(id) {
     return document.getElementById(id);
@@ -66,7 +62,7 @@ requirejs(
     nameCookie.set(newName, 700);
     nameContainer.style.display = "block";
 
-    if (args.fromHFTNet && newName != args.name) {
+    if (args.fromHFTNet && newName !== args.name) {
       var iframe = document.createElement("iframe");
       iframe.src = "http://happyfuntimes.net/save-name.html?name=" + encodeURIComponent(newName);
       document.body.appendChild(iframe);
@@ -85,14 +81,14 @@ requirejs(
   };
 
   // If no cookie name. Use args
-  if (name.length == 0 || nameRE.test(name)) {
+  if (name.length === 0 || nameRE.test(name)) {
     name = args.name || "";
   }
 
   nameInput.value = name;
 
   // If no name display
-  if (name.length == 0 || nameRE.test(name) || args.show) {
+  if (name.length === 0 || nameRE.test(name) || args.show) {
     nameContainer.style.display = "block";
     nameInput.value = Math.random() > 0.5 ? "Jill" : "Jim";
     nameInput.focus();

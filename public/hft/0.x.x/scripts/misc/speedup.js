@@ -31,6 +31,7 @@
 "use strict";
 
 define(function() {
+  /*eslint no-unused-vars:0*/
 
   // Making a WebGL context makes Chrome switch to the
   // discrete GPU on my Retina MBP

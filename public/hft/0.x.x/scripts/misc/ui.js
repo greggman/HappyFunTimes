@@ -61,7 +61,7 @@ define(function() {
       node.nodeValue = label + ": " + value.toFixed(3);
     };
 
-    input.addEventListener('input', function(e) {
+    input.addEventListener('input', function(/*e*/) {
       var v = parseFloat(input.value);
       var value = v * (max - min) / 100 + min;
       for (var ii = 0; ii < id.length; ++ii) {

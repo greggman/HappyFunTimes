@@ -61,7 +61,7 @@ define(function() {
    * on a string.
    */
   var stringIt = function(str) {
-    return (typeof(str) === 'string') ? str : str.toString();
+    return (typeof str === 'string') ? str : str.toString();
   };
 
   /**
@@ -124,8 +124,8 @@ define(function() {
         for (var ii = 0; ii < params.length; ++ii) {
           var obj = params[ii];
           for (var jj = 0; jj < keys.length; ++jj) {
-            var key = keys[jj]
-            var obj = obj[key];
+            key = keys[jj];
+            obj = obj[key];
             if (obj === undefined) {
               break;
             }
@@ -150,7 +150,7 @@ define(function() {
    */
   var startsWith = function(str, start) {
     return (str.length >= start.length &&
-            str.substr(0, start.length) == start);
+            str.substr(0, start.length) === start);
   };
 
   /**
@@ -162,7 +162,7 @@ define(function() {
    */
   var endsWith = function(str, end) {
     return (str.length >= end.length &&
-            str.substring(str.length - end.length) == end);
+            str.substring(str.length - end.length) === end);
   };
 
   /**
@@ -193,9 +193,9 @@ define(function() {
           !isFinite(codePoint) || // `NaN`, `+Infinity`, or `-Infinity`
           codePoint < 0 || // not a valid Unicode code point
           codePoint > 0x10FFFF || // not a valid Unicode code point
-          floor(codePoint) != codePoint // not an integer
+          floor(codePoint) !== codePoint // not an integer
         ) {
-          throw RangeError('Invalid code point: ' + codePoint);
+          throw new RangeError('Invalid code point: ' + codePoint);
         }
         if (codePoint <= 0xFFFF) { // BMP code point
           codeUnits.push(codePoint);
@@ -206,7 +206,7 @@ define(function() {
           lowSurrogate = (codePoint % 0x400) + 0xDC00;
           codeUnits.push(highSurrogate, lowSurrogate);
         }
-        if (index + 1 == length || codeUnits.length > MAX_SIZE) {
+        if (index + 1 === length || codeUnits.length > MAX_SIZE) {
           result += stringFromCharCode.apply(null, codeUnits);
           codeUnits.length = 0;
         }

@@ -64,7 +64,7 @@ define(function() {
    */
   var copyProperties = function(src, dst, opt_overwriteBehavior) {
     Object.keys(src).forEach(function(key) {
-      if (opt_overwriteBehavior == 2 && dst[key] !== undefined) {
+      if (opt_overwriteBehavior === 2 && dst[key] !== undefined) {
         return;
       }
       var value = src[key];
@@ -78,14 +78,14 @@ define(function() {
       } else if (value instanceof Object &&
                  !(value instanceof Function) &&
                  !(value instanceof HTMLElement)) {
-        var newDst = dst[key];
-        if (!newDst) {
-          newDst = {};
-          dst[key] = newDst;
+        var newDst2 = dst[key];
+        if (!newDst2) {
+          newDst2 = {};
+          dst[key] = newDst2;
         }
-        copyProperties(value, newDst, opt_overwriteBehavior);
+        copyProperties(value, newDst2, opt_overwriteBehavior);
       } else {
-        if (opt_overwriteBehavior == 1 && dst[key] !== undefined) {
+        if (opt_overwriteBehavior === 1 && dst[key] !== undefined) {
           return;
         }
         dst[key] = value;
@@ -152,8 +152,9 @@ define(function() {
     var argumentName = opt_argumentName || 'settings';
     var src = parseUrlQuery();
     var dst = opt_obj || {};
-    if (src.settings) {
-      var json = src.settings.replace(fixKeysRE, '"$1":');
+    var settingsStr = src[argumentName];
+    if (settingsStr) {
+      var json = settingsStr.replace(fixKeysRE, '"$1":');
       var settings = JSON.parse(json);
       copyProperties(settings, dst);
     }
@@ -181,7 +182,7 @@ define(function() {
     var strong = randFunc(3);
     var colors = [];
     for (var ii = 0; ii < 3; ++ii) {
-      colors.push(randFunc(128) + (ii == strong ? 128 : 64));
+      colors.push(randFunc(128) + (ii === strong ? 128 : 64));
     }
     return "rgb(" + colors.join(",") + ")";
   };
@@ -197,7 +198,7 @@ define(function() {
     var strong = randFunc(3);
     var color = 0xFF;
     for (var ii = 0; ii < 3; ++ii) {
-      color = (color << 8) | (randFunc(128) + (ii == strong ? 128 : 64));
+      color = (color << 8) | (randFunc(128) + (ii === strong ? 128 : 64));
     }
     return color;
   };
@@ -215,7 +216,7 @@ define(function() {
       if (rules) {
         for (var rr = 0; rr < rules.length; ++rr) {
           var rule = rules[rr];
-          if (rule.selectorText == selector) {
+          if (rule.selectorText === selector) {
             return rule;
           }
         }
@@ -344,17 +345,17 @@ define(function() {
   /**
    * Resizes a cavnas to match its CSS displayed size.
    * @param {Canvas} canvas canvas to resize.
-   * @param {boolean?} use_devicePixelRatio if true canvas will be
+   * @param {boolean?} useDevicePixelRatio if true canvas will be
    *        created to match devicePixelRatio.
    * @memberOf module:Misc
    */
-  var resize = function(canvas, use_devicePixelRatio) {
-    var mult = use_devicePixelRatio ? window.devicePixelRatio : 1;
+  var resize = function(canvas, useDevicePixelRatio) {
+    var mult = useDevicePixelRatio ? window.devicePixelRatio : 1;
     mult = mult || 1;
     var width  = Math.floor(canvas.clientWidth  * mult);
     var height = Math.floor(canvas.clientHeight * mult);
-    if (canvas.width != width ||
-        canvas.height != height) {
+    if (canvas.width !== width ||
+        canvas.height !== height) {
       canvas.width = width;
       canvas.height = height;
       return true;

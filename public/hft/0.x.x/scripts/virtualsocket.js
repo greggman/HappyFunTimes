@@ -32,36 +32,36 @@
 "use strict";
 
 define(function() {
-  var SocketIOClient = function(options) {
-    options = options || {};
-    console.log("Using direct Socket.io");
-    var _socket;
-    var _connected = false;
-
-    if (!window.io) {
-      console.log("no socket io");
-      _socket = {
-        send: function() { }
-      };
-      return;
-    }
-
-    var url = options.url || "http://" + window.location.host;
-    console.log("connecting to: " + url);
-    _socket = io.connect(url);
-
-    this.isConnected = function() {
-      return _socket.readyState == WebSocket.OPEN;
-    };
-
-    this.on = function(eventName, fn) {
-      _socket.on(eventName, fn);
-    };
-
-    this.send = function(msg) {
-      _socket.emit('message', msg);
-    };
-  };
+  //var SocketIOClient = function(options) {
+  //  options = options || {};
+  //  console.log("Using direct Socket.io");
+  //  var _socket;
+  //  var _connected = false;
+  //
+  //  if (!window.io) {
+  //    console.log("no socket io");
+  //    _socket = {
+  //      send: function() { }
+  //    };
+  //    return;
+  //  }
+  //
+  //  var url = options.url || "http://" + window.location.host;
+  //  console.log("connecting to: " + url);
+  //  _socket = io.connect(url);
+  //
+  //  this.isConnected = function() {
+  //    return _socket.readyState === WebSocket.OPEN;
+  //  };
+  //
+  //  this.on = function(eventName, fn) {
+  //    _socket.on(eventName, fn);
+  //  };
+  //
+  //  this.send = function(msg) {
+  //    _socket.emit('message', msg);
+  //  };
+  //};
 
   var WebSocketClient = function(options) {
     options = options || {};
@@ -77,7 +77,13 @@ define(function() {
     });
 
     this.isConnected = function() {
-      return _socket.readyState == WebSocket.OPEN;
+      return _socket.readyState === WebSocket.OPEN;
+    };
+
+    var sendLowLevel = function(str) {
+      if (_socket.readyState === WebSocket.OPEN) {
+        _socket.send(str);
+      }
     };
 
     this.on = function(eventName, fn) {
@@ -94,7 +100,7 @@ define(function() {
       case 'message':
         _socket.onmessage = function(event) {
           // Respond to ping.
-          if (event.data == 'P') {
+          if (event.data === 'P') {
             sendLowLevel('P');
             return;
           }
@@ -108,12 +114,6 @@ define(function() {
           }
         };
         break;
-      }
-    };
-
-    var sendLowLevel = function(str) {
-      if (_socket.readyState == WebSocket.OPEN) {
-        _socket.send(str);
       }
     };
 

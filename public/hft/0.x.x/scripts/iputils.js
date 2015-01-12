@@ -33,12 +33,12 @@
 
 define(function() {
   var RTCPeerConnection = /* window.RTCPeerConnection || */ window.webkitRTCPeerConnection || window.mozRTCPeerConnection;
-  var ipAddressRE = /\b(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\b/;
+  //var ipAddressRE = /\b(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\b/;
 
-  var getIpFromString = function(s) {
-    var r = s.match(ipAddressRE);
-    return r[0];
-  };
+  //var getIpFromString = function(s) {
+  //  var r = s.match(ipAddressRE);
+  //  return r[0];
+  //};
 
   var configuration = { "iceServers": [] };
   var localIPs = [];
@@ -76,17 +76,37 @@ define(function() {
     setChecked();
   };
 
+  var grepSPD = function(sdp) {
+    sdp.split('\r\n').forEach(function (line) {
+      var parts;
+      var addr;
+      if (~line.indexOf("a=candidate")) {
+        parts = line.split(' ');
+        addr = parts[4];
+        var type = parts[7];
+        if (type === 'host') {
+          addIPAddress(addr);
+        }
+      } else if (~line.indexOf("c=")) {
+        parts = line.split(' ');
+        addr = parts[2];
+        addIPAddress(addr);
+      }
+    });
+    setChecked();
+  };
+
   if (RTCPeerConnection) {
     var pc = new RTCPeerConnection(configuration);
     if (window.mozRTCPeerConnection) {  // FF needs a channel/stream to proceed
       pc.createDataChannel('', {reliable:false});
-    };
+    }
     pc.onicecandidate = function (evt) {
       if (evt.candidate) {
         grepSPD(evt.candidate.candidate);
       }
 
-      if (pc.iceGatheringState == "complete") {
+      if (pc.iceGatheringState === "complete") {
         decrementCallbacksNeededToFinish();
       }
     };
@@ -95,32 +115,13 @@ define(function() {
         grepSPD(offerDesc.sdp);
         pc.setLocalDescription(offerDesc);
         decrementCallbacksNeededToFinish();
-      }, function (e) {
+      }, function (/*e*/) {
         decrementCallbacksNeededToFinish();
       });
   } else {
    //browser doesn't support webrtc
    callbacksNeededToFinish = 0;
    setChecked();
-  }
-
-  var grepSPD = function(sdp) {
-    var hosts = [];
-    sdp.split('\r\n').forEach(function (line) {
-      if (~line.indexOf("a=candidate")) {
-        var parts = line.split(' ');
-        var addr = parts[4];
-        var type = parts[7];
-        if (type === 'host') {
-          addIPAddress(addr);
-        }
-      } else if (~line.indexOf("c=")) {
-        var parts = line.split(' ');
-        var addr = parts[2];
-        addIPAddress(addr);
-      }
-    });
-    setChecked();
   }
 
   /**

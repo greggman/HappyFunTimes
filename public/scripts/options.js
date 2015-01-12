@@ -34,16 +34,8 @@
 // Start the main app logic.
 requirejs(
   [ 'hft/gameclient',
-    'hft/misc/misc',
-    'hft/misc/strings',
   ], function(
-    GameClient,
-    Misc,
-    Strings) {
-
-  var $ = document.getElementById.bind(document);
-  var g = {
-  };
+    GameClient) {
 
   var client = new GameClient({
     gameId: "__hft__",
@@ -51,6 +43,7 @@ requirejs(
 
   var handleCmdErrorMsg = function(data) {
     // TODO: change to html dialog.
+    /*eslint no-alert:0*/
     alert(data.msg);
   };
 

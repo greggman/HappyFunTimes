@@ -52,6 +52,7 @@ requirejs(
 
   var handleCmdErrorMsg = function(data) {
     // TODO: change to html dialog.
+    /*eslint no-alert:0*/
     alert(data.msg);
   };
 
@@ -122,7 +123,7 @@ requirejs(
       var gameInfo = runtimeInfo.info;
       var hftInfo = gameInfo.happyFunTimes;
       gamesById[hftInfo.gameId] = runtimeInfo;
-      runtimeInfo.dev = (runtimeInfo.originalGameId != hftInfo.gameId) ? "(*)" : "";
+      runtimeInfo.dev = (runtimeInfo.originalGameId !== hftInfo.gameId) ? "(*)" : "";
       if (g.hftData.apiVersion) {
         if (semver.gt(hftInfo.apiVersion, g.hftData.apiVersion)) {
           runtimeInfo.needsUpgrade = true;
@@ -157,7 +158,7 @@ requirejs(
         var hftInfo = gameInfo.happyFunTimes;
         var gameType = hftInfo.gameType;
         if (!gameType) {
-          console.warn("missing happyFunTimes.gameType in package.json")
+          console.warn("missing happyFunTimes.gameType in package.json");
           return;
         }
         var msgId = (runtimeInfo.needsUpgrade ? "upgrade" : gameType.toLowerCase()) + hiddenMsgSuffix;
@@ -168,7 +169,7 @@ requirejs(
         }
         elem.addEventListener('click', function(element, runtimeInfo) {
           return function(e) {
-            e.preventDefault(true)
+            e.preventDefault(true);
             element.style.display = "block";
             onDisplay(element, runtimeInfo);
           };
@@ -183,7 +184,7 @@ requirejs(
             e.preventDefault(true);
             fn();
             onHide(element, runtimeInfo);
-          }
+          };
         }(cleanupFn, msgElement, runtimeInfo), false);
         gamesById[hftInfo.gameId].cleanupFn = cleanupFn;
       });
@@ -202,7 +203,7 @@ requirejs(
 
     addOverlayMessgaeOnClickToSelector(".launch-button", launch, quit);
 
-    forEachElementOnSelector(".upgrade-hft", function(elem, runtimeInfo) {
+    forEachElementOnSelector(".upgrade-hft", function(elem/*, runtimeInfo*/) {
       elem.addEventListener('click', function() {
         window.location.href = "http://superhappyfuntimes.net/install";
       });
@@ -226,7 +227,7 @@ requirejs(
     }
 
     // If there's only one game just go to it.
-    if (obj.length == 1 && obj[0].controllerUrl) {
+    if (obj.length === 1 && obj[0].controllerUrl) {
       window.location.href = obj[0].controllerUrl;
       return;
     }

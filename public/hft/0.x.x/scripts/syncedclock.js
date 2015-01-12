@@ -62,7 +62,7 @@ define(["./io"], function(IO) {
    * @returns {Clock} the created clock
    * @memberOf module:SyncedClock
    */
-  var createClock = (function(online, opt_syncRateSeconds, opt_callback) {
+  var createClock = function(online, opt_syncRateSeconds, opt_callback) {
 
     if (!window.performance) {
       window.performance = {};
@@ -116,13 +116,12 @@ define(["./io"], function(IO) {
       var url = window.location.href;
       var syncRateMS = (opt_syncRateSeconds || 10) * 1000;
       var timeOffset = 0;
-      var callback = opt_callback;
 
       var syncToServer = function(queueNext) {
         var sendTime = getLocalTime();
         IO.sendJSON(url, {cmd: 'time'}, function(exception, obj) {
           if (exception) {
-            //g_services.logger.error("syncToServer: " + exception);
+            console.error("syncToServer: " + exception);
           } else {
             var receiveTime = getLocalTime();
             var duration = receiveTime - sendTime;
@@ -142,10 +141,13 @@ define(["./io"], function(IO) {
           }
         });
       };
+      var syncToServerNoQueue = function() {
+        syncToServer(false);
+      };
       syncToServer(true);
-      setTimeout(function() {syncToServer(false)}, 1000);
-      setTimeout(function() {syncToServer(false)}, 2000);
-      setTimeout(function() {syncToServer(false)}, 4000);
+      setTimeout(syncToServerNoQueue, 1000);
+      setTimeout(syncToServerNoQueue, 2000);
+      setTimeout(syncToServerNoQueue, 4000);
 
       /**
        * Gets the current time in seconds.
@@ -158,7 +160,7 @@ define(["./io"], function(IO) {
     };
 
     return online ? new SyncedClock(opt_syncRateSeconds, opt_callback) : new LocalClock(opt_callback);
-  });
+  };
 
   return {
     createClock: createClock,
