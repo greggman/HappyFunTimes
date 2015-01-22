@@ -30,11 +30,8 @@
  */
 "use strict";
 
-var home    = require('../../lib/home');
 var Promise = require('promise');
 var semver  = require('semver');
-var sprintf = require('sprintf-js').sprintf;
-var strings = require('../../lib/strings');
 
 var list = function(args) {
   return new Promise(function(resolve /* , reject */) {
