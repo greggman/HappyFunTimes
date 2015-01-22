@@ -211,6 +211,9 @@ html, body {
 #hft-portrait {
   display: none;
 }
+#hft-landscape {
+  display: none;
+}
 .hft-xlarge {
   font-size: 150pt;
   font-weight: bold;
@@ -251,6 +254,30 @@ html, body {
       -o-transform: rotate(90deg);
       -ms-transform: rotate(90deg);
       transform: rotate(90deg);
+  }
+}
+
+@media only screen and (orientation : landscape) {
+  #hft-landscape {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    background-color: red;
+    color: white;
+    z-index: 9999;
+
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: flex;
+
+  }
+
+  .hft-landscape-rot90 {
+      g-webkit-transform: rotate(90deg);
+      g-moz-transform: rotate(90deg);
+      g-o-transform: rotate(90deg);
+      g-ms-transform: rotate(90deg);
+      gtransform: rotate(90deg);
   }
 }
 
