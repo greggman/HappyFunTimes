@@ -16,6 +16,7 @@ var globalOptions = [
   { option: 'help',    alias: 'h', type: 'Boolean', description: 'displays help'              },
   { option: 'verbose', alias: 'v', type: 'Boolean', description: 'print more stuff'           },
   { option: 'debug',   alias: 'd', type: 'Boolean', description: 'print stack trace on error' },
+  { option: 'version',             type: 'Boolean', description: 'print version'              },
   { option: 'config-path',         type: 'String',  description: 'config path'                },
   { option: 'settings-path',       type: 'String',  description: 'settings path'              },
   { option: 'hft-dir',             type: 'String',  description: 'hft installation path'      },
@@ -77,6 +78,10 @@ process.argv.slice(2).forEach(function(arg) {
 });
 
 var cmd = args._[0];
+if (args["version"]) {
+  cmd = "version";
+}
+
 if (!cmd) {
   printUsage();
   process.exit(1);
