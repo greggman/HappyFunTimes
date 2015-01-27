@@ -29,7 +29,9 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+/*jslint node: true */
 "use strict";
+
 
 var path        = require('path');
 var querystring = require('querystring');
@@ -198,4 +200,3 @@ AppleCaptivePortalHandler.prototype.sendCaptivePortalHTML = function(req, res, s
 };
 
 module.exports = AppleCaptivePortalHandler;
-

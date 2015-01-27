@@ -37,7 +37,9 @@
 // the game is not installed/added it won't show up at http://localhost:18679/games.html
 // but unity can still start a game and send a message to happyFunTimes
 
+/*jslint node: true */
 "use strict";
+
 
 var debug  = require('debug')("AvailableGames");
 var events = require('events');
@@ -77,5 +79,3 @@ var AvailableGames = function() {
 };
 
 module.exports = AvailableGames;
-
-

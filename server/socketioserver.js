@@ -29,8 +29,9 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-'use strict';
-
+ /*jslint node: true */
+ "use strict";
+ 
 var debug = require('debug')('socketioserver');
 
 var SocketIOServer = function(server) {
@@ -73,4 +74,3 @@ var SocketIOServer = function(server) {
 };
 
 module.exports = SocketIOServer;
-

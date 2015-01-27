@@ -29,7 +29,9 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-"use strict";
+ /*jslint node: true */
+ "use strict";
+
 
 /**
  * @typedef {Object} HeartMonitor~Options
@@ -89,5 +91,3 @@ var HeartMonitor = function(options) {
 };
 
 module.exports = HeartMonitor;
-
-

@@ -29,8 +29,9 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-"use strict";
-
+ /*jslint node: true */
+ "use strict";
+ 
 var computerName = require('../lib/computername');
 var debug        = require('debug')('relayserver');
 var events       = require('events');
@@ -316,4 +317,3 @@ var RelayServer = function(servers, inOptions) {
 };
 
 module.exports = RelayServer;
-

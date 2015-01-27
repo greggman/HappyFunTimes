@@ -29,6 +29,8 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+/*jslint node: true */
+/*jslint node: true */
 "use strict";
 
 var debug     = require('debug')('es6-support');
@@ -117,5 +119,3 @@ var ES6Support = function(options) {
 };
 
 module.exports = ES6Support;
-
-
