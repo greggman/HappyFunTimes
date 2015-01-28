@@ -29,9 +29,9 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
- /*jslint node: true */
+
  "use strict";
- 
+
 var computerName = require('../lib/computername');
 var debug        = require('debug')('relayserver');
 var events       = require('events');

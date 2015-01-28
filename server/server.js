@@ -31,7 +31,7 @@
 
 /*eslint no-process-exit:0*/
 
-/*jslint node: true */
+
 "use strict";
 
 var settingsOptionSpec = {

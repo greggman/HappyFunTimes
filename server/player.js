@@ -29,7 +29,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-/*jslint node: true */
+
 "use strict";
 
 var debug        = require('debug')('player');
