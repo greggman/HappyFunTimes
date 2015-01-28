@@ -4,19 +4,20 @@ To Do
 *   check 1.7.0 projects tell you you need new version of HFT
 *   unity plugin
     *   make it warn you you need a new version of HFT.
-    .   Have LocalNewPlayer emit game msgs
+    *   Have LocalNewPlayer emit game msgs
     *   make it set project settings
         *   Run in background
         *   Start FullScreen
     *   make it set run-in-background
     *   make package.json editor
     *   remove namespaces from samples
-    .   make "new project" button? (no need. Install plugin)
-    .   make "start HFT?" button (or should running it be enough)
-    .   make "location of HFT" button? (asks if can't run)
+    *   make "new project" button? (no need. Install plugin)
+    *   make "start HFT?" button (or should running it be enough)
+    *   make "location of HFT" button? (asks if can't run)
     *   add HFT->Export the exports all 3 to the correct palce
     *   add HFT->Publish that does an export and then published? (needs git currently).
     .   When running HFT from Unity don't bring up localhost../games.html
+    .   option to open controllers?
     *   make stages of commands
         .   cmd with cmd string RegisterCmdHandler<type>(fn)
         .   RegisterCmdHandler<type>(name, fn)
