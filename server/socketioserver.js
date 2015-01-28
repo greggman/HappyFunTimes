@@ -29,9 +29,9 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
- 
- "use strict";
- 
+
+"use strict";
+
 var debug = require('debug')('socketioserver');
 
 var SocketIOServer = function(server) {

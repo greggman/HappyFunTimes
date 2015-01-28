@@ -29,6 +29,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+"use strict";
 
 var AppleCaptivePortalHandler = require('./apple-captive-portal-handler');
 var AvailableGames            = require('./available-games');
@@ -481,9 +482,13 @@ var HFTServer = function(options, startedCallback) {
     listAvailableGames: handleListAvailableGamesRequest,
     happyFunTimesPing: handleHappyFunTimesPingRequest,
   };
-  app.post(/.*/, function(req,res,next){
-    if(!req.body.cmd) return send404(res);
-    if(!(req.body.cmd in postCmdHandlers)) return send404(res);
+  app.post(/.*/, function(req,res){
+    if(!req.body.cmd){
+      return send404(res);
+    }
+    if(!(req.body.cmd in postCmdHandlers)){
+      return send404(res);
+    }
     postCmdHandlers[req.body.cmd](req.body);
   });
 
