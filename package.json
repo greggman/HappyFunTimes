@@ -10,6 +10,7 @@
   "dependencies": {
     "almond": "^0.3.0",
     "asks": "^1.0.2",
+    "body-parser": "^1.10.2",
     "cli-color": "^0.3.2",
     "debug": "0.7.4",
     "express": "^4.4.1",

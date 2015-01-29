@@ -29,6 +29,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+
 "use strict";
 
 var debug     = require('debug')('non-require');
@@ -113,7 +114,3 @@ var NonRequire = function(options) {
 };
 
 module.exports = NonRequire;
-
-
-
-

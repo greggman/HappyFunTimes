@@ -31,7 +31,8 @@
 
 /*eslint no-process-exit:0*/
 
-'use strict';
+
+"use strict";
 
 var settingsOptionSpec = {
       option: 'settings',         type: 'String',     description: 'settings: key=value, ',
@@ -155,7 +156,3 @@ if (args.dns) {
     }
   });
 }
-
-
-
-

@@ -29,7 +29,8 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-'use strict';
+
+ "use strict";
 
 var debug        = require('debug')('websocketserver');
 var HeartMonitor = require('./heart-monitor');
@@ -140,4 +141,3 @@ var WSServer = function(server) {
 };
 
 module.exports = WSServer;
-

@@ -29,7 +29,9 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+
 "use strict";
+
 
 exports.options = [
   { option: 'port', alias: 'p', type: 'Int',     description: 'port. Default 18679'},
@@ -43,4 +45,3 @@ exports.options = [
   { option: 'minify',           type: 'Boolean', description: 'minify -minify.js files', default: false},
   { option: 'kiosk',            type: 'Boolean', description: 'skip the index', default: false},
 ];
-

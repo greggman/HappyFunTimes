@@ -29,6 +29,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+
 "use strict";
 
 var events = require('events');
@@ -52,4 +53,3 @@ var LocalWebSocketServer = function() {
 };
 
 module.exports = LocalWebSocketServer;
-

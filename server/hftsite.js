@@ -29,6 +29,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+
 "use strict";
 
 var config  = require('../lib/config');
@@ -102,4 +103,3 @@ var setup = function(options) {
 
 exports.inform = inform;
 exports.setup = setup;
-

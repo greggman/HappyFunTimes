@@ -29,7 +29,8 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-"use strict";
+
+ "use strict";
 
 var computerName = require('../lib/computername');
 var debug        = require('debug')('relayserver');
@@ -316,4 +317,3 @@ var RelayServer = function(servers, inOptions) {
 };
 
 module.exports = RelayServer;
-

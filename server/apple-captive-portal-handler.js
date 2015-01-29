@@ -31,6 +31,7 @@
 
 "use strict";
 
+
 var path        = require('path');
 var querystring = require('querystring');
 var strings     = require('../lib/strings');
@@ -198,4 +199,3 @@ AppleCaptivePortalHandler.prototype.sendCaptivePortalHTML = function(req, res, s
 };
 
 module.exports = AppleCaptivePortalHandler;
-

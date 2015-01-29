@@ -29,7 +29,9 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-"use strict";
+
+ "use strict";
+
 
 var debug  = require('debug')('game-group');
 var Game   = require('./game');

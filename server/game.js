@@ -29,7 +29,9 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-"use strict";
+
+ "use strict";
+
 
 var debug        = require('debug')('game');
 var hftSite      = require('./hftsite');
@@ -334,4 +336,3 @@ Game.prototype.sendGameDisconnect = function(otherGame) {
 };
 
 module.exports = Game;
-
