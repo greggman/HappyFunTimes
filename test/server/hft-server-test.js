@@ -30,14 +30,8 @@
  */
 "use strict";
 
-var assert         = require('assert');
-var fs             = require('fs');
 var path           = require('path');
-var Promise        = require('promise');
-var request        = require('request');
 var should         = require('should');
-var TestController = require('../../lib/test/test-controller');
-var TestGame       = require('../../lib/test/test-game');
 var testUtils      = require('../../lib/test/test-utils');
 
 var g_configPath             = path.join(__dirname, "..", "testconfig", "config.json");
@@ -49,14 +43,6 @@ describe('server requests', function() {
   var old = { };
 
   before(function(done) {
-//    var config = require('../../lib/config');
-//    config.reset();
-//    config.setup({
-//      configPath: g_configPath,
-//    });
-//    var gamedb = require('../../lib/gamedb');
-//    gamedb.reset();
-
     hftServer = testUtils.createHFTServerWithMocks(done);
   });
 
