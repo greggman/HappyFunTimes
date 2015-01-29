@@ -1,6 +1,7 @@
 To Do
 =====
 
+*   add git pre-commit hook for lint/test
 *   check 1.7.0 projects tell you you need new version of HFT
 *   unity plugin
     *   make it warn you you need a new version of HFT.
