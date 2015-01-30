@@ -153,36 +153,27 @@ var HFTServer = function(options, startedCallback) {
 
   var send404 = function(res, msg) {
     msg = msg || '';
-    res.writeHead(404);
-    res.write('404<br/>' + msg);
-    res.end();
+    res.writeHead(404).write('404<br/>' + msg).end();
   };
 
-  function postHandler(request, callback) {
+  var bodyParser = function(req, res, next) {
     var query = { };
-    var content = '';
+    var content = [];
 
-    request.addListener('data', function(chunk) {
-      content += chunk;
+    req.addListener('data', function(chunk) {
+      content.push(chunk);
     });
 
-    request.addListener('end', function() {
+    req.addListener('end', function() {
       try {
-        query = JSON.parse(content);
+        query = JSON.parse(content.join(""));
       } catch (e) {
         query = {};
       }
-      callback(query);
+      req.body = query;
+      next();
     });
-  }
-
-  function sendJSONResponse(res, object, opt_headers) {
-    var headers = opt_headers || { };
-    headers['Content-Type'] = 'application/json';
-    res.writeHead(200, headers);
-    res.write(JSON.stringify(object), 'utf8');
-    res.end();
-  }
+  };
 
   //function saveScreenshotFromDataURL(dataURL) {
   //  var EXPECTED_HEADER = 'data:image/png;base64,';
@@ -199,7 +190,7 @@ var HFTServer = function(options, startedCallback) {
   //}
 
   var handleTimeRequest = function(query, res) {
-    sendJSONResponse(res, { time: highResClock.getTime() });
+    res.json({ time: highResClock.getTime() });
   };
 
   // var handleScreenshotRequest = function(query, res) {
@@ -213,47 +204,22 @@ var HFTServer = function(options, startedCallback) {
       return;
     }
     var games = relayServer.getGames();
-    sendJSONResponse(res, games);
+    res.json(games);
   };
 
   var handleListAvailableGamesRequest = function(query, res) {
-    sendJSONResponse(res, g.gameDB.getGames());
+    res.json(g.gameDB.getGames());
   };
 
   var handleHappyFunTimesPingRequest = function(query, res) {
     var games = relayServer.getGames();
     var game = (games.length > 0) ? (': ' + games[0].runtimeInfo.originalGameId) : '';
-    sendJSONResponse(res, {
+    res.set({'Access-Control-Allow-Origin': '*'}).json({
       version: '0.0.0',
       id: 'HappyFunTimes',
       serverName: (options.systemName || computerName.get()) + game,
-    }, {
-      'Access-Control-Allow-Origin': '*',
     });
   };
-
-  var handlePOST = (function() {
-    var postCmdHandlers = {
-      time: handleTimeRequest,
-      //screenshot: handleScreenshotRequest,
-      listRunningGames: handleListRunningGamesRequest,
-      listAvailableGames: handleListAvailableGamesRequest,
-      happyFunTimesPing: handleHappyFunTimesPingRequest,
-    };
-
-    return function(req, res) {
-      postHandler(req, function(query) {
-        var cmd = query.cmd;
-        debug('query: ' + cmd);
-        var handler = postCmdHandlers[cmd];
-        if (!handler) {
-          send404(res);
-          return;
-        }
-        handler(query, res);
-      });
-    };
-  }());
 
   var handleOPTIONS = function(req, res) {
     res.removeHeader('Content-Type');
@@ -523,7 +489,25 @@ var HFTServer = function(options, startedCallback) {
   app.get(/^\/games\/(.*?)\//, sendGameRequestedFile);
   app.get(/^\/enter-name.html/, sendTemplatedFile);
   app.get(/.*/, sendSystemRequestedFile);
-  app.post(/.*/, handlePOST);
+  app.post(/.*/, bodyParser);
+
+  var postCmdHandlers = {
+    time: handleTimeRequest,
+    //screenshot: handleScreenshotRequest,
+    listRunningGames: handleListRunningGamesRequest,
+    listAvailableGames: handleListAvailableGamesRequest,
+    happyFunTimesPing: handleHappyFunTimesPingRequest,
+  };
+  app.post(/.*/, function(req,res){
+    if(!req.body.cmd){
+      return send404(res);
+    }
+    if(!(req.body.cmd in postCmdHandlers)){
+      return send404(res);
+    }
+    postCmdHandlers[req.body.cmd](req.body, res);
+  });
+
   app.options(/.*/, handleOPTIONS);
 
   var ports = [g.port];
