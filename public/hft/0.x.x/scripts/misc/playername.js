@@ -85,8 +85,8 @@ define(['./cookies'], function(Cookie) {
       // to do some hacky fix like scroll back to the top.
       content.style.display = contentOriginalDisplay;
       nameentry.style.display = "none";
-      window.scroll(0,1);
-      window.scroll(0,0);
+      window.scroll(0, 1);
+      window.scroll(0, 0);
       e.preventDefault();
       element.blur();
       var newName = element.value.replace(/[<>]/g, '');

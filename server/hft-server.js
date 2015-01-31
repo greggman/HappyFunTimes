@@ -498,14 +498,15 @@ var HFTServer = function(options, startedCallback) {
     listAvailableGames: handleListAvailableGamesRequest,
     happyFunTimesPing: handleHappyFunTimesPingRequest,
   };
-  app.post(/.*/, function(req,res){
-    if(!req.body.cmd){
+  app.post(/.*/, function(req, res){
+    if (!req.body.cmd){
       return send404(res);
     }
-    if(!(req.body.cmd in postCmdHandlers)){
+    var handler = postCmdHandlers[req.body.cmd];
+    if (!handler){
       return send404(res);
     }
-    postCmdHandlers[req.body.cmd](req.body, res);
+    handler(req.body, res);
   });
 
   app.options(/.*/, handleOPTIONS);
