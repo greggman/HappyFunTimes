@@ -38,16 +38,21 @@ var should = require('should');
 
 describe('lint', function() {
 
-  var configFile = path.join(__dirname, '..', 'dev', 'conf', 'eslint.json');
-  var config = hanson.parse(fs.readFileSync(configFile, {encoding: "utf-8"}));
+  var config;
+  var cwd;
 
-  config.rulePaths = [path.join(__dirname, '..', 'dev', 'rules')];
-  config.configFile = configFile;
+  before(function() {
+    cwd = process.cwd();
+    process.chdir(path.join(__dirname, ".."));
+    var configFile = path.join(__dirname, '..', 'dev', 'conf', 'eslint.json');
+    config = hanson.parse(fs.readFileSync(configFile, {encoding: "utf-8"}));
 
-  var cli = new eslint.CLIEngine(config);
-  config = cli.getConfigForFile(path.join(__dirname, "..", "server", "hft-server.js"));
+    config.rulePaths = [path.join(__dirname, '..', 'dev', 'rules')];
+    config.configFile = configFile;
 
-  // console.log(config);
+    var cli = new eslint.CLIEngine(config);
+    config = cli.getConfigForFile(path.join(__dirname, "..", "server", "hft-server.js"));
+  });
 
   [
     { rule: "require-trailing-comma/require-trailing-comma", code: "var a = [ 1, 2, 3 ]; console.log(a);", },
@@ -82,6 +87,10 @@ describe('lint', function() {
       var errors = eslint.linter.verify(test.code, config);
       errors[0].ruleId.should.be.eql(test.rule);
     });
+  });
+
+  after(function() {
+    process.chdir(cwd);
   });
 
 });

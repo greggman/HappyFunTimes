@@ -40,11 +40,6 @@ module.exports = function(grunt) {
         options: {
             config: 'dev/conf/eslint.json',
             rulesdir: ['dev/rules'],
-            plugin: [
-                'eslint-plugin-one-variable-per-var',
-                'eslint-plugin-optional-comma-spacing',
-                'eslint-plugin-require-trailing-comma',
-            ],
         },
     },
   });

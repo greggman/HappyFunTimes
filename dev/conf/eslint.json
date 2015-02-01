@@ -2,6 +2,11 @@
   "env": {
     "node": true
   },
+  "plugins": [
+    "eslint-plugin-optional-comma-spacing",
+    "eslint-plugin-one-variable-per-var",
+    "eslint-plugin-require-trailing-comma",
+  ],
   "rules": {
     "brace-style": [2, "1tbs", { "allowSingleLine": false }],
     "camelcase": [0],
