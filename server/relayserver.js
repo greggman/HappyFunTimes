@@ -42,6 +42,10 @@ var Player       = require('./player');
 var strings      = require('../lib/strings');
 var WSServer     = require('./websocketserver');
 
+var safeishName = function(gameId) {
+  return gameId.replace(/[^a-zA-Z0-9-_()]/g, '_');
+};
+
 /**
  * RelayServer options
  * @typedef {Object} RelayServer~Options
@@ -233,7 +237,7 @@ var RelayServer = function(servers, inOptions) {
    * @param {Client} client Websocket client object.
    */
   this.assignAsClientForGame = function(data, client) {
-    var gameId = data.gameId;
+    var gameId = safeishName(data.gameId);
     var cwd = data.cwd;
     if (cwd) {
       var origCwd = cwd;
@@ -244,15 +248,22 @@ var RelayServer = function(servers, inOptions) {
       // the 'bin' convension
 
       // First check deeper
-      cwd = path.join(cwd, "WebPlayerTemplates/HappyFunTimes");
-      cwd = findPackageJSON(cwd);
+      debug("gameId:" + gameId);
+      cwd = findPackageJSON(path.join(origCwd, "WebPlayerTemplates/HappyFunTimes", gameId));
       if (!cwd) {
-        cwd = findPackageJSON(path.join(origCwd, "../../../Assets/WebPlayerTemplates/HappyFunTimes"));
+        cwd = findPackageJSON(path.join(origCwd, "WebPlayerTemplates/HappyFunTimes"));
+        if (!cwd) {
+          cwd = findPackageJSON(path.join(origCwd, "../../../Assets/WebPlayerTemplates/HappyFunTimes", gameId));
+          if (!cwd) {
+            cwd = findPackageJSON(path.join(origCwd, "../../../Assets/WebPlayerTemplates/HappyFunTimes"));
+          }
+        }
       }
 
       var read = false;
       if (cwd) {
         var suffixes = [
+          "Assets/WebPlayerTemplates/HappyFunTimes/" + gameId + "/package.json",
           "Assets/WebPlayerTemplates/HappyFunTimes/package.json",
           "HappyFunTimes/package.json",
           "package.json",
@@ -266,7 +277,7 @@ var RelayServer = function(servers, inOptions) {
           }
         }
         try {
-          var runtimeInfo = gameInfo.readGameInfo(cwd);
+          var runtimeInfo = gameInfo.readGameInfo(cwd, gameId);
           if (runtimeInfo) {
             gameId = runtimeInfo.info.happyFunTimes.gameId;
             gameDB.add(runtimeInfo);

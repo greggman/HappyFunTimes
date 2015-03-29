@@ -278,4 +278,8 @@ the correct version
 
     *   Added `hft-landscape` and `hft-landscape-rot90` CSS
 
+* v1.9.0
+
+    *   Can put controller files in Assets/WebPlayerTemplates/HappyFunTimes/<gameId>
+
 
