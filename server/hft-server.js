@@ -153,7 +153,9 @@ var HFTServer = function(options, startedCallback) {
 
   var send404 = function(res, msg) {
     msg = msg || '';
-    res.writeHead(404).write('404<br/>' + msg).end();
+    res.writeHead(404);
+    res.write('404<br/>' + msg);
+    res.end();
   };
 
   var bodyParser = function(req, res, next) {
@@ -364,7 +366,7 @@ var HFTServer = function(options, startedCallback) {
         if (reqOptions.params.length) {
           params = params.concat(reqOptions.params);
         } else {
-          params.push(options.params);
+          params.push(reqOptions.params);
         }
       }
       return function(str) {
