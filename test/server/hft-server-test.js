@@ -59,6 +59,12 @@ describe('server requests', function() {
     }).then(done, done);
   });
 
+  it('returns 404 on non-existent get', function(done) {
+    hftServer.getP("http://localhost:8087/foobarmoo.html").then(function(res) {
+      res.body.should.containEql("404");
+    }).then(done, done);
+  });
+
   after(function(done) {
     hftServer.close();
     done();
