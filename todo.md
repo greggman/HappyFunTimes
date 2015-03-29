@@ -1,6 +1,21 @@
 To Do
 =====
 
+*   make PLUGIN!
+    *   make all samples have html in WebPlayerTemplates
+    *   make hft publish export .package and upload it
+    *   make hft-unitybuild grunt publish all projects (option)
+    *   make hft-unitybuild check git has nothing outstanding
+    *   make hft-editor-menu point to github/latest/file (or make it ask github?)
+    *   make videos
+        *   run unity simple
+        *   run unity char
+        *   run unity cardboard
+        *   run unity accel
+        *   run unity device
+        *   run unity video? (no)
+        *   make simple project
+
 *   add git pre-commit hook for lint/test
 *   check 1.7.0 projects tell you you need new version of HFT
 *   unity plugin
