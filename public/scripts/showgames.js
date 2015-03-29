@@ -42,6 +42,9 @@ requirejs(
     return document.getElementById(id);
   };
 
+  var debug = window.location.search.indexOf("debug") >= 0;
+  var log = debug ? console.log.bind(console) : function() {};
+
   var gamemenu = $("gamemenu");
   var nogames  = $("nogames");
   var template = $("item-template").text;
@@ -49,10 +52,13 @@ requirejs(
 
   var hftSystem = new HFTSystem();
   hftSystem.on('runningGames', function(obj) {
-console.log(obj);
+    log(obj);
     // If there's only one game just go to it.
     if (obj.length === 1 && obj[0].controllerUrl) {
-      window.location.href = obj[0].controllerUrl;
+      log("goto:", obj[0].controllerUrl);
+      if (!debug) {
+        window.location.href = obj[0].controllerUrl;
+      }
       return;
     }
 
