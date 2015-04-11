@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-;(function () { /*eslint no-extra-semi:0 no-process-exit:0*/ // wrapper in case we're in module_context mode
+;(function () { // eslint-disable-line
 
 "use strict";
 
@@ -56,7 +56,7 @@ function printUsage() {
     helpStyle: helpStyle,
   });
   console.log(o.generateHelp());
-};
+}
 
 // simple command line parsing
 var args = { _: [] };
@@ -84,7 +84,7 @@ if (args["version"]) {
 
 if (!cmd) {
   printUsage();
-  process.exit(1);
+  process.exit(1);  // eslint-disable-line
 }
 
 config.setup({
@@ -98,7 +98,7 @@ var cmdPath = path.join(__dirname, "cmds", cmd + ".js");
 if (!fs.existsSync(cmdPath)) {
   console.error("unknown cmd: " + cmd);
   printUsage();
-  process.exit(1);
+  process.exit(1);  // eslint-disable-line
 }
 
 var cmdModule = require('./cmds/' + cmd);
@@ -108,7 +108,7 @@ cmdModule.usage.helpStyle = helpStyle;
 
 if (args.help) {
   utils.printUsage(globalOptions, cmdModule.usage, cmdModule.name);
-  process.exit(1);
+  process.exit(1);  // eslint-disable-line
 }
 
 try {
@@ -117,18 +117,18 @@ try {
 } catch (e) {
   console.error(e);
   utils.printUsage(globalOptions, cmdModule.usage, cmdModule.name);
-  process.exit(1);
+  process.exit(1);  // eslint-disable-line
 }
 args._.shift(); // remove cmd
 cmdModule.cmd(args).then(function() {
   // We have to exit explicitly because there are event listeners for folders
-  process.exit(0);
+  process.exit(0);  // eslint-disable-line
 }).catch(function(e) {
   console.error("error running " + cmd);
   if (e) {
     console.error(e);
   }
-  process.exit(1);
+  process.exit(1);  // eslint-disable-line
 });
 
 }());

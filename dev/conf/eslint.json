@@ -10,6 +10,7 @@
   "rules": {
     "brace-style": [2, "1tbs", { "allowSingleLine": false }],
     "camelcase": [0],
+    "comma-dangle": 0,
     "comma-spacing": 0,
     "comma-style": [2, "last"],
     "optional-comma-spacing/optional-comma-spacing": [2, {after: true}],

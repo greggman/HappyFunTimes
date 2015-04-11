@@ -1,9 +1,24 @@
 To Do
 =====
 
+*   shouldn't be able to make-package / export bad version.
+*   build should do hft check?
+*   build should add .meta files?
+*   check version of plugin gets bumped
+
+    do I need this? Basically I need to edit Project/AssemlbyInfo.cs but if I bump
+    versions will old code link?
+
+*   move hft.net to it's own server
+*   upgrade servers
+*   move assets in samples out of examples folder
 *   make PLUGIN!
+    *   generate public json that lists were there sample's packages are
+        *   have plugin go to package.
     *   make all samples have html in WebPlayerTemplates
     *   make hft publish export .package and upload it
+        *   hft export (add --export-package)
+        *   hft publish (add --export-package)
     *   make hft-unitybuild grunt publish all projects (option)
     *   make hft-unitybuild check git has nothing outstanding
     *   make hft-editor-menu point to github/latest/file (or make it ask github?)
@@ -826,6 +841,7 @@ Runs Repo noid
 Done
 ====
 
+*   have hft check if it's already running
 *   why do I scan tree in readInfo? (to find icon and screenshots)
 *   remove connect/disconnect from simple and unitysimple examples
 *   make windows install for all users (optionally?) (no, fixed permissions to "user")

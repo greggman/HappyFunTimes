@@ -52,8 +52,7 @@ requirejs(
 
   var handleCmdErrorMsg = function(data) {
     // TODO: change to html dialog.
-    /*eslint no-alert:0*/
-    alert(data.msg);
+    alert(data.msg);  // eslint-disable-line
   };
 
   var handleRedirectMsg = function(data) {

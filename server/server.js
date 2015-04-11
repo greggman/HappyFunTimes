@@ -29,8 +29,6 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-/*eslint no-process-exit:0*/
-
 'use strict';
 
 var settingsOptionSpec = {
@@ -63,7 +61,7 @@ try {
   var args = optionator.parse(process.argv);
 } catch (e) {
   console.error(e);
-  process.exit(1);
+  process.exit(1);  // eslint-disable-line
 }
 
 var printHelp = function() {
@@ -74,7 +72,7 @@ var printHelp = function() {
   settingsOptionSpec.description += settings.join(', ');
 
   console.log(optionator.generateHelp());
-  process.exit(0);
+  process.exit(0);  // eslint-disable-line
 };
 
 if (args.help) {
@@ -118,7 +116,7 @@ function startServer() {
     var next = function() {
       if (err) {
         console.error(err);
-        process.exit(1);
+        process.exit(1);  // eslint-disable-line
       } else {
         if (args.appMode) {
           console.log([
@@ -158,7 +156,7 @@ function startServer() {
       if (ports.indexOf('80') < 0 && ports.indexOf(80) < 0) {
         console.error('You specified --dns but happyFunTimes could not use port 80.');
         console.error('Do you need to run this as admin or use sudo?');
-        process.exit(1);
+        process.exit(1);  // eslint-disable-line
       }
     });
   }

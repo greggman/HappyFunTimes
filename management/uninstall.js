@@ -102,7 +102,7 @@ var uninstall = function(gameIdOrPath, opt_options) {
         log("delete: " + file);
         fs.unlinkSync(file);
       }
-    } catch (e) {
+    } catch (e) {  // eslint-disable-line
       // Don't care!
     }
   };

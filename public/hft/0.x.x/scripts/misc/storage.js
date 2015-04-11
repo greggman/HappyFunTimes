@@ -38,7 +38,7 @@ define(function() {
       window.localStorage.setItem("foobardummyburp", "blargs");
       window.localStraoge.removeItem("foobardummyburp");
       itWorks = true;
-    } catch (e) {
+    } catch (e) {  // eslint-disable-line
     }
   }
 

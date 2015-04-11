@@ -31,11 +31,9 @@
 "use strict";
 
 define(function() {
-  /*eslint no-unused-vars:0*/
-
   // Making a WebGL context makes Chrome switch to the
   // discrete GPU on my Retina MBP
-  var gl = document.createElement("canvas").getContext("experimental-webgl");
+  var gl = document.createElement("canvas").getContext("experimental-webgl");  // eslint-disable-line
 
   return {
     // This is really here just to keep a reference

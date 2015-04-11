@@ -231,7 +231,7 @@ var publish = function(gamePath, options) {
       return createRelease({
         owner: options.username,
         repo: repoName,
-        tag_name: version,
+        tag_name: version,  // eslint-disable-line
         target_commitish: "master",  // eslint-disable-line
         name: version,
       });

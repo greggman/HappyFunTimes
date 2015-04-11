@@ -120,8 +120,7 @@ HFTPlayer.prototype.sendError = function(msg) {
 
 HFTPlayer.prototype.handleQuit = function() {
   console.log("exiting happyFunTimes");
-  /*eslint no-process-exit:0*/
-  process.exit(0);
+  process.exit(0);  // eslint-disable-line
 };
 
 HFTPlayer.prototype.handleGetGameInfo = function(data) {
@@ -191,14 +190,12 @@ HFTPlayer.prototype.download = function(gameId, upgrade) {
 };
 
 HFTPlayer.prototype.handleInstall = function(data) {
-  /*eslint no-unused-vars:0*/
-  /*eslint handle-callback-err:0*/
   var gameId = data.gameId;
 
   msgbox.prompt({
     msg: "Install '" + gameId + "'?",
     title: "HappyFunTimes",
-  }, function(err, result) {
+  }, function(err, result) {    // eslint-disable-line
     switch (result) {
       case msgbox.Result.YES:
         this.sendInstallProgress(gameId, 0, 0, "starting install");
@@ -213,14 +210,12 @@ HFTPlayer.prototype.handleInstall = function(data) {
 };
 
 HFTPlayer.prototype.handleUpgrade = function(data) {
-  /*eslint no-unused-vars:0*/
-  /*eslint handle-callback-err:0*/
   var gameId = data.gameId;
 
   msgbox.prompt({
     msg: "Upgrade '" + gameId + "'?",
     title: "HappyFunTimes",
-  }, function(err, result) {
+  }, function(err, result) {  // eslint-disable-line
     switch (result) {
       case msgbox.Result.YES:
         this.sendInstallProgress(gameId, 0, 0, "starting upgrade");
@@ -313,7 +308,7 @@ var HFTGame = function(options) {
     quiet: true,
   });
 
-  server.addEventListener('playerconnect', function(netPlayer, name) {
+  server.addEventListener('playerconnect', function(netPlayer, name) {    // eslint-disable-line
     players.push(new HFTPlayer(netPlayer, this, gameDB, relayServer));
   }.bind(this));
 

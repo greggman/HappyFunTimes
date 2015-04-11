@@ -110,11 +110,22 @@ define(
 
     ctx.fillStyle = "#CCC";
 
-    /*eslint brace-style:0*/
-    if (bits & 0x1) { drawCircle(ctx,  w - w6, 0, w6 * 0.8); } //ctx.fillRect(  w - w6 * 2, -w6         , w6 * 2, w6 * 2 ); }
-    if (bits & 0x2) { drawCircle(ctx, -w + w6, 0, w6 * 0.8); } //ctx.fillRect( -w         , -w6         , w6 * 2, w6 * 2 ); }
-    if (bits & 0x4) { drawCircle(ctx, 0, -w + w6, w6 * 0.8); } //ctx.fillRect( -w6        , -h          , w6 * 2, w6 * 2); }
-    if (bits & 0x8) { drawCircle(ctx, 0,  w - w6, w6 * 0.8); } //ctx.fillRect( -w6        ,  h - w6 * 2 , w6 * 2, w6 * 2); }
+    if (bits & 0x1) {
+      //ctx.fillRect(  w - w6 * 2, -w6         , w6 * 2, w6 * 2 ); }
+      drawCircle(ctx,  w - w6, 0, w6 * 0.8);
+    }
+    if (bits & 0x2) {
+      //ctx.fillRect( -w         , -w6         , w6 * 2, w6 * 2 ); }
+      drawCircle(ctx, -w + w6, 0, w6 * 0.8);
+    }
+    if (bits & 0x4) {
+      //ctx.fillRect( -w6        , -h          , w6 * 2, w6 * 2); }
+      drawCircle(ctx, 0, -w + w6, w6 * 0.8);
+    }
+    if (bits & 0x8) {
+      //ctx.fillRect( -w6        ,  h - w6 * 2 , w6 * 2, w6 * 2); }
+      drawCircle(ctx, 0,  w - w6, w6 * 0.8);
+    }
 
     ctx.restore();
   };

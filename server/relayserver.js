@@ -188,13 +188,12 @@ var RelayServer = function(servers, inOptions) {
    * @returns {Game} game that player was added to
    */
   this.addPlayerToGame = function(player, gameId) {
-    /*eslint consistent-return:0*/
     debug("adding player to game: " + gameId);
     var gameGroup = getGameGroup(gameId);
     if (!gameGroup) {
       return;
     }
-    return gameGroup.addPlayer(player);
+    return gameGroup.addPlayer(player);  // eslint-disable-line
   };
 
   /**
@@ -272,7 +271,7 @@ var RelayServer = function(servers, inOptions) {
             gameDB.add(runtimeInfo);
             read = true;
           }
-        } catch (e) {
+        } catch (e) {  // eslint-disable-line
         }
       }
       if (!read) {

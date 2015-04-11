@@ -68,14 +68,13 @@ define([
       // Don't try more than once a second.
       var elapsedTime = Math.floor(g.clock.getElapsedTime() * 1000);
       var timeout = Math.max(1000 - elapsedTime, 0);
-      setTimeout(tryToConnect, timeout);
+      setTimeout(tryToConnect, timeout);  // eslint-disable-line
     };
 
     var handleRunningGames = function(data) {
       g.eventEmitter.emit('runningGames', data);
     };
 
-    /*eslint no-use-before-define:0*/
     var tryToConnect = function() {
       // just read time so the next time we read it we'll get the time since this read.
       g.clock.getElapsedTime();

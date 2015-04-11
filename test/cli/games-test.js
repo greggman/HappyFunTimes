@@ -250,7 +250,7 @@ describe('release html', function() {
 
       try {
         fs.mkdirSync(g_testGameInstallDir);
-      } catch (e) {
+      } catch (e) {  // eslint-disable-line
       }
 
       hftcli('install', [destPath, "--verbose"], function(err, result) {

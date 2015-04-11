@@ -49,8 +49,7 @@ var DNSServer = function(options) {
 
     server.on('request', function (request, response) {
       debug("response: " + address + " : " + request.question[0].name);
-      /*eslint new-cap:0*/
-      response.answer.push(dns.A({
+      response.answer.push(dns.A({    // eslint-disable-line
         name: request.question[0].name,
         address: address,
         ttl: 1,

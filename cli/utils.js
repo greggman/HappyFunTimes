@@ -48,10 +48,9 @@ function printUsage(globalOptions, cmdUsage, cmdName) {
 }
 
 function badArgs(cmdModule, errorMsg) {
-  /*eslint no-process-exit:0*/
   console.error("ERROR: " + errorMsg);
   printUsage(cmdModule.exports.globalOptions, cmdModule.exports.usage, cmdModule.exports.name);
-  process.exit(1);
+  process.exit(1);  // eslint-disable-line
 }
 
 exports.badArgs = badArgs;

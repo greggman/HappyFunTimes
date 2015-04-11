@@ -250,13 +250,12 @@ define([
       return _reloaded;
     };
 
-    /*eslint no-use-before-define:0*/
     var connect_ = function() {
       _socket = options.socket || new VirtualSocket();
       _sendQueue = [];
-      _socket.on('connect', connected_.bind(this));
+      _socket.on('connect', connected_.bind(this));  // eslint-disable-line
       _socket.on('message', processMessage_.bind(this));
-      _socket.on('disconnect', disconnected_.bind(this));
+      _socket.on('disconnect', disconnected_.bind(this));  // eslint-disable-line
     }.bind(this);
 
     var connected_ = function() {
