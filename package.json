@@ -37,6 +37,7 @@
     "ws": "0.4.31"
   },
   "devDependencies": {
+    "eslint": "^0.18.0",
     "eslint-plugin-google-camelcase": "0.0.1",
     "eslint-plugin-one-variable-per-var": "0.0.1",
     "eslint-plugin-optional-comma-spacing": "0.0.3",
