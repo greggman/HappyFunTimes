@@ -121,7 +121,10 @@ var makeUnity3d = function(runtimeInfo, gamePath, destFolder, options) {
 
   var promise;
   if (options.export) {
-    promise = exporter.exporter(runtimeInfo, { exporterPath: options.exporterPath });
+    promise = exporter.exporter(runtimeInfo, {
+      exporterPath: options.exporterPath,
+      exportPackage: options.exportPackage,
+    });
   } else {
     promise = Promise.resolve();
   }
@@ -221,6 +224,13 @@ var makeUnity3d = function(runtimeInfo, gamePath, destFolder, options) {
       return Promise.all(promises);
     }).then(function(zipFiles) {
       var result = Array.prototype.concat.apply([], zipFiles);
+      if (options.exportPackage) {
+        var filename = releaseUtils.safeishName(gameId) + ".unitypackage";
+        var srcPath = path.join(gamePath, "bin", filename);
+        var destPath = path.join(destFolder, filename);
+        fs.writeFileSync(destPath, fs.readFileSync(srcPath));
+        result.push({filename: destPath});
+      }
       return Promise.resolve(result);
     });
   });

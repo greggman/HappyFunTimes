@@ -212,6 +212,7 @@ var publish = function(gamePath, options) {
     }).then(function(filePath) {
       return make.make(gamePath, filePath, {
         exporterPath: options.exporterPath,
+        exportPackage: options.exportPackage,
         export: true,
       });
     }).then(function(files) {
@@ -227,12 +228,11 @@ var publish = function(gamePath, options) {
     }).then(function() {
       console.log("creating release...");
       auth();
-      /*eslint hft-camelcase:0*/
       return createRelease({
         owner: options.username,
         repo: repoName,
         tag_name: version,
-        target_commitish: "master",
+        target_commitish: "master",  // eslint-disable-line
         name: version,
       });
     }).then(function(releaseInfo) {

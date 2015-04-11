@@ -77,10 +77,11 @@ exports.usage = {
     "Normally releases are made at publish time",
   ],
   options: [
-    { option: 'src',           type: 'String',  description: "path to source. If not supplied assumes current working directory"},
-    { option: 'export',        type: 'Boolean', description: "run exporters for native apps (eg: Unity)"},
-    { option: 'exporter-path', type: 'String',  description: "path to exporter. For example path to unity3d."},
-    { option: 'json',          type: 'Boolean', description: "format output as json" },
+    { option: 'src',            type: 'String',  description: "path to source. If not supplied assumes current working directory"},
+    { option: 'export',         type: 'Boolean', description: "run exporters for native apps (eg: Unity)"},
+    { option: 'exporter-path',  type: 'String',  description: "path to exporter. For example path to unity3d."},
+    { option: 'export-package', type: 'Boolean', description: "export a unity package as well."},
+    { option: 'json',           type: 'Boolean', description: "format output as json" },
   ],
 };
 exports.cmd = makeRelease;
