@@ -118,6 +118,20 @@ var exporter = function(runtimeInfo, options) {
         ]));
       });
 
+      if (options.exportPackage) {
+        var binPath = path.join(binFolder, gameId + ".unitypackage");
+        var logPath = binPath + ".log";
+
+        promises.push(makeExecPromise("unitypackage", binPath, logPath, exporterPath, [
+          '-batchmode',
+          '-exportPackage', 'Assets', binPath,
+          '-logFile', logPath,
+          '-projectPath', gamePath,
+          '-quit',
+          '-nographics',
+        ]));
+      }
+
       promises.reduce(function(cur, next) {
         return cur.then(next);
       }, Promise.resolve()).then(resolve, reject);

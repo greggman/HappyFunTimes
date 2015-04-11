@@ -52,9 +52,10 @@ exports.usage = {
     "You can use this to test a Unity3D game before publishing",
   ],
   options: [
-    { option: 'exporter-path', type: 'String',  description: "path to exporter. For example path to unity3d."},
-    { option: 'src-path',      type: 'String',  description: "path to export from. Default current folder"},
-    { option: 'dst-path',      type: 'String',  description: "path to export to. Default whatever is appropriate"},
+    { option: 'exporter-path',  type: 'String',  description: "path to exporter. For example path to unity3d."},
+    { option: 'src-path',       type: 'String',  description: "path to export from. Default current folder"},
+    { option: 'dst-path',       type: 'String',  description: "path to export to. Default whatever is appropriate"},
+    { option: 'export-package', type: 'Boolean', description: "export a unity package as well."},
   ],
 };
 exports.cmd = exporter;
