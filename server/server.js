@@ -56,6 +56,7 @@ var optionSpec = {
 
 var config     = require('../lib/config');
 var log        = require('../lib/log');
+var Promise    = require('promise');
 var optionator = require('optionator')(optionSpec);
 
 try {
@@ -96,65 +97,84 @@ if (args.settings) {
   });
 }
 
-if (args.appMode) {
-  require('../lib/games').init();
+
+
+function exitBecauseAlreadyRunning() {
+  console.error("HappyFunTimes is already running");
 }
 
-var browser   = require('../lib/browser');
-var DNSServer = require('./dnsserver');
-var iputils   = require('../lib/iputils');
-var Promise   = require('promise');
-var HFTServer = require('./hft-server');
+function startServer() {
+  if (args.appMode) {
+    require('../lib/games').init();
+  }
 
-var server;
-var launchBrowser = function(err) {
-  var next = function() {
-    if (err) {
-      console.error(err);
-      process.exit(1);
-    } else {
-      if (args.appMode) {
-        console.log([
-          '',
-          '---==> HappyFunTimes Running <==---',
-          '',
-        ].join('\n'));
+  var browser   = require('../lib/browser');
+  var DNSServer = require('./dnsserver');
+  var iputils   = require('../lib/iputils');
+  var HFTServer = require('./hft-server');
+
+  var server;
+  var launchBrowser = function(err) {
+    var next = function() {
+      if (err) {
+        console.error(err);
+        process.exit(1);
+      } else {
+        if (args.appMode) {
+          console.log([
+            '',
+            '---==> HappyFunTimes Running <==---',
+            '',
+          ].join('\n'));
+        }
       }
+    };
+
+    var p;
+    if (args.appMode || args.show) {
+      var name = args.show || 'games';
+      p = browser.launch('http://localhost:' + server.getSettings().port + '/' + name + '.html', config.getConfig().preferredBrowser);
+    } else {
+      p = Promise.resolve();
     }
+    p.then(function() {
+       next();
+    }).catch(function(err) {
+      console.error(err);
+      next();
+    });
   };
 
-  var p;
-  if (args.appMode || args.show) {
-    var name = args.show || 'games';
-    p = browser.launch('http://localhost:' + server.getSettings().port + '/' + name + '.html', config.getConfig().preferredBrowser);
-  } else {
-    p = Promise.resolve();
+  server = new HFTServer(args, launchBrowser);
+
+  if (args.dns) {
+    // This doesn't need to dynamicallly check for a change in ip address
+    // because it should only be used in a static ip address sitaution
+    // since DNS has to be static for our use-case.
+    (function() {
+      return new DNSServer({address: args.address || iputils.getIpAddresses()[0]});
+    }());
+    server.on('ports', function(ports) {
+      if (ports.indexOf('80') < 0 && ports.indexOf(80) < 0) {
+        console.error('You specified --dns but happyFunTimes could not use port 80.');
+        console.error('Do you need to run this as admin or use sudo?');
+        process.exit(1);
+      }
+    });
   }
-  p.then(function() {
-     next();
-  }).catch(function(err) {
-    console.error(err);
-    next();
-  });
-};
-
-server = new HFTServer(args, launchBrowser);
-
-if (args.dns) {
-  // This doesn't need to dynamicallly check for a change in ip address
-  // because it should only be used in a static ip address sitaution
-  // since DNS has to be static for our use-case.
-  (function() {
-    return new DNSServer({address: args.address || iputils.getIpAddresses()[0]});
-  }());
-  server.on('ports', function(ports) {
-    if (ports.indexOf('80') < 0 && ports.indexOf(80) < 0) {
-      console.error('You specified --dns but happyFunTimes could not use port 80.');
-      console.error('Do you need to run this as admin or use sudo?');
-      process.exit(1);
-    }
-  });
 }
+
+function launchIfNotRunning() {
+  var io = require('../lib/io');
+  var settings = config.getSettings().settings;
+  var sendJSON = Promise.denodeify(io.sendJSON);
+
+  var url = "http://localhost:" + settings.port;
+  sendJSON(url, { cmd: "happyFunTimesPing" }, {}).then(exitBecauseAlreadyRunning, startServer);
+}
+
+launchIfNotRunning();
+
 
 
 
