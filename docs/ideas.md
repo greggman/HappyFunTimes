@@ -17,6 +17,10 @@ or find stuff.
 So some random ideas I'd like to explore if I have time. Maybe they'll trigger some
 ideas for you
 
+*   Shake phone to race
+
+    The faster you shake the faster it goes
+
 *   Balance platforms with balls melodic.
 
     Each player controls one platform they can place and rotate with their phone. Balls bounce off them,
