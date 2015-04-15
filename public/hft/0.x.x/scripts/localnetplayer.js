@@ -101,19 +101,19 @@ define(function() {
     this.eventHanders = { };
   };
 
-  /**
+  /*
    */
   LocalNetPlayer.prototype.addGameEventListener = function(eventType, handler) {
     this.gameEventHandlers[eventType] = handler;
   };
 
-  /**
+  /*
    */
   LocalNetPlayer.prototype.removeGameEventListener = function(eventType) {
     this.gameEventHandlers[eventType] = undefined;
   };
 
-  /**
+  /*
    */
   LocalNetPlayer.prototype.removeGameAllListeners = function() {
     this.gameEventHanders = { };
