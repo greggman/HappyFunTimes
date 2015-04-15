@@ -1,27 +1,31 @@
 {
-	"tags"      : {
-		"allowUnknownTags" : true
-	},
-	"plugins"   : ["plugins/markdown"],
-	"private"   : false,
-	"templates" : {
-		"cleverLinks"           : false,
-		"monospaceLinks"        : true,
-		"dateFormat"            : "ddd MMM Do YYYY",
-		"outputSourceFiles"     : false,
-		"outputSourcePath"      : false,
-		"systemName"            : "HappyFunTimes",
-		"footer"                : "",
-		"copyright"             : "copyright Gregg Tavares",
-		"navType"               : "vertical",
-		"theme"                 : "cerulean",
-		"linenums"              : true,
-		"collapseSymbols"       : false,
-		"inverseNav"            : true,
-		"highlightTutorialCode" : true
-	},
-	"markdown"  : {
-		"parser"   : "gfm",
-		"hardwrap" : true
-	}
+    "tags"      : {
+        "allowUnknownTags" : true
+    },
+    "plugins"   : ["plugins/markdown"],
+    "private"   : false,
+    "templates" : {
+        "cleverLinks"           : false,
+        "monospaceLinks"        : true,
+        "dateFormat"            : "ddd MMM Do YYYY",
+        "outputSourceFiles"     : false,
+        "outputSourcePath"      : false,
+        "systemName"            : "HappyFunTimes",
+        "footer"                : "",
+        "copyright"             : "copyright Gregg Tavares",
+        "navType"               : "vertical",
+        "theme"                 : "cerulean",
+        "linenums"              : true,
+        "collapseSymbols"       : false,
+        "inverseNav"            : true,
+        "highlightTutorialCode" : true,
+        "analytics": {
+            "ua": "UA-51764205-4",
+            "domain": "auto"
+        }
+    },
+    "markdown"  : {
+        "parser"   : "gfm",
+        "hardwrap" : true
+    }
 }
