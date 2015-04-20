@@ -1,6 +1,11 @@
 To Do
 =====
 
+*   add about on name page and waiting page
+
+    that way if so if someone goes to hft.net on a network with hft they can
+    find out about hft?
+
 *   shouldn't be able to make-package / export bad version.
 *   build should do hft check?
 *   build should add .meta files?
