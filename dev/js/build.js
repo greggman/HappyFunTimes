@@ -94,10 +94,11 @@ var Builder = function(options) {
     return extractHeader(content);
   };
 
-  var applyTemplateToFile = function(templatePath, contentFileName, outFileName, opt_extra) {
+  var applyTemplateToFile = function(defaultTemplatePath, contentFileName, outFileName, opt_extra) {
     console.log("processing: ", contentFileName);
-    var template = readFile(templatePath);
     var data = loadMD(contentFileName);
+    var templatePath = data.headers.template || defaultTemplatePath;
+    var template = readFile(templatePath);
     // Call prep's Content which parses the HTML. This helps us find missing tags
     // should probably call something else.
     //Convert(md_content)
