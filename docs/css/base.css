@@ -939,6 +939,31 @@ pre.prettyprint li {
     text-decoration: none;
 }
 
+.dl-button {
+  background: #3498db;
+  background-image: linear-gradient(to bottom, #3498db, #2980b9);
+  border-radius: 3em;
+  font-family: sans-serif;
+  color: white;
+  padding: 0.5em 1em 0.5em 1em;
+  text-decoration: none;
+  width: 15em;
+  margin-bottom: 0.5em;
+}
+
+.dl-button:hover {
+  background: #3cb0fd;
+  background-image: linear-gradient(to bottom, #3cb0fd, #3498db);
+  text-decoration: none;
+}
+
+.dl-button a,
+.dl-button a:visited,
+.dl-button a:hover {
+  color: white;
+  text-decoration: none;
+}
+
 @media only screen and (max-width : 710px) {
     #content {
         padding: 0.0em;
