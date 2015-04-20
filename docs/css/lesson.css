@@ -1,3 +1,6 @@
+.hide {
+    display: none;
+}
 .header h1 {
     gbackground: linear-gradient(to bottom, #4296f8 0%,#3881e7 88%,#2566d0 91%,#408fe9 100%);
     border-top: 10px solid black;
@@ -39,6 +42,7 @@
 }
 h1, h2, h3, h4 {
   font-family: sans-serif;
+  line-height: 1em;
 }
 h3 {
   font-size: medium;
