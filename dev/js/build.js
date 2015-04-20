@@ -21,6 +21,9 @@ marked.setOptions({
   //pedantic: true,
 });
 
+function readFile(fileName) {
+  return cache.readFileSync(fileName, "utf-8");
+}
 
 subst.registerReplaceHandler('include', function(filename, params) {
   return subst.replaceParams(readFile(filename, {encoding: "utf-8"}), params);
@@ -42,11 +45,7 @@ subst.registerReplaceHandler('diagram', function(options) {
   return subst.replaceParams(readFile("dev/templates/diagram.template"), options);
 });
 
-var readFile = function(fileName) {
-  return cache.readFileSync(fileName, "utf-8");
-};
-
-var Builder = function(options) {
+function Builder(options) {
 
   var g_articles = [];
 
@@ -59,13 +58,13 @@ var Builder = function(options) {
   function writeFileIfChanged(fileName, content) {
     if (fs.existsSync(fileName)) {
       var old = readFile(fileName);
-      if (content == old) {
+      if (content === old) {
         return;
       }
     }
     fs.writeFileSync(fileName, content);
     console.log("Wrote: " + fileName);
-  };
+  }
 
   var extractHeader = (function() {
     var headerRE = /([A-Z0-9_-]+): (.*?)$/i;
@@ -73,7 +72,7 @@ var Builder = function(options) {
     return function(content) {
       var metaData = { };
       var lines = content.split("\n");
-      while (true) {
+      while (true) {  // eslint-disable-line
         var line = lines[0].trim();
         var m = headerRE.exec(line);
         if (!m) {
@@ -89,12 +88,12 @@ var Builder = function(options) {
     };
   }());
 
-  var loadMD = function(contentFileName) {
+  function loadMD(contentFileName) {
     var content = cache.readFileSync(contentFileName, "utf-8");
     return extractHeader(content);
-  };
+  }
 
-  var applyTemplateToFile = function(defaultTemplatePath, contentFileName, outFileName, opt_extra) {
+  function applyTemplateToFile(defaultTemplatePath, contentFileName, outFileName, opt_extra) {
     console.log("processing: ", contentFileName);
     var data = loadMD(contentFileName);
     var templatePath = data.headers.template || defaultTemplatePath;
@@ -120,11 +119,11 @@ var Builder = function(options) {
     metaData['bs'] = options;
 
     var output = subst.replaceParams(template,  metaData);
-    writeFileIfChanged(outFileName, output)
+    writeFileIfChanged(outFileName, output);
     g_articles.push(metaData);
-  };
+  }
 
-  var applyTemplateToFiles = function(templatePath, filesSpec) {
+  function applyTemplateToFiles(templatePath, filesSpec) {
     var files = glob.sync(filesSpec);
     files.forEach(function(fileName) {
       var ext = path.extname(fileName);
@@ -132,12 +131,11 @@ var Builder = function(options) {
       var outFileName = baseName + ".html";
       applyTemplateToFile(templatePath, fileName, outFileName);
     });
-
-  };
+  }
 
   this.process = function(filespec) {
     filespec = filespec || "*.md";
-    applyTemplateToFiles("dev/templates/lesson.template", "docs/unity/" + filespec)
+    applyTemplateToFiles("dev/templates/lesson.template", "docs/unity/" + filespec);
 
     var toc = [];
     g_articles.forEach(function(article) {
@@ -163,7 +161,7 @@ var Builder = function(options) {
         return cur.then(next);
     }, Promise.resolve()).then(function() {
       var articles = g_articles.filter(function(article) {
-        return article.date != undefined;
+        return article.date !== undefined;
       });
       articles = articles.sort(function(a, b) {
         return a.date > b.date ? -1 : (a.date < b.date ? 1 : 0);
@@ -216,9 +214,9 @@ var Builder = function(options) {
       return Promise.resolve();
     }).then(function() {
       applyTemplateToFile("dev/templates/index.template", "index.md", "index.html", {
-        table_of_contents: "<ul>" + toc.join("\n") + "</ul>",
+        tableOfContents: "<ul>" + toc.join("\n") + "</ul>",
       });
-      process.exit(0);  //
+      //process.exit(0);  //
     }, function(err) {
       console.error("ERROR!:");
       console.error(err);
@@ -228,7 +226,7 @@ var Builder = function(options) {
     });
   };
 
-};
+}
 
 var b = new Builder(options);
 b.process();

@@ -78,8 +78,8 @@ var Subst = function() {
         for (var ii = 0; ii < params.length; ++ii) {
           var obj = params[ii];
           for (var jj = 0; jj < keys.length; ++jj) {
-            var key = keys[jj];
-            obj = obj[key];
+            var k = keys[jj];
+            obj = obj[k];
             if (obj === undefined) {
               break;
             }
