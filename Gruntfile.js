@@ -49,6 +49,15 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-jsdoc');
   grunt.loadNpmTasks('grunt-eslint');
 
+  // extract inline docs
+  // mcs ~/src/hft-unity3d/HappyFunTimes/*.cs /doc:doc.xml -t:library -r:/Users/gregg/src/hft-unity3d/HappyFunTimes/bin/Release/DeJson.dll,/Users/gregg/src/hft-unity3d/HappyFunTimes/bin/Release/UnityEngine.dll,/Users/gregg/src/hft-unity3d/HappyFunTimes/bin/Release/websocket-sharp.dll
+  // generate xml
+  // MONO_PATH=/Applications/Unity/MonoDevelop.app/Contents/MacOS/lib/monodevelop/bin:/Applications/Unity/Unity.app/Contents/Frameworks/Mono/lib/mono/2.0 /Applications/Unity/Unity.app/Contents/Frameworks/Mono/bin/mdoc update -o en ~/src/hft-unity3d/HappyFunTimes/bin/Release/HappyFunTimes.dll
+  // merge inline docs with generated xml
+  // MONO_PATH=/Applications/Unity/MonoDevelop.app/Contents/MacOS/lib/monodevelop/bin:/Applications/Unity/Unity.app/Contents/Frameworks/Mono/lib/mono/2.0 /Applications/Unity/Unity.app/Contents/Frameworks/Mono/bin/mdoc export-html -o htmldocs en
+  // generate html
+  // MONO_PATH=/Applications/Unity/MonoDevelop.app/Contents/MacOS/lib/monodevelop/bin:/Applications/Unity/Unity.app/Contents/Frameworks/Mono/lib/mono/2.0 /Applications/Unity/Unity.app/Contents/Frameworks/Mono/bin/mdoc export-html -o htmldocs en
+
   grunt.registerTask('builddocs', function() {
     var buildStuff = require('./dev/js/build');
     buildStuff({
