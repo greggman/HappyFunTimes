@@ -25,7 +25,7 @@ function readFile(fileName) {
   return cache.readFileSync(fileName, "utf-8");
 }
 
-subst.registerReplaceHandler('include', function(filename, params) {
+subst.registerReplaceHandler('include', function(filename, subst, params) {
   return subst.replaceParams(readFile(filename, {encoding: "utf-8"}), params);
 });
 
@@ -93,8 +93,24 @@ function Builder(options) {
     return extractHeader(content);
   }
 
+  function applyObject(src, dst) {
+    Object.keys(src).forEach(function(key) {
+      dst[key] = src[key];
+    });
+  }
+
+  function mergeObjects() {
+    var merged = {};
+    Array.prototype.slice.call(arguments).forEach(function(src) {
+      applyObject(src, merged);
+    });
+    return merged;
+  }
+
   function applyTemplateToFile(defaultTemplatePath, contentFileName, outFileName, opt_extra) {
     console.log("processing: ", contentFileName);
+    opt_extra = opt_extra || {};
+    var mergedOptions = mergeObjects(options, opt_extra);
     var data = loadMD(contentFileName);
     var templatePath = data.headers.template || defaultTemplatePath;
     var template = readFile(templatePath);
@@ -107,35 +123,36 @@ function Builder(options) {
     content = content.replace(/%\(/g, '__STRING_SUB__');
     content = content.replace(/%/g, '__PERCENT__');
     content = content.replace(/__STRING_SUB__/g, '%(');
-    content = subst.replaceParams(content, opt_extra || {});
+    content = subst.replaceParams(content, opt_extra);
     content = content.replace(/__PERCENT__/g, '%');
     var html = marked(content);
     metaData['content'] = html;
     metaData['src_file_name'] = contentFileName;
     metaData['dst_file_name'] = outFileName;
     metaData['basedir'] = "";
-    metaData['url'] = joinUrl(options.baseurl, outFileName);
-    metaData['screenshot'] = options.defaultOGImageURL;
-    metaData['bs'] = options;
+    metaData['url'] = joinUrl(mergedOptions.baseurl, outFileName);
+    metaData['screenshot'] = mergedOptions.defaultOGImageURL;
+    metaData['bs'] = mergedOptions;
 
     var output = subst.replaceParams(template,  metaData);
     writeFileIfChanged(outFileName, output);
     g_articles.push(metaData);
   }
 
-  function applyTemplateToFiles(templatePath, filesSpec) {
+  function applyTemplateToFiles(templatePath, filesSpec, specOptions) {
     var files = glob.sync(filesSpec);
     files.forEach(function(fileName) {
       var ext = path.extname(fileName);
       var baseName = fileName.substr(0, fileName.length - ext.length);
       var outFileName = baseName + ".html";
-      applyTemplateToFile(templatePath, fileName, outFileName);
+      applyTemplateToFile(templatePath, fileName, outFileName, specOptions);
     });
   }
 
   this.process = function(filespec) {
-    filespec = filespec || "*.md";
-    applyTemplateToFiles("dev/templates/lesson.template", "docs/unity/" + filespec);
+    options.files.forEach(function(spec) {
+       applyTemplateToFiles(spec.template || options.template, spec.filespec, spec);
+    });
 
     var toc = [];
     g_articles.forEach(function(article) {
