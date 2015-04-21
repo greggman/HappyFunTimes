@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- this file is auto-generated from %(src_file_name)s. Do not edited directly -->
+<!-- this file is auto-generated from {{src_file_name}}. Do not edited directly -->
 <!--
 Copyright 2012, Gregg Tavares.
 All rights reserved.
@@ -34,50 +34,50 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0, user-scalable=yes">
-<meta property="og:title" content="%(title)s" />
+<meta property="og:title" content="{{title}}" />
 <meta property="og:type" content="website" />
-<meta property="og:image" content="%(screenshot)s" />
-<meta property="og:description" content="%(description)s" />
-<meta property="og:url" content="%(url)s" />
+<meta property="og:image" content="{{screenshot}}" />
+<meta property="og:description" content="{{description}}" />
+<meta property="og:url" content="{{url}}" />
 
 <meta name="twitter:card" content="summary_large_image" />
-<meta name="twitter:site" content="%(bs.defaultTwitter)s" />
-<meta name="twitter:creator" content="%(bs.defaultTwitter)s" />
-<meta name="twitter:domain" content="%(bs.domain)s" />
-<meta name="twitter:title" content="%(title)s" />
-<meta name="twitter:url" content="%(url)s" />
-<meta name="twitter:description" content="%(description)s" />
-<meta name="twitter:image:src" content="%(screenshot)s" />
+<meta name="twitter:site" content="{{bs.defaultTwitter}}" />
+<meta name="twitter:creator" content="{{bs.defaultTwitter}}" />
+<meta name="twitter:domain" content="{{bs.domain}}" />
+<meta name="twitter:title" content="{{title}}" />
+<meta name="twitter:url" content="{{url}}" />
+<meta name="twitter:description" content="{{description}}" />
+<meta name="twitter:image:src" content="{{screenshot}}" />
 
-<title>%(title)s</title>
+<title>{{title}}</title>
 <link href="/public/hft-icon.png" rel="shortcut icon" type="image/png">
 <link rel="stylesheet" href="/docs/css/base.css" type="text/css" />
 <link rel="stylesheet" href="/docs/css/lesson.css" type="text/css" />
 </head>
 <body>
-%(include: "dev/templates/header.template")s
+{{{include "dev/templates/header.template"}}}
 <div class="container">
   <div class="lesson-title">
-    <h1>%(title)s</h1>
+    <h1>{{title}}</h1>
   </div>
   <div class="row">
     <div class="col-sm-8 lesson-main">
-      %(content)s
+      {{{content}}}
       <hr/>
       <div>
-        <div>Questions? <a href="http://stackoverflow.com/questions/tagged/%(bs.stackoverflowTag)s">Ask on stackoverflow</a>.</div>
-        <div>Issue/Bug? <a href="%(bs.bugIssueURL)s">Create an issue on github</a>.</div>
+        <div>Questions? <a href="http://stackoverflow.com/questions/tagged/{{bs.stackoverflowTag}}">Ask on stackoverflow</a>.</div>
+        <div>Issue/Bug? <a href="{{bs.bugIssueURL}}">Create an issue on github</a>.</div>
 
         <div id="disqus_thread"></div>
         <script type="text/javascript">
             /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
-            var disqus_shortname = '%(bs.disqusShortName)s'; // required: replace example with your forum shortname
-            var disqus_identifier = '%(title)s';
-            var disqus_title = '%(title)s';
+            var disqus_shortname = '{{bs.disqusShortName}}'; // required: replace example with your forum shortname
+            var disqus_identifier = '{{title}}';
+            var disqus_title = '{{title}}';
 
             /* * * DON'T EDIT BELOW THIS LINE * * */
             (function() {
-                if (window.location.hostname.indexOf("%(bs.disqusCheckStr)s") < 0) {
+                if (window.location.hostname.indexOf("{{bs.disqusCheckStr}}") < 0) {
                     return;
                 }
                 var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
@@ -90,7 +90,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
       </div>
     </div>
     <div class="col-sm-3 col-sm-offset-1 lesson-sidebar">
-        %(include: "docs/unity/toc.html")s
+        {{{include "docs/unity/toc.html"}}}
     </div>
   </div>
 </div>
@@ -98,7 +98,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 <script src="/docs/3rdparty/jquery-1.11.2.min.js"></script>
 <script src="/docs/3rdparty/prettify.js"></script>
 <script src="/docs/js/lesson.js"></script>
-%(include: "dev/templates/analytics.template" )s
+{{{include "dev/templates/analytics.template" }}}
 </html>
 
 

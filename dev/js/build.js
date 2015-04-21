@@ -7,11 +7,11 @@ var cache   = new (require('inmemfilecache'));
 var Feed    = require('feed');
 var fs      = require('fs');
 var glob    = require('glob');
+var Handlebars = require('handlebars');
 var marked  = require('marked');
 var path    = require('path');
 var Promise = require('Promise');
 var sitemap = require('sitemap');
-var subst   = new (require('./subst'));
 var utils   = require('./../../lib/utils');
 
 var executeP = Promise.denodeify(utils.execute);
@@ -21,28 +21,72 @@ marked.setOptions({
   //pedantic: true,
 });
 
+function applyObject(src, dst) {
+  Object.keys(src).forEach(function(key) {
+    dst[key] = src[key];
+  });
+  return dst;
+}
+
+function mergeObjects() {
+  var merged = {};
+  Array.prototype.slice.call(arguments).forEach(function(src) {
+    applyObject(src, merged);
+  });
+  return merged;
+}
+
 function readFile(fileName) {
   return cache.readFileSync(fileName, "utf-8");
 }
 
-subst.registerReplaceHandler('include', function(filename, subst, params) {
-  return subst.replaceParams(readFile(filename, {encoding: "utf-8"}), params);
+function replaceParams(str, params) {
+  var template = Handlebars.compile(str);
+  if (Array.isArray(params)) {
+    params = mergeObjects.apply(null, params.slice.reverse());
+  }
+
+  return template(params);
+}
+
+function TemplateManager() {
+  var templates = {};
+
+  this.apply = function(filename, params) {
+    var template = templates[filename];
+    if (!template) {
+      var template = Handlebars.compile(readFile(filename));
+      templates[filename] = template;
+    }
+
+    if (Array.isArray(params)) {
+      params = mergeObjects.apply(null, params.slice.reverse());
+    }
+
+    return template(params);
+  };
+}
+
+var templateManager = new TemplateManager();
+
+Handlebars.registerHelper('include', function(filename, options) {
+  return templateManager.apply(filename, options.data.root);
 });
 
-subst.registerReplaceHandler('example', function(options) {
+Handlebars.registerHelper('example', function(options) {
 
-  options.width = options.width || "400";
-  options.height = options.height || "300";
+  options.hash.width  = options.hash.width || "400";
+  options.hash.height = options.hash.height || "300";
 
-  return subst.replaceParams(readFile("dev/templates/example.template"), options);
+  return templateManager.apply("dev/templates/example.template", options.hash);
 });
 
-subst.registerReplaceHandler('diagram', function(options) {
+Handlebars.registerHelper('diagram', function(options) {
 
-  options.width = options.width || "400";
-  options.height = options.height || "300";
+  options.hash.width  = options.hash.width || "400";
+  options.hash.height = options.hash.height || "300";
 
-  return subst.replaceParams(readFile("dev/templates/diagram.template"), options);
+  return templateManager.apply("dev/templates/diagram.template", options.hash);
 });
 
 function Builder(options) {
@@ -93,27 +137,12 @@ function Builder(options) {
     return extractHeader(content);
   }
 
-  function applyObject(src, dst) {
-    Object.keys(src).forEach(function(key) {
-      dst[key] = src[key];
-    });
-  }
-
-  function mergeObjects() {
-    var merged = {};
-    Array.prototype.slice.call(arguments).forEach(function(src) {
-      applyObject(src, merged);
-    });
-    return merged;
-  }
-
   function applyTemplateToFile(defaultTemplatePath, contentFileName, outFileName, opt_extra) {
     console.log("processing: ", contentFileName);
     opt_extra = opt_extra || {};
     var mergedOptions = mergeObjects(options, opt_extra);
     var data = loadMD(contentFileName);
     var templatePath = data.headers.template || defaultTemplatePath;
-    var template = readFile(templatePath);
     // Call prep's Content which parses the HTML. This helps us find missing tags
     // should probably call something else.
     //Convert(md_content)
@@ -123,7 +152,7 @@ function Builder(options) {
     content = content.replace(/%\(/g, '__STRING_SUB__');
     content = content.replace(/%/g, '__PERCENT__');
     content = content.replace(/__STRING_SUB__/g, '%(');
-    content = subst.replaceParams(content, opt_extra);
+    content = replaceParams(content, opt_extra);
     content = content.replace(/__PERCENT__/g, '%');
     var html = marked(content);
     metaData['content'] = html;
@@ -134,7 +163,7 @@ function Builder(options) {
     metaData['screenshot'] = mergedOptions.defaultOGImageURL;
     metaData['bs'] = mergedOptions;
 
-    var output = subst.replaceParams(template,  metaData);
+    var output = templateManager.apply(templatePath,  metaData);
     writeFileIfChanged(outFileName, output);
     g_articles.push(metaData);
   }

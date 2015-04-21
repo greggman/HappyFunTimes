@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- this file is auto-generated from %(src_file_name)s. Do not edited directly -->
+<!-- this file is auto-generated from {{src_file_name}}. Do not edited directly -->
 <!--
 Copyright 2012, Gregg Tavares.
 All rights reserved.
@@ -35,22 +35,22 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 <meta charset="utf-8">
 
 <meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0, user-scalable=yes">
-<meta property="og:title" content="%(title)s" />
+<meta property="og:title" content="{{title}}" />
 <meta property="og:type" content="website" />
-<meta property="og:image" content="%(screenshot)s" />
-<meta property="og:description" content="%(description)s" />
-<meta property="og:url" content="%(url)s" />
+<meta property="og:image" content="{{screenshot}}" />
+<meta property="og:description" content="{{description}}" />
+<meta property="og:url" content="{{url}}" />
 
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:site" content="%(bs.defaultTwitter)s" />
-<meta name="twitter:creator" content="%(bs.defaultTwitter)s" />
-<meta name="twitter:domain" content="%(bs.domain)s" />
-<meta name="twitter:title" content="%(title)s" />
-<meta name="twitter:url" content="%(url)s" />
-<meta name="twitter:description" content="%(description)s" />
-<meta name="twitter:image:src" content="%(screenshot)s" />
+<meta name="twitter:site" content="{{bs.defaultTwitter}}" />
+<meta name="twitter:creator" content="{{bs.defaultTwitter}}" />
+<meta name="twitter:domain" content="{{bs.domain}}" />
+<meta name="twitter:title" content="{{title}}" />
+<meta name="twitter:url" content="{{url}}" />
+<meta name="twitter:description" content="{{description}}" />
+<meta name="twitter:image:src" content="{{screenshot}}" />
 
-<title>%(title)s</title>
+<title>{{title}}</title>
 
 <link href="/public/hft-icon.png" rel="shortcut icon" type="image/png">
 <link rel="stylesheet" href="/docs/css/base.css" type="text/css" />
@@ -58,17 +58,17 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 <link rel="stylesheet" href="/docs/css/index.css" type="text/css" />
 </head>
 <body>
-%(include: "dev/templates/header.template")s
+{{{include "dev/templates/header.template"}}}
 <div class="container">
   <div class="row">
     <div class="not-jumbotron">
-      <h1>%(title)s</h1>
-      %(content)s
+      <h1>{{title}}</h1>
+      {{{content}}}
     </div>
   </div>
 </div>
 </body>
-%(include: "dev/templates/analytics.template" )s
+{{{include "dev/templates/analytics.template" }}}
 </html>
 
 
