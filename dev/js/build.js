@@ -3,16 +3,16 @@ module.exports = function (options) { // wrapper in case we're in module_context
 
 "use strict";
 
-var cache   = new (require('inmemfilecache'));
-var Feed    = require('feed');
-var fs      = require('fs');
-var glob    = require('glob');
+var cache      = new (require('inmemfilecache'));
+var Feed       = require('feed');
+var fs         = require('fs');
+var glob       = require('glob');
 var Handlebars = require('handlebars');
-var marked  = require('marked');
-var path    = require('path');
-var Promise = require('Promise');
-var sitemap = require('sitemap');
-var utils   = require('./../../lib/utils');
+var marked     = require('marked');
+var path       = require('path');
+var Promise    = require('Promise');
+var sitemap    = require('sitemap');
+var utils      = require('./../../lib/utils');
 
 var executeP = Promise.denodeify(utils.execute);
 
@@ -137,6 +137,45 @@ function Builder(options) {
     return extractHeader(content);
   }
 
+  function extractHandlebars(content) {
+    var tripleRE = /\{\{\{.*?\}\}\}/g;
+    var doubleRE = /\{\{\{.*?\}\}\}/g;
+
+    var numExtractions = 0;
+    var extractions = {
+    };
+
+    function saveHandlebar(match) {
+      var id = "==HANDLEBARS_ID_" + (++numExtractions) + "==";
+      extractions[id] = match;
+      return id;
+    }
+
+    content = content.replace(tripleRE, saveHandlebar);
+    content = content.replace(doubleRE, saveHandlebar);
+
+    return {
+      content: content,
+      extractions: extractions,
+    };
+  }
+
+  function insertHandlebars(info, content) {
+    var handlebarRE = /==HANDLEBARS_ID_\d+==/g;
+
+    function restoreHandlebar(match) {
+      var value = info.extractions[match];
+      if (value === undefined) {
+        throw new Error("no match restoring handlebar for: " + match);
+      }
+      return value;
+    }
+
+    content = content.replace(handlebarRE, restoreHandlebar);
+
+    return content;
+  }
+
   function applyTemplateToFile(defaultTemplatePath, contentFileName, outFileName, opt_extra) {
     console.log("processing: ", contentFileName);
     opt_extra = opt_extra || {};
@@ -149,12 +188,10 @@ function Builder(options) {
     var metaData = data.headers;
     var content = data.content;
     //console.log(JSON.stringify(metaData, undefined, "  "));
-    content = content.replace(/%\(/g, '__STRING_SUB__');
-    content = content.replace(/%/g, '__PERCENT__');
-    content = content.replace(/__STRING_SUB__/g, '%(');
-    content = replaceParams(content, opt_extra);
-    content = content.replace(/__PERCENT__/g, '%');
-    var html = marked(content);
+    var info = extractHandlebars(content);
+    var html = marked(info.content);
+    html = insertHandlebars(info, html);
+    html = replaceParams(html, opt_extra);
     metaData['content'] = html;
     metaData['src_file_name'] = contentFileName;
     metaData['dst_file_name'] = outFileName;
@@ -163,7 +200,7 @@ function Builder(options) {
     metaData['screenshot'] = mergedOptions.defaultOGImageURL;
     metaData['bs'] = mergedOptions;
 
-    var output = templateManager.apply(templatePath,  metaData);
+    var output = templateManager.apply(templatePath, metaData);
     writeFileIfChanged(outFileName, output);
     g_articles.push(metaData);
   }
