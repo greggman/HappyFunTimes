@@ -59,7 +59,7 @@ describe('roundtrip', function() {
     done();
   });
 
-  it('should be able to send messages to abd from game to controllers', function(done) {
+  it('should be able to send messages to and from game to controllers', function(done) {
     var testGame = new TestGame({hftServer: hftServer});
     var testCtrl1 = new TestController({hftServer: hftServer});
     var testCtrl2 = new TestController({hftServer: hftServer});
@@ -96,11 +96,12 @@ describe('roundtrip', function() {
 
     testGame.getPlayers()[0].sessionId.should.have.length(16);
     testGame.getPlayers()[1].sessionId.should.have.length(16);
-    done();
 
     testCtrl1.close();
     testCtrl2.close();
     testGame.close();
+
+    done();
   });
 
   after(function(done) {
