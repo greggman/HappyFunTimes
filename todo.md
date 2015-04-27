@@ -1,6 +1,18 @@
 To Do
 =====
 
+*   PlayerConncetor
+
+        * handle name
+        * handle color, game should pick
+        * handle busy
+            * send message to phone
+            * have phone show busy
+        * handle spawn
+            * have phone switch from busy to active
+        * handle reconnect
+
+*   add hft set or hft set-install to set which HFT is current
 *   add about on name page and waiting page
 
     that way if so if someone goes to hft.net on a network with hft they can

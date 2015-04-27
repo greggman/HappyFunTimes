@@ -12,6 +12,7 @@ var marked     = require('marked');
 var path       = require('path');
 var Promise    = require('Promise');
 var sitemap    = require('sitemap');
+var url        = require('url');
 var utils      = require('./../../lib/utils');
 
 var executeP = Promise.denodeify(utils.execute);
@@ -94,7 +95,7 @@ function Builder(options) {
   var g_articles = [];
 
   function joinUrl() {
-    return Array.prototype.map(function(part) {
+    return Array.prototype.map.call(arguments, function(part) {
       return (part.substr(-1) === "/") ? part.substr(0, part.length - 1) : part;
     }).join("/");
   }
@@ -176,6 +177,16 @@ function Builder(options) {
     return content;
   }
 
+  var mdRE = /href="(.*?)"/g
+  function fixMDLink(match, link) {
+    var urlObj = url.parse(link);
+    if (urlObj.pathname && urlObj.pathname.substr(-3) === ".md") {
+      urlObj.pathname = urlObj.pathname.substr(0, urlObj.pathname.length - 3) + ".html";
+      link = 'href="' + url.format(urlObj) + '"';
+    }
+    return link;
+  }
+
   function applyTemplateToFile(defaultTemplatePath, contentFileName, outFileName, opt_extra) {
     console.log("processing: ", contentFileName);
     opt_extra = opt_extra || {};
@@ -190,6 +201,7 @@ function Builder(options) {
     //console.log(JSON.stringify(metaData, undefined, "  "));
     var info = extractHandlebars(content);
     var html = marked(info.content);
+    html = html.replace(mdRE, fixMDLink);
     html = insertHandlebars(info, html);
     html = replaceParams(html, opt_extra);
     metaData['content'] = html;

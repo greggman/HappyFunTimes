@@ -62,20 +62,20 @@ module.exports = function(grunt) {
     var buildStuff = require('./dev/js/build');
     buildStuff({
       files: [
-        //{
-        //  filespec: "docs/*.md",
-        //},
+        {
+          filespec: "docs/*.md",
+        },
         {
           filespec: "docs/unity/*.md",
-          mainURL: "http://docs.happyfuntimes.net/docs",
+          mainURL: "/docs/unity",
           toc: "docs/unity/toc.html",
         },
       ],
       template: "dev/templates/lesson.template",
-      toc: "docs/unity/toc.html",
+      toc: "docs/toc.html",
       domain: 'docs.happyfuntimes.net',
-      baseurl: 'http://docs.happyfuntimes.net',  // used to prepend paths
-      mainURL: 'http://docs.happyfuntimes.net',  // use to "go to home" like clicking the title
+      baseurl: 'http://docs.happyfuntimes.net',  // used to prepend paths for things like og:url, twitter:url, ...
+      mainURL: '/docs',  // use to "go to home" like clicking the title
       defaultOGImageURL: 'http://docs.happyfuntimes.net/docs/images/happyfuntimes.jpg',
       defaultTwitter: '@greggman',
       googleAnalyticsId: 'UA-51764205-4',
