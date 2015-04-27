@@ -1,5 +1,5 @@
-Examples
-========
+Title: Examples
+Description: Various HappyFunTimes Examples
 
 **Disclaimer:** These samples are only meant to show how to use HappyFunTimes. Specifically for
 controllers the class `GameClient`. For games the classes `GameServer` and `NetPlayer`.

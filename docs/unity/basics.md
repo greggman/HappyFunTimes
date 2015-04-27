@@ -25,7 +25,7 @@ and receive messages from the phone.
 ## Receiving data from the Phone
 
 When your `InitializeNetPlayer` method is called you can
-register command handlers by calling `RegisterCmdHandler`
+register command handlers by calling `NetPlayer.RegisterCmdHandler`
 and passing the name of the command and the function to call
 when the command arrives from the phone. For example:
 
@@ -79,6 +79,8 @@ method we registered with `RegisterCmdHandler` will get called.
 **Note: It's up to you to make up commands appropriate for your game.
 It's also up to you to decide what data to pass from the phone to the
 game and create the approriate class to receive the data.**
+
+Of course you can always start with one of the samples
 
 ## Sending data to the phone
 

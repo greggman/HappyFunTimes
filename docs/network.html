@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<!-- this file is auto-generated from docs/network.md. Do not edited directly -->
+<!--
+Copyright 2012, Gregg Tavares.
+All rights reserved.
+
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions are
+met:
+
+    * Redistributions of source code must retain the above copyright
+notice, this list of conditions and the following disclaimer.
+    * Redistributions in binary form must reproduce the above
+copyright notice, this list of conditions and the following disclaimer
+in the documentation and/or other materials provided with the
+distribution.
+    * Neither the name of Gregg Tavares. nor the names of his
+contributors may be used to endorse or promote products derived from
+this software without specific prior written permission.
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+"AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+-->
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0, user-scalable=yes">
+<meta property="og:title" content="Museums &amp; Installations" />
+<meta property="og:type" content="website" />
+<meta property="og:image" content="http://docs.happyfuntimes.net/docs/images/happyfuntimes.jpg" />
+<meta property="og:description" content="Setting up for a Museum or Installation - Instant Connect Mode" />
+<meta property="og:url" content="http://docs.happyfuntimes.net/docs/network.html" />
+
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:site" content="@greggman" />
+<meta name="twitter:creator" content="@greggman" />
+<meta name="twitter:domain" content="docs.happyfuntimes.net" />
+<meta name="twitter:title" content="Museums &amp; Installations" />
+<meta name="twitter:url" content="http://docs.happyfuntimes.net/docs/network.html" />
+<meta name="twitter:description" content="Setting up for a Museum or Installation - Instant Connect Mode" />
+<meta name="twitter:image:src" content="http://docs.happyfuntimes.net/docs/images/happyfuntimes.jpg" />
+
+<title>Museums &amp; Installations</title>
+<link href="/public/hft-icon.png" rel="shortcut icon" type="image/png">
+<link rel="stylesheet" href="/docs/css/base.css" type="text/css" />
+<link rel="stylesheet" href="/docs/css/lesson.css" type="text/css" />
+</head>
+<body>
+<div class="header">
+  <h1><a href="/docs">HappyFunTimes Docs</a></h1>
+</div>
+
+
+<div class="container">
+  <div class="lesson-title">
+    <h1>Museums &amp; Installations</h1>
+  </div>
+  <div class="row">
+    <div class="col-sm-8 lesson-main">
+      <p>Asking players to connect to a local network and then type in URL like
+<code>happyfuntimes.net</code> works just fine but HappyFunTimes supports an even
+simpiler style for things like museums, events, and art installations.</p>
+<p>In this mode players connect to a dedicated router for the game. On iOS
+The moment they connect to to the WiFi they are instantly directed to the
+game, nothing to type. On Android they can type any url, for example,
+<code>h.com</code> and they&#39;ll get connected to the game.</p>
+<p>No internet connection is needed in this mode.</p>
+<h2 id="setup">Setup</h2>
+<p>First, get a router. You probably have an old one sitting around or if you want to be portable I
+recommend the <a http://google.com/#q=TP-Link+TL-WR702N>TP-Link TL-WR702N</a> though
+it will only handle 13-14 players and it&#39;s under $20.</p>
+<p>Go to your router&#39;s admin page and find the DHCP settings. Somewhere there
+should be a place that lets you assign a specfiic IP address to a specific MAC
+address. On TL-WR702N that&#39;s under Advanced Settings-&gt;DHCP-&gt;Address Reservations</p>
+<p>I looked up the MAC address for my machine (the machine running HappyFunTimes) and assigned it
+directly to <code>192.168.2.9</code>.</p>
+<div style="text-align: center;"><a images/router-address-reservation.png><img width="342" height="184" src="images/router-address-reservation.png"></a></div>
+
+<p>I then went to the main DHCP settings at Advanced Settings-&gt;DHCP-&gt;DHCP Settings and
+configured it to give out IP addresses from to <code>192.168.2.10</code> to <code>192.168.2.250</code>.
+Finally I set the DNS there to the same address I used for the HappyFunTimes machine.
+(<code>192.168.2.9</code>)</p>
+<div style="text-align: center;"><a images/router-dhcp-settings.png><img width="343" height="224" src="images/router-dhcp-settings.png"></a></div>
+
+<p>With that done I picked a nice name for my WiFi&#39;s SSID under
+Basic Settings-&gt;Wireless-&gt;Wireless Settings</p>
+<div style="text-align: center;"><a images/router-wifi-settings.png><img width="390" height="237" src="images/router-wifi-settings.png"></a></div>
+
+<p>and in my case I decided to turn off security so no password is needed.</p>
+<div style="text-align: center;"><a images/router-wifi-security.png><img width="375" height="221" src="images/router-wifi-security.png"></a></div>
+
+<p>This may or may not be a good idea since lots of people&#39;s devices are set to automatically
+connect to open routers. If you&#39;re in a relatively isolated location and everyone is going to
+play it&#39;s probably good. If you&#39;re in a more public location you probably want to add a
+password just so people not playing don&#39;t get accidentally connected.</p>
+<p>Install some software. I could give you the cryptic paths so you don&#39;t have to do this but
+this is easier IMO.</p>
+<ol>
+<li>Install HappyFunTimes <a http://superhappyfuntimes.net/install>http://superhappyfuntimes.net/install</a></li>
+<li>Install node.js <a http://nodejs.org/download>http://nodejs.org/download</a></li>
+<li>Open a node command prompt/terminal and type <code>npm install -g hft-cli</code></li>
+</ol>
+<p>With that done, reboot the router, connect your machine, then open a node command prompt or terminal
+and on OSX type</p>
+<pre><code>sudo hft start --dns
+</code></pre><p>On Windows just</p>
+<pre><code>hft start --dns
+</code></pre><p>You need <code>sudo</code> on OSX because port 80 is normally restricted to admin users only.</p>
+<p>Go to <code>http://localhost/games.html</code> and pick a game.</p>
+<p>Now try connecting a smartphone to your router. If it&#39;s an iOS device it <em>should</em>
+automatcally come up with a page that says &quot;Start&quot;. If it&#39;s an Android device
+open the browser and go to <code>hft.com</code> or any <code>http://</code> url.</p>
+<h2 id="using-your-router-for-normal-internet-access">Using your router for normal internet access</h2>
+<p>Once you&#39;ve made these changes on your router the only things you should need to
+to use it as a normal router again are</p>
+<ol>
+<li><p>Clear the DNS address in your DHCP settings</p>
+<p>You set the DNS address to point to the machine being the relayserver. Either
+clear that setting or set it to a real DNS server like Google&#39;s Public DNS servers
+<code>8.8.8.8</code> and <code>8.8.4.4</code></p>
+</li>
+<li><p>Turn security back on</p>
+<p>If you make your WiFi open/unsecured you probably want to turn that back on</p>
+</li>
+</ol>
+<h1 id="maximum-number-of-players">Maximum Number of Players</h1>
+<p>Apparently the TP-Link TL-WR702N only supports around 15 wireless devices at a time which
+means the main computer running the game and 14 players.</p>
+<p><a http://kb.netgear.com/app/answers/detail/a_id/24043/~/how-many-clients-can-you-connect-wirelessly-to-a-netgear-router%3F>Netgear claims their dual band routers can support 64 devices</a>.
+Unfortunatly netgear routers don&#39;t allow you to change the DNS server their DHCP server reports
+so avoid them. They always report themsevles and/or they always look on the WAN for resolution
+instead of the LAN. You can install a different firmware like DD-WRT if you&#39;re adventurous but
+otherwise choose something else.</p>
+<p><a http://www.apple.com/airport-extreme/specs/>Apple claims 50 devices with the Airport Extreme</a>
+though it&#39;s ambigous if that means 50 wifi devices or something else.</p>
+<p><a http://faq.buffalo.jp/app/answers/detail/a_id/326>Buffalo claims between 10 and 50 depending on the device</a>.</p>
+<p>This is all pretty frustrating. It would be nice to know the least expensive way to allow lots
+of players. If you&#39;re a network guru please contact me or submit a pull request with updates
+on what&#39;s best. Especially given the specfic needs of HappyFunTimes. We&#39;re not streaming video
+or dowloading torrents so for example, rather than buying the top end routers consumer routers
+maybe it&#39;s better to by 2 to 4 cheap home routers and set all but one of them into AP mode (Access Point)?
+Or should we go to business routers? Unfortunately at this time I have no idea.</p>
+<p>If you try this setup with a different router please post your results. Add to this doc or file an issue
+or something so that others can learn how to configure their routers.</p>
+
+      <hr/>
+      <div>
+        <div>Questions? <a href="http://stackoverflow.com/questions/tagged/happyfuntimes">Ask on stackoverflow</a>.</div>
+        <div>Issue/Bug? <a href="http://github.com/greggman/happyfuntimes/issues">Create an issue on github</a>.</div>
+
+        <div id="disqus_thread"></div>
+        <script type="text/javascript">
+            /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+            var disqus_shortname = 'happyfuntimes'; // required: replace example with your forum shortname
+            var disqus_identifier = 'Museums &amp; Installations';
+            var disqus_title = 'Museums &amp; Installations';
+
+            /* * * DON'T EDIT BELOW THIS LINE * * */
+            (function() {
+                if (window.location.hostname.indexOf("happyfuntimes") < 0) {
+                    return;
+                }
+                var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+                dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+                (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+            })();
+        </script>
+        <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+        <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+      </div>
+    </div>
+    <div class="col-sm-3 col-sm-offset-1 lesson-sidebar">
+        <ul>
+  <li>Setup
+    <ul>
+      <li><a href="osx.html">OSX</a></li>
+      <li><a href="windows.html">Windows</a></li>
+      <li><a href="linux.html">Linux</a></li>
+    </ul>
+  </li>
+  <li>Making Games
+    <ul>
+      <li><a href="makinggames.html">Making games in HTML5</a></li>
+      <li><a href="unity">Making games in Unity3D</a></li>
+      <li><a href="ideas.html">Ideas</a></li>
+      <li><a href="tips.html">Tips</a></li>
+      <li><a href="examples.html">Examples</a></li>
+      <li><a href="api-versions.html">API Versions</a></li>
+      <li><a href="commands.html">hft command</a></li>
+    </ul>
+  </li>
+  <li>Special Stuff
+    <ul>
+      <li><a href="network.html">Museums & Installations</a></li>
+      <li><a href="migration.html">Migrating from older APIs</a></li>
+    </ul>
+  </li>
+  <li>Contributing
+    <ul>
+      <li><a href="contributing.html">Contributing</a></li>
+      <li><a href="future.html">Future Features</a></li>
+    </ul>
+  </li>
+</ul>
+
+    </div>
+  </div>
+</div>
+</body>
+<script src="/docs/3rdparty/jquery-1.11.2.min.js"></script>
+<script src="/docs/3rdparty/prettify.js"></script>
+<script src="/docs/js/lesson.js"></script>
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-51764205-4', 'auto');
+  ga('send', 'pageview');
+
+</script>
+
+
+</html>
+
+
+

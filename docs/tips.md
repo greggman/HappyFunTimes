@@ -1,5 +1,5 @@
-Tips
-====
+Title: Tips
+Description: Tips for making the best HappyFunTimes experiences
 
 *   Too many players can make some games un-playable.
 

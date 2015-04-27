@@ -1,5 +1,5 @@
-Migrating Older Games
-=====================
+Title: Migrating Older Games
+Description: What you need to do up upgrade your game to a newer API
 
 *   [Migrating from 0.x.x to 1.x.x](#migrate-from-0xx-to-1xx)
 

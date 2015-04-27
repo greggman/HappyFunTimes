@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- this file is auto-generated from docs/unity/getting-started.md. Do not edited directly -->
+<!-- this file is auto-generated from docs/unity/player-connect.md. Do not edited directly -->
 <!--
 Copyright 2012, Gregg Tavares.
 All rights reserved.
@@ -34,22 +34,22 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0, user-scalable=yes">
-<meta property="og:title" content="Getting Starting with HappyFunTimes and Unity" />
+<meta property="og:title" content="Spawning Players" />
 <meta property="og:type" content="website" />
 <meta property="og:image" content="http://docs.happyfuntimes.net/docs/images/happyfuntimes.jpg" />
-<meta property="og:description" content="Step by step instructions on how to get HappyFunTimes running with Unity" />
-<meta property="og:url" content="http://docs.happyfuntimes.net/docs/unity/getting-started.html" />
+<meta property="og:description" content="What happens when a player joins" />
+<meta property="og:url" content="http://docs.happyfuntimes.net/docs/unity/player-connect.html" />
 
 <meta name="twitter:card" content="summary_large_image" />
 <meta name="twitter:site" content="@greggman" />
 <meta name="twitter:creator" content="@greggman" />
 <meta name="twitter:domain" content="docs.happyfuntimes.net" />
-<meta name="twitter:title" content="Getting Starting with HappyFunTimes and Unity" />
-<meta name="twitter:url" content="http://docs.happyfuntimes.net/docs/unity/getting-started.html" />
-<meta name="twitter:description" content="Step by step instructions on how to get HappyFunTimes running with Unity" />
+<meta name="twitter:title" content="Spawning Players" />
+<meta name="twitter:url" content="http://docs.happyfuntimes.net/docs/unity/player-connect.html" />
+<meta name="twitter:description" content="What happens when a player joins" />
 <meta name="twitter:image:src" content="http://docs.happyfuntimes.net/docs/images/happyfuntimes.jpg" />
 
-<title>Getting Starting with HappyFunTimes and Unity</title>
+<title>Spawning Players</title>
 <link href="/public/hft-icon.png" rel="shortcut icon" type="image/png">
 <link rel="stylesheet" href="/docs/css/base.css" type="text/css" />
 <link rel="stylesheet" href="/docs/css/lesson.css" type="text/css" />
@@ -62,33 +62,39 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 <div class="container">
   <div class="lesson-title">
-    <h1>Getting Starting with HappyFunTimes and Unity</h1>
+    <h1>Spawning Players</h1>
   </div>
   <div class="row">
     <div class="col-sm-8 lesson-main">
-      <ol>
-<li>Open Unity and create a new project</li>
-<li>From the Asset store install the HappyFunTimes plugin</li>
-<li>Open the HappyFunTimesSimple scene by double clicking it.</li>
-<li><p>Run</p>
-<p>If you haven&#39;t installed HappyFunTimes the app yet you&#39;ll be
-asked to install it. After you&#39;ve installed it stop the unity
-project and run it again.</p>
+      <p>It&#39;s probably easies to start with a working example.</p>
+<p>The easiest thing to do when a player joins your HappyFunTimes game
+is to spawn a prefab. To do this</p>
+<ol>
+<li><p>make new <code>GameObject</code></p>
+<p><img src="images/create-game-object.png" class="halfsize lesson" /></p>
+<p>name it something like &quot;PlayerCreator&quot; to help you remember
+what it&#39;s doing.</p>
+<p><img src="images/name-gameobject.png" class="halfsize lesson" /></p>
 </li>
-<li><p>Start your browser. Size it so you can see the Unity Game View and
-Go to &quot;<a http://localhost:18679><code>http://localhost:18679</code></a>&quot;</p>
-<p>You should see a small sphere appear in Unity.
-Move your mouse over the browser window and the sphere should move.</p>
+<li><p>click <code>Add Component</code> and then pick <code>HappyFunTimes-&gt;PlayerSpawner</code></p>
+<p><img src="images/hft-components.png" class="halfsize lesson" /></p>
+<p><img src="images/hft-playerspawner-script.png" class="halfsize" /></p>
 </li>
-<li><p>On your smartphone (iOS or Android. Others coming soon), <strong>MAKE SURE YOUR
-PHONE IS ON THE SAME WIFI AS YOUR COMPUTER</strong>. On iOS open Safari, on Android
-open Chrome and go to <a http://happyfuntimes.net>happyfuntimes.net</a>.</p>
-<p>You should see another small sphere appear in Unity. Slide your
-finger on your phone. The sphere should move</p>
+<li><p>Select the prefab you want HappyFunTimes to birth each time
+a player connects</p>
+<p><img src="images/playerspawner.png" class="halfsize lesson" /></p>
 </li>
 </ol>
-<p>Congratulations!!! HappyFunTimes is working! Now go make some awesome
-multiplayer games!</p>
+<p><strong>NOTE: There can only be one <code>PlayerSpawner</code> script in your scene</strong></p>
+<p>At this point, assuming you have a <a href="self-control.html">working controller</a>, if you
+run your game and open some browser windows you should see your prefab
+being spawned. Of course it won&#39;t do anything yet.</p>
+<h2 id="making-your-player-respond-to-input">Making your player respond to input</h2>
+<p>In your prefab pick <code>Add Component-&gt;New Script</code></p>
+<p><img src="images/new-script.png" class="halfsize lesson" /></p>
+<p>and name it something like <code>PlayerControl</code></p>
+<p><img src="images/playercontrol-script.png" class="halfsize lesson" /></p>
+<p><a href="basics.html#how-it-works">Then follow the code on this page</a></p>
 
       <hr/>
       <div>
@@ -99,8 +105,8 @@ multiplayer games!</p>
         <script type="text/javascript">
             /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
             var disqus_shortname = 'happyfuntimes'; // required: replace example with your forum shortname
-            var disqus_identifier = 'Getting Starting with HappyFunTimes and Unity';
-            var disqus_title = 'Getting Starting with HappyFunTimes and Unity';
+            var disqus_identifier = 'Spawning Players';
+            var disqus_title = 'Spawning Players';
 
             /* * * DON'T EDIT BELOW THIS LINE * * */
             (function() {

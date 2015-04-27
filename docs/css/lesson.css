@@ -15,6 +15,9 @@
     color: white;
 }
 
+img.lesson {
+    border: 5px solid black;
+}
 .lesson-title {
     margin-top: 3em;
     margin-bottom: 2em;

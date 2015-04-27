@@ -1,5 +1,5 @@
-Making games with HappyFunTimes
-===============================
+Title: Making games
+Description: Making games with HappyFunTimes
 
 ### Table of Contents
 

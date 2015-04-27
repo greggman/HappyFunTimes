@@ -1,5 +1,5 @@
-Ideas
-=====
+Title: Ideas
+Description: Ideas to spur more ideas. Innovated ways to use HappyFunTimes
 
 At the time I wrote this "ideas" document I hadn't made many games. I've spent
 the last 4 months making infrustucture. But, there's a ton of ideas. I'm sure

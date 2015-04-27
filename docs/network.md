@@ -1,5 +1,5 @@
-Setting up for a Museum or Installation
-===========================================
+Title: Museums & Installations
+Description: Setting up for a Museum or Installation - Instant Connect Mode
 
 Asking players to connect to a local network and then type in URL like
 `happyfuntimes.net` works just fine but HappyFunTimes supports an even

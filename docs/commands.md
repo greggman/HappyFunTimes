@@ -1,5 +1,5 @@
-HFT Commands
-============
+Title: Commands
+Description: hft commandline commands.
 
 `hft` is a command to help manage happyfuntimes for developers. For the basics typing `hft`
 will list all the commands. Typing `hft cmd --help` will list the help for a specific command.

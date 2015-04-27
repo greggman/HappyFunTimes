@@ -1,5 +1,5 @@
-Future Directions
-=================
+Title: Future
+Description: Stuff to purse in HappyFunTimes
 
 These would be very nice to have. I don't know if or when I'll have time to
 implement them. Feel free to implement them yourself and submit a pull request

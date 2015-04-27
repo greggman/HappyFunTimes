@@ -1,5 +1,5 @@
-Windows
-=======
+Title: Windows
+Description: Troubleshooting HappyFunTimes on Windows
 
 ## Installing
 
