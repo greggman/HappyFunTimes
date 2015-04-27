@@ -185,15 +185,16 @@ var RelayServer = function(servers, inOptions) {
    * @method
    * @param {Player} player the player to add
    * @param {String} gameId id of the game.
+   * @param {Object} data to pass to game
    * @returns {Game} game that player was added to
    */
-  this.addPlayerToGame = function(player, gameId) {
+  this.addPlayerToGame = function(player, gameId, data) {
     debug("adding player to game: " + gameId);
     var gameGroup = getGameGroup(gameId);
     if (!gameGroup) {
       return;
     }
-    return gameGroup.addPlayer(player);  // eslint-disable-line
+    return gameGroup.addPlayer(player, data);  // eslint-disable-line
   };
 
   /**

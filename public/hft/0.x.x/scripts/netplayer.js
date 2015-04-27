@@ -56,11 +56,12 @@ define(function() {
    * @param {number} id
    * @param {string} name
    */
-  var NetPlayer = function(server, id) {
+  var NetPlayer = function(server, id, data) {
     this.server = server;
     this.id = id;
     this.eventListeners = { };
     this.connected = true;
+    this.sessionId = data ? data.__hft_session_id__ : undefined;
   };
 
   /**

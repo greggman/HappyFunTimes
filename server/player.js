@@ -50,7 +50,7 @@ var Player = function(client, relayServer, id) {
   debug("" + id + ": start player");
 
   var addPlayerToGame = function(data) {
-    var game = this.relayServer.addPlayerToGame(this, data.gameId);
+    var game = this.relayServer.addPlayerToGame(this, data.gameId, data.data);
     if (!game) {
       // TODO: Make this URL set from some global so we can set it some place else.
       debug("game does not exit");

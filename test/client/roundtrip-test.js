@@ -89,6 +89,20 @@ describe('roundtrip', function() {
     done();
   });
 
+  it('should have session ids', function(done) {
+    var testGame = new TestGame({hftServer: hftServer});
+    var testCtrl1 = new TestController({hftServer: hftServer});
+    var testCtrl2 = new TestController({hftServer: hftServer});
+
+    testGame.getPlayers()[0].sessionId.should.have.length(16);
+    testGame.getPlayers()[1].sessionId.should.have.length(16);
+    done();
+
+    testCtrl1.close();
+    testCtrl2.close();
+    testGame.close();
+  });
+
   after(function(done) {
     hftServer.close();
     done();

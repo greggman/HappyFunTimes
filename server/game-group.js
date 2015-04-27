@@ -80,9 +80,9 @@ GameGroup.prototype.removeGame = function(game) {
   }
 };
 
-GameGroup.prototype.addPlayer = function(player) {
+GameGroup.prototype.addPlayer = function(player, data) {
   if (this.games.length) {
-    this.games[0].addPlayer(player);
+    this.games[0].addPlayer(player, data);
     return this.games[0];
   }
 

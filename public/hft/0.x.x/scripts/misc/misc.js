@@ -362,7 +362,66 @@ define(function() {
     }
   };
 
+  /**
+   * Copies all the src properties to the dst
+   * @param {Object} src an object with some properties
+   * @param {Object} dst an object to receive copes of the properties
+   * @return returns the dst object.
+   */
+  function applyObject(src, dst) {
+    Object.keys(src).forEach(function(key) {
+      dst[key] = src[key];
+    });
+    return dst;
+  }
+
+  /**
+   * Merges the proprties of all objects into a new object
+   *
+   * Example:
+   *
+   *     var a = { abc: "def" };
+   *     var b = { xyz: "123" };
+   *     var c = Misc.mergeObjects(a, b);
+   *
+   *     // c = { abc: "def", xyz: "123" };
+   *
+   * Later object properties take precedence
+   *
+   *     var a = { abc: "def" };
+   *     var b = { abc: "123" };
+   *     var c = Misc.mergeObjects(a, b);
+   *
+   *     // c = { abc: "123" };
+
+   * @param {...Object} object objects to merge.
+   * @return an object containing the merged properties
+   */
+  function mergeObjects(object) {
+    var merged = {};
+    Array.prototype.slice.call(arguments).forEach(function(src) {
+      if (src) {
+        applyObject(src, merged);
+      }
+    });
+    return merged;
+  }
+
+  /**
+   * Creates a random id
+   * @param {number} [digits] number of digits. default 16
+   */
+  function makeRandomId(digits) {
+    digits = digits || 16;
+    var id = ""
+    for (var ii = 0; ii < digits; ++ii) {
+      id = id + ((Math.random() * 16 | 0)).toString(16);
+    }
+    return id;
+  }
+
   return {
+    applyObject: applyObject,
     applyUrlSettings: applyUrlSettings,
     clamp: clamp,
     clampPlusMinus: clampPlusMinus,
@@ -372,6 +431,8 @@ define(function() {
     findCSSStyleRule: findCSSStyleRule,
     getAbsolutePosition: getAbsolutePosition,
     invertPlusMinusRange: invertPlusMinusRange,
+    makeRandomId: makeRandomId,
+    mergeObjects: mergeObjects,
     minToZero: minToZero,
     parseUrlQuery: parseUrlQuery,
     parseUrlQueryString: parseUrlQueryString,

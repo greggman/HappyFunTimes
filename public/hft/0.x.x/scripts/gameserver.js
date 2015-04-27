@@ -175,7 +175,7 @@ define([
         name = "Player" + (++_totalPlayerCount);
       }
 
-      var player = new NetPlayer(this, id);
+      var player = new NetPlayer(this, id, msg.data);
       _players[id] = player;
       ++_numPlayers;
       sendEvent_('playerconnect', [player, name, msg.data]);

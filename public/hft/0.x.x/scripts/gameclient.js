@@ -31,7 +31,14 @@
 
 "use strict";
 
-define(['./virtualsocket'], function(VirtualSocket) {
+define([
+    './misc/cookies',
+    './misc/misc',
+    './virtualsocket',
+  ], function(
+    Cookie,
+    Misc,
+    VirtualSocket) {
   /**
    * @typedef {Object} GameClient~Options
    */
@@ -199,7 +206,17 @@ define(['./virtualsocket'], function(VirtualSocket) {
     };
 
     connect_();
-    sendCmdLowLevel('join', options);
+
+    var idCookie = new Cookie("__hft_id__");
+    var opts = Misc.mergeObjects(options);
+    var id = idCookie.get();
+    if (!id) {
+      id = Misc.makeRandomId();
+      idCookie.set(id);
+    }
+    opts.data = Misc.mergeObjects(opts.data);
+    opts.data.__hft_session_id__ = id;
+    sendCmdLowLevel('join', opts);
   };
   return GameClient;
 });
