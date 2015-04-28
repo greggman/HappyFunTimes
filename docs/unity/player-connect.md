@@ -82,10 +82,11 @@ script.
     Making your players respond to input is [the same as above](#making-your-player-respond-to-input).
 
     Let's say your game supports 3 people and 6 people try to connect. The first 3
-    people will control the 3 GameObjects you setup. The other 3 people will
-    be told the game is full.
+    people will control the 3 GameObjects you setup. Their `InitializeNetPlayer`
+    function will be call. For the next 3 players the `WaitingNetPlayer` function
+    will be called **on the same `GameObject` as the `PlayerConnnetor`**.
 
-    By default if one of the first 3 people disconnects from the game one of the
+    If one of the first 3 people disconnects from the game one of the
     previously denied people will take their slot. Note: Your GameObject's
     InitializeNetPlayer will be called again. This is so it can pass you a new
     `NetPlayer` object to talk to the new player as wel as receive their name.
@@ -93,19 +94,19 @@ script.
     continue from where the previous player left off.
 
     If you'd like a player to be able to reconnect and pick up where they left
-    off check the `Reconnect Players` checkbox. The timeout below that determines
-    how long they have until someone else can take their place.
+    off sed the `timeout to disconnect` setting to how many seconds to give
+    them to reconnect before giving that slot to a waiting player.
 
-    In other words, if you check `Reconnect Players` and `Timeout...` is set to 15
+    In other words if you set `Timeout...` set to 15
     then a player that disconnects has 15 seconds to reconnect. If they don't
     reconnect in 15 seconds the next available player will take their place.
 
-
-
-
-
     Just like above making your player repsond to input requires you
-    add a script to each player and have it have a `Initialize
+    add a script to each player and have it have a `InitializeNetPlayer`
+    method to receive the `NetPlayer` for that phone.
+
+    You also need to handle waiting players, telling them the game is
+    full or to wait.
 
 ## Things to be aware of
 

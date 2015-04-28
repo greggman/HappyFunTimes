@@ -59,12 +59,20 @@ define(['./cookies'], function(Cookie) {
     };
 
     var sendName = function() {
+      client.sendCmd('_hft_setname_', {
+          name: name,
+      });
+      // deprecated msg .. left for legacy reasons
       client.sendCmd('setName', {
           name: name,
       });
     };
 
     var sendBusy = function(busy) {
+      client.sendCmd('_hft_busy_', {
+          busy: busy,
+      });
+      // deprecated msg .. left for legacy reasons
       client.sendCmd('busy', {
           busy: busy,
       });

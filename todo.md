@@ -1,17 +1,7 @@
 To Do
 =====
 
-*   PlayerConncetor
-
-        * handle name
-        * handle color, game should pick
-        * handle busy
-            * send message to phone
-            * have phone show busy
-        * handle spawn
-            * have phone switch from busy to active
-        * handle reconnect
-
+*   check for bower shit
 *   add hft set or hft set-install to set which HFT is current
 *   add about on name page and waiting page
 
@@ -857,6 +847,20 @@ Runs Repo noid
 
 Done
 ====
+
+*   fix unity device and orientation test
+    *   remove alert - switch to HFT alert
+    *   fix message (add imge?)
+*   PlayerConncetor
+
+        * handle name
+        * handle color, game should pick
+        * handle busy
+            * send message to phone
+            * have phone show busy
+        * handle spawn
+            * have phone switch from busy to active
+        * handle reconnect
 
 *   have hft check if it's already running
 *   why do I scan tree in readInfo? (to find icon and screenshots)
