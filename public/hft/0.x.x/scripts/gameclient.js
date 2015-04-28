@@ -215,7 +215,7 @@ define([
       idCookie.set(id);
     }
     opts.data = Misc.mergeObjects(opts.data);
-    opts.data.__hft_session_id__ = id;
+    opts.data.__hft_session_id__ = id;  // eslint-disable-line
     sendCmdLowLevel('join', opts);
   };
   return GameClient;

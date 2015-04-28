@@ -393,11 +393,11 @@ define(function() {
    *     var c = Misc.mergeObjects(a, b);
    *
    *     // c = { abc: "123" };
-
+   *
    * @param {...Object} object objects to merge.
    * @return an object containing the merged properties
    */
-  function mergeObjects(object) {
+  function mergeObjects(object) {  // eslint-disable-line
     var merged = {};
     Array.prototype.slice.call(arguments).forEach(function(src) {
       if (src) {
@@ -413,7 +413,7 @@ define(function() {
    */
   function makeRandomId(digits) {
     digits = digits || 16;
-    var id = ""
+    var id = "";
     for (var ii = 0; ii < digits; ++ii) {
       id = id + ((Math.random() * 16 | 0)).toString(16);
     }

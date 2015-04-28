@@ -56,7 +56,7 @@ function TemplateManager() {
   this.apply = function(filename, params) {
     var template = templates[filename];
     if (!template) {
-      var template = Handlebars.compile(readFile(filename));
+      template = Handlebars.compile(readFile(filename));
       templates[filename] = template;
     }
 
@@ -177,7 +177,7 @@ function Builder(options) {
     return content;
   }
 
-  var mdRE = /href="(.*?)"/g
+  var mdRE = /href="(.*?)"/g;
   function fixMDLink(match, link) {
     var urlObj = url.parse(link);
     if (urlObj.pathname && urlObj.pathname.substr(-3) === ".md") {
