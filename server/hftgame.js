@@ -262,15 +262,37 @@ HFTPlayer.prototype.handleLaunch = function(data) {
     }
 
     var args = [];
+    var stderr = [];
     launcher = platformInfo.launcher;
     if (!launcher) {
       launcher = nativePath;
     } else {
       args.push(nativePath);
     }
-
-    var child = childProcess.spawn(launcher, args);
-    child.unref();
+    try {
+      var child = childProcess.spawn(launcher, args, {
+        stdio: [
+          0,
+          1,
+          'pipe',
+        ],
+      });
+      child.on('error', function(err) {
+        this.sendError("unable to run game: " + launcher);
+      }.bind(this));
+      child.on('exit', function(exitCode) {
+        if (exitCode !== 0) {
+          this.sendError("error from game: " + stderr);
+          stderr = [];
+        }
+      }.bind(this));
+      child.stderr.on('data', function(chunk) {
+        stderr.push(chunk);
+      });
+      child.unref();
+    } catch (e) {
+      this.sendError("unable to run game: " + launcher);
+    }
   }
 };
 
