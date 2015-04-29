@@ -71,7 +71,7 @@ exports.usage = {
     "   hft uninstall gameid",
   ],
   options: [
-    { option: 'dry-run', type: 'String', description: "don't delete any files", },
+    { option: 'dry-run', type: 'Boolean', description: "don't delete any files", },
   ],
 };
 exports.cmd = uninstall;
