@@ -277,7 +277,7 @@ HFTPlayer.prototype.handleLaunch = function(data) {
           'pipe',
         ],
       });
-      child.on('error', function(err) {
+      child.on('error', function() {
         this.sendError("unable to run game: " + launcher);
       }.bind(this));
       child.on('exit', function(exitCode) {
