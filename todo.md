@@ -1,6 +1,8 @@
 To Do
 =====
 
+*   check osx unity no hft works
+*   check win unity no hft works
 *   check for bower shit
 *   add hft set or hft set-install to set which HFT is current
 *   add about on name page and waiting page
