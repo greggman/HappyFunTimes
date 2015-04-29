@@ -3,11 +3,12 @@ requirejs([
   ], function(io) {
   var isLocal = window.location.hostname.indexOf("localhost") >= 0;
   var plat = navigator.platform.toLowerCase();
-  if (plat.indexOf("mac")) {
+  if (plat.indexOf("mac") >= 0) {
     plat = "mac";
-  } else if (plat.indexOf("win")) {
+  } else if (plat.indexOf("win") >= 0) {
     plat = "win";
   }
+  console.log("platform:", plat);
 
   var $ = document.getElementById.bind(document);
 
