@@ -84,7 +84,7 @@ to that prefab. <code>InitializeNetPlayer</code> is passed a
 and receive messages from the phone.</p>
 <h2 id="receiving-data-from-the-phone">Receiving data from the Phone</h2>
 <p>When your <code>InitializeNetPlayer</code> method is called you can
-register command handlers by calling <code>RegisterCmdHandler</code>
+register command handlers by calling <code>NetPlayer.RegisterCmdHandler</code>
 and passing the name of the command and the function to call
 when the command arrives from the phone. For example:</p>
 <pre><code>private HappyFunTimes.NetPlayer m_netPlayer;
@@ -126,6 +126,7 @@ method we registered with <code>RegisterCmdHandler</code> will get called.</p>
 <p><strong>Note: It&#39;s up to you to make up commands appropriate for your game.
 It&#39;s also up to you to decide what data to pass from the phone to the
 game and create the approriate class to receive the data.</strong></p>
+<p>Of course you can always start with one of the samples</p>
 <h2 id="sending-data-to-the-phone">Sending data to the phone</h2>
 <p>Sending data to the phone is just the reverse. First we make
 class to represent the data we want to send.</p>

@@ -95,7 +95,86 @@ being spawned. Of course it won&#39;t do anything yet.</p>
 <p>and name it something like <code>PlayerControl</code></p>
 <p><img src="images/playercontrol-script.png" class="halfsize lesson" /></p>
 <p><a href="basics.html#how-it-works">Then follow the code on this page</a></p>
+<h2 id="controlling-to-gameobjects-already-in-the-scene">Controlling to GameObjects already in the scene</h2>
+<p>HappyFunTimes is designed to support 10s, or even 100s of players
+but sometimes you just want to use it for a fixed number of
+players of GameObjects manually placed in the scene to use the phone
+as a controller.</p>
+<p>The easist way to do this is to use the HappyFunTimes PlayerConnector
+script.</p>
+<ol>
+<li><p>make new <code>GameObject</code></p>
+<p><img src="images/create-game-object.png" class="halfsize lesson" /></p>
+<p>name it something like &quot;PlayerManager&quot; to help you remember
+what it&#39;s doing.</p>
+<p><img src="images/name-gameobject.png" class="halfsize lesson" /></p>
+</li>
+<li><p>click <code>Add Component</code> and then pick <code>HappyFunTimes-&gt;PlayerConnectorr</code></p>
+<p><img src="images/hft-components.png" class="halfsize lesson" /></p>
+<p><img src="images/hft-playerconnector-script.png" class="halfsize" /></p>
+</li>
+<li><p>Open the player property and set the size to the number of players
+you support, then drag in each of your player GameObjects into the
+slots <code>Element 0</code>, <code>Element 1</code> etc.</p>
+<p><img src="images/playerconnector.png" class="halfsize lesson" /></p>
+<p>The first person to connect to your game will control the GameObject
+in the first slot, the second player to connect to your game will
+control the GameObject in the second slot etc ...</p>
+<p>Making your players respond to input is <a #making-your-player-respond-to-input>the same as above</a>.</p>
+<p>Let&#39;s say your game supports 3 people and 6 people try to connect. The first 3
+people will control the 3 GameObjects you setup. Their <code>InitializeNetPlayer</code>
+function will be call. For the next 3 players the <code>WaitingNetPlayer</code> function
+will be called <strong>on the same <code>GameObject</code> as the <code>PlayerConnnetor</code></strong>.</p>
+<p>If one of the first 3 people disconnects from the game one of the
+previously denied people will take their slot. Note: Your GameObject&#39;s
+InitializeNetPlayer will be called again. This is so it can pass you a new
+<code>NetPlayer</code> object to talk to the new player as wel as receive their name.
+It&#39;s up to you if you want to reset any state in the game or just have them
+continue from where the previous player left off.</p>
+<p>If you&#39;d like a player to be able to reconnect and pick up where they left
+off sed the <code>timeout to disconnect</code> setting to how many seconds to give
+them to reconnect before giving that slot to a waiting player.</p>
+<p>In other words if you set <code>Timeout...</code> set to 15
+then a player that disconnects has 15 seconds to reconnect. If they don&#39;t
+reconnect in 15 seconds the next available player will take their place.</p>
+<p>Just like above making your player repsond to input requires you
+add a script to each player and have it have a <code>InitializeNetPlayer</code>
+method to receive the <code>NetPlayer</code> for that phone.</p>
+<p>You also need to handle waiting players, telling them the game is
+full or to wait.</p>
+</li>
+</ol>
+<h2 id="things-to-be-aware-of">Things to be aware of</h2>
+<pre><code>You&#39;ll get an `OnDisconnect` event (your `OnDisconnect` callback will be called)
+when a player disconnects. When a new player connects whether it&#39;s the same user
+who just disconnected or a new user connecting for the first time,
+your `InitializeNetPlayer` function will get called with a new
+`NetPlayer` object.
 
+**THE PHONE KEEPS NO STATE!!** This means if you have a controller that changes
+modes you need to send whatever messages you&#39;ve created to your controller to
+get it in the correct state.
+
+For example, Let&#39;s say have a game with 2 modes. In one mode the phone
+shows 3 buttons (yes, no, maybe). In the other mode the phone shows a slingshot.
+When the game switches to players needing buttons on their phone or players
+needing slingshots on their phone you send a message to them you made up something
+like
+
+    class ShowControllerMsg : MessageCmdData {
+      ShowControllerMsg(string s) : { control = s; }
+      public string control;
+    };
+
+    m_netPlayer.sendCmd(&#39;showcontroller`, new ShowControllerMsg(&quot;slingshot&quot;));
+
+A player disconnects, a new player connects, that player is starting in the middle
+of the game. Their controller has not received a message that it needs to be showing
+the slingshot controls.
+
+So, when your `InitializeNetPlayer` function gets called you need to send that
+message to tell the phone to switch to slingshot mode.
+</code></pre>
       <hr/>
       <div>
         <div>Questions? <a href="http://stackoverflow.com/questions/tagged/happyfuntimes">Ask on stackoverflow</a>.</div>
