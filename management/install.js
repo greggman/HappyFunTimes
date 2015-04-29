@@ -189,6 +189,7 @@ var install = function(releasePath, opt_destPath, opt_options) {
   }
 
   // Should this be in the zip?
+  log("checking gametype: " + hftInfo.gameType);
   if (hftInfo.gameType.toLowerCase() === "unity3d") {
     var exePath = platformInfo.exePath;
     if (exePath) {
@@ -197,6 +198,7 @@ var install = function(releasePath, opt_destPath, opt_options) {
         console.error("path not found: " + exePath);
         return false;
       }
+      log("setting chmod 643 for: " + exePath);
       fs.chmodSync(exePath, (7 << 6) | (4 << 3) | 4);
     }
   }
