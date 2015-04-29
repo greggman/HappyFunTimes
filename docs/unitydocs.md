@@ -1,101 +1,173 @@
 Unity Docs for HappyFunTimes
 ============================
 
-Very similar to the JavaScript version but note there is no gameclient
-(something to run on a smartphone), there is only gameserver, something to
-use in the game. That's because the whole point of this library is
-to allow people with smartphones (or laptops) to join your game without
-needing to install any software. The browser becomes a controller. The
-game itself can be in Unity but the controllers need to be browsers
-to achieve this goal.
+### Table of Contents
 
-Installation
-------------
+*   **[Unity by cloning an existing project](#unity-by-cloning-an-existing-project)**
+*   **[Unity from Scratch](#unity-from-scratch)**
+*   **[Making the Game](#making-the-game)**
+    *   **[Spawning Player GameObjects](#spawning-player-gameobjects)**
+    *   **[Getting Input From Phones](#getting-input-from-phones)**
+    *   **[Sending messages to the Phone](#sending-messages-to-the-phone)**
+*   **[Publishing](#publishing)**
+    *   **[Testing](#testing)**
+    *   **[Publish](#publish)**
+*   **[Ideas](ideas.md)**
+*   **[Future Features](future.md)**
 
-1.  Clone the repo
-2.  In Unity, make a new Project
-3.  Pick Assets->Import Package->Character Controller
-4.  Copy the contents of Unity3D/3rdParty to Assets/Plugins
-5.  Copy Unity3D/Extra to Assets/Plugins/HappyFunTimesExtra
-6.  Copy Unity3D/src to Assets/Plugins/HappyFunTimes
-7.  Copy Unity3d/Examples to Assets/Scripts/HappyFunTimes
-8.  Open the scene Unity3D/Examples/Scenes/HappyFunTimesCharacterExample
-9.  Pick Edit->Project Settings->Player and check "Run in Background"
+### Unity by cloning an existing project
 
-Note: These instructions include the sample projects. If all you want is
-the minimum required to do your own thing with HappyFunTimes skip steps #3, #7, and #8
+Follow the instructions in [Making Games with HappyFunTimes](makinggames.md#setting-up-for-development) and
+when cloning a game choose either
 
-**RelayServer**
+*   [Unitychararacterexample](http://github.com/greggman/hft-unitycharacterexample) A Unity3D example that spawns characters written in UnityScript.
 
-The relayserver is completely seperate to the Unity project.
-Follow the instructions in main [README.md](../README.md#running-the-examples) to install and run the server with node.js
+*   [Unitysimple](http://github.com/greggman/hft-unitysimple) A Unity3D example that just positions a sphere for each player written in C#.
 
-Integration with your app
--------------------------
+*   [Unity2dplatformer](http://github.com/greggman/hft-unity2dplatformer) A Unity3D example that shows a 2d platformer written in C#
 
-`GameServer`
+*   [Unity-multi-game--example](http://github.com/greggman/hft-unity-multi-game-example) A Unity3D example that shows a 2d platformer written in C# that can span multiple computers (Advanced!)
 
-In some MonoBehaviour (in other words, Add a Script Component), make `GameServer` and
-call init. You can pass init an optional websocket URL. The default is "ws://localhost:8080"
-which means it assume the relayserver us running on the same machine as the game and
-is running on the default port.
+### Unity from Scratch
 
-    GameServer.Options options = new GameServer.Options();
-    options.gameId = "simple";
-    m_server = new GameServer(options, gameObject);
-    m_server.Init();
+*   TBD
 
-Attach 3 events
+## Making the game
 
-    m_server.OnPlayerConnect += StartNewPlayer;
-    m_server.OnConnect += Connected;
-    m_server.OnDisconnect += Disconnected;
+These steps have already been done in the samples but assuming you were starting from
+scratch these are the steps you'd have taken. Reading this will hopefully help you
+understand the code.
 
-When a player connects your `StartNewPlayer` will be called and passed a NetPlayer in
-the event object. Spawn a GameObject however you please and some how pass the NetPlayer
-to it. In the example simple we do this by making a `ExampleSimplePlayer` class which
-is also a MonoBehaviour, add it to our newly created GameObject, and then call its
-`init` function passing it the `NetPlayer`
+### Spawning Player GameObjects
 
-    void StartNewPlayer(object sender, PlayerConnectMessageArgs e) {
-        // Spawn a new player then add a script to it.
-        GameObject gameObject = (GameObject)Instantiate(prefabToSpawnForPlayer, position, Quaternion.identity);
+The easist way to start is to make a prefab that contains the GameObject that you
+want to spawn everytime a player connects to the game. In that GameObject add a
+new script. Let's say it's `MyPlayer.cs` or `MyPlayer.js`
 
-        // Add the ExampleSimplePlayer script to this object. Note: We could possible add this to the prefab.
-        // Not sure which is best.
-        ExampleSimplePlayer player = gameObject.AddComponent<ExampleSimplePlayer>();
-        player.Init(e.netPlayer);
+In that script make a function called `InitializeNetPlayer`. This function will be
+called when the prefab is spawned everytime a new player connects.
+
+C# minimal code
+
+    using UnityEngine;
+    using HappyFunTimes;
+    using System;
+
+    class MyPlayer : MonoBehaviour
+    {
+        private NetPlayer m_netPlayer;
+
+        void InitializeNetPlayer(SpawnInfo spawnInfo) {
+            m_netPlayer = spawnInfo.netPlayer;
+            m_netPlayer.OnDisconnect += Remove;
+        }
+
+        // delete this gameobject if the player disconnects
+        private void Remove(object sender, EventArgs e) {
+            Destroy(gameObject);
+        }
+
+        ...
     }
 
-At this point wire up your events you want the NetPlayer to be able to respond to. To do this
-create a MessageCmdData class for each message that represents the data you'll receive. For example if the
-smartphone is going to send
+UnityScript minimal code
 
-    client.sendCmd('move', {x:10, y:20});
+    private var _netPlayer : HappyFunTimes.NetPlayer;
 
-Then you'd make a MessageCmdData class like thsi
+    function InitializeNetPlayer(spawnInfo : HappyFunTimes.SpawnInfo) {
+        _netPlayer = spawnInfo.netPlayer;
+        _netPlayer.OnDisconnect += Remove;
+    }
+
+    // delete this gameobject if the player disconnects
+    function Remove() {
+        Destroy(gameObject);
+    }
+
+Now make a new GameObject and add a Script Component, HappyFunTimes->PlayerSpawner.
+In the properties for the PlayerSpawner set the `prefab to spawn for player` to the
+prefab you just created. Leave `gameId` blank!
+
+   <img src="../images/unity/player-spawner-properties.png" width="279" height="94" />
+
+If happyfuntimes is running, and you followed all the other instructions about editing
+`package.json` and running `hft add` etc, then if you run the game you should see the
+message
+
+   <img src="../images/unity/socket-opened.png" width="238" height="65" />
+
+If you open a browser window and go to `http://localhost:18679` you should see your
+prefab get spawned. Open more browser windows/tabs you'll see more get spawned. Close them
+and they'll disappear. NOTE: Since we didn't set a positon they'll all be in the exact
+same spot.
+
+### Getting Input from Phones
+
+To get input from phones you need to program both the phone AND Unity. The
+phones must currently be programmed in JavaScript since the entire point
+is that there's nothing to install on the phone.  Maybe with Unity5 we'll
+be able to make controllers in Unity as well but for now you've got to
+code them.
+
+The way HappyFunTimes work is you write JavaScript on the phone to get input
+and send messages. For example here is some code in JavaScript to send a message
+
+    client.sendCmd('move', {
+      x: position.x / target.clientWidth,
+      y: position.y / target.clientHeight,
+    });
+
+As you can see the command is called `move`. You make up that name. You decide
+what data to send. In this case we're sending `x` and `y` and they are both
+numbers, in case floating point numbers. in Unity we need to create
+structs/classes that match, associate them with a command name, and register
+a function to be called when the message arrives
+
+C#
 
     [CmdName("move")]
     private class MessageMove : MessageCmdData {
-        public int x = 0;
-        public int y = 0;
+        public float x = 0;
+        public float y = 0;
     };
 
-The attribute `[CmdName("move")]` associates that class with 'move' commands. You can now
-setup an event handler for when move commands come in like this
-
+    void InitializeNetPlayer(SpawnInfo spawnInfo) {
+        m_netPlayer = spawnInfo.netPlayer;
+        ...
         m_netPlayer.RegisterCmdHandler<MessageMove>(OnMove);
-
-    ...
-
-    private void OnMove(MessageMove data) {
-        m_position.x = data.x;
-        m_position.z = data.y;
-
-        gameObject.transform.localPosition = m_position;
     }
 
-Similarly if you want to send a command to the client define a MessageCmdData. Example
+    private void OnMove(MessageMove data) {
+        // Do something with data.x and data.y
+        ...
+    }
+
+UnityScript
+
+    @HappyFunTimes.CmdName("setColor")
+    class MessageMove extends HappyFunTimes.MessageCmdData {
+        var x : float;
+        var y : float;
+    };
+
+    function InitializeNetPlayer(spawnInfo : HappyFunTimes.SpawnInfo) {
+        _netPlayer = spawnInfo.netPlayer;
+        ...
+        _netPlayer.RegisterCmdHandler(OnMove);
+    }
+
+    function OnMove(data : MessageMove) {
+        // Do something with data.x and data.y
+        ...
+    }
+
+Hopefully that's clear.
+
+### Sending messages to the Phone
+
+To send a message to the phone define a class/struct and then call `NetPlayer.SendCmd`
+
+C#
 
     [CmdName("scored")]
     private class MessageScored : MessageCmdData {
@@ -106,23 +178,86 @@ Similarly if you want to send a command to the client define a MessageCmdData. E
         public int points;
     }
 
-To send one call NetPlayer.sendCmd
+    ... in some function ...
 
-        m_netPlayer.SendCmd(new MessageScored(m_rand.Next(5, 15)));
+        m_netPlayer.SendCmd(new MessageScored(250));
 
-The smartphone's client will receive a 'scored' command with the data. eg. {points: 7}
+UnityScript
 
-You also need to handle if the player's smartphone disconnects. You do this by adding an
-OnDisconnect event handler.
+    @HappyFunTimes.CmdName("scored")
+    class MessageScored extends HappyFunTimes.MessageCmdData {
+        var points : int;
+    };
 
-        m_netPlayer.OnDisconnect += Remove;
+    ... in some function ...
 
-    ...
+        var data = new MessageScored();
+        data.points = 250
+        _netPlayer.SendCmd(data);
 
-    private void Remove(object sender, EventArgs e) {
-        Destroy(gameObject);
-    }
+Then back in `controller.js` you can listen for that command with
 
-That's pretty much it.
+        g_client.addEventListener('scored', handleScore);
+
+        function handleScore(data) {
+           // do something with data.points
+        }
+
+## Publishing
+
+Once your game is ready to be published follow these steps
+
+### Testing
+
+First make sure your game works outside if the unity editor
+so.
+
+1.  Inside the Unity editor pick "File->Build Settings..."
+
+    <img src="../images/unity/build-settings-menu.png" width="217" height="284" />
+
+2.  Click "Add Current" to add the current scene to "Scenes in Build".
+
+    <img src="../images/unity/build-settings-add-current.png" width="561" height="279" />
+
+3.  Click "Player Settings" at the bottom of the "Build Settings"
+
+    <img src="../images/unity/build-settings-player-settings.png" width="564" height="332" />
+
+4.  Make sure the following are set
+
+    *   Default is FullScreen (checked)
+    *   Run in Background (checked)
+    *   Display Resolution Dialog (disabled)
+
+   <img src="../images/unity/player-settings.png" width="274" height="423" />
+
+5.  Save the Scene and **Exit Unity**
+
+6.  from the game folder run `hft export`
+
+        cd myAwesomeGame
+        hft export
+
+7.  Now run happyfuntimes with `--app-mode` or
+    in the browser go to `http://localhost:18679/games.html`
+    and click on your game. It should launch and
+    run as a stand alone app.
+
+### Publish
+
+from the game folder type
+
+    hft publish
+
+It will export again (just in case you forgot) and
+then upload it all to a github release and finally
+notify superhappyfuntimes.net to take a look.
+
+Note: The first time you publish a **PERMANENT** association
+is made for the game's gameId from the `package.json` to the
+github repo being used in the game's folder. After that you
+can publish newer versions of the game but they must be from
+the same repo.
 
 

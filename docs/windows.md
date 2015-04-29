@@ -1,63 +1,29 @@
-Windows Instructions
-====================
-Clone the github repo from http://github.com/greggman/HappyFunTimes to your machine.
-(I assuming you know how to do this. If not [this might help](http://windows.github.com/))
+Title: Windows
+Description: Troubleshooting HappyFunTimes on Windows
 
-Download and Install Node.JS from http://node.js.org
-On the start menu pick "node.js command prompt" (or search for it on Win7/8?)
+## Installing
 
-cd to the folder you cloned the repo into (for example I cloned my into `z:\temp\happyfuntimes` so
+As of Windows 8 programs for Windows need to be "code signed". Signing costs $200-$500 a year
+which for an open source project is very *NOT COOL*. If anyone knows how to get a cheaper
+open source project code signed please contact me.
 
-    z:
-    cd z:\temp\happyfuntimes
+What this means to you is when installing in windows you might run into issues. Here's how to get
+around them
 
-Install the node modules
+Go to your Downloads folder and double click the installer. You’ll probably get a message something like
 
-    npm install
+![Windows Protection](http://blog.happyfuntimes.net/images/windows-protection-racket.jpg "Windows Protection")
 
-run the server
+Click "More" and you'll see this.
 
-    node server/server.js
+![Windows Warning](http://blog.happyfuntimes.net/images/windows-warning.jpg "Windows Warning")
 
-Open a browser, make the window large, and go to
+Click "Run Anyway". After that you'll have to find HappyFunTimes. On the start screen there's a tiny message at the bottom
 
-    http://localhost:8080/examples/simple/gameview.html
+![Windows New Apps](http://blog.happyfuntimes.net/images/windows-new-apps.jpg "Windows Apps")
 
-Open another browser window (a window, not a tab) and go to
+After that you'll find it under `H`
 
-    http://localhost:8080/
-
-Then click the link for **simple**.
-
-Adjust the windows so you can see both browser windows. Move the mouse over the colored window with it being the active window. Notice the corresponding colored dot in the other window moves.
-
-Look up the IP address of your windows box. Open another command prompt and type
-
-    ipconfig
-
-It should tell you the ip address of your machine. Mine was 192.168.1.132
-
-Using another computer or a smartphone THAT IS CONNECTED TO THE SAME NETWORK, open a browser and go to `http://ipaddress:8080/`.  On my machine that was
-
-    http://192.168.1.132:8080/
-
-Then click the link for **simple**.
-
-Try the same steps but use **powpow** or **jamjam** instead of simple. Examples
-
-On machine running the server
-
-    http://localhost:8080/examples/powpow/gameview.html
-
-In another browser window
-
-    http://localhost:8080/
-
-And click **powpow**
-
-On a smartphone or other computer
-
-    http://ipaddress:8080/
-
+![Windows HappyFunTimes](http://blog.happyfuntimes.net/images/windows-hft-app.jpg "Windows HappyFunTimes")
 
 
