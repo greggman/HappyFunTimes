@@ -50,7 +50,6 @@ var mime                      = require('mime');
 var NonRequire                = require('./non-require');
 var path                      = require('path');
 var strings                   = require('../lib/strings');
-var sys                       = require('sys');
 var url                       = require('url');
 
 mime.define({'application/javascript': ['js6']});
@@ -187,7 +186,7 @@ var HFTServer = function(options, startedCallback) {
   //            EXPECTED_HEADER.length,
   //            dataURL.length - EXPECTED_HEADER.length),
   //        'base64');
-  //    sys.print('Saved Screenshot: ' + filename + '\n');
+  //    console.log('Saved Screenshot: ' + filename + '\n');
   //  }
   //}
 
@@ -540,7 +539,7 @@ var HFTServer = function(options, startedCallback) {
         noMessageTimout: options.inactivityTimeout,
         gameDB: g.gameDB,
       });
-      sys.print('Listening on port(s): ' + goodPorts.join(', ') + '\n');
+      console.log('Listening on port(s): ' + goodPorts.join(', ') + '\n');
       eventEmitter.emit('ports', goodPorts);
 
       // Add management game
