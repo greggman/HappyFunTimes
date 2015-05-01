@@ -12,6 +12,14 @@ But, you can install it manually by following these steps
 *   cd into the root of the repo you cloned (eg. `cd HappyFunTimes`)
 *   type `npm install` which will install needed node modules locally
 *   type `sudo npm install -g hft-cli` which will install the `hft` command line tool.
-*   type `node server/server.js --app-mode` which will start the server.
+*   make sure `zenity` and `wmctrl` are installed.
+
+    Just type `zenity`. If it's installed it should print something. If not you'll
+    be given instructions on how to install it.
+
+    Similarly type `wmctrl`. If it's installed it should print something. If not you'll
+    be given instructions on how to install it.
+
+*   type `hft start --app-mode` which will start the server.
 
 
