@@ -101,6 +101,11 @@ function exitBecauseAlreadyRunning() {
   console.error("HappyFunTimes is already running");
 }
 
+function checkForPrerequisites() {
+  var platInfo = require('../lib/platform-info');
+  return platInfo.checkForPrerequisites();
+}
+
 function startServer() {
   if (args.appMode) {
     require('../lib/games').init();
@@ -131,7 +136,14 @@ function startServer() {
     var p;
     if (args.appMode || args.show) {
       var name = args.show || 'games';
-      p = browser.launch('http://localhost:' + server.getSettings().port + '/' + name + '.html', config.getConfig().preferredBrowser);
+      p = checkForPrerequisites()
+          .catch(function(err) {
+             console.error(err);
+             process.exit(1);  // eslint-disable-line
+          })
+          .then(function() {
+            return browser.launch('http://localhost:' + server.getSettings().port + '/' + name + '.html', config.getConfig().preferredBrowser);
+          });
     } else {
       p = Promise.resolve();
     }
