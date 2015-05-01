@@ -24,7 +24,7 @@
     "mkdirp": "^0.5.0",
     "moxie-zip": "0.0.3",
     "native-dns": "0.4.1",
-    "native-msg-box": "0.1.5",
+    "native-msg-box": "0.1.6",
     "optionator": "^0.4.0",
     "promise": "^5.0.0",
     "requirejs": "^2.1.14",
@@ -51,8 +51,6 @@
     "handlebars": "^3.0.2",
     "marked": "^0.3.3",
     "mocha": "^1.20.1",
-    "mocha-phantomjs": "^3.5.0",
-    "phantomjs": "^1.9.7-15",
     "request": "^2.40.0",
     "should": "^4.0.4",
     "sitemap": "^0.8.1"
