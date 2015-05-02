@@ -259,6 +259,9 @@ var HFTServer = function(options, startedCallback) {
     res.writeHead(200, {
       'Content-Type': opt_mimeType || 'text/html',
       'Content-Length': data.length,
+      'Cache-Control': 'no-cache, no-store, must-revalidate', // HTTP 1.1.
+      'Pragma':        'no-cache',                            // HTTP 1.0.
+      'Expires':       '0',                                   // Proxies.
     });
     res.write(data);
     res.end();
