@@ -1,9 +1,11 @@
 To Do
 =====
 
+*   figure out why chrome didn't launch in osx
+*   change alert for errors to html dialog
+*   have hft wait 2 seconds for ping from local:/games? if pinged bring to find instead of lanching tab
 *   check osx unity no hft works
 *   check win unity no hft works
-*   check for bower shit
 *   add hft set or hft set-install to set which HFT is current
 *   add about on name page and waiting page
 
@@ -117,7 +119,6 @@ To Do
     when hft starts it can open an iframe to shft which will read the cookie and
     trigger and install question
 
-*   make install dialog pop to top
 *   make hft newgame make a folder, ask the gametype etc.?
 *   fix names in powpow?
 *   make shft tell you you need to upgrade hft
@@ -850,6 +851,13 @@ Runs Repo noid
 Done
 ====
 
+*   check for bower shit.
+
+    This isn't an issue for Unity because we're putting the files in assets
+    and distributing by .unitypackage
+
+*   fix controlers L R buttons are tiny
+*   make install dialog pop to top
 *   fix unity device and orientation test
     *   remove alert - switch to HFT alert
     *   fix message (add imge?)
