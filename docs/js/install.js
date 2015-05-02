@@ -1,6 +1,10 @@
 requirejs([
     './io',
   ], function(io) {
+  // exit if we've already been here.
+  if (window.location.hash === "#downloaded") {
+    return;
+  }
   var isLocal = window.location.hostname.indexOf("localhost") >= 0;
   var plat = navigator.platform.toLowerCase();
   if (plat.indexOf("mac") >= 0) {
@@ -24,25 +28,33 @@ requirejs([
     return results;
   }
 
-  function goToInstaller(err, str) {
+  function startInstaller(err, str) {
     if (err) {
       console.error(err);
       return;
     }
-    var downloadUrl = "http://superhappyfuntimes.net/install";
     var platInfos = JSON.parse(str);
     var platInfo = platInfos.platforms[plat];
-    if (platInfo) {
-      downloadUrl = platInfo.exeUrl;
+    if (!platInfo) {
+      if (!isLocal) {
+        window.location.href = "http://superhappyfuntimes.net";
+      }
+      return;
     }
-    console.log("go to:", downloadUrl);
-    if (!isLocal) {
-      window.location.href = downloadUrl;
-    }
+
+    var downloadUrl = platInfo.exeUrl;
+    console.log("dl:", downloadUrl);
+    var iframe = document.createElement("iframe");
+    iframe.style.display = "none";
+    document.body.appendChild(iframe);
+    iframe.src = downloadUrl;
+    // replace the url otherwise if the user goes to a new page and then
+    // back here we'll start downloading again.
+    window.history.replaceState({}, "", window.location.href + "#downloaded");
   }
 
   var search = parseSearchString(window.location.search);
   var base = search.domain || "superhappyfuntimes.net";
   var url = "http://" + base + "/assets/pages/install.json";
-  io.get(url, "", goToInstaller);
+  io.get(url, "", startInstaller);
 });
