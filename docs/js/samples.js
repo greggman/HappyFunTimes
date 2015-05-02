@@ -22,7 +22,7 @@ requirejs([
     elem.parentNode.style.display = "block";
   }
 
-  function goToLatest(err, str) {
+  function downloadLatest(err, str) {
     if (err) {
       console.error(err);
       return;
@@ -32,9 +32,18 @@ requirejs([
     release.assets.forEach(function(asset) {
       if (endRE.test(asset.browser_download_url)) {
         setButtonTarget("package", asset.browser_download_url);
-        if (!isLocal) {
-          window.location.href = asset.browser_download_url;
+        console.log("dl:", asset.browser_download_url);
+        // exit if we've already been here.
+        if (window.location.hash === "#downloaded") {
+          return;
         }
+        var iframe = document.createElement("iframe");
+        iframe.style.display = "none";
+        document.body.appendChild(iframe);
+        iframe.src = asset.browser_download_url;
+        // replace the url otherwise if the user goes to a new page and then
+        // back here we'll start downloading again.
+        window.history.replaceState({}, "", window.location.href + "#downloaded");
       }
     });
   }
@@ -48,7 +57,7 @@ requirejs([
     var url = "https://api.github.com/repos/" + search.owner + "/" + search.repo + "/releases/latest";
     console.log(url);
     if (isLocal) {
-      goToLatest(null, JSON.stringify({
+      downloadLatest(null, JSON.stringify({
         assets: [
           {
             browser_download_url: "https://foo.com/foo.bar.unitypackage",
@@ -56,7 +65,7 @@ requirejs([
         ],
       }));
     } else {
-      io.get(url, "", goToLatest);
+      io.get(url, "", downloadLatest);
     }
   }
 
