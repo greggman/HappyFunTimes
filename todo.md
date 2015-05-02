@@ -1,77 +1,36 @@
 To Do
 =====
 
-*   figure out why chrome didn't launch in osx
+*   update all samples to newest api-version
 *   change alert for errors to html dialog
 *   have hft wait 2 seconds for ping from local:/games? if pinged bring to find instead of lanching tab
 *   check osx unity no hft works
 *   check win unity no hft works
 *   add hft set or hft set-install to set which HFT is current
-*   add about on name page and waiting page
-
-    that way if so if someone goes to hft.net on a network with hft they can
-    find out about hft?
-
 *   shouldn't be able to make-package / export bad version.
 *   build should do hft check?
 *   build should add .meta files?
-*   check version of plugin gets bumped
-
-    do I need this? Basically I need to edit Project/AssemlbyInfo.cs but if I bump
-    versions will old code link?
-
 *   move hft.net to it's own server
 *   upgrade servers
-*   move assets in samples out of examples folder
-*   make PLUGIN!
-    *   generate public json that lists were there sample's packages are
-        *   have plugin go to package.
-    *   make all samples have html in WebPlayerTemplates
-    *   make hft publish export .package and upload it
-        *   hft export (add --export-package)
-        *   hft publish (add --export-package)
-    *   make hft-unitybuild grunt publish all projects (option)
-    *   make hft-unitybuild check git has nothing outstanding
-    *   make hft-editor-menu point to github/latest/file (or make it ask github?)
-    *   make videos
-        *   run unity simple
-        *   run unity char
-        *   run unity cardboard
-        *   run unity accel
-        *   run unity device
-        *   run unity video? (no)
-        *   make simple project
+*   make videos
+    *   run unity simple
+    *   run unity char
+    *   run unity cardboard
+    *   run unity accel
+    *   run unity device
+    *   run unity video? (no)
+    *   make simple project
 
-*   add git pre-commit hook for lint/test
 *   check 1.7.0 projects tell you you need new version of HFT
 *   unity plugin
     *   make it warn you you need a new version of HFT.
     *   Have LocalNewPlayer emit game msgs
-    *   make it set project settings
-        *   Run in background
-        *   Start FullScreen
-    *   make it set run-in-background
-    *   make package.json editor
     *   remove namespaces from samples
-    *   make "new project" button? (no need. Install plugin)
-    *   make "start HFT?" button (or should running it be enough)
-    *   make "location of HFT" button? (asks if can't run)
     *   add HFT->Export the exports all 3 to the correct palce
     *   add HFT->Publish that does an export and then published? (needs git currently).
     .   When running HFT from Unity don't bring up localhost../games.html
     .   option to open controllers?
-    *   make stages of commands
-        .   cmd with cmd string RegisterCmdHandler<type>(fn)
-        .   RegisterCmdHandler<type>(name, fn)
-        .   RegisterCmdHandler(fn);
-        .   Use RegisterCmdHandler(fn) for gamestart
-        .   SendCmd(name, MessageCmdData)
-        .   SendCmd(name, Dict)
-    *   can we make an hft bower that runs bower pre-installed?
-    *   can we make an hft git (no)... but pre-installed bower no need for node?
-*   Sign OSX pkg with account?
 *   Have LocalNewPlayer emit game msgs(JavaScript)
-*   should we get rid of bower?(yes!)
 *   add glow processing to powpow?
 *   fix samsung
 *   fix android non-chrome?
@@ -850,6 +809,65 @@ Runs Repo noid
 
 Done
 ====
+
+*   add about on name page and waiting page
+
+    that way if so if someone goes to hft.net on a network with hft they can
+    find out about hft?
+
+    no, it's confusing. Players might pick it instead of "ok". The number of times
+    someone wants/needs to see that info where they might get stuck on that page is
+    close to 0.
+
+*   Sign OSX pkg with account?
+*   should we get rid of bower?(yes!)
+*   make PLUGIN!
+    *   generate public json that lists were there sample's packages are
+        *   have plugin go to package.
+    *   make all samples have html in WebPlayerTemplates
+    *   make hft publish export .package and upload it
+        *   hft export (add --export-package)
+        *   hft publish (add --export-package)
+    *   make hft-unitybuild grunt publish all projects (option)
+    *   make hft-unitybuild check git has nothing outstanding
+    *   make hft-editor-menu point to github/latest/file (or make it ask github?)
+    *   make it set project settings
+        *   Run in background
+        *   Start FullScreen
+    *   make package.json editor
+    *   make "new project" button? (no need. Install plugin)
+    *   make "start HFT?" button (or should running it be enough)
+    *   make "location of HFT" button? (asks if can't run)
+    *   make stages of commands
+        .   cmd with cmd string RegisterCmdHandler<type>(fn)
+        .   RegisterCmdHandler<type>(name, fn)
+        .   RegisterCmdHandler(fn);
+        .   Use RegisterCmdHandler(fn) for gamestart
+        .   SendCmd(name, MessageCmdData)
+        .   SendCmd(name, Dict)
+    *   can we make an hft bower that runs bower pre-installed?
+
+        no need. If sample is installed as package bower_components is included
+
+    *   can we make an hft git (no)... but pre-installed bower no need for node?
+
+        no need. Can install as package.
+
+*   move assets in samples out of examples folder
+*   add git pre-commit hook for lint/test
+*   check version of plugin gets bumped
+
+    do I need this? Basically I need to edit Project/AssemlbyInfo.cs but if I bump
+    versions will old code link? I links, it just complains. Curious what the proper
+    way to do this is.
+
+*   figure out why HFT is not setting run in background on import
+
+    it was because that code disappeared?!?? No idea where that code went
+
+*   figure out why chrome didn't launch in osx
+
+    not sure. Seems to be working now
 
 *   check for bower shit.
 
