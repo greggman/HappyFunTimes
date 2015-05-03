@@ -65,8 +65,8 @@ var publish = function(args) {
       bump = args.bump;
     }
 
-    if (args.version && !semver.valid(args.version)) {
-      utils.badArgs(module, "version not valid semver: '" + version + "'");
+    if (args.setVersion && !semver.valid(args.setVersion)) {
+      utils.badArgs(module, "version not valid semver: '" + args.setVersion + "'");
       reject();
       return;
     }
@@ -84,9 +84,10 @@ var publish = function(args) {
 
     var username;
     var password;
-    if (args.user) {
-      username = args.user.split(":")[0];
-      password = args.user.split(":")[1];
+    var user = args.user || process.env.HFT_PUBLISH_USER
+    if (user) {
+      username = user.split(":")[0];
+      password = user.split(":")[1];
     }
 
     var promise;
@@ -126,7 +127,7 @@ var publish = function(args) {
         password: answers.password,
         bump: bump,
         force: args['force'],
-        version: args['version'],
+        version: args['setVersion'],
         repoUrl: args['repoUrl'],
         endpoint: args['endpoint'],
         exporterPath: args['exporterPath'],
@@ -154,11 +155,11 @@ exports.usage = {
     "   hft publish",
   ],
   options: [
-    { option: 'user',           type: 'String',  description: "github username or username:password", },
+    { option: 'user',           type: 'String',  description: "github username or username:password. Can pass as env var HFT_PUBLISH_USER", },
     { option: 'bump',           type: 'String',  description: "how to bump version (major, premajor, minor, preminor, patch, prepatch, prerelease), default: patch", },
     { option: 'src',            type: 'String',  description: "path to source. If not supplied assumes current working directory.", },
     { option: 'force',          type: 'Boolean', description: "don't ask for conformation", },
-    { option: 'version',        type: 'String',  description: "set a specific version in semver format. (eg: --version=1.2.3)", },
+    { option: 'set-version',    type: 'String',  description: "set a specific version in semver format. (eg: --version=1.2.3)", },
     { option: 'dry-run',        type: 'Boolean', description: "don't write any files", },
     { option: 'endpoint',       type: 'String',  description: "base url to use to register server (eg. http://local.test.com)"},
     { option: 'exporter-path',  type: 'String',  description: "path to exporter. For example path to unity3d."},
