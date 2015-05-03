@@ -50,22 +50,26 @@ requirejs([
 
   var search = parseSearchString(window.location.search);
   if (search.repo && search.owner) {
-
-    setButtonTarget("github", "http://github.com/" + search.owner + "/" + search.repo);
-    setButtonTarget("files", "http://github.com/" + search.owner + "/" + search.repo + "/releases/latest");
-
-    var url = "https://api.github.com/repos/" + search.owner + "/" + search.repo + "/releases/latest";
-    console.log(url);
-    if (isLocal) {
-      downloadLatest(null, JSON.stringify({
-        assets: [
-          {
-            browser_download_url: "https://foo.com/foo.bar.unitypackage",
-          },
-        ],
-      }));
+    if (search.type === "docs") {
+      window.location.href = "http://github.com/" + search.owner + "/" + search.repo + "/blob/master/README.md";
     } else {
-      io.get(url, "", downloadLatest);
+
+      setButtonTarget("github", "http://github.com/" + search.owner + "/" + search.repo);
+      setButtonTarget("files", "http://github.com/" + search.owner + "/" + search.repo + "/releases/latest");
+
+      var url = "https://api.github.com/repos/" + search.owner + "/" + search.repo + "/releases/latest";
+      console.log(url);
+      if (isLocal) {
+        downloadLatest(null, JSON.stringify({
+          assets: [
+            {
+              browser_download_url: "https://foo.com/foo.bar.unitypackage",
+            },
+          ],
+        }));
+      } else {
+        io.get(url, "", downloadLatest);
+      }
     }
   }
 
