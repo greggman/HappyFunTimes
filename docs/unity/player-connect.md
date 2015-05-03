@@ -1,7 +1,8 @@
 Title: Spawning Players
 Description: What happens when a player joins
 
-It's probably easies to start with a working example.
+It's probably easies to start with a working example but from scratch
+here are the steps.
 
 The easiest thing to do when a player joins your HappyFunTimes game
 is to spawn a prefab. To do this
@@ -29,8 +30,8 @@ is to spawn a prefab. To do this
 **NOTE: There can only be one `PlayerSpawner` script in your scene**
 
 At this point, assuming you have a [working controller](self-control.md), if you
-run your game and open some browser windows you should see your prefab
-being spawned. Of course it won't do anything yet.
+run your game and open some browser windows to `http://localhost:18679` you should
+see your prefab being spawned. Of course it won't do anything yet.
 
 ## Making your player respond to input
 
@@ -110,34 +111,34 @@ script.
 
 ## Things to be aware of
 
-    You'll get an `OnDisconnect` event (your `OnDisconnect` callback will be called)
-    when a player disconnects. When a new player connects whether it's the same user
-    who just disconnected or a new user connecting for the first time,
-    your `InitializeNetPlayer` function will get called with a new
-    `NetPlayer` object.
+You'll get an `OnDisconnect` event (your `OnDisconnect` callback will be called)
+when a player disconnects. When a new player connects whether it's the same user
+who just disconnected or a new user connecting for the first time,
+your `InitializeNetPlayer` function will get called with a new
+`NetPlayer` object.
 
-    **THE PHONE KEEPS NO STATE!!** This means if you have a controller that changes
-    modes you need to send whatever messages you've created to your controller to
-    get it in the correct state.
+**THE PHONE KEEPS NO STATE!!** This means if you have a controller that changes
+modes you need to send whatever messages you've created to your controller to
+get it in the correct state.
 
-    For example, Let's say have a game with 2 modes. In one mode the phone
-    shows 3 buttons (yes, no, maybe). In the other mode the phone shows a slingshot.
-    When the game switches to players needing buttons on their phone or players
-    needing slingshots on their phone you send a message to them you made up something
-    like
+For example, Let's say have a game with 2 modes. In one mode the phone
+shows 3 buttons (yes, no, maybe). In the other mode the phone shows a slingshot.
+When the game switches to players needing buttons on their phone or players
+needing slingshots on their phone you send a message to them you made up something
+like
 
-        class ShowControllerMsg : MessageCmdData {
-          ShowControllerMsg(string s) : { control = s; }
-          public string control;
-        };
+    class ShowControllerMsg : MessageCmdData {
+      ShowControllerMsg(string s) : { control = s; }
+      public string control;
+    };
 
-        m_netPlayer.sendCmd('showcontroller`, new ShowControllerMsg("slingshot"));
+    m_netPlayer.sendCmd('showcontroller`, new ShowControllerMsg("slingshot"));
 
-    A player disconnects, a new player connects, that player is starting in the middle
-    of the game. Their controller has not received a message that it needs to be showing
-    the slingshot controls.
+A player disconnects, a new player connects, that player is starting in the middle
+of the game. Their controller has not received a message that it needs to be showing
+the slingshot controls.
 
-    So, when your `InitializeNetPlayer` function gets called you need to send that
-    message to tell the phone to switch to slingshot mode.
+So, when your `InitializeNetPlayer` function gets called you need to send that
+message to tell the phone to switch to slingshot mode.
 
 

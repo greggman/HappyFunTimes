@@ -29,6 +29,8 @@ I'm sorry there's so many steps. It's not as hard as it looks. Trust me.
 
 ### TL;DR version
 
+These instructions are for HTML5 games. If you're using Unity3D [see here](unity).
+
 *   install happyfuntimes (http://superhappyfuntimes.net/install) [(info)](#happyfuntimes)
 *   install node.js (http://nodejs.org/download/) [(info)](#nodejs)
 *   if on windows install msysgit (http://msysgit.github.io/) [(info)](#msysgit)
