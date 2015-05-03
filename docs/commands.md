@@ -66,6 +66,15 @@ You can use `--email=some@address` to set a different email address
 but it must an email address that appears in the most recent 10 commits.
 If you don't want to be emailed use `--no-send-email`
 
+`hft publish` will ask for your github username and password. If you
+have 2 factor enabled you'll need to create a
+[Personal Access Token](https://help.github.com/articles/creating-an-access-token-for-command-line-use/).
+Follow [the instructions on this page](https://help.github.com/articles/creating-an-access-token-for-command-line-use/)
+to create a personal access token and use that instead of your password.
+The only scope needed is the `public_repo` scope.
+Remember just like your password a personal access token should be
+kept secret.
+
 ### `hft register`
 
 Tells superhappyfuntimes to add your game. There's no reason to call this.

@@ -114,6 +114,14 @@ be emailed a cryptic message about the results of publishing the game.
 You can use <code>--email=some@address</code> to set a different email address
 but it must an email address that appears in the most recent 10 commits.
 If you don&#39;t want to be emailed use <code>--no-send-email</code></p>
+<p><code>hft publish</code> will ask for your github username and password. If you
+have 2 factor enabled you&#39;ll need to create a
+<a https://help.github.com/articles/creating-an-access-token-for-command-line-use/>Personal Access Token</a>.
+Follow <a https://help.github.com/articles/creating-an-access-token-for-command-line-use/>the instructions on this page</a>
+to create a personal access token and use that instead of your password.
+The only scope needed is the <code>public_repo</code> scope.
+Remember just like your password a personal access token should be
+kept secret.</p>
 <h3 id="-hft-register-"><code>hft register</code></h3>
 <p>Tells superhappyfuntimes to add your game. There&#39;s no reason to call this.
 It is called by <code>hft publish</code>.</p>
