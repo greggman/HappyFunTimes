@@ -131,6 +131,7 @@ var publish = function(args) {
         repoUrl: args['repoUrl'],
         endpoint: args['endpoint'],
         exporterPath: args['exporterPath'],
+        exportPackage: args['exportPackage'],
         email: args['email'],
         sendEmail: args['sendEmail'],
       };
