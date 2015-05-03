@@ -84,7 +84,7 @@ var publish = function(args) {
 
     var username;
     var password;
-    var user = args.user || process.env.HFT_PUBLISH_USER
+    var user = args.user || process.env.HFT_PUBLISH_USER;
     if (user) {
       username = user.split(":")[0];
       password = user.split(":")[1];
