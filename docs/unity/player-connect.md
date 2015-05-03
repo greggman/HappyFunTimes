@@ -44,7 +44,7 @@ and name it something like `PlayerControl`
 
 [Then follow the code on this page](basics.md#how-it-works)
 
-## Controlling to GameObjects already in the scene
+## Controlling GameObjects already in the scene
 
 HappyFunTimes is designed to support 10s, or even 100s of players
 but sometimes you just want to use it for a fixed number of
