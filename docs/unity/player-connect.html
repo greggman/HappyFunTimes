@@ -66,7 +66,8 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
   </div>
   <div class="row">
     <div class="col-sm-8 lesson-main">
-      <p>It&#39;s probably easies to start with a working example.</p>
+      <p>It&#39;s probably easies to start with a working example but from scratch
+here are the steps.</p>
 <p>The easiest thing to do when a player joins your HappyFunTimes game
 is to spawn a prefab. To do this</p>
 <ol>
@@ -87,8 +88,8 @@ a player connects</p>
 </ol>
 <p><strong>NOTE: There can only be one <code>PlayerSpawner</code> script in your scene</strong></p>
 <p>At this point, assuming you have a <a href="self-control.html">working controller</a>, if you
-run your game and open some browser windows you should see your prefab
-being spawned. Of course it won&#39;t do anything yet.</p>
+run your game and open some browser windows to <code>http://localhost:18679</code> you should
+see your prefab being spawned. Of course it won&#39;t do anything yet.</p>
 <h2 id="making-your-player-respond-to-input">Making your player respond to input</h2>
 <p>In your prefab pick <code>Add Component-&gt;New Script</code></p>
 <p><img src="images/new-script.png" class="halfsize lesson" /></p>
@@ -145,36 +146,31 @@ full or to wait.</p>
 </li>
 </ol>
 <h2 id="things-to-be-aware-of">Things to be aware of</h2>
-<pre><code>You&#39;ll get an `OnDisconnect` event (your `OnDisconnect` callback will be called)
+<p>You&#39;ll get an <code>OnDisconnect</code> event (your <code>OnDisconnect</code> callback will be called)
 when a player disconnects. When a new player connects whether it&#39;s the same user
 who just disconnected or a new user connecting for the first time,
-your `InitializeNetPlayer` function will get called with a new
-`NetPlayer` object.
-
-**THE PHONE KEEPS NO STATE!!** This means if you have a controller that changes
+your <code>InitializeNetPlayer</code> function will get called with a new
+<code>NetPlayer</code> object.</p>
+<p><strong>THE PHONE KEEPS NO STATE!!</strong> This means if you have a controller that changes
 modes you need to send whatever messages you&#39;ve created to your controller to
-get it in the correct state.
-
-For example, Let&#39;s say have a game with 2 modes. In one mode the phone
+get it in the correct state.</p>
+<p>For example, Let&#39;s say have a game with 2 modes. In one mode the phone
 shows 3 buttons (yes, no, maybe). In the other mode the phone shows a slingshot.
 When the game switches to players needing buttons on their phone or players
 needing slingshots on their phone you send a message to them you made up something
-like
+like</p>
+<pre><code>class ShowControllerMsg : MessageCmdData {
+  ShowControllerMsg(string s) : { control = s; }
+  public string control;
+};
 
-    class ShowControllerMsg : MessageCmdData {
-      ShowControllerMsg(string s) : { control = s; }
-      public string control;
-    };
-
-    m_netPlayer.sendCmd(&#39;showcontroller`, new ShowControllerMsg(&quot;slingshot&quot;));
-
-A player disconnects, a new player connects, that player is starting in the middle
+m_netPlayer.sendCmd(&#39;showcontroller`, new ShowControllerMsg(&quot;slingshot&quot;));
+</code></pre><p>A player disconnects, a new player connects, that player is starting in the middle
 of the game. Their controller has not received a message that it needs to be showing
-the slingshot controls.
+the slingshot controls.</p>
+<p>So, when your <code>InitializeNetPlayer</code> function gets called you need to send that
+message to tell the phone to switch to slingshot mode.</p>
 
-So, when your `InitializeNetPlayer` function gets called you need to send that
-message to tell the phone to switch to slingshot mode.
-</code></pre>
       <hr/>
       <div>
         <div>Questions? <a href="http://stackoverflow.com/questions/tagged/happyfuntimes">Ask on stackoverflow</a>.</div>
