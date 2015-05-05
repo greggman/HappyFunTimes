@@ -1,29 +1,36 @@
 Title: Multiple Computers
 Description: How to make a game that runs across mutliple computers.
 
-First of you might be interested in tnis video to see what I mean
+First off you might be interested in tnis video to see what running across multiple computers means
 
 <iframe width="853" height="480" src="https://www.youtube.com/embed/aFMNmKYE8KM?rel=0" frameborder="0" allowfullscreen></iframe>
 
-The game above spans 6 monitors. Each monitor has it's own computer. Players can jump from monitor
+The game above spans 6 monitors. Each monitor has its own computer. Players can jump from monitor
 to monitor and walk up and down a large level.
 
 For Unity3D you might want to [download this sample](http://docs.happyfuntimes.net/docs/unity/samples.html?owner=greggman&repo=hft-unity-multi-game-example)
 into an new scene in Unity.
 
-This sample **MUST BE RUN FROM THE COMMAND LINE**. The reason is each instance needs an ID and so
+You can run this sample solo in the Unity Editor but to run multiple copies it
+ **MUST BE RUN FROM THE COMMAND LINE**. The reason is each instance needs an ID and so
 running by clicking an app or from an editor would require editing that id. To run from the command
 line you must EXPORT an executable.  With Unity closed, open a Terminal/Command Prompt, cd to the
 folder your unity project is in and type `hft export` to automatically export
 
-The on OSX these command lines would launch 3 windows in the local machine
+On OSX these command lines would launch 3 windows in the local machine
 
     bin/unitymultigame-osx.app/Contents/MacOS/unitymultigame-osx --hft-id=game0 --num-games=3
     bin/unitymultigame-osx.app/Contents/MacOS/unitymultigame-osx --hft-id=game1 --num-games=3
     bin/unitymultigame-osx.app/Contents/MacOS/unitymultigame-osx --hft-id=game2 --num-games=3
 
+On windows
+
+    bin/unitymultigame-osx.app/Contents/MacOS/unitymultigame-win.exe --hft-id=game0 --num-games=3
+    bin/unitymultigame-osx.app/Contents/MacOS/unitymultigame-win.exe --hft-id=game1 --num-games=3
+    bin/unitymultigame-osx.app/Contents/MacOS/unitymultigame-win.exe --hft-id=game2 --num-games=3
+
 If you run those commands and then open a browser window to http://localhost:18679 a player should
-appear. Jumping off the left / right edges of the screen should make you go to the next window.
+appear. Jumping off the left / right edges of a window should make you go to the next window.
 
 If you were running on multiple machines the 3 machines might use lines like this
 
@@ -41,8 +48,8 @@ If you were running on multiple machines the 3 machines might use lines like thi
 
 where `192.68.1.9` is the IP address of the machine running HappyFunTimes.
 
-All machines must have the game in the same path AND whatever machine is running HappyFunTimes alos needs a copy
-of this repo at the exact same PATH as these machines.
+All machines must have the game in the same path AND whatever machine is running HappyFunTimes also needs a copy
+of the game at the exact same PATH as these machines.
 
 This particular game just runs a simple level and when you jump off the right side of the screen
 it transfers that player to the next game. In other words, if you are on `game1` and you go off the
@@ -163,7 +170,8 @@ at `BirdScript.cs`
 
             // Choose a starting position based on the old position
             float x = (data.pos.x < LevelSettings.settings.leftEdgeOfLevel.position.x)
-                ? LevelSettings.settings.rightEdgeOfLevel.position.x - 1 : LevelSettings.settings.leftEdgeOfLevel.position.x + 1;
+                ? LevelSettings.settings.rightEdgeOfLevel.position.x - 1 :
+                  LevelSettings.settings.leftEdgeOfLevel.position.x + 1;
             transform.localPosition = new Vector3(x, data.pos.y, 0f);
 
             // Set the initial velocity
@@ -202,11 +210,13 @@ first it converts the data sent into a `MessageSwitchGame`.
     MessageSwitchGame data = deserializer.Deserialize<MessageSwitchGame>(spawnInfo.data);
 
 Then it checks, if they were on the right on the
-old game it spawns them on the left, if they were on the left it spawns them on the right.
+old game it spawns them on the left, if they were on the left it spawns them on the right,
+at the same height as the exited the previous game.
 
     // Choose a starting position based on the old position
     float x = (data.pos.x < LevelSettings.settings.leftEdgeOfLevel.position.x)
-        ? LevelSettings.settings.rightEdgeOfLevel.position.x - 1 : LevelSettings.settings.leftEdgeOfLevel.position.x + 1;
+        ? LevelSettings.settings.rightEdgeOfLevel.position.x - 1 :
+          LevelSettings.settings.leftEdgeOfLevel.position.x + 1;
     transform.localPosition = new Vector3(x, data.pos.y, 0f);
 
 Finally it sets up the other state sent from the previous game
@@ -219,6 +229,9 @@ Finally it sets up the other state sent from the previous game
 
     SetName(data.name);
     SetColor(data.color);
+
+All of this makes it appear that it's all one big game when in reality
+it's multiple games running entirely independently.
 
 ## Command Line Arguments
 

@@ -66,23 +66,28 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
   </div>
   <div class="row">
     <div class="col-sm-8 lesson-main">
-      <p>First of you might be interested in tnis video to see what I mean</p>
+      <p>First off you might be interested in tnis video to see what running across multiple computers means</p>
 <iframe width="853" height="480" src="https://www.youtube.com/embed/aFMNmKYE8KM?rel=0" frameborder="0" allowfullscreen></iframe>
 
-<p>The game above spans 6 monitors. Each monitor has it&#39;s own computer. Players can jump from monitor
+<p>The game above spans 6 monitors. Each monitor has its own computer. Players can jump from monitor
 to monitor and walk up and down a large level.</p>
 <p>For Unity3D you might want to <a http://docs.happyfuntimes.net/docs/unity/samples.html?owner=greggman&amp;repo=hft-unity-multi-game-example>download this sample</a>
 into an new scene in Unity.</p>
-<p>This sample <strong>MUST BE RUN FROM THE COMMAND LINE</strong>. The reason is each instance needs an ID and so
+<p>You can run this sample solo in the Unity Editor but to run multiple copies it
+ <strong>MUST BE RUN FROM THE COMMAND LINE</strong>. The reason is each instance needs an ID and so
 running by clicking an app or from an editor would require editing that id. To run from the command
 line you must EXPORT an executable.  With Unity closed, open a Terminal/Command Prompt, cd to the
 folder your unity project is in and type <code>hft export</code> to automatically export</p>
-<p>The on OSX these command lines would launch 3 windows in the local machine</p>
+<p>On OSX these command lines would launch 3 windows in the local machine</p>
 <pre><code>bin/unitymultigame-osx.app/Contents/MacOS/unitymultigame-osx --hft-id=game0 --num-games=3
 bin/unitymultigame-osx.app/Contents/MacOS/unitymultigame-osx --hft-id=game1 --num-games=3
 bin/unitymultigame-osx.app/Contents/MacOS/unitymultigame-osx --hft-id=game2 --num-games=3
+</code></pre><p>On windows</p>
+<pre><code>bin/unitymultigame-osx.app/Contents/MacOS/unitymultigame-win.exe --hft-id=game0 --num-games=3
+bin/unitymultigame-osx.app/Contents/MacOS/unitymultigame-win.exe --hft-id=game1 --num-games=3
+bin/unitymultigame-osx.app/Contents/MacOS/unitymultigame-win.exe --hft-id=game2 --num-games=3
 </code></pre><p>If you run those commands and then open a browser window to <a http://localhost:18679>http://localhost:18679</a> a player should
-appear. Jumping off the left / right edges of the screen should make you go to the next window.</p>
+appear. Jumping off the left / right edges of a window should make you go to the next window.</p>
 <p>If you were running on multiple machines the 3 machines might use lines like this</p>
 <ul>
 <li><p>machine 1</p>
@@ -96,8 +101,8 @@ appear. Jumping off the left / right edges of the screen should make you go to t
 </code></pre></li>
 </ul>
 <p>where <code>192.68.1.9</code> is the IP address of the machine running HappyFunTimes.</p>
-<p>All machines must have the game in the same path AND whatever machine is running HappyFunTimes alos needs a copy
-of this repo at the exact same PATH as these machines.</p>
+<p>All machines must have the game in the same path AND whatever machine is running HappyFunTimes also needs a copy
+of the game at the exact same PATH as these machines.</p>
 <p>This particular game just runs a simple level and when you jump off the right side of the screen
 it transfers that player to the next game. In other words, if you are on <code>game1</code> and you go off the
 right side of the screen you&#39;ll be sent to <code>game2</code>. Conversely if you jump off the
@@ -200,7 +205,8 @@ void InitializeNetPlayer(SpawnInfo spawnInfo)
 
         // Choose a starting position based on the old position
         float x = (data.pos.x &lt; LevelSettings.settings.leftEdgeOfLevel.position.x)
-            ? LevelSettings.settings.rightEdgeOfLevel.position.x - 1 : LevelSettings.settings.leftEdgeOfLevel.position.x + 1;
+            ? LevelSettings.settings.rightEdgeOfLevel.position.x - 1 :
+              LevelSettings.settings.leftEdgeOfLevel.position.x + 1;
         transform.localPosition = new Vector3(x, data.pos.y, 0f);
 
         // Set the initial velocity
@@ -234,10 +240,12 @@ first it converts the data sent into a <code>MessageSwitchGame</code>.</p>
 DeJson.Deserializer deserializer = new DeJson.Deserializer();
 MessageSwitchGame data = deserializer.Deserialize&lt;MessageSwitchGame&gt;(spawnInfo.data);
 </code></pre><p>Then it checks, if they were on the right on the
-old game it spawns them on the left, if they were on the left it spawns them on the right.</p>
+old game it spawns them on the left, if they were on the left it spawns them on the right,
+at the same height as the exited the previous game.</p>
 <pre><code>// Choose a starting position based on the old position
 float x = (data.pos.x &lt; LevelSettings.settings.leftEdgeOfLevel.position.x)
-    ? LevelSettings.settings.rightEdgeOfLevel.position.x - 1 : LevelSettings.settings.leftEdgeOfLevel.position.x + 1;
+    ? LevelSettings.settings.rightEdgeOfLevel.position.x - 1 :
+      LevelSettings.settings.leftEdgeOfLevel.position.x + 1;
 transform.localPosition = new Vector3(x, data.pos.y, 0f);
 </code></pre><p>Finally it sets up the other state sent from the previous game</p>
 <pre><code>// Set the initial velocity
@@ -248,7 +256,9 @@ m_direction = data.dir;
 
 SetName(data.name);
 SetColor(data.color);
-</code></pre><h2 id="command-line-arguments">Command Line Arguments</h2>
+</code></pre><p>All of this makes it appear that it&#39;s all one big game when in reality
+it&#39;s multiple games running entirely independently.</p>
+<h2 id="command-line-arguments">Command Line Arguments</h2>
 <p>The <code>--hft-id</code>, <code>--hft-url</code> and <code>--hft-master</code> are all handled by HappyFunTimes for you.</p>
 <ul>
 <li><p><code>--hft-id</code></p>
@@ -326,7 +336,7 @@ arguments.</p>
 </li>
 <li>Examples
   <ul>
-    <li><a href="characters.html">3d Characters</a></li>
+    <li><a href="3d-characters.html">3d Characters</a></li>
     <li><a href="2d-platformer.html">2d Platformer</a></li>
 
   </ul>
@@ -336,7 +346,7 @@ arguments.</p>
     <li><a href="reusing-players.html">Handling disconnect and reconnect</a></li>
     <li><a href="too-many-players.html">Preventing too many players</a></li>
     <li><a href="device-orientation.html">Using Device Orientation</a></li>
-    <li><a href="accelerometer.html">Using the Accelerometer</a></li>
+    <li><a href="accelerometer  .html">Using the Accelerometer</a></li>
     <li><a href="multi-machine.html">Multiple Computers</a></li>
   </ul>
 </li>

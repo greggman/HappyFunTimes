@@ -54,6 +54,11 @@ code {
     color: black;
     font-family: monospace;
 }
+blockquote {
+  background-color: #C8E8FF;
+  padding: 1em;
+  border: 1px solid black;
+}
 
 .table_div_center {
   text-align: center;
@@ -203,7 +208,7 @@ pre.prettyprint, code.prettyprint {
     margin: auto;
     padding: 1em;
     text-align: left;           /* override justify on body */
-    goverflow: auto;             /* allow scroll bar in case of long lines - goes together with white-space: nowrap! */
+    overflow: auto;             /* allow scroll bar in case of long lines - goes together with white-space: nowrap! */
     white-space: pre;        /* was nowrap, prevent line wrapping */
     line-height: 10pt;
 }

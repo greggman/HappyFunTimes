@@ -201,7 +201,7 @@ between them.</p>
         <dl>
             
 <dt>
-    <h4 class="name" id="addPlayerToGame"><span class="type-signature"></span>addPlayerToGame<span class="signature">(player, gameId)</span><span class="type-signature"> &rarr; {<a href="Game.html">Game</a>}</span></h4>
+    <h4 class="name" id="addPlayerToGame"><span class="type-signature"></span>addPlayerToGame<span class="signature">(player, gameId, data)</span><span class="type-signature"> &rarr; {<a href="Game.html">Game</a>}</span></h4>
     
     
 </dt>
@@ -281,6 +281,28 @@ between them.</p>
             
 
             <td class="description last"><p>id of the game.</p></td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>data</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>to pass to game</p></td>
         </tr>
 
 	
@@ -1341,6 +1363,23 @@ between them.</p>
 
 
 	<!--Google Analytics-->
+	
+	<script>
+		(function ( i, s, o, g, r, a, m ) {
+			i['GoogleAnalyticsObject'] = r;
+			i[r] = i[r] || function () {
+				(i[r].q = i[r].q || []).push( arguments )
+			}, i[r].l = 1 * new Date();
+			a = s.createElement( o ),
+				m = s.getElementsByTagName( o )[0];
+			a.async = 1;
+			a.src = g;
+			m.parentNode.insertBefore( a, m )
+		})( window, document, 'script', '//www.google-analytics.com/analytics.js', 'ga' );
+
+		ga( 'create', 'UA-51764205-4', 'auto' );
+		ga( 'send', 'pageview' );
+	</script>
 	
 
 </body>

@@ -397,15 +397,19 @@ direction =
 dx   = -1, 0, 1
 dy   = -1, 0, 1
 bits = 1 for right, 2 for left, 4 for up, 8 for down</code></pre>
-<p>Note: this matches trig functions you can do this</p>
-<pre><code>var angle = dir * Math.PI / 4;
-var dx    = Math.cos(angle);
-var dy    = Math.sin(angle);</code></pre>
+<p>Note: this matches trig functions so you can do this</p>
+<pre><code>if (dir &gt;= 0) {
+  var angle = dir * Math.PI / 4;
+  var dx    = Math.cos(angle);
+  var dy    = Math.sin(angle);
+}</code></pre>
 <p>for +y up (ie, normal for 3d)</p>
-<p>In 2d you'd probably want</p>
-<pre><code>var angle =  dir * Math.PI / 4;
-var dx    =  Math.cos(angle);
-var dy    = -Math.sin(angle);</code></pre>
+<p>In 2d you'd probably want to flip dy</p>
+<pre><code>if (dir &gt;= 0) {
+  var angle =  dir * Math.PI / 4;
+  var dx    =  Math.cos(angle);
+  var dy    = -Math.sin(angle);
+}</code></pre>
 <p>The default way of figuring out the direction is to take the angle from the center to
 the place of touch, compute an angle, divide a circle into octants, which ever octant is the direction</p>
 <p>If axisSize is passed in then instead the space is divided into 3x3 boxes. Which ever box the finger is
@@ -1283,6 +1287,23 @@ by octant you get 4 decided by quadrant as in</p>
 
 
 	<!--Google Analytics-->
+	
+	<script>
+		(function ( i, s, o, g, r, a, m ) {
+			i['GoogleAnalyticsObject'] = r;
+			i[r] = i[r] || function () {
+				(i[r].q = i[r].q || []).push( arguments )
+			}, i[r].l = 1 * new Date();
+			a = s.createElement( o ),
+				m = s.getElementsByTagName( o )[0];
+			a.async = 1;
+			a.src = g;
+			m.parentNode.insertBefore( a, m )
+		})( window, document, 'script', '//www.google-analytics.com/analytics.js', 'ga' );
+
+		ga( 'create', 'UA-51764205-4', 'auto' );
+		ga( 'send', 'pageview' );
+	</script>
 	
 
 </body>
