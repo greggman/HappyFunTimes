@@ -1,11 +1,32 @@
 To Do
 =====
 
+*   add a max players option to playerspawner?
+*   allow setting portrait/landscrape from package.json
+
+    this way the framework can take care of the message
+    and if there's an app can put the app in the correct mode
+
+*   Make delete
+*   Videos
+    *   Setup video
+    *   Walk through unitysimple
+    *   Make new char example
+*   figure out option for unscrollale vs scrollable controllers
+*   have plugin auto update package.json to newest API version?
+*   write docs for each sample, and/or video
+    *   unity character
+    *   unity multi games
+    *   unity playerinscene
+    *   unity 2d platform
+*   check device orientation works both android and iphone
+*   change sync clock to hft msg
+
+    have clock take gameclient/gameserver. Use _hft_time_
+
 *   update all samples to newest api-version
 *   change alert for errors to html dialog
 *   have hft wait 2 seconds for ping from local:/games? if pinged bring to find instead of lanching tab
-*   check osx unity no hft works
-*   check win unity no hft works
 *   add hft set or hft set-install to set which HFT is current
 *   shouldn't be able to make-package / export bad version.
 *   build should do hft check?
@@ -810,6 +831,10 @@ Runs Repo noid
 Done
 ====
 
+*   check osx unity no hft works
+*   check win unity no hft works
+*   do sampeles type = doc
+*   publish new hft with publish bug fixed
 *   add about on name page and waiting page
 
     that way if so if someone goes to hft.net on a network with hft they can
