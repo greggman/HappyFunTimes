@@ -82,21 +82,23 @@ define(
    *     dy   = -1, 0, 1
    *     bits = 1 for right, 2 for left, 4 for up, 8 for down
    *
-   * Note: this matches trig functions you can do this
+   * Note: this matches trig functions so you can do this
    *
-   *     var angle = dir * Math.PI / 4;
-   *     var dx    = Math.cos(angle);
-   *     var dy    = Math.sin(angle);
+   *     if (dir >= 0) {
+   *       var angle = dir * Math.PI / 4;
+   *       var dx    = Math.cos(angle);
+   *       var dy    = Math.sin(angle);
+   *     }
    *
    * for +y up (ie, normal for 3d)
    *
-   * In 2d you'd probably want
+   * In 2d you'd probably want to flip dy
    *
-   *     var angle =  dir * Math.PI / 4;
-   *     var dx    =  Math.cos(angle);
-   *     var dy    = -Math.sin(angle);
-   *
-   *
+   *     if (dir >= 0) {
+   *       var angle =  dir * Math.PI / 4;
+   *       var dx    =  Math.cos(angle);
+   *       var dy    = -Math.sin(angle);
+   *     }
    *
    * The default way of figuring out the direction is to take the angle from the center to
    * the place of touch, compute an angle, divide a circle into octants, which ever octant is the direction
