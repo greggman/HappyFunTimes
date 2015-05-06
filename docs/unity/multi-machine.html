@@ -66,7 +66,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
   </div>
   <div class="row">
     <div class="col-sm-8 lesson-main">
-      <p>First off you might be interested in tnis video to see what running across multiple computers means</p>
+      <p>First off you might be interested in this video to see what running across multiple computers means</p>
 <iframe width="853" height="480" src="https://www.youtube.com/embed/aFMNmKYE8KM?rel=0" frameborder="0" allowfullscreen></iframe>
 
 <p>The game above spans 6 monitors. Each monitor has its own computer. Players can jump from monitor
@@ -291,8 +291,11 @@ function that if the player just connect randomly picks a game id and sends them
 }
 </code></pre><p>Create an <code>ArgParser</code> and then use it to read any commmand line argumest you want. The sample
 above uses &quot;--num-games&quot; to allow an infinite number of games but of course if you are designing
-a specific game with a specific number of machines there&#39;s no reason you&#39;d need any command line
-arguments.</p>
+a specific game with a specific number of machines you&#39;d need to set that as you&#39;d probably
+hard code the game ids for your specific setup.</p>
+<p>On the other hand a common argument might be which level to load or which part of a larger
+level to view. If you had a 3d installation where each monitor was like a portal into 3d
+space your arguments might be the position, target and field of view for the camera, etc...</p>
 
       <hr/>
       <div>

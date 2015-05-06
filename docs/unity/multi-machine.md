@@ -1,7 +1,7 @@
 Title: Multiple Computers
 Description: How to make a game that runs across mutliple computers.
 
-First off you might be interested in tnis video to see what running across multiple computers means
+First off you might be interested in this video to see what running across multiple computers means
 
 <iframe width="853" height="480" src="https://www.youtube.com/embed/aFMNmKYE8KM?rel=0" frameborder="0" allowfullscreen></iframe>
 
@@ -275,8 +275,14 @@ If you look in the sample above in `LevelSettings.cs` you can see some code like
 
 Create an `ArgParser` and then use it to read any commmand line argumest you want. The sample
 above uses "--num-games" to allow an infinite number of games but of course if you are designing
-a specific game with a specific number of machines there's no reason you'd need any command line
-arguments.
+a specific game with a specific number of machines you'd need to set that as you'd probably
+hard code the game ids for your specific setup.
+
+On the other hand a common argument might be which level to load or which part of a larger
+level to view. If you had a 3d installation where each monitor was like a portal into 3d
+space your arguments might be the position, target and field of view for the camera, etc...
+
+
 
 
 
