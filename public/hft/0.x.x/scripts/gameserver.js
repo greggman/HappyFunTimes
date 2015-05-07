@@ -44,9 +44,9 @@ define([
 
   /**
    * @typedef {Object} GameServer~Options
-   * @property {Socket?} socket Socket to use for communications
-   * @property {boolean?} quiet true = don't print any console messages
-   * @property {boolean?} reconnectOnDisconnect
+   * @property {Socket} [socket] Socket to use for communications
+   * @property {boolean} [quiet] true = don't print any console messages
+   * @property {boolean} [reconnectOnDisconnect]
    */
 
   /**
@@ -54,7 +54,7 @@ define([
    * controllers (phones) of the people playing the game.
    * @constructor
    * @alias GameServer
-   * @param {GameServer~Options?} options options.
+   * @param {GameServer~Options} [options] options.
    */
   var GameServer = function(options) {
     options = options || {};
@@ -337,7 +337,7 @@ define([
      * the same message to each client.
      *
      * @param {String} cmd name of command to send
-     * @param {Object?} data a jsonifyable object.
+     * @param {Object} [data] a jsonifyable object.
      */
     this.broadcastCmd = function(cmd, data) {
       if (data === undefined) {
