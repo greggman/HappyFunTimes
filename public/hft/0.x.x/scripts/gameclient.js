@@ -56,8 +56,8 @@ define([
    */
 
   /**
-   * GameClient is what a controller uses to talk with a
-   * game's GameServer.
+   * GameClient is what a controller(phone) uses to talk with a
+   * game's GameServer(the game).
    *
    * Messages sent with `sendCmd` get sent to the game. Messages
    * from the game are delivered to callbacks registered with
@@ -65,7 +65,7 @@ define([
    *
    * @constructor
    * @alias GameClient
-   * @param {GameClient~Options} options options.
+   * @param {GameClient~Options} [options] options.
    */
   var GameClient = function(options) {
     options = options || {};
