@@ -32,15 +32,6 @@
 "use strict";
 
 define(function() {
-
-  var emptyMsg = {};
-
-  /**
-   * Event that the player has left.
-   *
-   * @event NetPlayer#disconnected
-   */
-
   /**
    * Manages a player across the net.
    *
@@ -49,117 +40,165 @@ define(function() {
    * They are passed to you in the 'playerconnect' event from
    * `GameServer`
    *
-   * @private
    * @constructor
+   * @private
    * @alias NetPlayer
    * @param {GameServer} server
    * @param {number} id
    * @param {string} name
    */
   var NetPlayer = function(server, id, data) {
-    this.server = server;
-    this.id = id;
-    this.eventListeners = { };
-    this.connected = true;
-    this.sessionId = data ? data.__hft_session_id__ : undefined;
+    var _server = server;
+    var _id = id;
+    var _eventListeners = { };
+    var _connected = true;
+    var _sessionId = data ? data.__hft_session_id__ : undefined;
+    var _self = this;
+    var _emptyMsg = {};
+
+    /**
+     * Sends a message to this player.
+     *
+     * @param {string} cmd
+     * @param {object} [msg] a jsonifyable object.
+     */
+    this.sendCmd = function(cmd, msg) {
+      if (!_connected) {
+        return;
+      }
+      if (msg === undefined) {
+        msg = _emptyMsg;
+      }
+      _server.sendCmd("client", _id, {cmd: cmd, data: msg});
+    };
+
+    /**
+     * Adds an event listener
+     *
+     * You make up these events. Calling
+     *
+     *     GameClient.sendCmd('someEvent', { foo: 123 });
+     *
+     * In the controller (the phone) will emit an event `someEvent`
+     * which will end up calling the listener. That listener will be
+     * passed the data. In the example above that data is
+     * `{foo:123}`
+     *
+     *     function handleSomeEvent(data) {
+     *       console.log("foo = " + data.foo);
+     *     }
+     *
+     *     someNetPlayer.addEventListener('someEvent', handleSomeEvent);
+     *
+     *
+     * @param {string} eventType name of event.
+     * @param {function(object)} listener function to call when event
+     *        arrives
+     */
+    this.addEventListener = function(eventType, listener) {
+      switch (eventType) {
+        case 'disconnect':
+          listener = function(listener) {
+            return function() {
+               _self.removeAllListeners();
+               _connected = false;
+               return listener.apply(_self, arguments);
+            };
+          }(listener);
+          break;
+      }
+      _eventListeners[eventType] = listener;
+    };
+
+    /**
+     * Removes an event listener
+     * @param {string} eventType name of event to remove
+     */
+    this.removeEventListener = function(eventType) {
+      _eventListeners[eventType] = undefined;
+    };
+
+    /**
+     * Removes all listeners
+     */
+    this.removeAllListeners = function() {
+      _eventListeners = { };
+    };
+
+    this.sendEvent_ = function(eventType, args) {
+      var fn = _eventListeners[eventType];
+      if (fn) {
+        fn.apply(this, args);
+      } else {
+        console.error("NetPlayer: Unknown Event: " + eventType);
+      }
+    };
+
+    /**
+     * Moves this player to another game.
+     *
+     * You can use this function to make multi-computer / multi-screen
+     * games. See [hft-tonde-iko](http://github.com/greggman/hft-tonde-iko)
+     * as an example.
+     *
+     * @param {string} gameId id of game to send player to
+     * @param {*} data data to give to game receiving the player.
+     */
+    this.switchGame = function(gameId, data) {
+      if (_connected) {
+        _server.sendCmd("switchGame", _id, {gameId: gameId, data: data});
+        _connected = false;
+      }
+    };
+
+    /**
+     * Whether or not this netplayer is connected.
+     * you shouldn't need to look at this.
+     * @name NetPlayer#connected
+     * @type bool
+     * @readonly
+     */
+    Object.defineProperty(this, 'connected', {
+      get: function() {
+        return _connected;
+      },
+    });
+
+    /**
+     * A sessionId for this player
+     *
+     * This id should be the same if they disconnect and later reconnects
+     * so you can use it to restore their state if you want.
+     * @name NetPlayer#sessionId
+     * @type string
+     * @readonly
+     */
+    Object.defineProperty(this, 'sessionId', {
+      get: function() {
+        return _sessionId;
+      },
+    });
+
+    /**
+     * A unique id for this NetPlayer object.
+     *
+     * this id will not repeat even if the user disconnects and reconnects.
+     * @name NetPlayer#id
+     * @type string
+     * @readonly
+     */
+    Object.defineProperty(this, 'id', {
+      get: function() {
+        return _id;
+      },
+    });
   };
 
   /**
-   * Sends a message to this player.
+   * Event that the player has left.
    *
-   * @param {string} cmd
-   * @param {object?} msg a jsonifyable object.
+   * @event NetPlayer#disconnected
    */
-  NetPlayer.prototype.sendCmd = function(cmd, msg) {
-    if (!this.connected) {
-      return;
-    }
-    if (msg === undefined) {
-      msg = emptyMsg;
-    }
-    this.server.sendCmd("client", this.id, {cmd: cmd, data: msg});
-  };
-
-  /**
-   * Adds an event listener
-   *
-   * You make up these events. Calling
-   *
-   *     GameClient.sendCmd('someEvent', { foo: 123 });
-   *
-   * In the controller (the phone) will emit an event `someEvent`
-   * which will end up calling the listener. That listener will be
-   * passed the data. In the example above that data is
-   * `{foo:123}`
-   *
-   *     function handleSomeEvent(data) {
-   *       console.log("foo = " + data.foo);
-   *     }
-   *
-   *     someNetPlayer.addEventListener('someEvent', handleSomeEvent);
-   *
-   *
-   * @param {string} eventType name of event.
-   * @param {function(object)} listener function to call when event
-   *        arrives
-   */
-  NetPlayer.prototype.addEventListener = function(eventType, listener) {
-    var self = this;
-
-    switch (eventType) {
-      case 'disconnect':
-        listener = function(listener) {
-          return function() {
-             self.removeAllListeners();
-             self.connected = false;
-             return listener.apply(this, arguments);
-          };
-        }(listener);
-        break;
-    }
-    this.eventListeners[eventType] = listener;
-  };
-
-  /**
-   * Removes an event listener
-   * @param {string} eventType name of event to remove
-   */
-  NetPlayer.prototype.removeEventListener = function(eventType) {
-    this.eventListeners[eventType] = undefined;
-  };
-
-  /**
-   * Removes all listeners
-   */
-  NetPlayer.prototype.removeAllListeners = function() {
-    this.eventListeners = { };
-  };
-
-  NetPlayer.prototype.sendEvent_ = function(eventType, args) {
-    var fn = this.eventListeners[eventType];
-    if (fn) {
-      fn.apply(this, args);
-    } else {
-      console.error("NetPlayer: Unknown Event: " + eventType);
-    }
-  };
-
-  /**
-   * Moves this player to another game.
-   *
-   * You can use this function to make multi-computer / multi-screen
-   * games. See [hft-tonde-iko](http://github.com/greggman/hft-tonde-iko)
-   * as an example.
-   *
-   * @param {string} gameId id of game to send player to
-   * @param {*} data data to give to game receiving the player.
-   */
-  NetPlayer.prototype.switchGame = function(gameId, data) {
-    if (this.connected) {
-      this.server.sendCmd("switchGame", this.id, {gameId: gameId, data: data});
-      this.connected = false;
-    }
-  };
 
   return NetPlayer;
 });
