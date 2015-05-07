@@ -5,9 +5,17 @@ To Do
 *   allow setting portrait/landscrape from package.json
 
     this way the framework can take care of the message
-    and if there's an app can put the app in the correct mode
+    and if there's an app can put the app in the correct mode.
+    maybe it should be in SetupCommonUI?
 
-*   Make delete
+*   put categories in unity plugin
+*   add hft_error msg so hft can deliver errors back to
+    the source.
+    *   .net
+    *   .js
+*   add session and name support to js
+
+*   Make hft delete for deleting old releases
 *   Videos
     *   Setup video
     *   Walk through unitysimple
