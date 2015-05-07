@@ -68,43 +68,43 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
     <div class="col-sm-8 lesson-main">
       <h3 id="table-of-contents">Table of Contents</h3>
 <ul>
-<li><strong><a #setting-up-for-development>Setting up for devlopment</a></strong></li>
-<li><strong><a #running-games-during-development>Running Games During Development</a></strong></li>
-<li><strong><a #writing-games>Writing Games</a></strong><ul>
-<li><strong><a #making-the-controller>Making the controller (phone part)</a></strong></li>
-<li><strong><a #requirejs>requirejs</a></strong></li>
-<li><strong><a #controller-js>controller.js</a></strong></li>
-<li><strong><a #dealing-with-different-phone-sizes>Dealing with different phone sizes</a></strong></li>
+<li><strong><a href="#setting-up-for-development">Setting up for devlopment</a></strong></li>
+<li><strong><a href="#running-games-during-development">Running Games During Development</a></strong></li>
+<li><strong><a href="#writing-games">Writing Games</a></strong><ul>
+<li><strong><a href="#making-the-controller">Making the controller (phone part)</a></strong></li>
+<li><strong><a href="#requirejs">requirejs</a></strong></li>
+<li><strong><a href="#controller-js">controller.js</a></strong></li>
+<li><strong><a href="#dealing-with-different-phone-sizes">Dealing with different phone sizes</a></strong></li>
 </ul>
 </li>
-<li><strong><a #making-a-game>Games in JavaScript</a></strong><ul>
-<li><strong><a #game-js>game.js</a></strong></li>
-<li><strong><a #handling-players>Handling Players</a></strong></li>
+<li><strong><a href="#making-a-game">Games in JavaScript</a></strong><ul>
+<li><strong><a href="#game-js">game.js</a></strong></li>
+<li><strong><a href="#handling-players">Handling Players</a></strong></li>
 </ul>
 </li>
-<li><strong><a #packagejson>package.json</a></strong><ul>
-<li><strong><a #required-fields>Required Fields</a></strong></li>
+<li><strong><a href="#packagejson">package.json</a></strong><ul>
+<li><strong><a href="#required-fields">Required Fields</a></strong></li>
 </ul>
 </li>
-<li><strong><a #files>Files</a></strong></li>
+<li><strong><a href="#files">Files</a></strong></li>
 <li><strong><a href="commands.html">HFT Commands</a></strong></li>
-<li><strong><a #other-languages>Other Languages</a></strong></li>
+<li><strong><a href="#other-languages">Other Languages</a></strong></li>
 <li><strong><a href="ideas.html">Ideas</a></strong></li>
-<li><strong><a #misc>Misc</a></strong></li>
+<li><strong><a href="#misc">Misc</a></strong></li>
 <li><strong><a href="future.html">Future Features</a></strong></li>
 </ul>
 <h2 id="setting-up-for-development">Setting up for development</h2>
 <p>I&#39;m sorry there&#39;s so many steps. It&#39;s not as hard as it looks. Trust me.</p>
 <h3 id="tl-dr-version">TL;DR version</h3>
-<p>These instructions are for HTML5 games. If you&#39;re using Unity3D <a unity>see here</a>.</p>
+<p>These instructions are for HTML5 games. If you&#39;re using Unity3D <a href="unity">see here</a>.</p>
 <ul>
-<li>install happyfuntimes (<a http://superhappyfuntimes.net/install>http://superhappyfuntimes.net/install</a>) <a #happyfuntimes>(info)</a></li>
-<li>install node.js (<a http://nodejs.org/download/>http://nodejs.org/download/</a>) <a #nodejs>(info)</a></li>
-<li>if on windows install msysgit (<a http://msysgit.github.io/>http://msysgit.github.io/</a>) <a #msysgit>(info)</a></li>
-<li>install bower <code>sudo npm install -g bower</code> (no sudo on windows) <a #bower>(info)</a></li>
-<li>clone a game <a #clone>(info)</a></li>
-<li>edit <code>package.json</code> inside the game you cloned, change <code>gameId</code> and <code>name</code> <a #packagejson>(info)</a></li>
-<li>type <code>hft add</code> <a #hftadd>(info)</a></li>
+<li>install happyfuntimes (<a href="http://superhappyfuntimes.net/install">http://superhappyfuntimes.net/install</a>) <a href="#happyfuntimes">(info)</a></li>
+<li>install node.js (<a href="http://nodejs.org/download/">http://nodejs.org/download/</a>) <a href="#nodejs">(info)</a></li>
+<li>if on windows install msysgit (<a href="http://msysgit.github.io/">http://msysgit.github.io/</a>) <a href="#msysgit">(info)</a></li>
+<li>install bower <code>sudo npm install -g bower</code> (no sudo on windows) <a href="#bower">(info)</a></li>
+<li>clone a game <a href="#clone">(info)</a></li>
+<li>edit <code>package.json</code> inside the game you cloned, change <code>gameId</code> and <code>name</code> <a href="#packagejson">(info)</a></li>
+<li>type <code>hft add</code> <a href="#hftadd">(info)</a></li>
 </ul>
 <h3 id="verbose-vesrion">Verbose vesrion</h3>
 <ul>
@@ -126,10 +126,10 @@ the configured version, or, type <code>node start.js --app-mode</code> from the
 cloned folder if you&#39;re using a cloned repo.</p>
 </li>
 <li><p><a id="msysgit"/>If on Windows install msysgit (http://msysgit.github.io/)</p>
-<p>when asked choose to <a ../images/msysgit-option-01.png>&quot;Use Git from the Windows Commmand Prompt&quot;</a>.</p>
+<p>when asked choose to <a href="../images/msysgit-option-01.png">&quot;Use Git from the Windows Commmand Prompt&quot;</a>.</p>
 </li>
 <li><p>Open a shell/terminal/command prompt</p>
-<p>on Windows open a <a ../images/node-js-command-prompt.png>node.js command prompt</a>.</p>
+<p>on Windows open a <a href="../images/node-js-command-prompt.png">node.js command prompt</a>.</p>
 </li>
 <li><p><a id="bower"/>Install Bower.</p>
 <p>Bower is a program that downloads JavaScript libraries. For example
@@ -141,7 +141,7 @@ if a controller or game needs jquery or three.js bower handles that.</p>
 <p>for example, assuming you have git installed</p>
 <pre><code>git clone https://github.com/greggman/hft-simple.git
 </code></pre><p>Or you can download a zip. For example if you go to
-<a http://github.com/greggman/hft-simple>http://github.com/greggman/hft-simple</a> you should see a &quot;Download ZIP&quot;
+<a href="http://github.com/greggman/hft-simple">http://github.com/greggman/hft-simple</a> you should see a &quot;Download ZIP&quot;
 button on the right side.</p>
 </li>
 <li><p>If this is <strong>not a unity</strong> sample then cd into the root of the repo you cloned or you unzipped.</p>
@@ -175,7 +175,7 @@ or tabs in your browser.</p>
 <p><img src="../images/windows-for-controllers.jpg" width="840" height="525" /></p>
 <p>Inside happyfuntimes, games with <code>(*)</code> by their name are games in development. In other words
 they are games you used <code>hft add</code> to add to happyfuntimes. Games without the <code>(*)</code> are games
-that were installed from inside happyfuntimes by going to <a http://superhappyfuntimes.net>superhappyfuntimes.net</a>
+that were installed from inside happyfuntimes by going to <a href="http://superhappyfuntimes.net">superhappyfuntimes.net</a>
 and installing them.</p>
 <p>If you have other computers or smartphones <strong>on the same network</strong> go to <code>http://happyfuntimes.net</code>
 and they <em>should</em> connect to your game. Alternatively you can lookup the ip address of
@@ -189,19 +189,19 @@ or write from scratch but a few <em>rules</em>. If you&#39;re doing it in Unity3
 you should still follow the info below.</p>
 <p>The easist way to get started is to clone one of the existing games. Pick from</p>
 <ul>
-<li><p><a http://github.com/greggman/hft-jumpjump>JumpJump</a> A simple platform game written in JavaScript using WebGL / TDL</p>
+<li><p><a href="http://github.com/greggman/hft-jumpjump">JumpJump</a> A simple platform game written in JavaScript using WebGL / TDL</p>
 </li>
-<li><p><a http://github.com/greggman/hft-boomboom>BoomBoom</a> A bomb placing game written in JavaScript using WebGL / TDL</p>
+<li><p><a href="http://github.com/greggman/hft-boomboom">BoomBoom</a> A bomb placing game written in JavaScript using WebGL / TDL</p>
 </li>
-<li><p><a http://github.com/greggman/hft-powpow>PowPow</a> A space wars game written in JavaScript using WebGL / TDL</p>
+<li><p><a href="http://github.com/greggman/hft-powpow">PowPow</a> A space wars game written in JavaScript using WebGL / TDL</p>
 </li>
-<li><p><a http://github.com/greggman/hft-simple>Simple</a> The simplest example. Just moves dots around.</p>
+<li><p><a href="http://github.com/greggman/hft-simple">Simple</a> The simplest example. Just moves dots around.</p>
 </li>
-<li><p><a http://github.com/greggman/hft-deviceorientation>Deviceorientation</a> A device orientation sample written in JavaScript using WebGL / Three.js</p>
+<li><p><a href="http://github.com/greggman/hft-deviceorientation">Deviceorientation</a> A device orientation sample written in JavaScript using WebGL / Three.js</p>
 </li>
-<li><p><a http://github.com/greggman/hft-unitycharacterexample>Unitychararacterexample</a> A Unity3D example that spawns characters written in UnityScript.</p>
+<li><p><a href="http://github.com/greggman/hft-unitycharacterexample">Unitychararacterexample</a> A Unity3D example that spawns characters written in UnityScript.</p>
 </li>
-<li><p><a http://github.com/greggman/hft-simple>Unitysimple</a> A Unity3D example that just positions a sphere for each player written in C#.</p>
+<li><p><a href="http://github.com/greggman/hft-simple">Unitysimple</a> A Unity3D example that just positions a sphere for each player written in C#.</p>
 </li>
 </ul>
 <p>For example to clone JumpJump you&#39;d type</p>
@@ -235,10 +235,10 @@ and support for switching games.</p>
 <p>The CommonUI currently consists of the gear menu top right of the display as well
 has handling of name editing, disconnecting, and auto switching to the new games.</p>
 <h3 id="requirejs">requirejs</h3>
-<p>Currently most JavaScript in HappyFunTimes use <a http://requirejs.org>requirejs</a> to load and
+<p>Currently most JavaScript in HappyFunTimes use <a href="http://requirejs.org">requirejs</a> to load and
 reference files. Requirejs is awesome because it provides both dependency injection
 and a module system.</p>
-<p>If you&#39;d prefer to use a more traditional <code>&lt;script&gt;</code> tags <a http://github.com/greggman/hft-simple-script/>see example</a>.</p>
+<p>If you&#39;d prefer to use a more traditional <code>&lt;script&gt;</code> tags <a href="http://github.com/greggman/hft-simple-script/">see example</a>.</p>
 <h3 id="controller-js">controller.js</h3>
 <p>The minimum contents of a <code>controller.js</code> is</p>
 <pre><code>&quot;use strict&quot;;
@@ -339,8 +339,8 @@ var mainloop = function() {
 GameSupport.error(&quot;oops&quot;);
 </code></pre><p>These are not that useful given debugging tools in the browser but they can be
 useful on devices for which there is no easily accessable console. Note that
-you can get a remote debug from both <a https://developer.apple.com/library/safari/documentation/AppleApplications/Conceptual/Safari_Developer_Guide/Safari_Developer_Guide.pdf>iOS devices and the iOS simulator</a>
-and similarly in <a https://developer.chrome.com/devtools/docs/remote-debugging>Chrome on Android</a>.</p>
+you can get a remote debug from both <a href="https://developer.apple.com/library/safari/documentation/AppleApplications/Conceptual/Safari_Developer_Guide/Safari_Developer_Guide.pdf">iOS devices and the iOS simulator</a>
+and similarly in <a href="https://developer.chrome.com/devtools/docs/remote-debugging">Chrome on Android</a>.</p>
 <p>In both cases you connect the phone by USB cable. Run the webpage, launch your browser, pick
 the correct options and have access to the full suite of developer tools remotely. See links
 above for details.</p>
@@ -582,7 +582,7 @@ things. Current values</p>
 <li><p><code>happyFunTimes.useScriptTag</code></p>
 <p>True indicates you don&#39;t want to use requirejs instead you want to use <code>&lt;script&gt;</code> tags. Your <code>apiVerison</code>
 must be <code>1.3.0</code> or higher</p>
-<p>I really like <a http://requirejs.org>require.js</a> style of modules. It encourages
+<p>I really like <a href="http://requirejs.org">require.js</a> style of modules. It encourages
 dependency injection, it also suppots module independence. But, for many it&#39;s non
 standard and they&#39;re not used to it.</p>
 <p>So, if you want to just use standard script tags make sure your <code>package.json</code> has its
@@ -603,7 +603,7 @@ added for you and so is the script tag that includes <code>scripts/game.js</code
 (like three.js or pixi.js or jquery) add script tags to
 either <code>game.html</code> or <code>controller.html</code>.  The HappyFunTimes libraries will be inserted before
 those tags. The <code>game.js</code> or <code>controller.js</code> will be inserted after.</p>
-<p>See example: <a http://github.com/hft-simple-script/>http://github.com/hft-simple-script/</a></p>
+<p>See example: <a href="http://github.com/hft-simple-script/">http://github.com/hft-simple-script/</a></p>
 </li>
 </ul>
 <h2 id="files">Files</h2>

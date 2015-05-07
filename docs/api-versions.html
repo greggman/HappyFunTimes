@@ -67,7 +67,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
   <div class="row">
     <div class="col-sm-8 lesson-main">
       <p>In the <code>package.json</code> you set an <code>apiVersion</code>. The versions follows
-the <a http://semver.org>semver</a> standard meaning version 1.2.x is
+the <a href="http://semver.org">semver</a> standard meaning version 1.2.x is
 supposed to be backward compatible with 1.1.x but 2.0.x is NOT
 backward compatible.</p>
 <p>As much as possible I&#39;m trying to make it so you must set the
@@ -99,15 +99,15 @@ will automatically transpile it into es5 at runtime</p>
   ..
 });
 </code></pre><p>Warning: es6 has not shipped yet which means the spec can
-change. HappyFunTimes is using <a https://github.com/google/traceur-compiler>google-traceur</a>
+change. HappyFunTimes is using <a href="https://github.com/google/traceur-compiler">google-traceur</a>
 to supply this feature.</p>
 </li>
 </ul>
 </li>
 <li><p>v1.3.0</p>
 <ul>
-<li><p>Supports using <code>&lt;script&gt;</code> tags instead of <a http://requirejs.org>require.js</a>.</p>
-<p>I really like <a http://requirejs.org>require.js</a> style of modules. It encourages
+<li><p>Supports using <code>&lt;script&gt;</code> tags instead of <a href="http://requirejs.org">require.js</a>.</p>
+<p>I really like <a href="http://requirejs.org">require.js</a> style of modules. It encourages
 dependency injection, it also suppots module independence. But, for many it&#39;s non
 standard.</p>
 <p>So, if you want to just use standard script tags make sure your <code>package.json</code> has its
@@ -127,13 +127,13 @@ added for you and so is the script tag that includes <code>scripts/game.js</code
 <code>scripts/controller.js</code> for your controller. If you need any other scripts add script tags to
 either <code>game.html</code> or <code>controller.html</code>.  The HappyFunTimes libraries will be inserted before
 those tags. The <code>game.js</code> or <code>controller.js</code> will be inserted after.</p>
-<p>For a working example see <a http://github.com/greggman/hft-simple-script>http://github.com/greggman/hft-simple-script</a></p>
+<p>For a working example see <a href="http://github.com/greggman/hft-simple-script">http://github.com/greggman/hft-simple-script</a></p>
 </li>
 <li><p>Fix for Unity Games on Windows</p>
 <p>You need to upgrade old Unity Games to the latest .dlls.
-<a https://github.com/greggman/hft-unity3d/releases>Download the .dll here</a>
+<a href="https://github.com/greggman/hft-unity3d/releases">Download the .dll here</a>
 You&#39;ll also need the latest version of happyFunTimes. At least verison 0.0.9.
-<a http://superhappyfuntimes.net/install>Download here</a></p>
+<a href="http://superhappyfuntimes.net/install">Download here</a></p>
 </li>
 </ul>
 </li>
@@ -196,7 +196,7 @@ function addPlayer(netPlayer, name, data) {
 </code></pre><p>New players are always added to the first GameServer that connected to
 HappyFunTimes. After that it&#39;s up to you to decide how to pass the players
 among games.</p>
-<p>See <a http://github.com/greggman/hft-jumpabout/>hft-jumpabout</a> for
+<p>See <a href="http://github.com/greggman/hft-jumpabout/">hft-jumpabout</a> for
 a working example</p>
 <h3 id="setting-the-id-for-the-game-">Setting the id for the game.</h3>
 <p>As for setting the <code>id</code> I&#39;d suggest passing one on the URL. If you don&#39;t
@@ -255,7 +255,7 @@ calling <code>GameServer.sendCmdToGame(cmd, idOfGame, data)</code></p>
 <p>That command will arrive on the <code>GameServer</code> for that game.</p>
 <p>Of course you&#39;re free to make your own tracking objects
 if you want something similar to NetPlayer.
-<a http://blog.happyfuntimes.net/blog/why-no-netgame-object/>I don&#39;t recommend it</a>.</p>
+<a href="http://blog.happyfuntimes.net/blog/why-no-netgame-object/">I don&#39;t recommend it</a>.</p>
 </li>
 <li><p>Support for more templated files</p>
 <p>Sometimes it&#39;s important that HappyFunTimes can insert information into
