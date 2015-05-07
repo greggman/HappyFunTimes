@@ -361,6 +361,194 @@ They are passed to you in the 'playerconnect' event from
     
 
     
+        <h3 class="subsection-title">Members</h3>
+
+        <dl>
+            
+<dt class="name" id="connected">
+    <h4><span class="type-signature">&lt;readonly> </span>connected<span class="type-signature"> :bool</span></h4>
+
+    
+</dt>
+<dd>
+    
+    <div class="description">
+        <p>Whether or not this netplayer is connected.
+you shouldn't need to look at this.</p>
+    </div>
+    
+
+    
+        <h5>Type:</h5>
+        <ul>
+            <li>
+                
+<span class="param-type">bool</span>
+
+            </li>
+        </ul>
+    
+
+    
+<dl class="details">
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+</dd>
+
+        
+            
+<dt class="name" id="id">
+    <h4><span class="type-signature">&lt;readonly> </span>id<span class="type-signature"> :string</span></h4>
+
+    
+</dt>
+<dd>
+    
+    <div class="description">
+        <p>A unique id for this NetPlayer object.</p>
+<p>this id will not repeat even if the user disconnects and reconnects.</p>
+    </div>
+    
+
+    
+        <h5>Type:</h5>
+        <ul>
+            <li>
+                
+<span class="param-type">string</span>
+
+            </li>
+        </ul>
+    
+
+    
+<dl class="details">
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+</dd>
+
+        
+            
+<dt class="name" id="sessionId">
+    <h4><span class="type-signature">&lt;readonly> </span>sessionId<span class="type-signature"> :string</span></h4>
+
+    
+</dt>
+<dd>
+    
+    <div class="description">
+        <p>A sessionId for this player</p>
+<p>This id should be the same if they disconnect and later reconnects
+so you can use it to restore their state if you want.</p>
+    </div>
+    
+
+    
+        <h5>Type:</h5>
+        <ul>
+            <li>
+                
+<span class="param-type">string</span>
+
+            </li>
+        </ul>
+    
+
+    
+<dl class="details">
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+</dd>
+
+        </dl>
+    
 
     
         <h3 class="subsection-title">Methods</h3>
@@ -696,7 +884,7 @@ someNetPlayer.addEventListener('someEvent', handleSomeEvent);</code></pre>
         
             
 <dt>
-    <h4 class="name" id="sendCmd"><span class="type-signature"></span>sendCmd<span class="signature">(cmd, msg)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="sendCmd"><span class="type-signature"></span>sendCmd<span class="signature">(cmd, <span class="optional">msg</span>)</span><span class="type-signature"></span></h4>
     
     
 </dt>
@@ -784,9 +972,9 @@ someNetPlayer.addEventListener('someEvent', handleSomeEvent);</code></pre>
             
                 <td class="attributes">
                 
-
+                    &lt;optional><br>
                 
-                    &lt;nullable><br>
+
                 
 
                 

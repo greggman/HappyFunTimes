@@ -69,19 +69,19 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
       <p><code>hft</code> is a command to help manage happyfuntimes for developers. For the basics typing <code>hft</code>
 will list all the commands. Typing <code>hft cmd --help</code> will list the help for a specific command.</p>
 <p>Note: To use the hft commands you must install node.js and hft-cli.
-See <a #setting-up-for-development>Setting up for devlopment</a> for details.</p>
+See <a href="#setting-up-for-development">Setting up for devlopment</a> for details.</p>
 <ul>
-<li><strong><a #hft-add>hft add</a></strong></li>
-<li><strong><a #hft-check>hft check</a></strong></li>
-<li><strong><a #hft-download-gameId>hft download</a></strong></li>
-<li><strong><a #hft-install-srcpath>hft install</a></strong></li>
-<li><strong><a #hft-list>hft list</a></strong></li>
-<li><strong><a #hft-make-release-dstpath>hft make-release</a></strong></li>
-<li><strong><a #hft-publish>hft publish</a></strong></li>
-<li><strong><a #hft-register>hft register</a></strong></li>
-<li><strong><a #hft-remove>hft remove</a></strong></li>
-<li><strong><a #hft-start>hft start</a></strong></li>
-<li><strong><a #hft-uninstall-gameid>hft uninstall</a></strong></li>
+<li><strong><a href="#hft-add">hft add</a></strong></li>
+<li><strong><a href="#hft-check">hft check</a></strong></li>
+<li><strong><a href="#hft-download-gameId">hft download</a></strong></li>
+<li><strong><a href="#hft-install-srcpath">hft install</a></strong></li>
+<li><strong><a href="#hft-list">hft list</a></strong></li>
+<li><strong><a href="#hft-make-release-dstpath">hft make-release</a></strong></li>
+<li><strong><a href="#hft-publish">hft publish</a></strong></li>
+<li><strong><a href="#hft-register">hft register</a></strong></li>
+<li><strong><a href="#hft-remove">hft remove</a></strong></li>
+<li><strong><a href="#hft-start">hft start</a></strong></li>
+<li><strong><a href="#hft-uninstall-gameid">hft uninstall</a></strong></li>
 </ul>
 <h3 id="-hft-add-"><code>hft add</code></h3>
 <p>adds the game in the current folder to happyfuntimes</p>
@@ -99,7 +99,7 @@ there&#39;s no reason to run this.</p>
 <p>makes a releases, a zip file, of the game in the current folder and saves it to
 a path <code>dstpath</code>. Note <code>dstpath</code> must be a folder. Also note if the game is
 a unity game you must exit unity as unity will be called to export the game.
-This is mostly for testing. See <a #hft-publish>hft publish</a></p>
+This is mostly for testing. See <a href="#hft-publish">hft publish</a></p>
 <h3 id="-hft-publish-"><code>hft publish</code></h3>
 <p>Publishes the game in the current folder to superhappyfuntimes. This will
 call <code>hft make-release</code> so if you&#39;re publishing a unity game be sure to exit
@@ -116,8 +116,8 @@ but it must an email address that appears in the most recent 10 commits.
 If you don&#39;t want to be emailed use <code>--no-send-email</code></p>
 <p><code>hft publish</code> will ask for your github username and password. If you
 have 2 factor enabled you&#39;ll need to create a
-<a https://help.github.com/articles/creating-an-access-token-for-command-line-use/>Personal Access Token</a>.
-Follow <a https://help.github.com/articles/creating-an-access-token-for-command-line-use/>the instructions on this page</a>
+<a href="https://help.github.com/articles/creating-an-access-token-for-command-line-use/">Personal Access Token</a>.
+Follow <a href="https://help.github.com/articles/creating-an-access-token-for-command-line-use/">the instructions on this page</a>
 to create a personal access token and use that instead of your password.
 The only scope needed is the <code>public_repo</code> scope.
 Remember just like your password a personal access token should be

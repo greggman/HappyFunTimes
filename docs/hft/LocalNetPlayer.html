@@ -203,6 +203,30 @@ your game tries to send a message to the contoller nothing
 happens.</p>
 <p>It also provides a sendEvent method you can use to trigger
 events in your game as though they were from the controller.</p>
+<pre><code>if (!globals.haveServer) {
+  // We're testing locally so just manually create a
+  // player.
+
+  var localNetPlayer1 = new LocalNetPlayer();
+  var player1 = new MyPlayer(localNetPlayer1);
+  addPlayer(player1);
+
+  // pretend player1 one got a message from the
+  // controller when any key is pressed
+
+  window.addEventListner('keypress', function() {
+    localNetPlayer1.sendEvent('jump', { power: 10 });
+  });
+
+} else {
+
+  // We're online so create players as they connect.
+  var server = new GameServer(...);
+  server.addEventListener(
+      'playerconnect',
+      function(netPlayer) {
+        addPlayer(new MyPlayer(netPlayer));
+      });</code></pre>
     </div>
     
 
@@ -254,35 +278,6 @@ events in your game as though they were from the controller.</p>
     
     
     
-    
-        <h5>Example</h5>
-        
-    <pre class="sunlight-highlight-javascript">  if (!globals.haveServer) {
-    &#x2F;&#x2F; We&#x27;re testing locally so just manually create a
-    &#x2F;&#x2F; player.
-
-    var localNetPlayer1 = new LocalNetPlayer();
-    var player1 = new MyPlayer(localNetPlayer1);
-    addPlayer(player1);
-
-    &#x2F;&#x2F; pretend player1 one got a message from the
-    &#x2F;&#x2F; controller when any key is pressed
-
-    window.addEventListner(&#x27;keypress&#x27;, function() {
-      localNetPlayer1.sendEvent(&#x27;jump&#x27;, { power: 10 });
-    });
-
-  } else {
-
-    &#x2F;&#x2F; We&#x27;re online so create players as they connect.
-    var server = new GameServer(...);
-    server.addEventListener(
-        &#x27;playerconnect&#x27;,
-        function(netPlayer) {
-          addPlayer(new MyPlayer(netPlayer));
-        });</pre>
-
-
     
 </dd>
 
@@ -314,6 +309,10 @@ events in your game as though they were from the controller.</p>
 <dd>
     
     
+    <div class="description">
+        <p>see <code>NetPlayer.addEventListener</code></p>
+    </div>
+    
 
     
     
@@ -347,13 +346,6 @@ events in your game as though they were from the controller.</p>
 
 	
 
-	
-	<dt class="tag-see">See:</dt>
-	<dd class="tag-see">
-		<ul>
-			<li>NetPlayer.addEventListener</li>
-			</ul>
-	</dd>
 	
 
 	
@@ -383,6 +375,10 @@ events in your game as though they were from the controller.</p>
 <dd>
     
     
+    <div class="description">
+        <p>see <code>NetPlayer.removeAllListeners</code></p>
+    </div>
+    
 
     
     
@@ -416,13 +412,6 @@ events in your game as though they were from the controller.</p>
 
 	
 
-	
-	<dt class="tag-see">See:</dt>
-	<dd class="tag-see">
-		<ul>
-			<li>NetPlayer.removeAllListeners</li>
-			</ul>
-	</dd>
 	
 
 	
@@ -452,6 +441,10 @@ events in your game as though they were from the controller.</p>
 <dd>
     
     
+    <div class="description">
+        <p>see <code>NetPlayer.removeEventListener</code></p>
+    </div>
+    
 
     
     
@@ -485,13 +478,6 @@ events in your game as though they were from the controller.</p>
 
 	
 
-	
-	<dt class="tag-see">See:</dt>
-	<dd class="tag-see">
-		<ul>
-			<li>NetPlayer.removeEventListener</li>
-			</ul>
-	</dd>
 	
 
 	

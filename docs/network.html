@@ -76,27 +76,27 @@ game, nothing to type. On Android they can type any url, for example,
 <p>No internet connection is needed in this mode.</p>
 <h2 id="setup">Setup</h2>
 <p>First, get a router. You probably have an old one sitting around or if you want to be portable I
-recommend the <a http://google.com/#q=TP-Link+TL-WR702N>TP-Link TL-WR702N</a> though
+recommend the <a href="http://google.com/#q=TP-Link+TL-WR702N">TP-Link TL-WR702N</a> though
 it will only handle 13-14 players and it&#39;s under $20.</p>
 <p>Go to your router&#39;s admin page and find the DHCP settings. Somewhere there
 should be a place that lets you assign a specfiic IP address to a specific MAC
 address. On TL-WR702N that&#39;s under Advanced Settings-&gt;DHCP-&gt;Address Reservations</p>
 <p>I looked up the MAC address for my machine (the machine running HappyFunTimes) and assigned it
 directly to <code>192.168.2.9</code>.</p>
-<div style="text-align: center;"><a images/router-address-reservation.png><img width="342" height="184" src="images/router-address-reservation.png"></a></div>
+<div style="text-align: center;"><a href="images/router-address-reservation.png"><img width="342" height="184" src="images/router-address-reservation.png"></a></div>
 
 <p>I then went to the main DHCP settings at Advanced Settings-&gt;DHCP-&gt;DHCP Settings and
 configured it to give out IP addresses from to <code>192.168.2.10</code> to <code>192.168.2.250</code>.
 Finally I set the DNS there to the same address I used for the HappyFunTimes machine.
 (<code>192.168.2.9</code>)</p>
-<div style="text-align: center;"><a images/router-dhcp-settings.png><img width="343" height="224" src="images/router-dhcp-settings.png"></a></div>
+<div style="text-align: center;"><a href="images/router-dhcp-settings.png"><img width="343" height="224" src="images/router-dhcp-settings.png"></a></div>
 
 <p>With that done I picked a nice name for my WiFi&#39;s SSID under
 Basic Settings-&gt;Wireless-&gt;Wireless Settings</p>
-<div style="text-align: center;"><a images/router-wifi-settings.png><img width="390" height="237" src="images/router-wifi-settings.png"></a></div>
+<div style="text-align: center;"><a href="images/router-wifi-settings.png"><img width="390" height="237" src="images/router-wifi-settings.png"></a></div>
 
 <p>and in my case I decided to turn off security so no password is needed.</p>
-<div style="text-align: center;"><a images/router-wifi-security.png><img width="375" height="221" src="images/router-wifi-security.png"></a></div>
+<div style="text-align: center;"><a href="images/router-wifi-security.png"><img width="375" height="221" src="images/router-wifi-security.png"></a></div>
 
 <p>This may or may not be a good idea since lots of people&#39;s devices are set to automatically
 connect to open routers. If you&#39;re in a relatively isolated location and everyone is going to
@@ -105,8 +105,8 @@ password just so people not playing don&#39;t get accidentally connected.</p>
 <p>Install some software. I could give you the cryptic paths so you don&#39;t have to do this but
 this is easier IMO.</p>
 <ol>
-<li>Install HappyFunTimes <a http://superhappyfuntimes.net/install>http://superhappyfuntimes.net/install</a></li>
-<li>Install node.js <a http://nodejs.org/download>http://nodejs.org/download</a></li>
+<li>Install HappyFunTimes <a href="http://superhappyfuntimes.net/install">http://superhappyfuntimes.net/install</a></li>
+<li>Install node.js <a href="http://nodejs.org/download">http://nodejs.org/download</a></li>
 <li>Open a node command prompt/terminal and type <code>npm install -g hft-cli</code></li>
 </ol>
 <p>With that done, reboot the router, connect your machine, then open a node command prompt or terminal
@@ -135,14 +135,14 @@ clear that setting or set it to a real DNS server like Google&#39;s Public DNS s
 <h1 id="maximum-number-of-players">Maximum Number of Players</h1>
 <p>Apparently the TP-Link TL-WR702N only supports around 15 wireless devices at a time which
 means the main computer running the game and 14 players.</p>
-<p><a http://kb.netgear.com/app/answers/detail/a_id/24043/~/how-many-clients-can-you-connect-wirelessly-to-a-netgear-router%3F>Netgear claims their dual band routers can support 64 devices</a>.
+<p><a href="http://kb.netgear.com/app/answers/detail/a_id/24043/~/how-many-clients-can-you-connect-wirelessly-to-a-netgear-router%3F">Netgear claims their dual band routers can support 64 devices</a>.
 Unfortunatly netgear routers don&#39;t allow you to change the DNS server their DHCP server reports
 so avoid them. They always report themsevles and/or they always look on the WAN for resolution
 instead of the LAN. You can install a different firmware like DD-WRT if you&#39;re adventurous but
 otherwise choose something else.</p>
-<p><a http://www.apple.com/airport-extreme/specs/>Apple claims 50 devices with the Airport Extreme</a>
+<p><a href="http://www.apple.com/airport-extreme/specs/">Apple claims 50 devices with the Airport Extreme</a>
 though it&#39;s ambigous if that means 50 wifi devices or something else.</p>
-<p><a http://faq.buffalo.jp/app/answers/detail/a_id/326>Buffalo claims between 10 and 50 depending on the device</a>.</p>
+<p><a href="http://faq.buffalo.jp/app/answers/detail/a_id/326">Buffalo claims between 10 and 50 depending on the device</a>.</p>
 <p>This is all pretty frustrating. It would be nice to know the least expensive way to allow lots
 of players. If you&#39;re a network guru please contact me or submit a pull request with updates
 on what&#39;s best. Especially given the specfic needs of HappyFunTimes. We&#39;re not streaming video
