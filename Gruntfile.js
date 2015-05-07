@@ -24,10 +24,15 @@ module.exports = function(grunt) {
         },
       },
     },
-    clean: [
+    clean: {
+      docs: [
         'docs/relayserver',
         'docs/hft',
-    ],
+      ],
+      dotnetdocs: [
+        'docs/dotnet',
+      ],
+    },
     eslint: {
         target: [
           'cli',
@@ -49,14 +54,66 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-jsdoc');
   grunt.loadNpmTasks('grunt-eslint');
 
-  // extract inline docs
-  // mcs ~/src/hft-unity3d/HappyFunTimes/*.cs /doc:doc.xml -t:library -r:/Users/gregg/src/hft-unity3d/HappyFunTimes/bin/Release/DeJson.dll,/Users/gregg/src/hft-unity3d/HappyFunTimes/bin/Release/UnityEngine.dll,/Users/gregg/src/hft-unity3d/HappyFunTimes/bin/Release/websocket-sharp.dll
-  // generate xml
-  // MONO_PATH=/Applications/Unity/MonoDevelop.app/Contents/MacOS/lib/monodevelop/bin:/Applications/Unity/Unity.app/Contents/Frameworks/Mono/lib/mono/2.0 /Applications/Unity/Unity.app/Contents/Frameworks/Mono/bin/mdoc update -o en ~/src/hft-unity3d/HappyFunTimes/bin/Release/HappyFunTimes.dll
-  // merge inline docs with generated xml
-  // MONO_PATH=/Applications/Unity/MonoDevelop.app/Contents/MacOS/lib/monodevelop/bin:/Applications/Unity/Unity.app/Contents/Frameworks/Mono/lib/mono/2.0 /Applications/Unity/Unity.app/Contents/Frameworks/Mono/bin/mdoc export-html -o htmldocs en
-  // generate html
-  // MONO_PATH=/Applications/Unity/MonoDevelop.app/Contents/MacOS/lib/monodevelop/bin:/Applications/Unity/Unity.app/Contents/Frameworks/Mono/lib/mono/2.0 /Applications/Unity/Unity.app/Contents/Frameworks/Mono/bin/mdoc export-html -o htmldocs en
+  grunt.registerTask('unitydocsgen', function() {
+    var fs = require('fs');
+    var utils = require('./lib/utils');
+    var Promise = require('promise');
+    var done = this.async();
+    var execP = Promise.denodeify(utils.execute);
+    var dstPath = "docs/dotnet";
+    var mdocPath = "/Applications/Unity/Unity.app/Contents/Frameworks/Mono/bin/mdoc";
+    var mdocEnv = JSON.parse(JSON.stringify(process.env));
+    mdocEnv.MONO_PATH = "/Applications/Unity/MonoDevelop.app/Contents/MacOS/lib/monodevelop/bin:/Applications/Unity/Unity.app/Contents/Frameworks/Mono/lib/mono/2.0";
+    if (!fs.existsSync(dstPath)) {
+      fs.mkdirSync(dstPath);
+    }
+    // extract inline docs
+    // mcs ~/src/hft-unity3d/HappyFunTimes/*.cs /doc:doc.xml -t:library -r:/Users/gregg/src/hft-unity3d/HappyFunTimes/bin/Release/DeJson.dll,/Users/gregg/src/hft-unity3d/HappyFunTimes/bin/Release/UnityEngine.dll,/Users/gregg/src/hft-unity3d/HappyFunTimes/bin/Release/websocket-sharp.dll
+    execP("mcs", [
+        "../../../hft-unity3d/HappyFunTimes/*.cs",
+        "/doc:doc.xml",
+        "-t:library",
+        "-r:../../../hft-unity3d/HappyFunTimes/bin/Release/DeJson.dll,../../../hft-unity3d/HappyFunTimes/bin/Release/UnityEngine.dll,../../../hft-unity3d/HappyFunTimes/bin/Release/websocket-sharp.dll",
+      ], {
+        cwd: dstPath,
+        env: process.env,
+      }).then(function() {
+        // generate xml
+        // MONO_PATH=/Applications/Unity/MonoDevelop.app/Contents/MacOS/lib/monodevelop/bin:/Applications/Unity/Unity.app/Contents/Frameworks/Mono/lib/mono/2.0 /Applications/Unity/Unity.app/Contents/Frameworks/Mono/bin/mdoc update -o en ~/src/hft-unity3d/HappyFunTimes/bin/Release/HappyFunTimes.dll
+        return execP(mdocPath, [
+          "update",
+          "-o", "en",
+          "../../../hft-unity3d/HappyFunTimes/bin/Release/HappyFunTimes.dll",
+        ], {
+          cwd: dstPath,
+          env: mdocEnv,
+        });
+      }).then(function() {
+        // merge inline docs with generated xml
+        // MONO_PATH=/Applications/Unity/MonoDevelop.app/Contents/MacOS/lib/monodevelop/bin:/Applications/Unity/Unity.app/Contents/Frameworks/Mono/lib/mono/2.0 /Applications/Unity/Unity.app/Contents/Frameworks/Mono/bin/mdoc export-html -o htmldocs en
+        return execP(mdocPath, [
+           "export-html",
+           "-o", "htmldocs", "en",
+        ], {
+          cwd: dstPath,
+          env: mdocEnv,
+        });
+      }).then(function() {
+        // generate xml
+        // MONO_PATH=/Applications/Unity/MonoDevelop.app/Contents/MacOS/lib/monodevelop/bin:/Applications/Unity/Unity.app/Contents/Frameworks/Mono/lib/mono/2.0 /Applications/Unity/Unity.app/Contents/Frameworks/Mono/bin/mdoc update -o en ~/src/hft-unity3d/HappyFunTimes/bin/Release/HappyFunTimes.dll
+        return execP(mdocPath, [
+          "update",
+          "-o", "en",
+          "../../../hft-unity3d/HappyFunTimes/bin/Release/HappyFunTimes.dll",
+        ], {
+          cwd: dstPath,
+          env: mdocEnv,
+        });
+      }).then(function() {
+        done();
+      }).done();
+  });
+  grunt.registerTask('unitydocs', ['clean:dotnetdocs', 'unitydocsgen']);
 
   grunt.registerTask('builddocs', function() {
     var buildStuff = require('./dev/js/build');
@@ -86,6 +143,6 @@ module.exports = function(grunt) {
     });
   });
 
-  grunt.registerTask('default', ['eslint', 'clean', 'jsdoc']);
+  grunt.registerTask('default', ['eslint', 'clean:docs', 'jsdoc']);
 };
 
