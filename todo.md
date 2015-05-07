@@ -9,10 +9,6 @@ To Do
     maybe it should be in SetupCommonUI?
 
 *   put categories in unity plugin
-*   add hft_error msg so hft can deliver errors back to
-    the source.
-    *   .net
-    *   .js
 *   add session and name support to js
 
 *   Make hft delete for deleting old releases
@@ -838,6 +834,16 @@ Runs Repo noid
 
 Done
 ====
+
+*   add hft_error msg so hft can deliver errors back to
+    the source.
+
+    No. I started implementing it and then I realized that probably > 50% of the time
+    the issue will be a typo. The typo will prevent the logging code from running so
+    most of the time the user won't get a message helping them fix stuff which will
+    just make it doubly frustrating if they get used to getting messages sometimes.
+    Better they setup remote debugging because the remote debuggers will show typos
+    and syntax errors etc..
 
 *   check osx unity no hft works
 *   check win unity no hft works
