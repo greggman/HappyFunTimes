@@ -183,6 +183,8 @@ function Builder(options) {
     if (urlObj.pathname && urlObj.pathname.substr(-3) === ".md") {
       urlObj.pathname = urlObj.pathname.substr(0, urlObj.pathname.length - 3) + ".html";
       link = 'href="' + url.format(urlObj) + '"';
+    } else {
+      link = 'href="' + link + '"';
     }
     return link;
   }
