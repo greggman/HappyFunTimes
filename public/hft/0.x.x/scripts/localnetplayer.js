@@ -43,33 +43,33 @@ define(function() {
    * It also provides a sendEvent method you can use to trigger
    * events in your game as though they were from the controller.
    *
+   *     if (!globals.haveServer) {
+   *       // We're testing locally so just manually create a
+   *       // player.
+   *
+   *       var localNetPlayer1 = new LocalNetPlayer();
+   *       var player1 = new MyPlayer(localNetPlayer1);
+   *       addPlayer(player1);
+   *
+   *       // pretend player1 one got a message from the
+   *       // controller when any key is pressed
+   *
+   *       window.addEventListner('keypress', function() {
+   *         localNetPlayer1.sendEvent('jump', { power: 10 });
+   *       });
+   *
+   *     } else {
+   *
+   *       // We're online so create players as they connect.
+   *       var server = new GameServer(...);
+   *       server.addEventListener(
+   *           'playerconnect',
+   *           function(netPlayer) {
+   *             addPlayer(new MyPlayer(netPlayer));
+   *           });
+   *
    * @constructor
    * @alias LocalNetPlayer
-   * @example
-   *   if (!globals.haveServer) {
-   *     // We're testing locally so just manually create a
-   *     // player.
-   *
-   *     var localNetPlayer1 = new LocalNetPlayer();
-   *     var player1 = new MyPlayer(localNetPlayer1);
-   *     addPlayer(player1);
-   *
-   *     // pretend player1 one got a message from the
-   *     // controller when any key is pressed
-   *
-   *     window.addEventListner('keypress', function() {
-   *       localNetPlayer1.sendEvent('jump', { power: 10 });
-   *     });
-   *
-   *   } else {
-   *
-   *     // We're online so create players as they connect.
-   *     var server = new GameServer(...);
-   *     server.addEventListener(
-   *         'playerconnect',
-   *         function(netPlayer) {
-   *           addPlayer(new MyPlayer(netPlayer));
-   *         });
    */
   var LocalNetPlayer = (function() {
     var _count = 0;
@@ -81,21 +81,21 @@ define(function() {
   }());
 
   /**
-   * @see NetPlayer.addEventListener
+   * see {@link NetPlayer.addEventListener}
    */
   LocalNetPlayer.prototype.addEventListener = function(eventType, handler) {
     this.eventHandlers[eventType] = handler;
   };
 
   /**
-   * @see NetPlayer.removeEventListener
+   * see {@link NetPlayer.removeEventListener}
    */
   LocalNetPlayer.prototype.removeEventListener = function(eventType) {
     this.eventHandlers[eventType] = undefined;
   };
 
   /**
-   * @see NetPlayer.removeAllListeners
+   * see {@link NetPlayer.removeAllListeners}
    */
   LocalNetPlayer.prototype.removeAllListeners = function() {
     this.eventHanders = { };
