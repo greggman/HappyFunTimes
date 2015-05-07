@@ -281,7 +281,8 @@ function that if the player just connect randomly picks a game id and sends them
 </li>
 </ul>
 <h2 id="custom-command-line-arguments">Custom Command Line Arguments</h2>
-<p>If you look in the sample above in <code>LevelSettings.cs</code> you can see some code like this</p>
+<p>If you look in the sample above in <code>Assets/HappyFunTimes/Scripts/LevelSettings.cs</code> you can see
+some code like this</p>
 <pre><code>void Awake()
 {
     ...
@@ -289,13 +290,15 @@ function that if the player just connect randomly picks a game id and sends them
     p.TryGet&lt;int&gt;(&quot;num-games&quot;, ref numGames);
     ...
 }
-</code></pre><p>Create an <code>ArgParser</code> and then use it to read any commmand line argumest you want. The sample
-above uses &quot;--num-games&quot; to allow an infinite number of games but of course if you are designing
-a specific game with a specific number of machines you&#39;d need to set that as you&#39;d probably
-hard code the game ids for your specific setup.</p>
-<p>On the other hand a common argument might be which level to load or which part of a larger
-level to view. If you had a 3d installation where each monitor was like a portal into 3d
-space your arguments might be the position, target and field of view for the camera, etc...</p>
+</code></pre><p>Feel free to change that script to meet your needs. If you&#39;d like to get command line arguments
+somewhere else create an <code>ArgParser</code> and then use it to read any commmand line arguments you want. The sample
+above uses &quot;--num-games&quot; to allow an infinite number of games. If you are designing
+a specific game with a specific number of machines you probably wouldn&#39;t need a <code>numGames</code>
+setting at all as you&#39;d probably hard code game ids for your specific setup.</p>
+<p>On the other hand a common command line argument you might need would be which level to load or
+which part of a larger level to view. If you had a 3d installation where each monitor was
+like a portal into 3d space your arguments might be the position, target and field of view
+for the camera, etc...</p>
 
       <hr/>
       <div>
