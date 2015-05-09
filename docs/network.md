@@ -101,7 +101,9 @@ instead of the LAN. You can install a different firmware like DD-WRT if you're a
 otherwise choose something else.
 
 [Apple claims 50 devices with the Airport Extreme](http://www.apple.com/airport-extreme/specs/)
-though it's ambigous if that means 50 wifi devices or something else.
+though it's ambigous if that means 50 wifi devices or something else. I got one and so far it's
+been pretty great. One time I had 92 people playing Bombbomb. I'm not sure if that was a bug
+or real since the specs say 50 people. Maybe it's 50 for 5ghz and 50 for 2.5ghz?
 
 [Buffalo claims between 10 and 50 depending on the device](http://faq.buffalo.jp/app/answers/detail/a_id/326).
 
