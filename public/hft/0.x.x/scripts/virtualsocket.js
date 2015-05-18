@@ -120,6 +120,10 @@ define(function() {
     this.send = function(msg) {
       sendLowLevel(JSON.stringify(msg));
     };
+
+    this.close = function() {
+     _socket.close();
+    }
   };
 
   //return SocketIOClient;
