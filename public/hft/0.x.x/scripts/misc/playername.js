@@ -123,6 +123,7 @@ define(['./cookies'], function(Cookie) {
 
     // If the user's name is "" the game may send a name.
     client.addEventListener('setName', handleSetNameMsg);
+    client.addEventListener('_hft_setname_', handleSetNameMsg);
 
     element.addEventListener('click', startEnteringName, false);
     element.addEventListener('change', finishEnteringName, false);
