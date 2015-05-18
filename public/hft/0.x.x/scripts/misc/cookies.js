@@ -74,6 +74,15 @@ define(function() {
      *        expires. Default = none
      */
     this.set = function(value, opt_days) {
+      if (value === undefined) {
+        this.erase();
+        return;
+      }
+      // Cordova/Phonegap doesn't support cookies so use localStorage?
+      if (window.hftSettings && window.hftSettings.inApp) {
+        window.localStorage.setItem(name, value);
+        return;
+      }
       var expires = "";
       opt_days = opt_days || 9999;
       var date = new Date();
@@ -88,6 +97,11 @@ define(function() {
      * @return {string?} value of cookie
      */
     this.get = function() {
+      // Cordova/Phonegap doesn't support cookies so use localStorage?
+      if (window.hftSettings && window.hftSettings.inApp) {
+        return window.localStorage.getItem(name);
+      }
+
       var nameEQ = encodeURIComponent(name) + "=";
       var ca = document.cookie.split(';');
       for (var i = 0; i < ca.length; ++i) {
@@ -105,6 +119,9 @@ define(function() {
      * Erases the cookie.
      */
     this.erase = function() {
+      if (window.hftSettings && window.hftSettings.inApp) {
+        return window.localStorage.removeItem(name);
+      }
       document.cookie = this.set(" ", -1);
     };
   };
