@@ -62,8 +62,8 @@ define([
     var handleDisconnect = function() {
       if (g.connected) {
         g.connected = false;
-        g.eventEmitter.emit('disconnect');
       }
+      g.eventEmitter.emit('disconnect');
       g.client = undefined;
       // Don't try more than once a second.
       var elapsedTime = Math.floor(g.clock.getElapsedTime() * 1000);
