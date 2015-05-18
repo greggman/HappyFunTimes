@@ -63,7 +63,12 @@ var inform = (function() {
         var hftUrl = process.env.HFT_RENDEZVOUS_URL || config.getSettings().settings.rendezvousUrl;
         var parsedUrl = url.parse(hftUrl);
         debug("ping: " + hftUrl);
-        io.sendJSON(hftUrl, { addresses: g.addresses, port: g.port }, {}, function(err) {
+        var options = { headers: {} };
+        var rendezvousIp = process.env.HFT_RENDEZVOUS_IP;
+        if (rendezvousIp) {
+          options.headers["x-forwarded-for"] = rendezvousIp;
+        }
+        io.sendJSON(hftUrl, { addresses: g.addresses, port: g.port }, options, function(err) {
           // do I care?
           if (err) {
             console.error("Could not contact: " + parsedUrl.host);
