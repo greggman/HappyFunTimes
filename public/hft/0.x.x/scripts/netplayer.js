@@ -51,10 +51,13 @@ define(function() {
     var _server = server;
     var _id = id;
     var _eventListeners = { };
+    var _internalListeners = { };
     var _connected = true;
     var _sessionId = data ? data.__hft_session_id__ : undefined;
     var _self = this;
     var _emptyMsg = {};
+    var _name = "player";
+    var _busy = false;
 
     /**
      * Sends a message to this player.
@@ -111,6 +114,11 @@ define(function() {
     };
 
     /**
+     * Synonym for {@link addEventListener}.
+     */
+    this.on = this.addEventListener;
+
+    /**
      * Removes an event listener
      * @param {string} eventType name of event to remove
      */
@@ -125,12 +133,19 @@ define(function() {
       _eventListeners = { };
     };
 
-    this.sendEvent_ = function(eventType, args) {
-      var fn = _eventListeners[eventType];
+    var _sendEvent = function(eventType, args) {
+      var fn = _eventListeners[eventType] || _internalListeners[eventType];
       if (fn) {
         fn.apply(this, args);
       } else {
         console.error("NetPlayer: Unknown Event: " + eventType);
+      }
+    };
+    this.sendEvent_ = _sendEvent;
+
+    var _sendEventIfHandler = function(eventType, args) {
+      if (_eventListeners[eventType]) {
+        _sendEvent(eventType, args);
       }
     };
 
@@ -150,6 +165,26 @@ define(function() {
         _connected = false;
       }
     };
+
+    function ignoreMsg() {
+    }
+
+    function handleSetNameMsg(data) {
+      if (data.name && data.name.length > 0) {
+        _name = data.name
+        _sendEventIfHandler('hft_namechange');
+      }
+    }
+
+    function handleBusyMsg(data) {
+      _busy = data.busy;
+      _sendEventIfHandler('hft_busy');
+    }
+
+    _internalListeners["setName"] = ignoreMsg;
+    _internalListeners["_hft_setname_"] = handleSetNameMsg;
+    _internalListeners["busy"] = ignoreMsg;
+    _internalListeners["_hft_busy_"] = handleBusyMsg;
 
     /**
      * Whether or not this netplayer is connected.
@@ -190,6 +225,32 @@ define(function() {
     Object.defineProperty(this, 'id', {
       get: function() {
         return _id;
+      },
+    });
+
+    /**
+     * The players's name.
+     * Use event 'hft_namechange' to watch for a change.
+     * @name NetPlayer#name
+     * @type string
+     * @readonly
+     */
+    Object.defineProperty(this, 'name', {
+      get: function() {
+        return _name;
+      },
+    });
+
+    /**
+     * Whether or not player is in system menu on controller (editing name)
+     * Use event 'hft_busy' to watch for a change.
+     * @name NetPlayer#busy
+     * @type string
+     * @readonly
+     */
+    Object.defineProperty(this, 'busy', {
+      get: function() {
+        return _busy;
       },
     });
   };
