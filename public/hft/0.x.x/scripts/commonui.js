@@ -38,18 +38,28 @@
 define([
     './io',
     './hft-splash',
+    './hft-settings',
     './hft-system',
+    './misc/cookies',
+    './misc/dialog',
     './misc/fullscreen',
     './misc/logger',
     './misc/misc',
+    './misc/mobilehacks',
+    './misc/orientation',
     './misc/playername',
   ], function(
     IO,
     HFTSplash,
+    hftSettings,
     HFTSystem,
-    FullScreen,
-    Logger,
-    Misc,
+    Cookie,
+    dialog,
+    fullScreen,
+    logger,
+    misc,
+    mobilehacks,
+    orientation,
     PlayerNameHandler) {
 
   var $ = function(id) {
@@ -57,18 +67,59 @@ define([
   };
 
   var g = {
-    logger: new Logger.NullLogger(),
+    logger: new logger.NullLogger(),
   };
+
+  function resetOrientation() {
+    if (fullScreen.isFullScreen()) {
+      orientation.set(g.orientation);
+    }
+  }
+
+  /**
+   * Sets the orientation of the screen. Doesn't work on desktop
+   * nor iOS unless in app.
+   * @param {string} [orientation] The orientation. Valid options are
+   *
+   *     "portrait-primary"    // normal way people hold phones
+   *     "portrait-secondary"  // upsidedown
+   *     "landscape-primary"   // phone turned clockwise 90 degrees from normal
+   *     "landscape-secondary" // phone turned counter-clockwise 90 degrees from normal
+   *     "none" (or undefined) // unlocked
+   */
+  function setOrientation(orientation) {
+    g.orientation = orientation;
+    resetOrientation();
+  };
+
+  function showRequireApp() {
+    dialog({
+      title: "HappyFunTimes",
+      msg: "This game requires the HappyFunTimes App<br/>Please download it from your app store",
+    }, function() {
+      var ua = window.navigator.userAgent;
+      if (ua.indexOf("iPhone") >= 0 ||
+          ua.indexOf("iPad") >= 0) {
+        misc.gotoIFrame("itms://itunes.apple.com/");
+      } else if (ua.indexOf("Android") >= 0) {
+        misc.gotoIFrame("market://details?id=com.greggman.HappyFunTimes");
+      } else {
+        showRequiredApp();
+      }
+    });
+  }
 
   /**
    * @typedef {Object} ControllerUI~Options
-   * @property {callback?} function to call when controller
+   * @property {callback} [connectFn] function to call when controller
    *           connects to HappyFunTimes
-   * @property {callback?} function to call when controller is
+   * @property {callback} [disconnectFn] function to call when controller is
    *           disconncted from game.
-   * @property {boolean?} debug True displays a status and debug
+   * @property {boolean} [debug] True displays a status and debug
    *           html element
-   * @property {number?} numConsoleLines number of lines to show for the debug console.
+   * @property {number} [numConsoleLines] number of lines to show for the debug console.
+   * @property {string} [orienation] The orientation to set the phone. Only works on Android or the App. See {@link setOrientation}.
+   * @property {boolean} [requireApp] If true and we're not in the app will present a dialog saying you must use the app
    * @memberOf module:CommonUI
    */
 
@@ -99,27 +150,28 @@ define([
 
     // setup full screen support
     var requestFullScreen = function() {
-      touchStartElement.removeEventListener('click', requestFullScreen, false);
-      touchStartElement.style.display = "none";
-      FullScreen.requestFullScreen(document.body);
-    };
-
-    var goFullScreenIfNotFullScreen = function(isFullScreen) {
-      if (!isFullScreen) {
-        touchStartElement.addEventListener('click', requestFullScreen, false);
-        touchStartElement.style.display = "block";
+      if (!fullScreen.isFullScreen()) {
+        touchStartElement.removeEventListener('click', requestFullScreen, false);
+        touchStartElement.style.display = "none";
+        fullScreen.requestFullScreen(document.body);
       }
     };
-    FullScreen.onFullScreenChange(document.body, goFullScreenIfNotFullScreen);
 
-    // Try to detect if we're on mobile. I'm assuming it's not
-    // common for window.innerWidth to match screen.availWidth
-    // on desktop but that it is on mobile.
-//    var landscape = window.orientation === 90 || window.orientation === 270;
-//    var effectiveWidth = landscape ? screen.height : screen.width;
-//    if (window.innerWidth === effectiveWidth) {
-//      goFullScreenIfNotFullScreen(false);
-//    }
+    var goFullScreenIfNotFullScreen = function() {
+      if (fullScreen.isFullScreen()) {
+        resetOrientation();
+      } else {
+        if (fullScreen.canGoFullScreen()) {
+          touchStartElement.addEventListener('click', requestFullScreen, false);
+          touchStartElement.style.display = "block";
+        }
+      }
+    };
+    fullScreen.onFullScreenChange(document.body, goFullScreenIfNotFullScreen);
+
+    if (mobilehacks.isMobile()) {
+       goFullScreenIfNotFullScreen();
+    }
 
     var playerNameHandler = new PlayerNameHandler(client, $("hft-name"));
 
@@ -161,6 +213,7 @@ define([
         options.disconnectFn();
       }
 
+      var hftSystemDisconnected = false;
       var hftSystem = new HFTSystem();
       hftSystem.on('runningGames', function(obj) {
         // Is the game running
@@ -185,19 +238,47 @@ define([
           return;
         }
       });
+      hftSystem.on('disconnect', function() {
+        // if the HFT system disconnected it means
+        // HFT is no longer running. Since we might be
+        // doing DEV we don't want to leave but if
+        // it's a player give them the option to restart
+        if (!hftSystemDisconnected) {
+          hftSystemDisconnected = true;
+          dialog.modal({
+            title: "HappyFunTimes",
+            msg: "Touch To Restart",
+          }, function() {
+            var redirCookie = new Cookie("redir");
+            var url = redirCookie.get() || "http://happyfuntimes.net";
+            console.log("goto: " + url);
+            window.location.href = url;
+          });
+        }
+      });
     });
 
     client.addEventListener('_hft_redirect_', function(data) {
       window.location.href = data.url;
     });
 
+    setOrientation(hftSettings.haveVersion("0.1.10") ? options.orientation : undefined);
+
+    if (options.requireApp) {
+      if (hftSettings.haveVersion("0.1.10")) {
+        if (!hftSettings.inApp) {
+          showRequireApp();
+        }
+      }
+    }
+
     if (options.debug) {
       g.statusNode = document.createTextNode("");
       $("hft-status").appendChild(g.statusNode);
-      var debugCSS = Misc.findCSSStyleRule("#hft-debug");
+      var debugCSS = misc.findCSSStyleRule("#hft-debug");
       debugCSS.style.display = "block";
 
-      g.logger = new Logger.HTMLLogger($("hft-console"), options.numConsoleLines);
+      g.logger = new logger.HTMLLogger($("hft-console"), options.numConsoleLines);
     }
   };
 
@@ -233,12 +314,13 @@ define([
     g.logger.error(str);
   };
 
-  return {
+  return hftSettings.versionFuncs({
     log: log,
     error: error,
+    setOrientation: { version: "0.1.10", func: setOrientation },
     setStatus: setStatus,
     setupStandardControllerUI: setupStandardControllerUI,
-  };
+  });
 });
 
 
