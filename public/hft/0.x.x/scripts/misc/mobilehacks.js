@@ -64,6 +64,13 @@ define(function() {
     return shittyOldIPhoneWithShittyIOS8Plus;
   };
 
+  var isMobile = function() {
+    // yes I know I should feature detect. FUCK YOU!
+    var mobile = (/Android|webOS|Phone|Pad|Pod|Tablet|BlackBerry/i).test(navigator.userAgent);
+    return function() {
+      return mobile;
+    };
+  }();
 
   /**
    * resets the height of any element with CSS class "fixeight"
@@ -176,13 +183,34 @@ define(function() {
     window.addEventListener('resize', detectPortrait, false);
   };
 
+  function preventEvent(e) {
+    e.preventDefault();
+    return false;
+  }
+
+  /**
+   * Disable the context menus!
+   * At least on Android if you long press on an image it asks if you
+   * want to save it. I'd think "user-select: none" CSS should handle that
+   * but nope
+   */
+  function disableContextMenu() {
+    // for now just images.
+    Array.prototype.forEach.call(document.getElementsByTagName("img"), function(img) {
+      img.addEventListener('contextmenu', preventEvent, false);
+    });
+  }
+
+
   window.scrollTo(0, 0);
 
   return {
+    disableContextMenu: disableContextMenu,
     fixHeightHack: fixHeightHack,
     forceLandscape: forceLandscape,
     adjustCSSBasedOnPhone: adjustCSSBasedOnPhone,
     isIOS8OrNewerAndiPhone4OrIPhone5: isIOS8OrNewerAndiPhone4OrIPhone5,
+    isMobile: isMobile,
   };
 });
 
