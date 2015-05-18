@@ -94,11 +94,30 @@ define(function() {
     return dst;
   };
 
+  function searchStringToObject(str, opt_obj) {
+    if (str[0] === '?') {
+      str = str.substring(1);
+    }
+    var results = opt_obj || {};
+    str.split("&").forEach(function(part) {
+      var pair = part.split("=").map(decodeURIComponent);
+      results[pair[0]] = pair[1] !== undefined ? pair[1] : true;
+    });
+    return results;
+  }
+
+  function objectToSearchString(obj) {
+    return "?" + Object.keys(obj).filter(function(key) {
+      return obj[key] !== undefined;
+    }).map(function(key) {
+      return encodeURIComponent(key) + "=" + encodeURIComponent(obj[key]);
+    }).join("&");
+  }
 
   /**
    * Reads the query values from a URL like string.
    * @param {String} url URL like string eg. http://foo?key=value
-   * @param {Object=} opt_obj Object to attach key values to
+   * @param {Object} [opt_obj] Object to attach key values to
    * @return {Object} Object with key values from URL
    * @memberOf module:Misc
    */
@@ -111,13 +130,7 @@ define(function() {
         e = str.length;
       }
       var query = str.substring(q + 1, e);
-      var pairs = query.split("&");
-      for (var ii = 0; ii < pairs.length; ++ii) {
-        var keyValue = pairs[ii].split("=");
-        var key = keyValue[0];
-        var value = decodeURIComponent(keyValue[1]);
-        dst[key] = value;
-      }
+      searchStringToObject(query, dst);
     } catch (e) {
       console.error(e);
     }
@@ -131,7 +144,7 @@ define(function() {
    * @memberOf module:Misc
    */
   var parseUrlQuery = function(opt_obj) {
-    return parseUrlQueryString(window.location.href, opt_obj);
+    return searchStringToObject(window.location.search, opt_obj);
   };
 
   /**
@@ -160,6 +173,43 @@ define(function() {
     }
     return dst;
   };
+
+  /**
+   * Gets a function checking for prefixed versions
+   *
+   * example:
+   *
+   *     var lockOrientation = misc.getFunctionByPrefix(window.screen, "lockOrientation");
+   *
+   * @param {object} obj object that has function
+   * @param {string} funcName name of function
+   * @return {function?} or undefined if it doesn't exist
+   */
+  var prefixes = ["", "moz", "webkit", "ms"];
+  function getFunctionByPrefix(obj, funcName) {
+    var capitalName = funcName.substr(0, 1).toUpperCase() + funcName.substr(1);
+    for (var ii = 0; ii < prefixes.length; ++ii) {
+      var prefix = prefixes[ii];
+      var name = prefix + prefix ? capitalName : funcName;
+      var func = obj[funcName];
+      if (func) {
+        return func.bind(obj);
+      }
+    }
+  }
+
+  /**
+   * Creates an invisible iframe and sets the src
+   * @param {string} src the source for the iframe
+   * @return {HTMLIFrameElement} The iframe
+   */
+  function gotoIFrame(src) {
+    var iframe = document.createElement("iframe");
+    iframe.style.display = "none";
+    iframe.src = src;
+    document.body.appendChild(iframe);
+    return iframe;
+  }
 
   /**
    * get a random int
@@ -430,10 +480,13 @@ define(function() {
     degToRad: degToRad,
     findCSSStyleRule: findCSSStyleRule,
     getAbsolutePosition: getAbsolutePosition,
+    getFunctionByPrefix: getFunctionByPrefix,
+    gotoIFrame: gotoIFrame,
     invertPlusMinusRange: invertPlusMinusRange,
     makeRandomId: makeRandomId,
     mergeObjects: mergeObjects,
     minToZero: minToZero,
+    objectToSearchString: objectToSearchString,
     parseUrlQuery: parseUrlQuery,
     parseUrlQueryString: parseUrlQueryString,
     radToDeg: radToDeg,
@@ -442,6 +495,7 @@ define(function() {
     rand32BitColor: rand32BitColor,
     resize: resize,
     sign: sign,
+    searchStringToObject: searchStringToObject,
   };
 });
 
