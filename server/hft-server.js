@@ -153,7 +153,7 @@ var HFTServer = function(options, startedCallback) {
   var send404 = function(res, msg) {
     msg = msg || '';
     res.writeHead(404);
-    res.write('404<br/>' + msg);
+    res.write('404<br/>' + res.url + "<br/>" + msg);
     res.end();
   };
 
@@ -451,6 +451,7 @@ var HFTServer = function(options, startedCallback) {
               content: str,
               hftSettings: 'window.hftSettings = ' + JSON.stringify({
                 menu: g.menu,
+                apiVersion: runtimeInfo.info.happyFunTimes.apiVersion,
               }),
             },
           ]);
