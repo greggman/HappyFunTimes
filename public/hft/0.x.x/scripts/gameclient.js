@@ -176,6 +176,9 @@ define([
     }.bind(this);
 
     var sendCmdLowLevel = function(cmd, data) {
+      if (!g_socket) {
+        return;
+      }
       var msg = {
         cmd: cmd,
         data: data,
