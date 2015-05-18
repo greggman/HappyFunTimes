@@ -34,76 +34,99 @@
 
 // Start the main app logic.
 requirejs(
-  [ 'hft/misc/cookies',
+  [ 'hft/appredirector',
+    'hft/misc/cookies',
     'hft/misc/misc',
   ], function(
+    appRedirector,
     Cookie,
     Misc) {
 
-  var $ = function(id) {
-    return document.getElementById(id);
-  };
+  var $ = document.getElementById.bind(document);
 
   var nameContainer = $("namecontainer");
   var nameInput = $("hft-name");
+  var checkingElem = $("checking");
   var okay = $("okay");
   var nameRE = /^player\d+$/i;
   var args = Misc.parseUrlQuery();
   var nameCookie = new Cookie("name");
+  var redirCookie = new Cookie("redir");
   var name = nameCookie.get() || "";
+  var origin = args.origin || "http://happyfuntimes.net";
+  redirCookie.set(origin);
 
-  var gotoIndex = function() {
-    gotoIndex = function() {};
-
-    var newName = nameInput.value.replace(/[<>]/g, '');
-    if (newName.length > 16) {
-      newName = newName.substring(0, 16);
+  function saveName(name) {
+    try {
+      var url = new URL(origin);
+    } catch (e) {
+      url = new URL("http://happyfuntimes.net");
     }
-    nameCookie.set(newName, 700);
-    nameContainer.style.display = "block";
-
-    if (args.fromHFTNet && newName !== args.name) {
-      var iframe = document.createElement("iframe");
-      iframe.src = "http://happyfuntimes.net/save-name.html?name=" + encodeURIComponent(newName);
-      document.body.appendChild(iframe);
-    }
-
-    // Give the iframe 1/2 a second to complete.
-    setTimeout(function() {
-      window.location.href = "/";
-    }, 500);
-  };
-
-  var finishEnteringName = function(e) {
-    e.preventDefault();
-    gotoIndex();
-    return false;
-  };
-
-  // If no cookie name. Use args
-  if (name.length === 0 || nameRE.test(name)) {
-    name = args.name || "";
+    Misc.gotoIFrame(url.origin + "/save-name.html" + Misc.objectToSearchString({
+      name: name,
+    }));
   }
 
-  nameInput.value = name;
+  function handleNameEntry() {
+    var gotoIndex = function() {
+      gotoIndex = function() {};  // make gotoIndex a no-op
 
-  // If no name display
-  if (name.length === 0 || nameRE.test(name) || args.show) {
-    nameContainer.style.display = "block";
-    nameInput.value = Math.random() > 0.5 ? "Jill" : "Jim";
-    nameInput.focus();
+      var newName = nameInput.value.replace(/[<>]/g, '');
+      if (newName.length > 16) {
+        newName = newName.substring(0, 16);
+      }
+      nameCookie.set(newName, 700);
+      nameContainer.style.display = "none";
 
-    nameInput.addEventListener('change', finishEnteringName, false);
-    nameInput.addEventListener('submit', finishEnteringName, false);
-    if (nameInput.form) {
-      nameInput.form.addEventListener('submit', finishEnteringName, false);
+      if (args.fromHFTNet && newName !== args.name) {
+        saveName(newName);
+      }
+
+      // Give the iframe 1/2 a second to complete.
+      setTimeout(function() {
+        var url = "/index.html" + appRedirector.getUrlArgs();
+        console.log("goto: " + url);
+        window.location.href = url;
+      }, 500);
+    };
+
+    var finishEnteringName = function(e) {
+      e.preventDefault();
+      gotoIndex();
+      return false;
+    };
+
+    // If no cookie name. Use args
+    if (name.length === 0 || nameRE.test(name)) {
+      name = args.name || "";
     }
-    okay.addEventListener('click', finishEnteringName, false);
 
-  } else {
-    gotoIndex();
+    nameInput.value = name;
+
+    // If no name display
+    if (name.length === 0 || nameRE.test(name) || args.show) {
+      console.log("show name");
+      nameContainer.style.display = "block";
+      checkingElem.style.display = "none";
+      nameInput.value = Math.random() > 0.5 ? "Jill" : "Jim";
+      nameInput.focus();
+
+      nameInput.addEventListener('change', finishEnteringName, false);
+      nameInput.addEventListener('submit', finishEnteringName, false);
+      if (nameInput.form) {
+        nameInput.form.addEventListener('submit', finishEnteringName, false);
+      }
+      okay.addEventListener('click', finishEnteringName, false);
+
+    } else {
+      gotoIndex();
+    }
   }
 
+  appRedirector.checkForApp({
+    inApp: handleNameEntry,
+    notInApp: handleNameEntry,
+  });
 
 });
 

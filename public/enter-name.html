@@ -46,12 +46,17 @@
   <link rel="stylesheet" href="css/mobile.css">
 </head>
 <body>
-<div id="namecontainer">
-  <div>Enter a Name:</div>
-  <form id="hft-nameform">
-    <input type="text" id="hft-name" maxlength="16" autocorrect="off" spellcheck="false" />
-  </form>
-  <div class="center"><div class="button-like" id="okay">Okay</div></div>
+<div class="hft-fullcenter">
+  <div id="checking">
+      <div>checking...</div>
+  </div>
+  <div id="namecontainer">
+    <div>Enter a Name:</div>
+    <form id="hft-nameform">
+      <input type="text" id="hft-name" maxlength="16" autocorrect="off" spellcheck="false" />
+    </form>
+    <div class="center"><div class="button-like" id="okay">Okay</div></div>
+  </div>
 </div>
 </body>
 <script data-main="%(enterNameScript)s" src="3rdparty/require.js"></script>
