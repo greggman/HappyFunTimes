@@ -110,7 +110,6 @@ function startServer() {
   if (args.appMode) {
     require('../lib/games').init();
   }
-
   var browser   = require('../lib/browser');
   var DNSServer = require('./dnsserver');
   var iputils   = require('../lib/iputils');
@@ -180,7 +179,7 @@ function launchIfNotRunning() {
   var sendJSON = Promise.denodeify(io.sendJSON);
 
   var url = "http://localhost:" + settings.port;
-  sendJSON(url, { cmd: "happyFunTimesPing" }, {}).then(exitBecauseAlreadyRunning, startServer);
+  sendJSON(url, { cmd: "happyFunTimesPing" }, {}).then(exitBecauseAlreadyRunning, startServer).done();
 }
 
 launchIfNotRunning();
