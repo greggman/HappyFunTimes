@@ -30,7 +30,10 @@
  */
 "use strict";
 
-define([], function() {
+define([
+    '../hft-settings',
+  ], function(
+    hftSettings) {
 
   var requestFullScreen = function(element) {
     if (element.requestFullscreen) {
@@ -73,9 +76,28 @@ define([], function() {
       });
   };
 
+  function isFullScreen() {
+    var f = document.fullscreenElement ||
+            document.fullScreenElement ||
+            document.webkitFullscreenElement ||
+            document.mozFullScreenElement ||
+            document.webkitIsFullScreen;
+    return (f !== undefined && f !== null) || hftSettings.isApp;
+  }
+
+  function canGoFullScreen() {
+     var r = window.requestFullscreen ||
+             window.msRequestFullscreen ||
+             window.webkitRequestFullScreen ||
+             window.mozRequestFullScreen;
+     return r !== undefined && r !== null;
+  }
+
   return {
-    requestFullScreen: requestFullScreen,
     cancelFullScreen: cancelFullScreen,
+    isFullScreen: isFullScreen,
+    canGoFullScreen: canGoFullScreen,
     onFullScreenChange: onFullScreenChange,
+    requestFullScreen: requestFullScreen,
   };
 });
