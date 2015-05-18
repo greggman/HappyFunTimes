@@ -36,6 +36,7 @@
 }
 html, body {
     width: 100%;
+    height: 100%;
     border: 0px;
     margin: 0px;
     padding: 0px;
@@ -70,7 +71,7 @@ iframe {
     text-align: center;
 }
 #namecontainer {
-    display: hidden;
+    display: none;
     margin-left: 1em;
     margin-right: 1em;
 }
@@ -105,6 +106,43 @@ iframe {
   min-height: auto;
 }
 
+.hft-dialog-cover {
+    position: fixed;
+    left: 0;
+    top: 0;
+    right: 0;
+    top: 0;
+    background-color: rgba(0, 0, 0, 0.8);
+    width: 100%;
+    height: 100%;
+}
+
+.hft-dialog-container {
+    background: linear-gradient(to bottom, #f2f6f8 0%,#d8e1e7 88%,#b5c6d0 91%,#e0eff9 100%);
+    border-top: 10px solid black;
+    border-bottom: 10px solid black;
+    color: #000;
+    width: 100%;
+}
+
+.hft-dialog-title {
+    padding: 0.5em 20px 0.5em 20px;
+    background-color: #68A;
+    font-size: larger;
+    font-weight: bolder;
+}
+
+.hft-dialog-choice {
+    padding: 10px 20px 10px 20px;
+    margin: 0.5em;
+    border: 5px solid blue;
+    border-radius: 10px;
+    background-color: #BDF;
+}
+
+.hft-dialog-content {
+    padding: 20px;
+}
 
 /* Smartphones (portrait and landscape) ----------- */
 @media only screen and (min-device-width : 320px) and (max-device-width : 480px) {
