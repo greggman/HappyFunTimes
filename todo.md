@@ -1,6 +1,45 @@
 To Do
 =====
 
+*   change samples the use name to use new name system
+*   fix all samples to use orientation
+*   checklist
+    *   ios safari works
+    *   ios safari to app works
+    *   ios app works
+    *   android chrome
+    *   android chrome to app works
+    *   android app works
+
+*   put startup options in all controllers
+*   check scroll vs no-scroll option
+*   app
+
+    *   fix index to restart if no connection?
+    *   app needs a resume screen (so you can exit?).
+
+        if the app is not the front app, then next time it's the front
+        app it should have a dialog "resume? quit?" or something?
+
+    *   problem: connect to game, game exits, game restarts, controller goes
+        to index.html. Index thinks not in game because it's cleared cookie?
+    *   make hft redirect to app
+    *   prevent sleeping
+    *   hide status
+    *   when app goes to background, next launch start over or have "resume" (maybe can ping last HFT?)
+    *   make "switching games" have "search for new game"
+    *   make sure you can play sounds immediately
+    *   make sure you can play video immediately
+    *   allow URL input on timeout?
+    *   put options in settings (ios only?)
+    *   make sure --no-ask-name path works .. ??   FIX THIS!!! enter-name must happen but we can skip index?
+    *   handle can't connect to hft.net (test locally!)
+    *   check why android lag. Does it do it in chrome? If not can we turn it off? Is it related to double click
+    *   make playername send name back to controller?
+    *   reset controller back to non - oriented
+
+*   make HFT so if we can't contact HFT.net we try again every 10 seconds for 2 mins or so
+*   if controller does not have focus for > 30 seconds disconnect.
 *   add a max players option to playerspawner?
 *   allow setting portrait/landscrape from package.json
 
@@ -8,8 +47,10 @@ To Do
     and if there's an app can put the app in the correct mode.
     maybe it should be in SetupCommonUI?
 
+*   scroll/no scroll setting
+*   zoom/no zoom setting
+
 *   put categories in unity plugin
-*   add session and name support to js
 
 *   Make hft delete for deleting old releases
 *   Videos
@@ -835,6 +876,7 @@ Runs Repo noid
 Done
 ====
 
+`*   add session and name support to js
 *   add hft_error msg so hft can deliver errors back to
     the source.
 

@@ -283,4 +283,11 @@ the correct version
 
     *   Added id tracking
 
+* v1.10.0
+
+    *   Added app support
+    *   Added fullscreen support for Android
+    *   Added orientation handling for Android and the app
+
+
 
