@@ -272,14 +272,14 @@ html, body {
 }
 
 
-@media only screen and (max-width : 360px) {
+@media only screen and (max-width : 480px) and (orientation: portrait) {
   #hft-portrait {
     position: absolute;
     top: 0px;
     left: 0px;
     background-color: red;
     color: white;
-    z-index: 9999;
+    z-index: 4998;
 
     display: -webkit-box;
     display: -webkit-flex;
@@ -296,14 +296,14 @@ html, body {
   }
 }
 
-@media only screen and (orientation : landscape) {
+@media only screen and (max-width: 800px) and (orientation: landscape) {
   #hft-landscape {
     position: absolute;
     top: 0px;
     left: 0px;
     background-color: red;
     color: white;
-    z-index: 9999;
+    z-index: 4998;
 
     display: -webkit-box;
     display: -webkit-flex;
@@ -312,11 +312,11 @@ html, body {
   }
 
   .hft-landscape-rot90 {
-      g-webkit-transform: rotate(90deg);
-      g-moz-transform: rotate(90deg);
-      g-o-transform: rotate(90deg);
-      g-ms-transform: rotate(90deg);
-      gtransform: rotate(90deg);
+      -webkit-transform: rotate(90deg);
+      -moz-transform: rotate(90deg);
+      -o-transform: rotate(90deg);
+      -ms-transform: rotate(90deg);
+      transform: rotate(90deg);
   }
 }
 
