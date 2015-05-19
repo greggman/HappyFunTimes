@@ -2,7 +2,6 @@ To Do
 =====
 
 *   change samples the use name to use new name system
-*   fix all samples to use orientation
 *   checklist
     *   ios safari works
     *   ios safari to app works
@@ -10,7 +9,7 @@ To Do
     *   android chrome
     *   android chrome to app works
     *   android app works
-
+*   fix launching from Safari to App
 *   put startup options in all controllers
 *   check scroll vs no-scroll option
 *   app
@@ -24,8 +23,6 @@ To Do
     *   problem: connect to game, game exits, game restarts, controller goes
         to index.html. Index thinks not in game because it's cleared cookie?
     *   make hft redirect to app
-    *   prevent sleeping
-    *   hide status
     *   when app goes to background, next launch start over or have "resume" (maybe can ping last HFT?)
     *   make "switching games" have "search for new game"
     *   make sure you can play sounds immediately
@@ -36,16 +33,10 @@ To Do
     *   handle can't connect to hft.net (test locally!)
     *   check why android lag. Does it do it in chrome? If not can we turn it off? Is it related to double click
     *   make playername send name back to controller?
-    *   reset controller back to non - oriented
 
 *   make HFT so if we can't contact HFT.net we try again every 10 seconds for 2 mins or so
 *   if controller does not have focus for > 30 seconds disconnect.
 *   add a max players option to playerspawner?
-*   allow setting portrait/landscrape from package.json
-
-    this way the framework can take care of the message
-    and if there's an app can put the app in the correct mode.
-    maybe it should be in SetupCommonUI?
 
 *   scroll/no scroll setting
 *   zoom/no zoom setting
@@ -876,7 +867,20 @@ Runs Repo noid
 Done
 ====
 
-`*   add session and name support to js
+*   fix all samples to use orientation
+*   app
+
+    *   prevent sleeping
+    *   hide status
+    *   reset controller back to non - oriented
+
+*   allow setting portrait/landscrape from package.json
+
+    this way the framework can take care of the message
+    and if there's an app can put the app in the correct mode.
+    maybe it should be in SetupCommonUI?
+
+*   add session and name support to js
 *   add hft_error msg so hft can deliver errors back to
     the source.
 
