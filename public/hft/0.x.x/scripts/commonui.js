@@ -70,6 +70,49 @@ define([
     logger: new logger.NullLogger(),
   };
 
+  var requireLandscapeHTML = [
+      '<div id="hft-portrait" class="hft-fullsize hft-fullcenter">',
+      '  <div class="hft-portrait-rot90">                         ',
+      '    <div class="hft-instruction">                          ',
+      '      Turn the Screen                                      ',
+      '    </div>                                                 ',
+      '    <div class="hft-xlarge">                               ',
+      '      &#x21ba;                                             ',
+      '    </div>                                                 ',
+      '  </div>                                                   ',
+      '</div>                                                     ',
+  ].join("\n");
+  var requirePortraitHTML = [
+    '<div id="hft-landscape" class="hft-fullsize hft-fullcenter">',
+    '  <div class="hft-landscape-rot90">                         ',
+    '    <div class="hft-instruction">                           ',
+    '      Turn the Screen                                       ',
+    '    </div>                                                  ',
+    '    <div class="hft-xlarge">                                ',
+    '      &#x21bb;                                              ',
+    '    </div>                                                  ',
+    '  </div>                                                    ',
+    '</div>                                                      ',
+  ].join("\n");
+  var orientationDiv;
+
+  function setOrientationHTML(desiredOrientation) {
+    desiredOrientation = desiredOrientation || "";
+    if (!orientationDiv) {
+      orientationDiv = document.createElement("div");
+      //document.body.appendChild(orientationDiv);
+      var h = document.getElementById("hft-menu");
+      h.parentNode.insertBefore(orientationDiv, h);
+    }
+    if (desiredOrientation.indexOf("portrait") >= 0) {
+      orientationDiv.innerHTML = requirePortraitHTML;
+    } else if (desiredOrientation.indexOf("landscape") >= 0) {
+      orientationDiv.innerHTML = requireLandscapeHTML;
+    } else {
+      orientationDiv.innerHTML = "";
+    }
+  }
+
   function resetOrientation() {
     if (fullScreen.isFullScreen()) {
       orientation.set(g.orientation);
@@ -79,7 +122,7 @@ define([
   /**
    * Sets the orientation of the screen. Doesn't work on desktop
    * nor iOS unless in app.
-   * @param {string} [orientation] The orientation. Valid options are
+   * @param {string} [desiredOrientation] The orientation. Valid options are
    *
    *     "portrait-primary"    // normal way people hold phones
    *     "portrait-secondary"  // upsidedown
@@ -87,9 +130,13 @@ define([
    *     "landscape-secondary" // phone turned counter-clockwise 90 degrees from normal
    *     "none" (or undefined) // unlocked
    */
-  function setOrientation(orientation) {
-    g.orientation = orientation;
-    resetOrientation();
+  function setOrientation(desiredOrientation) {
+    g.orientation = desiredOrientation;
+    if (orientation.canOrient()) {
+      resetOrientation();
+    } else {
+      setOrientationHTML(g.orientation);
+    }
   };
 
   function showRequireApp() {
