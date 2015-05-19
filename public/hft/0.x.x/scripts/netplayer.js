@@ -188,71 +188,51 @@ define(function() {
 
     /**
      * Whether or not this netplayer is connected.
-     * you shouldn't need to look at this.
-     * @name NetPlayer#connected
-     * @type bool
-     * @readonly
+     * you shouldn't need to look at this. Use 'disconnect' event.
+     * @return {boolean} true if player is connected.
      */
-    Object.defineProperty(this, 'connected', {
-      get: function() {
-        return _connected;
-      },
-    });
+    this.isConnected = function() {
+      return _connected;
+    };
 
     /**
      * A sessionId for this player
      *
-     * This id should be the same if they disconnect and later reconnects
+     * This id should be the same if they disconnect and later reconnect
      * so you can use it to restore their state if you want.
-     * @name NetPlayer#sessionId
-     * @type string
-     * @readonly
+     * @return {string} session id for player
      */
-    Object.defineProperty(this, 'sessionId', {
-      get: function() {
-        return _sessionId;
-      },
-    });
+    this.getSessionId = function() {
+      return _sessionId;
+    };
 
     /**
      * A unique id for this NetPlayer object.
      *
      * this id will not repeat even if the user disconnects and reconnects.
-     * @name NetPlayer#id
-     * @type string
-     * @readonly
+     * @return {string} id for player
      */
-    Object.defineProperty(this, 'id', {
-      get: function() {
-        return _id;
-      },
-    });
+    this.getId = function() {
+      return _id;
+    };
 
     /**
      * The players's name.
      * Use event 'hft_namechange' to watch for a change.
-     * @name NetPlayer#name
-     * @type string
-     * @readonly
+     * @return {string} name of player
      */
-    Object.defineProperty(this, 'name', {
-      get: function() {
-        return _name;
-      },
-    });
+    this.getName = function() {
+      return _name;
+    };
 
     /**
      * Whether or not player is in system menu on controller (editing name)
      * Use event 'hft_busy' to watch for a change.
-     * @name NetPlayer#busy
-     * @type string
-     * @readonly
+     * @return {boolean} true if busy.
      */
-    Object.defineProperty(this, 'busy', {
-      get: function() {
-        return _busy;
-      },
-    });
+    this.isBusy = function() {
+      return _busy;
+    };
   };
 
   /**
