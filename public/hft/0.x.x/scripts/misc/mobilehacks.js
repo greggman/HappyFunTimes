@@ -38,9 +38,7 @@
  */
 define(function() {
 
-  var $ = function(id) {
-    return document.getElementById(id);
-  };
+  var $ = document.getElementById.bind(document);
 
   // shit hacks for iOS8 because iOS8 barfs toolbars on the screen and
   // (a) the user can NOT dismiss them and (b) there is no way for the
@@ -63,6 +61,13 @@ define(function() {
   var isIOS8OrNewerAndiPhone4OrIPhone5 = function() {
     return shittyOldIPhoneWithShittyIOS8Plus;
   };
+
+  var isIOS = function() {
+    var itsIOS = (/iP(hone|od|ad)/i).test(navigator.platform);
+    return function() {
+      return itsIOS;
+    };
+  }();
 
   var isMobile = function() {
     // yes I know I should feature detect. FUCK YOU!
@@ -210,6 +215,7 @@ define(function() {
     forceLandscape: forceLandscape,
     adjustCSSBasedOnPhone: adjustCSSBasedOnPhone,
     isIOS8OrNewerAndiPhone4OrIPhone5: isIOS8OrNewerAndiPhone4OrIPhone5,
+    isIOS: isIOS,
     isMobile: isMobile,
   };
 });
