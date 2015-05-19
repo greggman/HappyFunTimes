@@ -40,6 +40,7 @@ define([
   var lockOrientation = misc.getFunctionByPrefix(window.screen, "lockOrientation");
   var unlockOrientation = misc.getFunctionByPrefix(window.screen, "unlockOrientation");
   var currentOrientation = "none";
+  var _canOrient = true;
 
   if (!hftSettings.isApp && window.screen.orientation && window.screen.orientation.lock) {
     lockOrientation = window.screen.orientation.lock.bind(window.screen.orientation);
@@ -47,8 +48,9 @@ define([
   }
 
   if (!lockOrientation) {
-    lockOrientation = function() {
-      console.warn("lock orientation not implemeneted");
+    _canOrient = false;
+    lockOrientation = function(orientation) {
+      console.warn("orientation locking not supported");
     };
     unlockOrientation = function() {
     };
@@ -81,7 +83,16 @@ define([
     }
   }
 
+  /**
+   * Returns true if orientation is supported.
+   * @return {boolean} true if orientation is supported
+   */
+  function canOrient() {
+    return _canOrient;
+  }
+
   return {
     set: set,
+    canOrient: canOrient,
   };
 });
