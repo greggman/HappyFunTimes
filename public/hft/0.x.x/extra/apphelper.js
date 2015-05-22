@@ -32,9 +32,7 @@
 "use strict";
 
 (function() {
-  var Cookie = function(name, opt_path) {
-    var path = opt_path || "/";
-
+  var Cookie = function(name) {
     this.get = function() {
       var nameEQ = encodeURIComponent(name) + "=";
       var ca = document.cookie.split(';');
@@ -123,10 +121,6 @@
     window.hftSettings = window.hftSettings || {};
     window.hftSettings.isApp = true;
     document.addEventListener('deviceready', loadAfter);
-  }
-
-  function cordovaFailed(url) {
-    loadAfter();
   }
 
   if (cordovaUrl) {

@@ -171,7 +171,7 @@ define(function() {
 
     function handleSetNameMsg(data) {
       if (data.name && data.name.length > 0) {
-        _name = data.name
+        _name = data.name;
         _sendEventIfHandler('hft_namechange');
       }
     }

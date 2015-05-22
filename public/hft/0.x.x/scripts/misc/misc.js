@@ -191,7 +191,7 @@ define(function() {
     for (var ii = 0; ii < prefixes.length; ++ii) {
       var prefix = prefixes[ii];
       var name = prefix + prefix ? capitalName : funcName;
-      var func = obj[funcName];
+      var func = obj[name];
       if (func) {
         return func.bind(obj);
       }

@@ -105,7 +105,7 @@ define([
         setTimeout(checkWasApp, 3000);
 
         // Try to go to the app
-        var iframe = misc.gotoIFrame("happyfuntimes://start" + misc.objectToSearchString({
+        misc.gotoIFrame("happyfuntimes://start" + misc.objectToSearchString({
           goto: options.href || window.location.href,
         }));
       } else {

@@ -113,7 +113,7 @@ requirejs(
         });
       }
     });
-  };
+  }
 
   appRedirector.checkForApp({
     inApp: showGames,

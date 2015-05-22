@@ -105,7 +105,7 @@ define([], function() {
       dst[key] = value;
     });
     return dst;
-  };
+  }
 
   window.hftSettings.haveVersion = haveVersion;
   window.hftSettings.versionedFunc = versionedFunc;

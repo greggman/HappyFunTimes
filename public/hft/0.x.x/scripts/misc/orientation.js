@@ -49,7 +49,7 @@ define([
 
   if (!lockOrientation) {
     _canOrient = false;
-    lockOrientation = function(orientation) {
+    lockOrientation = function() {
       console.warn("orientation locking not supported");
     };
     unlockOrientation = function() {
@@ -71,7 +71,7 @@ define([
    */
   function set(orientation) {
     orientation = orientation || "none";
-    if (orientation != currentOrientation) {
+    if (orientation !== currentOrientation) {
       currentOrientation = orientation;
       if (currentOrientation === "none") {
         console.log("unlock orienation");

@@ -123,7 +123,7 @@ define(function() {
 
     this.close = function() {
      _socket.close();
-    }
+    };
   };
 
   //return SocketIOClient;

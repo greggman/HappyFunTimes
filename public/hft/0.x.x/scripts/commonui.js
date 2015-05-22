@@ -137,7 +137,7 @@ define([
     } else {
       setOrientationHTML(g.orientation);
     }
-  };
+  }
 
   function showRequireApp() {
     dialog({
@@ -309,10 +309,10 @@ define([
       window.location.href = data.url;
     });
 
-    setOrientation(hftSettings.haveVersion("0.1.10") ? options.orientation : undefined);
+    setOrientation(hftSettings.haveVersion("1.10.0") ? options.orientation : undefined);
 
     if (options.requireApp) {
-      if (hftSettings.haveVersion("0.1.10")) {
+      if (hftSettings.haveVersion("1.10.0")) {
         if (!hftSettings.inApp) {
           showRequireApp();
         }
@@ -364,7 +364,7 @@ define([
   return hftSettings.versionFuncs({
     log: log,
     error: error,
-    setOrientation: { version: "0.1.10", func: setOrientation },
+    setOrientation: { version: "1.10.0", func: setOrientation },
     setStatus: setStatus,
     setupStandardControllerUI: setupStandardControllerUI,
   });

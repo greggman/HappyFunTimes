@@ -96,7 +96,7 @@ define([], function() {
     var closeIt = function() {
       close(cover);
       callback();
-    }
+    };
 
     if (options.title) {
       addElem(options.title, { className: "hft-dialog-title", parent: container });
@@ -134,7 +134,7 @@ define([], function() {
        }
       });
     } else {
-      container.addEventListener('click', closeIt, false)
+      container.addEventListener('click', closeIt, false);
       container.addEventListener('touchend', closeIt, false);
     }
 
