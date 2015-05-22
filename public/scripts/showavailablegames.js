@@ -121,6 +121,7 @@ requirejs(
     obj.forEach(function(runtimeInfo, ndx) {
       var gameInfo = runtimeInfo.info;
       var hftInfo = gameInfo.happyFunTimes;
+      gameInfo.name = gameInfo.name.replace(/ /g, "&nbsp;");
       gamesById[hftInfo.gameId] = runtimeInfo;
       runtimeInfo.dev = (runtimeInfo.originalGameId !== hftInfo.gameId) ? "(*)" : "";
       if (g.hftData.apiVersion) {
