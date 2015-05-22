@@ -269,6 +269,10 @@ HFTPlayer.prototype.handleLaunch = function(data) {
     } else {
       args.push(nativePath);
     }
+    if (platformInfo.extraArgs) {
+      args = args.concat(platformInfo.extraArgs);
+    }
+    args.push("--hft-url=ws://localhost:" + config.getSettings().settings.port);
     try {
       var child = childProcess.spawn(launcher, args, {
         stdio: [

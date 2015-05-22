@@ -30,6 +30,7 @@
  */
 "use strict";
 
+var config          = require('../lib/config');
 var debug           = require('debug')('hftgame-client');
 var path            = require('path');
 var Promise         = require('promise');
@@ -46,7 +47,7 @@ requirejs.config({
 var HFTGameClient = function(options) {
   options = options || {};
   var GameClient = requirejs('hft/gameclient');
-  var wsclient = options.socket || new WebSocketClient({url: "ws://localhost:18679"});
+  var wsclient = options.socket || new WebSocketClient({url: "ws://localhost:" + config.getSettings().settings.port});
   var client = new GameClient({
     gameId: "__hft__",
     socket: wsclient,
