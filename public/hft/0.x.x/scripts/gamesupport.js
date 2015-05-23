@@ -195,12 +195,16 @@ define([
 
       stats.end();
 
-      requestId = result ? undefined : requestAnimationFrame(loop);
+      requestLoop(result);
     };
+
+    function requestLoop(result) {
+      requestId = result ? undefined : requestAnimationFrame(loop);
+    }
 
     var start = function() {
       if (requestId === undefined) {
-        loop();
+        requestLoop(false);
       }
     };
 
