@@ -81,6 +81,7 @@ var RelayServer = function(servers, inOptions) {
   var socketServers = [];
   var eventEmitter = new events.EventEmitter();
   var gameDB = inOptions.gameDB;
+  var hftServer = inOptions.hftServer;
 
   this.setOptions = function(srcOptions) {
     ["baseUrl"].forEach(function(key) {
@@ -288,6 +289,10 @@ var RelayServer = function(servers, inOptions) {
     var gameGroup = getGameGroup(gameId, true);
     gameGroup.assignClient(client, data);
     eventEmitter.emit('gameStarted', {gameId: gameId});
+  };
+
+  this.addFilesForGame = function(gameId, files) {
+    hftServer.addFilesForGame(gameId, files);
   };
 
   servers.forEach(function(server) {

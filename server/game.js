@@ -205,6 +205,9 @@ Game.prototype.assignClient = function(client, data) {
   this.client.clearTimeout();
   this.disconnectPlayersIfGameDisconnects = data.disconnectPlayersIfGameDisconnects === undefined ? true : data.disconnectPlayersIfGameDisconnects;
   this.showInList = data.showInList;
+  if (data.files) {
+    this.gameGroup.addFiles(data.files);
+  }
   this.setGameId();
 
   var sendMessageToPlayer = function(id, message) {

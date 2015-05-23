@@ -165,6 +165,10 @@ GameGroup.prototype.assignClient = function(client, data) {
   }
 };
 
+GameGroup.prototype.addFiles = function(files) {
+  this.relayServer.addFilesForGame(this.gameId, files);
+}
+
 GameGroup.prototype.hasClient = function() {
   return this.games.length > 0 && this.games[0].hasClient();
 };

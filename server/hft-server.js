@@ -41,6 +41,7 @@ var ES6Support                = require('./es6-support');
 var events                    = require('events');
 var express                   = require('express');
 var fs                        = require('fs');
+var GameFiles                 = require('./gamefiles');
 var HFTGame                   = require('./hftgame');
 var hftSite                   = require('./hftsite');
 var highResClock              = require('../lib/highresclock');
@@ -134,7 +135,8 @@ var HFTServer = function(options, startedCallback) {
   g.gameDB = g.gameDB || new AvailableGames();
 
   var eventEmitter = new events.EventEmitter();
-  var nonRequire = new NonRequire();
+  var gameFiles = new GameFiles();
+  var nonRequire = new NonRequire({fileSystem: gameFiles.fileSystem});
   var es6Support = new ES6Support({fileSystem: nonRequire.fileSystem});
   var fileCache = new Cache({fileSystem: es6Support.fileSystem});
 //  var fileCache = new Cache({fileSystem: nonRequire.fileSystem});
@@ -378,9 +380,14 @@ var HFTServer = function(options, startedCallback) {
     sendFileResponse(req, res, fullPath, prepFn, runtimeInfo);
   };
 
+  var gamePrefix = "/games/";
+  var gamePrefixLength = gamePrefix.length + 1;  //  + the slash after the id
+  var pathToGamePath = function(gameId, runtimeInfo, filePath) {
+    return path.normalize(path.join(runtimeInfo.htmlPath, filePath.substr(gamePrefixLength + gameId.length)));
+  };
+
   // Send a file from a game.
   var sendGameRequestedFile = function(req, res) {
-    var gamePrefixLength = 8;  // '/games/' + the slash after the id
     var gameId = req.params[0];
     var runtimeInfo = g.gameDB.getGameById(gameId);
     if (!runtimeInfo || !runtimeInfo.htmlPath) {
@@ -388,7 +395,7 @@ var HFTServer = function(options, startedCallback) {
     }
     var parsedUrl = url.parse(req.url);
     var filePath = parsedUrl.pathname;
-    var fullPath = path.normalize(path.join(runtimeInfo.htmlPath, filePath.substr(gamePrefixLength + gameId.length)));
+    var fullPath = pathToGamePath(gameId, runtimeInfo, filePath);
     sendRequestedFileFullPath(req, res, fullPath, runtimeInfo);
   };
 
@@ -542,6 +549,7 @@ var HFTServer = function(options, startedCallback) {
         baseUrl: getBaseUrl(),
         noMessageTimout: options.inactivityTimeout,
         gameDB: g.gameDB,
+        hftServer: this,
       });
       console.log('Listening on port(s): ' + goodPorts.join(', ') + '\n');
       eventEmitter.emit('ports', goodPorts);
@@ -562,7 +570,7 @@ var HFTServer = function(options, startedCallback) {
       });
       startedCallback();
     }
-  };
+  }.bind(this);
 
   var makeServerErrorHandler = function(portnum) {
     return function(err) {
@@ -623,6 +631,27 @@ var HFTServer = function(options, startedCallback) {
 
   this.handleRequest = function(req, res) {
     app(req, res);
+  };
+
+  this.addFilesForGame = function(gameId, files) {
+    var runtimeInfo = g.gameDB.getGameById(gameId);
+    if (!runtimeInfo) {
+      console.error("can not get runtimeInfo for gameId: " + gameId);
+      return;
+    }
+    if (!runtimeInfo.features.filesFromGame) {
+      console.error("files from game requires API version 1.11.0 or greater. Update your package.json");
+      return;
+    }
+    var mappedFiles = {};
+    Object.keys(files).forEach(function(filePath) {
+      var content = files[filePath];
+      filePath = filePath.replace(/\\/g, '/');
+      filePath = gamePrefix + gameId + '/' + filePath;
+      filePath = pathToGamePath(gameId, runtimeInfo, filePath);
+      mappedFiles[filePath] = content;
+    });
+    gameFiles.addFiles(mappedFiles);
   };
 };
 
