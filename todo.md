@@ -1,6 +1,7 @@
 To Do
 =====
 
+*   make shft ask hft.net for port if it's not 18679
 *   change samples the use name to use new name system
 *   checklist
     *   ios safari works
