@@ -235,6 +235,7 @@ var RelayServer = function(servers, inOptions) {
    */
   this.assignAsClientForGame = function(data, client) {
     var gameId = data.gameId;
+    var runtimeInfo;
     var cwd = data.cwd;
     if (cwd) {
       var origCwd = cwd;
@@ -267,7 +268,7 @@ var RelayServer = function(servers, inOptions) {
           }
         }
         try {
-          var runtimeInfo = gameInfo.readGameInfo(cwd);
+          runtimeInfo = gameInfo.readGameInfo(cwd);
           if (runtimeInfo) {
             gameId = runtimeInfo.info.happyFunTimes.gameId;
             gameDB.add(runtimeInfo);
@@ -278,6 +279,46 @@ var RelayServer = function(servers, inOptions) {
       }
       if (!read) {
         gameId = gameInfo.makeRuntimeGameId(gameId, origCwd);
+      }
+    }
+    if (data.packageInfo) {
+      // Is this a total hack? Normally a game needs to be registered with HFT.
+      // That's because HFT needs to know where to get the files for the game. Usually it does
+      // this by url as in `http://localhost:18679/games/foobar/index.html` the game id is `foobar`.
+      // From that it can find out the package.json for the game either by looking in the installed
+      // games or by guessing at the folder.
+      //
+      // But, a game running off a different web server's URL won't have any info in it.
+      // So, this "hack" makes up a package.json for it and inserts it.
+      //
+      // Fill in some stuff. Should I let the game pass all this in? My feeling is NO because
+      // it might be a security risk.
+      try {
+        gameId = gameId.replace(/[^a-zA-Z0-9_-]/g, "-").substr(0, 60);
+        var fakePackageInfo = {
+          name: data.packageInfo.happyFunTimes.name || data.packageInfo.name || gameId,
+          happyFunTimes: {
+            gameId: gameId,
+            apiVersion: data.packageInfo.happyFunTimes.apiVersion,
+            category: "does not matter",
+            gameType: "html",  // this really doesn't matter because the game is already running
+            minPlayers: 0,
+          },
+        };
+      } catch (e) {
+        console.error(e);
+        console.error("trouble making runtimeInfo for gameId:", gameId);
+        eventEmitter.emit('gameStartFailed');
+        return;
+      }
+      runtimeInfo = gameInfo.parseGameInfo(JSON.stringify(fakePackageInfo), path.join(gameId, "--unnamed-pkg--"), gameId);
+      if (!runtimeInfo) {
+        console.error("can't make runtimeInfo for gameId:", gameId);
+        eventEmitter.emit('gameStartFailed');
+        return;
+      } else {
+        gameId = runtimeInfo.info.happyFunTimes.gameId;
+        gameDB.add(runtimeInfo);
       }
     }
     if (!gameId) {
