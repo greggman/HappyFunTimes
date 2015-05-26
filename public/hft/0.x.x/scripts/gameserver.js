@@ -251,7 +251,7 @@ define([
     };
 
     var connect_ = function() {
-      _socket = options.socket || new VirtualSocket();
+      _socket = options.socket || new VirtualSocket(options);
       _sendQueue = [];
       _socket.on('connect', connected_.bind(this));  // eslint-disable-line
       _socket.on('message', processMessage_.bind(this));
