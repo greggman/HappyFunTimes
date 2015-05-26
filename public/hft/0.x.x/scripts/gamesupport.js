@@ -178,13 +178,18 @@ define([
    *        false or pauseOnBlur = true when the window does not
    *        have the focus.
    */
-  var run = function(globals, fn) {
+  function run(globals, fn) {
     var clock = new GameClock();
     globals.frameCount = 0;
     globals.gameTime = 0;
 
     var requestId;
-    var loop = function() {
+
+    function requestLoop(result) {
+      requestId = result ? undefined : requestAnimationFrame(loop);  // eslint-disable-line
+    }
+
+    function loop() {
       stats.begin();
 
       globals.elapsedTime = globals.fixedFramerate || clock.getElapsedTime();
@@ -196,10 +201,6 @@ define([
       stats.end();
 
       requestLoop(result);
-    };
-
-    function requestLoop(result) {
-      requestId = result ? undefined : requestAnimationFrame(loop);
     }
 
     var start = function() {
@@ -244,7 +245,7 @@ define([
     } else {
       start();
     }
-  };
+  }
 
   /**
    * Sets the content of the status element. Only visible of debug
