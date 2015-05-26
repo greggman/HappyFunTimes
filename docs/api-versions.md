@@ -289,5 +289,19 @@ the correct version
     *   Added fullscreen support for Android
     *   Added orientation handling for Android and the app
 
+* v1.11.0
 
+    *   Games can provide files for controller.
+
+        When calling `new GameServer' the options you
+        pass in now has a `files` field. You can use it to
+        provide files for the controller. As a simple example
+
+            options.files["controller.html"] = controllerHTMLContent;
+            options.files["scripts/controller.js"] = controllerJSContent;
+            options.files["css/controller.css"] = controllerCSSContent;
+
+        This allows the game to provide all the files HappyFunTimes
+        to server to the controller so that no external files are
+        needed.
 
