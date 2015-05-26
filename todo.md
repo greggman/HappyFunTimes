@@ -1,6 +1,35 @@
 To Do
 =====
 
+*   fix controller that incorrectly asked for orientation
+*   add colors to controller-support
+*   need a way for game to send binary files (how about a .zip)
+    for controller so you can have image files and sounds. That sounds
+    painful. I can either expand to base64 (easy) or need to send
+    binary websocket (yuck!). I guess I can set some state in relayserver
+    that next msg is ___.
+
+*   handle no package.?
+
+    idea: If game has files and inside files is package?
+    or: if flag "noPackage" or if "package: packgs".
+
+    Why is this needed? Because HFT needs someway to (a) tell you
+    you need a newer version and (b) know what path to server your
+    files from (does it needs this? make up a path?)
+
+
+*   make gamecontroller compatible api? Can I add more controllers?
+*   make hft-unitybuild insert top hft.hanson API version in default package
+*   make sure options.files work in unity
+*   add happyFunTimes.name to package info because package.json name can't have spaces! UGH!!
+*   make unity edit HappyFunTimes.name (auto-set name to valid name)
+*   update shft and manage to use hft.name
+*   make gamefiles invalidate cache
+
+    easy? override fs.watch or whatever it's called
+    since cache is using fake filesys
+
 *   make shft ask hft.net for port if it's not 18679
 *   change samples the use name to use new name system
 *   checklist
