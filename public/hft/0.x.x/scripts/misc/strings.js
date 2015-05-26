@@ -124,8 +124,8 @@ define(function() {
         for (var ii = 0; ii < params.length; ++ii) {
           var obj = params[ii];
           for (var jj = 0; jj < keys.length; ++jj) {
-            key = keys[jj];
-            obj = obj[key];
+            var part = keys[jj];
+            obj = obj[part];
             if (obj === undefined) {
               break;
             }
