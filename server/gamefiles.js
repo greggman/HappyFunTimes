@@ -33,28 +33,34 @@
 
 var debug     = require('debug')('gamefiles');
 var path      = require('path');
-var requirejs = require('requirejs');
 var fsWrapper = require('../lib/fs-wrapper');
-var utils     = require('../lib/utils');
 
 var GameFiles = function(options) {
   options = options || {};
   var fs = options.fileSystem || require('fs');
   var enabled = true;
-  var tempPath;
   var gameFiles = {};
+  var dirNames = {};
+  var watchers = {};
 
   this.enable = function(enable) {
     enabled = enable;
   };
 
-  this.addFiles = function(files) {
-    Object.keys(files).forEach(function(filePath) {
-      var content = files[filePath];
-      filePath = filePath.replace(/\\/g, "/");
-      debug("add file:" + filePath);
-      gameFiles[filePath] = content;
-    })
+  var Watcher = function(dirname, callback) {
+    var watchersForDir = watchers[dirname];
+    if (!watchersForDir) {
+      watchersForDir = [];
+      watchers[dirname] = watchersForDir;
+    }
+    watchersForDir.push(this);
+    this.notify = function(filename) {
+      callback('changed', filename);
+    };
+    this.close = function() {
+      var ndx = watchersForDir.indexOf(this);
+      watchersForDir.splice(ndx, 1);
+    }.bind(this);
   };
 
   var fileSystem = fsWrapper.createReadOnlyWrapper({
@@ -69,7 +75,35 @@ var GameFiles = function(options) {
       debug("getting: " + filename);
       return gameFiles[filename];
     },
+    existsSyncImpl: function(filename) {
+      var iFilename = filename.replace(/\\/g, "/");
+      if (gameFiles[iFilename]) {
+        return true;
+      }
+      return fs.existsSync(filename);
+    },
+    watchCreatorFn: function(dirname, callback) {
+      var iDirname = dirname.replace(/\\/g, "/");
+      return dirNames[iDirname] ? new Watcher(iDirname, callback) : undefined;
+    },
   });
+
+  this.addFiles = function(files) {
+    Object.keys(files).forEach(function(filePath) {
+      var content = files[filePath];
+      var iFilePath = filePath.replace(/\\/g, "/");
+      debug("add file:" + filePath);
+      gameFiles[iFilePath] = content;
+      var iDirName = path.dirname(iFilePath);
+      dirNames[iDirName] = true;
+      var watchersForDir = watchers[iDirName];
+      if (watchersForDir) {
+        watchersForDir.forEach(function(watcher) {
+          watcher.notify();
+        });
+      }
+    });
+  };
 
   this.fileSystem = fileSystem;
 };
