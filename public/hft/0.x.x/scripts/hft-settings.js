@@ -49,7 +49,7 @@ define([], function() {
     return version.split(".").reduce(addVersion, 0);
   }
 
-  var apiVersion = semverToNumber(window.hftSettings.apiVersion);
+  var apiVersion = semverToNumber(window.hftSettings.apiVersion || "0.0.0");
 
   /**
    * check if we have a version
