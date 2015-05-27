@@ -308,6 +308,28 @@ except for the controller.</p>
 <li>Added id tracking</li>
 </ul>
 </li>
+<li><p>v1.10.0</p>
+<ul>
+<li>Added app support</li>
+<li>Added fullscreen support for Android</li>
+<li>Added orientation handling for Android and the app</li>
+</ul>
+</li>
+<li><p>v1.11.0</p>
+<ul>
+<li><p>Games can provide files for controller.</p>
+<p>When calling <code>new GameServer&#39; the options you
+pass in now has a</code>files` field. You can use it to
+provide files for the controller. As a simple example</p>
+<pre><code>options.files[&quot;controller.html&quot;] = controllerHTMLContent;
+options.files[&quot;scripts/controller.js&quot;] = controllerJSContent;
+options.files[&quot;css/controller.css&quot;] = controllerCSSContent;
+</code></pre><p>This allows the game to provide all the files HappyFunTimes
+to server to the controller so that no external files are
+needed.</p>
+</li>
+</ul>
+</li>
 </ul>
 
       <hr/>

@@ -785,7 +785,7 @@ input and the gear menu.</p>
 
         <tr>
             
-                <td class="name"><code>function</code></td>
+                <td class="name"><code>connectFn</code></td>
             
 
             <td class="type">
@@ -799,16 +799,16 @@ input and the gear menu.</p>
             
                 <td class="attributes">
                 
-
+                    &lt;optional><br>
                 
-                    &lt;nullable><br>
+
                 
                 </td>
             
 
             
 
-            <td class="description last"><p>to call when controller
+            <td class="description last"><p>function to call when controller
           connects to HappyFunTimes</p></td>
         </tr>
 
@@ -816,7 +816,7 @@ input and the gear menu.</p>
 
         <tr>
             
-                <td class="name"><code>function</code></td>
+                <td class="name"><code>disconnectFn</code></td>
             
 
             <td class="type">
@@ -830,16 +830,16 @@ input and the gear menu.</p>
             
                 <td class="attributes">
                 
-
+                    &lt;optional><br>
                 
-                    &lt;nullable><br>
+
                 
                 </td>
             
 
             
 
-            <td class="description last"><p>to call when controller is
+            <td class="description last"><p>function to call when controller is
           disconncted from game.</p></td>
         </tr>
 
@@ -861,9 +861,9 @@ input and the gear menu.</p>
             
                 <td class="attributes">
                 
-
+                    &lt;optional><br>
                 
-                    &lt;nullable><br>
+
                 
                 </td>
             
@@ -892,9 +892,9 @@ input and the gear menu.</p>
             
                 <td class="attributes">
                 
-
+                    &lt;optional><br>
                 
-                    &lt;nullable><br>
+
                 
                 </td>
             
@@ -902,6 +902,66 @@ input and the gear menu.</p>
             
 
             <td class="description last"><p>number of lines to show for the debug console.</p></td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>orienation</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"><p>The orientation to set the phone. Only works on Android or the App. See <code>setOrientation</code>.</p></td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>requireApp</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">boolean</span>
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"><p>If true and we're not in the app will present a dialog saying you must use the app</p></td>
         </tr>
 
 	
