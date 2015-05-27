@@ -67,7 +67,7 @@ define(function() {
         msg = _emptyMsg;
       }
       _server.sendCmd("client", _id, {cmd: cmd, data: msg});
-    };
+    }
 
     /**
      * Sends a message to this player.
