@@ -34,10 +34,12 @@
 define([
     './misc/cookies',
     './misc/misc',
+    './hft-settings',
     './virtualsocket',
   ], function(
     Cookie,
-    Misc,
+    misc,
+    hftSettings,
     VirtualSocket) {
   /**
    * @typedef {Object} GameClient~Options
@@ -190,6 +192,13 @@ define([
       }
     };
 
+    var sendCmd = function(cmd, data) {
+      sendCmdLowLevel('update', {
+        cmd: cmd,
+        data: data,
+      });
+    };
+
     /**
      * Sends a command to the game
      * @param {string} cmd name of command
@@ -201,23 +210,32 @@ define([
      *        y: 456,
      *     });
      */
-    this.sendCmd = function(cmd, data) {
-      sendCmdLowLevel('update', {
-        cmd: cmd,
-        data: data,
-      });
-    };
+    this.sendCmd = sendCmd;
+
+    function sendLogMsg(type, msg) {
+      sendCmd("_hft_log_", { type: type, msg: msg });
+    }
+
+    this.error = hftSettings.versionedFunc("1.11.0", function() {
+      console.error.apply(console, arguments);
+      sendLogMsg("error", Array.prototype.join.call(arguments, " "));
+    });
+
+    this.log = hftSettings.versionedFunc("1.11.0", function() {
+      console.log.apply(console, arguments);
+      sendLogMsg("log", Array.prototype.join.call(arguments, " "));
+    });
 
     connect_();
 
     var idCookie = new Cookie("__hft_id__");
-    var opts = Misc.mergeObjects(options);
+    var opts = misc.mergeObjects(options);
     var id = idCookie.get();
     if (!id) {
-      id = Misc.makeRandomId();
+      id = misc.makeRandomId();
       idCookie.set(id);
     }
-    opts.data = Misc.mergeObjects(opts.data);
+    opts.data = misc.mergeObjects(opts.data);
     opts.data.__hft_session_id__ = id;  // eslint-disable-line
     sendCmdLowLevel('join', opts);
   };
