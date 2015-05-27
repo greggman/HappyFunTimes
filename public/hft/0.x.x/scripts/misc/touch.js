@@ -233,9 +233,9 @@ define(
       Input.emitDirectionEvent(padId, dir, pad.event, callback);
     };
 
-    var updatePad = function(pad, padId) {
+    var updatePad = function(pad, padId, out) {
       var newDir = -1;
-      if (pad.pointerId >= 0) {
+      if (!out && pad.pointerId >= 0) {
         var distSq = pad.vector.x * pad.vector.x + pad.vector.y * pad.vector.y;
         if (distSq > deadSpaceRadiusSq) {
           newDir = computeDir(pad.vector.x, pad.vector.y);
@@ -323,10 +323,19 @@ define(
       }
     };
 
+    var onPointerOut = function(e) {
+      for (var ii = 0; ii < pads.length; ++ii) {
+        var pad = pads[ii];
+        if (pad.pointerId === e.pointerId) {
+          updatePad(pad, ii, true);
+        }
+      }
+    };
+
     container.addEventListener('pointerdown', onPointerDown, false);
     container.addEventListener('pointermove', onPointerMove, false);
     container.addEventListener('pointerup', onPointerUp, false);
-    container.addEventListener('pointerout', onPointerUp, false);
+    container.addEventListener('pointerout', onPointerOut, false);
   };
 
   /**
