@@ -43,8 +43,20 @@ define([
   var _canOrient = true;
 
   if (!hftSettings.isApp && window.screen.orientation && window.screen.orientation.lock) {
-    lockOrientation = window.screen.orientation.lock.bind(window.screen.orientation);
-    unlockOrientation = window.screen.orientation.unlock.bind(window.screen.orientation);
+    lockOrientation = function(orientation) {
+      window.screen.orientation.lock(orientation).then(function() {
+        console.log("orientation set");
+      }, function(err) {
+        console.error("can not set orientation:", err);
+      });
+    };
+    unlockOrientation = function() {
+      window.screen.orientation.unlock().then(function() {
+        console.log("orientation unlocked");
+      }, function(err) {
+        console.error("can not unlock orientation:", err);
+      });
+    };
   }
 
   if (!lockOrientation) {
