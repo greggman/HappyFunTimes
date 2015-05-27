@@ -59,13 +59,7 @@ define(function() {
     var _name = "player";
     var _busy = false;
 
-    /**
-     * Sends a message to this player.
-     *
-     * @param {string} cmd
-     * @param {object} [msg] a jsonifyable object.
-     */
-    this.sendCmd = function(cmd, msg) {
+    function sendCmd(cmd, msg) {
       if (!_connected) {
         return;
       }
@@ -74,6 +68,15 @@ define(function() {
       }
       _server.sendCmd("client", _id, {cmd: cmd, data: msg});
     };
+
+    /**
+     * Sends a message to this player.
+     *
+     * @method
+     * @param {string} cmd
+     * @param {object} [msg] a jsonifyable object.
+     */
+    this.sendCmd = sendCmd;
 
     /**
      * Adds an event listener
@@ -114,7 +117,11 @@ define(function() {
     };
 
     /**
-     * Synonym for {@link addEventListener}.
+     * Synonym for {@link Netplayer#addEventListener}.
+     * @method
+     * @param {string} eventType name of event.
+     * @param {function(object)} listener function to call when event
+     *        arrives
      */
     this.on = this.addEventListener;
 
@@ -181,10 +188,16 @@ define(function() {
       _sendEventIfHandler('hft_busy');
     }
 
+    function handleLogMsg(data) {
+      var fn = console[data.type] || console.log;
+      fn.call(console, data.msg);
+    }
+
     _internalListeners["setName"] = ignoreMsg;
     _internalListeners["_hft_setname_"] = handleSetNameMsg;
     _internalListeners["busy"] = ignoreMsg;
     _internalListeners["_hft_busy_"] = handleBusyMsg;
+    _internalListeners["_hft_log_"] = handleLogMsg;
 
     /**
      * Whether or not this netplayer is connected.
@@ -237,8 +250,22 @@ define(function() {
 
   /**
    * Event that the player has left.
-   *
    * @event NetPlayer#disconnected
+   */
+
+  /**
+   * Event that player has changed their name
+   *
+   * check `getName` to get their new name.
+   * @event NetPlayer#hft_namechange
+   */
+
+  /**
+   * Event that player entered or exited the system menu
+   *
+   * Meaning they aren't playing the game.
+   * check `isBusy` to find out if they are in the menu or not.
+   * @event NetPlayer#hft_busy
    */
 
   return NetPlayer;
