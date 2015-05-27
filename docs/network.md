@@ -12,8 +12,8 @@ game, nothing to type. On Android they can type any url, for example,
 
 No internet connection is needed in this mode.
 
-Setup
------
+Setup for most routers
+----------------------
 
 First, get a router. You probably have an old one sitting around or if you want to be portable I
 recommend the [TP-Link TL-WR702N](http://google.com/#q=TP-Link+TL-WR702N) though
@@ -48,29 +48,8 @@ connect to open routers. If you're in a relatively isolated location and everyon
 play it's probably good. If you're in a more public location you probably want to add a
 password just so people not playing don't get accidentally connected.
 
-Install some software. I could give you the cryptic paths so you don't have to do this but
-this is easier IMO.
-
-1.  Install HappyFunTimes http://superhappyfuntimes.net/install
-2.  Install node.js http://nodejs.org/download
-3.  Open a node command prompt/terminal and type `npm install -g hft-cli`
-
-With that done, reboot the router, connect your machine, then open a node command prompt or terminal
-and on OSX type
-
-    sudo hft start --dns
-
-On Windows just
-
-    hft start --dns
-
-You need `sudo` on OSX because port 80 is normally restricted to admin users only.
-
-Go to `http://localhost/games.html` and pick a game.
-
-Now try connecting a smartphone to your router. If it's an iOS device it *should*
-automatcally come up with a page that says "Start". If it's an Android device
-open the browser and go to `hft.com` or any `http://` url.
+With that done, reboot the router, connect your machine.
+[Now follow the instructions above](#starting-happyfuntimes-in-installation-mode)
 
 Using your router for normal internet access
 --------------------------------------------
@@ -87,6 +66,88 @@ to use it as a normal router again are
 2.  Turn security back on
 
     If you make your WiFi open/unsecured you probably want to turn that back on
+
+Starting HappyFunTimes in installation mode
+-------------------------------------------
+
+Open a node command prompt or terminal and on OSX type
+
+    sudo hft start --dns
+
+On Windows just
+
+    hft start --dns
+
+You need `sudo` on OSX because port 80 is normally restricted to admin users only.
+
+Go to `http://localhost/games.html` and pick a game.
+
+Now try connecting a smartphone to your router. If it's an iOS device it *should*
+automatcally come up with a page that says "Start". If it's an Android device
+open the browser and go to `hft.com` or any `http://` url.
+
+Setting Up an Airport Extreme
+-----------------------------
+
+Unlike every other router in existence the Airport Extreme requires custom
+software to configure it. If you're on Windows or Linux you'll need to
+[download it here](https://support.apple.com/downloads/airport).
+
+Connect it by ethernet cable to your computer.
+Use one of the top 3 sockets on the airport extreme to connect
+(not to be confused with the bottom socket which is for incoming internet).
+
+Start the Airport Utility on your computer and select the airport extreme
+from the image then select edit.
+
+<div style="text-align: center;"><img src="images/airport-extreme.png" width="50%" height="50%" /></div>
+
+Under the Network section click the `+` button to add your machine
+to the DHCP reservation list.
+
+<div style="text-align: center;"><img src="images/airport-extreme-reserve-ip.png" width="50% height="50%" /></div>
+
+Then add your machine. You'll need to know your machine's mac address.
+
+On Mac you can look that in the the menus pick
+`Apple Menu->System Preferences` then click on `Network`.
+Select the Thunderbolt connection
+
+<div style="text-align: center;"><img src="images/osx-network-thunderbolt.png" width="50% height="50%" /></div>
+
+and then clicking the hardware section
+
+<div style="text-align: center;"><img src="images/osx-macaddress.png" width="50% height="50%" /></div>
+
+On Windows you can look up your Mac address by opening a command prompt
+and typing `getmac`
+
+Type that number into the aiport extreme settings and "MAC address" (yes the numbers in these
+picutres don't match. For you they should match).
+In description put whatever you want to remember
+that's your machine. Select "Mac Address" for "Reserve Address By".
+
+<div style="text-align: center;"><img src="images/airport-extreme-reserve-ip-details.png" width="50% height="50%" /></div>
+
+Note the number under IPv4 Address. It probably defaults to the correct
+number for your setup. Note the number.
+
+In the Internet section of the Airport Utility put that number in the
+2 spaces for DNS Servers
+
+<div style="text-align: center;"><img src="images/airport-extreme-dns.png" width="50% height="50%" /></div>
+
+Note: with these numbers set in DNS server your Airport Extreme will no longer work for internet
+access. You can only use it for HappyFunTimes installation mode. To use it for internet run
+the Airport Utility again and clear those 2 numbers.
+
+After that you may want to setup the WiFi security. I would suggest adding
+a simple password because otherwise people's phones walking by your installation will
+connect to it even if they don't plan on interacting with it.
+
+Finally click "update" at the bottom to update your Airport Extreme.
+
+[Now follow the instructions above](#starting-happyfuntimes-in-installation-mode)
 
 Maximum Number of Players
 =========================
