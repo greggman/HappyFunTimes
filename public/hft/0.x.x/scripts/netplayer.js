@@ -47,7 +47,7 @@ define(function() {
    * @param {number} id
    * @param {string} name
    */
-  var NetPlayer = function(server, id, data) {
+  var NetPlayer = function(server, id, data, name) {
     var _server = server;
     var _id = id;
     var _eventListeners = { };
@@ -56,7 +56,7 @@ define(function() {
     var _sessionId = data ? data.__hft_session_id__ : undefined;
     var _self = this;
     var _emptyMsg = {};
-    var _name = "player";
+    var _name = name;
     var _busy = false;
 
     function sendCmd(cmd, msg) {
