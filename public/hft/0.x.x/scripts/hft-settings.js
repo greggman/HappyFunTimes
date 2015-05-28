@@ -29,9 +29,13 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 "use strict";
+(function(window) {
 
 define([], function() {
 
+  if (window === undefined) {
+    window = {};
+  }
   window.hftSettings = window.hftSettings || {};
 
   var numRE = /\d+/;
@@ -113,3 +117,5 @@ define([], function() {
 
   return window.hftSettings;
 });
+}(this));
+
