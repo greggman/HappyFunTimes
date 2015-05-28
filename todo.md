@@ -1,6 +1,7 @@
 To Do
 =====
 
+*   add max players to HTML5 controller
 *   fix controller that incorrectly asked for orientation
 *   add colors to controller-support
 *   need a way for game to send binary files (how about a .zip)
