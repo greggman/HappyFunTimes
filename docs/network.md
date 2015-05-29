@@ -116,7 +116,7 @@ play it's probably good. If you're in a more public location you probably want t
 password just so people not playing don't get accidentally connected.
 
 With that done, reboot the router, connect your machine.
-[Now follow the instructions above](#starting-happyfuntimes-in-installation-mode)
+[Now follow the instructions below](#starting-happyfuntimes-in-installation-mode)
 
 Using your router for normal internet access
 --------------------------------------------
@@ -132,7 +132,7 @@ to use it as a normal router again are
 
 2.  Turn security back on
 
-    If you make your WiFi open/unsecured you probably want to turn that back on
+    If you made your WiFi open/unsecured you probably want to turn that back on
 
 Starting HappyFunTimes in installation mode
 -------------------------------------------
