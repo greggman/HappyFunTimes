@@ -250,24 +250,22 @@ define(
 
     var checkStart = function(padId, e) {
       var pad = pads[padId];
-   /*   if (pad.pointerId < 0) */ {
-        var padOptions = options.pads[padId];
-        pad.pointerId = e.pointerId;
-        var relPos = Input.getRelativeCoordinates(padOptions.referenceElement, e);
-        var x = relPos.x - padOptions.offsetX;
-        var y = relPos.y - padOptions.offsetY;
-        if (options.fixedCenter) {
-          pad.pointerStartPos.reset(0, 0);
-          pad.pointerPos.reset(x, y);
-          pad.vector.reset(x, y);
-          updatePad(pad, padId);
-        } else {
-          pad.pointerStartPos.reset(x, y);
-          pad.pointerPos.copyFrom(pad.pointerStartPos);
-          pad.vector.reset(0, 0);
-          pad.dir = pad.lastDir;
-          callCallback(padId, pad.lastDir);
-        }
+      var padOptions = options.pads[padId];
+      pad.pointerId = e.pointerId;
+      var relPos = Input.getRelativeCoordinates(padOptions.referenceElement, e);
+      var x = relPos.x - padOptions.offsetX;
+      var y = relPos.y - padOptions.offsetY;
+      if (options.fixedCenter) {
+        pad.pointerStartPos.reset(0, 0);
+        pad.pointerPos.reset(x, y);
+        pad.vector.reset(x, y);
+        updatePad(pad, padId);
+      } else {
+        pad.pointerStartPos.reset(x, y);
+        pad.pointerPos.copyFrom(pad.pointerStartPos);
+        pad.vector.reset(0, 0);
+        pad.dir = pad.lastDir;
+        callCallback(padId, pad.lastDir);
       }
     };
 
