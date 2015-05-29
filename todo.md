@@ -1,7 +1,6 @@
 To Do
 =====
 
-*   make it only try to connect once (or for 30 seconds)?
 *   fix controller that incorrectly asked for orientation
 *   need a way for game to send binary files (how about a .zip)
     for controller so you can have image files and sounds. That sounds
@@ -14,6 +13,8 @@ To Do
 *   add happyFunTimes.name to package info because package.json name can't have spaces! UGH!!
 *   make unity edit HappyFunTimes.name (auto-set name to valid name)
 *   update shft and manage to use hft.name
+*   check kiosk mode and app
+
 
 *   make shft ask hft.net for port if it's not 18679
 *   change samples the use name to use new name system
@@ -882,6 +883,8 @@ Runs Repo noid
 Done
 ====
 
+*   fix CSS for 5s on hft-gamepad
+*   make hft-gamepad only try to connect once (or for 30 seconds)?
 *   make gamefiles invalidate cache
 
     easy? override fs.watch or whatever it's called
