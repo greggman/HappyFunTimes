@@ -12,6 +12,62 @@ game, nothing to type. On Android they can type any url, for example,
 
 No internet connection is needed in this mode.
 
+Networking Basics
+-----------------
+
+A quick note on IP addresses. First, in your router's manual it will most likely
+tell you to set it up, open a browser and go to `http://192.168.0.1` or `http://192.168.1.1`
+For my `TP-Link TL-WR702N` it has me go to `http://192.168.2.254`.
+
+The `192.168.2` part, the first 3 numbers, are the address for your local
+network. Your local network is the network created by your router that all your
+computers and phones connect to. The `254` or the last number is the number
+assigned to a specific machine. In this case the router is assigning itself
+the number `254` in the `192.168.2` network.
+
+What we need to do to get installation mode to work is
+
+1.  Figure out what our network number is (the first 3 numbers of the router)
+2.  Configure the router to assign a specific number to the computer running HappyFunTimes
+3.  Tell the router use the HappyFunTimes computer for DNS
+
+For part #1 we probably already know the number because the manual for router said
+to type it into the browser to access the settings page. If not check the settings.
+For example on the `TP-Link WR702N` it's under Basic Settings->Network->LAN.
+
+For #2 see below. Basically we need to tell the router for a given computer's **mac**
+address assign us a specific number on our local network. If we didn't do this we'd
+get a different number everytime we connected. A **mac** address is a unique number
+for your computer's networking equipment. Depending on the computer there are
+different ways to look it up ([see below](#looking-up-your-mac-address)).
+
+For #3 we tell the router the number we assigned in #2.
+
+DNS is the way computers translate a name like "google.com" to a number like `172.194.117.133`
+(which is Google's computer's address). By telling the router to look to the happyfuntimes machine
+for converting names to numbers (DNS) happyfuntimes can redirect the phone
+to your installation.
+
+Looking Up Your MAC Address
+---------------------------
+
+MAC address *does not stand for machintosh*. It stands for Media Access Control Address.
+
+To look it up on Windows open a command prompt and type `getmac`
+To look it up on OSX open the network settings in the system preferences
+
+NOTE!!!: Your computer has a different MAC address for WiFi vs Wired networking. **The MAC address
+you need to look up is the MAC address for the way you'll connect the happyfuntimes machine
+to the router!**
+
+If can connect the happyfuntimes computer to the router with an ethernet cable that should
+be your first choice because you don't have to worry about interference.
+
+If you're connecting the happyfuntimes comptuer to the router via WiFi then you need to look up your
+computer's WiFi MAC address.
+
+**Be sure to look up the correct MAC address**
+
 Setup for most routers
 ----------------------
 
@@ -19,29 +75,40 @@ First, get a router. You probably have an old one sitting around or if you want 
 recommend the [TP-Link TL-WR702N](http://google.com/#q=TP-Link+TL-WR702N) though
 it will only handle 13-14 players and it's under $20.
 
+Find the IP address of your router. If the URL in your browser looks something like `http://192.168.2.254/???`
+then that's the IP address of your router. Otherwise check the lan settings. For example
+
+<div style="text-align: center;"><a href="images/router-network-lan-settings.png"><img width="50% height="50%" src="images/router-network-lan-settings.png" /></a></div>
+
+Now that we know the router's IP address is `192.168.2.254` we know our network's address
+is `192.168.2` ([see above](#networking-basics)). If yours is different remember that **for all the ip addresses below
+you need to change the first 3 numbers to match your network address**. For example if your network is `192.168.0`
+then all the ip addresses below need to start with `192.168.0`. If your network is `10.0.1` then all
+the ip address below need to start with `10.0.1`.
+
 Go to your router's admin page and find the DHCP settings. Somewhere there
 should be a place that lets you assign a specfiic IP address to a specific MAC
 address. On TL-WR702N that's under Advanced Settings->DHCP->Address Reservations
 
-I looked up the MAC address for my machine (the machine running HappyFunTimes) and assigned it
+I [looked up the MAC address for my machine](#looking-up-your-mac-address) (the machine running HappyFunTimes) and assigned it
 directly to `192.168.2.9`.
 
-<div style="text-align: center;"><a href="images/router-address-reservation.png"><img width="342" height="184" src="images/router-address-reservation.png"></a></div>
+<div style="text-align: center;"><a href="images/router-address-reservation.png"><img width="50%" height="50%" src="images/router-address-reservation.png"></a></div>
 
-I then went to the main DHCP settings at Advanced Settings->DHCP->DHCP Settings and
+I then went to the DHCP settings at Advanced Settings->DHCP->DHCP Settings and
 configured it to give out IP addresses from to `192.168.2.10` to `192.168.2.250`.
 Finally I set the DNS there to the same address I used for the HappyFunTimes machine.
 (`192.168.2.9`)
 
-<div style="text-align: center;"><a href="images/router-dhcp-settings.png"><img width="343" height="224" src="images/router-dhcp-settings.png"></a></div>
+<div style="text-align: center;"><a href="images/router-dhcp-settings.png"><img width="50%" height="50%" src="images/router-dhcp-settings.png"></a></div>
 
 With that done I picked a nice name for my WiFi's SSID under
 Basic Settings->Wireless->Wireless Settings
 
-<div style="text-align: center;"><a href="images/router-wifi-settings.png"><img width="390" height="237" src="images/router-wifi-settings.png"></a></div>
+<div style="text-align: center;"><a href="images/router-wifi-settings.png"><img width="50%" height="50%" src="images/router-wifi-settings.png"></a></div>
 
 and in my case I decided to turn off security so no password is needed.
-<div style="text-align: center;"><a href="images/router-wifi-security.png"><img width="375" height="221" src="images/router-wifi-security.png"></a></div>
+<div style="text-align: center;"><a href="images/router-wifi-security.png"><img width="50%" wheight="50%" src="images/router-wifi-security.png"></a></div>
 
 This may or may not be a good idea since lots of people's devices are set to automatically
 connect to open routers. If you're in a relatively isolated location and everyone is going to
@@ -86,6 +153,17 @@ Now try connecting a smartphone to your router. If it's an iOS device it *should
 automatcally come up with a page that says "Start". If it's an Android device
 open the browser and go to `hft.com` or any `http://` url.
 
+If you're planning on running one game on your installation you might want to use
+these one or more of these options to start
+
+    hft start --dns --no-ask-name --no-menu --kiosk
+
+`--no-menu` removes the gear icon on the contollers. `--no-ask-name` says to skip
+asking the user for a name. If your game doesn't need names or if you're getting
+the name some other way then this will skip the enter-name screen. Finally `--kiosk`
+says to send players directly to the currently running game. Normally users go
+to the `/index.html` where they wait for a game to be selected.
+
 Setting Up an Airport Extreme
 -----------------------------
 
@@ -107,10 +185,10 @@ to the DHCP reservation list.
 
 <div style="text-align: center;"><img src="images/airport-extreme-reserve-ip.png" width="50% height="50%" /></div>
 
-Then add your machine. You'll need to know your machine's mac address.
+Then add your machine. You'll need to know your machine's [mac address](#looking-up-your-mac-address).
 
-On Mac you can look that in the the menus pick
-`Apple Menu->System Preferences` then click on `Network`.
+On Mac you can look that up in the the menus by picking
+`Apple Menu->System Preferences` then clicking on `Network`.
 Select the Thunderbolt connection
 
 <div style="text-align: center;"><img src="images/osx-network-thunderbolt.png" width="50% height="50%" /></div>
@@ -120,9 +198,9 @@ and then clicking the hardware section
 <div style="text-align: center;"><img src="images/osx-macaddress.png" width="50% height="50%" /></div>
 
 On Windows you can look up your Mac address by opening a command prompt
-and typing `getmac`
+and typing `getmac`. You want the mac address for wired/ethernet networking.
 
-Type that number into the aiport extreme settings and "MAC address" (yes the numbers in these
+Type that number into the aiport extreme settings for "MAC address" (yes the numbers in these
 picutres don't match. For you they should match).
 In description put whatever you want to remember
 that's your machine. Select "Mac Address" for "Reserve Address By".
