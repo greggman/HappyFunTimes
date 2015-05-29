@@ -250,7 +250,7 @@ define(
 
     var checkStart = function(padId, e) {
       var pad = pads[padId];
-      if (pad.pointerId < 0) {
+   /*   if (pad.pointerId < 0) */ {
         var padOptions = options.pads[padId];
         pad.pointerId = e.pointerId;
         var relPos = Input.getRelativeCoordinates(padOptions.referenceElement, e);
@@ -376,6 +376,14 @@ define(
   var setupButtons = function(options) {
     var buttonInfos = [];
     var buttons = options.buttons;
+    var expirationTime = 2000;  // 2 seconds, 2000ms
+
+    // I don't really know what to make this number
+    // If the person has steady hands they can make
+    // this fail but I'm going to assume most players
+    // most of the time won't hold steady for this long.
+    // On the other hand if the button does get stuck
+    // It will take this long to un-stick.
 
     for (var ii = 0; ii < buttons.length; ++ii) {
       var button = buttons[ii];
@@ -391,9 +399,9 @@ define(
     //   console.log("button: " + buttonInfo.element.id + ", " + buttonInfo.numPointerIds);
     // };
 
-    var addPointerId = function(buttonInfo, pointerId) {
+    var addPointerId = function(buttonInfo, pointerId, timeStamp) {
       if (!buttonInfo.pointerIds[pointerId]) {
-        buttonInfo.pointerIds[pointerId] = true;
+        buttonInfo.pointerIds[pointerId] = timeStamp;
         ++buttonInfo.numPointerIds;
         buttonInfo.callback({pressed: true});
       }
@@ -411,16 +419,33 @@ define(
       }
     };
 
+    // This is because (maybe because my programming sucks?)
+    // sometimes it seems we miss an out/up event and buttons
+    // get stuck. So, for a particlar id, if no event has come in
+    // for a while assume it was released.
+    var expireOldButtons = function() {
+      var now = Date.now();
+      buttonInfos.forEach(function(buttonInfo) {
+        Object.keys(buttonInfo.pointerIds).forEach(function(pointerId) {
+          var timeStamp = buttonInfo.pointerIds[pointerId];
+          var age = now - timeStamp;
+          if (age > expirationTime) {
+            removePointerId(buttonInfo, pointerId);
+          }
+        });
+      });
+    };
+
     var handleButtonDown = function(e, buttonInfo) {
-      addPointerId(buttonInfo, e.pointerId);
+      addPointerId(buttonInfo, e.pointerId, e.timeStamp);
     };
 
     var handleButtonMove = function(e, buttonInfo) {
-      addPointerId(buttonInfo, e.pointerId);
+      addPointerId(buttonInfo, e.pointerId, e.timeStamp);
     };
 
     var handleButtonOut = function(e, buttonInfo) {
-      removePointerId(buttonInfo, e.pointerId);
+      removePointerId(buttonInfo, e.pointerId, e.timeStamp);
     };
 
     buttonInfos.forEach(function(buttonInfo) {
@@ -446,6 +471,8 @@ define(
         };
       }(buttonInfo), false);
     });
+
+    setInterval(expireOldButtons, 100);
   };
 
   return {
