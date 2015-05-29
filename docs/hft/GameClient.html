@@ -154,6 +154,14 @@
 							<a href="NetPlayer.html#event:disconnected">NetPlayer#event:disconnected</a>
 						</li>
 						
+						<li>
+							<a href="NetPlayer.html#event:hft_busy">NetPlayer#event:hft_busy</a>
+						</li>
+						
+						<li>
+							<a href="NetPlayer.html#event:hft_namechange">NetPlayer#event:hft_namechange</a>
+						</li>
+						
 
 					</ul>
 				</li>
@@ -328,6 +336,70 @@ from the game are delivered to callbacks registered with
 
     
 
+    
+        <h3 class="subsection-title">Members</h3>
+
+        <dl>
+            
+<dt class="name" id="sendCmd">
+    <h4><span class="type-signature"></span>sendCmd<span class="type-signature"></span></h4>
+
+    
+</dt>
+<dd>
+    
+    <div class="description">
+        <p>Sends a command to the game</p>
+    </div>
+    
+
+    
+
+    
+<dl class="details">
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+        <h5>Example</h5>
+        
+    <pre class="sunlight-highlight-javascript">    client.sendCmd(&#x27;position&#x27;, {
+       x: 123,
+       y: 456,
+    });</pre>
+
+
+    
+</dd>
+
+        </dl>
     
 
     
@@ -677,171 +749,6 @@ the previous listener for that type.</p>
     
     
     
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name" id="sendCmd"><span class="type-signature"></span>sendCmd<span class="signature">(cmd, <span class="optional">data</span>)</span><span class="type-signature"></span></h4>
-    
-    
-</dt>
-<dd>
-    
-    
-    <div class="description">
-        <p>Sends a command to the game</p>
-    </div>
-    
-
-    
-    
-    
-    
-    
-        <h5>Parameters:</h5>
-        
-
-<table class="params table table-striped">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-
-		<th>Type</th>
-
-		
-		<th>Argument</th>
-		
-
-		
-
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-
-	<tbody>
-	
-
-        <tr>
-            
-                <td class="name"><code>cmd</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">string</span>
-
-            
-            </td>
-
-            
-                <td class="attributes">
-                
-
-                
-
-                
-                </td>
-            
-
-            
-
-            <td class="description last"><p>name of command</p></td>
-        </tr>
-
-	
-
-        <tr>
-            
-                <td class="name"><code>data</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">Object</span>
-
-            
-            </td>
-
-            
-                <td class="attributes">
-                
-                    &lt;optional><br>
-                
-
-                
-
-                
-                </td>
-            
-
-            
-
-            <td class="description last"><p>any jsonifyable object.</p></td>
-        </tr>
-
-	
-	</tbody>
-</table>
-
-    
-    
-    
-<dl class="details">
-	
-
-	
-
-	
-
-	
-
-	
-
-	
-
-	
-
-	
-
-	
-
-
-
-	
-
-	
-
-	
-
-	
-</dl>
-
-    
-    
-
-    
-
-    
-    
-    
-    
-    
-    
-    
-        <h5>Example</h5>
-        
-    <pre class="sunlight-highlight-javascript">    client.sendCmd(&#x27;position&#x27;, {
-       x: 123,
-       y: 456,
-    });</pre>
-
-
     
 </dd>
 

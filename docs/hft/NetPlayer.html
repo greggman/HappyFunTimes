@@ -154,6 +154,14 @@
 							<a href="NetPlayer.html#event:disconnected">NetPlayer#event:disconnected</a>
 						</li>
 						
+						<li>
+							<a href="NetPlayer.html#event:hft_busy">NetPlayer#event:hft_busy</a>
+						</li>
+						
+						<li>
+							<a href="NetPlayer.html#event:hft_namechange">NetPlayer#event:hft_namechange</a>
+						</li>
+						
 
 					</ul>
 				</li>
@@ -360,61 +368,6 @@ They are passed to you in the 'playerconnect' event from
 
     
 
-    
-        <h3 class="subsection-title">Members</h3>
-
-        <dl>
-            
-<dt class="name" id="on">
-    <h4><span class="type-signature"></span>on<span class="type-signature"></span></h4>
-
-    
-</dt>
-<dd>
-    
-    <div class="description">
-        <p>Synonym for <code>addEventListener</code>.</p>
-    </div>
-    
-
-    
-
-    
-<dl class="details">
-	
-
-	
-
-	
-
-	
-
-	
-
-	
-
-	
-
-	
-
-	
-
-
-
-	
-
-	
-
-	
-
-	
-</dl>
-
-
-    
-</dd>
-
-        </dl>
     
 
     
@@ -1017,6 +970,143 @@ you shouldn't need to look at this. Use 'disconnect' event.</p>
         
             
 <dt>
+    <h4 class="name" id="on"><span class="type-signature"></span>on<span class="signature">(eventType, listener)</span><span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        <p>Synonym for <code>Netplayer#addEventListener</code>.</p>
+    </div>
+    
+
+    
+    
+    
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+
+		<th>Type</th>
+
+		
+
+		
+
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+
+	<tbody>
+	
+
+        <tr>
+            
+                <td class="name"><code>eventType</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>name of event.</p></td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>listener</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">function</span>
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>function to call when event
+       arrives</p></td>
+        </tr>
+
+	
+	</tbody>
+</table>
+
+    
+    
+    
+<dl class="details">
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    
+    
+</dd>
+
+        
+            
+<dt>
     <h4 class="name" id="removeAllListeners"><span class="type-signature"></span>removeAllListeners<span class="signature">()</span><span class="type-signature"></span></h4>
     
     
@@ -1509,6 +1599,141 @@ as an example.</p>
     
     <div class="description">
         <p>Event that the player has left.</p>
+    </div>
+    
+
+    
+    
+    
+    
+    
+    
+    
+<dl class="details">
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="event:hft_busy">hft_busy</h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        <p>Event that player entered or exited the system menu</p>
+<p>Meaning they aren't playing the game.
+check <code>isBusy</code> to find out if they are in the menu or not.</p>
+    </div>
+    
+
+    
+    
+    
+    
+    
+    
+    
+<dl class="details">
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="event:hft_namechange">hft_namechange</h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        <p>Event that player has changed their name</p>
+<p>check <code>getName</code> to get their new name.</p>
     </div>
     
 

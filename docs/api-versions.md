@@ -305,3 +305,30 @@ the correct version
         to server to the controller so that no external files are
         needed.
 
+    *   GameClient now has both a `log` and an `error`
+
+        These functions work just like `console.log` and `console.error`
+        except they also send the message back to the game. The game
+        will print out the message. This is useful for testing or debugging
+        but *BEWARE*
+
+        1.  Messages use bandwidth.
+
+            So for example if you're checking for checking for an error that
+            rarely happens then no problem but if you're printing some
+            info often for testing you should remove or comment out the
+            line before using your controller with real users.
+
+        2.  They can't help with JavaScript errors.
+
+            If your JavaScript has an error then JavaScript stops running and
+            of course the JavaScript needed to send messages will not be
+            running either.
+
+            The point is even though this is convenient remember that just
+            because you don't see any errors in the game doesn't mean
+            there aren't errors in your controller. Remember to use
+            remote debugging in Safari and Chrome to debug.
+
+
+
