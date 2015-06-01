@@ -57,21 +57,32 @@ mime.define({'application/javascript': ['js6']});
 
 /**
  * @typedef {Object} HFTServer~Options
- * @property {number?} port port to listen on. Default 18679
- * @property {number[]?} extraPorts other ports to listen on.
+ * @property {number} [port] port to listen on. Default 18679
+ * @property {number[]} [extraPorts] other ports to listen on.
  *           Default [80, 8080]
- * @property {string?} hftDomain Domain to inform our internal
+ * @property {string} [hftDomain] Domain to inform our internal
  *           ip address. Default: "happyfuntimes.net"
- * @property {string?} baseDir path to server files from
+ * @property {string} [baseDir] path to server files from
  * @property {string} address ip address to bind to.
- * @property {boolean} privateServer true = don't inform
+ * @property {boolean} [privateServer] true = don't inform
  *           rendezvous server
- * @property {RelayServer?} relayServer relay server to use. (for testing)
- * @property {HttpServer?} httpServer http server to use. (for testing)
- * @property {GameDB?} gameDB GameDB to use (for testing)
- * @property {string?} systemName name to use if mulitiple
+ * @property {RelayServer} [relayServer] relay server to use. (for testing)
+ * @property {HttpServer} [httpServer] http server to use. (for testing)
+ * @property {GameDB} [gameDB] GameDB to use (for testing)
+ * @property {string} [systemName] name to use if mulitiple
  *           happyFunTimes servers are running on the same
  *           network.
+ * @property {boolean} [menu] whether or not to show the system menu (the gear icon).
+ * @property {boolean} [kiosk] Go directly to game. The normal flow is
+ *    to go to enter-name.html -> index.html (players wait here for a game
+ *    to start). Then they go to the game. Setting `kiosk` to true makes
+ *    them go directly to the game, skipping index.html. See `askName`.
+ * @property {boolean} [askName] Ask for name. The default is true. Set this
+ *    to false to go directly to directly to index.html or the game (see `kiosk`).
+ * @property {boolean} [allowMinify] whether or not -minify scripts minify.
+ * @property {number} [inactivityTimeout] time to disconnect users if no activity.
+ * @property {boolean} [checkForApp] default = true. Whether or not to try to launch
+ *    the native mobile app. This currently takes 3 seconds.
  */
 
 /**
@@ -337,6 +348,7 @@ var HFTServer = function(options, startedCallback) {
     reqOptions = reqOptions || {};
     var parsedUrl = url.parse(req.url);
     var filePath = parsedUrl.pathname;
+    debug("sendRequestedFileFullPath:", filePath);
     var isTemplate = (runtimeInfo && runtimeInfo.templateUrls[filePath]) || reqOptions.params;
     var isQuery = parsedUrl.query !== null;
     var isAnchor = parsedUrl.hash !== null;
@@ -452,6 +464,7 @@ var HFTServer = function(options, startedCallback) {
           return send404(res);
         }
         sendFileResponse(req, res, contentFullPath, function(str) {
+          debug("doing substitutions for:", contentPath);
           var result = strings.replaceParams(templateData.toString(), [
             runtimeInfo,
             {
@@ -468,6 +481,15 @@ var HFTServer = function(options, startedCallback) {
     });
   };
 
+  app.get(/^\/hft\/0.x.x\/scripts\/runtime\/live-settings\.js$/, function(req, res) {
+    var data = {
+      system: {
+        checkForApp: options.checkForApp,
+      },
+    };
+    var src = "define([], function() { return " + JSON.stringify(data) + "; })\n";
+    sendStringResponse(res, src, "application/javascript");
+  });
   addTemplateInsertedPath(app, /^\/games\/(.*?)\/index.html$/, 'controller', 'controller.html');
   addTemplateInsertedPath(app, /^\/games\/(.*?)\/gameview.html$/, 'game', 'game.html');
   app.get(/^\/games\/(.*?)\/runtime-scripts\/traceur-runtime.js$/, function(req, res) {
