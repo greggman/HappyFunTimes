@@ -133,7 +133,7 @@ define([], function() {
          addObjectChoice(choice, ndx);
        }
       });
-    } else {
+    } else if (callback) {
       container.addEventListener('click', closeIt, false);
       container.addEventListener('touchend', closeIt, false);
     }
