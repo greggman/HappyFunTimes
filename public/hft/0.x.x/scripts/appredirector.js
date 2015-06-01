@@ -36,12 +36,13 @@ define([
   'hft/misc/dialog',
   'hft/misc/misc',
   'hft/misc/mobilehacks',
+  'hft/runtime/live-settings',
 ], function(
    Cookie,
    dialog,
    misc,
-   mobilehacks) {
-
+   mobilehacks,
+   liveSettings) {
   var args = misc.parseUrlQuery();
 
   /**
@@ -101,6 +102,18 @@ define([
       window.addEventListener('focus', onBlurFocus);
 
       if (mobilehacks.isMobile()) {
+        if (args.checkedForApp) {
+          console.log("already checked for app");
+          options.notInApp();
+          return;
+        }
+
+        if (!liveSettings.system.checkForApp) {
+          console.log("don't check for app");
+          options.notInApp();
+          return;
+        }
+
         // give ourselves a moment to switch to the app
         setTimeout(checkWasApp, 3000);
 
@@ -109,7 +122,7 @@ define([
           goto: options.href || window.location.href,
         }));
       } else {
-        console.log("no mobile so not in app");
+        console.log("not mobile so not in app");
         options.notInApp();
       }
     }
@@ -119,6 +132,7 @@ define([
    return misc.objectToSearchString({
      cordovaurl: args.cordovaurl,
      restarturl: args.restarturl,
+     checkedForApp: true,
    });
   }
 
