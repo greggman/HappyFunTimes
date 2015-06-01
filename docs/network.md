@@ -154,15 +154,11 @@ automatcally come up with a page that says "Start". If it's an Android device
 open the browser and go to `hft.com` or any `http://` url.
 
 If you're planning on running one game on your installation you might want to use
-these one or more of these options to start
+these one or more of these [options](commands.md#hft-start) to start
 
     hft start --dns --no-ask-name --no-menu --kiosk
 
-`--no-menu` removes the gear icon on the contollers. `--no-ask-name` says to skip
-asking the user for a name. If your game doesn't need names or if you're getting
-the name some other way then this will skip the enter-name screen. Finally `--kiosk`
-says to send players directly to the currently running game. Normally users go
-to the `/index.html` where they wait for a game to be selected.
+[See the start command for details](commands.md#hft-start).
 
 Setting Up an Airport Extreme
 -----------------------------

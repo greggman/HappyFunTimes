@@ -1,6 +1,12 @@
 To Do
 =====
 
+*   make LR
+*   make LR + 1
+*   make LR + 2
+*   make touch
+*   make orientation
+*   make accel
 *   fix controller that incorrectly asked for orientation
 *   need a way for game to send binary files (how about a .zip)
     for controller so you can have image files and sounds. That sounds

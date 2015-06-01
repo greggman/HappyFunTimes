@@ -87,7 +87,46 @@ happyFunTimes. No files are deleted.
 
 ### `hft start`
 
-starts happyFunTimes`
+starts happyFunTimes.
+
+`--app-mode`
+
+launches the browser to `http://localhost:18679/games.html`. This is the same way HappyFunTimes
+is started when you launch by clicking the HappyFunTimes program icon.
+
+`--system-name=<somename>`
+
+If you're at a gamejam or some other place where there are multiple happyfuntimes
+games running on the same network, then when users connect to happyfuntimes.net they'll
+be given a list of game to join. The list will say the name of the computer followed
+by the name of the game. By default happyfuntimes user the name of your computer. You
+can set a specific name with this option.
+
+`--no-ask-name`
+
+If you're running a single game in [installation mode](network.md) and you don't need users to enter
+a name this option will skip asking the user for a name
+
+`--no-menu`
+
+If you're running in [installation mode](network.md) and you don't need users to be able to change their
+name this option turns off the gear icon on the controller
+
+`--kiosk`
+
+Normally controllers start at `http://localhost:18679`. There the controller waits for
+a game to start. If multiple games are running users are given a list to choose from.
+If you're running in an [installation](network.md) where there's only 1 game you can have controller
+go directly to the game with this option.
+
+`--no-check-for-app`
+
+Controllers normally try to launch the native mobile app. This check takes 3 seconds.
+Use this switch to skip that check.
+
+`--dns`
+
+Tells happyfuntimes to implement a DNS server. This is for [installation mode](network.md).
 
 ### `hft uninstall gameId`
 
