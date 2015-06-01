@@ -106,6 +106,10 @@ requirejs(
           title: "HappyFunTimes",
           msg: "Touch To Restart",
         }, function() {
+          dialog.modal({
+            title: "HappyFunTimes",
+            msg: "...restarting...",
+          });
           var redirCookie = new Cookie("redir");
           var url = redirCookie.get() || "http://happyfuntimes.net";
           console.log("goto: " + url);
