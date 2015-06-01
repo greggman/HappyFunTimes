@@ -129,7 +129,32 @@ It is called by <code>hft publish</code>.</p>
 <p>This is the opposite of <code>hft add</code>. It removes the game in the current folder from
 happyFunTimes. No files are deleted.</p>
 <h3 id="-hft-start-"><code>hft start</code></h3>
-<p>starts happyFunTimes`</p>
+<p>starts happyFunTimes.</p>
+<p><code>--app-mode</code></p>
+<p>launches the browser to <code>http://localhost:18679/games.html</code>. This is the same way HappyFunTimes
+is started when you launch by clicking the HappyFunTimes program icon.</p>
+<p><code>--system-name=&lt;somename&gt;</code></p>
+<p>If you&#39;re at a gamejam or some other place where there are multiple happyfuntimes
+games running on the same network, then when users connect to happyfuntimes.net they&#39;ll
+be given a list of game to join. The list will say the name of the computer followed
+by the name of the game. By default happyfuntimes user the name of your computer. You
+can set a specific name with this option.</p>
+<p><code>--no-ask-name</code></p>
+<p>If you&#39;re running a single game in <a href="network.html">installation mode</a> and you don&#39;t need users to enter
+a name this option will skip asking the user for a name</p>
+<p><code>--no-menu</code></p>
+<p>If you&#39;re running in <a href="network.html">installation mode</a> and you don&#39;t need users to be able to change their
+name this option turns off the gear icon on the controller</p>
+<p><code>--kiosk</code></p>
+<p>Normally controllers start at <code>http://localhost:18679</code>. There the controller waits for
+a game to start. If multiple games are running users are given a list to choose from.
+If you&#39;re running in an <a href="network.html">installation</a> where there&#39;s only 1 game you can have controller
+go directly to the game with this option.</p>
+<p><code>--no-check-for-app</code></p>
+<p>Controllers normally try to launch the native mobile app. This check takes 3 seconds.
+Use this switch to skip that check.</p>
+<p><code>--dns</code></p>
+<p>Tells happyfuntimes to implement a DNS server. This is for <a href="network.html">installation mode</a>.</p>
 <h3 id="-hft-uninstall-gameid-"><code>hft uninstall gameId</code></h3>
 <p>Un-installs a game from happyfuntimes. <strong>WARNING!!! this DELETES FILES!!!</strong></p>
 
