@@ -1,6 +1,7 @@
 To Do
 =====
 
+*   make --minify minify the main script for controller
 *   make LR
 *   make LR + 1
 *   make LR + 2
