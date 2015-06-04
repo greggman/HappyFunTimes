@@ -330,5 +330,12 @@ the correct version
             there aren't errors in your controller. Remember to use
             remote debugging in Safari and Chrome to debug.
 
+* v1.12.0
+
+    *   Made `Touch.setupVirtualDPads` use the middle of the referenceElement if
+        `offsetX` or `offsetY` is not set for that dpad.
+
+        This is better because it means if things change size based on CSS or other
+        stuff there's nothing to do. The code will just work.
 
 
