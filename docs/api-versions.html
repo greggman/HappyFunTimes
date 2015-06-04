@@ -87,14 +87,14 @@ the correct version</p>
 <li><p>v1.2.0</p>
 <ul>
 <li><p>Supports es6 features. This feature is not extensively
-tested but, if you name a file ending in <code>.es6</code> happyFunTimes
+tested but, if you name a file ending in <code>.js6</code> happyFunTimes
 will automatically transpile it into es5 at runtime</p>
 <p>So for example to use you might do</p>
 <pre><code>requirejs([
   &#39;./some-es5-file.js`,
   &#39;./some-es6.file.js6`,
 ], function(
-  SomeES6File,
+  SomeES5File,
   SomeES6File) {
   ..
 });
@@ -144,7 +144,7 @@ You&#39;ll also need the latest version of happyFunTimes. At least verison 0.0.9
 the second one will disconnect the first one and become the <strong>one</strong> GameServer
 running the game.</p>
 <p>The thinking there was if there is already a game running and HappyFunTimes
-see another try to start it probably means you left a window open somewhere
+sees another try to start it probably means you left a window open somewhere
 or some how the old game didn&#39;t get disconnected from HappyFunTimes so
 you probably want the new one to take charge.</p>
 <p>Now though, in your options to <code>GameServer</code> you can pass in <code>allowMutlipleGames: true</code>

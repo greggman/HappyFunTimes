@@ -1,7 +1,7 @@
 Title: Getting Starting with HappyFunTimes and Unity
 Description: Step by step instructions on how to get HappyFunTimes running with Unity
 
-<iframe width="853" height="480" src="https://www.youtube.com/embed/XUzExLoxTQA?rel=0" frameborder="0" allowfullscreen></iframe>
+<iframe width="853" height="480" src="https://www.youtube.com/embed/vG4Bs3XOAxI?rel=0" frameborder="0" allowfullscreen></iframe>
 
 1.  Open Unity and create a new project
 2.  From the Asset store install the HappyFunTimes plugin

@@ -24,7 +24,7 @@ the correct version
 *   v1.2.0
 
     *   Supports es6 features. This feature is not extensively
-        tested but, if you name a file ending in `.es6` happyFunTimes
+        tested but, if you name a file ending in `.js6` happyFunTimes
         will automatically transpile it into es5 at runtime
 
         So for example to use you might do
@@ -33,7 +33,7 @@ the correct version
               './some-es5-file.js`,
               './some-es6.file.js6`,
             ], function(
-              SomeES6File,
+              SomeES5File,
               SomeES6File) {
               ..
             });
@@ -88,7 +88,7 @@ the correct version
         running the game.
 
         The thinking there was if there is already a game running and HappyFunTimes
-        see another try to start it probably means you left a window open somewhere
+        sees another try to start it probably means you left a window open somewhere
         or some how the old game didn't get disconnected from HappyFunTimes so
         you probably want the new one to take charge.
 

@@ -1,6 +1,9 @@
 To Do
 =====
 
+*   provide screenshot and icon if missing (use logo)
+*   remove all offsetX and offsetY from sample controllers
+*   Update all samples to api 1.12.0
 *   make --minify minify the main script for controller
 *   make LR
 *   make LR + 1
