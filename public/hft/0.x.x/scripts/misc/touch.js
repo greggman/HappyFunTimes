@@ -253,8 +253,8 @@ define(
       var padOptions = options.pads[padId];
       pad.pointerId = e.pointerId;
       var relPos = Input.getRelativeCoordinates(padOptions.referenceElement, e);
-      var x = relPos.x - padOptions.offsetX;
-      var y = relPos.y - padOptions.offsetY;
+      var x = relPos.x - (padOptions.offsetX || padOptions.referenceElement.clientWidth  / 2);
+      var y = relPos.y - (padOptions.offsetY || padOptions.referenceElement.clientHeight / 2);
       if (options.fixedCenter) {
         pad.pointerStartPos.reset(0, 0);
         pad.pointerPos.reset(x, y);
@@ -300,8 +300,8 @@ define(
         if (pad.pointerId === e.pointerId) {
           var padOptions = options.pads[ii];
           var relPos = Input.getRelativeCoordinates(padOptions.referenceElement, e);
-          var x = relPos.x - padOptions.offsetX;
-          var y = relPos.y - padOptions.offsetY;
+          var x = relPos.x - (padOptions.offsetX || padOptions.referenceElement.clientWidth / 2);
+          var y = relPos.y - (padOptions.offsetY || padOptions.referenceElement.clientHeight / 2);
           pad.pointerPos.reset(x, y);
           pad.vector.copyFrom(pad.pointerPos);
           pad.vector.minusEq(pad.pointerStartPos);
