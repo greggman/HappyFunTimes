@@ -1,6 +1,14 @@
 Changelist
 ==========
 
+*   0.0.31
+
+    *   Made `Touch.setupVirtualDPads` use the middle of the referenceElement if
+        `offsetX` or `offsetY` is not set for that dpad.
+
+        This is better because it means if things change size based on CSS or other
+        stuff there's nothing to do. The code will just work.
+
 *   0.0.30
 
     *   added `--no-check-for-app`

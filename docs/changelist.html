@@ -68,6 +68,15 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
     <div class="col-sm-8 lesson-main">
       <h1 id="changelist">Changelist</h1>
 <ul>
+<li><p>0.0.31</p>
+<ul>
+<li><p>Made <code>Touch.setupVirtualDPads</code> use the middle of the referenceElement if
+<code>offsetX</code> or <code>offsetY</code> is not set for that dpad.</p>
+<p>This is better because it means if things change size based on CSS or other
+stuff there&#39;s nothing to do. The code will just work.</p>
+</li>
+</ul>
+</li>
 <li><p>0.0.30</p>
 <ul>
 <li><p>added <code>--no-check-for-app</code></p>
