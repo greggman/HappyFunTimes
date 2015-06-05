@@ -1,6 +1,13 @@
 Changelist
 ==========
 
+*   0.0.32
+
+    *   fixed fullscreen for Android Chrome
+
+        I have no idea how this ever worked when I tested it before. Hopefully it works
+        now
+
 *   0.0.31
 
     *   Made `Touch.setupVirtualDPads` use the middle of the referenceElement if
