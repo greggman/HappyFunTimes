@@ -1,6 +1,11 @@
 Changelist
 ==========
 
+*   0.0.33
+
+    *   Fix for firefox. I totally broke it around 0.0.27. Firefox needed different
+        stuff for making scripts load at runtime :(
+
 *   0.0.32
 
     *   fixed fullscreen for Android Chrome
