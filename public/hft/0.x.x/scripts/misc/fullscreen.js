@@ -51,6 +51,9 @@ define([
     }
   };
 
+  var noop = function() {
+  };
+
   var cancelFullScreen = (
       document.exitFullscreen ||
       document.exitFullScreen ||
@@ -60,7 +63,7 @@ define([
       document.webkitCancelFullScreen ||
       document.mozCancelFullScreen ||
       document.mozCancelFullscreen ||
-      (function() {})).bind(document);
+      noop).bind(document);
 
   function isFullScreen() {
     var f = document.fullscreenElement ||
