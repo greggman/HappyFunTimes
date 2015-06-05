@@ -42,29 +42,36 @@ define([
       element.msRequestFullscreen();
     } else if (element.webkitRequestFullScreen) {
       element.webkitRequestFullScreen(Element.ALLOW_KEYBOARD_INPUT);
+    } else if (element.webkitRequestFullscreen) {
+      element.webkitRequestFullscreen(Element.ALLOW_KEYBOARD_INPUT);
     } else if (element.mozRequestFullScreen) {
       element.mozRequestFullScreen();
+    } else if (element.mozRequestFullscreen) {
+      element.mozRequestFullscreen();
     }
   };
 
-  var cancelFullScreen = function(/*element*/) {
-    if (document.exitFullscreen) {
-      document.exitFullscreen();
-    } else if (document.msExitFullscreen) {
-      document.msExitFullscreen();
-    } else if (document.webkitCancelFullScreen) {
-      document.webkitCancelFullScreen();
-    } else if (document.mozCancelFullScreen) {
-      document.mozCancelFullScreen();
-    }
-  };
+  var cancelFullScreen = (
+      document.exitFullscreen ||
+      document.exitFullScreen ||
+      document.msExitFullscreen ||
+      document.msExitFullScreen ||
+      document.webkitCancelFullscreen ||
+      document.webkitCancelFullScreen ||
+      document.mozCancelFullScreen ||
+      document.mozCancelFullscreen ||
+      (function() {})).bind(document);
+
+  function isFullScreen() {
+    var f = document.fullscreenElement ||
+            document.fullScreenElement ||
+            document.webkitFullscreenElement ||
+            document.mozFullScreenElement ||
+            document.webkitIsFullScreen;
+    return (f !== undefined && f !== null && f !== false) || hftSettings.isApp;
+  }
 
   var onFullScreenChange = function(element, callback) {
-    var isFullScreen = function() {
-      return document.fullscreenElement || document.mozFullScreenElement ||
-             document.webkitFullscreenElement || document.msFullscreenElement ||
-             document.mozFullScreen || document.webkitIsFullScreen;
-    };
     document.addEventListener('fullscreenchange', function(/*event*/) {
         callback(isFullScreen());
       });
@@ -76,21 +83,17 @@ define([
       });
   };
 
-  function isFullScreen() {
-    var f = document.fullscreenElement ||
-            document.fullScreenElement ||
-            document.webkitFullscreenElement ||
-            document.mozFullScreenElement ||
-            document.webkitIsFullScreen;
-    return (f !== undefined && f !== null) || hftSettings.isApp;
-  }
-
   function canGoFullScreen() {
-     var r = window.requestFullscreen ||
-             window.msRequestFullscreen ||
-             window.webkitRequestFullScreen ||
-             window.mozRequestFullScreen;
-     return r !== undefined && r !== null;
+    var body = window.document.body || {};
+    var r = body.requestFullscreen ||
+            body.requestFullScreen ||
+            body.msRequestFullscreen ||
+            body.msRequestFullScreen ||
+            body.webkitRequestFullScreen ||
+            body.webkitRequestFullscreen ||
+            body.mozRequestFullScreen ||
+            body.mozRequestFullscreen;
+    return r !== undefined && r !== null;
   }
 
   return {
