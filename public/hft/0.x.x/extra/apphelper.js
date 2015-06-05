@@ -109,6 +109,8 @@
         var script = scriptsToLoad.shift();
         var s = copyScript(script);
         s.type = "text/javascript";
+        s.charset = "utf-8";
+        s.async = true;
         s.addEventListener('load', loadNextScript);
         document.body.appendChild(s);
       }
