@@ -5,9 +5,6 @@ To Do
 *   remove all offsetX and offsetY from sample controllers
 *   Update all samples to api 1.12.0
 *   make --minify minify the main script for controller
-*   make LR
-*   make LR + 1
-*   make LR + 2
 *   make touch
 *   make orientation
 *   make accel
@@ -893,6 +890,9 @@ Runs Repo noid
 Done
 ====
 
+*   make LR
+*   make LR + 1
+*   make LR + 2
 *   fix CSS for 5s on hft-gamepad
 *   make hft-gamepad only try to connect once (or for 30 seconds)?
 *   make gamefiles invalidate cache
