@@ -48,6 +48,7 @@ var list = function(args) {
     if (args.json) {
       console.log(JSON.stringify({
         hftVersion: packageInfo.version,
+        apiVersion: availableVersions[availableVersions.length - 1],
         apiVersions: availableVersions,
       }, undefined, "  "));
     } else {
