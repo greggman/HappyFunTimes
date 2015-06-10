@@ -11,7 +11,7 @@ There are a bunch of ENV vars you can set for testing
 
 ### HFT_PUBLISH_USER
 
-Used to set a user:pass for calling `hft publish`
+Can be used to set a user:pass for calling `hft publish` vs command line arguments
 
 ### HFT_SETTINGS
 
