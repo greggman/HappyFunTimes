@@ -150,11 +150,21 @@ name this option turns off the gear icon on the controller</p>
 a game to start. If multiple games are running users are given a list to choose from.
 If you&#39;re running in an <a href="network.html">installation</a> where there&#39;s only 1 game you can have controller
 go directly to the game with this option.</p>
-<p><code>--no-check-for-app</code></p>
-<p>Controllers normally try to launch the native mobile app. This check takes 3 seconds.
-Use this switch to skip that check.</p>
+<p><code>--check-for-app</code></p>
+<p>Controllers don&#39;t normally try to launch the native mobile app. This check takes 3 seconds.
+Use this switch to add that check so if the user has the app installed it will switch to
+the app.</p>
 <p><code>--dns</code></p>
 <p>Tells happyfuntimes to implement a DNS server. This is for <a href="network.html">installation mode</a>.</p>
+<p><code>--optimize-controller</code></p>
+<p>Tells happyfuntimes to concatinate and compress most of your controller&#39;s JavaScript files into one file.
+This should make phones connect faster (less to download) and be less likely to have
+a communication error while downloading (less to download).</p>
+<p>For the technically minded it runs the <a href="requirejs.org/docs/optimization.html">require.js optimizer</a>
+on <code>controller.js</code> using <a href="https://github.com/jrburke/almond">almond</a> as a wrapper.</p>
+<p><strong>BE SURE TO TEST</strong> as optimizers are not perfect.</p>
+<p>This option is not the default because it&#39;s very hard to debug optimized code. You would
+probably only use this option with <a href="network.html">installation mode</a>.</p>
 <h3 id="-hft-uninstall-gameid-"><code>hft uninstall gameId</code></h3>
 <p>Un-installs a game from happyfuntimes. <strong>WARNING!!! this DELETES FILES!!!</strong></p>
 

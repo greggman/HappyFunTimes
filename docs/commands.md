@@ -119,14 +119,29 @@ a game to start. If multiple games are running users are given a list to choose 
 If you're running in an [installation](network.md) where there's only 1 game you can have controller
 go directly to the game with this option.
 
-`--no-check-for-app`
+`--check-for-app`
 
-Controllers normally try to launch the native mobile app. This check takes 3 seconds.
-Use this switch to skip that check.
+Controllers don't normally try to launch the native mobile app. This check takes 3 seconds.
+Use this switch to add that check so if the user has the app installed it will switch to
+the app.
 
 `--dns`
 
 Tells happyfuntimes to implement a DNS server. This is for [installation mode](network.md).
+
+`--optimize-controller`
+
+Tells happyfuntimes to concatinate and compress most of your controller's JavaScript files into one file.
+This should make phones connect faster (less to download) and be less likely to have
+a communication error while downloading (less to download).
+
+For the technically minded it runs the [require.js optimizer](requirejs.org/docs/optimization.html)
+on `controller.js` using [almond](https://github.com/jrburke/almond) as a wrapper.
+
+**BE SURE TO TEST** as optimizers are not perfect.
+
+This option is not the default because it's very hard to debug optimized code. You would
+probably only use this option with [installation mode](network.md).
 
 ### `hft uninstall gameId`
 
