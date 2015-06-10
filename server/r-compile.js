@@ -77,7 +77,7 @@ var RCompile = function(options) {
       wrap:    true,
       paths: {
         hft: path.join(__dirname, "..", "public", "hft", "0.x.x", "scripts"),
-        __hft_almond__: path.join(__dirname, "..", "node_modules", "almond"),
+        __hft_almond__: path.join(__dirname, "..", "node_modules", "almond"),  // eslint-disable-line
       },
     };
 
