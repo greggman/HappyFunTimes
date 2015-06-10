@@ -42,6 +42,6 @@ exports.options = [
   { option: 'menu',             type: 'Boolean', description: 'show menu icon on controller, use --no-menu to turn off', default: "true"},
   { option: 'minify',           type: 'Boolean', description: 'minify -minify.js files', default: false},
   { option: 'kiosk',            type: 'Boolean', description: 'skip the index', default: false},
-  { option: 'check-for-app',    type: 'Boolean', description: 'try to launch mobile app. use --no-check-for-app to turn off', default: "true"},
+  { option: 'check-for-app',    type: 'Boolean', description: 'try to launch mobile app.  note: it takes 3 seconds to check', default: "false"},
 ];
 
