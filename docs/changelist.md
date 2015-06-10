@@ -1,6 +1,25 @@
 Changelist
 ==========
 
+*   0.0.34
+
+    *   added `--optimize-controller` option
+
+        This is probably only useful for [installation mode](network.md). If you're
+        using require.js (the standard way HappyFunTimes controllers work) then
+        happyfuntimes can try to concatinate and compress most of the JavaScript
+        used for your controller. This means the phones have to download less
+        files which make it faster to get started and less likely there will be an error.
+
+        Note: I have no actual testing to know that this makes much difference
+        but when we showed off [Tonde-Iko at Steam Carnival](http://greggman.github.io/hft-tonde-iko)
+        I noticed some people having trouble connecting or it taking a long time,
+        probably missed a packet or something with unreliable WiFi.
+
+        So I decided do some optimizations. I added the --minify flag and I also put
+        all 12 or 14 avatar images into 1 file. `--optimize-controller` does
+        the --minify part automatically.
+
 *   0.0.33
 
     *   Fix for firefox. I totally broke it around 0.0.27. Firefox needed different

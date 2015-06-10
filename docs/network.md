@@ -153,10 +153,14 @@ Now try connecting a smartphone to your router. If it's an iOS device it *should
 automatcally come up with a page that says "Start". If it's an Android device
 open the browser and go to `hft.com` or any `http://` url.
 
-If you're planning on running one game on your installation you might want to use
+If you're planning on running only one game on your installation you might want to use
 these one or more of these [options](commands.md#hft-start) to start
 
     hft start --dns --no-ask-name --no-menu --kiosk
+
+or
+
+    hft start --dns --no-ask-name --no-menu --kiosk --optimize-controller
 
 [See the start command for details](commands.md#hft-start).
 

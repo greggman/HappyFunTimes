@@ -68,6 +68,24 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
     <div class="col-sm-8 lesson-main">
       <h1 id="changelist">Changelist</h1>
 <ul>
+<li><p>0.0.34</p>
+<ul>
+<li><p>added <code>--optimize-controller</code> option</p>
+<p>This is probably only useful for <a href="network.html">installation mode</a>. If you&#39;re
+using require.js (the standard way HappyFunTimes controllers work) then
+happyfuntimes can try to concatinate and compress most of the JavaScript
+used for your controller. This means the phones have to download less
+files which make it faster to get started and less likely there will be an error.</p>
+<p>Note: I have no actual testing to know that this makes much difference
+but when we showed off <a href="http://greggman.github.io/hft-tonde-iko">Tonde-Iko at Steam Carnival</a>
+I noticed some people having trouble connecting or it taking a long time,
+probably missed a packet or something with unreliable WiFi.</p>
+<p>So I decided do some optimizations. I added the --minify flag and I also put
+all 12 or 14 avatar images into 1 file. <code>--optimize-controller</code> does
+the --minify part automatically.</p>
+</li>
+</ul>
+</li>
 <li><p>0.0.33</p>
 <ul>
 <li>Fix for firefox. I totally broke it around 0.0.27. Firefox needed different

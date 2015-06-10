@@ -3,8 +3,6 @@ To Do
 
 *   provide screenshot and icon if missing (use logo)
 *   remove all offsetX and offsetY from sample controllers
-*   Update all samples to api 1.12.0
-*   make --minify minify the main script for controller
 *   make touch
 *   make orientation
 *   make accel
@@ -13,9 +11,8 @@ To Do
     for controller so you can have image files and sounds. That sounds
     painful. I can either expand to base64 (easy) or need to send
     binary websocket (yuck!). I guess I can set some state in relayserver
-    that next msg is ___.
+    that next msg is ___. Or I could 'post' it.
 
-*   make hft-unitybuild insert top hft.hanson API version in default package
 *   make sure options.files work in unity
 *   add happyFunTimes.name to package info because package.json name can't have spaces! UGH!!
 *   make unity edit HappyFunTimes.name (auto-set name to valid name)
@@ -890,6 +887,13 @@ Runs Repo noid
 Done
 ====
 
+*   make --minify minify the main script for controller
+
+    made it --optimize-controller
+
+*   make it not check for app by default
+*   make hft-unitybuild insert top hft.hanson API version in default package
+*   Update all samples to api 1.12.0
 *   make LR
 *   make LR + 1
 *   make LR + 2
