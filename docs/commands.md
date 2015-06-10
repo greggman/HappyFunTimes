@@ -4,9 +4,6 @@ Description: hft commandline commands.
 `hft` is a command to help manage happyfuntimes for developers. For the basics typing `hft`
 will list all the commands. Typing `hft cmd --help` will list the help for a specific command.
 
-Note: To use the hft commands you must install node.js and hft-cli.
-See [Setting up for devlopment](#setting-up-for-development) for details.
-
 *   **[hft add](#hft-add)**
 *   **[hft check](#hft-check)**
 *   **[hft download](#hft-download-gameId)**
