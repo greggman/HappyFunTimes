@@ -49,6 +49,7 @@ var http                      = require('http');
 var iputils                   = require('../lib/iputils');
 var mime                      = require('mime');
 var NonRequire                = require('./non-require');
+var RCompile                  = require('./r-compile');
 var path                      = require('path');
 var strings                   = require('../lib/strings');
 var url                       = require('url');
@@ -152,6 +153,9 @@ var HFTServer = function(options, startedCallback) {
   var fileCache = new Cache({fileSystem: es6Support.fileSystem});
 //  var fileCache = new Cache({fileSystem: nonRequire.fileSystem});
 //  var fileCache = new Cache();
+
+  var rCompile = new RCompile({fileSystem: fileCache, optimize: "uglify2"});
+  //var rCompile = new RCompile({fileSystem: fileCache, optimize: "none"});
 
   var app = express();
 
@@ -481,6 +485,30 @@ var HFTServer = function(options, startedCallback) {
     });
   };
 
+  var minifyControllerJS = function() {
+    var gameIndexRE = /\/games\/(.*?)\/index.html$/;
+    return function(req, res, next) {
+      var referer = req.get("Referer");
+      var match = gameIndexRE.exec(referer);
+      if (!match) {
+        return next();
+      }
+      var gameId = match[1];
+      var runtimeInfo = g.gameDB.getGameById(gameId);
+      if (!runtimeInfo) {
+        return next();
+      }
+      var controllerPath = runtimeInfo.htmlPath + "/scripts/controller.js";
+      rCompile.compile(controllerPath, function(err, content) {
+        if (err) {
+          console.warn(err);
+          return next();
+        }
+        sendStringResponse(res, content, "application/json");
+      });
+    };
+  }();
+
   app.get(/^\/hft\/0.x.x\/scripts\/runtime\/live-settings\.js$/, function(req, res) {
     var data = {
       system: {
@@ -503,6 +531,10 @@ var HFTServer = function(options, startedCallback) {
     //var gameId = req.params[0];
     sendRequestedFileFullPath(req, res, nonPath);
   });
+
+  if (options.optimizeController) {
+    app.get(/^\/3rdparty\/require\.js$/, minifyControllerJS);
+  }
 
   if (options.allowMinify) {
     app.get(/^\/games\/(.*?)\/scripts\/(.*?)-minify\.js$/, function(req, res) {
