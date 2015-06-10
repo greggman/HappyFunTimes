@@ -27,7 +27,7 @@
     "native-msg-box": "0.1.6",
     "optionator": "^0.4.0",
     "promise": "^5.0.0",
-    "requirejs": "^2.1.14",
+    "requirejs": "^2.1.18",
     "rest-url": "0.0.4",
     "semver": "^2.3.1",
     "sprintf-js": "0.0.7",
