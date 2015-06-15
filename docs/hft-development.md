@@ -31,7 +31,7 @@ is derived from the network connection. The rendezvous server generally sees you
 ip. But, when testing locally, with happyfuntimes and the rendezvous server running on the same
 machine it will just see `127.0.0.1` as the ip. So, it will record that some system at `127.0.0.1`
 is hosting games at say `192.168.0.10`. You then try to connect by going to `192.168.0.10:1337` from
-another machines on your local net who's IP address is `192.168.0.11`. Because you're not both
+another machine on your local net who's IP address is `192.168.0.11`. Because you're not both
 behind NAT the rendezvous server sees different IP addresses for you and your test machine.
 
 That's the long way of saying you need to set `HFT_RENDEZVOUS_IP` to the same IP address

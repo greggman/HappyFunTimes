@@ -85,7 +85,7 @@ is derived from the network connection. The rendezvous server generally sees you
 ip. But, when testing locally, with happyfuntimes and the rendezvous server running on the same
 machine it will just see <code>127.0.0.1</code> as the ip. So, it will record that some system at <code>127.0.0.1</code>
 is hosting games at say <code>192.168.0.10</code>. You then try to connect by going to <code>192.168.0.10:1337</code> from
-another machines on your local net who&#39;s IP address is <code>192.168.0.11</code>. Because you&#39;re not both
+another machine on your local net who&#39;s IP address is <code>192.168.0.11</code>. Because you&#39;re not both
 behind NAT the rendezvous server sees different IP addresses for you and your test machine.</p>
 <p>That&#39;s the long way of saying you need to set <code>HFT_RENDEZVOUS_IP</code> to the same IP address
 as your test machine / phone.</p>
