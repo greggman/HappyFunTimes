@@ -72,14 +72,18 @@ of 2 characters on your controller. Do you have 50 characters? Well now you need
 images. Since 50 images probably won&#39;t fit on the phone you&#39;re going to have to design some
 kind of selection UI. Do you want users to select clothing, weapons, armor? Now you&#39;re going to
 have to make a relatively complex UI on the controller and send all of the user&#39;s selections
-to the game.</p>
-<p>To keep it simple though here&#39;s one example.</p>
+to the game. Do you want players to be able to change characters during player. Now you&#39;re
+getting into really complex stuff that has nothing to do with HappyFunTimes really. Find
+a game that lets you do that and add inputs from a happyfuntimes controller to let the player
+do it from their phone.</p>
+<p>To keep it simple though here&#39;s one example of letting players pick characters.</p>
 <p>Using the default <code>PlayerSpawer</code> script make a prefab that is just a single GameObject with
 just one script. That script waits for a message from the controller as to which character
 the player picked. It then spawns yet another prefab based on the player&#39;s selection and
 passes the <code>NetPlayer</code> to that new prefab.</p>
 <p>So for example here&#39;s a script.</p>
-<pre><code>using UnityEngine;
+<pre><code>// ExampleCharacterSelect.cs
+using UnityEngine;
 using System;
 using HappyFunTimes;
 
@@ -87,6 +91,8 @@ class ExampleCharacterSelect : MonoBehaviour {
 
     public GameObject[] characterPrefabs = null;
 
+    // Message received from controller about which
+    // character the player picked.
     private class MessageCharacter : MessageCmdData {
         public int id = 0;
     }
@@ -127,8 +133,8 @@ class ExampleCharacterSelect : MonoBehaviour {
 
     private NetPlayer m_netPlayer;
 }
-</code></pre><p>Put it on an empty GameObject. make it a prefab. Make the happyfuntimes <code>PlayerSpawner</code> spawn it.</p>
-<p>This script has an array of GameObjects. Put the prefabs you want spawned for each character
+</code></pre><p>Put it on an empty GameObject. Make it a prefab. Make the happyfuntimes <code>PlayerSpawner</code> spawn it.</p>
+<p>This script has an array of GameObjects. Put the prefabs you want spawned for each type of character
 in the slots shown in Unity</p>
 <p><img src="images/characterselectsettings.png" width="50%" height="50%" /></p>
 <p>After that you need to make a controller that lets the user select a character
@@ -185,7 +191,8 @@ img {
 }
 </code></pre><p>It shows up like this</p>
 <p><img src="characterselect.png" width="50%" height="50%" /></p>
-<p>I then added code to send which character the user selected. It also hides the selection HTML</p>
+<p>I then added code to send which character the user selected. It also hides the selection HTML
+which was covering up the normal game controls.</p>
 <pre><code>  function selectCharacter(id) {
     // only do this once
     if (choice &lt; 0) {
