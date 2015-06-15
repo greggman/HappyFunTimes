@@ -2,7 +2,6 @@ To Do
 =====
 
 *   provide screenshot and icon if missing (use logo)
-*   remove all offsetX and offsetY from sample controllers
 *   make touch
 *   make orientation
 *   make accel
@@ -887,6 +886,7 @@ Runs Repo noid
 Done
 ====
 
+*   remove all offsetX and offsetY from sample controllers
 *   make --minify minify the main script for controller
 
     made it --optimize-controller
