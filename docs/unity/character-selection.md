@@ -7,9 +7,12 @@ of 2 characters on your controller. Do you have 50 characters? Well now you need
 images. Since 50 images probably won't fit on the phone you're going to have to design some
 kind of selection UI. Do you want users to select clothing, weapons, armor? Now you're going to
 have to make a relatively complex UI on the controller and send all of the user's selections
-to the game.
+to the game. Do you want players to be able to change characters during player. Now you're
+getting into really complex stuff that has nothing to do with HappyFunTimes really. Find
+a game that lets you do that and add inputs from a happyfuntimes controller to let the player
+do it from their phone.
 
-To keep it simple though here's one example.
+To keep it simple though here's one example of letting players pick characters.
 
 Using the default `PlayerSpawer` script make a prefab that is just a single GameObject with
 just one script. That script waits for a message from the controller as to which character
@@ -18,6 +21,7 @@ passes the `NetPlayer` to that new prefab.
 
 So for example here's a script.
 
+    // ExampleCharacterSelect.cs
     using UnityEngine;
     using System;
     using HappyFunTimes;
@@ -26,6 +30,8 @@ So for example here's a script.
 
         public GameObject[] characterPrefabs = null;
 
+        // Message received from controller about which
+        // character the player picked.
         private class MessageCharacter : MessageCmdData {
             public int id = 0;
         }
@@ -67,9 +73,9 @@ So for example here's a script.
         private NetPlayer m_netPlayer;
     }
 
-Put it on an empty GameObject. make it a prefab. Make the happyfuntimes `PlayerSpawner` spawn it.
+Put it on an empty GameObject. Make it a prefab. Make the happyfuntimes `PlayerSpawner` spawn it.
 
-This script has an array of GameObjects. Put the prefabs you want spawned for each character
+This script has an array of GameObjects. Put the prefabs you want spawned for each type of character
 in the slots shown in Unity
 
 <img src="images/characterselectsettings.png" width="50%" height="50%" />
@@ -137,6 +143,7 @@ It shows up like this
 <img src="characterselect.png" width="50%" height="50%" />
 
 I then added code to send which character the user selected. It also hides the selection HTML
+which was covering up the normal game controls.
 
       function selectCharacter(id) {
         // only do this once
