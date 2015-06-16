@@ -211,7 +211,7 @@ which was covering up the normal game controls.</p>
   $(&quot;choice0&quot;).addEventListener(&#39;touchstart&#39;, function() { selectCharacter(0); });
   $(&quot;choice1&quot;).addEventListener(&#39;touchstart&#39;, function() { selectCharacter(1); });
   $(&quot;choice2&quot;).addEventListener(&#39;touchstart&#39;, function() { selectCharacter(2); });
-</code></pre><p><a href="https://github.com/greggman/hft-unity-character-select">There&#39;s a working sample here</a>.</p>
+</code></pre><p><a href="http://docs.happyfuntimes.net/docs/unity/samples.html?owner=greggman&amp;repo=hft-unity-multi-character-select">There&#39;s a working sample here</a>.</p>
 <p>To use this with the character example first off you&#39;d need different character prefabs.
 Otherwise the only change is your <code>InitializeNetPlayer</code> function only
 receives a <code>NetPlayer</code> so you only need to change the first 2 lines from</p>
@@ -219,7 +219,7 @@ receives a <code>NetPlayer</code> so you only need to change the first 2 lines f
     _netPlayer = spawnInfo.netPlayer;
 </code></pre><p>to</p>
 <pre><code>function InitializeNetPlayer(netPlayer : HappyFunTimes.NetPlayer) {
-    _netPlayer = netPlayer;
+   _netPlayer = netPlayer;
 </code></pre>
       <hr/>
       <div>
