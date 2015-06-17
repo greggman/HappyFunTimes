@@ -38,8 +38,6 @@ var url     = require('url');
 
 var g = {
   throttleTime: 1000,
-  retryTimeout: 10000,
-  retryTimes: 10 * 6,
 };
 
 var getTime = function() {
@@ -58,10 +56,10 @@ var sendForAWhile = (function() {
       // do I care?
       if (err) {
         ++tries;
-        console.error("Try " + tries + " of " + g.retryTimes + ": Could not contact: " + parsedUrl.host);
+        console.error("Try " + tries + " of " + config.getSettings().settings.rendezvousRetryTimes + ": Could not contact: " + parsedUrl.host);
         console.error(err);
-        if (tries <= g.retryTimes) {
-          setTimeout(tryInform, g.retryTimeout);
+        if (tries <= config.getSettings().settings.rendezvousRetryTimes) {
+          setTimeout(tryInform, config.getSettings().settings.rendezvousRetryTimeout * 1000);
         }
       }
     });

@@ -51,6 +51,8 @@
 
     // The URL for the rendezvous server
     rendezvousUrl: "http://happyfuntimes.net/api/inform2",
+    rendezvousRetryTimeout: 10,  // in seconds
+    rendezvousRetryTimes: 60,    // number of times to retry
 
     // The URL for the games API.
     gamesUrl: "http://api.superhappyfuntimes.net/hftapi/v0/games",
