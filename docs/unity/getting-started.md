@@ -27,6 +27,10 @@ Description: Step by step instructions on how to get HappyFunTimes running with 
     You should see another small sphere appear in Unity. Slide your
     finger on your phone. The sphere should move
 
+    **WARNING!!! Will not work on Corporate networks, Hotels, Internet Cafes!!!
+    It should work on most home networks with a good WiFi connection between your
+    phones and your router**
+
 Congratulations!!! HappyFunTimes is working! Now go make some awesome
 multiplayer games!
 

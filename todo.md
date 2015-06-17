@@ -5,6 +5,8 @@ To Do
 *   make touch
 *   make orientation
 *   make accel
+*   add frame rate
+*   test you can set options
 *   fix controller that incorrectly asked for orientation
 *   need a way for game to send binary files (how about a .zip)
     for controller so you can have image files and sounds. That sounds
