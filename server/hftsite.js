@@ -38,11 +38,44 @@ var url     = require('url');
 
 var g = {
   throttleTime: 1000,
+  retryTimeout: 10000,
+  retryTimes: 10 * 6,
 };
 
 var getTime = function() {
   return Date.now();
 };
+
+var sendForAWhile = (function() {
+  var hftUrl;
+  var data;
+  var options;
+  var tries;
+  var parsedUrl;
+
+  var tryInform = function() {
+    io.sendJSON(hftUrl, data, options, function(err) {
+      // do I care?
+      if (err) {
+        ++tries;
+        console.error("Try " + tries + " of " + g.retryTimes + ": Could not contact: " + parsedUrl.host);
+        console.error(err);
+        if (tries <= g.retryTimes) {
+          setTimeout(tryInform, g.retryTimeout);
+        }
+      }
+    });
+  };
+
+  return function(_url, _data, _options) {
+    hftUrl = _url;
+    parsedUrl = url.parse(_url);
+    data = _data;
+    options = _options;
+    tries = 0;
+    tryInform();
+  };
+}());
 
 // Sends the local ip address and port
 var inform = (function() {
@@ -61,20 +94,14 @@ var inform = (function() {
         lastAddressesAsStr = g.addressesAsStr;
         lastPort = g.port;
         var hftUrl = process.env.HFT_RENDEZVOUS_URL || config.getSettings().settings.rendezvousUrl;
-        var parsedUrl = url.parse(hftUrl);
         debug("ping: " + hftUrl);
         var options = { headers: {} };
         var rendezvousIp = process.env.HFT_RENDEZVOUS_IP;
         if (rendezvousIp) {
           options.headers["x-forwarded-for"] = rendezvousIp;
         }
-        io.sendJSON(hftUrl, { addresses: g.addresses, port: g.port }, options, function(err) {
-          // do I care?
-          if (err) {
-            console.error("Could not contact: " + parsedUrl.host);
-            console.error(err);
-          }
-        });
+
+        sendForAWhile(hftUrl, { addresses: g.addresses, port: g.port }, options);
       }
     }
   };
