@@ -3,7 +3,6 @@
     useTemplate: {
       "controller": true,
     },
-    screenshotUrl: "screenshot.png",
   },
 
   hftGameTypeDefaults: {
