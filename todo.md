@@ -1,10 +1,8 @@
 To Do
 =====
 
+*   figure out why Player23, Player24, Player25
 *   provide screenshot and icon if missing (use logo)
-*   make touch
-*   make orientation
-*   make accel
 *   add frame rate
 *   test you can set options
 *   fix controller that incorrectly asked for orientation
@@ -899,6 +897,9 @@ Done
 *   make LR
 *   make LR + 1
 *   make LR + 2
+*   make touch
+*   make orientation
+*   make accel
 *   fix CSS for 5s on hft-gamepad
 *   make hft-gamepad only try to connect once (or for 30 seconds)?
 *   make gamefiles invalidate cache

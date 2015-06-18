@@ -3,22 +3,16 @@ HappyFunTimes
 
 *   [Installer](http://superhappyfuntimes.net/install)
 *   [Playing Games](http://superhappyfuntimes.net/about)
-*   [Home Page](http://greggman.github.io/HappyFunTimes/)
+*   [Docs](http://docs.happyfuntimes.net/docs)
+*   [Home Page](http://docs.happyfuntimes.net/)
+*   [Changelist](docs/changelist.md)
+*   [License](LICENSE.md)
+
+Support
+
 *   [Developer Mailing List](https://groups.google.com/d/forum/hft-dev)
 *   [Blog](http://blog.happyfuntimes.net)
 *   [Facebook Group](https://www.facebook.com/groups/timesfunhappy/)
-*   [Making Games](docs/makinggames.md)
-*   [Making Games in Unity3D](docs/unity/)
-*   [Inspiring Ideas for Games](docs/ideas.md)
-*   [Dev Tips](docs/tips.md)
-*   [API Docs](http://greggman.github.io/HappyFunTimes/docs/hft/)
-*   [API Versions](docs/api-versions.md)
-*   [Changelist](docs/changelist.md)
-*   [Example Descriptions](docs/examples.md)
-*   [Setting Up for a Museum or Installation](docs/network.md)
-*   [Notes](#notes)
-*   [Migrating from 0.x.x to 1.x.x](docs/migration.md#migrate-from-0xx-to-1xx)
-*   [License](LICENSE.md)
 
 [![Build Status](https://travis-ci.org/greggman/HappyFunTimes.svg?branch=master)](https://travis-ci.org/greggman/HappyFunTimes)
 
