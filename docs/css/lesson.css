@@ -161,6 +161,21 @@ code {
     background-color: #eee;
 }
 
+.image-grid>figure {
+    display: inline-block;
+    width: 200px;
+    text-align: center;
+    margin: 0.5em;
+    background-color: #eee;
+    padding: 0.5em;
+    font-family: monospace;
+}
+
+.image-grid img {
+    width: 100%;
+    height: auto;
+}
+
 /* --- Prettify --- */
 pre.prettyprint .nocode { background-color: none; color: #000 }
 pre.prettyprint .str { color: #080 } /* string          */

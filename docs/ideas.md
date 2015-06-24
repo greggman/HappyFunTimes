@@ -21,6 +21,9 @@ ideas for you
 
     The faster you shake the faster it goes
 
+*   Fly ship in 2d using orienation. Hold buttons to spread particles, effects, interact
+    Have glow or other interaction when players touch, 2, 3, 4 etc.
+
 *   Balance platforms with balls melodic.
 
     Each player controls one platform they can place and rotate with their phone. Balls bounce off them,

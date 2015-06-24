@@ -54,6 +54,7 @@ requirejs([
       var special = {
         "greggman/hft-unity2dplatformer": "/docs/unity/2d-platformer.html",
         "greggman/hft-unitycharacterexample": "/docs/unity/3d-characters.html",
+        "greggman/hft-unity-gamepad": "/docs/unity/gamepad.html",
       };
       var url = special[search.owner + "/"+ search.repo] ||
         "http://github.com/" + search.owner + "/" + search.repo + "/blob/master/README.md";

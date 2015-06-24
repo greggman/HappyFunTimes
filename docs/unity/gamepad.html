@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<!-- this file is auto-generated from docs/unity/gamepad.md. Do not edited directly -->
+<!--
+Copyright 2012, Gregg Tavares.
+All rights reserved.
+
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions are
+met:
+
+    * Redistributions of source code must retain the above copyright
+notice, this list of conditions and the following disclaimer.
+    * Redistributions in binary form must reproduce the above
+copyright notice, this list of conditions and the following disclaimer
+in the documentation and/or other materials provided with the
+distribution.
+    * Neither the name of Gregg Tavares. nor the names of his
+contributors may be used to endorse or promote products derived from
+this software without specific prior written permission.
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+"AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+-->
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0, user-scalable=yes">
+<meta property="og:title" content="Unity3D HappyFunTimes Gamepad" />
+<meta property="og:type" content="website" />
+<meta property="og:image" content="http://docs.happyfuntimes.net/docs/images/happyfuntimes.jpg" />
+<meta property="og:description" content="Using the Gamepad Example" />
+<meta property="og:url" content="http://docs.happyfuntimes.net/docs/unity/gamepad.html" />
+
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:site" content="@greggman" />
+<meta name="twitter:creator" content="@greggman" />
+<meta name="twitter:domain" content="docs.happyfuntimes.net" />
+<meta name="twitter:title" content="Unity3D HappyFunTimes Gamepad" />
+<meta name="twitter:url" content="http://docs.happyfuntimes.net/docs/unity/gamepad.html" />
+<meta name="twitter:description" content="Using the Gamepad Example" />
+<meta name="twitter:image:src" content="http://docs.happyfuntimes.net/docs/images/happyfuntimes.jpg" />
+
+<title>Unity3D HappyFunTimes Gamepad</title>
+<link href="/public/hft-icon.png" rel="shortcut icon" type="image/png">
+<link rel="stylesheet" href="/docs/css/base.css" type="text/css" />
+<link rel="stylesheet" href="/docs/css/lesson.css" type="text/css" />
+</head>
+<body>
+<div class="header">
+  <h1><a href="/docs/unity">HappyFunTimes Docs</a></h1>
+</div>
+
+
+<div class="container">
+  <div class="lesson-title">
+    <h1>Unity3D HappyFunTimes Gamepad</h1>
+  </div>
+  <div class="row">
+    <div class="col-sm-8 lesson-main">
+      <p>The Unity Gamepad example is easiest way to get started with HappyFunTimes in Unity.
+It provides 10 different pre-made controllers with options for a touch controls
+and for orientation data. Normally it would be up to you to create the controller,
+the part that runs on the phone, but using this sample is a good way to skip
+that part if you&#39;re looking to get started with HappyFunTimes as quickly as possible.</p>
+<p>Once you get the hang of it feel free to modify this sample for new features
+or look at one of the many other samples. For example if you want to see how a controller
+(the part on the phone) actually works <a href="2d-platformer.html">check out the 2d platformer example</a></p>
+<p>You can <a href="http://docs.happyfuntimes.net/docs/unity/samples.html?owner=greggman&amp;repo=hft-unity-gamepad">download this sample here</a>.</p>
+<h2 id="explaination-of-the-code">Explaination of the code</h2>
+<p>This project is basically <a href="https://unity3d.com/learn/tutorials/modules/beginner/2d">the 2D platformer example</a> from the
+unity website with HappyFunTimes control added. If you haven&#39;t gone through those tutorials I suggest you do that first
+so you have some idea of what&#39;s happening in unity.</p>
+<p>Load the scene from <code>HappyFunTimes/Scenes/Level01</code>.
+Follow below for an explaintion of the HappyFunTimes parts</p>
+<h3 id="levelmanager-playerspawer">LevelManager / PlayerSpawer</h3>
+<p>Select the <code>LevelManager</code> object from the scene.</p>
+<p><img src="images/gamepad-levelmanager.png" width="25%" height="25%"></p>
+<p>Notice the <code>PlayerSpawer</code>. <code>PlayerSpawner</code> is a standard HappyFunTimes component. There should
+only be one per scene. It spawns a prefab each time a player connects to HappyFunTimes with their phone.</p>
+<p><img src="images/gamepad-playerspawner.png" width="50%" height="50%"></p>
+<p>You can see the spawns the prefab <code>Character</code>.</p>
+<h3 id="character">Character</h3>
+<p>Select the <code>Character</code> prefab from <code>HappyFunTimes/prefabs/Character</code></p>
+<p><img src="images/gamepad-character.png" width="50%" height="50%"></p>
+<p>Looking inside the character you can see it uses 2 scripts. One
+is the <code>HFTGamepad</code> script.</p>
+<p><img src="images/gamepad-hftgamepad.png" width="50%" height="50%"></p>
+<h4 id="hftgamepad">HFTGamepad</h4>
+<p>The HFTGamepad script lets you select the type of controller you
+want for your game. The 10 types are</p>
+<div class="image-grid">
+  <figure>
+    <figcaption>1button</figcaption>
+    <img gwidth="20%" gheight="20%" src="images/1button.png" />
+  </figure>
+  <figure>
+    <figcaption>2button</figcaption>
+    <img gwidth="20%" gheight="20%" src="images/2button.png" />
+  </figure>
+  <figure>
+    <figcaption>1dpad-1button</figcaption>
+    <img gwidth="20%" gheight="20%" src="images/1dpad-1button.png" />
+  </figure>
+  <figure>
+    <figcaption>1dpad-2button</figcaption>
+    <img gwidth="20%" gheight="20%" src="images/1dpad-2button.png" />
+  </figure>
+  <figure>
+    <figcaption>1dpad</figcaption>
+    <img gwidth="20%" gheight="20%" src="images/1dpad.png" />
+  </figure>
+  <figure>
+    <figcaption>2dpad</figcaption>
+    <img gwidth="20%" gheight="20%" src="images/2dpad.png" />
+  </figure>
+  <figure>
+    <figcaption>1lrpad-1button</figcaption>
+    <img gwidth="20%" gheight="20%" src="images/1lrpad-1button.png" />
+  </figure>
+  <figure>
+    <figcaption>1lrpad-2button</figcaption>
+    <img gwidth="20%" gheight="20%" src="images/1lrpad-2button.png" />
+  </figure>
+  <figure>
+    <figcaption>1lrpad</figcaption>
+    <img gwidth="20%" gheight="20%" src="images/1lrpad.png" />
+  </figure>
+  <figure>
+    <figcaption>touch</figcaption>
+    <img gwidth="20%" gheight="20%" src="images/touch.png" />
+  </figure>
+</div>
+
+<p>You can see for this sample we&#39;ve select the <code>1lrpad-1button</code> controller.</p>
+<p>The other 3 checkboxes let you get orientation data from the phone. <a href="#hft-gamepad-api">See below</a></p>
+<h4 id="birdscript">BirdScript</h4>
+<p><img src="images/gamepad-birdscript.png" width="50%" height="50%"></p>
+<p><code>BirdScript.cs</code> is basically <a href="https://unity3d.com/learn/tutorials/modules/beginner/2d">the same code from the unity tutorial</a>
+with a few additions for HappyFunTimes</p>
+<h5 id="start">Start</h5>
+<p>Our standard unity <code>Start</code> function looks up several components including the <code>HFTGamePad</code> component.
+It then sets the color, get&#39;s the user&#39;s name, and sets up a callback for if the user changes their name.</p>
+<pre><code>private Animator m_animator;
+private Rigidbody2D m_rigidbody2d;
+private Material m_material;
+private HFTGamepad m_gamepad;
+private static int m_playerNumber = 0;
+
+void Start ()
+{
+    m_animator = GetComponent&lt;Animator&gt;();
+    m_rigidbody2d = GetComponent&lt;Rigidbody2D&gt;();
+    m_material = GetComponent&lt;Renderer&gt;().material;
+    m_gamepad = GetComponent&lt;HFTGamepad&gt;();
+
+    SetColor(m_playerNumber++);
+    SetName(m_gamepad.Name);
+
+    // Notify us if the name changes.
+    m_gamepad.OnNameChange += ChangeName;
+}
+</code></pre><p>One thing to notice is that we have <code>static</code> <code>m_playerNumber</code> property. Because it&#39;s
+static it is shared with all other BirdScript instances. We use that to help pick
+a color for each player. We could just pick at random but I&#39;ve found far too often
+the colors come out too close.</p>
+<h5 id="setcolor">SetColor</h5>
+<p>Setting the color used for the character is a little funky. We&#39;re using
+<a href="https://github.com/greggman/hsva-unity">an HSVA shader that lets us selectively adjust the hue, saturation, and value of part
+of an image based on a hue range</a>. We need to
+know the base color of the character so we can then apply the adjustments to that
+color to see what the final color becomes. That color is set manually in Unity.</p>
+<p>Based on the player number which we use as <code>colorNdx</code> we pick a player color. The goal is to pick something
+that is different from other players. To do that we reverse the least significant
+6 bits which means instead of counting 0, 1, 2, 3, 4, 5, 6, 7, 8 we end up counting
+0, 32, 16, 48, 8, 40, 24, 56, ...  6 bits means we have a range of 0 to 63 so dividing
+by 64 gives as an amount to adjust the hue.</p>
+<pre><code>float hueAdjust = (((colorNdx &amp; 0x01) &lt;&lt; 5) |
+                   ((colorNdx &amp; 0x02) &lt;&lt; 3) |
+                   ((colorNdx &amp; 0x04) &lt;&lt; 1) |
+                   ((colorNdx &amp; 0x08) &gt;&gt; 1) |
+                   ((colorNdx &amp; 0x10) &gt;&gt; 3) |
+                   ((colorNdx &amp; 0x20) &gt;&gt; 5)) / 64.0f;
+</code></pre><p>These 2 lines make every other set of 8 players be 50% darker
+and every other set of 4 players be 50% less saturated.</p>
+<pre><code>float valueAdjust = (colorNdx &amp; 0x08) != 0 ? -0.5f : 0.0f;
+float satAdjust   = (colorNdx &amp; 0x04) != 0 ? -0.5f : 0.0f;
+</code></pre><p>Hopefully that comes up with good colors.</p>
+<p>The rest seems pretty straight forward</p>
+<pre><code>// get the hsva for the baseColor
+Vector4 hsva = ColorUtils.ColorToHSVA(baseColor);
+
+// adjust that base color by the amount we picked
+hsva.x += hueAdjust;
+hsva.y += satAdjust;
+hsva.z += valueAdjust;
+
+// now get the adjusted color.
+Color playerColor = ColorUtils.HSVAToColor(hsva);
+
+// Create a 1 pixel texture for the OnGUI code to draw the label
+Color[] pix = new Color[1];
+pix[0] = playerColor;
+m_gamepad.Color = pix[0];  // Tell the gamepad to change color
+Texture2D tex = new Texture2D(1, 1);
+tex.SetPixels(pix);
+tex.Apply();
+m_guiStyle.normal.background = tex;
+
+// Set the HSVA material of the character to the color adjustments.
+m_material.SetVector(&quot;_HSVAAdjust&quot;, new Vector4(hueAdjust, satAdjust, valueAdjust, 0.0f));
+</code></pre><h5 id="reading-user-input">Reading User Input</h5>
+<p><a href="https://unity3d.com/learn/tutorials/modules/beginner/2d">In the original tutorial</a> there was
+only 1 player and it used keyboard input. To read input from the phone we just reference
+the <code>HFTGamepad</code> as well.</p>
+<p>So in <code>Update</code></p>
+<pre><code>void Update()
+{
+    bool jumpPressed = m_gamepad.buttons[0].pressed || Input.GetKeyDown(&quot;space&quot;);
+    bool jumpJustPressed = !m_oldJumpPressed &amp;&amp; jumpPressed;
+    // If we&#39;re on the ground AND we just pressed jump (or space)
+    if (m_grounded &amp;&amp; jumpJustPressed)
+    {
+       ...
+</code></pre><p>And in <code>FixedUpdate</code></p>
+<pre><code>void FixedUpdate () {
+    ...
+    // Get left/right input (get both phone and local input)
+    float move = m_gamepad.axes[HFTGamepad.AXIS_DPAD0_X] + Input.GetAxis(&quot;Horizontal&quot;);
+    ...
+</code></pre><p>Reading the keyboard using <code>Input.GetXXX</code> is just there to make it easy to test, debug, and interate.
+We can start unity, open a local browser window and go to <code>http://localhost:18679</code>. Once we do that
+we can switch back to unity and just press the arrow and space bar to test the game&#39;s physics and stuff.
+If we stop unity and start it again that local browser will re-connect automatically so we can continue
+to test just using the keyboard.</p>
+<p><a href="#hft-gamepad-api">See below for other inputs</a></p>
+<h3 id="levelsettings-cs">LevelSettings.cs</h3>
+<p>The rest of the code in BirdScript should be clear to anyone that&#39;s use Unity much or
+gone through <a href="https://unity3d.com/learn/tutorials/modules/beginner/2d">the 2d platformer tutorial</a>.
+That example made an enclosed world. For me, instead, I just used a few locators. They are
+attached to the <code>LevelSettings.cs</code> script which is attached to the <code>LevelManager</code> object.</p>
+<p><img src="images/gamepad-levelsettings.png" width="50%" height="50%"></p>
+<p>If a player falls below the <code>bottomOfLevel</code> locator then I just respawn them. For respawn points
+there is an array of <code>spawnPoints</code>. I only made one in this sample.</p>
+<p>The code for <code>LevelSettings.js</code> adds a <code>static</code> accessor, <code>settings</code>. This means any other script
+can access the global settings using <code>LevelSettings.settings.&lt;nameOfSetting&gt;</code>.</p>
+<p>For example in <code>BirdScript.cs</code> we pick a random spawn point like this</p>
+<pre><code>void MoveToRandomSpawnPoint()
+{
+    // Pick a random spawn point
+    int ndx = Random.Range(0, LevelSettings.settings.spawnPoints.Length - 1);
+    transform.localPosition = LevelSettings.settings.spawnPoints[ndx].localPosition;
+}
+</code></pre><p>And in <code>FixedUpdate</code> we check for the players falling below the bottom of the level like this</p>
+<pre><code>if (transform.position.y &lt; LevelSettings.settings.bottomOfLevel.position.y) {
+    MoveToRandomSpawnPoint();
+}
+</code></pre><h2 id="hft-gamepad-api">HFT Gamepad API</h2>
+<p>The <code>HFTGamePad</code> script follows the HTML5 convention. I&#39;m not sure there was a good reason
+to keep it but this script is based on <a href="http://github.com/greggman/hft-gamepad-api">the HTML5 version of this gamepad</a>
+and it seemed like a good idea to keep the 2 as similar as possible so if new features are
+added to one they can hopefully be easily copied to the other.</p>
+<p>What that means is <code>HFTGamepad</code> as 2 public properties,</p>
+<pre><code>public float[] axes;
+public Button[] buttons;
+</code></pre><p>that work just like the HTML5 Gamepad API</p>
+<p><img src="images/gamepad.svg" /></p>
+<p>Of course the 10 controller variations don&#39;t support all those buttons. What they do support are
+2 dpads and 2 buttons plus a few extra things. Here are the constants</p>
+<pre><code>AXIS_DPAD0_X = 0;
+AXIS_DPAD0_Y = 1;
+AXIS_DPAD1_X = 0;
+AXIS_DPAD1_Y = 1;
+AXIS_ORIENTATION_ALPHA = 4;
+AXIS_ORIENTATION_BETA  = 5;
+AXIS_ORIENTATION_GAMMA = 6;
+AXIS_ACCELERATION_X = 7;
+AXIS_ACCELERATION_Y = 8;
+AXIS_ACCELERATION_Z = 9;
+AXIS_ROTATION_RATE_ALPHA = 10;
+AXIS_ROTATION_RATE_BETA  = 11;
+AXIS_ROTATION_RATE_GAMMA = 12;
+AXIS_TOUCH_X = 13;
+AXIS_TOUCH_Y = 14;
+
+BUTTON_DPAD0_LEFT = 14;
+BUTTON_DPAD0_RIGHT = 15;
+BUTTON_DPAD0_TOP = 12;
+BUTTON_DPAD0_BOTTOM = 13;
+BUTTON_DPAD1_LEFT = 18;
+BUTTON_DPAD1_RIGHT = 19;
+BUTTON_DPAD1_TOP = 16;
+BUTTON_DPAD1_BOTTOM = 17;
+</code></pre><h3 id="reading-the-dpads-and-or-lrpads">Reading the DPads and or LRPads</h3>
+<p>So for example if you are using controller type <code>2dpads</code> then you can use</p>
+<pre><code>m_gamepad.axes[HFTGamepad.AXIS_DPAD0_X]   // returns -1, 0, or 1
+m_gamepad.axes[HFTGamepad.AXIS_DPAD0_Y]   // returns -1, 0, or 1
+</code></pre><p>to read DPAD 0 and this</p>
+<pre><code>m_gamepad.axes[HFTGamepad.AXIS_DPAD1_X]   // returns -1, 0, or 1
+m_gamepad.axes[HFTGamepad.AXIS_DPAD1_Y]   // returns -1, 0, or 1
+</code></pre><p>Or you can also read the dpads as buttons with</p>
+<pre><code>// dpad0
+m_gamepad.buttons[HFTGamepad.BUTTON_DPAD0_LEFT].pressed  // true if the user is pressing left
+m_gamepad.buttons[HFTGamepad.BUTTON_DPAD0_RIGHT].pressed // true if the user is pressing right
+m_gamepad.buttons[HFTGamepad.BUTTON_DPAD0_UP].pressed    // true if the user is pressing up
+m_gamepad.buttons[HFTGamepad.BUTTON_DPAD0_DOWN].pressed  // true if the user is pressing down
+
+// dpad1
+m_gamepad.buttons[HFTGamepad.BUTTON_DPAD1_LEFT].pressed  // true if the user is pressing left
+m_gamepad.buttons[HFTGamepad.BUTTON_DPAD1_RIGHT].pressed // true if the user is pressing right
+m_gamepad.buttons[HFTGamepad.BUTTON_DPAD1_UP].pressed    // true if the user is pressing up
+m_gamepad.buttons[HFTGamepad.BUTTON_DPAD1_DOWN].pressed  // true if the user is pressing down
+</code></pre><p>LR pads work exactly the same except they onl provide <code>X</code> and <code>LEFT</code> and <code>RIGHT</code> values.</p>
+<h3 id="reading-the-buttons">Reading the Buttons</h3>
+<p>If you&#39;re using a controller with buttons they can be read with</p>
+<pre><code>m_gamepad.buttons[0].pressed  // true if the user is pressing blue button
+m_gamepad.buttons[1].pressed  // true if the user is pressing red button
+</code></pre><p>For the <code>touch</code> controller the values are normalized with 0.0 in the center and -1 to 1
+at the edges. You probably want to choose some range smaller than that to actually use
+because various mobile OSes like to do things near the edge of the
+screen like switch apps or make various UI elements appear. You can read the values
+at</p>
+<pre><code>m_gamepad.axes[HFTGamepad.AXIS_TOUCH_X]   // returns -1 to 1
+m_gamepad.axes[HFTGamepad.AXIS_TOUCH_Y]   // returns -1 to 1
+</code></pre><h3 id="orientation-data">Orientation Data</h3>
+<p>If you check <code>provideOrientation</code> then the phone will start providing
+orientation data.</p>
+<p>Imagine the phone in portrait mode lying flat on a table. In that case.</p>
+<pre><code>m_gamepad.axes[HFTGamepad.AXIS_ORIENTATION_ALPHA] = y rotation. eg: rotation on table. Range 0 to 360
+m_gamepad.axes[HFTGamepad.AXIS_ORIENTATION_BETA]  = x rotation. eg: lift the phone to face you or tilt away from you. Range -180 to 180
+m_gamepad.axes[HFTGamepad.AXIS_ORIENTATION_GAMMA] = z rotation. eg: tilt the phone to the left or right. Range -90 to 90
+</code></pre><p>If you check <code>provideAcceleration</code> then the phone will provide acceleration data.
+All values are in meters per second squared. Note: different phones seem to have different sensitivities.</p>
+<p>Imagine the phone in portrait mode lying flat on a table. In that case.</p>
+<pre><code>m_gamepad.axes[HFTGamepad.AXIS_ACCELERATION_X] = x motion: eg moving the phone left to right
+m_gamepad.axes[HFTGamepad.AXIS_ACCELERATION_Y] = y motion: eg moving the phone away from you or toward you (forward and back)
+m_gamepad.axes[HFTGamepad.AXIS_ACCELERATION_Z] = z motion: eg moving the phone above / below the table
+</code></pre><p>If you check <code>provideRotationRate</code> then the phone will provide rotation rate data.</p>
+<p>All values are in degrees per second. Note: different phones seem to have different sensitivities.</p>
+<p>Imagine the phone in portrait mode lying flat on a table. In that case.</p>
+<pre><code>m_gamepad.axes[HFTGamepad.AXIS_ROTATION_RATE_ALPHA] = y rotation. eg: rotation on table.
+m_gamepad.axes[HFTGamepad.AXIS_ROTATION_RATE_BETA]  = x rotation. eg: lift the phone to face you or tilt away from you.
+m_gamepad.axes[HFTGamepad.AXIS_ROTATION_RATE_GAMMA] = z rotation. eg: tilt the phone to the left or right.
+</code></pre><p>I haven&#39;t tested this but I suspect the various forms of orientation data use a lot of network
+bandwidth because they have to constantly send data where as most of the dpad, lrpad, and button
+controllers send very little data.</p>
+<p>That means for example if you want to make game with 4 to 8 players and use orientation data it&#39;s
+probably fine but 50 players might be a little much. Similarly you should only turn on the data
+you actually need. Don&#39;t just check all 3 boxes if you don&#39;t need all 3 types of data.</p>
+<p>Also consider creative game design and making a custom controllers that do more orientation
+processing on the phone itself. For example lets say you were making a game like <a href="http://www.sleepingbeastgames.com/spaceteam/">SpaceTeam</a>
+and you wanted to know when the user shakes the phone (meteor) and when the user turns the phone upsidedown (warp).</p>
+<p>The brute force way would be to send the orientation data and the acceleration data to the game. A ton of data
+would be send from the phones to th game. But, rather, you could write some JavaScript that detects on the
+phone if the user shakes the phone or if the user turns it upside down. Then you just send commands that
+pass that info to the game. Sending only th e binary info if if the phone is upsidedown or not (true/false)
+and if the phone is currently being shaken (true/false) would be orders of magnitude less data.</p>
+<p>See other samples about how to make your on controllers.</p>
+<h3 id="setting-the-color-of-a-gamepad">Setting the Color of a gamepad</h3>
+<p>You can set the color of a gamepad by setting <code>HFTGamepad.Color</code> as in</p>
+<pre><code>m_gamepad.Color = new Color(0, 1, 0);  // make the gamepad green
+</code></pre><h3 id="getting-the-name-of-the-user">Getting the Name of the User</h3>
+<p><code>m_gamepad.Name</code> contains the user&#39;s name. If the user changes the name any callbacks
+attached to the <code>OnNameChange</code> event handler will be called. For example in <code>BirdScript</code>
+you can see</p>
+<pre><code>void Start() {
+   ...
+   // Notify us if the name changes.
+   m_gamepad.OnNameChange += ChangeName;
+</code></pre><p>And</p>
+<pre><code>// Called when the user changes their name.
+void ChangeName(object sender, System.EventArgs e)
+{
+    SetName(m_gamepad.Name);
+}
+</code></pre><h3 id="changing-the-controller-type">Changing the Controller Type</h3>
+<p>The controller starts in whatever type you set in Unity but if you want you can also
+change it at runtime. For example maybe you have a game that just an LRPAD while
+the player is running across the level but when they die you want to switch the
+controller to touch controls to let them control their spirit. You can do that with
+code like</p>
+<pre><code>m_gamepad.controllerOptions.controllerType = HFTGamepad.ControllerType.c_touch
+</code></pre><p>Valid controllers types are</p>
+<pre><code>c_1button,
+c_2button,
+c_1dpad_1button,
+c_1dpad_2button,
+c_1dpad,
+c_2dpad,
+c_1lrpad_1button,
+c_1lrpad_2button,
+c_1lrpad,
+c_touch,
+</code></pre><h2 id="limiting-the-number-of-players">Limiting the number of players</h2>
+<p>The sample has no limit to the number of players. The limit is only up to your networking equipment.</p>
+<p>But, with these relatively large characters and small level you&#39;ll quickly find that if you have
+too many players it gets impossible to play. If you want to limit the number of characters set
+the <code>maxPlayers</code> setting in the <code>PlayerSpawner</code> to something greater than 0.</p>
+<p>If you look at the <code>LevelManager</code> you&#39;ll see that in addition to the <code>PlayerSpawner</code> script there is
+also a <code>HFTGamepadHelper</code> script. That script is also needed to handle telling players
+the game is full and they need to wait.</p>
+<p>For example if you set <code>maxPlayers</code> to 2 and 3 people connect, the 3rd person&#39;s phone will
+say &quot;Game Full Please Wait&quot;. If one of the other players quits their phone will switch to the
+current controls.</p>
+<h3 id="changing-players-manually">Changing players manually</h3>
+<p>Imagine we set <code>maxPlayers</code> to something and we want it so that when a player dies they are taken
+out of the game and the next player waiting is allowed to play. We could do that like this.</p>
+<p>Edit <code>BirdScript</code> and change the code that check if they fall of the bottom to this</p>
+<pre><code>void FixedUpdate() {
+   ...
+   if (transform.position.y &lt; LevelSettings.settings.bottomOfLevel.position.y) {
+       // Return the player
+       m_gamepad.ReturnPlayer();
+
+       // Destory ourselves
+       Destroy(gameObject);
+
+       return;  // because we just destroyed ourselves lets not do anything else.
+   }
+</code></pre><h2 id="be-creative">BE CREATIVE</h2>
+<p>Once you get started <a href="http://blog.happyfuntimes.net/blog/thinking-outside-the-box-making-hft-games/">please consider getting even more creative</a>.
+and <a href="../ideas.html">considering other ideas</a>.</p>
+
+      <hr/>
+      <div>
+        <div>Questions? <a href="http://stackoverflow.com/questions/tagged/happyfuntimes">Ask on stackoverflow</a>.</div>
+        <div>Issue/Bug? <a href="http://github.com/greggman/happyfuntimes/issues">Create an issue on github</a>.</div>
+
+        <div id="disqus_thread"></div>
+        <script type="text/javascript">
+            /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+            var disqus_shortname = 'happyfuntimes'; // required: replace example with your forum shortname
+            var disqus_identifier = 'Unity3D HappyFunTimes Gamepad';
+            var disqus_title = 'Unity3D HappyFunTimes Gamepad';
+
+            /* * * DON'T EDIT BELOW THIS LINE * * */
+            (function() {
+                if (window.location.hostname.indexOf("happyfuntimes") < 0) {
+                    return;
+                }
+                var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+                dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+                (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+            })();
+        </script>
+        <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+        <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+      </div>
+    </div>
+    <div class="col-sm-3 col-sm-offset-1 lesson-sidebar">
+        <ul class="toc">
+<li>HappyFunTimes & Unity
+  <ul>
+    <li><a href="getting-started.html">Getting Started</a><span class="hide">: Do this first!!</span></li>
+    <li><a href="basics.html">The Basics</a><span class="hide">: Read this!!!</span></li>
+  </ul>
+</li>
+<li>Specifics
+  <ul>
+    <li><a href="player-connect.html">Spawn players</a></li>
+    <li><a href="self-control.html">Making controllers (the phone part)</a></li>
+  </ul>
+</li>
+<li>Examples
+  <ul>
+    <li><a href="3d-characters.html">3d Characters</a></li>
+    <li><a href="2d-platformer.html">2d Platformer</a></li>
+
+  </ul>
+</li>
+<li>Techinques
+  <ul>
+    <li><a href="reusing-players.html">Handling disconnect and reconnect</a></li>
+    <li><a href="too-many-players.html">Preventing too many players</a></li>
+    <li><a href="device-orientation.html">Using Device Orientation</a></li>
+    <li><a href="accelerometer.html">Using the Accelerometer</a></li>
+    <li><a href="character-selection.html">Spawning different characters per Player</a></li>
+    <li><a href="multi-machine.html">Multiple Computers</a></li>
+  </ul>
+</li>
+<li>API Reference
+  <ul>
+    <li><a href="/docs/hft/">Controller (HTML/JavaScript) API</a></li>
+  </ul>
+</li>
+<li>Other
+  <ul>
+    <li><a href="changelog.html">Changelog</a></li>
+  </ul>
+</li>
+</ul>
+
+
+
+
+    </div>
+  </div>
+</div>
+</body>
+<script src="/docs/3rdparty/jquery-1.11.2.min.js"></script>
+<script src="/docs/3rdparty/prettify.js"></script>
+<script src="/docs/js/lesson.js"></script>
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-51764205-4', 'auto');
+  ga('send', 'pageview');
+
+</script>
+
+
+</html>
+
+
+
