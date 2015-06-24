@@ -61,6 +61,8 @@ var sendForAWhile = (function() {
         if (tries <= config.getSettings().settings.rendezvousRetryTimes) {
           setTimeout(tryInform, config.getSettings().settings.rendezvousRetryTimeout * 1000);
         }
+      } else {
+        console.log("registered:", data.addresses.join(", "), "with", parsedUrl.hostname);
       }
     });
   };
