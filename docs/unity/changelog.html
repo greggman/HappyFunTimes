@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- this file is auto-generated from docs/unity/reusing-players.md. Do not edited directly -->
+<!-- this file is auto-generated from docs/unity/changelog.md. Do not edited directly -->
 <!--
 Copyright 2012, Gregg Tavares.
 All rights reserved.
@@ -34,22 +34,22 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0, user-scalable=yes">
-<meta property="og:title" content="Handling Disconnect and Reconnect." />
+<meta property="og:title" content="Changelog for Unity Plugin" />
 <meta property="og:type" content="website" />
 <meta property="og:image" content="http://docs.happyfuntimes.net/docs/images/happyfuntimes.jpg" />
-<meta property="og:description" content="What to do when a player disconnects and reconnects." />
-<meta property="og:url" content="http://docs.happyfuntimes.net/docs/unity/reusing-players.html" />
+<meta property="og:description" content="Changes for Unity Plugin" />
+<meta property="og:url" content="http://docs.happyfuntimes.net/docs/unity/changelog.html" />
 
 <meta name="twitter:card" content="summary_large_image" />
 <meta name="twitter:site" content="@greggman" />
 <meta name="twitter:creator" content="@greggman" />
 <meta name="twitter:domain" content="docs.happyfuntimes.net" />
-<meta name="twitter:title" content="Handling Disconnect and Reconnect." />
-<meta name="twitter:url" content="http://docs.happyfuntimes.net/docs/unity/reusing-players.html" />
-<meta name="twitter:description" content="What to do when a player disconnects and reconnects." />
+<meta name="twitter:title" content="Changelog for Unity Plugin" />
+<meta name="twitter:url" content="http://docs.happyfuntimes.net/docs/unity/changelog.html" />
+<meta name="twitter:description" content="Changes for Unity Plugin" />
 <meta name="twitter:image:src" content="http://docs.happyfuntimes.net/docs/images/happyfuntimes.jpg" />
 
-<title>Handling Disconnect and Reconnect.</title>
+<title>Changelog for Unity Plugin</title>
 <link href="/public/hft-icon.png" rel="shortcut icon" type="image/png">
 <link rel="stylesheet" href="/docs/css/base.css" type="text/css" />
 <link rel="stylesheet" href="/docs/css/lesson.css" type="text/css" />
@@ -62,66 +62,17 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 <div class="container">
   <div class="lesson-title">
-    <h1>Handling Disconnect and Reconnect.</h1>
+    <h1>Changelog for Unity Plugin</h1>
   </div>
   <div class="row">
     <div class="col-sm-8 lesson-main">
-      <p>For may games this doesn&#39;t matter. Do nothing. A player that disconnects
-and reconnects later just starts as a new player. The majority of samples
-HappyFunTimes games work this way.</p>
-<p>But, let&#39;s say you&#39;re making a multi-player long play game something like</p>
-<iframe width="853" height="480" src="https://www.youtube.com/embed/FBsDF4qLF7w?rel=0" frameborder="0" allowfullscreen></iframe>
-
-<p>A player is expected to play for 15 minutes to an hour. While they are playing
-waiting for other players to make their moves they go get a snack or start
-reading their facebook newsfeed.</p>
-<p>Finally when it&#39;s time for them to make a move again they&#39;ve disconnected.</p>
-<p>There&#39;s 2 ways around this.</p>
-<ol>
-<li><p>If your game has a fixed number of characters you can try using the <code>PlayerConnector</code>.</p>
-<p>The <code>PlayerConnector</code> lets you designate <code>GameObjects</code> in your scene to connect players
-to. The <code>GameObjects</code> are never deleted. If a player reconnects they&#39;ll be attached to
-the same <code>GameObject</code> they were before.</p>
-<p>For more info see <a href="player-connect.html#controlling-gameobjects-already-in-the-scene">Controlling GameObjects already in the scene</a>.</p>
+      <ul>
+<li><p>0.0.7</p>
+<ul>
+<li>Added <code>maxPlayers</code> to PlayerSpawner</li>
+</ul>
 </li>
-<li><p>Use <code>NetPlayer.GetSessionId()</code></p>
-<p>In your game each NetPlayer object has a <code>session id</code>. You can access the session
-id by calling <code>m_netPlayer.GetSessionId()</code>. That id will stay the same when a player
-reconnects to a game.</p>
-<p>So, you can make some player state, associate it with the session id, then if a player
-reconnects you can user their session id to get their old state. For example</p>
-<pre><code>class PlayerState {
-  public int score = 0;
-  public int characterClass = 0;
-};
-
-Dictionary&lt;string, PlayerState&gt; m_playerStates = new Dictionary&lt;string, PlayerState&gt;();
-
-void InitializeNetPlayer(SpawnInfo spawnInfo) {
-
-    m_netPlayer = spawnInfo.netPlayer;
-
-    // See if we already have state for this player
-    PlayerState playerState = null;
-    if (!m_playerStates.TryGetValue(m_netPlayer.GetSessionId(), out playerState)) {
-
-        // This is a new player so setup their player state
-        playerState = new PlayerState();
-
-        // Save it in case they disconnect and reconnect later
-        m_playerStates[m_netPlayer.GetSessionId()] = playerState;
-    }
-
-    // adjust the GameObject based on PlayerState
-    ....
-}
-</code></pre></li>
-</ol>
-<p>Of course it&#39;s not that simple. What do you do if they never reconnect? Maybe
-it got too late and they left. Maybe they got sucked into a conversation
-and are no longer interested in playing. Maybe their battery died on their
-phone. All of that is a design issue and I can&#39;t really help but it&#39;s something
-you should think about if you&#39;re designing a long play game.</p>
+</ul>
 
       <hr/>
       <div>
@@ -132,8 +83,8 @@ you should think about if you&#39;re designing a long play game.</p>
         <script type="text/javascript">
             /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
             var disqus_shortname = 'happyfuntimes'; // required: replace example with your forum shortname
-            var disqus_identifier = 'Handling Disconnect and Reconnect.';
-            var disqus_title = 'Handling Disconnect and Reconnect.';
+            var disqus_identifier = 'Changelog for Unity Plugin';
+            var disqus_title = 'Changelog for Unity Plugin';
 
             /* * * DON'T EDIT BELOW THIS LINE * * */
             (function() {

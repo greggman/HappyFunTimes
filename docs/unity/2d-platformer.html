@@ -70,7 +70,10 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 works for your game. Maybe you&#39;d like to make it so players
 tilt their phone left or right to move their character and
 shake it to jump. It&#39;s really up to you.</p>
-<p>At the moment there is <a href="http://docs.happyfuntimes.net/docs/unity/samples.html?owner=greggman&amp;repo=hft-unity2dplatformer">one sample you can find here</a>.</p>
+<p>You can <a href="http://docs.happyfuntimes.net/docs/unity/samples.html?owner=greggman&amp;repo=hft-unity2dplatformer">download this sample here</a>.</p>
+<p>Note: You should consider checking out the <a href="gamepad.html">HappyFunTimes Unity GamePad example</a>
+which is easier than this sample. This sample is still 100% valid and server as a good example
+of doing everything with custom code.</p>
 <h2 id="a-short-explaination-">A short explaination:</h2>
 <p>This sample is based on <a href="https://unity3d.com/learn/tutorials/modules/beginner/2d">one of the Unity tutorials</a>.
 If you haven&#39;t already I suggest you go through those tutorials as they will help you
@@ -268,7 +271,193 @@ ImageLoader.loadImages(images, startClient);
 </code></pre><h3 id="now-on-the-game-side-in-unity-">Now on the game side, in Unity.</h3>
 <p>We&#39;re using the Character Controller example which was written in UnityScript.
 It&#39;s in <code>Assets/HappyFunTimes/Scripts/Example3rdPersonController.js</code></p>
+<p>There isn&#39;t much too it. It&#39;s basically <a href="https://unity3d.com/learn/tutorials/modules/beginner/2d">the same code from the Unity tutorials</a>.
+For HappyFunTimes we needed to add a few functions.</p>
+<h3 id="levelmanager-playerspawner">LevelManager / PlayerSpawner</h3>
+<p>Select the <code>LevelManager</code> object from the scene.</p>
+<p><img src="images/gamepad-levelmanager.png" width="25%" height="25%"></p>
+<p>Notice the <code>PlayerSpawer</code>. <code>PlayerSpawner</code> is a standard HappyFunTimes component. There should
+only be one per scene. It spawns a prefab each time a player connects to HappyFunTimes with their phone.</p>
+<p><img src="images/gamepad-playerspawner.png" width="50%" height="50%"></p>
+<p>You can see the spawns the prefab <code>Character</code>.</p>
+<h3 id="character">Character</h3>
+<p>Select the <code>Character</code> prefab from <code>HappyFunTimes/prefabs/Character</code></p>
+<p><img src="images/gamepad-character.png" width="50%" height="50%"></p>
+<p>Looking inside the character you can see it uses the <code>BirdScript</code></p>
+<p><img src="images/gamepad-birdscript.png" width="50%" height="50%"></p>
+<h3 id="birdscript">BirdScript</h3>
+<p><code>BirdScript.cs</code> is basically <a href="https://unity3d.com/learn/tutorials/modules/beginner/2d">the same code from the unity tutorial</a>
+with a few additions for HappyFunTimes</p>
+<h4 id="initializenewplayer">InitializeNewPlayer</h4>
+<p>This function is called anytime a new player is created by the <code>PlayerSpawner</code>.</p>
+<pre><code>// Manages the connection between this object and the phone.
+private NetPlayer m_netPlayer;
 
+// Called when player connects with their phone
+void InitializeNetPlayer(SpawnInfo spawnInfo)
+{
+    Init();
+
+    m_netPlayer = spawnInfo.netPlayer;
+    m_netPlayer.OnDisconnect += Remove;
+    m_netPlayer.OnNameChange += ChangeName;
+
+    // Setup events for the different messages.
+    m_netPlayer.RegisterCmdHandler&lt;MessageMove&gt;(&quot;move&quot;, OnMove);
+    m_netPlayer.RegisterCmdHandler&lt;MessageJump&gt;(&quot;jump&quot;, OnJump);
+
+    MoveToRandomSpawnPoint();
+
+    SetName(m_netPlayer.Name);
+
+    // Pick a random amount to adjust the hue and saturation
+    float hue = Random.value;
+    float sat = (float)Random.Range(0, 3) * -0.25f;
+    MessageSetColor color = new MessageSetColor(
+        hue,
+        sat,
+        0.0f,
+        m_material.GetFloat(&quot;_HSVRangeMin&quot;),
+        m_material.GetFloat(&quot;_HSVRangeMax&quot;));
+    SetColor(color);
+
+    // Send it to the phone
+    m_netPlayer.SendCmd(&quot;setColor&quot;, color);
+}
+</code></pre><p>The code above is very straight forward. First <code>m_netPlayer</code> is set to the <code>NetPlayer</code> object
+that represents the connection between the user&#39;s phone and Unity.</p>
+<p>It then sets up several callbacks. Call <code>Remove</code> if the phone disconnects. Call <code>ChangeName</code> if
+the user changes their name. Call <code>OnMove</code> if we receive the <code>&quot;move&quot;</code> command we created
+above. Call <code>OnJump</code> if we receive a <code>&quot;jump&quot;</code> command we created above.</p>
+<p>Then call <code>SetName</code> with the user&#39;s current name. Pick a random color, use it to set the
+color of our character and the color of the name label and finally send what we picked
+to the phone.</p>
+<h4 id="messages-received-from-the-phone">Messages received from the phone</h4>
+<p>We need to define classes to receive the data we defined above from the phone</p>
+<pre><code>// Message when player presses or release jump button
+private class MessageJump : MessageCmdData
+{
+    public bool jump = false;
+}
+
+// Message when player pressed left or right
+private class MessageMove : MessageCmdData
+{
+    public int dir = 0;  // will be -1, 0, or +1
+}
+</code></pre><p>We use those messages in <code>OnMove</code> and <code>OnJump</code> whic just set a few variables.</p>
+<pre><code>void OnMove(MessageMove data)
+{
+    m_direction = data.dir;
+}
+
+void OnJump(MessageJump data)
+{
+    m_jumpJustPressed = data.jump &amp;&amp; !m_jumpPressed;
+    m_jumpPressed = data.jump;
+}
+</code></pre><p><code>m_direction</code> will be -1, 0, or 1 depending on if the user is pressing left, right or not at all.
+<code>m_jumpPressed</code> will be true if the player is holding the jump button. <code>m_jumpJustPressed</code> will be
+true if the player was previously not pressing the button but now is. It&#39;s cleared in <code>Update</code>.</p>
+<p>We look at these in <code>Update</code> and <code>FixedUpdate</code> which are just modified versions from the
+<a href="https://unity3d.com/learn/tutorials/modules/beginner/2d">tutorial</a>.</p>
+<pre><code>void Update()
+{
+    // If we&#39;re on the ground AND we pressed jump (or space)
+    if (m_grounded &amp;&amp; (m_jumpJustPressed || Input.GetKeyDown(&quot;space&quot;)))
+    {
+       ...
+
+void FixedUpdate () {
+   ...
+
+   // Get left/right input (get both phone and local input)
+   float move = m_direction + Input.GetAxis(&quot;Horizontal&quot;);
+</code></pre><p>Reading the keyboard using <code>Input.GetXXX</code> is just there to make it easy to test, debug, and interate.
+We can start unity, open a local browser window and go to <code>http://localhost:18679</code>. Once we do that
+we can switch back to unity and just press the arrow and space bar to test the game&#39;s physics and stuff.
+If we stop unity and start it again that local browser will re-connect automatically so we can continue
+to test just using the keyboard.</p>
+<h4 id="messages-sent-to-the-phone">Messages sent to the phone</h4>
+<p>To send our color choice to the phone we define a class for that</p>
+<pre><code>// Message to send to phone to tell it the color of the avatar
+// Note that it sends an hue, saturation, value **adjustment**
+// meaning that RGB values are first converted to HSV where H, S, and V
+// are each in the 0 to 1 range. Then this adjustment is added to those 3
+// values. Finally they are converted back to RGB.
+// The min/max values are a hue range. Anything outside that range will
+// not be adjusted.
+private class MessageSetColor : MessageCmdData
+{
+    public MessageSetColor() { }  // for deserialization
+    public MessageSetColor(float _h, float _s, float _v, float _min, float _max)
+    {
+        h = _h;
+        s = _s;
+        v = _v;
+        rangeMin = _min;
+        rangeMax = _max;
+
+    }
+    public float h; // hue
+    public float s; // saturation
+    public float v; // value
+    public float rangeMin;
+    public float rangeMax;
+}
+</code></pre><h4 id="setting-the-color-of-the-character-in-unity">Setting the color of the character in Unity</h4>
+<p>Setting the color used for the character is a little funky. We&#39;re using
+<a href="https://github.com/greggman/hsva-unity">an HSVA shader that lets us selectively adjust the hue, saturation, and value of part
+of an image based on a hue range</a>. We need to
+know the base color of the character so we can then apply the adjustments to that
+color to see what the final color becomes. That color is set manually in Unity.</p>
+<pre><code>void SetColor(MessageSetColor colorAdjust) {
+    // get the hsva for the baseColor
+    Vector4 hsva = ColorUtils.ColorToHSVA(baseColor);
+
+    // adjust that base color by the amount we picked
+    hsva.x += colorAdjust.h;
+    hsva.y += colorAdjust.s;
+    hsva.w += colorAdjust.v;
+
+    // now get the adjusted color.
+    Color playerColor = ColorUtils.HSVAToColor(hsva);
+
+    // Create a 1 pixel texture for the OnGUI code to draw the label
+    Color[] pix = new Color[1];
+    pix[0] = playerColor;
+    Texture2D tex = new Texture2D(1, 1);
+    tex.SetPixels(pix);
+    tex.Apply();
+    m_guiStyle.normal.background = tex;
+
+    // Set the HSVA material of the character to the color adjustments.
+    m_material.SetVector(&quot;_HSVAAdjust&quot;, new Vector4(colorAdjust.h, colorAdjust.s, colorAdjust.v, 0.0f));
+    m_material.SetFloat(&quot;_HSVRangeMin&quot;, colorAdjust.rangeMin);
+    m_material.SetFloat(&quot;_HSVRangeMax&quot;, colorAdjust.rangeMax);
+}
+</code></pre><h3 id="levelsettings-cs">LevelSettings.cs</h3>
+<p>The rest of the code in BirdScript should be clear to anyone that&#39;s use Unity much or
+gone through <a href="https://unity3d.com/learn/tutorials/modules/beginner/2d">the 2d platformer tutorial</a>.
+That example made an enclosed world. For me, instead, I just used a few locators. They are
+attached to the <code>LevelSettings.cs</code> script which is attached to the <code>LevelManager</code> object.</p>
+<p><img src="images/gamepad-levelsettings.png" width="50%" height="50%"></p>
+<p>If a player falls below the <code>bottomOfLevel</code> locator then I just respawn them. For respawn points
+there is an array of <code>spawnPoints</code>. I only made one in this sample.</p>
+<p>The code for <code>LevelSettings.js</code> adds a <code>static</code> accessor, <code>settings</code>. This means any other script
+can access the global settings using <code>LevelSettings.settings.&lt;nameOfSetting&gt;</code>.</p>
+<p>For example in <code>BirdScript.cs</code> we pick a random spawn point like this</p>
+<pre><code>void MoveToRandomSpawnPoint()
+{
+    // Pick a random spawn point
+    int ndx = Random.Range(0, LevelSettings.settings.spawnPoints.Length - 1);
+    transform.localPosition = LevelSettings.settings.spawnPoints[ndx].localPosition;
+}
+</code></pre><p>And in <code>FixedUpdate</code> we check for the players falling below the bottom of the level like this</p>
+<pre><code>if (transform.position.y &lt; LevelSettings.settings.bottomOfLevel.position.y) {
+    MoveToRandomSpawnPoint();
+}
+</code></pre>
       <hr/>
       <div>
         <div>Questions? <a href="http://stackoverflow.com/questions/tagged/happyfuntimes">Ask on stackoverflow</a>.</div>
@@ -329,6 +518,11 @@ It&#39;s in <code>Assets/HappyFunTimes/Scripts/Example3rdPersonController.js</co
 <li>API Reference
   <ul>
     <li><a href="/docs/hft/">Controller (HTML/JavaScript) API</a></li>
+  </ul>
+</li>
+<li>Other
+  <ul>
+    <li><a href="changelog.html">Changelog</a></li>
   </ul>
 </li>
 </ul>
