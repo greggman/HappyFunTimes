@@ -67,7 +67,7 @@ define([
       });
     }
 
-    function onBlurFocus(e) {
+    function onBlurFocus() {
       //console.log("event: ", e.type);
       switchedOutOfPage = true;
     }
