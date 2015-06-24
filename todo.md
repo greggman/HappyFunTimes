@@ -1,9 +1,12 @@
 To Do
 =====
 
+*   plants and motion flying
+*   put link to plugin on start video
+*   make hft-unity-gamepad
+*   decide on now to handle max players. Should it be 2 messages? _hft_full_ or something else?
 *   figure out why Player23, Player24, Player25
-*   provide screenshot and icon if missing (use logo)
-*   add frame rate
+*   add frame rate for motion data
 *   test you can set options
 *   fix controller that incorrectly asked for orientation
 *   need a way for game to send binary files (how about a .zip)
@@ -886,6 +889,9 @@ Runs Repo noid
 Done
 ====
 
+*   provide screenshot and icon if missing (use logo)
+*   Split PlayerConnector into PlayerConnector and PlayerManager
+*   add MaxPlayers to playerspawner
 *   remove all offsetX and offsetY from sample controllers
 *   make --minify minify the main script for controller
 
