@@ -68,7 +68,7 @@ define([
     }
 
     function onBlurFocus(e) {
-      console.log("event: ", e.type);
+      //console.log("event: ", e.type);
       switchedOutOfPage = true;
     }
 
