@@ -31,7 +31,7 @@ I'm sorry there's so many steps. It's not as hard as it looks. Trust me.
 
 These instructions are for HTML5 games. If you're using Unity3D [see here](unity).
 
-*   install happyfuntimes (http://superhappyfuntimes.net/install) [(info)](#happyfuntimes)
+*   install happyfuntimes (http://docs.happyfuntimes.net/install.html) [(info)](#happyfuntimes)
 *   install node.js (http://nodejs.org/download/) [(info)](#nodejs)
 *   if on windows install msysgit (http://msysgit.github.io/) [(info)](#msysgit)
 *   install bower `sudo npm install -g bower` (no sudo on windows) [(info)](#bower)
@@ -41,7 +41,7 @@ These instructions are for HTML5 games. If you're using Unity3D [see here](unity
 
 ### Verbose vesrion
 
-*   <a id="happyfuntimes"/>Install HappyFunTimes (http://superhappyfuntimes.net/install)
+*   <a id="happyfuntimes"/>Install HappyFunTimes (http://docs.happyfuntimes.net/install.html)
 
     On Windows you might run into security issues: [See here](windows.md).
 

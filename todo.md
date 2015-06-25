@@ -1,6 +1,8 @@
 To Do
 =====
 
+*   add hft stop
+*   fix upgrade to stop running hft
 *   plants and motion flying
 *   put link to plugin on start video
 *   make hft-unity-gamepad

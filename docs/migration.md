@@ -12,7 +12,7 @@ best not to break things in the future.
 If you made a game for HappyFunTimes before they were separated from HappyFunTimes
 here are some of the steps you need to take.
 
-*   First, [install happyfuntimes](http://superhappyfuntimes.net/install) and run it at least once.
+*   First, [install happyfuntimes](http://docs.happyfuntimes.net/install.html) and run it at least once.
 
 *   Install the hft command. Type `npm install -g hft-cli`
 
