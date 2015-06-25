@@ -162,6 +162,27 @@ var HFTGameClient = function(options) {
       client.sendCmd('getAvailableGames');
     });
   };
+
+  this.stop = function() {
+    return new Promise(function(resolve, reject) {
+      var handleConnect = function() {
+        client.sendCmd('quit');
+        resolve();
+      };
+
+      var handleDisconnect = function() {
+        reject();
+      };
+
+      var handleError = function() {
+        reject();
+      };
+
+      client.addEventListener('connect', handleConnect);
+      client.addEventListener('disconnect', handleDisconnect);
+      client.addEventListener('error', handleError);
+    });
+  };
 };
 
 module.exports = HFTGameClient;
