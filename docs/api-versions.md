@@ -77,7 +77,7 @@ the correct version
         You need to upgrade old Unity Games to the latest .dlls.
         [Download the .dll here](https://github.com/greggman/hft-unity3d/releases)
         You'll also need the latest version of happyFunTimes. At least verison 0.0.9.
-        [Download here](http://superhappyfuntimes.net/install)
+        [Download here](http://docs.happyfuntimes.net/install.html)
 
 * v1.4.0
 

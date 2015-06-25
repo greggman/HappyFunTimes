@@ -417,7 +417,7 @@ out of the game and the next player waiting is allowed to play. We could do that
 <pre><code>void FixedUpdate() {
    ...
    if (transform.position.y &lt; LevelSettings.settings.bottomOfLevel.position.y) {
-       // Return the player
+       // Return the player to the queue of waiting players.
        m_gamepad.ReturnPlayer();
 
        // Destory ourselves
