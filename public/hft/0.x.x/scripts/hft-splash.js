@@ -34,7 +34,7 @@ define(function() {
   console.log(
     [ "%c",
       "---------------------------------------------------------------------------------------------",
-      "If you'd like to know more about this code check out http://greggman.github.io/HappyFunTimes/",
+      "If you'd like to know more about this sytem check out http://docs.happyfuntimes.net/docs",
       "---------------------------------------------------------------------------------------------",
       "",
     ].join("\n"), "color:blue; font-weight: bold;");
