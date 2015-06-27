@@ -119,13 +119,6 @@ define([
       server.addEventListener('disconnect', handleDisconnected);
     }
 
-    if (options.showGithub) {
-      var gh = $("hft-github");
-      if (gh) {
-        gh.style.display = "block";
-      }
-    }
-
     if (options.showFPS) {
       stats = new Stats();
       stats.setMode(0); // 0: fps, 1: ms
