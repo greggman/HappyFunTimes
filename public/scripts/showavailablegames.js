@@ -205,7 +205,7 @@ requirejs(
 
     forEachElementOnSelector(".upgrade-hft", function(elem/*, runtimeInfo*/) {
       elem.addEventListener('click', function() {
-        window.location.href = "http://superhappyfuntimes.net/install";
+        window.location.href = "http://docs.happyfuntimes.net/install.html";
       });
     });
 
