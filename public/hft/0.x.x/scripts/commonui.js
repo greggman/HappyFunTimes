@@ -193,6 +193,9 @@ define([
       menuElement.addEventListener('click', function() {
         settingsElement.style.display = "block";
       }, false);
+      menuElement.addEventListener('touchstart', function() {
+        settingsElement.style.display = "block";
+      }, false);
     }
 
     // setup full screen support
