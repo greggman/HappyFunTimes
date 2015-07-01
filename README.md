@@ -1,7 +1,7 @@
 HappyFunTimes
 =============
 
-*   [Installer](http://superhappyfuntimes.net/install)
+*   [Installer](http://docs.happyfuntimes.net/install.html)
 *   [Playing Games](http://superhappyfuntimes.net/about)
 *   [Docs](http://docs.happyfuntimes.net/docs)
 *   [Home Page](http://docs.happyfuntimes.net/)
