@@ -4,10 +4,22 @@ HappyFunTimes FAQ
 This FAQ is mostly questions developers might ask.
 
 
-
-
 Rational
 --------
+
+*   **Q:** What does the message "trying to use feature of API version x.x.x" mean?
+
+    I think it's pretty self explanatory what it means. Rather you problably want
+    to know why even have the message? Why not just use that version.
+
+    The reason is when a user goes to install your game she needs to know why
+    it's not working. If you have a lower API version in your package.json
+    then if there was no error then the game would not run and she'd have
+    no idea why.
+
+    This way hopefully you'll update your package.json. That way if she
+    doesn't have a version of happyFunTimes that supports that api version
+    she'll be prompted to install a newer version.
 
 *   **Q:** Why not use native installers?
 
