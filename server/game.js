@@ -315,6 +315,20 @@ Game.prototype.assignClient = function(client, data) {
   };
 };
 
+// report error back to game
+Game.prototype.error = function(msg) {
+  console.error(msg);
+  if (this.client) {
+    this.client.send({
+      cmd: 'log',
+      data: {
+        type: 'error',
+        msg: msg,
+      },
+    });
+  }
+};
+
 Game.prototype.sendSystemCmd = function(cmd, data) {
   this.send(null, {cmd: "system", data: {cmd: cmd, id: -1, data: data}});
 };
