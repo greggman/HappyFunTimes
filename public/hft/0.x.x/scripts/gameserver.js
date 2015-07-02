@@ -201,6 +201,11 @@ define([
     var handleSystemMsg_ = function(/*msg*/) {
     };
 
+    var handleLogMsg_ = function(data) {
+      var fn = console[data.type] || console.log;
+      fn.call(console, data.msg);
+    };
+
     var handleGameMsg_ = function(msg) {
       sendEvent_(msg.data.cmd, [msg.data.data, msg.id]);
     };
@@ -222,6 +227,7 @@ define([
       remove: handleRemovePlayer_,
       start: handleStartPlayer_,
       system: handleSystemMsg_,
+      log: handleLogMsg_,
     };
 
     var processMessage_ = function(msg) {
