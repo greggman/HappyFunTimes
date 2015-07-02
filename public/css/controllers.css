@@ -54,6 +54,11 @@ html, body {
   width: 100%;
   height: 100%;
 }
+.hft-top-left {
+  position: absolute;
+  left: 0;
+  top: 0;
+}
 /* class to make a column based flexbox with everything centered */
 .hft-fullcenter {
   width: 100%;
