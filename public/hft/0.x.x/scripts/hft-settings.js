@@ -37,6 +37,11 @@ define([], function() {
     window = {};
   }
   window.hftSettings = window.hftSettings || {};
+  var error = console.error.bind(console);
+
+  function setErrorFunc(fn) {
+    error = fn;
+  }
 
   var numRE = /\d+/;
   function toNumber(str) {
@@ -55,6 +60,10 @@ define([], function() {
 
   var apiVersion = semverToNumber(window.hftSettings.apiVersion || "0.0.0");
 
+  function reportError(version) {
+    error("trying to use feature of API version " + version + " but package.json apiVersion is set to " + window.hftSettings.apiVersion + "\nPlease update your package.json.");
+  }
+
   /**
    * check if we have a version
    * @param {string} version A semver version to test for
@@ -62,7 +71,7 @@ define([], function() {
    */
   function haveVersion(version) {
     if (semverToNumber(version) > apiVersion) {
-      console.error("trying to use feature of API version " + version + " but package.json apiVersion is set to " + window.hftSettings.apiVersion + "\nUPDATE YOUR package.json!!!");
+      reportError(version);
       return false;
     }
     return true;
@@ -77,7 +86,7 @@ define([], function() {
   function versionedFunc(version, func) {
     if (semverToNumber(version) > apiVersion) {
       return function() {
-        console.error("trying to use feature of API version " + version + " but package.json apiVersion is set to " + window.hftSettings.apiVersion + "\nUPDATE YOUR package.json!!!");
+        reportError(version);
       };
     }
     return func;
@@ -114,6 +123,7 @@ define([], function() {
   window.hftSettings.haveVersion = haveVersion;
   window.hftSettings.versionedFunc = versionedFunc;
   window.hftSettings.versionFuncs = versionFuncs;
+  window.hftSettings.setErrorFunc = setErrorFunc;
 
   return window.hftSettings;
 });
