@@ -96,6 +96,11 @@ define([
   ].join("\n");
   var orientationDiv;
 
+  function isSemiValidOrientation(o) {
+    o = o || "";
+    return o.indexOf("portrait") >= 0 || o.indexOf("landscape") >= 0;
+  }
+
   function setOrientationHTML(desiredOrientation) {
     desiredOrientation = desiredOrientation || "";
     if (!orientationDiv) {
@@ -129,18 +134,25 @@ define([
    *     "landscape-primary"   // phone turned clockwise 90 degrees from normal
    *     "landscape-secondary" // phone turned counter-clockwise 90 degrees from normal
    *     "none" (or undefined) // unlocked
+   * @param {bool} [orientationOptional]
    */
-  function setOrientation(desiredOrientation) {
+  function setOrientation(desiredOrientation, orientationOptional) {
+    orientationOptional = orientationOptional && hftSettings.haveVersion("1.13.0");
+
     g.orientation = desiredOrientation;
     if (orientation.canOrient()) {
       resetOrientation();
     } else {
-      setOrientationHTML(g.orientation);
+      var orient = g.orientation;
+      if (orientationOptional) {
+        orient = "none";
+      }
+      setOrientationHTML(orient);
     }
   }
 
   function showRequireApp() {
-    dialog({
+    dialog.modal({
       title: "HappyFunTimes",
       msg: "This game requires the HappyFunTimes App<br/>Please download it from your app store",
     }, function() {
@@ -166,6 +178,7 @@ define([
    *           html element
    * @property {number} [numConsoleLines] number of lines to show for the debug console.
    * @property {string} [orienation] The orientation to set the phone. Only works on Android or the App. See {@link setOrientation}.
+   * @property {boolean} [orientationOptional] Don't ask the user to orient the phone if their device does not support orientation
    * @property {boolean} [requireApp] If true and we're not in the app will present a dialog saying you must use the app
    * @memberOf module:CommonUI
    */
@@ -177,15 +190,24 @@ define([
    * input and the gear menu.
    *
    * @param {GameClient} client The `GameClient` for the phone
-   * @param {module:CommonUI.ControllerUI~Options} options
+   * @param {module:CommonUI.ControllerUI~Options} [options] the options
    * @memberOf module:CommonUI
    */
   var setupStandardControllerUI = function(client, options) {
+    options = options || {};
     var hftSettings = window.hftSettings || {};
     var menuElement = $("hft-menu");
     var settingsElement = $("hft-settings");
     var disconnectedElement = $("hft-disconnected");
     var touchStartElement = $("hft-touchstart");
+
+    hftSettings.setErrorFunc(function(msg) {
+        client.error(msg);
+        dialog.modal({
+          title: "HappyFunTimes",
+          msg: msg,
+        });
+    });
 
     if (!hftSettings.menu) {
       menuElement.style.display = "none";
@@ -316,7 +338,7 @@ define([
       window.location.href = data.url;
     });
 
-    setOrientation(hftSettings.haveVersion("1.10.0") ? options.orientation : undefined);
+    setOrientation(hftSettings.haveVersion("1.10.0") ? options.orientation : undefined, options.orientationOptional);
 
     if (options.requireApp) {
       if (hftSettings.haveVersion("1.10.0")) {
