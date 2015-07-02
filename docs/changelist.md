@@ -3,6 +3,19 @@ Changelist
 
 *   0.0.34
 
+    *   Made Unity version pay attention to `needNewHFT` flag.
+
+    *   Made controlellers report to game if they need new apiVersion.
+
+    *   added `orientationOptional` to `CommonUI.setupStandardControllerUI`
+
+        Setting it to true makes the commonUI not tell the user to orient their
+        phone if their phone doesn't support orientation. Example usage is
+        are the device orientation examples. They want the phone to be in
+        portrait but as of iOS 8.3 Safari doesn't support orientation. So
+        the message that used to come up would be confusing as the user
+        orients their phone.
+
     *   added `--optimize-controller` option
 
         This is probably only useful for [installation mode](network.md). If you're
@@ -19,6 +32,10 @@ Changelist
         So I decided do some optimizations. I added the --minify flag and I also put
         all 12 or 14 avatar images into 1 file. `--optimize-controller` does
         the --minify part automatically.
+
+    *   Made happyfuntimes reload package.json when they are edited.
+
+        I hope there's no issues with half saved files
 
 *   0.0.33
 
