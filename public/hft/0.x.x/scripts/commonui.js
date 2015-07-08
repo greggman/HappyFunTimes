@@ -96,10 +96,10 @@ define([
   ].join("\n");
   var orientationDiv;
 
-  function isSemiValidOrientation(o) {
-    o = o || "";
-    return o.indexOf("portrait") >= 0 || o.indexOf("landscape") >= 0;
-  }
+  //function isSemiValidOrientation(o) {
+  //  o = o || "";
+  //  return o.indexOf("portrait") >= 0 || o.indexOf("landscape") >= 0;
+  //}
 
   function setOrientationHTML(desiredOrientation) {
     desiredOrientation = desiredOrientation || "";
