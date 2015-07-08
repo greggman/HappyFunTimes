@@ -49,11 +49,12 @@ requirejs(
   var $ = document.getElementById.bind(document);
 
   function showGames() {
-    if (!document.hasFocus()) {
-      return;  // TODO: Put up "scan" button?
-    }
+    // Why is this here?
+    //if (!document.hasFocus()) {
+    //  return;  // TODO: Put up "scan" button?
+    //}
     var debug = window.location.search.indexOf("debug") >= 0;
-    var log = debug ? console.log.bind(console) : function() {};
+    var log = (debug || true) ? console.log.bind(console) : function() {};
 
     var gamemenu = $("gamemenu");
     var nogames  = $("nogames");
