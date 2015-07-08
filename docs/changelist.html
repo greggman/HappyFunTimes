@@ -70,6 +70,18 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 <ul>
 <li><p>0.0.34</p>
 <ul>
+<li><p>Made Unity version pay attention to <code>needNewHFT</code> flag.</p>
+</li>
+<li><p>Made controlellers report to game if they need new apiVersion.</p>
+</li>
+<li><p>added <code>orientationOptional</code> to <code>CommonUI.setupStandardControllerUI</code></p>
+<p>Setting it to true makes the commonUI not tell the user to orient their
+phone if their phone doesn&#39;t support orientation. Example usage is
+are the device orientation examples. They want the phone to be in
+portrait but as of iOS 8.3 Safari doesn&#39;t support orientation. So
+the message that used to come up would be confusing as the user
+orients their phone.</p>
+</li>
 <li><p>added <code>--optimize-controller</code> option</p>
 <p>This is probably only useful for <a href="network.html">installation mode</a>. If you&#39;re
 using require.js (the standard way HappyFunTimes controllers work) then
@@ -83,6 +95,9 @@ probably missed a packet or something with unreliable WiFi.</p>
 <p>So I decided do some optimizations. I added the --minify flag and I also put
 all 12 or 14 avatar images into 1 file. <code>--optimize-controller</code> does
 the --minify part automatically.</p>
+</li>
+<li><p>Made happyfuntimes reload package.json when they are edited.</p>
+<p>I hope there&#39;s no issues with half saved files</p>
 </li>
 </ul>
 </li>

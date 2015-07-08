@@ -362,6 +362,18 @@ stuff there&#39;s nothing to do. The code will just work.</p>
 </li>
 </ul>
 </li>
+<li><p>v1.13.0</p>
+<ul>
+<li><p>Added <code>orientationOptional</code> to <code>CommonUI.setupStandardControllerUI</code></p>
+<p>Setting it to true makes the commonUI not tell the user to orient their
+phone if their phone doesn&#39;t support orientation. Example usage is
+are the device orientation examples. They want the phone to be in
+portrait but as of iOS 8.3 Safari doesn&#39;t support orientation. So
+the message that used to come up would be confusing as the user
+orients their phone.</p>
+</li>
+</ul>
+</li>
 </ul>
 
       <hr/>

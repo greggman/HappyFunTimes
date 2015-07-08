@@ -338,4 +338,13 @@ the correct version
         This is better because it means if things change size based on CSS or other
         stuff there's nothing to do. The code will just work.
 
+* v1.13.0
 
+    *   Added `orientationOptional` to `CommonUI.setupStandardControllerUI`
+
+        Setting it to true makes the commonUI not tell the user to orient their
+        phone if their phone doesn't support orientation. Example usage is
+        are the device orientation examples. They want the phone to be in
+        portrait but as of iOS 8.3 Safari doesn't support orientation. So
+        the message that used to come up would be confusing as the user
+        orients their phone.
