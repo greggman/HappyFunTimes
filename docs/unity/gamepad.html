@@ -67,7 +67,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
   <div class="row">
     <div class="col-sm-8 lesson-main">
       <p>The Unity Gamepad example is easiest way to get started with HappyFunTimes in Unity.
-It provides 10 different pre-made controllers with options for a touch controls
+It provides a bunch of different pre-made controllers with options for a touch controls
 and for orientation data. Normally it would be up to you to create the controller,
 the part that runs on the phone, but using this sample is a good way to skip
 that part if you&#39;re looking to get started with HappyFunTimes as quickly as possible.</p>
@@ -76,10 +76,10 @@ or look at one of the many other samples. For example if you want to see how a c
 (the part on the phone) actually works <a href="2d-platformer.html">check out the 2d platformer example</a></p>
 <p>You can <a href="http://docs.happyfuntimes.net/docs/unity/samples.html?owner=greggman&amp;repo=hft-unity-gamepad">download this sample here</a>.</p>
 <h2 id="explaination-of-the-code">Explaination of the code</h2>
-<p>This project is basically <a href="https://unity3d.com/learn/tutorials/modules/beginner/2d">the 2D platformer example</a> from the
+<p>There are 3 samples, the first  is basically <a href="https://unity3d.com/learn/tutorials/modules/beginner/2d">the 2D platformer example</a> from the
 unity website with HappyFunTimes control added. If you haven&#39;t gone through those tutorials I suggest you do that first
 so you have some idea of what&#39;s happening in unity.</p>
-<p>Load the scene from <code>HappyFunTimes/Scenes/Level01</code>.
+<p>Load the scene from <code>HappyFunTimes/Scenes/2dPlatformScene</code>.
 Follow below for an explaintion of the HappyFunTimes parts</p>
 <h3 id="levelmanager-playerspawer">LevelManager / PlayerSpawer</h3>
 <p>Select the <code>LevelManager</code> object from the scene.</p>
@@ -96,7 +96,7 @@ is the <code>HFTGamepad</code> script.</p>
 <p><img src="images/gamepad-hftgamepad.png" width="50%" height="50%"></p>
 <h4 id="hftgamepad">HFTGamepad</h4>
 <p>The HFTGamepad script lets you select the type of controller you
-want for your game. The 10 types are</p>
+want for your game. The 11 types are</p>
 <div class="image-grid">
   <figure>
     <figcaption>1button</figcaption>
@@ -138,6 +138,10 @@ want for your game. The 10 types are</p>
     <figcaption>touch</figcaption>
     <img gwidth="20%" gheight="20%" src="images/touch.png" />
   </figure>
+  <figure>
+    <figcaption>orient</figcaption>
+    <img gwidth="20%" gheight="20%" src="images/orient.png" />
+  </figure>
 </div>
 
 <p>You can see for this sample we&#39;ve select the <code>1lrpad-1button</code> controller.</p>
@@ -153,6 +157,7 @@ It then sets the color, get&#39;s the user&#39;s name, and sets up a callback fo
 private Rigidbody2D m_rigidbody2d;
 private Material m_material;
 private HFTGamepad m_gamepad;
+private HFTInout m_hftInput;
 private static int m_playerNumber = 0;
 
 void Start ()
@@ -162,13 +167,18 @@ void Start ()
     m_material = GetComponent&lt;Renderer&gt;().material;
     m_gamepad = GetComponent&lt;HFTGamepad&gt;();
 
+    m_hftInput = new HFTInput(m_gamepad);
+
     SetColor(m_playerNumber++);
     SetName(m_gamepad.Name);
 
     // Notify us if the name changes.
     m_gamepad.OnNameChange += ChangeName;
 }
-</code></pre><p>One thing to notice is that we have <code>static</code> <code>m_playerNumber</code> property. Because it&#39;s
+</code></pre><p>We look up the various components. We also create a <code>HFTInput</code> instance. <code>HFTInput</code>
+is an emulator for <a href="http://docs.unity3d.com/ScriptReference/Input.html">the standard Unity <code>Input</code> class</a>.
+Most places that you&#39;d use <code>Input</code> you can use <code>m_hftInput</code> instead`. See Below.</p>
+<p>Another thing to notice is that we have <code>static</code> <code>m_playerNumber</code> property. Because it&#39;s
 static it is shared with all other BirdScript instances. We use that to help pick
 a color for each player. We could just pick at random but I&#39;ve found far too often
 the colors come out too close.</p>
@@ -220,23 +230,29 @@ m_material.SetVector(&quot;_HSVAAdjust&quot;, new Vector4(hueAdjust, satAdjust, 
 </code></pre><h5 id="reading-user-input">Reading User Input</h5>
 <p><a href="https://unity3d.com/learn/tutorials/modules/beginner/2d">In the original tutorial</a> there was
 only 1 player and it used keyboard input. To read input from the phone we just reference
-the <code>HFTGamepad</code> as well.</p>
+the <code>m_hftInput</code> as well.</p>
 <p>So in <code>Update</code></p>
 <pre><code>void Update()
 {
-    bool jumpPressed = m_gamepad.buttons[0].pressed || Input.GetKeyDown(&quot;space&quot;);
-    bool jumpJustPressed = !m_oldJumpPressed &amp;&amp; jumpPressed;
+    m_hftInput.Update();
+
+    bool jumpJustPressed = m_hftInput.GetButtonDown(&quot;fire1&quot;) || Input.GetKeyDown(&quot;space&quot;);
     // If we&#39;re on the ground AND we just pressed jump (or space)
     if (m_grounded &amp;&amp; jumpJustPressed)
     {
        ...
-</code></pre><p>And in <code>FixedUpdate</code></p>
+    }
+    m_hftInput.LateUpdate();
+}
+</code></pre><p>Note: In Update we must call <code>m_hftInput.Update()</code> at the start and <code>m_hftInput.LateUpdate()</code>
+at the end.</p>
+<p>And in <code>FixedUpdate</code></p>
 <pre><code>void FixedUpdate () {
     ...
     // Get left/right input (get both phone and local input)
-    float move = m_gamepad.axes[HFTGamepad.AXIS_DPAD0_X] + Input.GetAxis(&quot;Horizontal&quot;);
+    float move = m_hftInput.GetAxis(&quot;Horizontal&quot;) + Input.GetAxis(&quot;Horizontal&quot;);
     ...
-</code></pre><p>Reading the keyboard using <code>Input.GetXXX</code> is just there to make it easy to test, debug, and interate.
+</code></pre><p>Reading both <code>m_hftInput</code> and <code>Input</code> is just there to make it easy to test, debug, and interate.
 We can start unity, open a local browser window and go to <code>http://localhost:18679</code>. Once we do that
 we can switch back to unity and just press the arrow and space bar to test the game&#39;s physics and stuff.
 If we stop unity and start it again that local browser will re-connect automatically so we can continue
@@ -263,7 +279,18 @@ can access the global settings using <code>LevelSettings.settings.&lt;nameOfSett
 <pre><code>if (transform.position.y &lt; LevelSettings.settings.bottomOfLevel.position.y) {
     MoveToRandomSpawnPoint();
 }
-</code></pre><h2 id="hft-gamepad-api">HFT Gamepad API</h2>
+</code></pre><h2 id="hftinput">HFTInput</h2>
+<p>The <code>HFTInput</code> class tries to emulate <a href="http://docs.unity3d.com/ScriptReference/Input.html">the standard Unity <code>Input</code> class</a>.</p>
+<p>So, for every function and property in <code>Input</code> there&#39;s the corresponding one in <code>HFTInput</code>. For example</p>
+<pre><code>Input.GetButton(&quot;fire1&quot;)
+</code></pre><p>vs</p>
+<pre><code>m_hftInput.GetButton(&quot;fire1&quot;);
+</code></pre><p>Things like remapping and the Input Manager are not really relevant to HappyFunTimes. If you want to setup your
+own mappings you can call</p>
+<pre><code>m_hftInput.SpecifyAxisNameToAxisIndex(name, index);     // for axis controls
+m_hftInput.SpecifyButtonNameToButtonIndex(name, index); // for buttons
+</code></pre><p>For the correct indices see the next section.</p>
+<h2 id="hft-gamepad-api">HFT Gamepad API</h2>
 <p>The <code>HFTGamePad</code> script follows the HTML5 convention. I&#39;m not sure there was a good reason
 to keep it but this script is based on <a href="http://github.com/greggman/hft-gamepad-api">the HTML5 version of this gamepad</a>
 and it seemed like a good idea to keep the 2 as similar as possible so if new features are
