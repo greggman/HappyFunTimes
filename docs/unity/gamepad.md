@@ -19,7 +19,7 @@ There are 3 samples, the first is basically [the 2D platformer example](https://
 unity website with HappyFunTimes control added. If you haven't gone through those tutorials I suggest you do that first
 so you have some idea of what's happening in unity.
 
-Load the scene from `HappyFunTimes/Scenes/2dPlatformScene`.
+Load the scene from `HappyFunTimes/Samples/Scenes/2dPlatformScene`.
 Follow below for an explaintion of the HappyFunTimes parts
 
 ### LevelManager / PlayerSpawer
