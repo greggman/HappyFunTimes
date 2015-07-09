@@ -15,7 +15,7 @@ You can [download this sample here](http://docs.happyfuntimes.net/docs/unity/sam
 
 ## Explaination of the code
 
-There are 3 samples, the first  is basically [the 2D platformer example](https://unity3d.com/learn/tutorials/modules/beginner/2d) from the
+There are 3 samples, the first is basically [the 2D platformer example](https://unity3d.com/learn/tutorials/modules/beginner/2d) from the
 unity website with HappyFunTimes control added. If you haven't gone through those tutorials I suggest you do that first
 so you have some idea of what's happening in unity.
 
@@ -41,8 +41,8 @@ Select the `Character` prefab from `HappyFunTimes/prefabs/Character`
 
 <img src="images/gamepad-character.png" width="50%" height="50%">
 
-Looking inside the character you can see it uses 2 scripts. One
-is the `HFTGamepad` script.
+Looking inside the character you can see it uses 3 scripts. One
+is `HFTGamepad` script.
 
 <img src="images/gamepad-hftgamepad.png" width="50%" height="50%">
 
@@ -102,6 +102,16 @@ You can see for this sample we've select the `1lrpad-1button` controller.
 
 The other 3 checkboxes let you get orientation data from the phone. [See below](#hft-gamepad-api)
 
+#### HFTInput
+
+Another script is the `HFTInput` script. The `HFTInput` script coordinates with
+the `HFTGamepad` script to emulate [the standard Unity `Input` class](http://docs.unity3d.com/ScriptReference/Input.html)
+Most places that you'd use `Input` you can use `m_hftInput` instead`. See Below.
+
+Whether you use `HFTInput` or not is up to you. `HFTGamepad` provides the real
+gamepad support. `HFTInput` just looks at the data from `HFTGamepad` and
+makes it look similar to the standard `Input` system.
+
 #### BirdScript
 
 <img src="images/gamepad-birdscript.png" width="50%" height="50%">
@@ -111,14 +121,14 @@ with a few additions for HappyFunTimes
 
 ##### Start
 
-Our standard unity `Start` function looks up several components including the `HFTGamePad` component.
+Our standard unity `Start` function looks up several components including the `HFTGamePad` and `HFTInput` components.
 It then sets the color, get's the user's name, and sets up a callback for if the user changes their name.
 
     private Animator m_animator;
     private Rigidbody2D m_rigidbody2d;
     private Material m_material;
     private HFTGamepad m_gamepad;
-    private HFTInout m_hftInput;
+    private HFTInput m_hftInput;
     private static int m_playerNumber = 0;
 
     void Start ()
@@ -127,8 +137,7 @@ It then sets the color, get's the user's name, and sets up a callback for if the
         m_rigidbody2d = GetComponent<Rigidbody2D>();
         m_material = GetComponent<Renderer>().material;
         m_gamepad = GetComponent<HFTGamepad>();
-
-        m_hftInput = new HFTInput(m_gamepad);
+        m_hftInput = GetComponent<HFTInput>();
 
         SetColor(m_playerNumber++);
         SetName(m_gamepad.Name);
@@ -137,9 +146,7 @@ It then sets the color, get's the user's name, and sets up a callback for if the
         m_gamepad.OnNameChange += ChangeName;
     }
 
-We look up the various components. We also create a `HFTInput` instance. `HFTInput`
-is an emulator for [the standard Unity `Input` class](http://docs.unity3d.com/ScriptReference/Input.html).
-Most places that you'd use `Input` you can use `m_hftInput` instead`. See Below.
+We look up the various components.
 
 Another thing to notice is that we have `static` `m_playerNumber` property. Because it's
 static it is shared with all other BirdScript instances. We use that to help pick
@@ -210,19 +217,13 @@ So in `Update`
 
     void Update()
     {
-        m_hftInput.Update();
-
         bool jumpJustPressed = m_hftInput.GetButtonDown("fire1") || Input.GetKeyDown("space");
         // If we're on the ground AND we just pressed jump (or space)
         if (m_grounded && jumpJustPressed)
         {
            ...
         }
-        m_hftInput.LateUpdate();
     }
-
-Note: In Update we must call `m_hftInput.Update()` at the start and `m_hftInput.LateUpdate()`
-at the end.
 
 And in `FixedUpdate`
 
@@ -314,17 +315,17 @@ Of course the 10 controller variations don't support all those buttons. What the
     AXIS_DPAD0_Y = 1;
     AXIS_DPAD1_X = 0;
     AXIS_DPAD1_Y = 1;
-    AXIS_ORIENTATION_ALPHA = 4;
-    AXIS_ORIENTATION_BETA  = 5;
-    AXIS_ORIENTATION_GAMMA = 6;
-    AXIS_ACCELERATION_X = 7;
-    AXIS_ACCELERATION_Y = 8;
-    AXIS_ACCELERATION_Z = 9;
-    AXIS_ROTATION_RATE_ALPHA = 10;
-    AXIS_ROTATION_RATE_BETA  = 11;
-    AXIS_ROTATION_RATE_GAMMA = 12;
-    AXIS_TOUCH_X = 13;
-    AXIS_TOUCH_Y = 14;
+    AXIS_ORIENTATION_ALPHA = 4;    //    0 to 360
+    AXIS_ORIENTATION_BETA  = 5;    // -180 to 180
+    AXIS_ORIENTATION_GAMMA = 6;    //  -90 to 90
+    AXIS_ACCELERATION_X = 7;       // meters per second left & right
+    AXIS_ACCELERATION_Y = 8;       // meters per second toward top and bottom of phone
+    AXIS_ACCELERATION_Z = 9;       // meters per second forward and back
+    AXIS_ROTATION_RATE_ALPHA = 10; // degress per second
+    AXIS_ROTATION_RATE_BETA  = 11; //
+    AXIS_ROTATION_RATE_GAMMA = 12; //
+    AXIS_TOUCH_X = 13;             // -1 to +1 across the screen
+    AXIS_TOUCH_Y = 14;             // -1 to +1 down the screen
 
     BUTTON_DPAD0_LEFT = 14;
     BUTTON_DPAD0_RIGHT = 15;
@@ -336,7 +337,7 @@ Of course the 10 controller variations don't support all those buttons. What the
     BUTTON_DPAD1_BOTTOM = 17;
 
 
-### Reading the DPads and or LRPads
+### Reading the DPads and or LRPads using `HFTGamepad`
 
 So for example if you are using controller type `2dpads` then you can use
 
