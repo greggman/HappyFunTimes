@@ -1,15 +1,16 @@
 To Do
 =====
 
-*   add hft stop
+*   make instructions CSS handling less hacky
+*   boomboom "dead" -> "throw bombs from the side"
+*   boomboom teleport to side
+*   powpow: control ghost ship
+*   garden: tilt to aim, press to move, flap for speed
+*   put menu/banner on docs.happyfuntimes.net
 *   fix upgrade to stop running hft
 *   plants and motion flying
-*   put link to plugin on start video
-*   make hft-unity-gamepad
-*   decide on now to handle max players. Should it be 2 messages? _hft_full_ or something else?
 *   figure out why Player23, Player24, Player25
 *   add frame rate for motion data
-*   test you can set options
 *   fix controller that incorrectly asked for orientation
 *   need a way for game to send binary files (how about a .zip)
     for controller so you can have image files and sounds. That sounds
@@ -891,6 +892,13 @@ Runs Repo noid
 Done
 ====
 
+*   banner
+*   change SetColor in hft-gamepad-api and hft-unity-gamepad and hft-garden
+*   decide on now to handle max players. Should it be 2 messages? _hft_full_ or something else?
+*   test you can set options
+*   make hft-unity-gamepad
+*   add hft stop
+*   put link to plugin on start video
 *   provide screenshot and icon if missing (use logo)
 *   Split PlayerConnector into PlayerConnector and PlayerManager
 *   add MaxPlayers to playerspawner
