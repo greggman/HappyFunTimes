@@ -235,8 +235,12 @@ define([
       id = misc.makeRandomId();
       idCookie.set(id);
     }
+
+    var nameCookie = new Cookie("name");
+
     opts.data = misc.mergeObjects(opts.data);
     opts.data.__hft_session_id__ = id;  // eslint-disable-line
+    opts.data.__hft_name__ = nameCookie.get() || "";
     sendCmdLowLevel('join', opts);
   };
   return GameClient;
