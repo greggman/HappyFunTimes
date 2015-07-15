@@ -1,4 +1,4 @@
-﻿/*
+/*
  * Copyright 2014, Gregg Tavares.
  * All rights reserved.
  *
@@ -105,6 +105,6 @@ define([
     getDefaultLang: getDefaultLang,
     getLang: getLang,
     getLangs: getLangs,
-  }
+  };
 });
 

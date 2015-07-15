@@ -240,7 +240,7 @@ define([
 
     opts.data = misc.mergeObjects(opts.data);
     opts.data.__hft_session_id__ = id;  // eslint-disable-line
-    opts.data.__hft_name__ = nameCookie.get() || "";
+    opts.data.__hft_name__ = nameCookie.get() || "";  // eslint-disable-line
     sendCmdLowLevel('join', opts);
   };
   return GameClient;
