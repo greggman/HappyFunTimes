@@ -59,6 +59,10 @@ define(function() {
     var _name = name;
     var _busy = false;
 
+    if (data && data.__hft_name__) {
+      _name = data.__hft_name__;
+    }
+
     function sendCmd(cmd, msg) {
       if (!_connected) {
         return;
