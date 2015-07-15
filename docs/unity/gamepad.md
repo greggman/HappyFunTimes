@@ -165,7 +165,7 @@ Based on the player number which we use as `colorNdx` we pick a player color. Th
 that is different from other players. To do that we reverse the least significant
 6 bits which means instead of counting 0, 1, 2, 3, 4, 5, 6, 7, 8 we end up counting
 0, 32, 16, 48, 8, 40, 24, 56, ...  6 bits means we have a range of 0 to 63 so dividing
-by 64 gives as an amount to adjust the hue.
+by 64 gives us an amount from 0.0 to 1.0 to adjust the hue around the color wheel.
 
     float hueAdjust = (((colorNdx & 0x01) << 5) |
                        ((colorNdx & 0x02) << 3) |
@@ -174,18 +174,20 @@ by 64 gives as an amount to adjust the hue.
                        ((colorNdx & 0x10) >> 3) |
                        ((colorNdx & 0x20) >> 5)) / 64.0f;
 
-These 2 lines make every other set of 8 players be 50% darker
-and every other set of 4 players be 50% less saturated.
+These 2 lines make every other set of 32 players be 50% darker
+and every other set of 16 players be 50% less saturated.
 
-    float valueAdjust = (colorNdx & 0x08) != 0 ? -0.5f : 0.0f;
-    float satAdjust   = (colorNdx & 0x04) != 0 ? -0.5f : 0.0f;
+    float satAdjust   = (colorNdx & 0x10) != 0 ? -0.5f : 0.0f;
+    float valueAdjust = (colorNdx & 0x20) != 0 ? -0.5f : 0.0f;
 
 Hopefully that comes up with good colors.
 
-The rest seems pretty straight forward
+The rest seems pretty straight forward. The one HappyFunTimes line
+is `m_gamepad.Color = playerColor`. Setting `m_gamepad.Color` will
+tell the controller to change to a matching color.
 
     // get the hsva for the baseColor
-    Vector4 hsva = ColorUtils.ColorToHSVA(baseColor);
+    Vector4 hsva = HFTColorUtils.ColorToHSVA(baseColor);
 
     // adjust that base color by the amount we picked
     hsva.x += hueAdjust;
@@ -193,12 +195,14 @@ The rest seems pretty straight forward
     hsva.z += valueAdjust;
 
     // now get the adjusted color.
-    Color playerColor = ColorUtils.HSVAToColor(hsva);
+    Color playerColor = HFTColorUtils.HSVAToColor(hsva);
+
+    // Tell the gamepad to change color
+    m_gamepad.Color = playerColor];
 
     // Create a 1 pixel texture for the OnGUI code to draw the label
     Color[] pix = new Color[1];
     pix[0] = playerColor;
-    m_gamepad.Color = pix[0];  // Tell the gamepad to change color
     Texture2D tex = new Texture2D(1, 1);
     tex.SetPixels(pix);
     tex.Apply();

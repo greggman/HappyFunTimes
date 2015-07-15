@@ -1,6 +1,37 @@
 Changelist
 ==========
 
+*   0.0.36
+
+    *   added `--instructions` which puts a scrolling banner on top of each
+        game that says something like "connect to HappyFunTimes wifi, on iOS
+        just wait, on Android use Chrome and go to "h.com""
+
+    *   added `--langs` to specify which languages games should use.
+
+        For controllers, if you support multiple languages you should probaby
+        use `navigator.language` but for the games since they are running on
+        my computer I needed a way to choose.
+
+    *   added `--wifi-name`, `--wifi-pass`
+
+        This is to specify the name and password in the connect messages. See `--instructions`
+
+    *   Hacked in more name support
+
+        gameclient now gets name and sends it automatically when controller starts.
+        On the one hand it feels "impure" to do it this way. On the other pragmatism wins.
+
+*   0.0.35
+
+    *   Fixed a bug where if the page did not have the focus the controller
+        would not get redirected to the game.
+
+        I think that was in there for the app. The idea being if the app
+        is in the background it shouldn't join the game. Unfortunately it
+        also made it so  typing in a URL often didn't work because when the
+        URL bar has the focus the page itself does not.
+
 *   0.0.34
 
     *   Made Unity version pay attention to `needNewHFT` flag.

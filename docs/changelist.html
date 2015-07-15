@@ -68,6 +68,37 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
     <div class="col-sm-8 lesson-main">
       <h1 id="changelist">Changelist</h1>
 <ul>
+<li><p>0.0.36</p>
+<ul>
+<li><p>added <code>--instructions</code> which puts a scrolling banner on top of each
+game that says something like &quot;connect to HappyFunTimes wifi, on iOS
+just wait, on Android use Chrome and go to &quot;h.com&quot;&quot;</p>
+</li>
+<li><p>added <code>--langs</code> to specify which languages games should use.</p>
+<p>For controllers, if you support multiple languages you should probaby
+use <code>navigator.language</code> but for the games since they are running on
+my computer I needed a way to choose.</p>
+</li>
+<li><p>added <code>--wifi-name</code>, <code>--wifi-pass</code></p>
+<p>This is to specify the name and password in the connect messages. See <code>--instructions</code></p>
+</li>
+<li><p>Hacked in more name support</p>
+<p>gameclient now gets name and sends it automatically when controller starts.
+On the one hand it feels &quot;impure&quot; to do it this way. On the other pragmatism wins.</p>
+</li>
+</ul>
+</li>
+<li><p>0.0.35</p>
+<ul>
+<li><p>Fixed a bug where if the page did not have the focus the controller
+would not get redirected to the game.</p>
+<p>I think that was in there for the app. The idea being if the app
+is in the background it shouldn&#39;t join the game. Unfortunately it
+also made it so  typing in a URL often didn&#39;t work because when the
+URL bar has the focus the page itself does not.</p>
+</li>
+</ul>
+</li>
 <li><p>0.0.34</p>
 <ul>
 <li><p>Made Unity version pay attention to <code>needNewHFT</code> flag.</p>

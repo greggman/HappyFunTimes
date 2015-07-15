@@ -60,8 +60,8 @@ NOTE!!!: Your computer has a different MAC address for WiFi vs Wired networking.
 you need to look up is the MAC address for the way you'll connect the happyfuntimes machine
 to the router!**
 
-If can connect the happyfuntimes computer to the router with an ethernet cable that should
-be your first choice because you don't have to worry about interference.
+If you can connect the happyfuntimes computer to the router with an ethernet cable that should
+be your first choice because you don't have to worry about WiFi interference.
 
 If you're connecting the happyfuntimes comptuer to the router via WiFi then you need to look up your
 computer's WiFi MAC address.

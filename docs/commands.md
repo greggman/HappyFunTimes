@@ -116,6 +116,22 @@ a game to start. If multiple games are running users are given a list to choose 
 If you're running in an [installation](network.md) where there's only 1 game you can have controller
 go directly to the game with this option.
 
+`--instructions`
+
+Displays a scrolling message on the screen telling users how to connect to the game
+
+`--langs`
+
+Chooses which languages to display instructions. Example `--langs=en,ja`
+
+`--wifi-name`
+
+Specifies the WiFi name for the connect message.
+
+`--wifi-pass`
+
+Specifies the WiFi password for the connect message.
+
 `--check-for-app`
 
 Controllers don't normally try to launch the native mobile app. This check takes 3 seconds.
