@@ -348,3 +348,5 @@ the correct version
         portrait but as of iOS 8.3 Safari doesn't support orientation. So
         the message that used to come up would be confusing as the user
         orients their phone.
+
+
