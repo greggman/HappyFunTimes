@@ -476,6 +476,10 @@ var HFTServer = function(options, startedCallback) {
               hftSettings: 'window.hftSettings = ' + JSON.stringify({
                 menu: g.menu,
                 apiVersion: runtimeInfo.info.happyFunTimes.apiVersion,
+                instructions: g.instructions,
+                langs: g.langs,
+                wifiName: g.wifiName,
+                wifiPass: g.wifiPass,
               }),
             },
           ]);

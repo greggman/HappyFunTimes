@@ -47,16 +47,22 @@ define([
     './misc/gameclock',
     './misc/logger',
     './misc/misc',
+    './misc/strings',
+    './hft-settings',
     './hft-splash',
     './hft-system',
+    './languages',
   ], function(
     StatsJS,
     Cookie,
     GameClock,
     Logger,
     Misc,
+    strings,
+    hftSettings,
     HFTSplash,
-    HFTSystem) {
+    HFTSystem,
+    languages) {
 
   var $ = function(id) {
     return document.getElementById(id);
@@ -117,6 +123,45 @@ define([
     if (options.haveServer !== false && server) {
       server.addEventListener('connect', handleConnected);
       server.addEventListener('disconnect', handleDisconnected);
+    }
+
+    if (options.instructions || hftSettings.instructions) {
+      $("hft-connect").style.display = "block";
+      var langs = languages.getLangs(options.langs || hftSettings.langs);
+      if (langs.length === 0) {
+        langs = [languages.getDefaultLang()];
+      }
+      $("hft-ins").innerHTML = langs.map(function(lang) {
+        return lang.connect;
+      }).join(" ");
+
+      var style = document.createElement("style");
+      var css = document.createTextNode("");
+
+      var computeAnim = function() {
+        var padding = 100;
+        var msgWidth = $("hft-ins").clientWidth + padding * 2;
+        var bodyWidth = document.body.clientWidth;
+        var start = bodyWidth + padding;
+        var end = -msgWidth - padding;
+        var duration = (start - end) / 60;
+
+        var anim = strings.replaceParams([
+          "#hft-ins { animation: hft-ins-anim %(duration)ss linear infinite; }",
+          "@keyframes hft-ins-anim { 0% { transform: translateX(%(start)spx); } 100% { transform: translateX(%(end)spx); } }",
+        ].join("\n"), {
+          duration: duration,
+          start: start,
+          end: end,
+        });
+
+        css.nodeValue = anim;
+      };
+
+      style.appendChild(css);
+      document.body.appendChild(style);
+      computeAnim();
+      // window.addEventListener('resize', computeAnim, false);
     }
 
     if (options.showFPS) {

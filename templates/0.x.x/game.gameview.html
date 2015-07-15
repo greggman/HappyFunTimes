@@ -1,4 +1,4 @@
-<!--
+﻿<!--
 /*
  * Copyright 2014, Gregg Tavares.
  * All rights reserved.
@@ -43,10 +43,16 @@
   <link href="%(urls.favicon)s" rel="shortcut icon" type="image/png">
   <link rel="stylesheet" href="../../css/games.css">
   <link rel="stylesheet" href="css/game.css">
+<script>
+%(hftSettings)s
+</script>
 %(pages.game.beforeScripts)s
 </head>
 <body>
 %(content)s
+<div id="hft-connect">
+  <div id="hft-ins"></div>
+</div>
 <div id="hft-debug">
   <pre id="hft-status"></pre>
   <div id="hft-console"></div>

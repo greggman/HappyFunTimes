@@ -163,6 +163,37 @@ html, body {
   z-index: 10;
   display: none;
 }
+#hft-connect {
+  position: absolute;
+  top: 0px;
+  text-align: center;
+  background-color: rgba(0,0,0,0.5);
+  color: white;
+  z-index: 1000;
+  font-size: 18pt;
+  font-weight: bold;
+  display: none;
+  min-width: 100%;
+}
+#hft-ins {
+ overflow: hidden;
+ white-space: nowrap;
+ margin: 0.2em;
+ transform: translateX(100%);
+ animation: hft-ins-anim 45s linear infinite;
+}
+/*
+@keyframes hft-ins-anim {
+  0%   {
+    transform: translateX(50%);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+*/
+
+
 #hft-disconnected {
   position: absolute;
   top: 0px;
