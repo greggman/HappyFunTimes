@@ -1,11 +1,16 @@
 To Do
 =====
 
+*   figure out why hft-garden broke
 *   make instructions CSS handling less hacky
+
+    need to be able to edit CSS and update it
+
 *   boomboom "dead" -> "throw bombs from the side"
 *   boomboom teleport to side
 *   powpow: control ghost ship
 *   garden: tilt to aim, press to move, flap for speed
+*   garden: hold button to fly
 *   put menu/banner on docs.happyfuntimes.net
 *   fix upgrade to stop running hft
 *   plants and motion flying

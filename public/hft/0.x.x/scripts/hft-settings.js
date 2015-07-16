@@ -71,6 +71,18 @@ define([], function() {
    */
   function haveVersion(version) {
     if (semverToNumber(version) > apiVersion) {
+      return false;
+    }
+    return true;
+  }
+
+  /**
+   * check if we have a version and fail if we don't
+   * @param {string} version A semver version to test for
+   * @return {boolean} true if current API version is >= version.
+   */
+  function requireVersion(version) {
+    if (!haveVersion(version)) {
       reportError(version);
       return false;
     }
