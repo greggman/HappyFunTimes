@@ -75,12 +75,46 @@ game would be unplayable. Powpow&#39;s solution is after
 6 players there&#39;s a queue of players waiting to get
 launched. They collectively control a ghost ship</p>
 </li>
+<li><p>Always give players something to do</p>
+<p>Bombbomb has 2 minute rounds. It used to be if you died you
+were out until the round was over. Many players would end up
+just leaving and never coming back.</p>
+<p>A fix was to put them on the edge of the playfield and let
+them throw bombs in to kill off the remaing players. It took
+2 iterations to get that right because just putting them
+back in was not enough. We also had to show them getting
+moved to the side AND we had to tell them on their controller
+to keep playing.</p>
+</li>
+<li><p>Always make the player press something</p>
+<p>So far a browser can&#39;t prevent the phone from sleeping
+A solution is to make sure the player has a reason to
+interact with the phone often.</p>
+<p>So for example the hft-garden game requires you press
+a button for the butterflies to fly. Without that
+players would hold their phone on the edges, play the
+game and eventually their phone would go to sleep.</p>
+</li>
 <li><p>Preventing text selection in the browser</p>
 <p>Use this CSS</p>
-<pre><code>-moz-user-select: none;
--webkit-user-select: none;
--o-user-select: none;
-user-select: none;
+<pre><code> -moz-user-select: none;
+ -webkit-user-select: none;
+ -o-user-select: none;
+ user-select: none;
+</code></pre></li>
+<li><p>Preventing images from popping up a context menu</p>
+<p>Both Safari on iOS and Chrome on Android will pop
+up a context menu &quot;Save Image?&quot; if the user long
+presses an image. So prevent that you need both this CSS:</p>
+<pre><code>img {
+    -moz-user-select: none;
+    -webkit-user-select: none;
+    -o-user-select: none;
+    user-select: none;
+    pointer-events: none;
+}
+</code></pre><p>And this JavaScript in your <code>controller.js</code></p>
+<pre><code>mobileHacks.disableContextMenu();
 </code></pre></li>
 <li><p>Use the iOS simulator</p>
 <p>You probably need to test both landscape and portrait
@@ -219,6 +253,10 @@ and (min-device-width : 768px) {
 <p>Touch events suck balls. Microsoft proposed a much better system
 called Pointer events and they provided a polyfill for all browsers
 called HandJS that provides pointer events across browser.</p>
+<p>NOTE: HandJS is a standard part of HappyFunTimes already and will be
+included if you use the <a href="http://docs.happyfuntimes.net/docs/hft/module-Touch.html"><code>Touch</code> module</a>.
+I recommend you use the touch module where possible as we can then fix bugs as they come up
+across games.</p>
 </li>
 <li><p>Add invisible divs for input if needed.</p>
 <p>For games that have large input areas, like the Simple example, you may
@@ -309,7 +347,7 @@ in the correct order and pass whatever those functions returned into the functio
 would load <code>somelib.js</code> and <code>otherlib.js</code> and call <code>define()</code> in each. Each of those depend on
 <code>./yetanotherlib</code> so it would load <code>yetanotherlib.js</code>. <code>yetanotherlib.js</code> has no dependencies.
 Now it would call the function that was passed to <code>yetanotherlib.js:define()</code>. That funtion returns an
-object with single property <code>astrofy</code>. The system then calls the fucntions that were passed to
+object with single property <code>astrofy</code>. The system then calls the functions that were passed to
 <code>somelib.js:define</code> and <code>otherlib.js:define</code> passing in the object from <code>yetanotherlib</code>.
 It finally calls the function that was passed to <code>game.js:requirejs</code></p>
 </li>

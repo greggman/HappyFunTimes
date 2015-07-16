@@ -22,6 +22,9 @@ Changelist
         gameclient now gets name and sends it automatically when controller starts.
         On the one hand it feels "impure" to do it this way. On the other pragmatism wins.
 
+    *   fixed bug in hftSettings. haveVersion should only check for version not fail if
+        if version is old.
+
 *   0.0.35
 
     *   Fixed a bug where if the page did not have the focus the controller

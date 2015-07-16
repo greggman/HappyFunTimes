@@ -10,14 +10,56 @@ Description: Tips for making the best HappyFunTimes experiences
     6 players there's a queue of players waiting to get
     launched. They collectively control a ghost ship
 
+*   Always give players something to do
+
+    Bombbomb has 2 minute rounds. It used to be if you died you
+    were out until the round was over. Many players would end up
+    just leaving and never coming back.
+
+    A fix was to put them on the edge of the playfield and let
+    them throw bombs in to kill off the remaing players. It took
+    2 iterations to get that right because just putting them
+    back in was not enough. We also had to show them getting
+    moved to the side AND we had to tell them on their controller
+    to keep playing.
+
+*   Always make the player press something
+
+    So far a browser can't prevent the phone from sleeping
+    A solution is to make sure the player has a reason to
+    interact with the phone often.
+
+    So for example the hft-garden game requires you press
+    a button for the butterflies to fly. Without that
+    players would hold their phone on the edges, play the
+    game and eventually their phone would go to sleep.
+
 *   Preventing text selection in the browser
 
     Use this CSS
 
-        -moz-user-select: none;
-        -webkit-user-select: none;
-        -o-user-select: none;
-        user-select: none;
+         -moz-user-select: none;
+         -webkit-user-select: none;
+         -o-user-select: none;
+         user-select: none;
+
+*   Preventing images from popping up a context menu
+
+    Both Safari on iOS and Chrome on Android will pop
+    up a context menu "Save Image?" if the user long
+    presses an image. So prevent that you need both this CSS:
+
+        img {
+            -moz-user-select: none;
+            -webkit-user-select: none;
+            -o-user-select: none;
+            user-select: none;
+            pointer-events: none;
+        }
+
+    And this JavaScript in your `controller.js`
+
+        mobileHacks.disableContextMenu();
 
 *   Use the iOS simulator
 
@@ -174,6 +216,11 @@ Description: Tips for making the best HappyFunTimes experiences
     called Pointer events and they provided a polyfill for all browsers
     called HandJS that provides pointer events across browser.
 
+    NOTE: HandJS is a standard part of HappyFunTimes already and will be
+    included if you use the [`Touch` module](http://docs.happyfuntimes.net/docs/hft/module-Touch.html).
+    I recommend you use the touch module where possible as we can then fix bugs as they come up
+    across games.
+
 *   Add invisible divs for input if needed.
 
     For games that have large input areas, like the Simple example, you may
@@ -283,7 +330,7 @@ Description: Tips for making the best HappyFunTimes experiences
     would load `somelib.js` and `otherlib.js` and call `define()` in each. Each of those depend on
     `./yetanotherlib` so it would load `yetanotherlib.js`. `yetanotherlib.js` has no dependencies.
     Now it would call the function that was passed to `yetanotherlib.js:define()`. That funtion returns an
-    object with single property `astrofy`. The system then calls the fucntions that were passed to
+    object with single property `astrofy`. The system then calls the functions that were passed to
     `somelib.js:define` and `otherlib.js:define` passing in the object from `yetanotherlib`.
     It finally calls the function that was passed to `game.js:requirejs`
 
