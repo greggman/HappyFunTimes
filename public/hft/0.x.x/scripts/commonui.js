@@ -137,7 +137,7 @@ define([
    * @param {bool} [orientationOptional]
    */
   function setOrientation(desiredOrientation, orientationOptional) {
-    orientationOptional = orientationOptional && hftSettings.haveVersion("1.13.0");
+    orientationOptional = orientationOptional && hftSettings.requireVersion("1.13.0");
 
     g.orientation = desiredOrientation;
     if (orientation.canOrient()) {
@@ -341,7 +341,7 @@ define([
     setOrientation(hftSettings.haveVersion("1.10.0") ? options.orientation : undefined, options.orientationOptional);
 
     if (options.requireApp) {
-      if (hftSettings.haveVersion("1.10.0")) {
+      if (hftSettings.requireVersion("1.10.0")) {
         if (!hftSettings.inApp) {
           showRequireApp();
         }
