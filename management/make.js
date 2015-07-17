@@ -30,6 +30,7 @@
  */
 "use strict";
 
+var debug        = require('debug')('make');
 var buildInfo    = require('./build-info');
 var exporter     = require('./exporter');
 var fs           = require('fs');
@@ -56,8 +57,12 @@ var makeZip = function(gameId, baseSrcPath, destPath, filter) {
     }(filter);
   }
 
+  var filterFunc = function(filename) {
+    return filter(filename, baseSrcPath, fs.statSync(path.join(baseSrcPath, filename)).isDirectory());
+  };
+
   var fileNames = readdirtree.sync(baseSrcPath, {filter: /^(?!\.)/});
-  fileNames = fileNames.filter(filter);
+  fileNames = fileNames.filter(filterFunc);
 
   // check there are no non-casesenative duplicates
   var lowerCaseFileNames = fileNames.map(function(f) {
@@ -93,8 +98,10 @@ var makeZip = function(gameId, baseSrcPath, destPath, filter) {
     var srcPath = path.join(baseSrcPath, fileName);
     var stat = fs.statSync(srcPath);
     if (stat.isDirectory()) {
+      debug("adding dir: " + zipName);
       zip.addDir(zipName);
     } else {
+      debug("adding file: " + srcPath);
       var buffer = fs.readFileSync(srcPath);
       zip.addData(zipName, buffer);
     }
@@ -113,7 +120,16 @@ var makeZip = function(gameId, baseSrcPath, destPath, filter) {
 
 var makeHTML = function(runtimeInfo, gamePath, destFolder/*, options*/) {
   var destPath = path.join(destFolder, releaseUtils.safeishName(runtimeInfo.originalGameId) + "-html.zip");
-  return makeZip(runtimeInfo.originalGameId, gamePath, destPath);
+  var ignoreFilter = readdirtree.makeIgnoreFilter(runtimeInfo.info.happyFunTimes.ignore);
+  var filter = function(filename, filePath, isDir) {
+    var pass = ignoreFilter(filename, filePath, isDir);
+    if (!pass) {
+      debug("ignore: " + filename);
+    }
+    return pass;
+  };
+
+  return makeZip(runtimeInfo.originalGameId, gamePath, destPath, filter);
 };
 
 var makeUnity3d = function(runtimeInfo, gamePath, destFolder, options) {
@@ -198,12 +214,13 @@ var makeUnity3d = function(runtimeInfo, gamePath, destFolder, options) {
         return Promise.reject(new Error("aborted"));
       }
 
+      var ignoreFilter = readdirtree.makeIgnoreFilter(runtimeInfo.info.happyFunTimes.ignore);
       var promises = [];
       platInfos.forEach(function(platInfo) {
         var destPath = path.join(destFolder, releaseUtils.safeishName(gameId) + platInfo.platform.zipSuffix);
         var binStart = "bin/";
         var excludeRE = /^(src|Assets(?!\/WebPlayerTemplates)|Library|ProjectSettings|Temp)\//i;
-        var filter = function(nativeFilename) {
+        var filter = function(nativeFilename, filePath, isDir) {
           var filename = nativeFilename.replace(/\\/g, '/');
           if (excludeRE.test(filename)) {
             return false;
@@ -217,7 +234,11 @@ var makeUnity3d = function(runtimeInfo, gamePath, destFolder, options) {
             }
             return false;
           }
-          return true;
+          var pass = ignoreFilter(nativeFilename, filePath, isDir);
+          if (!pass) {
+            debug("ignore: " + nativeFilename);
+          }
+          return pass;
         };
         promises.push(makeZip(gameId, gamePath, destPath, filter));
       });
