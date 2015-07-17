@@ -512,7 +512,7 @@ Player.prototype.handleSetNameMsg = function(data) {
 </li>
 <li><p>No comments! JSON is NOT JavaScript.</p>
 </li>
-<li><p>All Strings and identifiers must be quoted. The only things not quoted are numbers and <code>true</code>, <code>false</code>,
+<li><p>All Strings and identifiers must be quoted with double quotes. The only things not quoted are numbers and <code>true</code>, <code>false</code>,
 and <code>null</code>.</p>
 </li>
 <li><p>It&#39;s case sensitive. <code>&quot;HappyFunTimes&quot;</code> is NOT the same as <code>&quot;happyFunTimes&quot;</code></p>
@@ -604,6 +604,23 @@ added for you and so is the script tag that includes <code>scripts/game.js</code
 either <code>game.html</code> or <code>controller.html</code>.  The HappyFunTimes libraries will be inserted before
 those tags. The <code>game.js</code> or <code>controller.js</code> will be inserted after.</p>
 <p>See example: <a href="http://github.com/hft-simple-script/">http://github.com/hft-simple-script/</a></p>
+</li>
+<li><p>&#39;happyFunTimes.ignore`</p>
+<p>Used to prevent certainly files from being part of the published game.</p>
+<p>This is an array of strings in the format of <code>.gitignore</code> (<a href="http://git-scm.com/docs/gitignore">see git docs</a>)
+not including the double asterix syntax. So for example</p>
+<pre><code>{
+  ...
+  &quot;happyFunTimes&quot;: {
+    ...
+    ignore: [
+      &quot;/src/&quot;,
+      &quot;*.psd&quot;
+    ],
+    ...
+  }
+}
+</code></pre><p>would exclude the <code>&lt;projectdir&gt;/src</code> folder as well as any photoshop files.</p>
 </li>
 </ul>
 <h2 id="files">Files</h2>
