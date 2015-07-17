@@ -13,6 +13,7 @@
     "cli-color": "^0.3.2",
     "debug": "0.7.4",
     "express": "^4.4.1",
+    "filesize": "^3.1.2",
     "github": "git+https://github.com/greggman/node-github.git#46a5e454079d2e1ee6f378ade6aaef39bd64da93",
     "hanson": "^1.1.1",
     "iniparser": "^1.0.5",
@@ -52,7 +53,7 @@
     "marked": "^0.3.3",
     "mocha": "^1.20.1",
     "request": "^2.40.0",
-    "should": "^4.0.4",
+    "should": "^7.0.2",
     "sitemap": "^0.8.1",
     "xml2js": "^0.4.8"
   }
