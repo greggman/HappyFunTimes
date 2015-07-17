@@ -30,6 +30,7 @@
  */
 "use strict";
 
+var filesize     = require('filesize');
 var fs           = require('fs');
 var gameInfo     = require('../lib/gameinfo');
 var GitHubApi    = require('github');
@@ -221,7 +222,7 @@ var publish = function(gamePath, options) {
       });
       filesToUpload = files;
       console.log("Upload:\n" + files.map(function(file) {
-        return "    " + file.filename + ", size: " + fs.statSync(file.filename).size;
+        return "    " + file.filename + ", size: " + filesize(fs.statSync(file.filename).size);
       }).join("\n"));
       console.log("publish as version: " + version);
       return askOrForce('release y/N?');
