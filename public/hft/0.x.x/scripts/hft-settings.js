@@ -133,9 +133,11 @@ define([], function() {
   }
 
   window.hftSettings.haveVersion = haveVersion;
+  window.hftSettings.reportError = reportError;
+  window.hftSettings.requireVersion = requireVersion;
+  window.hftSettings.setErrorFunc = setErrorFunc;
   window.hftSettings.versionedFunc = versionedFunc;
   window.hftSettings.versionFuncs = versionFuncs;
-  window.hftSettings.setErrorFunc = setErrorFunc;
 
   return window.hftSettings;
 });
