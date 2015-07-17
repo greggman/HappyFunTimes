@@ -221,7 +221,7 @@ var publish = function(gamePath, options) {
       });
       filesToUpload = files;
       console.log("Upload:\n" + files.map(function(file) {
-        return "    " + file.filename;
+        return "    " + file.filename + ", size: " + fs.statSync(file.filename).size;
       }).join("\n"));
       console.log("publish as version: " + version);
       return askOrForce('release y/N?');
