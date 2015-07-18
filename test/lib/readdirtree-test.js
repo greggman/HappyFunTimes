@@ -1,4 +1,4 @@
-﻿/*
+/*
  * Copyright 2014, Gregg Tavares.
  * All rights reserved.
  *
@@ -40,6 +40,8 @@ describe('readdirtree', function() {
   it('should ignore files', function() {
     var ignoreFn = readdirtree.makeIgnoreFilter(['foo.jpg']);
     ignoreFn("foo.jpg", ".", false).should.be.false();
+    ignoreFn("sfoo.jpg", ".", false).should.be.true();
+    ignoreFn("foo.jpgs", ".", false).should.be.true();
     ignoreFn("foodjpg", ".", false).should.be.true();
     ignoreFn("bar/foo.jpg", ".", false).should.be.false();
     ignoreFn("bar/moo/foo.jpg", ".", false).should.be.false();
@@ -83,6 +85,7 @@ describe('readdirtree', function() {
     var ignoreFn = readdirtree.makeIgnoreFilter(['foo/']);
     ignoreFn("foo", ".", true).should.be.false();
     ignoreFn("foo", ".", false).should.be.true();
+    ignoreFn("foo/abc", ".", false).should.be.false();
     ignoreFn("bar/foo", ".", true).should.be.false();
     ignoreFn("bar/foo", ".", false).should.be.true();
   });
@@ -132,8 +135,40 @@ describe('readdirtree', function() {
   it('should not ignore only dir', function() {
     var ignoreFn = readdirtree.makeIgnoreFilter(['!foo/']);
     ignoreFn("foo", ".", true).should.be.true();
-    ignoreFn("foo", ".", false).should.be.true();
+    ignoreFn("foo", ".", false).should.be.false();
+    ignoreFn("foo/abc", ".", false).should.be.true();
     ignoreFn("bar/foo", ".", true).should.be.true();
-    ignoreFn("bar/foo", ".", false).should.be.true();
+    ignoreFn("bar/foo", ".", false).should.be.false();
   });
+
+  it('should filter out "/src/"', function() {
+    var ignoreFn = readdirtree.makeIgnoreFilter(['/src/']);
+    [
+      [ '3rdparty', '/Users/gregg/src/hft-garden', true ],
+      [ 'LICENSE.md', '/Users/gregg/src/hft-garden', false ],
+      [ 'README.md', '/Users/gregg/src/hft-garden', false ],
+      [ 'assets', '/Users/gregg/src/hft-garden', true ],
+      [ 'bower.json', '/Users/gregg/src/hft-garden', false ],
+      [ 'bower_components', '/Users/gregg/src/hft-garden', true ],
+      [ 'controller.html', '/Users/gregg/src/hft-garden', false ],
+      [ 'css', '/Users/gregg/src/hft-garden', true ],
+      [ 'game.html', '/Users/gregg/src/hft-garden', false ],
+      [ 'icon.png', '/Users/gregg/src/hft-garden', false ],
+      [ 'package.json', '/Users/gregg/src/hft-garden', false ],
+      [ 'screenshot.png', '/Users/gregg/src/hft-garden', false ],
+      [ 'scripts', '/Users/gregg/src/hft-garden', true ],
+      [ 'src', '/Users/gregg/src/hft-garden', true, false ],
+      [ 'scripts/stem.js', '/Users/gregg/src/hft-garden', false ],
+      [ 'scripts/tree.js', '/Users/gregg/src/hft-garden', false ],
+      [ 'scripts/tweeny.js', '/Users/gregg/src/hft-garden', false ],
+      [ 'src/flap.psd', '/Users/gregg/src/hft-garden', false, false ],
+      [ 'src/flap02.psd', '/Users/gregg/src/hft-garden', false, false ],
+      [ 'src/flap03.psd', '/Users/gregg/src/hft-garden', false, false ],
+    ].forEach(function(f) {
+      var result = ignoreFn(f[0], f[1], f[2]);
+      var expected = (f[3] === false) ? false : true;
+      should.equal(result, expected, f[0]);
+    });
+  });
+
 });
