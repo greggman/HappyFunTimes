@@ -522,7 +522,7 @@ Edit `BirdScript` and change the code that check if they fall of the bottom to t
 ## BE CREATIVE
 
 Once you get started [please consider getting even more creative](http://blog.happyfuntimes.net/blog/thinking-outside-the-box-making-hft-games/).
-and [considering other ideas](../ideas.md).
+and [considering other ideas](../ideas.md). Learn [how HappyFunTimes works at lower-level](basics.md) so you can make your own controllers.
 
 
 
