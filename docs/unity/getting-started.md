@@ -4,8 +4,8 @@ Description: Step by step instructions on how to get HappyFunTimes running with 
 <iframe width="853" height="480" src="https://www.youtube.com/embed/yvt9btwrUAU?rel=0" frameborder="0" allowfullscreen></iframe>
 
 1.  Open Unity and create a new project
-2.  From the Asset store install the HappyFunTimes plugin
-3.  Open the `HappyFunTimes/Scenes/2DPlatformScene` by double clicking it.
+2.  From the Asset store install [the HappyFunTimes plugin](https://www.assetstore.unity3d.com/en/#!/content/19668)
+3.  Open the `HappyFunTimes/Samples/Scenes/2DPlatformScene` by double clicking it.
 4.  Run
 
     If you haven't installed HappyFunTimes the app yet you'll be

@@ -74,7 +74,8 @@ that part if you&#39;re looking to get started with HappyFunTimes as quickly as 
 <p>Once you get the hang of it feel free to modify this sample for new features
 or look at one of the many other samples. For example if you want to see how a controller
 (the part on the phone) actually works <a href="2d-platformer.html">check out the 2d platformer example</a></p>
-<p>You can <a href="http://docs.happyfuntimes.net/docs/unity/samples.html?owner=greggman&amp;repo=hft-unity-gamepad">download this sample here</a>.</p>
+<p>This sample is included with the <a href="https://www.assetstore.unity3d.com/en/#!/content/19668">Unity HappyFunTimes plugin</a>.
+Or, you can <a href="http://docs.happyfuntimes.net/docs/unity/samples.html?owner=greggman&amp;repo=hft-unity-gamepad">download this sample here</a>.</p>
 <h2 id="explaination-of-the-code">Explaination of the code</h2>
 <p>There are 3 samples, the first is basically <a href="https://unity3d.com/learn/tutorials/modules/beginner/2d">the 2D platformer example</a> from the
 unity website with HappyFunTimes control added. If you haven&#39;t gone through those tutorials I suggest you do that first
@@ -149,7 +150,7 @@ want for your game. The 11 types are</p>
 <h4 id="hftinput">HFTInput</h4>
 <p>Another script is the <code>HFTInput</code> script. The <code>HFTInput</code> script coordinates with
 the <code>HFTGamepad</code> script to emulate <a href="http://docs.unity3d.com/ScriptReference/Input.html">the standard Unity <code>Input</code> class</a>
-Most places that you&#39;d use <code>Input</code> you can use <code>m_hftInput</code> instead`. See Below.</p>
+Most places that you&#39;d use <code>Input</code> you can use <code>m_hftInput</code> instead. See Below.</p>
 <p>Whether you use <code>HFTInput</code> or not is up to you. <code>HFTGamepad</code> provides the real
 gamepad support. <code>HFTInput</code> just looks at the data from <code>HFTGamepad</code> and
 makes it look similar to the standard <code>Input</code> system.</p>
@@ -207,7 +208,7 @@ by 64 gives us an amount from 0.0 to 1.0 to adjust the hue around the color whee
 and every other set of 16 players be 50% less saturated.</p>
 <pre><code>float satAdjust   = (colorNdx &amp; 0x10) != 0 ? -0.5f : 0.0f;
 float valueAdjust = (colorNdx &amp; 0x20) != 0 ? -0.5f : 0.0f;
-</code></pre><p>Hopefully that comes up with good colors.</p>
+</code></pre><p>Hopefully that comes up with <a href="http://greggman.github.io/doodles/picking-colors.html">good colors</a>.</p>
 <p>The rest seems pretty straight forward. The one HappyFunTimes line
 is <code>m_gamepad.Color = playerColor</code>. Setting <code>m_gamepad.Color</code> will
 tell the controller to change to a matching color.</p>
@@ -490,6 +491,7 @@ and <a href="../ideas.html">considering other ideas</a>.</p>
 <li>HappyFunTimes & Unity
   <ul>
     <li><a href="getting-started.html">Getting Started</a><span class="hide">: Do this first!!</span></li>
+    <li><a href="gamepad.html">Your first HappyFunTimes Game</a><span class="hide": Read this!!!</li>
     <li><a href="basics.html">The Basics</a><span class="hide">: Read this!!!</span></li>
   </ul>
 </li>
