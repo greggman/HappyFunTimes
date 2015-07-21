@@ -8,7 +8,10 @@ can be created in HTML5 or Unity3D (more coming).
 HappyFunTimes only provides the communications. It does
 **not** provide controller implementations (the part that
 runs on the phone) though there are many samples you can
-start from.
+start from. In fact [if you want to get started quick
+as possible see the included gamepads](gamepad.md).
+Otherwise the following covers the basics of how to
+make everything custom.
 
 HappyFunTimes also does not supply a game engine. That's
 what Unity3D is for.

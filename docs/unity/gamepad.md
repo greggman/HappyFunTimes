@@ -11,7 +11,8 @@ Once you get the hang of it feel free to modify this sample for new features
 or look at one of the many other samples. For example if you want to see how a controller
 (the part on the phone) actually works [check out the 2d platformer example](2d-platformer.md)
 
-You can [download this sample here](http://docs.happyfuntimes.net/docs/unity/samples.html?owner=greggman&repo=hft-unity-gamepad).
+This sample is included with the [Unity HappyFunTimes plugin](https://www.assetstore.unity3d.com/en/#!/content/19668).
+Or, you can [download this sample here](http://docs.happyfuntimes.net/docs/unity/samples.html?owner=greggman&repo=hft-unity-gamepad).
 
 ## Explaination of the code
 
@@ -106,7 +107,7 @@ The other 3 checkboxes let you get orientation data from the phone. [See below](
 
 Another script is the `HFTInput` script. The `HFTInput` script coordinates with
 the `HFTGamepad` script to emulate [the standard Unity `Input` class](http://docs.unity3d.com/ScriptReference/Input.html)
-Most places that you'd use `Input` you can use `m_hftInput` instead`. See Below.
+Most places that you'd use `Input` you can use `m_hftInput` instead. See Below.
 
 Whether you use `HFTInput` or not is up to you. `HFTGamepad` provides the real
 gamepad support. `HFTInput` just looks at the data from `HFTGamepad` and
@@ -180,7 +181,7 @@ and every other set of 16 players be 50% less saturated.
     float satAdjust   = (colorNdx & 0x10) != 0 ? -0.5f : 0.0f;
     float valueAdjust = (colorNdx & 0x20) != 0 ? -0.5f : 0.0f;
 
-Hopefully that comes up with good colors.
+Hopefully that comes up with [good colors](http://greggman.github.io/doodles/picking-colors.html).
 
 The rest seems pretty straight forward. The one HappyFunTimes line
 is `m_gamepad.Color = playerColor`. Setting `m_gamepad.Color` will
