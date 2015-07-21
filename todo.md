@@ -1,12 +1,10 @@
 To Do
 =====
 
-*   figure out why hft-garden broke
 *   make instructions CSS handling less hacky
 
     need to be able to edit CSS and update it
 
-*   garden: hold button to fly
 *   put menu/banner on docs.happyfuntimes.net
 *   fix upgrade to stop running hft
 *   plants and motion flying
@@ -893,6 +891,8 @@ Runs Repo noid
 Done
 ====
 
+*   figure out why hft-garden broke
+*   garden: hold button to fly
 *   garden: tilt to aim, press to move, flap for speed
 *   powpow: control ghost ship
 *   boomboom "dead" -> "throw bombs from the side"
