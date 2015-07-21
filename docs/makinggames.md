@@ -549,7 +549,7 @@ This file defines some data about your game. It is a JSON file and JSON has a ve
 
 *   No comments! JSON is NOT JavaScript.
 
-*   All Strings and identifiers must be quoted. The only things not quoted are numbers and `true`, `false`,
+*   All Strings and identifiers must be quoted with double quotes. The only things not quoted are numbers and `true`, `false`,
     and `null`.
 
 *   It's case sensitive. `"HappyFunTimes"` is NOT the same as `"happyFunTimes"`
@@ -655,6 +655,27 @@ A standard package.json looks like this
     those tags. The `game.js` or `controller.js` will be inserted after.
 
     See example: http://github.com/hft-simple-script/
+
+*   'happyFunTimes.ignore`
+
+    Used to prevent certainly files from being part of the published game.
+
+    This is an array of strings in the format of `.gitignore` ([see git docs](http://git-scm.com/docs/gitignore))
+    not including the double asterix syntax. So for example
+
+        {
+          ...
+          "happyFunTimes": {
+            ...
+            ignore: [
+              "/src/",
+              "*.psd"
+            ],
+            ...
+          }
+        }
+
+    would exclude the `<projectdir>/src` folder as well as any photoshop files.
 
 ##Files
 

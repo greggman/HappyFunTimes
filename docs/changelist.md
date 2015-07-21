@@ -1,6 +1,13 @@
 Changelist
 ==========
 
+*   0.0.37
+
+    *   Added `happyFunTimes.ignore` to package.json
+
+        It's an array of strings in the format of `.gitignore` ([see git docs](http://git-scm.com/docs/gitignore))
+        not including the double asterix syntax.
+
 *   0.0.36
 
     *   added `--instructions` which puts a scrolling banner on top of each
