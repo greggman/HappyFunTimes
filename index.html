@@ -82,13 +82,30 @@
       margin-right: auto;
       padding-bottom: 2em;
   }
-  div a {
+  .section>div a {
       text-decoration: none;
       font-weight: bold;
       color: black;
       background-color: white;
       padding: 0.5em;
       border-radius: 1em;
+  }
+  .menu {
+      gwidth: 100%;
+      gposition: fixed;
+      gz-index: 2;
+      text-align: left;
+      font-size: medium;
+      background-color: #444;
+  }
+  .menu a {
+      display: inline-block;
+      padding: 1em;
+      text-decoration: none;
+      color: #CCC;
+  }
+  .menu a:hover {
+      background-color: #555;
   }
 
   #section01 { background-color: #979971; color: white; }
@@ -130,6 +147,12 @@
   </style>
 </head>
 <body>
+  <div class="menu">
+    <a href="/install.html"Install</a>
+    <a href="/docs">Docs</a>
+    <a href="/docs/unity/">Unity</a>
+    <a href="/docs/makinggames.html">JavaScript</a>
+  </div>
   <div class="section" id="section01">
     <img id="test" src="images/scene-00-jumpjump.jpg" width="782" height="441" />
   </div>
@@ -286,7 +309,7 @@
       <a href="http://docs.happyfuntimes.net/install.html">Install it and let's party!</a>
     </div>
   </div>
-  <a href="http://docs.happyfuntimes.net/install.html"><img style="position: absolute; top: 0; right: 0; border: 0;" src="images/corner-banner.png" alt="Install it!" /></a>
+  <a href="http://docs.happyfuntimes.net/install.html"><img style="position: absolute; top: 0; right: 0; border: 0; z-index: 3;" src="images/corner-banner.png" alt="Install it!" /></a>
 </body>
 </html>
 
