@@ -5,7 +5,6 @@ To Do
 
     need to be able to edit CSS and update it
 
-*   put menu/banner on docs.happyfuntimes.net
 *   fix upgrade to stop running hft
 *   plants and motion flying
 *   figure out why Player23, Player24, Player25
@@ -891,6 +890,7 @@ Runs Repo noid
 Done
 ====
 
+*   put menu/banner on docs.happyfuntimes.net
 *   figure out why hft-garden broke
 *   garden: hold button to fly
 *   garden: tilt to aim, press to move, flap for speed

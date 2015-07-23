@@ -344,7 +344,9 @@ Game.prototype.sendGameDisconnect = function(otherGame) {
       id: otherGame.id,
       data: {
         cmd: 'gamedisconnect',
-        data: {},
+        data: {
+          id: otherGame.id,
+        },
       },
     });
   }
