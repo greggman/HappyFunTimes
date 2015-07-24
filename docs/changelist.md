@@ -8,6 +8,8 @@ Changelist
         It's an array of strings in the format of `.gitignore` ([see git docs](http://git-scm.com/docs/gitignore))
         not including the double asterix syntax.
 
+    *   Fixed `gamedisconnect` message so it includes the id of the game that disconnected.
+
 *   0.0.36
 
     *   added `--instructions` which puts a scrolling banner on top of each

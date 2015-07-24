@@ -1,14 +1,30 @@
 HappyFunTimes
 =============
 
-*   [Installer](http://docs.happyfuntimes.net/install.html)
-*   [Playing Games](http://superhappyfuntimes.net/about)
+# Want to play?
+
+*   [Install HappyFunTimes](http://docs.happyfuntimes.net/install.html)
+
+# Make games with Unity?
+
+*   [See Getting Started with Unity](http://docs.happyfuntimes.net/docs/unity/getting-started.html)
+
+# Make games with HTML5?
+
+*   [Get started with a single line script](http://greggman.github.io/hft-gamepad-api)
+*   [Make custom controllers](makking-games.md)
+
+# Docs
+
 *   [Docs](http://docs.happyfuntimes.net/docs)
+
+# Other
+
 *   [Home Page](http://docs.happyfuntimes.net/)
 *   [Changelist](docs/changelist.md)
 *   [License](LICENSE.md)
 
-Support
+# Support
 
 *   [Developer Mailing List](https://groups.google.com/d/forum/hft-dev)
 *   [Blog](http://blog.happyfuntimes.net)
