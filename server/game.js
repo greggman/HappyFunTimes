@@ -33,6 +33,7 @@
 
 var debug        = require('debug')('game');
 var hftSite      = require('./hftsite');
+var semverUtils  = require('../lib/semver-utils');
 
 /**
  * @typedef {object} Game~Options
@@ -339,14 +340,19 @@ Game.prototype.sendQuit = function() {
 
 Game.prototype.sendGameDisconnect = function(otherGame) {
   if (this.client) {  // this check is needed because in GameGroup.assignClient the new game has been added to games but not yet assigned a client
+
+    var data = {};
+
+    if (semverUtils.canUse(this.runtimeInfo.info.happyFunTimes.apiVersion, "1.14.0")) {
+      data.id = otherGame.id;
+    }
+
     this.client.send({
       cmd: 'upgame',
       id: otherGame.id,
       data: {
         cmd: 'gamedisconnect',
-        data: {
-          id: otherGame.id,
-        },
+        data: data,
       },
     });
   }
