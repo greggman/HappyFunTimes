@@ -5,6 +5,18 @@ To Do
 
     need to be able to edit CSS and update it
 
+*   add support for unity3dlibrary
+    *   make
+    *   install
+    *   download
+    *   export
+    *   run
+*   add multi-touch support to unity-gamepad
+*   add jsfx support to unity-gamepad
+*   figure out why buttons get stuck and remove timout
+*   why is nexus not working on hft-tonde-iko
+*   why does play appear on hft-tonde-iko without passing select screen?
+*   make unity input tester
 *   fix upgrade to stop running hft
 *   plants and motion flying
 *   figure out why Player23, Player24, Player25
