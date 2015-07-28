@@ -438,11 +438,27 @@ define(
       addPointerId(buttonInfo, e.pointerId, e.timeStamp);
     };
 
-    var handleButtonMove = function(e, buttonInfo) {
+    var handleButtonUp = function(e, buttonInfo) {
       addPointerId(buttonInfo, e.pointerId, e.timeStamp);
     };
 
+    var handleButtonMove = function(e, buttonInfo) {
+//      addPointerId(buttonInfo, e.pointerId, e.timeStamp);
+    };
+
     var handleButtonOut = function(e, buttonInfo) {
+      removePointerId(buttonInfo, e.pointerId, e.timeStamp);
+    };
+
+    var handleButtonEnter = function(e, buttonInfo) {
+      addPointerId(buttonInfo, e.pointerId, e.timeStamp);
+    };
+
+    var handleButtonLeave = function(e, buttonInfo) {
+      removePointerId(buttonInfo, e.pointerId, e.timeStamp);
+    };
+
+    var handleButtonCancel = function(e, buttonInfo) {
       removePointerId(buttonInfo, e.pointerId, e.timeStamp);
     };
 
@@ -460,7 +476,7 @@ define(
       }(buttonInfo), false);
       elem.addEventListener('pointerup', function(buttonInfo) {
         return function(e) {
-          handleButtonOut(e, buttonInfo);
+          handleButtonUp(e, buttonInfo);
         };
       }(buttonInfo), false);
       elem.addEventListener('pointerout', function(buttonInfo) {
@@ -468,9 +484,24 @@ define(
           handleButtonOut(e, buttonInfo);
         };
       }(buttonInfo), false);
+      elem.addEventListener('pointerenter', function(buttonInfo) {
+        return function(e) {
+          handleButtonEnter(e, buttonInfo);
+        };
+      }(buttonInfo), false);
+      elem.addEventListener('pointerleave', function(buttonInfo) {
+        return function(e) {
+          handleButtonLeave(e, buttonInfo);
+        };
+      }(buttonInfo), false);
+      elem.addEventListener('pointercancel', function(buttonInfo) {
+        return function(e) {
+          handleButtonCancel(e, buttonInfo);
+        };
+      }(buttonInfo), false);
     });
 
-    setInterval(expireOldButtons, 100);
+//    setInterval(expireOldButtons, 100);
   };
 
   return {
