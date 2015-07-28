@@ -11,12 +11,9 @@ To Do
     *   download
     *   export
     *   run
-*   add multi-touch support to unity-gamepad
-*   add jsfx support to unity-gamepad
 *   figure out why buttons get stuck and remove timout
 *   why is nexus not working on hft-tonde-iko
 *   why does play appear on hft-tonde-iko without passing select screen?
-*   make unity input tester
 *   fix upgrade to stop running hft
 *   plants and motion flying
 *   figure out why Player23, Player24, Player25
@@ -902,6 +899,9 @@ Runs Repo noid
 Done
 ====
 
+*   make unity input tester
+*   add multi-touch support to unity-gamepad
+*   add jsfx support to unity-gamepad
 *   put menu/banner on docs.happyfuntimes.net
 *   figure out why hft-garden broke
 *   garden: hold button to fly
