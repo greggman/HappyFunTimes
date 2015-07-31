@@ -140,6 +140,7 @@ var makeUnity3d = function(runtimeInfo, gamePath, destFolder, options) {
     promise = exporter.exporter(runtimeInfo, {
       exporterPath: options.exporterPath,
       exportPackage: options.exportPackage,
+      platforms: options.platforms,
     });
   } else {
     promise = Promise.resolve();
@@ -149,6 +150,9 @@ var makeUnity3d = function(runtimeInfo, gamePath, destFolder, options) {
     var platInfos = [];
     var platforms = buildInfo.get().platforms;
     platforms.forEach(function(platform) {
+      if (options.platforms && options.platforms.indexOf(platform.platform.toLowerCase()) < 0) {
+        return;
+      }
       var missing = false;
       var binPath;
       var dirPath;
@@ -196,7 +200,7 @@ var makeUnity3d = function(runtimeInfo, gamePath, destFolder, options) {
     }
 
     var promise;
-    if (!tooOld && platInfos.length === platforms.length) {
+    if (!tooOld && (platInfos.length === platforms.length || (options.platforms && platInfos.length === options.platforms.length))) {
       promise = Promise.resolve({confirmation: 'y'});
     } else {
       promise = releaseUtils.askPrompt([

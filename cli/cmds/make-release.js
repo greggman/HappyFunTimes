@@ -30,9 +30,14 @@
  */
 "use strict";
 
-var path    = require('path');
-var Promise = require('promise');
-var utils   = require('../utils');
+var path      = require('path');
+var Promise   = require('promise');
+var utils     = require('../utils');
+var buildInfo = require('../../management/build-info');
+
+var platforms = buildInfo.get().platforms.map(function(plat) {
+  return plat.platform.toLowerCase();
+});
 
 var makeRelease = function(args) {
   return new Promise(function(resolve, reject) {
@@ -46,6 +51,20 @@ var makeRelease = function(args) {
       utils.badArgs(module, "too many arguments");
       reject();
       return;
+    }
+
+    if (args.platforms) {
+      args.platforms = args.platforms.split(",");
+      var badPlatforms = args.platforms.reduce(function(prev, curr) {
+        if (platforms.indexOf(curr) < 0) {
+          prev.push(curr);
+        }
+        return prev;
+      }, []);
+      if (badPlatforms.length) {
+        utils.badArgs(module, "unknown platforms: " + badPlatforms.join(", "));
+        return reject();
+      }
     }
 
     var destPath = path.resolve(args._[0]);
@@ -77,11 +96,12 @@ exports.usage = {
     "Normally releases are made at publish time",
   ],
   options: [
-    { option: 'src',            type: 'String',  description: "path to source. If not supplied assumes current working directory"},
-    { option: 'export',         type: 'Boolean', description: "run exporters for native apps (eg: Unity)"},
-    { option: 'exporter-path',  type: 'String',  description: "path to exporter. For example path to unity3d."},
-    { option: 'export-package', type: 'Boolean', description: "export a unity package as well."},
-    { option: 'json',           type: 'Boolean', description: "format output as json" },
+    { option: 'src',            type: 'String',   description: "path to source. If not supplied assumes current working directory"},
+    { option: 'export',         type: 'Boolean',  description: "run exporters for native apps (eg: Unity)"},
+    { option: 'exporter-path',  type: 'String',   description: "path to exporter. For example path to unity3d."},
+    { option: 'export-package', type: 'Boolean',  description: "export a unity package as well."},
+    { option: 'platforms',      type: 'String',   description: "platforms to export separated by comma. Valid platforms: " + platforms.join(", ")},
+    { option: 'json',           type: 'Boolean',  description: "format output as json" },
   ],
 };
 exports.cmd = makeRelease;

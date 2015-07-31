@@ -104,6 +104,9 @@ var exporter = function(runtimeInfo, options) {
       var promises = [];
       var platforms = buildInfo.get().platforms;
       platforms.forEach(function(platInfo) {
+        if (options.platforms && options.platforms.indexOf(platInfo.platform.toLowerCase()) < 0) {
+          return;
+        }
 
         var binPath = path.join(binFolder, gameId + (platInfo.binSuffix ? platInfo.binSuffix : ""));
         var logPath = binPath + ".log";

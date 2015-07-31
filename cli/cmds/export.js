@@ -33,6 +33,11 @@
 var gameInfo  = require('../../lib/gameinfo');
 var path      = require('path');
 var Promise   = require('promise');
+var buildInfo = require('../../management/build-info');
+
+var platforms = buildInfo.get().platforms.map(function(plat) {
+  return plat.platform.toLowerCase();
+});
 
 var exporter = function(args) {
   var fullPath = args.srcPath ? path.resolve(args.srcPath) : process.cwd();
@@ -40,6 +45,20 @@ var exporter = function(args) {
     var runtimeInfo = gameInfo.readGameInfo(fullPath);
   } catch (e) {
     return Promise.reject(e);
+  }
+
+  if (args.platforms) {
+    args.platforms = args.platforms.split(",");
+    var badPlatforms = args.platforms.reduce(function(prev, curr) {
+      if (platforms.indexOf(curr) < 0) {
+        prev.push(curr);
+      }
+      return prev;
+    }, []);
+    if (badPlatforms.length) {
+      utils.badArgs(module, "unknown platforms: " + badPlatforms.join(", "));
+      return Promise.reject();
+    }
   }
 
   return require('../../management/exporter').exporter(runtimeInfo, args);
@@ -56,6 +75,7 @@ exports.usage = {
     { option: 'src-path',       type: 'String',  description: "path to export from. Default current folder"},
     { option: 'dst-path',       type: 'String',  description: "path to export to. Default whatever is appropriate"},
     { option: 'export-package', type: 'Boolean', description: "export a unity package as well."},
+    { option: 'platforms',      type: 'String',   description: "platforms to export separated by comma. Valid platforms: " + platforms.join(", ")},
   ],
 };
 exports.cmd = exporter;
