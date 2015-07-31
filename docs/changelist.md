@@ -10,6 +10,20 @@ Changelist
 
     *   Fixed `gamedisconnect` message so it includes the id of the game that disconnected.
 
+    *   Fixed touch buttons so no timeout is needed.
+
+        I think I maybe (or maybe not) finally understand pointer events
+        enough to not need a timeout to make sure they don't stick. Crossing
+        my fingers.
+
+    *   Added `consoleTarget` option to commonui. Valid values are "game" and "html".
+
+        If "html" console.log and console.error are retargeted to HTML. `options.debug` needs to be true
+        to see that html. If "game" console.log and console.error are sent back to the game. This
+        can be used to try to debug something when there's no way to connect a debugger.
+
+    *   make `hft start --port` option work.
+
 *   0.0.36
 
     *   added `--instructions` which puts a scrolling banner on top of each

@@ -11,6 +11,12 @@ To Do
     *   download
     *   export
     *   run
+*   fix realgame so it auto includes realgame.js and doesn't need manual HFT stuff
+*   add system session id. When checking ip addresses from scanner
+    merge by session id
+*   add progress bar when scanning
+*   check if HFT has page up? Go to that page
+*   when exiting native app make hft front app
 *   figure out why buttons get stuck and remove timout
 *   why is nexus not working on hft-tonde-iko
 *   why does play appear on hft-tonde-iko without passing select screen?

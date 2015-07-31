@@ -94,6 +94,10 @@ if (args.settings) {
     settings[key] = value;
   });
 }
+if (args.port) {
+  var settings = config.getSettings().settings;
+  settings.port = args.port;
+}
 
 
 
