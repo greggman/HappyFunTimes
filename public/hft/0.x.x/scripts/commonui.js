@@ -356,6 +356,28 @@ define([
 
       g.logger = new logger.HTMLLogger($("hft-console"), options.numConsoleLines);
     }
+
+    if (options.consoleTarget) {
+      switch (options.consoleTarget.toLowerCase()) {
+        case "html":
+          g.logger = g.logger || new logger.HTMLLogger($("hft-console"), options.numConsoleLines);
+          console.log = g.logger.log.bind(g.logger);
+          console.error = g.logger.error.bind(g.logger);
+          window.addEventListener('error', function(errorMsg, url, lineNo) {
+             console.error(url, lineNo, errorMsg);
+          });
+          break;
+        case "game":
+          g.logger = new logger.GameLogger(client);
+          console.log = g.logger.log.bind(g.logger);
+          console.error = g.logger.error.bind(g.logger);
+          window.addEventListener('error', function(errorMsg, url, lineNo) {
+             console.error(url, lineNo, errorMsg);
+          });
+          break;
+      }
+      console.log("here");
+    }
   };
 
   /**

@@ -221,8 +221,16 @@ define([
       sendLogMsg("error", Array.prototype.join.call(arguments, " "));
     });
 
+    this.errorImpl = hftSettings.versionedFunc("1.11.0", function() {
+      sendLogMsg("error", Array.prototype.join.call(arguments, " "));
+    });
+
     this.log = hftSettings.versionedFunc("1.11.0", function() {
       console.log.apply(console, arguments);
+      sendLogMsg("log", Array.prototype.join.call(arguments, " "));
+    });
+
+    this.logImpl = hftSettings.versionedFunc("1.11.0", function() {
       sendLogMsg("log", Array.prototype.join.call(arguments, " "));
     });
 

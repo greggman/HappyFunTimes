@@ -115,10 +115,16 @@ define(function() {
     this.addLine_(argsToString(arguments), "red");
   };
 
+  var GameLogger = function(client) {
+    this.log = client.logImpl.bind(client);
+    this.error = client.errorImpl.bind(client);
+  };
+
   return {
-    NullLogger: NullLogger,
     ConsoleLogger: ConsoleLogger,
+    GameLogger: GameLogger,
     HTMLLogger: HTMLLogger,
+    NullLogger: NullLogger,
   };
 });
 
