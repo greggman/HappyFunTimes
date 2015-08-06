@@ -74,6 +74,11 @@ var uninstall = function(gameIdOrPath, opt_options) {
   var gamePath = installedGame.rootPath;
   var files = installedGame.files || [];
 
+  log("remove: " + gamePath);
+  if (!options.dryRun) {
+    games.remove(gamePath);
+  }
+
   var failCount = 0;
   var folders = [gamePath];
   files.forEach(function(file) {
@@ -126,11 +131,6 @@ var uninstall = function(gameIdOrPath, opt_options) {
       console.error(e);
     }
   });
-
-  log("remove: " + gamePath);
-  if (!options.dryRun) {
-    games.remove(gamePath);
-  }
 
   if (!options.dryRun) {
     console.log("uninstalled:" + gameIdOrPath);
