@@ -63,7 +63,7 @@ var makeRelease = function(args) {
       }, []);
       if (badPlatforms.length) {
         utils.badArgs(module, "unknown platforms: " + badPlatforms.join(", "));
-        return reject();
+        return reject();  // eslint-disable-line
       }
     }
 

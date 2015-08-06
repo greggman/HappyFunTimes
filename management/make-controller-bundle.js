@@ -31,8 +31,6 @@
 "use strict";
 
 var debug        = require('debug')('make');
-var buildInfo    = require('./build-info');
-var exporter     = require('./exporter');
 var fs           = require('fs');
 var gameInfo     = require('../lib/gameinfo');
 var path         = require('path');
@@ -132,11 +130,10 @@ var makeHTML = function(runtimeInfo, gamePath, destFolder/*, options*/) {
   return makeZip(runtimeInfo.originalGameId, gamePath, destPath, filter);
 };
 
-var makeUnity3d = function(runtimeInfo, gamePath, destFolder, options) {
+var makeUnity3d = function(runtimeInfo, gamePath, destFolder/*, options*/) {
   var gameId = runtimeInfo.originalGameId;
 
   var ignoreFilter = readdirtree.makeIgnoreFilter(runtimeInfo.info.happyFunTimes.ignore);
-  var promises = [];
   var destPath = path.join(destFolder, releaseUtils.safeishName(gameId) + ".controller.zip");
   var binStart = "bin/";
   var excludeRE = /^(src|Assets(?!\/WebPlayerTemplates)|Library|ProjectSettings|Temp)\//i;

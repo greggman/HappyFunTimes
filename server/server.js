@@ -56,6 +56,7 @@ var config     = require('../lib/config');
 var log        = require('../lib/log');
 var Promise    = require('promise');
 var optionator = require('optionator')(optionSpec);
+var settings;
 
 try {
   var args = optionator.parse(process.argv);
@@ -82,7 +83,7 @@ if (args.help) {
 log.config(args);
 config.setup(args);
 if (args.settings) {
-  var settings = config.getSettings().settings;
+  settings = config.getSettings().settings;
   args.settings.split(',').forEach(function(setting) {
     var keyValue = setting.split('=');
     var key = keyValue[0];
@@ -95,7 +96,7 @@ if (args.settings) {
   });
 }
 if (args.port) {
-  var settings = config.getSettings().settings;
+  settings = config.getSettings().settings;
   settings.port = args.port;
 }
 

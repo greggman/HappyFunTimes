@@ -374,7 +374,7 @@ define(
   var setupButtons = function(options) {
     var buttonInfos = [];
     var buttons = options.buttons;
-    var expirationTime = 2000;  // 2 seconds, 2000ms
+    //var expirationTime = 2000;  // 2 seconds, 2000ms
 
     // I don't really know what to make this number
     // If the person has steady hands they can make
@@ -421,18 +421,18 @@ define(
     // sometimes it seems we miss an out/up event and buttons
     // get stuck. So, for a particlar id, if no event has come in
     // for a while assume it was released.
-    var expireOldButtons = function() {
-      var now = Date.now();
-      buttonInfos.forEach(function(buttonInfo) {
-        Object.keys(buttonInfo.pointerIds).forEach(function(pointerId) {
-          var timeStamp = buttonInfo.pointerIds[pointerId];
-          var age = now - timeStamp;
-          if (age > expirationTime) {
-            removePointerId(buttonInfo, pointerId);
-          }
-        });
-      });
-    };
+    //var expireOldButtons = function() {
+    //  var now = Date.now();
+    //  buttonInfos.forEach(function(buttonInfo) {
+    //    Object.keys(buttonInfo.pointerIds).forEach(function(pointerId) {
+    //      var timeStamp = buttonInfo.pointerIds[pointerId];
+    //      var age = now - timeStamp;
+    //      if (age > expirationTime) {
+    //        removePointerId(buttonInfo, pointerId);
+    //      }
+    //    });
+    //  });
+    //};
 
     var handleButtonDown = function(e, buttonInfo) {
       addPointerId(buttonInfo, e.pointerId, e.timeStamp);
@@ -442,7 +442,7 @@ define(
       addPointerId(buttonInfo, e.pointerId, e.timeStamp);
     };
 
-    var handleButtonMove = function(e, buttonInfo) {
+    var handleButtonMove = function(/*e, buttonInfo*/) {
 //      addPointerId(buttonInfo, e.pointerId, e.timeStamp);
     };
 
