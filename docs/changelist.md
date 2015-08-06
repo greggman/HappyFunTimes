@@ -24,6 +24,16 @@ Changelist
 
     *   make `hft start --port` option work.
 
+    *   fixed `hft remove --bad`.
+
+        It was removing everything :(
+
+    *   fixed notifications for added/removed games.
+
+        It broke when support for running uninstalled games like hft-gamepad-api was added
+
+    *   made it save 5 backups of `installed-games.json`
+
 *   0.0.36
 
     *   added `--instructions` which puts a scrolling banner on top of each

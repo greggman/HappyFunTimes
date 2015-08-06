@@ -11,6 +11,19 @@ To Do
     *   download
     *   export
     *   run
+*   Export in Unity
+    *   why textarea is not big for description?
+    *   If install make it say "install"
+    *   If install select platform and hide platform choices
+    *   Make install and platform expanded by default
+    *   (remove install check. Its' confusing)
+    *   make semver editor?
+    *   Check when installing game appears in /games.html
+    *   progress?
+*   make prefab in scene not generate errors
+*   remove upgrade warning with install --upgrade. change to "upgrading ...."
+*   add "touch to start" on android (and iOS?) both sound and fullscreen can be added
+*   make unity provide files for controller
 *   fix realgame so it auto includes realgame.js and doesn't need manual HFT stuff
 *   add system session id. When checking ip addresses from scanner
     merge by session id
@@ -19,6 +32,9 @@ To Do
 *   when exiting native app make hft front app
 *   figure out why buttons get stuck and remove timout
 *   why is nexus not working on hft-tonde-iko
+
+    because of anti-scroll code.
+
 *   why does play appear on hft-tonde-iko without passing select screen?
 *   fix upgrade to stop running hft
 *   plants and motion flying
@@ -905,6 +921,8 @@ Runs Repo noid
 Done
 ====
 
+*   fix HFT not noticing new game installed/removed
+*   keep backups of installed-games
 *   make unity input tester
 *   add multi-touch support to unity-gamepad
 *   add jsfx support to unity-gamepad
