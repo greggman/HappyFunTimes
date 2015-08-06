@@ -54,6 +54,12 @@ var AvailableGames = function() {
   this.removeListener = emitter.removeListener.bind(emitter);
   this.reset = gameDB.reset.bind(gameDB);
 
+  function emitChanged() {
+    emitter.emit('changed');
+  }
+
+  gameDB.on('changed', emitChanged);
+
   // When getting games only get what's installed
   this.getGames = gameDB.getGames.bind(gameDB);
 
@@ -63,6 +69,7 @@ var AvailableGames = function() {
     if (!info) {
       debug("Added: " + gameId);
       unAddedAndUnInstalledGames[gameId] = runtimeInfo;
+      emitChanged();
     }
   };
 
