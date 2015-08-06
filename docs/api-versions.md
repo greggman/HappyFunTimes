@@ -349,4 +349,12 @@ the correct version
         the message that used to come up would be confusing as the user
         orients their phone.
 
+* v1.14.0
+
+    *   Fixed `gamedisconnect` message so in includes id of game that disconnected
+
+        When doing a multi-machine game, when a game disconnects a `gamedisconnect`
+        message is sent to all the remaining games. It was missing the id
+        of the game that disconnected. That's been added.
+
 

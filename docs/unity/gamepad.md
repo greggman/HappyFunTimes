@@ -386,6 +386,8 @@ at
     m_gamepad.axes[HFTGamepad.AXIS_TOUCH_X]   // returns -1 to 1
     m_gamepad.axes[HFTGamepad.AXIS_TOUCH_Y]   // returns -1 to 1
 
+    m_gamepad.buttons[HFTGamepad.BUTTON_TOUCH] // true if player is touching the screen
+
 ### Orientation Data
 
 If you check `provideOrientation` then the phone will start providing

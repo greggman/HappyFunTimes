@@ -17,6 +17,19 @@ or find stuff.
 So some random ideas I'd like to explore if I have time. Maybe they'll trigger some
 ideas for you
 
+*   using orientation use phone as a laser pointer
+
+    make team laser pointer game
+
+*   Coreography game
+
+    Computer calls 4-8 people up "It's your turn". Displays a diagram "[1 2 3 4]" on the big screen and tells each player
+    which number to stand on on their phone. Players are instructed to plugin headphones and put them on, make sure their
+    phone won't turn off and press a button when they can hear the sound.
+
+    Computer then plays dance music on the TV and gives each player individual dance instructions in their headphones
+    for a coreographied dance.
+
 *   Shake phone to race
 
     The faster you shake the faster it goes
@@ -31,8 +44,10 @@ ideas for you
 
 *   Bucket brigade
 
-    Players have to pass things from player to player either on the big screen or on their own
-
+    Players have to pass things from player to player either on the big screen or on their own.
+    Divide into teams. Red (A, B, C, D) vs Blue (A, B, C, D). A and B have to press at the same time?
+    Then B and C, then C and D. But must let off? Controls could be just L<->R. Or just one button.
+    Hold for Left, release for Right. But, discourage just mashing the button some how
 
 *   Given at least 4 players divide into groups.
 
@@ -229,3 +244,59 @@ ideas for you
 *   draw pattern, thing follows pattern
 
 *   sequence across phones. Each phone screams at random?
+
+*   Give everyone different controls
+
+    Give them N seconds to do their thing. Then show graph/percent of people who finished.
+    Figure out way for crowd to route for each other trying to get 100%
+
+*   Sorting game
+
+    Each player gets a letter (or a number). Make teams by color. Players press left or right
+    to swap position. First team to get their team in order wins. Fun? More than Once?
+
+*   Find your symbol.
+
+    Inspired by Alistar Aitcheson's games, each player is assigned a symbol. Sock, Ball, Chicken, Bat,
+    The symbols appear on the screen in different ways. Players must press their button when they
+    see their symbol but not press it when there symbol is not visible.
+
+*   Find matching background.
+
+    Find the player with the matching background. Click button on your screen that matches
+    one on theirs. Each screen shows 4 buttons. Only one matches. When you press the correct
+    one you get a point. Press the wrong one lose a point. After pressing your background
+    and images change so you have to find others? Not sure how to do that last part since
+    others are looking for your background. Maybe two people are always looking for each other?
+    Since there are 4 symbols is there a way to make all 4 of those people have to find each
+    other?
+
+*   Co-op tetris
+
+    Except figure out a way good players can power up and help bad players. Maybe they can
+    start shooting. Maybe have teams so there's an insentive to help teammates (don't want to
+    lose to other team)
+
+*   Press to not DIE!
+
+    Some kind of game where it shows a video or something and then someone screams "ABUNAI!!!"
+    If you have to press your button or the right button within 1 seconds or you fail. Show
+    precent of people that succeeded. Teams might make it competative.
+
+*   Artillary game
+
+    Players are divided into teams. Each team has a castle. UI is slingshot. Tilt phone to aim
+    Draw string to set power, Release to fire. Projectiles of one team all come from same castle.
+
+    Could make this asymetric where some players control shields or the movement of the base.
+    or get different weapons
+
+*   Chanting game
+
+    Could you make a game where when the phone flashes and makes a noise the player is
+    supposed to lift their hands and shout. Computer would conduct players in a chant
+    some people saying "Ooga" others saying "Chaka" etc....
+
+    Ideally you wouldn't have to look at the phone. Look into sounds that rumble the phone.
+
+

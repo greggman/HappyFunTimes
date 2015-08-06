@@ -74,6 +74,28 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 <p>It&#39;s an array of strings in the format of <code>.gitignore</code> (<a href="http://git-scm.com/docs/gitignore">see git docs</a>)
 not including the double asterix syntax.</p>
 </li>
+<li><p>Fixed <code>gamedisconnect</code> message so it includes the id of the game that disconnected.</p>
+</li>
+<li><p>Fixed touch buttons so no timeout is needed.</p>
+<p>I think I maybe (or maybe not) finally understand pointer events
+enough to not need a timeout to make sure they don&#39;t stick. Crossing
+my fingers.</p>
+</li>
+<li><p>Added <code>consoleTarget</code> option to commonui. Valid values are &quot;game&quot; and &quot;html&quot;.</p>
+<p>If &quot;html&quot; console.log and console.error are retargeted to HTML. <code>options.debug</code> needs to be true
+to see that html. If &quot;game&quot; console.log and console.error are sent back to the game. This
+can be used to try to debug something when there&#39;s no way to connect a debugger.</p>
+</li>
+<li><p>make <code>hft start --port</code> option work.</p>
+</li>
+<li><p>fixed <code>hft remove --bad</code>.</p>
+<p>It was removing everything :(</p>
+</li>
+<li><p>fixed notifications for added/removed games.</p>
+<p>It broke when support for running uninstalled games like hft-gamepad-api was added</p>
+</li>
+<li><p>made it save 5 backups of <code>installed-games.json</code></p>
+</li>
 </ul>
 </li>
 <li><p>0.0.36</p>

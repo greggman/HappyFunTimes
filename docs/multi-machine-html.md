@@ -15,6 +15,37 @@ on the game you'll get a launcher screen that looks like this.
 
 <img src="images/multi-machine-launcher.png" />
 
-This is the standard `game.html` and `scripts/game.js`. I did this because
+This is only for testing. It is the standard `game.html` and `scripts/game.js` combination that is
+usually run when picking an HTML5 game. I did this because
 setting up and testing multiple machines is a pain in the ass so I wanted
 an easy way to test stuff.
+
+The real game is defined in `realgame.html` and `scripts/realgame.js`
+
+## Multi Machine Basics
+
+In a normal HappyFunTimes HTML5 game the game creates a `GameServer` object.
+For multi machine game you should do this
+
+    var server = new GameServer({
+      allowMultipleGames: true,
+      id: someIdUniqueToThisMachine
+      master: someVariableTrueForOneMachineOnly
+    });
+
+Those options explained
+
+### allowMultipleGames
+
+The default for HappyFunTimes is if a game with the same gameId connects
+HappyFunTimes will disconnect the old game. This is an assuption that you're
+probably doing development, left a version of your game running in a tab somewhere,
+You open a new tab, start the game. If HappyFunTimes didn't disconnect the old
+game you'd probably spend 10 minutes trying to figure out why things are working.
+
+When making a game that supports multiple machines though you need HappyFunTimes
+to keep all of them connect so you set `allowMultipleMachines` to true.
+
+### id
+
+This id
