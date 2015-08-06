@@ -48,7 +48,8 @@ exports.usage = {
     "if no path or id is passed in current path is used.",
   ],
   options: [
-    { option: 'bad', type: 'Boolean',  description: "remove all that can't be loaded."},
+    { option: 'bad',     type: 'Boolean',  description: "remove all that can't be loaded."},
+    { option: 'dry-run', type: 'Boolean',  description: "don't actually remove"},
   ],
 };
 exports.cmd = remove;
