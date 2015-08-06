@@ -224,9 +224,10 @@ var makeUnity3d = function(runtimeInfo, gamePath, destFolder, options) {
         var destPath = path.join(destFolder, releaseUtils.safeishName(gameId) + platInfo.platform.zipSuffix);
         var binStart = "bin/";
         var excludeRE = /^(src|Assets(?!\/WebPlayerTemplates)|Library|ProjectSettings|Temp)\//i;
+        var extRE = /\.(meta|sln|userprefs|csproj)$/i;
         var filter = function(nativeFilename, filePath, isDir) {
           var filename = nativeFilename.replace(/\\/g, '/');
-          if (excludeRE.test(filename)) {
+          if (excludeRE.test(filename) || extRE.test(filename)) {
             return false;
           }
           if (strings.startsWith(filename, binStart)) {
@@ -244,7 +245,12 @@ var makeUnity3d = function(runtimeInfo, gamePath, destFolder, options) {
           }
           return pass;
         };
-        promises.push(makeZip(gameId, gamePath, destPath, filter));
+        promises.push(makeZip(gameId, gamePath, destPath, filter).then(function(zipFiles) {
+          zipFiles.forEach(function(zipFile) {
+              zipFile.platform = platInfo.platform.platform;
+          });
+          return zipFiles;
+        }));
       });
       return Promise.all(promises);
     }).then(function(zipFiles) {
@@ -254,7 +260,7 @@ var makeUnity3d = function(runtimeInfo, gamePath, destFolder, options) {
         var srcPath = path.join(gamePath, "bin", filename);
         var destPath = path.join(destFolder, filename);
         fs.writeFileSync(destPath, fs.readFileSync(srcPath));
-        result.push({filename: destPath});
+        result.push({filename: destPath, type: "unitypackage"});
       }
       return Promise.resolve(result);
     });
