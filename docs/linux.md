@@ -20,6 +20,7 @@ But, you can install it manually by following these steps
     Similarly type `wmctrl`. If it's installed it should print something. If not you'll
     be given instructions on how to install it.
 
+*   type `./cli/hft.js init` which will write a config file to `~/.happfuntimes/config.json`
 *   type `hft start --app-mode` which will start the server.
 
 

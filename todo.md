@@ -20,6 +20,7 @@ To Do
     *   make semver editor?
     *   Check when installing game appears in /games.html
     *   progress?
+    *   check package.json gets saved
 *   make prefab in scene not generate errors
 *   remove upgrade warning with install --upgrade. change to "upgrading ...."
 *   add "touch to start" on android (and iOS?) both sound and fullscreen can be added
