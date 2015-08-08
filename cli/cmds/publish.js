@@ -89,6 +89,7 @@ var publish = function(args) {
       username = user.split(":")[0];
       password = user.split(":")[1];
     }
+    password = args.pass || password;
 
     var promise;
     if (!password) {
@@ -130,6 +131,7 @@ var publish = function(args) {
         version: args['setVersion'],
         repoUrl: args['repoUrl'],
         endpoint: args['endpoint'],
+        export: args['export'],
         exporterPath: args['exporterPath'],
         exportPackage: args['exportPackage'],
         email: args['email'],
@@ -157,9 +159,11 @@ exports.usage = {
   ],
   options: [
     { option: 'user',           type: 'String',  description: "github username or username:password. Can pass as env var HFT_PUBLISH_USER", },
+    { option: 'pass',           type: 'String',  description: "github password. If not provided will be asked." },
     { option: 'bump',           type: 'String',  description: "how to bump version (major, premajor, minor, preminor, patch, prepatch, prerelease), default: patch", },
     { option: 'src',            type: 'String',  description: "path to source. If not supplied assumes current working directory.", },
     { option: 'force',          type: 'Boolean', description: "don't ask for conformation", },
+    { option: 'export',         type: 'Boolean', description: "export if type of project that needs exporting, eg:Unity3d. use --no-export to turn off", default: "true" },
     { option: 'set-version',    type: 'String',  description: "set a specific version in semver format. (eg: --version=1.2.3)", },
     { option: 'dry-run',        type: 'Boolean', description: "don't write any files", },
     { option: 'endpoint',       type: 'String',  description: "base url to use to register server (eg. http://local.test.com)"},
