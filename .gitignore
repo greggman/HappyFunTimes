@@ -9,6 +9,7 @@ images/src
 *.swp
 *.bat
 *.bak
+*.bak.json
 temp
 .mayaSwatches
 .git
