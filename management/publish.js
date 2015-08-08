@@ -55,6 +55,7 @@ var utils        = require('../lib/utils');
  *           confirmations
  * @property {string?} version set to a specific version
  * @property {string} repoUrl url of repo of game to register
+ * @property {boolean} export true to export projects that need exporting like unity3d
  * @property {string?} endpoint base url to register game. eg
  *           http://foo.com
  * @property {string?} email email address to send notification.
@@ -214,7 +215,7 @@ var publish = function(gamePath, options) {
       return make.make(gamePath, filePath, {
         exporterPath: options.exporterPath,
         exportPackage: options.exportPackage,
-        export: true,
+        export: options.export,
       });
     }).then(function(files) {
       files.forEach(function(file) {
