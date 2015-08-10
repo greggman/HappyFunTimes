@@ -11,17 +11,6 @@ To Do
     *   download
     *   export
     *   run
-*   Export in Unity
-    *   why textarea is not big for description?
-    *   If install make it say "install"
-    *   If install select platform and hide platform choices
-    *   Make install and platform expanded by default
-    *   (remove install check. Its' confusing)
-    *   make semver editor?
-    *   Check when installing game appears in /games.html
-    *   progress?
-    *   check package.json gets saved
-*   make prefab in scene not generate errors
 *   remove upgrade warning with install --upgrade. change to "upgrading ...."
 *   add "touch to start" on android (and iOS?) both sound and fullscreen can be added
 *   make unity provide files for controller
@@ -922,6 +911,17 @@ Runs Repo noid
 Done
 ====
 
+*   Export in Unity
+    *   why textarea is not big for description?
+    *   If install make it say "install"
+    *   If install select platform and hide platform choices
+    *   Make install and platform expanded by default
+    *   (remove install check. Its' confusing)
+    *   make semver editor?
+    *   Check when installing game appears in /games.html
+    *   progress?
+    *   check package.json gets saved
+*   make prefab in scene not generate errors
 *   fix HFT not noticing new game installed/removed
 *   keep backups of installed-games
 *   make unity input tester
