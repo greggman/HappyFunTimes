@@ -246,10 +246,18 @@ var RelayServer = function(servers, inOptions) {
       // the 'bin' convension
 
       // First check deeper
-      cwd = path.join(cwd, "WebPlayerTemplates/HappyFunTimes");
-      cwd = findPackageJSON(cwd);
-      if (!cwd) {
-        cwd = findPackageJSON(path.join(origCwd, "../../../Assets/WebPlayerTemplates/HappyFunTimes"));
+      // First check deeper
+      var checkPaths = [
+        "WebPlayerTemplates/HappyFunTimes",
+        "../../../Assets/WebPlayerTemplates/HappyFunTimes",
+        "../../Assets/WebPlayerTemplates/HappyFunTimes",
+      ];
+      for (var cp = 0; cp < checkPaths.length; ++cp) {
+        cwd = path.join(origCwd, checkPaths[cp]);
+        cwd = findPackageJSON(cwd);
+        if (cwd) {
+          break;
+        }
       }
 
       var read = false;
