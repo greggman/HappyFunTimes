@@ -5,13 +5,13 @@ To Do
 
     need to be able to edit CSS and update it
 
+*   make unity export open export folder?
 *   add support for unity3dlibrary
     *   make
     *   install
     *   download
     *   export
     *   run
-*   remove upgrade warning with install --upgrade. change to "upgrading ...."
 *   add "touch to start" on android (and iOS?) both sound and fullscreen can be added
 *   make unity provide files for controller
 *   fix realgame so it auto includes realgame.js and doesn't need manual HFT stuff
@@ -21,10 +21,6 @@ To Do
 *   check if HFT has page up? Go to that page
 *   when exiting native app make hft front app
 *   figure out why buttons get stuck and remove timout
-*   why is nexus not working on hft-tonde-iko
-
-    because of anti-scroll code.
-
 *   why does play appear on hft-tonde-iko without passing select screen?
 *   fix upgrade to stop running hft
 *   plants and motion flying
@@ -911,6 +907,11 @@ Runs Repo noid
 Done
 ====
 
+*   why is nexus not working on hft-tonde-iko
+
+    because of anti-scroll code.
+
+*   remove upgrade warning with install --upgrade. change to "upgrading ...."
 *   Export in Unity
     *   why textarea is not big for description?
     *   If install make it say "install"
