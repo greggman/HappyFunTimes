@@ -943,6 +943,10 @@ pre.prettyprint li {
     zoom: 50%;
 }
 
+.quartersize {
+    zoom: 25%;
+}
+
 .dl-button {
   background: #3498db;
   background-image: linear-gradient(to bottom, #3498db, #2980b9);

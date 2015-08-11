@@ -6,6 +6,7 @@ To Do
     need to be able to edit CSS and update it
 
 *   make unity export open export folder?
+*   make osx bring browser to front after quiting unity game
 *   add support for unity3dlibrary
     *   make
     *   install

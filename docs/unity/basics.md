@@ -42,13 +42,13 @@ when the command arrives from the phone. For example:
         m_netPlayer.OnDisconnect += Remove;
 
         // Setup events for the different messages.
-        m_netPlayer.RegisterCmdHandler<"color", MessageColor>(OnColor);
-        m_netPlayer.RegisterCmdHandler<"move", MessageMove>(OnMove);
+        m_netPlayer.RegisterCmdHandler<MessageColor>("color", OnColor);
+        m_netPlayer.RegisterCmdHandler<MessageMove>("move", OnMove);
     }
 
 Here you can see a typical `InitializeNetPlayer` method in C#. This line
 
-    m_netPlayer.RegisterCmdHandler<"move", MessageMove>(OnMove);
+    m_netPlayer.RegisterCmdHandler<MessageMove>("move", OnMove);
 
 says when the command "move" comes in, convert the data in that message to
 a `MessageMove` class and then call the method `OnMove`.
