@@ -66,7 +66,9 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
   </div>
   <div class="row">
     <div class="col-sm-8 lesson-main">
-      <p>See the video above for a demonstration of these steps</p>
+      <iframe width="853" height="480" src="https://www.youtube.com/embed/7jCNm9ZxzUY?rel=0" frameborder="0" allowfullscreen></iframe>
+
+<p>See the video above for a demonstration of these steps</p>
 <h2 id="first-let-s-make-the-simplest-non-happyfuntimes-example-i-can-think-of-">First let&#39;s make the simplest <em>non</em> happyfuntimes example I can think of.</h2>
 <ol>
 <li><p>Make a new scene in Unity</p>
@@ -90,7 +92,7 @@ public class PlayerScript : MonoBehaviour {
     // Update is called once per frame
     void Update () {
         float dx = speed * Input.GetAxis(&quot;Horizontal&quot;) * Time.deltaTime;
-        float dz = speed * Input.GetAxis(&quot;Vertical&quot;) * Time.deltaTime;
+        float dz = speed * Input.GetAxis(&quot;Vertical&quot;)   * Time.deltaTime;
         transform.position = transform.position + new Vector3(dx, 0.0f, dz);
     }
 }
@@ -122,7 +124,7 @@ void Start () {
 <pre><code>// Update is called once per frame
 void Update () {
     float dx = speed * (m_hftInput.GetAxis(&quot;Horizontal&quot;) + Input.GetAxis(&quot;Horizontal&quot;)) * Time.deltaTime;
-    float dz = speed * (m_hftInput.GetAxis(&quot;Vertical&quot;) + Input.GetAxis(&quot;Vertical&quot;)) * Time.deltaTime;
+    float dz = speed * (m_hftInput.GetAxis(&quot;Vertical&quot;)   + Input.GetAxis(&quot;Vertical&quot;)  ) * Time.deltaTime;
     transform.position = transform.position + new Vector3(dx, 0.0f, dz);
 }
 </code></pre></li>
@@ -162,18 +164,17 @@ void Start () {
     m_gamepad = GetComponent&lt;HFTGamepad&gt;();
 }
 </code></pre></li>
-<li><p>Also in <code>Start</code> look up the renderer component and set its material&#39;s color</p>
-</li>
-</ol>
-<pre><code>    // Use this for initialization
-    void Start () {
-        m_hftInput = GetComponent&lt;HFTInput&gt;();
-        m_gamepad = GetComponent&lt;HFTGamepad&gt;();
+<li><p>Also in <code>Start</code> look up the renderer component and set its material&#39;s color
+to the color the gamepad chose.</p>
+<pre><code>// Use this for initialization
+void Start () {
+    m_hftInput = GetComponent&lt;HFTInput&gt;();
+    m_gamepad = GetComponent&lt;HFTGamepad&gt;();
 
-        Renderer renderer = GetComponent&lt;Renderer&gt;();
-        renderer.material.color = m_gamepad.Color;
-    }
-</code></pre><ol>
+    Renderer renderer = GetComponent&lt;Renderer&gt;();
+    renderer.material.color = m_gamepad.Color;
+}
+</code></pre></li>
 <li><p>Create a new Material and assign it to the player prefab</p>
 </li>
 <li><p>Run it</p>

@@ -1,8 +1,7 @@
 ﻿Title: Your First HappyFunTimes Unity Game
 Description: How to make a game with HappyFunTimes and Unity
 
-
-
+<iframe width="853" height="480" src="https://www.youtube.com/embed/7jCNm9ZxzUY?rel=0" frameborder="0" allowfullscreen></iframe>
 
 See the video above for a demonstration of these steps
 
@@ -31,7 +30,7 @@ See the video above for a demonstration of these steps
             // Update is called once per frame
             void Update () {
                 float dx = speed * Input.GetAxis("Horizontal") * Time.deltaTime;
-                float dz = speed * Input.GetAxis("Vertical") * Time.deltaTime;
+                float dz = speed * Input.GetAxis("Vertical")   * Time.deltaTime;
                 transform.position = transform.position + new Vector3(dx, 0.0f, dz);
             }
         }
@@ -67,7 +66,7 @@ Let's make our sample work with HappyFunTimes
         // Update is called once per frame
         void Update () {
             float dx = speed * (m_hftInput.GetAxis("Horizontal") + Input.GetAxis("Horizontal")) * Time.deltaTime;
-            float dz = speed * (m_hftInput.GetAxis("Vertical") + Input.GetAxis("Vertical")) * Time.deltaTime;
+            float dz = speed * (m_hftInput.GetAxis("Vertical")   + Input.GetAxis("Vertical")  ) * Time.deltaTime;
             transform.position = transform.position + new Vector3(dx, 0.0f, dz);
         }
 
@@ -115,7 +114,7 @@ One problem right now is all the spheres are the same color. Let's fix that
         }
 
 2.  Also in `Start` look up the renderer component and set its material's color
-
+    to the color the gamepad chose.
 
         // Use this for initialization
         void Start () {
