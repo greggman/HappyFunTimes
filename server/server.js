@@ -147,6 +147,9 @@ function startServer() {
           })
           .then(function() {
             return browser.launch('http://localhost:' + server.getSettings().port + '/' + name + '.html', config.getConfig().preferredBrowser);
+          })
+          .then(function(browser) {
+            debug("launched: " + browser);
           });
     } else {
       p = Promise.resolve();
