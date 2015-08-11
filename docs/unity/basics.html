@@ -100,11 +100,11 @@ void InitializeNetPlayer(SpawnInfo spawnInfo) {
     m_netPlayer.OnDisconnect += Remove;
 
     // Setup events for the different messages.
-    m_netPlayer.RegisterCmdHandler&lt;&quot;color&quot;, MessageColor&gt;(OnColor);
-    m_netPlayer.RegisterCmdHandler&lt;&quot;move&quot;, MessageMove&gt;(OnMove);
+    m_netPlayer.RegisterCmdHandler&lt;MessageColor&gt;(&quot;color&quot;, OnColor);
+    m_netPlayer.RegisterCmdHandler&lt;MessageMove&gt;(&quot;move&quot;, OnMove);
 }
 </code></pre><p>Here you can see a typical <code>InitializeNetPlayer</code> method in C#. This line</p>
-<pre><code>m_netPlayer.RegisterCmdHandler&lt;&quot;move&quot;, MessageMove&gt;(OnMove);
+<pre><code>m_netPlayer.RegisterCmdHandler&lt;MessageMove&gt;(&quot;move&quot;, OnMove);
 </code></pre><p>says when the command &quot;move&quot; comes in, convert the data in that message to
 a <code>MessageMove</code> class and then call the method <code>OnMove</code>.</p>
 <p>The <code>MessageMove</code> class must inherit from <code>MessageCmdData</code> looks like this</p>
@@ -198,8 +198,9 @@ It&#39;s really up to you.</p>
 <li>HappyFunTimes & Unity
   <ul>
     <li><a href="getting-started.html">Getting Started</a><span class="hide">: Do this first!!</span></li>
-    <li><a href="gamepad.html">Your first HappyFunTimes Game</a><span class="hide": Read this!!!</li>
-    <li><a href="basics.html">The Basics</a><span class="hide">: Read this!!!</span></li>
+    <li><a href="first-game.html">Your First HappyFunTimes Game</a><span class="hide">: Do this second!!</span></li>
+    <li><a href="gamepad.html">The Sample Gamepad</a><span class="hide": Read this!!!</li>
+    <li><a href="basics.html">How it Works</a><span class="hide">: Read this!!!</span></li>
   </ul>
 </li>
 <li>Specifics

@@ -113,6 +113,8 @@ ideas for you
     circle in the dot as they are instructed to turn left, turn right,
     jump, etc...
 
+    Maybe it's a group dance.
+
 *   Just press button most times?
 
     various track and field / hyper bishi bashi games
