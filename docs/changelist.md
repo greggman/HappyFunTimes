@@ -1,6 +1,10 @@
 Changelist
 ==========
 
+*   0.0.38
+
+    *   Fix bug where it wasn't always able to start controllers in unity based projects.
+
 *   0.0.37
 
     *   Added `happyFunTimes.ignore` to package.json
