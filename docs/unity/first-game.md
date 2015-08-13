@@ -93,7 +93,7 @@ Let's make our sample work with HappyFunTimes
 You should see that pressing the D-Pad in the browser controls the sphere. Try
 opening more browser windows and you'll see more spheres. If you want, get out
 your phone and go to `happyfuntimes.net` and as long as your phone and computer
-are on the same WiFi you should see another sphere appear. Not they all start
+are on the same WiFi you should see another sphere appear. Note they all start
 at the same location so you need to move them to see them.
 
 ## Setting the Color
