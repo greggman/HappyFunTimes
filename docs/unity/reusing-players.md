@@ -32,14 +32,14 @@ There's 2 ways around this.
     reconnects to a game.
 
     So, you can make some player state, associate it with the session id, then if a player
-    reconnects you can user their session id to get their old state. For example
+    reconnects you can use their session id to get their old state. For example
 
         class PlayerState {
           public int score = 0;
           public int characterClass = 0;
         };
 
-        Dictionary<string, PlayerState> m_playerStates = new Dictionary<string, PlayerState>();
+        static Dictionary<string, PlayerState> s_playerStates = new Dictionary<string, PlayerState>();
 
         void InitializeNetPlayer(SpawnInfo spawnInfo) {
 
@@ -47,13 +47,13 @@ There's 2 ways around this.
 
             // See if we already have state for this player
             PlayerState playerState = null;
-            if (!m_playerStates.TryGetValue(m_netPlayer.GetSessionId(), out playerState)) {
+            if (!s_playerStates.TryGetValue(m_netPlayer.GetSessionId(), out playerState)) {
 
                 // This is a new player so setup their player state
                 playerState = new PlayerState();
 
                 // Save it in case they disconnect and reconnect later
-                m_playerStates[m_netPlayer.GetSessionId()] = playerState;
+                s_playerStates[m_netPlayer.GetSessionId()] = playerState;
             }
 
             // adjust the GameObject based on PlayerState
