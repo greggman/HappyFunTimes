@@ -223,7 +223,7 @@ define([
     // setup full screen support
     var requestFullScreen = function() {
       if (!fullScreen.isFullScreen()) {
-        touchStartElement.removeEventListener('click', requestFullScreen, false);
+        touchStartElement.removeEventListener('touchstart', requestFullScreen, false);
         touchStartElement.style.display = "none";
         fullScreen.requestFullScreen(document.body);
       }
@@ -234,7 +234,7 @@ define([
         resetOrientation();
       } else {
         if (fullScreen.canGoFullScreen()) {
-          touchStartElement.addEventListener('click', requestFullScreen, false);
+          touchStartElement.addEventListener('touchstart', requestFullScreen, false);
           touchStartElement.style.display = "block";
         }
       }
