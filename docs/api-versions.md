@@ -357,4 +357,12 @@ the correct version
         message is sent to all the remaining games. It was missing the id
         of the game that disconnected. That's been added.
 
+* v1.15.0
 
+    *   Choose a position for connect info
+
+        As of HappyFunTimes 0.0.36 you can use `--instructions` to disable
+        a banner showing how to connect. Now you can use `--instructions-position=bottom`
+        or `top` to set the position of the instructions. You can also add
+        `"instuctionsPosition": "bottom"` to the `happyFunTimes` section of your
+        `package.json` file to set it per game. The default is top.

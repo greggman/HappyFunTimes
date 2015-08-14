@@ -124,6 +124,10 @@ Displays a scrolling message on the screen telling users how to connect to the g
 
 Chooses which languages to display instructions. Example `--langs=en,ja`
 
+`--instructionsPosition=<position>`
+
+Selects where to put the connection instructions. Valid values are `top`, and `bottom`.
+
 `--wifi-name`
 
 Specifies the WiFi name for the connect message.
