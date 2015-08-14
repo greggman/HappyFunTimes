@@ -478,6 +478,7 @@ var HFTServer = function(options, startedCallback) {
                 apiVersion: runtimeInfo.info.happyFunTimes.apiVersion,
                 instructions: g.instructions,
                 langs: g.langs,
+                instructionsPosition: g.instructionsPosition || runtimeInfo.info.happyFunTimes.instructionsPosition,
                 wifiName: g.wifiName,
                 wifiPass: g.wifiPass,
               }),

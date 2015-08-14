@@ -126,7 +126,22 @@ define([
     }
 
     if (options.instructions || hftSettings.instructions) {
-      $("hft-connect").style.display = "block";
+      var hftConnectElem = $("hft-connect");
+      var hftConnectStyle = hftConnectElem.style;
+      hftConnectStyle.display = "block";
+      var position = options.instructionsPosition || hftSettings.instructionsPosition;
+      if (position) {
+        switch (position.toLowerCase()) {
+          case "top":
+            hftConnectStyle.top = "0";
+            hftConnectStyle.bottom = "auto";
+            break;
+          case "bottom":
+            hftConnectStyle.top = "auto";
+            hftConnectStyle.bottom = "0";
+            break;
+        }
+      }
       var langs = languages.getLangs(options.langs || hftSettings.langs);
       if (langs.length === 0) {
         langs = [languages.getDefaultLang()];
