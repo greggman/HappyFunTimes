@@ -1,6 +1,7 @@
 To Do
 =====
 
+*   add "touch to start" on android (and iOS?) both sound and fullscreen can be added
 *   make instructions CSS handling less hacky
 
     need to be able to edit CSS and update it
@@ -13,7 +14,6 @@ To Do
     *   download
     *   export
     *   run
-*   add "touch to start" on android (and iOS?) both sound and fullscreen can be added
 *   make unity provide files for controller
 *   fix realgame so it auto includes realgame.js and doesn't need manual HFT stuff
 *   add system session id. When checking ip addresses from scanner
