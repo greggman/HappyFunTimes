@@ -47,6 +47,7 @@ var hftSite                   = require('./hftsite');
 var highResClock              = require('../lib/highresclock');
 var http                      = require('http');
 var iputils                   = require('../lib/iputils');
+var languages                 = require('./languages');
 var mime                      = require('mime');
 var NonRequire                = require('./non-require');
 var RCompile                  = require('./r-compile');
@@ -84,6 +85,11 @@ mime.define({'application/javascript': ['js6']});
  * @property {number} [inactivityTimeout] time to disconnect users if no activity.
  * @property {boolean} [checkForApp] default = true. Whether or not to try to launch
  *    the native mobile app. This currently takes 3 seconds.
+ * @property {boolean} [instructions] whether or not to show instructions
+ * @property {string} [instructionsPosition] position of instructions "top" or "bottom"
+ * @property {string} [langs] comma separated language ids eg ("en,ja")
+ * @property {string} [wifiName] SSID for wifi
+ * @property {string} [wifiPass] password for wifi
  */
 
 /**
@@ -101,6 +107,7 @@ var HFTServer = function(options, startedCallback) {
     baseDir: 'public',
     cwd: process.cwd(),
   };
+  languages.init(options);
   var relayServer;
   var appleCaptivePortalHandler;
 
@@ -476,11 +483,6 @@ var HFTServer = function(options, startedCallback) {
               hftSettings: 'window.hftSettings = ' + JSON.stringify({
                 menu: g.menu,
                 apiVersion: runtimeInfo.info.happyFunTimes.apiVersion,
-                instructions: g.instructions,
-                langs: g.langs,
-                instructionsPosition: g.instructionsPosition || runtimeInfo.info.happyFunTimes.instructionsPosition,
-                wifiName: g.wifiName,
-                wifiPass: g.wifiPass,
               }),
             },
           ]);
@@ -609,6 +611,9 @@ var HFTServer = function(options, startedCallback) {
         noMessageTimout: options.inactivityTimeout,
         gameDB: g.gameDB,
         hftServer: this,
+        languages: languages,
+        instructions: options.instructions,
+        instructionsPosition: options.instructionsPosition,
       });
       console.log('Listening on port(s): ' + goodPorts.join(', ') + '\n');
       eventEmitter.emit('ports', goodPorts);
