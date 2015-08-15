@@ -163,6 +163,8 @@ GameGroup.prototype.assignClient = function(client, data) {
     this.games.splice(ndx, 1);
     this.games.unshift(game);
   }
+
+  return game;
 };
 
 GameGroup.prototype.addFiles = function(files) {
