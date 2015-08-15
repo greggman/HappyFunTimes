@@ -179,20 +179,7 @@ html, body {
  overflow: hidden;
  white-space: nowrap;
  margin: 0.2em;
- transform: translateX(100%);
- animation: hft-ins-anim 45s linear infinite;
 }
-/*
-@keyframes hft-ins-anim {
-  0%   {
-    transform: translateX(50%);
-  }
-  100% {
-    transform: translateX(-50%);
-  }
-}
-*/
-
 
 #hft-disconnected {
   position: absolute;
