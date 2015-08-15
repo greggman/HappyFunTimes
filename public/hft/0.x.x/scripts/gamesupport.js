@@ -51,7 +51,7 @@ define([
     './hft-settings',
     './hft-splash',
     './hft-system',
-    './languages',
+    './netplayer',
   ], function(
     StatsJS,
     Cookie,
@@ -62,7 +62,7 @@ define([
     hftSettings,
     HFTSplash,
     HFTSystem,
-    languages) {
+    NetPlayer) {
 
   var $ = function(id) {
     return document.getElementById(id);
@@ -125,41 +125,39 @@ define([
       server.addEventListener('disconnect', handleDisconnected);
     }
 
-    if (options.instructions || hftSettings.instructions) {
+    var handleInstructions = function(data) {
       var hftConnectElem = $("hft-connect");
       var hftConnectStyle = hftConnectElem.style;
-      hftConnectStyle.display = "block";
-      var position = options.instructionsPosition || hftSettings.instructionsPosition;
-      if (position) {
-        switch (position.toLowerCase()) {
-          case "top":
-            hftConnectStyle.top = "0";
-            hftConnectStyle.bottom = "auto";
-            break;
-          case "bottom":
-            hftConnectStyle.top = "auto";
-            hftConnectStyle.bottom = "0";
-            break;
-        }
+      hftConnectStyle.display = data.msg ? "block" : "none";
+      if (!data.msg) {
+        return;
       }
-      var langs = languages.getLangs(options.langs || hftSettings.langs);
-      if (langs.length === 0) {
-        langs = [languages.getDefaultLang()];
+      if (data.bottom) {
+        hftConnectStyle.top = "auto";
+        hftConnectStyle.bottom = "0";
+      } else {
+        hftConnectStyle.top = "0";
+        hftConnectStyle.bottom = "auto";
       }
-      $("hft-ins").innerHTML = langs.map(function(lang) {
-        return lang.connect;
-      }).join(" ");
+      $("hft-ins").innerHTML = data.msg;
 
       var style = document.createElement("style");
       var css = document.createTextNode("");
 
       var computeAnim = function() {
         var padding = 100;
-        var msgWidth = $("hft-ins").clientWidth + padding * 2;
+        var msgWidth = $("hft-ins").clientWidth;
         var bodyWidth = document.body.clientWidth;
-        var start = bodyWidth + padding;
-        var end = -msgWidth - padding;
-        var duration = (start - end) / 60;
+
+        if (msgWidth < bodyWidth) {
+          css.nodeValue = "";
+          return;
+        }
+
+        var width = msgWidth + padding;
+        var start = bodyWidth;
+        var end = -width - padding;
+        var duration = Math.abs(start - end) / 60;
 
         var anim = strings.replaceParams([
           "#hft-ins { animation: hft-ins-anim %(duration)ss linear infinite; }",
@@ -176,8 +174,15 @@ define([
       style.appendChild(css);
       document.body.appendChild(style);
       computeAnim();
-      // window.addEventListener('resize', computeAnim, false);
-    }
+      window.addEventListener('resize', computeAnim, false);
+
+    };
+
+    var sysNetPlayer = new NetPlayer(server, "-1", {}, "_hft_sys_");
+    server.setSystemMsgHandler_(function(data) {
+        sysNetPlayer.sendEvent_(data.cmd, [data.data]);
+    });
+    sysNetPlayer.addEventListener('instructions', handleInstructions);
 
     if (options.showFPS) {
       stats = new Stats();
