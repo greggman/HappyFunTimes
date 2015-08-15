@@ -42,7 +42,7 @@ exports.options = [
   { option: 'menu',                  type: 'Boolean', description: 'show menu icon on controller, use --no-menu to turn off', default: "true"},
   { option: 'instructions',          type: 'Boolean', description: 'show a instructions at the top games on how to connect', default: "false"},
   { option: 'instructions-position', type: 'String',  description: 'position for the instructions', enum: ["top", "bottom"], },
-  { option: 'langs',                 type: 'String',  description: 'languages to show separated by commas (eg --langs=en,ja,es). The first one will be used where only one language can be displayed', default: "false"},
+  { option: 'langs',                 type: 'String',  description: 'languages to show separated by commas (eg --langs=en,ja,es). The first one will be used where only one language can be displayed'},
   { option: 'wifi-name',             type: 'String',  description: 'name of wifi to display to users', default: "HappyFunTimes"},
   { option: 'wifi-pass',             type: 'String',  description: 'password of wifi to display to users'},
   { option: 'minify',                type: 'Boolean', description: 'minify -minify.js files', default: false},
