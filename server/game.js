@@ -338,6 +338,13 @@ Game.prototype.sendQuit = function() {
   this.sendSystemCmd('exit', {});
 };
 
+Game.prototype.sendInstructions = function(msg, bottom) {
+  this.sendSystemCmd('instructions', {
+    msg: msg,
+    bottom: bottom,
+  });
+};
+
 Game.prototype.sendGameDisconnect = function(otherGame) {
   if (this.client) {  // this check is needed because in GameGroup.assignClient the new game has been added to games but not yet assigned a client
 
