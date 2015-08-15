@@ -69,6 +69,7 @@ define([
     var _players = {};  // by id
     var _totalPlayerCount = 0;
     var _eventListeners = {};
+    var _systemMsgHandler;
     var _connectData = {
       id: undefined,
       needNewHFT: undefined,
@@ -97,6 +98,10 @@ define([
         throw new Error("can't derive gameId");
       }
     }
+
+    this.setSystemMsgHandler_ = function(handler) {
+      _systemMsgHandler = handler;
+    };
 
     /**
      * Event that we've connected to happyFunTimes
@@ -198,7 +203,10 @@ define([
       removePlayer_(msg.id);
     };
 
-    var handleSystemMsg_ = function(/*msg*/) {
+    var handleSystemMsg_ = function(msg) {
+      if (_systemMsgHandler) {
+        _systemMsgHandler(msg.data);
+      }
     };
 
     var handleLogMsg_ = function(data) {
