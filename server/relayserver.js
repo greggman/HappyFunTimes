@@ -47,7 +47,11 @@ var WSServer     = require('./websocketserver');
  * @typedef {Object} RelayServer~Options
  * @property {AvailableGames} gameDB The game db
  * @property {String?} baseUrl ???
+ * @property {HFTServer} hftServer the HFT server
+ * @property {Languages} languages the languages module
  * @property {WebSocketServer?} WebSocketServer constructor for WebSocketServer (for testing)
+ * @property {boolean} [instructions] whether or not to show instructions
+ * @property {string} [instructionsPosition] position of instructions "top" or "bottom"
  */
 
 /**
@@ -82,6 +86,7 @@ var RelayServer = function(servers, inOptions) {
   var eventEmitter = new events.EventEmitter();
   var gameDB = inOptions.gameDB;
   var hftServer = inOptions.hftServer;
+  var languages = inOptions.languages;
 
   this.setOptions = function(srcOptions) {
     ["baseUrl"].forEach(function(key) {
@@ -336,7 +341,10 @@ var RelayServer = function(servers, inOptions) {
     }
     debug("starting game: " + gameId);
     var gameGroup = getGameGroup(gameId, true);
-    gameGroup.assignClient(client, data);
+    var game = gameGroup.assignClient(client, data);
+    if (inOptions.instructions) {
+      game.sendInstructions(languages.getString("connect"), inOptions.instructionsPosition === "bottom");
+    }
     eventEmitter.emit('gameStarted', {gameId: gameId});
   };
 
