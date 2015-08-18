@@ -51,6 +51,7 @@ var install                   = require('../management/install');
 var iputils                   = require('../lib/iputils');
 var languages                 = require('./languages');
 var mime                      = require('mime');
+var msgbox                    = require('native-msg-box');
 var NonRequire                = require('./non-require');
 var RCompile                  = require('./r-compile');
 var path                      = require('path');
@@ -569,41 +570,59 @@ var HFTServer = function(options, startedCallback) {
     req.pipe(req.busboy);
     req.busboy.on('file', function (fieldname, file, filename) {
       debug("receiving: " + filename);
-      utils.getTempTempFilename({postfix: ".zip"})
-      .then(function(_fileInfo) {
-        fileInfo = _fileInfo;
-        debug("streamfile: " + filename);
-        return new Promise(function(resolve, reject) {
-          var fstream = fs.createWriteStream(fileInfo.filename);
-          file.pipe(fstream);
-          fstream.on('close', function() {
-            resolve(fileInfo);
-          });
-          fstream.on('error', function(e) {
-            reject(e);
-          });
-        });
-      })
-      .then(function() {
-        debug("installing: " + filename);
-        return install.install(fileInfo.filename, undefined, { overwrite: true });
-      })
-      .then(function() {
-        debug("installed: " + filename);
-        fileInfo.cleanup();
-        res.json({
-          success: true,
-          msg: "Installed",
-        });
-      })
-      .catch(function(e) {
-        debug("failed to install: " + filename);
-        e = e ? e.toString() : "";
-        fileInfo.cleanup();
-        res.json({
-          sucesss: false,
-          msg: "Failed to install: " + e.replace(fileInfo.filename, filename),
-        });
+      msgbox.prompt({
+        msg: "Install '"+ filename + "'?",
+        title: "HappyFunTimes",
+      }, function(err, result) {
+        switch (result) {
+          case msgbox.Result.YES: {
+              utils.getTempTempFilename({postfix: ".zip"})
+              .then(function(_fileInfo) {
+                fileInfo = _fileInfo;
+                debug("streamfile: " + filename);
+                return new Promise(function(resolve, reject) {
+                  var fstream = fs.createWriteStream(fileInfo.filename);
+                  file.pipe(fstream);
+                  fstream.on('close', function() {
+                    resolve(fileInfo);
+                  });
+                  fstream.on('error', function(e) {
+                    reject(e);
+                  });
+                });
+              })
+              .then(function() {
+                debug("installing: " + filename);
+                return install.install(fileInfo.filename, undefined, { overwrite: true });
+              })
+              .then(function() {
+                debug("installed: " + filename);
+                fileInfo.cleanup();
+                res.json({
+                  success: true,
+                  msg: "Installed",
+                });
+              })
+              .catch(function(e) {
+                debug("failed to install: " + filename);
+                e = e ? e.toString() : "";
+                fileInfo.cleanup();
+                res.json({
+                  sucesss: false,
+                  msg: "Failed to install: " + e.replace(fileInfo.filename, filename),
+                });
+              });
+            }
+            break;
+          case msgbox.Result.NO:
+          default: {
+              res.json({
+                success: true,
+                msg: "Installation Cancelled",
+              });
+            }
+            break;
+        }
       });
     });
   };
