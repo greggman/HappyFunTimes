@@ -39,6 +39,7 @@ var JSZip        = require('jszip');
 var mkdirp       = require('mkdirp');
 var path         = require('path');
 var platformInfo = require('../lib/platform-info');
+var Promise      = require('promise');
 var releaseUtils = require('./release-utils');
 var strings      = require('../lib/strings');
 
@@ -63,155 +64,156 @@ var install = function(releasePath, opt_destPath, opt_options) {
   var options = opt_options || {};
   var log = options.verbose ? console.log.bind(console) : function() {};
 
-  if (!strings.endsWith(releasePath, ".zip")) {
-    // ToDo: Should we handle URLs? What about ids?
-    console.error("Can't handle non zip files yet");
-    return false;
-  }
+  return new Promise(function(resolve, reject) {
 
-  var zip = new JSZip();
-  zip.load(fs.readFileSync(releasePath));
-  var entries = Object.keys(zip.files).sort().map(function(key) {
-    return zip.files[key];
-  });
-  var runtimeInfo;
-  var zipRootPath;
-
-  var packageLocations = gameInfo.getPackageLocations();
-  var checkPackageLocations = function(entry) {
-    var safeDirName = entry.name.replace(/\\/g, "/");
-    var shortPath = safeDirName.substring(safeDirName.indexOf("/") + 1);
-    for (var jj = 0; jj < packageLocations.length; ++jj) {
-      var packageLocation = packageLocations[jj];
-      if (shortPath === packageLocation.packagePath) {
-        return entry;
-      }
+    if (!strings.endsWith(releasePath, ".zip")) {
+      // ToDo: Should we handle URLs? What about ids?
+      return reject("Not a .zip file");
     }
-  };
 
-  var findPackage = function(entries) {
-    for (var ii = 0; ii < entries.length; ++ii) {
-      var entry = checkPackageLocations(entries[ii]);
-      if (entry) {
-        return entry;
-      }
-    }
-  };
+    var zip = new JSZip();
+    zip.load(fs.readFileSync(releasePath));
+    var entries = Object.keys(zip.files).sort().map(function(key) {
+      return zip.files[key];
+    });
+    var runtimeInfo;
+    var zipRootPath;
 
-  try {
-    // Find the packageInfo
-    var packageEntry = findPackage(entries);
-    if (!packageEntry) {
-      throw new Error("no package.json found in " + releasePath);
-    }
-    zipRootPath = packageEntry.name.replace(/\\/g, "/");
-    zipRootPath = zipRootPath.substring(0, zipRootPath.indexOf("/"));
-    runtimeInfo = gameInfo.parseGameInfo(packageEntry.asText(), packageEntry.name, zipRootPath);
-  } catch (e) {
-    console.error("could not parse package.json. Maybe this is not a HappyFunTimes game?");
-    console.error(e);
-    return false;
-  }
-
-  var info = runtimeInfo.info;
-  var hftInfo = info.happyFunTimes;
-  var gameId = runtimeInfo.originalGameId;
-  var destBasePath;
-
-  // is it already installed?
-  var installedGame = gameDB.getGameById(gameId);
-  if (installedGame) {
-    if (!options.overwrite) {
-      console.error("game " + gameId + " already installed at: " + installedGame.rootPath);
-      return false;
-    }
-    // Was it "installed" or just added?
-    if (installedGame.files) {
-      destBasePath = installedGame.rootPath;
-    }
-  }
-
-  var safeGameId = releaseUtils.safeishName(gameId);
-
-  if (!destBasePath) {
-      // make the dir after we're sure we're ready to install
-      destBasePath = path.join(config.getConfig().gamesDir, safeGameId);
-  }
-
-  destBasePath = opt_destPath ? opt_destPath : destBasePath;
-
-  console.log("installing to: " + destBasePath);
-  if (!options.dryRun) {
-    mkdirp.sync(destBasePath);
-  }
-
-  var files = [];
-  var bad = false;
-  entries.forEach(function(entry) {
-    if (bad) {
-      return;
-    }
-    var filePath = entry.name.substring(zipRootPath.length + 1);
-    files.push(filePath);
-    var destPath = path.resolve(path.join(destBasePath, filePath));
-    if (destPath.substring(0, destBasePath.length) !== destBasePath) {
-      console.error("ERROR: bad zip file. Path would write outside game folder");
-      bad = true;
-    } else {
-      var isDir = entry.dir;
-      if (destPath.substr(-1) === "/" || destPath.substr(-1) === "\\") {
-        destPath = destPath.substr(0, destPath.length - 1);
-        isDir = true;
-      }
-      //??
-      if (isDir) {
-        log("mkdir  : " + destPath);
-        if (!options.dryRun) {
-          mkdirp.sync(destPath);
+    var packageLocations = gameInfo.getPackageLocations();
+    var checkPackageLocations = function(entry) {
+      var safeDirName = entry.name.replace(/\\/g, "/");
+      var shortPath = safeDirName.substring(safeDirName.indexOf("/") + 1);
+      for (var jj = 0; jj < packageLocations.length; ++jj) {
+        var packageLocation = packageLocations[jj];
+        if (shortPath === packageLocation.packagePath) {
+          return entry;
         }
+      }
+    };
+
+    var findPackage = function(entries) {
+      for (var ii = 0; ii < entries.length; ++ii) {
+        var entry = checkPackageLocations(entries[ii]);
+        if (entry) {
+          return entry;
+        }
+      }
+    };
+
+    try {
+      // Find the packageInfo
+      var packageEntry = findPackage(entries);
+      if (!packageEntry) {
+        return reject("no package.json found in " + releasePath);
+      }
+      zipRootPath = packageEntry.name.replace(/\\/g, "/");
+      zipRootPath = zipRootPath.substring(0, zipRootPath.indexOf("/"));
+      runtimeInfo = gameInfo.parseGameInfo(packageEntry.asText(), packageEntry.name, zipRootPath);
+    } catch (e) {
+      return reject("could not parse package.json. Maybe this is not a HappyFunTimes game?");
+    }
+
+    var info = runtimeInfo.info;
+    var hftInfo = info.happyFunTimes;
+    var gameId = runtimeInfo.originalGameId;
+    var destBasePath;
+
+    // is it already installed?
+    var installedGame = gameDB.getGameById(gameId);
+    if (installedGame) {
+      if (!options.overwrite) {
+        return reject("game " + gameId + " already installed at: " + installedGame.rootPath);
+      }
+      // Was it "installed" or just added?
+      if (installedGame.files) {
+        destBasePath = installedGame.rootPath;
+      }
+    }
+
+    var safeGameId = releaseUtils.safeishName(gameId);
+
+    if (!destBasePath) {
+        // make the dir after we're sure we're ready to install
+        destBasePath = path.join(config.getConfig().gamesDir, safeGameId);
+    }
+
+    destBasePath = opt_destPath ? opt_destPath : destBasePath;
+
+    console.log("installing to: " + destBasePath);
+    if (!options.dryRun) {
+      mkdirp.sync(destBasePath);
+    }
+
+    var files = [];
+    var errors = [];
+    var bad = false;
+    entries.forEach(function(entry) {
+      if (bad) {
+        return;
+      }
+      var filePath = entry.name.substring(zipRootPath.length + 1);
+      files.push(filePath);
+      var destPath = path.resolve(path.join(destBasePath, filePath));
+      if (destPath.substring(0, destBasePath.length) !== destBasePath) {
+        errors.push("ERROR: bad zip file. Path would write outside game folder");
+        bad = true;
       } else {
-        log("install: " + entry.name + " -> " + destPath);
-        if (!options.dryRun) {
-          var dirPath = path.dirname(destPath);
-          if (!fs.existsSync(dirPath)) {
-            log("mkdir  : " + dirPath);
-            mkdirp.sync(dirPath);
+        var isDir = entry.dir;
+        if (destPath.substr(-1) === "/" || destPath.substr(-1) === "\\") {
+          destPath = destPath.substr(0, destPath.length - 1);
+          isDir = true;
+        }
+        //??
+        if (isDir) {
+          log("mkdir  : " + destPath);
+          if (!options.dryRun) {
+            mkdirp.sync(destPath);
           }
-          fs.writeFileSync(destPath, entry.asNodeBuffer());
+        } else {
+          log("install: " + entry.name + " -> " + destPath);
+          if (!options.dryRun) {
+            var dirPath = path.dirname(destPath);
+            if (!fs.existsSync(dirPath)) {
+              log("mkdir  : " + dirPath);
+              mkdirp.sync(dirPath);
+            }
+            fs.writeFileSync(destPath, entry.asNodeBuffer());
+          }
         }
       }
+    });
+
+    if (bad) {
+      // Should delete all work here?
+      return reject(errors.join("\n"));
     }
-  });
 
-  if (bad) {
-    // Should delete all work here?
-    return false;
-  }
-
-  // Should this be in the zip?
-  log("checking gametype: " + hftInfo.gameType);
-  if (hftInfo.gameType.toLowerCase() === "unity3d") {
-    var exePath = platformInfo.exePath;
-    if (exePath) {
-      exePath = path.join(destBasePath, strings.replaceParams(exePath, { gameId: safeGameId }));
-      if (!fs.existsSync(exePath)) {
-        console.error("path not found: " + exePath);
-        return false;
+    // Should this be in the zip?
+    log("checking gametype: " + hftInfo.gameType);
+    if (hftInfo.gameType.toLowerCase() === "unity3d") {
+      var exePath = platformInfo.exePath;
+      if (exePath) {
+        exePath = path.join(destBasePath, strings.replaceParams(exePath, { gameId: safeGameId }));
+        if (!fs.existsSync(exePath)) {
+          return reject("path not found: " + exePath);
+        }
+        log("setting chmod 643 for: " + exePath);
+        fs.chmodSync(exePath, (7 << 6) | (4 << 3) | 4);
       }
-      log("setting chmod 643 for: " + exePath);
-      fs.chmodSync(exePath, (7 << 6) | (4 << 3) | 4);
     }
-  }
 
 
-  log("add: " + destBasePath);
-  if (!options.dryRun) {
-    games.add(destBasePath, files);
-  }
+    log("add: " + destBasePath);
+    if (!options.dryRun) {
+      games.add(destBasePath, files);
+    }
 
-  if (!options.dryRun) {
-    console.log("installed:" + releasePath);
-  }
+    if (!options.dryRun) {
+      console.log("installed:" + releasePath);
+    }
+
+    resolve();
+  });
 };
 
 /**

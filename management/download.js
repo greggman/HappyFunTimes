@@ -256,10 +256,7 @@ var download = function(gameId, opt_destPath, options) {
       });
     }).then(function(srcPath) {
       eventEmitter.emit('status', {status: "Installing..."});
-      if (install(srcPath, opt_destPath, options) === false) {
-        return Promise.reject("Trouble installing " + gameId);
-      }
-      return Promise.resolve();
+      return install(srcPath, opt_destPath, options);
     }).then(function() {
       cleanup();
       eventEmitter.emit('status', {status: "Finished"});
