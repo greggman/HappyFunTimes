@@ -33,6 +33,7 @@
 
 var AppleCaptivePortalHandler = require('./apple-captive-portal-handler');
 var AvailableGames            = require('./available-games');
+var busboy                    = require('connect-busboy');
 var Cache                     = require('inmemfilecache');
 var computerName              = require('../lib/computername');
 var config                    = require('../lib/config');
@@ -46,6 +47,7 @@ var HFTGame                   = require('./hftgame');
 var hftSite                   = require('./hftsite');
 var highResClock              = require('../lib/highresclock');
 var http                      = require('http');
+var install                   = require('../management/install');
 var iputils                   = require('../lib/iputils');
 var languages                 = require('./languages');
 var mime                      = require('mime');
@@ -54,6 +56,7 @@ var RCompile                  = require('./r-compile');
 var path                      = require('path');
 var strings                   = require('../lib/strings');
 var url                       = require('url');
+var utils                     = require('../lib/utils');
 
 mime.define({'application/javascript': ['js6']});
 
@@ -559,8 +562,56 @@ var HFTServer = function(options, startedCallback) {
     });
   }
 
+  var receiveUploadedFile = function(req, res) {
+    debug("receiveUploadedFile");
+    console.dir(req);
+    var fileInfo;
+    req.pipe(req.busboy);
+    req.busboy.on('file', function (fieldname, file, filename) {
+      debug("receiving: " + filename);
+      utils.getTempTempFilename({postfix: ".zip"})
+      .then(function(_fileInfo) {
+        fileInfo = _fileInfo;
+        debug("streamfile: " + filename);
+        return new Promise(function(resolve, reject) {
+          var fstream = fs.createWriteStream(fileInfo.filename);
+          file.pipe(fstream);
+          fstream.on('close', function() {
+            resolve(fileInfo);
+          });
+          fstream.on('error', function(e) {
+            reject(e);
+          });
+        });
+      })
+      .then(function() {
+        debug("installing: " + filename);
+        return install.install(fileInfo.filename, undefined, { overwrite: true });
+      })
+      .then(function() {
+        debug("installed: " + filename);
+        fileInfo.cleanup();
+        res.json({
+          success: true,
+          msg: "Installed",
+        });
+      })
+      .catch(function(e) {
+        debug("failed to install: " + filename);
+        e = e ? e.toString() : "";
+        fileInfo.cleanup();
+        res.json({
+          sucesss: false,
+          msg: "Failed to install: " + e.replace(fileInfo.filename, filename),
+        });
+      });
+    });
+  };
+
   app.get(/^\/games\/(.*?)\//, sendGameRequestedFile);
   app.get(/^\/enter-name.html/, sendTemplatedFile);
+  app.use(/^\/upload\//, busboy());
+  app.post(/^\/upload\//, receiveUploadedFile);
   app.get(/.*/, sendSystemRequestedFile);
   app.post(/.*/, bodyParser);
 
