@@ -82,7 +82,7 @@ function getLangsMessage(langs, msgId, concatStr) {
  * @param {Lang~Options} options
  */
 function init(options) {
-  options = options;
+  options = options || {};
   Object.keys(g.srcLangs).forEach(function(key) {
     var srcLang = g.srcLangs[key];
     var dstLang = {};
