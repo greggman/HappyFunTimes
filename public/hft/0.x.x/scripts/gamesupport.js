@@ -183,6 +183,12 @@ define([
         sysNetPlayer.sendEvent_(data.cmd, [data.data]);
     });
     sysNetPlayer.addEventListener('instructions', handleInstructions);
+    if (options.instructions) {
+      handleInstructions({
+        msg: options.instructions,
+        bottom: options.instructionsPosition === "bottom",
+      });
+    }
 
     if (options.showFPS) {
       stats = new Stats();
