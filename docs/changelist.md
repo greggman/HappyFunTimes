@@ -1,6 +1,20 @@
 Changelist
 ==========
 
+*   0.0.39
+
+    *   Change instructions to use game sys messages.
+
+        That way both HTML and Unity (etc..) can use the same system
+        for instructions
+
+    *   move langauges.js to server
+
+        That way both HTML and Unity can use the same language strings
+
+    *   Allow Unity to use `HFT_INSTUCTIONS` and `HFT_INSTRUCTIONSPOSITION`
+        environment variables to specify instructions.
+
 *   0.0.38
 
     *   Fix bug where it wasn't always able to start controllers in unity based projects.

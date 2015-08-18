@@ -1,6 +1,15 @@
 Title: Changelog for Unity Plugin
 Description: Changes for Unity Plugin
 
+*   1.3
+
+    *   Fixed `GetAxis` bug where asking for the wrong axis returned the first axis
+
+    *   Added Instructions support.
+
+        Start HappyFunTimes with `hft start --instrutions` for instructions to appear.
+        [See docs](commands.html#-hft-start-)
+
 *   1.2
 
     *   Added Export/Install/Publish menu items

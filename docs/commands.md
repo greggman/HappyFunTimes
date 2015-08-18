@@ -4,17 +4,17 @@ Description: hft commandline commands.
 `hft` is a command to help manage happyfuntimes for developers. For the basics typing `hft`
 will list all the commands. Typing `hft cmd --help` will list the help for a specific command.
 
-*   **[hft add](#hft-add)**
-*   **[hft check](#hft-check)**
-*   **[hft download](#hft-download-gameId)**
-*   **[hft install](#hft-install-srcpath)**
-*   **[hft list](#hft-list)**
-*   **[hft make-release](#hft-make-release-dstpath)**
-*   **[hft publish](#hft-publish)**
-*   **[hft register](#hft-register)**
-*   **[hft remove](#hft-remove)**
-*   **[hft start](#hft-start)**
-*   **[hft uninstall](#hft-uninstall-gameid)**
+*   **[`hft add`](#-hft-add-)**
+*   **[`hft check`](#-hft-check-)**
+*   **[`hft download`](#-hft-download-gameId-)**
+*   **[`hft install`](#-hft-install-srcpath-)**
+*   **[`hft list`](#-hft-list-)**
+*   **[`hft make-release`](#-hft-make-release-dstpath-)**
+*   **[`hft publish`](#-hft-publish-)**
+*   **[`hft register`](#-hft-register-)**
+*   **[`hft remove`](#-hft-remove-)**
+*   **[`hft start`](#-hft-start-)**
+*   **[`hft uninstall`](#-hft-uninstall-gameid-)**
 
 ### `hft add`
 
@@ -43,7 +43,7 @@ lists all the games currently added or installed in happyfuntimes
 makes a releases, a zip file, of the game in the current folder and saves it to
 a path `dstpath`. Note `dstpath` must be a folder. Also note if the game is
 a unity game you must exit unity as unity will be called to export the game.
-This is mostly for testing. See [hft publish](#hft-publish)
+This is mostly for testing. See [hft publish](#-hft-publish-)
 
 ### `hft publish`
 
@@ -86,67 +86,71 @@ happyFunTimes. No files are deleted.
 
 starts happyFunTimes.
 
-`--app-mode`
+#### `--app-mode`
 
 launches the browser to `http://localhost:18679/games.html`. This is the same way HappyFunTimes
 is started when you launch by clicking the HappyFunTimes program icon.
 
-`--system-name=<somename>`
+#### `--system-name=<somename>`
 
 If you're at a gamejam or some other place where there are multiple happyfuntimes
 games running on the same network, then when users connect to happyfuntimes.net they'll
 be given a list of game to join. The list will say the name of the computer followed
-by the name of the game. By default happyfuntimes user the name of your computer. You
+by the name of the game. By default happyfuntimes uses the name of your computer. You
 can set a specific name with this option.
 
-`--no-ask-name`
+#### `--no-ask-name`
 
 If you're running a single game in [installation mode](network.md) and you don't need users to enter
 a name this option will skip asking the user for a name
 
-`--no-menu`
+#### `--no-menu`
 
 If you're running in [installation mode](network.md) and you don't need users to be able to change their
 name this option turns off the gear icon on the controller
 
-`--kiosk`
+#### `--kiosk`
 
 Normally controllers start at `http://localhost:18679`. There the controller waits for
 a game to start. If multiple games are running users are given a list to choose from.
 If you're running in an [installation](network.md) where there's only 1 game you can have controller
 go directly to the game with this option.
 
-`--instructions`
+#### `--instructions`
 
 Displays a scrolling message on the screen telling users how to connect to the game
 
-`--langs`
+#### `--langs`
 
 Chooses which languages to display instructions. Example `--langs=en,ja`
 
-`--instructionsPosition=<position>`
+Note: To add more languages [please submit a pull request for this file](https://github.com/greggman/HappyFunTimes/blob/master/server/languages.js)
+
+#### `--instructionsPosition=<position>`
 
 Selects where to put the connection instructions. Valid values are `top`, and `bottom`.
+Games can also select where to put the messages in their [package.json](packagejson.md).
 
-`--wifi-name`
+#### `--wifi-name`
 
-Specifies the WiFi name for the connect message.
+Specifies the WiFi name for the connect message. Defaults to "HappyFunTimes.
 
-`--wifi-pass`
+#### `--wifi-pass`
 
-Specifies the WiFi password for the connect message.
+Specifies the WiFi password for the connect message. If none specified it's assumed
+the WiFi is open and no password is needed.
 
-`--check-for-app`
+#### `--check-for-app`
 
 Controllers don't normally try to launch the native mobile app. This check takes 3 seconds.
 Use this switch to add that check so if the user has the app installed it will switch to
 the app.
 
-`--dns`
+#### `--dns`
 
 Tells happyfuntimes to implement a DNS server. This is for [installation mode](network.md).
 
-`--optimize-controller`
+#### `--optimize-controller`
 
 Tells happyfuntimes to concatinate and compress most of your controller's JavaScript files into one file.
 This should make phones connect faster (less to download) and be less likely to have

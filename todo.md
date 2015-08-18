@@ -1,12 +1,13 @@
 To Do
 =====
 
+*   drag and drop install?
 *   add "touch to start" on android (and iOS?) both sound and fullscreen can be added
 *   make instructions CSS handling less hacky
 
     need to be able to edit CSS and update it
 
-*   make unity export open export folder?
+*   make unity export open export folder in finder/explorer?
 *   make osx bring browser to front after quiting unity game
 *   add support for unity3dlibrary
     *   make
@@ -17,17 +18,11 @@ To Do
 *   make unity provide files for controller
 *   fix realgame so it auto includes realgame.js and doesn't need manual HFT stuff
 *   add system session id. When checking ip addresses from scanner
-    merge by session id
+    merge by session id. Maybe just use system name
 *   add progress bar when scanning
 *   check if HFT has page up? Go to that page
-*   when exiting native app make hft front app
-*   figure out why buttons get stuck and remove timout
-*   why does play appear on hft-tonde-iko without passing select screen?
-*   fix upgrade to stop running hft
-*   plants and motion flying
 *   figure out why Player23, Player24, Player25
 *   add frame rate for motion data
-*   fix controller that incorrectly asked for orientation
 *   need a way for game to send binary files (how about a .zip)
     for controller so you can have image files and sounds. That sounds
     painful. I can either expand to base64 (easy) or need to send
@@ -35,9 +30,6 @@ To Do
     that next msg is ___. Or I could 'post' it.
 
 *   make sure options.files work in unity
-*   add happyFunTimes.name to package info because package.json name can't have spaces! UGH!!
-*   make unity edit HappyFunTimes.name (auto-set name to valid name)
-*   update shft and manage to use hft.name
 *   check kiosk mode and app
 
 
@@ -908,6 +900,14 @@ Runs Repo noid
 Done
 ====
 
+*   fix upgrade to stop running hft
+*   why does play appear on hft-tonde-iko without passing select screen?
+
+    because new players get passed a `data` that used to be null if the
+    player was new but is no longer null because of __hft__ fields
+
+*   figure out why buttons get stuck and remove timout
+*   make instructions not scroll if can fit?
 *   why is nexus not working on hft-tonde-iko
 
     because of anti-scroll code.
@@ -1736,6 +1736,14 @@ Done
 Rejected
 --------
 
+*   add happyFunTimes.name to package info because package.json name can't have spaces! UGH!!
+
+    doesn't matter. Not using NPM for HFT. HFT doesn't care about spaces
+
+    *   make unity edit HappyFunTimes.name (auto-set name to valid name) (see above)
+    *   update shft and manage to use hft.name (see above)
+
+*   fix controller that incorrectly asked for orientation. No repo
 *   look into nsis has the installer solution
     *   windows only.
 *   Need to make installer creator for hft games
