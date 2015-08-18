@@ -39,8 +39,8 @@ requirejs(
     './semver',
   ], function(
     GameClient,
-    Misc,
-    Strings,
+    misc,
+    strings,
     semver) {
 
   var $ = document.getElementById.bind(document);
@@ -49,6 +49,107 @@ requirejs(
     gamesById: {},
     hftData: {},
   };
+
+  function dump(e) {
+    console.log(e);
+  }
+
+  function DragDropManager(elem) {
+
+    var noPropagate = function(e) {
+      e.stopPropagation();
+      if (e.preventDefault) {
+        return e.preventDefault();
+      } else {
+        return e.returnValue = false;
+      }
+    };
+
+    var origBGColor = elem.style.backgroundColor;
+
+    var hide = function() {
+      elem.style.backgroundColor = origBGColor;
+    };
+
+    var show = function() {
+      elem.style.backgroundColor = "red";
+    };
+
+    var showFiles = function(e) {
+      if (!e.dataTransfer) {
+        console.log("WTF! no dataTransfer");
+        return;
+      }
+      var files = e.dataTransfer.files;
+      if (files && files.length) {
+        var items = e.dataTransfer.items;
+        if (false && items && items.length && items[0].webkitGetAsEntry !== null) {
+          Array.prototype.forEach.call(items, function(item, ndx) {
+            if (item.webkitGetAsEntry) {
+              var entry = item.webkitGetAsEntry();
+              if (entry.isFile) {
+                console.log("item", ndx, item.getAsFile());
+              }
+            }
+          });
+        } else {
+          Array.prototype.forEach.call(files, function(file, ndx) {
+            console.log("file", ndx, file);
+          });
+        }
+      }
+    };
+
+    var old;
+    var debug = function(e) {
+      try {
+        if (e.type !== old) {
+          old = e.type;
+          console.log(old);
+          showFiles(e);
+        }
+      } catch (e) {
+        console.error(e);
+      }
+    }
+
+    misc.applyListeners(elem, {
+      dragstart: function(e) {
+        debug(e);
+        show();
+      },
+      dragenter: function(e) {
+        debug(e);
+        show();
+        return noPropagate(e);
+      },
+      dragover: function(e) {
+        debug(e);
+        show();
+        return noPropagate(e);
+      },
+      dragleave: function(e) {
+        debug(e);
+        hide();
+      },
+      drag: function(e) {
+        debug(e);
+        // no-op
+      },
+      drop: function(e) {
+        debug(e);
+        hide();
+        return noPropagate(e);
+      },
+      dragend: function(e) {
+        debug(e);
+        hide();
+      },
+    });
+  }
+
+  var dd = new DragDropManager(document.body);
+
 
   var handleCmdErrorMsg = function(data) {
     // TODO: change to html dialog.
@@ -75,7 +176,7 @@ requirejs(
     $("versionnum").innerHTML = "v" + data.version;
   };
 
-  var params = Misc.parseUrlQuery();
+  var params = misc.parseUrlQuery();
 
   var client = new GameClient({
     gameId: "__hft__",
@@ -136,7 +237,7 @@ requirejs(
         console.error("missing template: " + templateId);
         return;
       }
-      html.push(Strings.replaceParams(template, runtimeInfo));
+      html.push(strings.replaceParams(template, runtimeInfo));
     });
 
     gamemenu.innerHTML = html.join("");

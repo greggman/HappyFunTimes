@@ -470,9 +470,36 @@ define(function() {
     return id;
   }
 
+  /**
+   * Applies an object of listeners to an emitter.
+   *
+   * Example:
+   *
+   *     applyListeners(someDivElement, {
+   *       mousedown: someFunc1,
+   *       mousemove: someFunc2,
+   *       mouseup: someFunc3,
+   *     });
+   *
+   * Which is the same as
+   *
+   *     someDivElement.addEventListener("mousedown", someFunc1);
+   *     someDivElement.addEventListener("mousemove", someFunc2);
+   *     someDivElement.addEventListener("mouseup", someFunc3);
+   *
+   * @param {Emitter} emitter some object that emits events and has a function `addEventListener`
+   * @param {Object.<string, function>} listeners eventname function pairs.
+   */
+  function applyListeners(emitter, listeners) {
+    Object.keys(listeners).forEach(function(name) {
+      emitter.addEventListener(name, listeners[name]);
+    });
+  }
+
   return {
     applyObject: applyObject,
     applyUrlSettings: applyUrlSettings,
+    applyListeners: applyListeners,
     clamp: clamp,
     clampPlusMinus: clampPlusMinus,
     copyProperties: copyProperties,
