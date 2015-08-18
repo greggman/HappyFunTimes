@@ -338,10 +338,14 @@ Game.prototype.sendQuit = function() {
   this.sendSystemCmd('exit', {});
 };
 
-Game.prototype.sendInstructions = function(msg, bottom) {
+Game.prototype.sendInstructions = function(msg, pos) {
+  if (!this.runtimeInfo) {
+    return;
+  }
+  pos = pos || this.runtimeInfo.info.happyFunTimes.instructionsPosition;
   this.sendSystemCmd('instructions', {
     msg: msg,
-    bottom: bottom,
+    bottom: pos === "bottom",
   });
 };
 

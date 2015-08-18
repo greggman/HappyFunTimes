@@ -17,6 +17,16 @@ or find stuff.
 So some random ideas I'd like to explore if I have time. Maybe they'll trigger some
 ideas for you
 
+*   Spider game
+
+    One button. Players are at edge of screen. Shoot line across
+    screen and then travel down line to where it touches other edge of
+    screen. If any other player touches their line they die.
+
+    Q: How long do the lines last? 1 second? Forever?
+
+    Q: How to aim? Auto sweep? Tilt phone?
+
 *   using orientation use phone as a laser pointer
 
     make team laser pointer game
