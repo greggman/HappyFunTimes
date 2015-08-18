@@ -343,7 +343,7 @@ var RelayServer = function(servers, inOptions) {
     var gameGroup = getGameGroup(gameId, true);
     var game = gameGroup.assignClient(client, data);
     if (inOptions.instructions) {
-      game.sendInstructions(languages.getString("connect"), inOptions.instructionsPosition === "bottom");
+      game.sendInstructions(languages.getString("connect"), inOptions.instructionsPosition);
     }
     eventEmitter.emit('gameStarted', {gameId: gameId});
   };
