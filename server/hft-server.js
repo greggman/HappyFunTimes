@@ -571,9 +571,12 @@ var HFTServer = function(options, startedCallback) {
       debug("receiving: " + filename);
       var safeishName = filename.replace(/[^a-zA-Z0-9-_. ]/g, '_').substring(0, 64);
       msgbox.prompt({
-        msg: "Install '"+ safeishName + "'?",
+        msg: "Install '" + safeishName + "'?",
         title: "HappyFunTimes",
       }, function(err, result) {
+        if (err) {
+          result = msgbox.Result.NO;
+        }
         switch (result) {
           case msgbox.Result.YES: {
               utils.getTempTempFilename({postfix: ".zip"})

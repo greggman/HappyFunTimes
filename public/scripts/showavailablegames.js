@@ -54,7 +54,7 @@ requirejs(
     hftData: {},
   };
 
-  var dd = new DragDropManager({
+  g.dd = new DragDropManager({
     inputElem: document.body,
     showElem: $("hft-install-drop"),
   });
@@ -146,7 +146,7 @@ requirejs(
 
     var getGameId = function(element) {
       if (!element) {
-        return;
+        return false;
       }
 
       var gameId;
@@ -167,7 +167,7 @@ requirejs(
 
     var isContextMenu = function(element) {
       if (!element) {
-        return;
+        return false;
       }
       if (element.id === "hft-contextmenu") {
         return true;
@@ -198,13 +198,8 @@ requirejs(
       event.preventDefault();
       _showing = true;
       _menuElem.style.display = "block";
-      var scrollTop = document.body.scrollTop ? document.body.scrollTop :
-          document.documentElement.scrollTop;
-      var scrollLeft = document.body.scrollLeft ? document.body.scrollLeft :
-          document.documentElement.scrollLeft;
 
       var gameInfo = _runtimeInfo.info;
-      var hftInfo = gameInfo.happyFunTimes;
       var name = _runtimeInfo.dev + gameInfo.name;
       Array.prototype.forEach.call(_menuElem.querySelectorAll(".hft-gameid"), function(elem) {
         elem.innerHTML = name;
@@ -267,9 +262,6 @@ requirejs(
       });
     };
 
-    var uninstallGame = function() {
-    };
-
     var handleUninstall = function() {
       hideContextMenu();
       client.sendCmd('uninstall', { gameId: _runtimeInfo.info.happyFunTimes.gameId });
@@ -280,9 +272,9 @@ requirejs(
       client.sendCmd('remove', { gameId: _runtimeInfo.info.happyFunTimes.gameId });
     };
 
-    setupOption(_menuElem.querySelector("#hft-get-info"), handleGetInfo);
-    setupOption(_menuElem.querySelector("#hft-uninstall"), handleUninstall);
-    setupOption(_menuElem.querySelector("#hft-remove"), handleRemove);
+    setupOption(_getInfoElem, handleGetInfo);
+    setupOption(_uninstallElem, handleUninstall);
+    setupOption(_removeElem, handleRemove);
 
     var handleMouseDown = function(e) {
       if (!isContextMenu(e.target)) {
@@ -295,7 +287,7 @@ requirejs(
     window.addEventListener('blur', hideContextMenu);
   };
 
-  var cm = new ContextMenuManager({
+  g.cm = new ContextMenuManager({
     inputElem: document.body,
     menuElem: $("hft-contextmenu"),
   });

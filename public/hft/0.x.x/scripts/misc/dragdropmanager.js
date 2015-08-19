@@ -1,4 +1,4 @@
-﻿/*
+/*
  * Copyright 2014, Gregg Tavares.
  * All rights reserved.
  *
@@ -47,13 +47,15 @@ define([
     var badFiles = [];
     var pendingFiles = [];
     var uploading = false;
+    var uploadNextFile;
 
     var noPropagate = function(e) {
       e.stopPropagation();
       if (e.preventDefault) {
         return e.preventDefault();
       } else {
-        return e.returnValue = false;
+        e.returnValue = false;
+        return false;
       }
     };
 
@@ -82,10 +84,6 @@ define([
       }
     };
 
-    var showFile = function(file) {
-        console.log(file);
-    };
-
     var addFile = function(file) {
       if (strings.endsWith(file.name, ".zip")) {
         console.log(file);
@@ -96,7 +94,7 @@ define([
     };
 
     var handleError = function(msg) {
-      var msg = msg.replace(/\n/g, "<br/>");
+      msg = msg.replace(/\n/g, "<br/>");
       var div = document.createElement("div");
       div.innerHTML = msg;
       dialog.modal({
@@ -112,11 +110,11 @@ define([
       var xhr = new XMLHttpRequest();
       var url = window.location.origin + "/upload/";
       xhr.open("POST", url, true);
-      xhr.onload = function(e) {
+      xhr.onload = function(/* e */) {
         if (xhr.readyState !== 4) {
           return;
         }
-        var success = xhr.status == 200 || xhr.status == 0;
+        var success = xhr.status === 200 || xhr.status === 0;
         if (success) {
           try {
             var data = JSON.parse(xhr.responseText);
@@ -128,19 +126,17 @@ define([
           } catch (e) {
             handleError("could not install: " + file.name + "\n" + e);
           }
-        } else {
-          // Update progress?
         }
       };
       xhr.onerror = function() {
         handleError("could not upload: " + file.name);
       };
-      var formData = new FormData()
+      var formData = new FormData();
       formData.append("file", file, file.name);
       xhr.send(formData);
     };
 
-    var uploadNextFile = function() {
+    uploadNextFile = function() {
       if (!uploading) {
         if (pendingFiles.length) {
           var file = pendingFiles.shift();
@@ -149,20 +145,21 @@ define([
       }
     };
 
-    var old;
-    var oldTarget;
-    var debug = function(e) {
-      //try {
-      //  if (e.type !== old || oldTarget !== e.target) {
-      //    old = e.type;
-      //    oldTarget = e.target;
-      //    console.log(old, e.target.id, e.target.nodeName);
-      //  //  processFiles(e, showFile);
-      //  }
-      //} catch (e) {
-      //  console.error(e);
-      //}
-    }
+    //var old;
+    //var oldTarget;
+    //var debug = function(e) {
+    //  try {
+    //    if (e.type !== old || oldTarget !== e.target) {
+    //      old = e.type;
+    //      oldTarget = e.target;
+    //      console.log(old, e.target.id, e.target.nodeName);
+    //    //  processFiles(e, showFile);
+    //    }
+    //  } catch (e) {
+    //    console.error(e);
+    //  }
+    //};
+    var debug = function() {};
 
     misc.applyListeners(inputElem, {
       dragstart: function(e) {
@@ -193,9 +190,6 @@ define([
         hide(e);
         processFiles(e, addFile);
         if (badFiles.length) {
-          var filesStr = badFiles.map(function(file) {
-            return file.name;
-          }).join("\n");
           badFiles = [];
           handleError("Only .zip files are allowed");
         } else {
