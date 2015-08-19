@@ -570,8 +570,9 @@ var HFTServer = function(options, startedCallback) {
     req.pipe(req.busboy);
     req.busboy.on('file', function (fieldname, file, filename) {
       debug("receiving: " + filename);
+      var safeishName = filename.replace(/[^a-zA-Z0-9-_. ]/g, '_').substring(0, 64);
       msgbox.prompt({
-        msg: "Install '"+ filename + "'?",
+        msg: "Install '"+ safeishName + "'?",
         title: "HappyFunTimes",
       }, function(err, result) {
         switch (result) {

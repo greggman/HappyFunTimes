@@ -52,91 +52,92 @@ var uninstall = function(gameIdOrPath, opt_options) {
   var options = opt_options || {};
   var log = options.verbose ? console.log.bind(console) : function() {};
 
-  var installedGame = gameDB.getGameById(gameIdOrPath);
-  if (!installedGame) {
-    // See if we can find it by path
-    var gameList = gameDB.getGames();
-    var gPath = path.resolve(gameIdOrPath);
-    for (var ii = 0; ii < gameList.length; ++ii) {
-      var game = gameList[ii];
-      if (game.rootPath === gPath) {
-        installedGame = game;
-        break;
+  return new Promise(function(resolve, reject) {
+    var installedGame = gameDB.getGameById(gameIdOrPath);
+    if (!installedGame) {
+      // See if we can find it by path
+      var gameList = gameDB.getGames();
+      var gPath = path.resolve(gameIdOrPath);
+      for (var ii = 0; ii < gameList.length; ++ii) {
+        var game = gameList[ii];
+        if (game.rootPath === gPath) {
+          installedGame = game;
+          break;
+        }
       }
     }
-  }
 
-  if (!installedGame) {
-    console.error("ERROR: " + gameIdOrPath + " does not reference an installed game by id or path");
-    return false;
-  }
+    if (!installedGame) {
+      return reject("ERROR: " + gameIdOrPath + " does not reference an installed game by id or path");
+    }
 
-  var gamePath = installedGame.rootPath;
-  var files = installedGame.files || [];
+    var gamePath = installedGame.rootPath;
+    var files = installedGame.files || [];
 
-  log("remove: " + gamePath);
-  if (!options.dryRun) {
-    games.remove(gamePath);
-  }
+    log("remove: " + gamePath);
+    if (!options.dryRun) {
+      games.remove(gamePath);
+    }
 
-  var failCount = 0;
-  var folders = [gamePath];
-  files.forEach(function(file) {
-    var fullPath = path.join(gamePath, file);
-    try {
-      if (fs.existsSync(fullPath)) {
-        var stat = fs.statSync(fullPath);
-        if (stat.isDirectory()) {
-          folders.push(fullPath);
-        } else {
-          log("delete: " + fullPath);
-          if (!options.dryRun) {
-            fs.unlinkSync(fullPath);
+    var failCount = 0;
+    var folders = [gamePath];
+    files.forEach(function(file) {
+      var fullPath = path.join(gamePath, file);
+      try {
+        if (fs.existsSync(fullPath)) {
+          var stat = fs.statSync(fullPath);
+          if (stat.isDirectory()) {
+            folders.push(fullPath);
+          } else {
+            log("delete: " + fullPath);
+            if (!options.dryRun) {
+              fs.unlinkSync(fullPath);
+            }
           }
         }
+      } catch (e) {
+        ++failCount;
+        console.error("Couldn't delete: " + fullPath);
       }
-    } catch (e) {
-      ++failCount;
-      console.error("Couldn't delete: " + fullPath);
-    }
-  });
+    });
 
-  var deleteNoFail = function(file) {
-    try {
-      if (fs.existsSync(file)) {
-        log("delete: " + file);
-        fs.unlinkSync(file);
-      }
-    } catch (e) {  // eslint-disable-line
-      // Don't care!
-    }
-  };
-
-  folders.sort();
-  folders.reverse();
-  folders.forEach(function(folder) {
-    try {
-      if (fs.existsSync(folder)) {
-        // Should I try to delete system files? I think so
-        log("rmdir: " + folder);
-        if (!options.dryRun) {
-          deleteNoFail(path.join(folder, ".DS_store"));
-          deleteNoFail(path.join(folder, "Thumbs.db"));
-          fs.rmdirSync(folder);
+    var deleteNoFail = function(file) {
+      try {
+        if (fs.existsSync(file)) {
+          log("delete: " + file);
+          fs.unlinkSync(file);
         }
+      } catch (e) {  // eslint-disable-line
+        // Don't care!
       }
-    } catch (e) {
-      ++failCount;
-      console.error("Couldn't delete: " + folder);
-      console.error(e);
+    };
+
+    folders.sort();
+    folders.reverse();
+    folders.forEach(function(folder) {
+      try {
+        if (fs.existsSync(folder)) {
+          // Should I try to delete system files? I think so
+          log("rmdir: " + folder);
+          if (!options.dryRun) {
+            deleteNoFail(path.join(folder, ".DS_store"));
+            deleteNoFail(path.join(folder, "Thumbs.db"));
+            fs.rmdirSync(folder);
+          }
+        }
+      } catch (e) {
+        ++failCount;
+        console.error("Couldn't delete: " + folder);
+        console.error(e);
+      }
+    });
+
+    if (!options.dryRun) {
+      console.log("uninstalled:" + gameIdOrPath);
     }
+
+    resolve();
   });
-
-  if (!options.dryRun) {
-    console.log("uninstalled:" + gameIdOrPath);
-  }
-
-  return true;
 };
 
 exports.uninstall = uninstall;

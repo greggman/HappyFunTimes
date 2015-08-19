@@ -54,11 +54,7 @@ var uninstall = function(args) {
 
     var gamePathOrId = args._[0];
 
-    if (require('../../management/uninstall').uninstall(gamePathOrId, options) === false) {
-      reject();
-    } else {
-      resolve();
-    }
+    require('../../management/uninstall').uninstall(gamePathOrId, options).then(resolve, reject);
   });
 };
 
