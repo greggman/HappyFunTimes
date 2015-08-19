@@ -50,7 +50,8 @@ var LoopbackClient = require('./loopbackclient');
 var msgbox         = require('native-msg-box');
 var platformInfo   = require('../lib/platform-info.js');
 var download       = require('../management/download').download;
-
+var uninstall      = require('../management/uninstall').uninstall;
+var games          = require('../lib/games');
 var GameServer     = requirejs('hft/gameserver');
 
 var HFTPlayer = function(netPlayer, game, gameDB, relayServer) {
@@ -67,6 +68,8 @@ var HFTPlayer = function(netPlayer, game, gameDB, relayServer) {
   netPlayer.addEventListener('getAvailableGames',     HFTPlayer.prototype.handleGetAvailableGames.bind(this));
   netPlayer.addEventListener('getRunningGames',       HFTPlayer.prototype.handleGetRunningGames.bind(this));
   netPlayer.addEventListener('install',               HFTPlayer.prototype.handleInstall.bind(this));
+  netPlayer.addEventListener('uninstall',             HFTPlayer.prototype.handleUninstall.bind(this));
+  netPlayer.addEventListener('remove',                HFTPlayer.prototype.handleRemove.bind(this));
   netPlayer.addEventListener('upgrade',               HFTPlayer.prototype.handleUpgrade.bind(this));
   netPlayer.addEventListener('launch',                HFTPlayer.prototype.handleLaunch.bind(this));
   netPlayer.addEventListener('quit',                  HFTPlayer.prototype.handleQuit.bind(this));
@@ -189,6 +192,26 @@ HFTPlayer.prototype.download = function(gameId, upgrade) {
   }.bind(this));
 };
 
+
+HFTPlayer.prototype.uninstall = function(gameId) {
+  var self = this;
+  uninstall(gameId).then(function() {
+  }).catch(function(e) {
+    self.sendError("Trouble uninstalling " + gameID + "\n" + (e ? e.toString() : "unknown error"));
+  });
+};
+
+HFTPlayer.prototype.remove = function(gameId) {
+  var self = this;
+  var gameInfo = this.gameDB.getGameById(gameId);
+  if (gameInfo) {
+    var result = games.remove(gameInfo.rootPath);
+    if (result === false) {
+      self.sendError("Trouble removing " + gameInfo.rootPath);
+    }
+  }
+};
+
 HFTPlayer.prototype.handleInstall = function(data) {
   var gameId = data.gameId;
 
@@ -203,6 +226,42 @@ HFTPlayer.prototype.handleInstall = function(data) {
         break;
       case msgbox.Result.NO:
         this.sendCmd("installCancelled", {gameId: gameId});
+        break;
+    }
+  }.bind(this));
+
+};
+
+HFTPlayer.prototype.handleUninstall = function(data) {
+  var gameId = data.gameId;
+
+  msgbox.prompt({
+    msg: "UnInstall '" + gameId + "'?",
+    title: "HappyFunTimes",
+  }, function(err, result) {    // eslint-disable-line
+    switch (result) {
+      case msgbox.Result.YES:
+        this.uninstall(gameId);
+        break;
+      case msgbox.Result.NO:
+        break;
+    }
+  }.bind(this));
+
+};
+
+HFTPlayer.prototype.handleRemove = function(data) {
+  var gameId = data.gameId;
+
+  msgbox.prompt({
+    msg: "Remove '" + gameId + "'?",
+    title: "HappyFunTimes",
+  }, function(err, result) {    // eslint-disable-line
+    switch (result) {
+      case msgbox.Result.YES:
+        this.remove(gameId);
+        break;
+      case msgbox.Result.NO:
         break;
     }
   }.bind(this));
