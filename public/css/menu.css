@@ -33,6 +33,10 @@
 * {
     box-sizing: border-box;
    -moz-box-sizing: border-box;
+   -webkit-user-select: none;
+   -moz-user-select: none;
+   -ms-user-select: none;
+   user-select: none;
 }
 html, body {
     width: 100%;
@@ -104,7 +108,7 @@ h2 a:hover {
     text-shadow: none;
 }
 .upgrade-hft {
-    background-color: rgba(128,0,0,0.9);
+    background-color: rgba(128,0,0,0.98);
     color: white;
     width: 100%;
     height: 100%;
@@ -235,6 +239,31 @@ a:visited {
 .hft-hidden {
     display: none;
 }
+#hft-contextmenu {
+    display: none;
+    border: 1px solid black;
+    border-radius: 0.2em;
+    padding: 0.2em;
+    margin: 0em;
+    padding: 0.1em 0em 0.1em 0em; /* TRBL */
+    font-size: medium;
+    font-weight: normal;
+    font-family: system, sans-serif;
+    color: black;
+
+    background-color: rgba(240, 240, 240, 0.9);
+    box-shadow: 5px 5px 5px 5px rgba(0, 0, 0, 0.25);
+
+    position: fixed;
+    z-index: 5;
+}
+#hft-contextmenu div {
+    padding: 0em 2em 0em 2em;
+}
+#hft-contextmenu div:hover {
+   color: white;
+   background-color: #49F;
+}
 .hft-dialog-cover {
     position: fixed;
     left: 0;
@@ -252,6 +281,9 @@ a:visited {
     border-bottom: 10px solid black;
     color: #000;
     width: 80%;
+}
+.hft-dialog-container td {
+    vertical-align: text-top;
 }
 
 .hft-dialog-title {

@@ -34,12 +34,14 @@
 // Start the main app logic.
 requirejs(
   [ 'hft/gameclient',
+    'hft/misc/dialog',
     'hft/misc/dragdropmanager',
     'hft/misc/misc',
     'hft/misc/strings',
     './semver',
   ], function(
     GameClient,
+    dialog,
     DragDropManager,
     misc,
     strings,
@@ -58,8 +60,13 @@ requirejs(
   });
 
   var handleCmdErrorMsg = function(data) {
-    // TODO: change to html dialog.
-    alert(data.msg);  // eslint-disable-line
+    dialog.modal({
+      title: "Error",
+      msg: data.msg,
+      choices: [
+        { msg: "Ok", },
+      ],
+    });
   };
 
   var handleRedirectMsg = function(data) {
@@ -105,6 +112,7 @@ requirejs(
   var itemTemplateSuffix = "-item-template";
   var hiddenMsgSuffix = "-msg";
   var buttonIdSuffix = "-button";
+  var getInfoTemplate = $("get-info-template").text;
 
   var templates = {};
   Array.prototype.forEach.call(document.querySelectorAll(".item-template"), function(elem) {
@@ -120,6 +128,178 @@ requirejs(
     console.log("sending quitGame: " + gameId);
     client.sendCmd('quitGame', {gameId: gameId});
   };
+
+  var ContextMenuManager = function(options) {
+
+    var _menuElem = options.menuElem;
+    var _inputElem = options.inputElem;
+    var _showing = false;
+    var _runtimeInfo;
+    var _canSelect = true;  // not sure how to fix
+    // the issue is if an option is directly under the mouse when
+    // we get contextmenu event then we also for some reason
+    // get mouseup event in that element
+
+    var _getInfoElem   = _menuElem.querySelector("#hft-get-info");
+    var _uninstallElem = _menuElem.querySelector("#hft-uninstall");
+    var _removeElem    = _menuElem.querySelector("#hft-remove");
+
+    var getGameId = function(element) {
+      if (!element) {
+        return;
+      }
+
+      var gameId;
+      if (element.getAttribute) {
+        gameId = element.getAttribute("gameid");
+      }
+
+      return gameId || getGameId(element.parentNode);
+    };
+
+    var getName = function() {
+      return _runtimeInfo.dev + _runtimeInfo.info.name;
+    };
+
+    var allowSelection = function() {
+      _canSelect = true;
+    };
+
+    var isContextMenu = function(element) {
+      if (!element) {
+        return;
+      }
+      if (element.id === "hft-contextmenu") {
+        return true;
+      }
+      return isContextMenu(element.parentNode);
+    };
+
+    var hideContextMenu = function(e) {
+      if (_showing) {
+        _showing = false;
+        if (e) {
+          e.preventDefault();
+        }
+        _menuElem.style.display = "none";
+      }
+    };
+
+    var showContextMenu = function(event) {
+      var gameId = getGameId(event.target);
+      if (!gameId) {
+        return hideContextMenu(event);
+      }
+
+      _runtimeInfo = g.gamesById[gameId];
+
+      _canSelect = false;
+      setTimeout(allowSelection, 50);
+      event.preventDefault();
+      _showing = true;
+      _menuElem.style.display = "block";
+      var scrollTop = document.body.scrollTop ? document.body.scrollTop :
+          document.documentElement.scrollTop;
+      var scrollLeft = document.body.scrollLeft ? document.body.scrollLeft :
+          document.documentElement.scrollLeft;
+
+      var gameInfo = _runtimeInfo.info;
+      var hftInfo = gameInfo.happyFunTimes;
+      var name = _runtimeInfo.dev + gameInfo.name;
+      Array.prototype.forEach.call(_menuElem.querySelectorAll(".hft-gameid"), function(elem) {
+        elem.innerHTML = name;
+      });
+
+      if (_runtimeInfo.dev) {
+        _uninstallElem.style.display = "none";
+        _removeElem.style.display = "block";
+      } else {
+        _uninstallElem.style.display = "block";
+        _removeElem.style.display = "none";
+      }
+
+      _menuElem.style.left = '0';
+      _menuElem.style.top  = '0';
+
+      var padding = 20;
+      var width  = _menuElem.clientWidth  + padding;
+      var height = _menuElem.clientHeight + padding;
+
+      var x = event.clientX;// + scrollLeft;
+      var y = event.clientY;// + scrollTop;
+
+      var bound = function(v, size, max) {
+        if (v + size > max) {
+          v = Math.max(0, max - size);
+        }
+        return v;
+      };
+
+      x = bound(x, width, window.innerWidth);
+      y = bound(y, height, window.innerHeight);
+
+      _menuElem.style.left = x + 'px';
+      _menuElem.style.top  = y + 'px';
+
+
+      _menuElem.style.display = 'block';
+    };
+
+    var setupOption = function(elem, fn) {
+      elem.addEventListener('mouseup', function(e) {
+        if (_canSelect) {
+          fn(e);
+        }
+      });
+    };
+
+    var handleGetInfo = function() {
+      hideContextMenu();
+      // TODO! change to better
+      var div = document.createElement("div");
+      div.innerHTML = strings.replaceParams(getInfoTemplate, _runtimeInfo);
+      dialog.modal({
+        title: "Info for " +  getName(),
+        msg: div,
+        choices: [
+          { msg: "Ok" },
+        ],
+      });
+    };
+
+    var uninstallGame = function() {
+    };
+
+    var handleUninstall = function() {
+      hideContextMenu();
+      client.sendCmd('uninstall', { gameId: _runtimeInfo.info.happyFunTimes.gameId });
+    };
+
+    var handleRemove = function() {
+      hideContextMenu();
+      client.sendCmd('remove', { gameId: _runtimeInfo.info.happyFunTimes.gameId });
+    };
+
+    setupOption(_menuElem.querySelector("#hft-get-info"), handleGetInfo);
+    setupOption(_menuElem.querySelector("#hft-uninstall"), handleUninstall);
+    setupOption(_menuElem.querySelector("#hft-remove"), handleRemove);
+
+    var handleMouseDown = function(e) {
+      if (!isContextMenu(e.target)) {
+        hideContextMenu(e);
+      }
+    };
+
+    _inputElem.addEventListener('contextmenu', showContextMenu);
+    _inputElem.addEventListener('mousedown', handleMouseDown);
+    window.addEventListener('blur', hideContextMenu);
+  };
+
+  var cm = new ContextMenuManager({
+    inputElem: document.body,
+    menuElem: $("hft-contextmenu"),
+  });
+
 
   var handleAvailableGames = function(obj) {
     var html = [];

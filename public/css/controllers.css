@@ -38,6 +38,7 @@
     -moz-user-select: none;
     -ms-user-select: none;
     user-select: none;
+    cursor: pointer;
 }
 /* make the body full size, FF needs html there? */
 html, body {

@@ -40,16 +40,26 @@
   <style>
   </style>
   <script class="item-template" id="upgrade-item-template" type="not-javascript">
-<div class="game"><a class="upgrade-button" title="%(info.happyFunTimes.gameId)s" id="%(count)s-button"><div>%(dev)s%(info.name)s</div><img src="%(screenshotUrl)s" /></a><div class="upgrade-hft">Needs new HappyFunTimes</div></div>
+<div class="game"><a class="upgrade-button" title="%(info.happyFunTimes.gameId)s" id="%(count)s-button" gameid="%(info.happyFunTimes.gameId)s"><div>%(dev)s%(info.name)s</div><img src="%(screenshotUrl)s" /></a><div class="upgrade-hft">Needs new HappyFunTimes</div></div>
   </script>
   <script class="item-template" id="unity3d-item-template" type="not-javascript">
-<div class="game"><a class="launch-button" title="%(info.happyFunTimes.gameId)s" id="%(count)s-button"><div>%(dev)s%(info.name)s</div><img src="%(screenshotUrl)s" /></a></div>
+<div class="game"><a class="launch-button" title="%(info.happyFunTimes.gameId)s" id="%(count)s-button" gameid="%(info.happyFunTimes.gameId)s"><div>%(dev)s%(info.name)s</div><img src="%(screenshotUrl)s" /></a></div>
   </script>
   <script class="item-template" id="html-item-template" type="not-javascript">
-<div class="game"><a href="%(gameUrl)s" title="%(info.happyFunTimes.gameId)s" id="%(count)s-button"><div>%(dev)s%(info.name)s</div><img src="%(screenshotUrl)s" /></a></div>
+<div class="game"><a href="%(gameUrl)s" title="%(info.happyFunTimes.gameId)s" id="%(count)s-button" gameid="%(info.happyFunTimes.gameId)s"><div>%(dev)s%(info.name)s</div><img src="%(screenshotUrl)s" /></a></div>
   </script>
   <script class="item-template" id="html-example-item-template" type="not-javascript">
-<div class="game"><a href="%(gameUrl)s" title="%(info.happyFunTimes.gameId)s" id="%(count)s-button"><div>%(dev)s%(info.name)s</div><img src="%(screenshotUrl)s" /></a></div>
+<div class="game"><a href="%(gameUrl)s" title="%(info.happyFunTimes.gameId)s" id="%(count)s-button" gameid="%(info.happyFunTimes.gameId)s"><div>%(dev)s%(info.name)s</div><img src="%(screenshotUrl)s" /></a></div>
+  </script>
+  <script type="non-javascript" id="get-info-template">
+<table>
+  <tr><td>Name:</td><td>%(info.name)s</td></tr>
+  <tr><td>GameID:</td><td>%(originalGameId)s</td></tr>
+  <tr><td>Version:</td><td>%(info.version)s</td></tr>
+  <tr><td>API&nbsp;Version:</td><td>%(info.happyFunTimes.apiVersion)s</td></tr>
+  <tr><td>Game&nbsp;Type:</td><td>%(info.happyFunTimes.gameType)s</td></tr>
+  <tr><td>Location:</td><td>%(rootPath)s</td></tr>
+</table>
   </script>
 </head>
 <body>
@@ -61,6 +71,11 @@
 <h1><span id="versionnum"></span><span>HappyFunTimes<span id="version">super-alpha</span></span></h1>
 <h2><a href="http://superhappyfuntimes.net">visit superhappyfuntimes.net for more games</a></h2>
 <div id="gamemenu">
+</div>
+<div id="hft-contextmenu">
+    <div id="hft-get-info">Get Info for <span class="hft-gameid"></span></div>
+    <div id="hft-uninstall">Uninstall <span class="hft-gameid"></span></div>
+    <div id="hft-remove">Remove <span class="hft-gameid"></span></div>
 </div>
 <div id="hft-install-drop" class="hidden-msg">
   <div>

@@ -3,6 +3,12 @@ Changelist
 
 *   0.0.39
 
+    *   Games have context menu with "GetInfo", "Uninstall" and/or "Remove"
+
+    *   Add drag and drop install support
+
+        You can drag a zip file onto HappyFunTimes and it will install it.
+
     *   Change instructions to use game sys messages.
 
         That way both HTML and Unity (etc..) can use the same system

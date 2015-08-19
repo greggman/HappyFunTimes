@@ -152,16 +152,16 @@ define([
     var old;
     var oldTarget;
     var debug = function(e) {
-      try {
-        if (e.type !== old || oldTarget !== e.target) {
-          old = e.type;
-          oldTarget = e.target;
-          console.log(old, e.target.id, e.target.nodeName);
-        //  processFiles(e, showFile);
-        }
-      } catch (e) {
-        console.error(e);
-      }
+      //try {
+      //  if (e.type !== old || oldTarget !== e.target) {
+      //    old = e.type;
+      //    oldTarget = e.target;
+      //    console.log(old, e.target.id, e.target.nodeName);
+      //  //  processFiles(e, showFile);
+      //  }
+      //} catch (e) {
+      //  console.error(e);
+      //}
     }
 
     misc.applyListeners(inputElem, {
