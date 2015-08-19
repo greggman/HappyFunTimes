@@ -565,7 +565,6 @@ var HFTServer = function(options, startedCallback) {
 
   var receiveUploadedFile = function(req, res) {
     debug("receiveUploadedFile");
-    console.dir(req);
     var fileInfo;
     req.pipe(req.busboy);
     req.busboy.on('file', function (fieldname, file, filename) {
