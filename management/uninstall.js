@@ -34,6 +34,7 @@ var fs           = require('fs');
 var gameDB       = require('../lib/gamedb');
 var games        = require('../lib/games');
 var path         = require('path');
+var Promise      = require('promise');
 
 /**
  * @typedef {Object} Uninstall~Options
