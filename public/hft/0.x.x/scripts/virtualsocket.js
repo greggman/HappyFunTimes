@@ -65,11 +65,11 @@ define(function() {
 
   var WebSocketClient = function(options) {
     options = options || {};
-    console.log("Using direct WebSocket");
+    var log = options.quiet === true ? console.log.bind(console) : function() {};
     var _socket;
 
     var url = options.url || "ws://" + window.location.host;
-    console.log("connecting to: " + url);
+    log("connecting to: " + url);
     _socket = new WebSocket(url);
 
     this.__defineGetter__("readyState", function() {
