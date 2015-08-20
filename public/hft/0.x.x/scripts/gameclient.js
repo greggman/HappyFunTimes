@@ -74,7 +74,7 @@ define([
     var g_socket;
     var g_sendQueue = [];
     var eventListeners = {};
-    var log = options.quiet ? function() {} : console.log.bind(console);
+    var log = options.quiet === true ? console.log.bind(console) : function() {};
 
     if (!options.gameId) {
       var m = /games\/([^\/]+)\//.exec(window.location.href);
@@ -160,7 +160,7 @@ define([
     };
 
     var handleError_ = function(err) {
-      console.error(err);
+      log(err);
       sendEvent_('error');
       if (g_socket) {
         g_socket.close();
