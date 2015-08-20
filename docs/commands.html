@@ -69,17 +69,17 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
       <p><code>hft</code> is a command to help manage happyfuntimes for developers. For the basics typing <code>hft</code>
 will list all the commands. Typing <code>hft cmd --help</code> will list the help for a specific command.</p>
 <ul>
-<li><strong><a href="#hft-add">hft add</a></strong></li>
-<li><strong><a href="#hft-check">hft check</a></strong></li>
-<li><strong><a href="#hft-download-gameId">hft download</a></strong></li>
-<li><strong><a href="#hft-install-srcpath">hft install</a></strong></li>
-<li><strong><a href="#hft-list">hft list</a></strong></li>
-<li><strong><a href="#hft-make-release-dstpath">hft make-release</a></strong></li>
-<li><strong><a href="#hft-publish">hft publish</a></strong></li>
-<li><strong><a href="#hft-register">hft register</a></strong></li>
-<li><strong><a href="#hft-remove">hft remove</a></strong></li>
-<li><strong><a href="#hft-start">hft start</a></strong></li>
-<li><strong><a href="#hft-uninstall-gameid">hft uninstall</a></strong></li>
+<li><strong><a href="#-hft-add-"><code>hft add</code></a></strong></li>
+<li><strong><a href="#-hft-check-"><code>hft check</code></a></strong></li>
+<li><strong><a href="#-hft-download-gameId-"><code>hft download</code></a></strong></li>
+<li><strong><a href="#-hft-install-srcpath-"><code>hft install</code></a></strong></li>
+<li><strong><a href="#-hft-list-"><code>hft list</code></a></strong></li>
+<li><strong><a href="#-hft-make-release-dstpath-"><code>hft make-release</code></a></strong></li>
+<li><strong><a href="#-hft-publish-"><code>hft publish</code></a></strong></li>
+<li><strong><a href="#-hft-register-"><code>hft register</code></a></strong></li>
+<li><strong><a href="#-hft-remove-"><code>hft remove</code></a></strong></li>
+<li><strong><a href="#-hft-start-"><code>hft start</code></a></strong></li>
+<li><strong><a href="#-hft-uninstall-gameid-"><code>hft uninstall</code></a></strong></li>
 </ul>
 <h3 id="-hft-add-"><code>hft add</code></h3>
 <p>adds the game in the current folder to happyfuntimes</p>
@@ -97,7 +97,7 @@ there&#39;s no reason to run this.</p>
 <p>makes a releases, a zip file, of the game in the current folder and saves it to
 a path <code>dstpath</code>. Note <code>dstpath</code> must be a folder. Also note if the game is
 a unity game you must exit unity as unity will be called to export the game.
-This is mostly for testing. See <a href="#hft-publish">hft publish</a></p>
+This is mostly for testing. See <a href="#-hft-publish-">hft publish</a></p>
 <h3 id="-hft-publish-"><code>hft publish</code></h3>
 <p>Publishes the game in the current folder to superhappyfuntimes. This will
 call <code>hft make-release</code> so if you&#39;re publishing a unity game be sure to exit
@@ -128,43 +128,46 @@ It is called by <code>hft publish</code>.</p>
 happyFunTimes. No files are deleted.</p>
 <h3 id="-hft-start-"><code>hft start</code></h3>
 <p>starts happyFunTimes.</p>
-<p><code>--app-mode</code></p>
+<h4 id="-app-mode-"><code>--app-mode</code></h4>
 <p>launches the browser to <code>http://localhost:18679/games.html</code>. This is the same way HappyFunTimes
 is started when you launch by clicking the HappyFunTimes program icon.</p>
-<p><code>--system-name=&lt;somename&gt;</code></p>
+<h4 id="-system-name-somename-"><code>--system-name=&lt;somename&gt;</code></h4>
 <p>If you&#39;re at a gamejam or some other place where there are multiple happyfuntimes
 games running on the same network, then when users connect to happyfuntimes.net they&#39;ll
 be given a list of game to join. The list will say the name of the computer followed
-by the name of the game. By default happyfuntimes user the name of your computer. You
+by the name of the game. By default happyfuntimes uses the name of your computer. You
 can set a specific name with this option.</p>
-<p><code>--no-ask-name</code></p>
+<h4 id="-no-ask-name-"><code>--no-ask-name</code></h4>
 <p>If you&#39;re running a single game in <a href="network.html">installation mode</a> and you don&#39;t need users to enter
 a name this option will skip asking the user for a name</p>
-<p><code>--no-menu</code></p>
+<h4 id="-no-menu-"><code>--no-menu</code></h4>
 <p>If you&#39;re running in <a href="network.html">installation mode</a> and you don&#39;t need users to be able to change their
 name this option turns off the gear icon on the controller</p>
-<p><code>--kiosk</code></p>
+<h4 id="-kiosk-"><code>--kiosk</code></h4>
 <p>Normally controllers start at <code>http://localhost:18679</code>. There the controller waits for
 a game to start. If multiple games are running users are given a list to choose from.
 If you&#39;re running in an <a href="network.html">installation</a> where there&#39;s only 1 game you can have controller
 go directly to the game with this option.</p>
-<p><code>--instructions</code></p>
+<h4 id="-instructions-"><code>--instructions</code></h4>
 <p>Displays a scrolling message on the screen telling users how to connect to the game</p>
-<p><code>--langs</code></p>
+<h4 id="-langs-"><code>--langs</code></h4>
 <p>Chooses which languages to display instructions. Example <code>--langs=en,ja</code></p>
-<p><code>--instructionsPosition=&lt;position&gt;</code></p>
-<p>Selects where to put the connection instructions. Valid values are <code>top</code>, and <code>bottom</code>.</p>
-<p><code>--wifi-name</code></p>
-<p>Specifies the WiFi name for the connect message.</p>
-<p><code>--wifi-pass</code></p>
-<p>Specifies the WiFi password for the connect message.</p>
-<p><code>--check-for-app</code></p>
+<p>Note: To add more languages <a href="https://github.com/greggman/HappyFunTimes/blob/master/server/languages.js">please submit a pull request for this file</a></p>
+<h4 id="-instructionsposition-position-"><code>--instructionsPosition=&lt;position&gt;</code></h4>
+<p>Selects where to put the connection instructions. Valid values are <code>top</code>, and <code>bottom</code>.
+Games can also select where to put the messages in their <a href="packagejson.html">package.json</a>.</p>
+<h4 id="-wifi-name-"><code>--wifi-name</code></h4>
+<p>Specifies the WiFi name for the connect message. Defaults to &quot;HappyFunTimes.</p>
+<h4 id="-wifi-pass-"><code>--wifi-pass</code></h4>
+<p>Specifies the WiFi password for the connect message. If none specified it&#39;s assumed
+the WiFi is open and no password is needed.</p>
+<h4 id="-check-for-app-"><code>--check-for-app</code></h4>
 <p>Controllers don&#39;t normally try to launch the native mobile app. This check takes 3 seconds.
 Use this switch to add that check so if the user has the app installed it will switch to
 the app.</p>
-<p><code>--dns</code></p>
+<h4 id="-dns-"><code>--dns</code></h4>
 <p>Tells happyfuntimes to implement a DNS server. This is for <a href="network.html">installation mode</a>.</p>
-<p><code>--optimize-controller</code></p>
+<h4 id="-optimize-controller-"><code>--optimize-controller</code></h4>
 <p>Tells happyfuntimes to concatinate and compress most of your controller&#39;s JavaScript files into one file.
 This should make phones connect faster (less to download) and be less likely to have
 a communication error while downloading (less to download).</p>

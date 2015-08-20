@@ -1,6 +1,28 @@
 Changelist
 ==========
 
+*   0.0.39
+
+    *   Games have context menu with "GetInfo", "Uninstall" and/or "Remove"
+
+    *   Add drag and drop install support
+
+        You can drag a zip file onto HappyFunTimes and it will install it.
+
+    *   Change instructions to use game sys messages.
+
+        That way both HTML and Unity (etc..) can use the same system
+        for instructions
+
+    *   move langauges.js to server
+
+        That way both HTML and Unity can use the same language strings
+
+    *   Allow Unity to use `HFT_INSTUCTIONS` and `HFT_INSTRUCTIONSPOSITION`
+        environment variables to specify instructions.
+
+    *   Make main page reconnect to happyfuntimes if happyfuntimes exits and is then restarted
+
 *   0.0.38
 
     *   Fix bug where it wasn't always able to start controllers in unity based projects.
