@@ -1,26 +1,41 @@
 To Do
 =====
 
-*   drag and drop install?
 *   add "touch to start" on android (and iOS?) both sound and fullscreen can be added
-*   make instructions CSS handling less hacky
-
-    need to be able to edit CSS and update it
-
 *   make unity export open export folder in finder/explorer?
 *   make osx bring browser to front after quiting unity game
-*   add support for unity3dlibrary
+*   add support for gameType "unity3dlibrary"
+
+    The problem is I want to be able to upload unity libraries to superhappyfuntimes
+    but not have them show up as games and also to only have a .unitypackage, no exported apps
+
     *   make
     *   install
     *   download
     *   export
     *   run
+
 *   make unity provide files for controller
+
+    in editor send each file. On Export generate .zip.bytes. Maybe make new option
+    for "Export standalone"?
+
+    The problem is HappyFunTimes needs at least a package.json to be able to add
+    the game to the HappyFunTimes menu. But a standalone exe wouldn't have such
+    a file anywhere that I know of. I guess it does generate a _Data folder that
+    I could look in. not sure how Windows and Linux apps are distrubuted.
+
+    The question is basically how do I install it. Ideally there'd be just one way
+
 *   fix realgame so it auto includes realgame.js and doesn't need manual HFT stuff
 *   add system session id. When checking ip addresses from scanner
     merge by session id. Maybe just use system name
 *   add progress bar when scanning
-*   check if HFT has page up? Go to that page
+*   check if HFT has page up? Go to that page.
+
+    Problem is I can't bring tab to front so if the tab is hidden the user will never
+    notice :(  Maybe I could use the Notification API to put up a notification?
+
 *   figure out why Player23, Player24, Player25
 *   add frame rate for motion data
 *   need a way for game to send binary files (how about a .zip)
@@ -900,6 +915,11 @@ Runs Repo noid
 Done
 ====
 
+*   make instructions CSS handling less hacky
+
+    need to be able to edit CSS and update it
+
+*   drag and drop install?
 *   fix upgrade to stop running hft
 *   why does play appear on hft-tonde-iko without passing select screen?
 
