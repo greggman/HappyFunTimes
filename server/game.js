@@ -289,6 +289,7 @@ Game.prototype.assignClient = function(client, data) {
     cmd: 'gamestart',
     data: {
       id: this.id,
+      gameId: (this.runtimeInfo ? this.runtimeInfo.info.happyFunTimes.gameId : ""),
       needNewHFT: (this.runtimeInfo ? this.runtimeInfo.needNewHFT : false),
     },
   });
