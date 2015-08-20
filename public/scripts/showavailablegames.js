@@ -34,6 +34,7 @@
 // Start the main app logic.
 requirejs(
   [ 'hft/gameclient',
+    'hft/hft-system',
     'hft/misc/dialog',
     'hft/misc/dragdropmanager',
     'hft/misc/misc',
@@ -41,6 +42,7 @@ requirejs(
     './semver',
   ], function(
     GameClient,
+    HFTSystem,
     dialog,
     DragDropManager,
     misc,
@@ -75,6 +77,10 @@ requirejs(
 
   var handleDisconnect = function() {
     g.elementToShowOnDisconnect.style.display = "block";
+    var hftSystem = new HFTSystem();
+    hftSystem.on('connect', function() {
+        window.location.reload();
+    });
   };
 
   var handleGameExited = function(data) {
@@ -95,6 +101,7 @@ requirejs(
     gameId: "__hft__",
   });
 
+  client.addEventListener('error', function() {});
   client.addEventListener('connect', function() {});
   client.addEventListener('errorMsg', handleCmdErrorMsg);
   client.addEventListener('redirect', handleRedirectMsg);
