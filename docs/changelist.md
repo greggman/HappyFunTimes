@@ -21,6 +21,8 @@ Changelist
     *   Allow Unity to use `HFT_INSTUCTIONS` and `HFT_INSTRUCTIONSPOSITION`
         environment variables to specify instructions.
 
+    *   Make main page reconnect to happyfuntimes if happyfuntimes exits and is then restarted
+
 *   0.0.38
 
     *   Fix bug where it wasn't always able to start controllers in unity based projects.
