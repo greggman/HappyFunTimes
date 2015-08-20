@@ -83,6 +83,7 @@ define([
       g.client.addEventListener('connect', handleConnect);
       g.client.addEventListener('disconnect', handleDisconnect);
       g.client.addEventListener('hftInfo', noop);
+      g.client.addEventListener('error', noop);
       g.client.addEventListener('gameExited', noop);
       g.client.addEventListener('runningGames', handleRunningGames);
       g.client.sendCmd('getRunningGames');
