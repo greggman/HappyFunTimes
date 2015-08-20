@@ -104,6 +104,7 @@ mime.define({'application/javascript': ['js6']});
  *        of error, undefined if successful.
  */
 var HFTServer = function(options, startedCallback) {
+  var self = this;
   var g = {
     port: config.getSettings().settings.port,
     extraPorts: [80, 8080],
@@ -563,8 +564,65 @@ var HFTServer = function(options, startedCallback) {
     });
   }
 
-  var receiveUploadedFile = function(req, res) {
-    debug("receiveUploadedFile");
+  var addUploadedFile = function(req, res) {
+    debug("addUploadedFile");
+    var fileData;
+    var filename = "*unknown*";
+    var bad = false;
+    var fields = {};
+    req.pipe(req.busboy);
+    req.busboy.on('field', function(fieldname, val, fieldnameTruncated, valTruncated) {
+      fields[fieldname] = val;
+    });
+    req.busboy.on('file', function (fieldname, file, filename) {
+      //debug("receiving: " + filename);
+      var buffers = [];
+      file.on('data', function(data) {
+        //debug("got chunk " + buffers.length + ": " + data.length);
+        buffers.push(data);
+      });
+      file.on('end', function() {
+        fileData = Buffer.concat(buffers);
+        //debug("total data: " + fileData.length);
+      });
+      file.on('error', function(e) {
+        bad = true;  // not really sure how to handle errors
+      });
+    });
+    req.busboy.on('finish', function() {
+      try {
+        if (bad) {
+          throw "trouble receiving file";
+        }
+        var gameId = fields.gameId;
+        var filename = fields.filename;
+        if (!gameId) {
+          throw "bad gameId";
+        }
+        if (!filename) {
+          throw "bad filename";
+        }
+        var files = {};
+        files[filename] = fileData;
+        self.addFilesForGame(gameId, files);
+        debug("added: " + filename + " size: " + fileData.length);
+        res.json({
+          success: true,
+          msg: "Added " + filename,
+        });
+      } catch (e) {
+        debug("failed to add: " + filename + "\n" + e);
+        e = e ? e.toString() : "";
+        res.json({
+          sucesss: false,
+          msg: "Failed to add: " + filename + "\n" + e,
+        });
+      }
+    })
+  };
+
+  var installUploadedFile = function(req, res) {
+    debug("installUploadedFile");
     var fileInfo;
     req.pipe(req.busboy);
     req.busboy.on('file', function (fieldname, file, filename) {
@@ -632,8 +690,10 @@ var HFTServer = function(options, startedCallback) {
 
   app.get(/^\/games\/(.*?)\//, sendGameRequestedFile);
   app.get(/^\/enter-name.html/, sendTemplatedFile);
-  app.use(/^\/upload\//, busboy());
-  app.post(/^\/upload\//, receiveUploadedFile);
+  app.use(/^\/api\/v0\/install\//, busboy());
+  app.post(/^\/api\/v0\/install\//, installUploadedFile);
+  app.use(/^\/api\/v0\/uploadFile\//, busboy());
+  app.post(/^\/api\/v0\/uploadFile\//, addUploadedFile);
   app.get(/.*/, sendSystemRequestedFile);
   app.post(/.*/, bodyParser);
 

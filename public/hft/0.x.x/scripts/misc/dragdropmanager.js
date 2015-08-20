@@ -108,7 +108,7 @@ define([
 
     var uploadFile = function(file) {
       var xhr = new XMLHttpRequest();
-      var url = window.location.origin + "/upload/";
+      var url = window.location.origin + "/api/v0/install/";
       xhr.open("POST", url, true);
       xhr.onload = function(/* e */) {
         if (xhr.readyState !== 4) {
