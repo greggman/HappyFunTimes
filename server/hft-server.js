@@ -566,12 +566,11 @@ var HFTServer = function(options, startedCallback) {
 
   var addUploadedFile = function(req, res) {
     debug("addUploadedFile");
-    var fileData;
-    var filename = "*unknown*";
     var bad = false;
+    var files = {};
     var fields = {};
     req.pipe(req.busboy);
-    req.busboy.on('field', function(fieldname, val, fieldnameTruncated, valTruncated) {
+    req.busboy.on('field', function(fieldname, val) {
       fields[fieldname] = val;
     });
     req.busboy.on('file', function (fieldname, file, filename) {
@@ -582,10 +581,11 @@ var HFTServer = function(options, startedCallback) {
         buffers.push(data);
       });
       file.on('end', function() {
-        fileData = Buffer.concat(buffers);
-        //debug("total data: " + fileData.length);
+        files[filename] = Buffer.concat(buffers);
+        //debug("total data: " + files[filename]);
       });
       file.on('error', function(e) {
+        console.error(e);
         bad = true;  // not really sure how to handle errors
       });
     });
@@ -595,30 +595,23 @@ var HFTServer = function(options, startedCallback) {
           throw "trouble receiving file";
         }
         var gameId = fields.gameId;
-        var filename = fields.filename;
         if (!gameId) {
           throw "bad gameId";
         }
-        if (!filename) {
-          throw "bad filename";
-        }
-        var files = {};
-        files[filename] = fileData;
         self.addFilesForGame(gameId, files);
-        debug("added: " + filename + " size: " + fileData.length);
         res.json({
           success: true,
-          msg: "Added " + filename,
+          msg: "Added " + Object.keys(files).length + " files",
         });
       } catch (e) {
-        debug("failed to add: " + filename + "\n" + e);
-        e = e ? e.toString() : "";
+        debug("failed to add: " + Object.keys(files).join(", ") + "\n" + e);
+        var eStr = e ? e.toString() : "";
         res.json({
           sucesss: false,
-          msg: "Failed to add: " + filename + "\n" + e,
+          msg: "Failed to add: " + Object.keys(files).join(", ") + "\n" + eStr,
         });
       }
-    })
+    });
   };
 
   var installUploadedFile = function(req, res) {
@@ -843,6 +836,7 @@ var HFTServer = function(options, startedCallback) {
     var mappedFiles = {};
     Object.keys(files).forEach(function(filePath) {
       var content = files[filePath];
+      debug("added: " + filePath + " size: " + content.length + " gameId:" + gameId);
       filePath = filePath.replace(/\\/g, '/');
       filePath = gamePrefix + gameId + '/' + filePath;
       filePath = pathToGamePath(gameId, runtimeInfo, filePath);
