@@ -1,8 +1,7 @@
 To Do
 =====
 
-*   add "touch to start" on android (and iOS?) both sound and fullscreen can be added
-*   make unity export open export folder in finder/explorer?
+*   add easy message to unity-gamepad
 *   make osx bring browser to front after quiting unity game
 *   add support for gameType "unity3dlibrary"
 
@@ -20,8 +19,8 @@ To Do
     in editor send each file. On Export generate .zip.bytes. Maybe make new option
     for "Export standalone"?
 
-    The problem is HappyFunTimes needs at least a package.json to be able to add
-    the game to the HappyFunTimes menu. But a standalone exe wouldn't have such
+    The problem is happyfuntimes needs at least a package.json to be able to add
+    the game to the happyfuntimes menu. But a standalone exe wouldn't have such
     a file anywhere that I know of. I guess it does generate a _Data folder that
     I could look in. not sure how Windows and Linux apps are distrubuted.
 
@@ -358,7 +357,7 @@ To Do
 *   make hft-exe update Info.plist version from hft version?
 *   Optionally allow games to advertise they are running.
 
-    Superhappyfuntimes can show games in your area. Think
+    superhappyfuntimes can show games in your area. Think
 
         15 people playing jumpjump at Joe's Bar in Maintown, MA
         17 people playing shootshoot at Big Burger in Anywhere, USA
@@ -480,10 +479,10 @@ Runs Repo noid
     *   make an install command
     *   figure out what happens if disconnected
 
-*   Have SuperHappyFunTimes check that HappyFunTimes is running and request to run it. gray out install buttons
+*   Have superhappyfuntimes check that happyfuntimes is running and request to run it. gray out install buttons
     until it's running. Use game to run it?
 *   Sanatize msgs to native-msg-box
-*   Make sure SuperHappyFunTimes can be indexed.  enable meteor spiderable
+*   Make sure superhappyfuntimes can be indexed.  enable meteor spiderable
 
 *   look into openframewords.cc's http://ofxaddons.com/ how it watches github tags
 *   switch port to something less likley to be in use. How about 8123 for now. We can register one later if we get users.
@@ -641,7 +640,7 @@ Runs Repo noid
 *   Game service / package installer?
 
     It might be nice to make this like many of the package installers. You could download
-    HappyFunTimes then type something like
+    happyfuntimes then type something like
 
         hft install someplatformgame
 
@@ -655,7 +654,7 @@ Runs Repo noid
     it more likely people would write games. It might also make it super easy
     to download gamejam games etc.
 
-*   decide on what HappyFunTimes is
+*   decide on what happyfuntimes is
 
     It started off as just a simple library to relay messages between game and controllers.
     But, as I added more games I started wanted to share code on the controllers. Then
@@ -674,7 +673,7 @@ Runs Repo noid
     large enough to run multiple simultainous games are much smaller than running
     just a single setup. On a single setup that seems like the best way to do it.
 
-    So, I think I might make the ExampleUI part of the *base* HappyFunTimes.
+    So, I think I might make the ExampleUI part of the *base* happyfuntimes.
 
     That brings up another question though. Right now there's a name bar at the
     top of the shared part of the controllers. I wonder if I should get rid of that.
@@ -682,7 +681,7 @@ Runs Repo noid
     that says
 
         +-------------+
-        |HappyFunTimes|
+        |happyfuntimes|
         +-------------+
         |-enter-name--|
         +-------------+
@@ -800,9 +799,9 @@ Runs Repo noid
     inside a div. Just draw what you want. I swear I waste 1-3 hrs per controller
     futsuing with CSS :(
 
-*   Consider deciding the ExampleUI etc is part of HappyFunTimes
+*   Consider deciding the ExampleUI etc is part of happyfuntimes
 
-    Originally I thought HappyFunTimes was just the relayserver and the libraries to
+    Originally I thought happyfuntimes was just the relayserver and the libraries to
     talk to it.
 
     Having made the demos though it does seem there is some utility in the exampleUI.
@@ -914,6 +913,11 @@ Runs Repo noid
 
 Done
 ====
+
+*   make unity export open export folder in finder/explorer?
+*   add "touch to start" on android (and iOS?) both sound and fullscreen can be added
+
+    going to try the new on touchstart stuff for now
 
 *   make instructions CSS handling less hacky
 
@@ -1243,7 +1247,7 @@ Done
 *   consider making HFT work with old games?
     *    no, because I need to be able to update the templates as HFT adds to features. Old games won't do that.
 *   make --app-mode
-    *   make small splash "HappyFunTimes Running ..."
+    *   make small splash "happyfuntimes Running ..."
     *   check if it's installed. (config exists), if not make it.
 *   Refactor gameInfo so it returns a runtimeInfo
 *   automate exporting unity
@@ -1383,7 +1387,7 @@ Done
 *   make hft command line
 
     hft should call into happyfuntimes some how. I guess it should be a 'dev' function?
-    Need to figure that out. I guess HappyFunTimes could write to ~/.happyfuntimes/config.json
+    Need to figure that out. I guess happyfuntimes could write to ~/.happyfuntimes/config.json
     which the localtion of Happyfuntimes, then HFT could use that.
 
     *   hft add - adds to ~/.happyfuntimes/installed-games.json
@@ -1760,7 +1764,7 @@ Rejected
 
     doesn't matter. Not using NPM for HFT. HFT doesn't care about spaces
 
-    *   make unity edit HappyFunTimes.name (auto-set name to valid name) (see above)
+    *   make unity edit happyfuntimes.name (auto-set name to valid name) (see above)
     *   update shft and manage to use hft.name (see above)
 
 *   fix controller that incorrectly asked for orientation. No repo
