@@ -454,6 +454,7 @@ var HFTServer = function(options, startedCallback) {
   var addTemplateInsertedPath = function(theApp, pathRegex, templateName, contentPath) {
     theApp.get(pathRegex, function(req, res) {
       var gameId = req.params[0];
+      var filename = req.params[1] || templateName;
       var runtimeInfo = g.gameDB.getGameById(gameId);
       if (!runtimeInfo) {
         var msg = [
@@ -463,6 +464,14 @@ var HFTServer = function(options, startedCallback) {
         ].join('\n');
         console.error(msg);
         return send404(res, msg);
+      }
+
+      if (!templateName) {
+        contentPath = filename + ".html";
+        var urlRuntimeInfo = runtimeInfo.templateFileOptions[contentPath];
+        if (urlRuntimeInfo && urlRuntimeInfo.urlInfo) {
+          templateName = urlRuntimeInfo.urlInfo.template;
+        }
       }
 
       if (!runtimeInfo.useTemplate[templateName]) {
@@ -481,7 +490,23 @@ var HFTServer = function(options, startedCallback) {
         }
         sendFileResponse(req, res, contentFullPath, function(str) {
           debug("doing substitutions for:", contentPath);
+          var scriptParams = {
+            filename: filename,
+          };
           var result = strings.replaceParams(templateData.toString(), [
+            {
+              filename: filename,
+              pages: {
+                game: {
+                  beforeScripts: strings.replaceParams(runtimeInfo.pages.game.beforeScripts, scriptParams),
+                  afterScripts: strings.replaceParams(runtimeInfo.pages.game.afterScripts, scriptParams),
+                },
+                controller: {
+                  beforeScripts: strings.replaceParams(runtimeInfo.pages.controller.beforeScripts, scriptParams),
+                  afterScripts: strings.replaceParams(runtimeInfo.pages.controller.afterScripts, scriptParams),
+                }
+              },
+            },
             runtimeInfo,
             {
               content: str,
@@ -530,8 +555,9 @@ var HFTServer = function(options, startedCallback) {
     var src = "define([], function() { return " + JSON.stringify(data) + "; })\n";
     sendStringResponse(res, src, "application/javascript");
   });
-  addTemplateInsertedPath(app, /^\/games\/(.*?)\/index.html$/, 'controller', 'controller.html');
-  addTemplateInsertedPath(app, /^\/games\/(.*?)\/gameview.html$/, 'game', 'game.html');
+  addTemplateInsertedPath(app, /^\/games\/(.*?)\/index\.html$/, 'controller', 'controller.html');
+  addTemplateInsertedPath(app, /^\/games\/(.*?)\/gameview\.html$/, 'game', 'game.html');
+  addTemplateInsertedPath(app, /^\/games\/(.*?)\/(.*?)\.html$/);
   app.get(/^\/games\/(.*?)\/runtime-scripts\/traceur-runtime.js$/, function(req, res) {
     //var gameId = req.params[0];
     var fullPath = path.join(__dirname, '..', 'node_modules', 'traceur', 'bin', 'traceur-runtime.js');
