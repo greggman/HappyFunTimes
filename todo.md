@@ -1,6 +1,11 @@
 To Do
 =====
 
+*   figure out why retry didn't work at National Videogame Arcade
+*   fix bombbomb hard to press button
+*   fix buttons in jumpjump/powpow (bigger!)
+*   add analog sticks to gamepad
+*   update html gamepad to match unity gamepad
 *   add easy message to unity-gamepad
 *   make osx bring browser to front after quiting unity game
 *   add support for gameType "unity3dlibrary"
