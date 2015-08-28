@@ -504,7 +504,7 @@ var HFTServer = function(options, startedCallback) {
                 controller: {
                   beforeScripts: strings.replaceParams(runtimeInfo.pages.controller.beforeScripts, scriptParams),
                   afterScripts: strings.replaceParams(runtimeInfo.pages.controller.afterScripts, scriptParams),
-                }
+                },
               },
             },
             runtimeInfo,
