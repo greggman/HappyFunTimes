@@ -366,3 +366,10 @@ the correct version
         or `top` to set the position of the instructions. You can also add
         `"instuctionsPosition": "bottom"` to the `happyFunTimes` section of your
         `package.json` file to set it per game. The default is top.
+
+    *   Added `happyFunTimes.templateFileOptions`
+
+        [See docs](packagejson.md#-happyfuntimes-templatefileoptions-)
+
+
+
