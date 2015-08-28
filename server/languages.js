@@ -70,7 +70,7 @@ function getLangsMessage(langs, msgId, concatStr) {
 }
 
 /**
- * @type {Object} Lang~Options
+ * @typedef {Object} Lang~Options
  * @parameter {string} wifiName the name of the wifi eg. "HappyFunTimes"
  * @parameter {string} [wifiPass] the password to access the wifi.
  * @parameter {string} [langs] comma separated language ids. eg. "en,ja"
