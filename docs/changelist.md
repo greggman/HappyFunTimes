@@ -1,6 +1,10 @@
 Changelist
 ==========
 
+*   0.0.40
+
+    *   don't allow games for a different platform to be installed.
+
 *   0.0.39
 
     *   Games have context menu with "GetInfo", "Uninstall" and/or "Remove"

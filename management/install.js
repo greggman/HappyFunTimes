@@ -78,6 +78,7 @@ var install = function(releasePath, opt_destPath, opt_options) {
     });
     var runtimeInfo;
     var zipRootPath;
+    var zipPackagePath;
 
     var packageLocations = gameInfo.getPackageLocations();
     var checkPackageLocations = function(entry) {
@@ -106,17 +107,49 @@ var install = function(releasePath, opt_destPath, opt_options) {
       if (!packageEntry) {
         return reject("no package.json found in " + releasePath);
       }
-      zipRootPath = packageEntry.name.replace(/\\/g, "/");
-      zipRootPath = zipRootPath.substring(0, zipRootPath.indexOf("/"));
+      zipPackagePath = packageEntry.name.replace(/\\/g, "/");
+      zipRootPath = zipPackagePath.substring(0, zipPackagePath.indexOf("/"));
       runtimeInfo = gameInfo.parseGameInfo(packageEntry.asText(), packageEntry.name, zipRootPath);
     } catch (e) {
       return reject("could not parse package.json. Maybe this is not a HappyFunTimes game?");
     }
 
+    // Check it's got the required files
+    try {
+      var zipPackageDir = path.dirname(zipPackagePath);
+      var fileNames = entries.map(function(entry) {
+        return path.relative(zipPackageDir, entry.name.replace(/[\\/]/g, path.sep)).replace(/\\/g, "/");
+      });
+      gameInfo.checkRequiredFiles(runtimeInfo, fileNames);
+    } catch (e) {
+      return reject(e);
+    }
+
     var info = runtimeInfo.info;
     var hftInfo = info.happyFunTimes;
     var gameId = runtimeInfo.originalGameId;
+    var safeGameId = releaseUtils.safeishName(gameId);
     var destBasePath;
+
+    var fileExists = {};
+    entries.forEach(function(entry) {
+      var filename = entry.name.replace(/\\/g, "/").replace(/.*?\//, "");
+      fileExists[filename] = true;
+    });
+
+    // Check for more files that should exist.
+    // Games that are "added" don't need this but games
+    // that are "installed" do.
+    log("checking gametype: " + hftInfo.gameType);
+    if (hftInfo.gameType.toLowerCase() === "unity3d") {
+      var exePath = platformInfo.exePath;
+      if (exePath) {
+        exePath = strings.replaceParams(exePath, { gameId: safeGameId });
+        if (!fileExists[exePath]) {
+          return reject("path not found: " + exePath + "\nIs this the correct zip file for " + platformInfo.id + "?");
+        }
+      }
+    }
 
     // is it already installed?
     var installedGame = gameDB.getGameById(gameId);
@@ -130,8 +163,6 @@ var install = function(releasePath, opt_destPath, opt_options) {
       }
     }
 
-    var safeGameId = releaseUtils.safeishName(gameId);
-
     if (!destBasePath) {
         // make the dir after we're sure we're ready to install
         destBasePath = path.join(config.getConfig().gamesDir, safeGameId);
@@ -139,14 +170,32 @@ var install = function(releasePath, opt_destPath, opt_options) {
 
     destBasePath = opt_destPath ? opt_destPath : destBasePath;
 
+    // Check for bad paths
+    var bad = false;
+    var errors = [];
+    entries.forEach(function(entry) {
+      if (bad) {
+        return;
+      }
+      var filePath = entry.name.substring(zipRootPath.length + 1);
+      var destPath = path.resolve(path.join(destBasePath, filePath));
+      if (destPath.substring(0, destBasePath.length) !== destBasePath) {
+        errors.push("ERROR: bad zip file. Path would write outside game folder");
+        bad = true;
+      }
+    });
+
+    if (bad) {
+      // Should delete all work here?
+      return reject(errors.join("\n"));
+    }
+
     console.log("installing to: " + destBasePath);
     if (!options.dryRun) {
       mkdirp.sync(destBasePath);
     }
 
     var files = [];
-    var errors = [];
-    var bad = false;
     entries.forEach(function(entry) {
       if (bad) {
         return;
@@ -154,31 +203,26 @@ var install = function(releasePath, opt_destPath, opt_options) {
       var filePath = entry.name.substring(zipRootPath.length + 1);
       files.push(filePath);
       var destPath = path.resolve(path.join(destBasePath, filePath));
-      if (destPath.substring(0, destBasePath.length) !== destBasePath) {
-        errors.push("ERROR: bad zip file. Path would write outside game folder");
-        bad = true;
-      } else {
-        var isDir = entry.dir;
-        if (destPath.substr(-1) === "/" || destPath.substr(-1) === "\\") {
-          destPath = destPath.substr(0, destPath.length - 1);
-          isDir = true;
+      var isDir = entry.dir;
+      if (destPath.substr(-1) === "/" || destPath.substr(-1) === "\\") {
+        destPath = destPath.substr(0, destPath.length - 1);
+        isDir = true;
+      }
+      //??
+      if (isDir) {
+        log("mkdir  : " + destPath);
+        if (!options.dryRun) {
+          mkdirp.sync(destPath);
         }
-        //??
-        if (isDir) {
-          log("mkdir  : " + destPath);
-          if (!options.dryRun) {
-            mkdirp.sync(destPath);
+      } else {
+        log("install: " + entry.name + " -> " + destPath);
+        if (!options.dryRun) {
+          var dirPath = path.dirname(destPath);
+          if (!fs.existsSync(dirPath)) {
+            log("mkdir  : " + dirPath);
+            mkdirp.sync(dirPath);
           }
-        } else {
-          log("install: " + entry.name + " -> " + destPath);
-          if (!options.dryRun) {
-            var dirPath = path.dirname(destPath);
-            if (!fs.existsSync(dirPath)) {
-              log("mkdir  : " + dirPath);
-              mkdirp.sync(dirPath);
-            }
-            fs.writeFileSync(destPath, entry.asNodeBuffer());
-          }
+          fs.writeFileSync(destPath, entry.asNodeBuffer());
         }
       }
     });
@@ -188,8 +232,7 @@ var install = function(releasePath, opt_destPath, opt_options) {
       return reject(errors.join("\n"));
     }
 
-    // Should this be in the zip?
-    log("checking gametype: " + hftInfo.gameType);
+    // Set the executable bit
     if (hftInfo.gameType.toLowerCase() === "unity3d") {
       var exePath = platformInfo.exePath;
       if (exePath) {

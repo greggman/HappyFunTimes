@@ -320,7 +320,7 @@ var make = function(gamePath, destFolder, options) {
   }
 
   try {
-    gameInfo.checkRequiredFiles(runtimeInfo, gamePath);
+    gameInfo.checkRequiredFiles(runtimeInfo);
     if (!fs.existsSync(destFolder)) {
       fs.mkdirSync(destFolder);
     }
