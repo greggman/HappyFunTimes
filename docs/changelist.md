@@ -5,6 +5,10 @@ Changelist
 
     *   don't allow games for a different platform to be installed.
 
+    *   remove css `cursor: pointer` from controllers.
+
+        it was messing up android!?! WTFBBQ!
+
 *   0.0.39
 
     *   Games have context menu with "GetInfo", "Uninstall" and/or "Remove"
