@@ -130,6 +130,7 @@ var install = function(releasePath, opt_destPath, opt_options) {
     var gameId = runtimeInfo.originalGameId;
     var safeGameId = releaseUtils.safeishName(gameId);
     var destBasePath;
+    var exePath;
 
     var fileExists = {};
     entries.forEach(function(entry) {
@@ -142,7 +143,7 @@ var install = function(releasePath, opt_destPath, opt_options) {
     // that are "installed" do.
     log("checking gametype: " + hftInfo.gameType);
     if (hftInfo.gameType.toLowerCase() === "unity3d") {
-      var exePath = platformInfo.exePath;
+      exePath = platformInfo.exePath;
       if (exePath) {
         exePath = strings.replaceParams(exePath, { gameId: safeGameId });
         if (!fileExists[exePath]) {
@@ -234,7 +235,7 @@ var install = function(releasePath, opt_destPath, opt_options) {
 
     // Set the executable bit
     if (hftInfo.gameType.toLowerCase() === "unity3d") {
-      var exePath = platformInfo.exePath;
+      exePath = platformInfo.exePath;
       if (exePath) {
         exePath = path.join(destBasePath, strings.replaceParams(exePath, { gameId: safeGameId }));
         if (!fs.existsSync(exePath)) {
