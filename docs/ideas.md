@@ -65,13 +65,13 @@ ideas for you
 
     Put a number on each phone and a diagram
 
-        +----+
-        |    |    +----+
-        | 1  +----+    |
-        |    |    | 3  |
-        +----+ 2  |    |
-             |    +----+
-             +----+
+         +----+
+         |    |    +----+
+         | 1  +----+    |
+         |    |    | 3  |
+         +----+ 2  |    |
+              |    +----+
+              +----+
 
     Then, players push a character from on phone to the next or flick a ball.
     Teams that make the most laps win or points win
@@ -139,12 +139,12 @@ ideas for you
 
     Example for groups of 3 players they might see
 
-        +---+  +---+  +---+   Picture of 3 phones side by side.
-        |   |  |   |  |   |   with some image that fits just those
-        | <-|  |-O-|  |-> |   3 phones.
-        |   |  |   |  |   |
-        |   |  |   |  |   |
-        +---+  +---+  +---+
+         +---+  +---+  +---+   Picture of 3 phones side by side.
+         |   |  |   |  |   |   with some image that fits just those
+         | <-|  |-O-|  |-> |   3 phones.
+         |   |  |   |  |   |
+         |   |  |   |  |   |
+         +---+  +---+  +---+
 
     You have to walk around the room and find your matching partners.
     Maybe make it easier by matching background colors. First find all the red players,
