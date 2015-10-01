@@ -1,6 +1,10 @@
 Changelist
 ==========
 
+*   0.0.41
+
+    *   Fixed broken how.html
+
 *   0.0.40
 
     *   don't allow games for a different platform to be installed.
