@@ -52,6 +52,7 @@ var optionSpec = {
   },
 };
 
+var debug      = require('debug')('server');
 var config     = require('../lib/config');
 var log        = require('../lib/log');
 var Promise    = require('promise');
