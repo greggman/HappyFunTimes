@@ -55,6 +55,7 @@ requirejs(
     gamesById: {},
     hftData: {},
   };
+  misc.applyUrlSettings(g);
 
   g.dd = new DragDropManager({
     inputElem: document.body,
@@ -426,9 +427,11 @@ requirejs(
 
   (function() {
     var elem = document.querySelector(".unhidden-msg");
-    if (elem) {
+    if (elem && g.how) {
+      window.history.replaceState({}, "", window.location.origin + window.location.pathname);
+      elem.style.display = "block";
       elem.addEventListener('click', function() {
-        window.location.href = elem.getAttribute("target");
+        elem.style.display = "none";
       }, false);
     }
   }());
