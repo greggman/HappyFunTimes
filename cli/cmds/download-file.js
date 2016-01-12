@@ -31,7 +31,6 @@
 "use strict";
 
 var Promise = require('promise');
-var sys     = require('sys');
 var utils   = require('../utils');
 
 var downloadFile = function(args) {
@@ -55,7 +54,7 @@ var downloadFile = function(args) {
     var url = args._[0];
     var destPath = args._[1];
     var log = options.verbose ? console.log.bind(console) : function() { };
-    var print = options.verbose ? sys.print.bind(sys) : function() { };
+    var print = options.verbose ? console.log.bind(console) : function() { };
 
     var emitter = require('../../management/download').downloadFile(url, destPath);
     emitter.on('start', function(e) {
