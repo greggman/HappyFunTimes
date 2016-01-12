@@ -50,8 +50,10 @@ var list = function(args) {
         hftVersion: packageInfo.version,
         apiVersion: availableVersions[availableVersions.length - 1],
         apiVersions: availableVersions,
+        nodeVersion: process.version,
       }, undefined, "  "));
     } else {
+      console.log("nodeVersion: " + process.version);
       console.log("hftVersion: " + packageInfo.version);
       if (args.all) {
         console.log("apiVersions: ");
