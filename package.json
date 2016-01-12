@@ -20,7 +20,6 @@
     "iniparser": "^1.0.5",
     "inmemfilecache": "0.0.5",
     "jszip": "^2.5.0",
-    "launchpad": "^0.3.0",
     "launchpadlite": "^0.3.5",
     "mime": "1.2.11",
     "mkdirp": "^0.5.0",
