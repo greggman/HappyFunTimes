@@ -36,10 +36,10 @@
  * @module Touch
  */
 define(
-  [ '../../../../3rdparty/handjs/hand-1.3.7',
+  [ '../../../../3rdparty/pep.min',
     './input',
     './misc',
-  ], function(HandJS, Input, Misc) {
+  ], function(pep, Input, Misc) {
 
   /**
    * @typedef {Object} PadInfo
@@ -439,7 +439,7 @@ define(
     };
 
     var handleButtonUp = function(e, buttonInfo) {
-      addPointerId(buttonInfo, e.pointerId, e.timeStamp);
+      removePointerId(buttonInfo, e.pointerId, e.timeStamp);
     };
 
     var handleButtonMove = function(/*e, buttonInfo*/) {
@@ -462,43 +462,27 @@ define(
       removePointerId(buttonInfo, e.pointerId, e.timeStamp);
     };
 
+    var funcs = {
+      pointerdown: handleButtonDown,
+      pointermove: handleButtonMove,
+      pointerup: handleButtonUp,
+      pointerout: handleButtonOut,
+      pointerenter: handleButtonEnter,
+      pointerleave: handleButtonLeave,
+      pointercancel: handleButtonCancel,
+    };
+
     buttonInfos.forEach(function(buttonInfo) {
       var elem = buttonInfo.element;
-      elem.addEventListener('pointerdown', function(buttonInfo) {
-        return function(e) {
-          handleButtonDown(e, buttonInfo);
-        };
-      }(buttonInfo), false);
-      elem.addEventListener('pointermove', function(buttonInfo) {
-        return function(e) {
-          handleButtonMove(e, buttonInfo);
-        };
-      }(buttonInfo), false);
-      elem.addEventListener('pointerup', function(buttonInfo) {
-        return function(e) {
-          handleButtonUp(e, buttonInfo);
-        };
-      }(buttonInfo), false);
-      elem.addEventListener('pointerout', function(buttonInfo) {
-        return function(e) {
-          handleButtonOut(e, buttonInfo);
-        };
-      }(buttonInfo), false);
-      elem.addEventListener('pointerenter', function(buttonInfo) {
-        return function(e) {
-          handleButtonEnter(e, buttonInfo);
-        };
-      }(buttonInfo), false);
-      elem.addEventListener('pointerleave', function(buttonInfo) {
-        return function(e) {
-          handleButtonLeave(e, buttonInfo);
-        };
-      }(buttonInfo), false);
-      elem.addEventListener('pointercancel', function(buttonInfo) {
-        return function(e) {
-          handleButtonCancel(e, buttonInfo);
-        };
-      }(buttonInfo), false);
+      Object.keys(funcs).forEach(function(eventName) {
+        var func = funcs[eventName];
+        elem.addEventListener(eventName, function(buttonInfo) {
+          return function(e) {
+            console.log(e.type, e.target.id, e.pointerId);
+            func(e, buttonInfo);
+          };
+        }(buttonInfo));
+      });
     });
 
 //    setInterval(expireOldButtons, 100);
