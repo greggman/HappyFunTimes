@@ -707,10 +707,20 @@ var HFTServer = function(options, startedCallback) {
     });
   };
 
+  // if we're in DNS mode we'll get messages from games trying to
+  // inform happyfuntimes.net
+  function fakeHFTSitePing(req, res) {
+    res.json({
+      ip: "0.0.0.0",
+    });
+  }
+
   app.get(/^\/games\/(.*?)\//, sendGameRequestedFile);
   app.get(/^\/enter-name.html/, sendTemplatedFile);
   app.use(/^\/api\/v0\/install\//, busboy());
   app.post(/^\/api\/v0\/install\//, installUploadedFile);
+  app.use(/^\/api\/inform2/, busboy());
+  app.post(/^\/api\/inform2/, fakeHFTSitePing);
   app.use(/^\/api\/v0\/uploadFile\//, busboy());
   app.post(/^\/api\/v0\/uploadFile\//, addUploadedFile);
   app.get(/.*/, sendSystemRequestedFile);
