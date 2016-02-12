@@ -52,6 +52,7 @@ var sendForAWhile = (function() {
   var parsedUrl;
 
   var tryInform = function() {
+    debug("inform: " + hftUrl);
     io.sendJSON(hftUrl, data, options, function(err) {
       // do I care?
       if (err) {
