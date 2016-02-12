@@ -478,7 +478,6 @@ define(
         var func = funcs[eventName];
         elem.addEventListener(eventName, function(buttonInfo) {
           return function(e) {
-            console.log(e.type, e.target.id, e.pointerId);
             func(e, buttonInfo);
           };
         }(buttonInfo));
