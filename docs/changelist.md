@@ -1,6 +1,24 @@
 Changelist
 ==========
 
+*   0.0.47
+
+    *   handle case where computer name is not set on OSX
+
+*   0.0.44
+
+    *   switched from HANDJS to PEP for pointerevents support
+
+        Should fix sticky buttons
+
+    *   added fake hft ping to prevent error message in installation mode
+
+*   0.0.43
+
+    *   removed launchpad dependency
+
+    *   added node version to htf version
+
 *   0.0.41
 
     *   Fixed broken how.html
