@@ -99,7 +99,8 @@ function init(options) {
     }
 
     Object.keys(srcLang).forEach(function(key) {
-        dstLang[key] = strings.replaceParams(srcLang[key], [subs, options]);
+        var src = process.env["HFT_LANG_" + key.toUpperCase()] || srcLang[key];
+        dstLang[key] = strings.replaceParams(src, [subs, options]);
     });
 
     g.langs[key] = dstLang;
