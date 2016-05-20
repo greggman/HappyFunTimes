@@ -1,0 +1,37 @@
+<script>
+function getJSON(url, obj, callback) {
+  var xhr = new XMLHttpRequest();
+  xhr.open('POST', url);
+  xhr.setRequestHeader('Content-Type', 'application/json');
+  xhr.onload = function() {
+    if (xhr.status === 200) {
+      try {
+        var obj = JSON.parse(xhr.responseText)
+        callback(null, obj);
+      } catch (e) {
+        callback(e);
+      }
+    } else {
+      callback("status not 200. Was " + xhr.status);
+    }
+  }
+  xhr.onerror = function(e) {
+    callback(e);
+  };
+  xhr.send(JSON.stringify(obj));
+}
+
+function log() {
+  var elem = document.createElement("pre");
+  elem.appendChild(document.createTextNode(Array.prototype.join.call(arguments, " ")));
+  document.body.appendChild(elem);
+}
+
+getJSON("http://happyfuntimes.net/api/getgames", {}, function(err, obj) {
+  if (err) {
+    log("ERROR:", err);
+  } else {
+    log(JSON.stringify(obj, null, 2));
+  }
+});
+</script>
