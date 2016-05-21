@@ -819,7 +819,7 @@ var HFTServer = function(options, startedCallback) {
     server.once('error', makeServerErrorHandler(port));
     server.once('listening', makeServerListeningHandler(server, port));
 
-    server.listen(port);
+    server.listen(port, '::');
   });
 
   /**
