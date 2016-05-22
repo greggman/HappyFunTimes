@@ -50,31 +50,43 @@ var sendForAWhile = (function() {
   var options;
   var tries;
   var parsedUrl;
+  var success;
 
-  var tryInform = function() {
-    debug("inform: " + hftUrl);
-    io.sendJSON(hftUrl, data, options, function(err) {
-      // do I care?
-      if (err) {
-        ++tries;
-        console.error("Try " + tries + " of " + config.getSettings().settings.rendezvousRetryTimes + ": Could not contact: " + parsedUrl.host);
-        console.error(err);
-        if (tries <= config.getSettings().settings.rendezvousRetryTimes) {
-          setTimeout(tryInform, config.getSettings().settings.rendezvousRetryTimeout * 1000);
+  var tryInform = function(tryOptions) {
+    var tryUntilSuccess = function() {
+      var localOptions = JSON.parse(JSON.stringify(options));
+      localOptions.family = tryOptions.family;
+      debug("inform: " + hftUrl + " family: " + localOptions.family);
+      io.sendJSON(hftUrl, data, localOptions, function(err) {
+        // do I care?
+        if (err) {
+          ++tries[localOptions.family];
+          console.error("Try " + tries[localOptions.family] + " of " + config.getSettings().settings.rendezvousRetryTimes + ": Could not contact: " + parsedUrl.host + " family: " + localOptions.family);
+          console.error(err);
+          if (tries[localOptions.family] <= config.getSettings().settings.rendezvousRetryTimes) {
+            // If one family succeeds then the other only needs 1 try.
+            if (!success) {
+              setTimeout(tryUntilSuccess, config.getSettings().settings.rendezvousRetryTimeout * 1000);
+            }
+          }
+        } else {
+          success = true;
+          console.log("registered:", data.addresses.join(", "), "with", parsedUrl.hostname, "family:", localOptions.family);
         }
-      } else {
-        console.log("registered:", data.addresses.join(", "), "with", parsedUrl.hostname);
-      }
-    });
+      });
+    };
+    tryUntilSuccess();
   };
 
   return function(_url, _data, _options) {
     hftUrl = _url;
     parsedUrl = url.parse(_url);
     data = _data;
-    options = _options;
-    tries = 0;
-    tryInform();
+    options = JSON.parse(JSON.stringify(_options));
+    tries = { 4: 0, 6: 0};
+    success = false;
+    tryInform({family:4});
+    tryInform({family:6});
   };
 }());
 
@@ -96,7 +108,7 @@ var inform = (function() {
         lastPort = g.port;
         var hftUrl = process.env.HFT_RENDEZVOUS_URL || config.getSettings().settings.rendezvousUrl;
         debug("ping: " + hftUrl);
-        var options = { headers: {} };
+        var options = { headers: {},  };
         var rendezvousIp = process.env.HFT_RENDEZVOUS_IP;
         if (rendezvousIp) {
           options.headers["x-forwarded-for"] = rendezvousIp;
