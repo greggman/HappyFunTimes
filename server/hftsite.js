@@ -61,8 +61,10 @@ var sendForAWhile = (function() {
         // do I care?
         if (err) {
           ++tries[localOptions.family];
-          console.error("Try " + tries[localOptions.family] + " of " + config.getSettings().settings.rendezvousRetryTimes + ": Could not contact: " + parsedUrl.host + " family: " + localOptions.family);
-          console.error(err);
+          if (tries[localOptions.family] > 1 && !success) {
+            console.error("Try " + tries[localOptions.family] + " of " + config.getSettings().settings.rendezvousRetryTimes + ": Could not contact: " + parsedUrl.host + " family: " + localOptions.family);
+            console.error(err);
+          }
           if (tries[localOptions.family] <= config.getSettings().settings.rendezvousRetryTimes) {
             // If one family succeeds then the other only needs 1 try.
             if (!success) {
