@@ -27,7 +27,55 @@ function log() {
   document.body.appendChild(elem);
 }
 
-getJSON("http://happyfuntimes.net/api/getgames2", {}, function(err, obj) {
+function searchStringToObject(str, opt_obj) {
+  if (str[0] === '?') {
+    str = str.substring(1);
+  }
+  var results = opt_obj || {};
+  str.split("&").forEach(function(part) {
+    var pair = part.split("=").map(decodeURIComponent);
+    results[pair[0]] = pair[1] !== undefined ? pair[1] : true;
+  });
+  return results;
+}
+
+/**
+ * Reads the query values from a URL like string.
+ * @param {String} url URL like string eg. http://foo?key=value
+ * @param {Object} [opt_obj] Object to attach key values to
+ * @return {Object} Object with key values from URL
+ * @memberOf module:Misc
+ */
+var parseUrlQueryString = function(str, opt_obj) {
+  var dst = opt_obj || {};
+  try {
+    var q = str.indexOf("?");
+    var e = str.indexOf("#");
+    if (e < 0) {
+      e = str.length;
+    }
+    var query = str.substring(q + 1, e);
+    searchStringToObject(query, dst);
+  } catch (e) {
+    console.error(e);
+  }
+  return dst;
+};
+
+/**
+ * Reads the query values from the current URL.
+ * @param {Object=} opt_obj Object to attach key values to
+ * @return {Object} Object with key values from URL
+ * @memberOf module:Misc
+ */
+var parseUrlQuery = function(opt_obj) {
+  return searchStringToObject(window.location.search, opt_obj);
+};
+
+var q = parseUrlQuery();
+var url = q.url || "http://happyfuntimes.net"
+
+getJSON(url + "/api/getgames2", {}, function(err, obj) {
   if (err) {
     log("ERROR:", err);
   } else {
