@@ -17,6 +17,26 @@ or find stuff.
 So some random ideas I'd like to explore if I have time. Maybe they'll trigger some
 ideas for you
 
+*   Sequences by team
+
+    Each team member's phone shows a symbol.
+    The symbol needed for that team is shown. That team member member needs to press their button
+    If the wrong team member presses their button the team has to start over
+    First team wins?
+
+    Simple example: show a hurdle race. Each hurdle has a symbol above it. Each person
+    on a team has 1 symbol on their phone. For that team to advance the person with
+    the matching symbol has to press their button to jump the hurdle.
+
+    Complications:
+
+    *   each player on each team needs a unique symbol. If one someone on a
+        team quits that symbol needs to be removed. If a play joins in the middle they need
+        to be added.
+
+    *   given a lot of player per team most team members have nothing to do
+
+
 *   Spider game
 
     One button. Players are at edge of screen. Shoot line across
