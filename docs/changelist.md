@@ -3,6 +3,8 @@ Changelist
 
 *   0.0.47
 
+    *   handle ipv6
+
     *   handle case where computer name is not set on OSX
 
 *   0.0.44
