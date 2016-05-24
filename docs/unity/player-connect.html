@@ -145,6 +145,18 @@ method to receive the <code>NetPlayer</code> for that phone.</p>
 full or to wait.</p>
 </li>
 </ol>
+<h4 id="letting-everyone-play">Letting everyone play</h4>
+<p>You can <em>return a player</em> by calling <code>PlayerConnector.ReturnPlayer(someNetPlayer)</code>.
+You&#39;ll have to get a reference to your <code>PlayerConnector</code>.</p>
+<p>What do I mean by <em>return the player</em>.</p>
+<p>Imagine you&#39;ve made a game that supports only 4 people. There&#39;s 8 people
+who have connected to your game. 4 of them are playing. 4 are waiting to play.
+When a player dies you want the next player waiting to start playing. You can
+do this by when a player dies calling <code>thePlayerConnector.ReturnPlayer(netPlayerOfPlayerThatDied)</code>.</p>
+<p>Similarly let&#39;s say you made a round based game. 7 people are connected
+but the game only supports 4 players. You can call <code>thePlayerConnector.FlushCurrentPlayers()</code>
+which will effectively call <code>thePlayerConnector.ReturnPlayer(netPlayer)</code> for every currently
+connected player and so will swap in the next 4 players.</p>
 <h2 id="things-to-be-aware-of">Things to be aware of</h2>
 <p>You&#39;ll get an <code>OnDisconnect</code> event (your <code>OnDisconnect</code> callback will be called)
 when a player disconnects. When a new player connects whether it&#39;s the same user
