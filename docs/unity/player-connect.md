@@ -109,6 +109,23 @@ script.
     You also need to handle waiting players, telling them the game is
     full or to wait.
 
+#### Letting everyone play
+
+You can *return a player* by calling `PlayerConnector.ReturnPlayer(someNetPlayer)`.
+You'll have to get a reference to your `PlayerConnector`.
+
+What do I mean by *return the player*.
+
+Imagine you've made a game that supports only 4 people. There's 8 people
+who have connected to your game. 4 of them are playing. 4 are waiting to play.
+When a player dies you want the next player waiting to start playing. You can
+do this by when a player dies calling `thePlayerConnector.ReturnPlayer(netPlayerOfPlayerThatDied)`.
+
+Similarly let's say you made a round based game. 7 people are connected
+but the game only supports 4 players. You can call `thePlayerConnector.FlushCurrentPlayers()`
+which will effectively call `thePlayerConnector.ReturnPlayer(netPlayer)` for every currently
+connected player and so will swap in the next 4 players.
+
 ## Things to be aware of
 
 You'll get an `OnDisconnect` event (your `OnDisconnect` callback will be called)
