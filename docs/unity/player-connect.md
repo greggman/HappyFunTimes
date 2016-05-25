@@ -114,7 +114,7 @@ script.
 You can *return a player* by calling `PlayerConnector.ReturnPlayer(someNetPlayer)`.
 You'll have to get a reference to your `PlayerConnector`.
 
-What do I mean by *return the player*.
+What do I mean by *return the player*?
 
 Imagine you've made a game that supports only 4 people. There's 8 people
 who have connected to your game. 4 of them are playing. 4 are waiting to play.
