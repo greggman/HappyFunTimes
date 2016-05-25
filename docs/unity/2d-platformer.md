@@ -338,13 +338,13 @@ to the phone.
 We need to define classes to receive the data we defined above from the phone
 
     // Message when player presses or release jump button
-    private class MessageJump : MessageCmdData
+    private class MessageJump
     {
         public bool jump = false;
     }
 
     // Message when player pressed left or right
-    private class MessageMove : MessageCmdData
+    private class MessageMove
     {
         public int dir = 0;  // will be -1, 0, or +1
     }
@@ -399,7 +399,7 @@ To send our color choice to the phone we define a class for that
     // values. Finally they are converted back to RGB.
     // The min/max values are a hue range. Anything outside that range will
     // not be adjusted.
-    private class MessageSetColor : MessageCmdData
+    private class MessageSetColor
     {
         public MessageSetColor() { }  // for deserialization
         public MessageSetColor(float _h, float _s, float _v, float _min, float _max)

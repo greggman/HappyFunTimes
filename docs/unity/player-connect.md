@@ -144,7 +144,7 @@ When the game switches to players needing buttons on their phone or players
 needing slingshots on their phone you send a message to them you made up something
 like
 
-    class ShowControllerMsg : MessageCmdData {
+    class ShowControllerMsg {
       ShowControllerMsg(string s) : { control = s; }
       public string control;
     };

@@ -32,7 +32,7 @@ So for example here's a script.
 
         // Message received from controller about which
         // character the player picked.
-        private class MessageCharacter : MessageCmdData {
+        private class MessageCharacter {
             public int id = 0;
         }
 

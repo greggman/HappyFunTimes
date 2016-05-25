@@ -83,7 +83,7 @@ Looking at the `BirdScript.cs` code the sample above. First we create a mesasge 
 data we want to send between games.
 
     // Message to send when sending a player to another game
-    private class MessageSwitchGame : MessageCmdData
+    private class MessageSwitchGame
     {
         public Vector2 pos;  // where the player was
         public Vector2 vel;  // what speed he was going

@@ -75,7 +75,7 @@ Will emit a message on the corresponding `NetPlayer` in the game.
 
     ...
 
-    class FooMsg : MessageCmdData {
+    class FooMsg {
       public int someNumber;
       public string someString;
       public bool someBool;
@@ -100,7 +100,7 @@ Will emit a message on the corresponding `NetPlayer` in the game.
 
 Similary any message sent by the game
 
-    class BarMsg : MessageCmdData {
+    class BarMsg {
       BarMsg(string s, bool b, float n) {
         aString = s;
         aBool = b;

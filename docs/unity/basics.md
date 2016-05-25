@@ -53,9 +53,9 @@ Here you can see a typical `InitializeNetPlayer` method in C#. This line
 says when the command "move" comes in, convert the data in that message to
 a `MessageMove` class and then call the method `OnMove`.
 
-The `MessageMove` class must inherit from `MessageCmdData` looks like this
+The `MessageMove` class make all its fields public
 
-    private class MessageMove : MessageCmdData {
+    private class MessageMove {
         public float x = 0;
         public float y = 0;
     };
@@ -90,7 +90,7 @@ Of course you can always start with one of the samples
 Sending data to the phone is just the reverse. First we make
 class to represent the data we want to send.
 
-    private class MessageScored : MessageCmdData {
+    private class MessageScored {
         public MessageScored(int _points) {
             points = _points;
         }
