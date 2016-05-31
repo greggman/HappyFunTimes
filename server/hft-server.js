@@ -799,13 +799,13 @@ var HFTServer = function(options, startedCallback) {
   }.bind(this);
 
   var makeServerErrorHandler = function(server, portnum) {
-	var tryIpv4 = true;
+    var tryIpv4 = true;
     return function(err) {
-	  if (tryIpv4) {
-		  tryIpv4 = false;
-		  server.listen(portnum, '');
-		  return;
-	  }
+      if (tryIpv4) {
+        tryIpv4 = false;
+        server.listen(portnum, '');
+        return;
+      }
       console.warn('WARNING!!!: ' + err.code + ': could NOT connect to port: ' + portnum);
       tryStartRelayServer();
     };
