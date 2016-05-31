@@ -798,12 +798,20 @@ var HFTServer = function(options, startedCallback) {
     }
   }.bind(this);
 
-  var makeServerErrorHandler = function(server, portnum) {
-    var tryIpv4 = true;
+  function makeServerAndListen(port, address) {
+    var server = options.httpServer || http.createServer(app);
+
+    server.once('error', makeServerErrorHandler(server, port, address));
+    server.once('listening', makeServerListeningHandler(server, port));
+
+    debug("try listen port", port, "address: ", address);
+    server.listen(port, address);
+  }
+
+  function makeServerErrorHandler(server, portnum, address) {
     return function(err) {
-      if (tryIpv4) {
-        tryIpv4 = false;
-        server.listen(portnum, '');
+      if (address) {
+        makeServerAndListen(portnum, '');
         return;
       }
       console.warn('WARNING!!!: ' + err.code + ': could NOT connect to port: ' + portnum);
@@ -811,7 +819,7 @@ var HFTServer = function(options, startedCallback) {
     };
   };
 
-  var makeServerListeningHandler = function(theServer, portnum) {
+  function makeServerListeningHandler(theServer, portnum) {
     return function() {
       servers.push(theServer);
       goodPorts.push(portnum);
@@ -820,12 +828,7 @@ var HFTServer = function(options, startedCallback) {
   };
 
   ports.forEach(function(port) {
-    var server = options.httpServer || http.createServer(app);
-
-    server.once('error', makeServerErrorHandler(server, port));
-    server.once('listening', makeServerListeningHandler(server, port));
-
-    server.listen(port, '::');
+     makeServerAndListen(port, '::');
   });
 
   /**
