@@ -798,8 +798,14 @@ var HFTServer = function(options, startedCallback) {
     }
   }.bind(this);
 
-  var makeServerErrorHandler = function(portnum) {
+  var makeServerErrorHandler = function(server, portnum) {
+	var tryIpv4 = true;
     return function(err) {
+	  if (tryIpv4) {
+		  tryIpv4 = false;
+		  server.listen(portnum, '');
+		  return;
+	  }
       console.warn('WARNING!!!: ' + err.code + ': could NOT connect to port: ' + portnum);
       tryStartRelayServer();
     };
@@ -816,7 +822,7 @@ var HFTServer = function(options, startedCallback) {
   ports.forEach(function(port) {
     var server = options.httpServer || http.createServer(app);
 
-    server.once('error', makeServerErrorHandler(port));
+    server.once('error', makeServerErrorHandler(server, port));
     server.once('listening', makeServerListeningHandler(server, port));
 
     server.listen(port, '::');
