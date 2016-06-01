@@ -798,10 +798,18 @@ var HFTServer = function(options, startedCallback) {
     }
   }.bind(this);
 
+  function makeServerListeningHandler(theServer, portnum) {
+    return function() {
+      servers.push(theServer);
+      goodPorts.push(portnum);
+      tryStartRelayServer();
+    };
+  }
+
   function makeServerAndListen(port, address) {
     var server = options.httpServer || http.createServer(app);
 
-    server.once('error', makeServerErrorHandler(server, port, address));
+    server.once('error', makeServerErrorHandler(server, port, address));  // eslint-disable-line
     server.once('listening', makeServerListeningHandler(server, port));
 
     debug("try listen port", port, "address: ", address);
@@ -817,15 +825,7 @@ var HFTServer = function(options, startedCallback) {
       console.warn('WARNING!!!: ' + err.code + ': could NOT connect to port: ' + portnum);
       tryStartRelayServer();
     };
-  };
-
-  function makeServerListeningHandler(theServer, portnum) {
-    return function() {
-      servers.push(theServer);
-      goodPorts.push(portnum);
-      tryStartRelayServer();
-    };
-  };
+  }
 
   ports.forEach(function(port) {
      makeServerAndListen(port, '::');
