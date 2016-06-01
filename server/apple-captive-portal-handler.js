@@ -31,6 +31,8 @@
 
 "use strict";
 
+var debug       = require('debug')('captivep');
+var ipUtils     = require('../lib/iputils');
 var path        = require('path');
 var querystring = require('querystring');
 var strings     = require('../lib/strings');
@@ -127,27 +129,37 @@ AppleCaptivePortalHandler.prototype.setFirstPath = function(path) {
 AppleCaptivePortalHandler.prototype.check = function(req, res) {
   var parsedUrl = url.parse(req.url, true);
   var filePath = querystring.unescape(parsedUrl.pathname);
-  var sessionId = filePath;
+//  var sessionId = filePath;
+  var sessionId = encodeURIComponent(ipUtils.getRequestIpAddresses(req).join("_") + '_' + path.extname(filePath));
   var isCheckingForApple = req.headers["user-agent"] && strings.startsWith(req.headers["user-agent"], "CaptiveNetworkSupport");
+//isCheckingForApple = filePath.substr(filePath.length - 5) === ".html";//true;
   var isLoginURL = (filePath === "/game-login.html");
   var isIndexURL = (filePath === "/index.html" || filePath === "/" || filePath === this.firstPath);
 
+  debug("url:", req.url);
+  debug("path:", filePath);
+  debug("ips:", ipUtils.getRequestIpAddresses(req));
+  debug("headers:" + JSON.stringify(req.headers, null, 2));
   if (isIndexURL) {
-    sessionId = parsedUrl.query.sessionId;
-    if (sessionId) {
+//    sessionId = parsedUrl.query.sessionId;
+//    if (sessionId) {
+      debug("remove session:", sessionId);
       delete this.sessions[sessionId];
-    }
+//    }
     return false;
   }
 
-  if (isLoginURL && req.headers["referer"]) {
-    sessionId = querystring.unescape(url.parse(req.headers["referer"]).pathname);
-  }
+  //  if (isLoginURL && req.headers["referer"]) {
+  //    sessionId = querystring.unescape(url.parse(req.headers["referer"]).pathname);
+  //debug("sessionId from referer:" + sessionId);
+  //  }
 
   var session = sessionId ? this.sessions[sessionId] : undefined;
   if (session) {
 
+    debug("found prev sessionId:" + sessionId);
     if (isLoginURL) {
+      debug("send game-login");
       session.loggedIn = true;
       this.sendCaptivePortalHTML(req, res, sessionId, "game-login.html");
       return true;
@@ -156,19 +168,23 @@ AppleCaptivePortalHandler.prototype.check = function(req, res) {
     // We've seen this device before. Either it's checking that it can connect or it's asking for a normal webpage.
     if (isCheckingForApple) {
       if (session.loggedIn) {
+        debug("send apple response");
         res.status(200).send("<HTML><HEAD><TITLE>Success</TITLE></HEAD><BODY>Success</BODY></HTML>");
         return true;
       }
     }
+    debug("send captive-portal.html");
     this.sendCaptivePortalHTML(req, res, sessionId);
     return true;
   }
 
   if (!isCheckingForApple) {
+    debug("not checking for apple");
     return false;
   }
 
   // We are checking for apple for the first time so remember the path
+  debug("send captive-portal.html with new session:", sessionId);
   this.sessions[sessionId] = {};
   this.sendCaptivePortalHTML(req, res, sessionId);
   return true;
@@ -187,10 +203,15 @@ AppleCaptivePortalHandler.prototype.sendCaptivePortalHTML = function(req, res, s
   opt_path = opt_path || "captive-portal.html";
   var fullPath = path.normalize(path.join(this.options.baseDir, opt_path));
   this.options.sendFileFn(req, res, fullPath, function(str) {
+    var address = req.socket.address();
+    var isIPv6 = address.family === 'IPv6';
+    var isHTTPS = req.socket.getPeerCertificate !== undefined;
+    var ip = address.address;
+    var port = address.port;
+    var localhost = (isHTTPS ? 'https://' : 'http://') + (isIPv6 ? ('[' + ip + ']') : ip) + ':' + port;
     var params = {
+      startUrl: localhost + this.firstPath + '?sessionId=' + sessionId,
       sessionId: sessionId,
-      localhost: this.options.address + ":" + this.options.port,
-      firstPath: this.firstPath,
     };
     str = strings.replaceParams(str, params);
     return str;
