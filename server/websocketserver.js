@@ -89,7 +89,7 @@ var WSServer = function(server) {
               try {
                 origFn(JSON.parse(data));
               } catch (e) {
-                console.error(e);
+                console.error(e, data.substr(0, 40));
               }
             }
           };
