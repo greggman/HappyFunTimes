@@ -205,7 +205,7 @@ AppleCaptivePortalHandler.prototype.sendCaptivePortalHTML = function(req, res, s
   this.options.sendFileFn(req, res, fullPath, function(str) {
     var address = req.socket.address();
     var isIPv6 = address.family === 'IPv6';
-    var isHTTPS = req.socket.getPeerCertificate !== undefined;
+    var isHTTPS = req.socket.encrypted;
     var ip = address.address;
     var port = address.port;
     var localhost = (isHTTPS ? 'https://' : 'http://') + (isIPv6 ? ('[' + ip + ']') : ip) + ':' + port;
