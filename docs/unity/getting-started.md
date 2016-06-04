@@ -7,13 +7,6 @@ Description: Step by step instructions on how to get HappyFunTimes running with 
 2.  From the Asset store install [the HappyFunTimes plugin](https://www.assetstore.unity3d.com/en/#!/content/19668)
 3.  Open the `HappyFunTimes/Samples/Scenes/2DPlatformScene` by double clicking it.
 4.  Run
-
-    If you haven't installed HappyFunTimes the app yet you'll be
-    asked to install it. After you've installed it stop the unity
-    project and run it again. You might be asked for network permisison.
-    Please give it. You might have to stop and start the scene in
-    Unity again.
-
 5.  Start your browser. Size it so you can see the Unity Game View and
     Go to "[`http://localhost:18679`](http://localhost:18679)"
 

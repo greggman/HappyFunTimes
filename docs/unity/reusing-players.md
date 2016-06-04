@@ -1,7 +1,7 @@
 Title: Handling Disconnect and Reconnect.
 Description: What to do when a player disconnects and reconnects.
 
-For may games this doesn't matter. Do nothing. A player that disconnects
+For many games this doesn't matter. Do nothing. A player that disconnects
 and reconnects later just starts as a new player. The majority of samples
 HappyFunTimes games work this way.
 

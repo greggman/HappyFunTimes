@@ -8,48 +8,55 @@ First off you might be interested in this video to see what running across multi
 The game above spans 6 monitors. Each monitor has its own computer. Players can jump from monitor
 to monitor and walk up and down a large level.
 
-For Unity3D you might want to [download this sample](http://docs.happyfuntimes.net/docs/unity/samples.html?owner=greggman&repo=hft-unity-multi-game-example)
-into an new scene in Unity.
+For Unity3D open the `Assets/HappyFunTimes/MoreSamples/multi-machine/Scenes/MultiMachine` scene.
 
 You can run this sample solo in the Unity Editor but to run multiple copies it
  **MUST BE RUN FROM THE COMMAND LINE**. The reason is each instance needs an ID and so
 running by clicking an app or from an editor would require editing that id. To run from the command
-line you must EXPORT an executable.  With Unity closed, open a Terminal/Command Prompt, cd to the
-folder your unity project is in and type `hft export` to automatically export
+line you must build an executable.
 
-On OSX these command lines would launch 3 windows in the local machine
+Pick `File->Build Settings...` from the menus
 
-    bin/unitymultigame-osx.app/Contents/MacOS/unitymultigame-osx --hft-id=game0 --num-games=3
-    bin/unitymultigame-osx.app/Contents/MacOS/unitymultigame-osx --hft-id=game1 --num-games=3
-    bin/unitymultigame-osx.app/Contents/MacOS/unitymultigame-osx --hft-id=game2 --num-games=3
+<img src="images/multi-machine-build-settings-menu.png" class="halfsize lesson" />
 
-On windows
+Make sure the multi-machine scene is the only scene selected.
+It it doesn't appear click the `Add Open Scenes` button to add it.
 
-    bin/unitymultigame-osx.app/Contents/MacOS/unitymultigame-win.exe --hft-id=game0 --num-games=3
-    bin/unitymultigame-osx.app/Contents/MacOS/unitymultigame-win.exe --hft-id=game1 --num-games=3
-    bin/unitymultigame-osx.app/Contents/MacOS/unitymultigame-win.exe --hft-id=game2 --num-games=3
+<img src="images/multi-machine-build-settings.png" class="halfsize lesson" />
 
-If you run those commands and then open a browser window to http://localhost:18679 a player should
-appear. Jumping off the left / right edges of a window should make you go to the next window.
+Now click `Build` at the bottom. Save it as `test.app` if you're on OSX or `test.exe` if you're
+on Windows.
 
-If you were running on multiple machines the 3 machines might use lines like this
+Then on OSX open the Terminal, cd to the older you exported the game to, then type or copy
+and paste each of these lines. You will need to get Unity to run the game in a window.
 
-*   machine 1
+```
+test.app/Contents/MacOS/test --num-games=3 --hft-master --hft-id=game0 &
 
-        bin/unitymultigame-osx.app/Contents/MacOS/unitymultigame-osx --hft-id=game0 --num-games=3 --hft-url=ws://192.168.1.9:18679 --hft-master
+test.app/Contents/MacOS/test --num-games=3 --hft-url=ws://localhost:18679 --hft-id=game2 &
 
-*   machine 2
+test.app/Contents/MacOS/test --num-games=3 --hft-url=ws://localhost:18679 --hft-id=game2 &
+```
 
-        bin/unitymultigame-osx.app/Contents/MacOS/unitymultigame-osx --hft-id=game1 --num-games=3 --hft-url=ws://192.168.1.9:18679
+If you're on Windows open a command prompt and type these commands
 
-*   machine 3
+```
+start /B test.exe --num-games=3 --hft-master --hft-id=game0
 
-        bin/unitymultigame-osx.app/Contents/MacOS/unitymultigame-osx --hft-id=game2 --num-games=3 --hft-url=ws://192.168.1.9:18679
+start /B test.exe --num-games=3 --hft-url=ws://localhost:18679 --hft-id=game2
 
-where `192.68.1.9` is the IP address of the machine running HappyFunTimes.
+start /B test.exe --num-games=3 --hft-url=ws://localhost:18679 --hft-id=game2
+```
 
-All machines must have the game in the same path AND whatever machine is running HappyFunTimes also needs a copy
-of the game at the exact same PATH as these machines.
+Arrange the windows left to right in the order the were run. Then open a browser window,
+size it such that you can see all 3 games and the window. To go to `http://localhost:18679`
+and a player should appear. Jumping off the left / right edges of a window should
+make you go to the next window.
+
+If you actually have 3 separate machines to run on, if the are all on the same network
+run the game one on each machine except look up the IP address of the first machine
+and change `localhost` to that ipaddress. For example my ip address is `192.168.2.9` so
+I'd use `--hft-url=ws://192.168.2.9:18679`
 
 This particular game just runs a simple level and when you jump off the right side of the screen
 it transfers that player to the next game. In other words, if you are on `game1` and you go off the
@@ -57,9 +64,14 @@ right side of the screen you'll be sent to `game2`. Conversely if you jump off t
 left side you'd be send to `game0`. `--num-games` determines when to wrap around so in the above example
 with `--num-games=3` if you're on `game2` and go off the right you'll be sent to `game0`.
 
-Of course in your own game you could put up a dialog box or something and ask for an ID but
-most people running multiple machine games are probably doing so in a setting they want to
-automate and so using the command line seems like the best way.
+Of course in your own game you'd make up your own IDs. Maybe you want to make a 20 screen
+game where some games are above and some below and some to the left in a maze of screens.
+You'd just program your game to know which ID to jump to when you want to send the player
+to another game. You'd use the id to choose a level/scene/stage.
+
+Of course you could make some kind of GUI to choose the ID but if you're really going to
+make a mutli-screen game you're probably going to want to set it up so that it runs
+automatically instead of having to go to each machine and set options every time
 
 ## How it works
 
@@ -79,7 +91,8 @@ data to pass.
 
 ## Passing Data from one Game to Another
 
-Looking at the `BirdScript.cs` code the sample above. First we create a mesasge with the
+Looking at the `Assets/HappyFunTimes/MoreSamples/multi-machine/Scripts/MultiMacineBirdScript.cs`
+code from the sample above. First we create a mesasge with the
 data we want to send between games.
 
     // Message to send when sending a player to another game
@@ -117,7 +130,8 @@ Then we make some code to send a player to another game
         gameId = gameId.Substring(0, numNdx) + gameNum;
 
         // Send this player to that game.
-        // Note: No more messages will be received or sent to this player.
+        // Note: No more messages will be received or sent to this player on this machine.
+        // since it's being sent to another machine.
         m_netPlayer.SwitchGame(gameId, data);
     }
 
@@ -145,7 +159,7 @@ when the player goes of the right side of the level
     ...
 
 The game receiving the player will have it's `InitializeNetPlayer` method called. Again looking
-at `BirdScript.cs`
+at `MultiMachineBirdScript.cs`
 
     // Called when player connects with their phone
     void InitializeNetPlayer(SpawnInfo spawnInfo)
@@ -154,11 +168,13 @@ at `BirdScript.cs`
 
         m_netPlayer = spawnInfo.netPlayer;
         m_netPlayer.OnDisconnect += Remove;
-        m_netPlayer.OnNameChange += ChangeName;
 
         // Setup events for the different messages.
         m_netPlayer.RegisterCmdHandler<MessageMove>("move", OnMove);
         m_netPlayer.RegisterCmdHandler<MessageJump>("jump", OnJump);
+
+        m_playerNameManager = new HFTPlayerNameManager(m_netPlayer);
+        m_playerNameManager.OnNameChange += HandleNameChange;
 
         // We always get a `data` so check if it has one key from our expected message
         if (spawnInfo.data != null && spawnInfo.data.ContainsKey("dir")) {
@@ -186,6 +202,19 @@ at `BirdScript.cs`
             // This player just joined.
             MoveToRandomSpawnPoint();
             SetName(m_netPlayer.Name);
+
+            float hue = Random.value;
+            float sat = (float)Random.Range(0, 3) * -0.25f;
+            MessageSetColor color = new MessageSetColor(
+                hue,
+                sat,
+                0.0f,
+                m_material.GetFloat("_HSVRangeMin"),
+                m_material.GetFloat("_HSVRangeMax"));
+            SetColor(color);
+
+            // Send it to the phone
+            m_netPlayer.SendCmd("setColor", color);
         }
     }
 
@@ -243,27 +272,35 @@ The `--hft-id`, `--hft-url` and `--hft-master` are all handled by HappyFunTimes 
 
 *   `--hft-url`
 
-    This specifies the URL of the machine running HappyFunTimes. Only one machine should run HappyFunTimes.
+    This specifies the URL of the machine running the server. This is the machine that doesn't have
+    a `--hft-url` specified.
 
     If you're really setting up an installation you probably want to make sure your router always
-    gives the machine running HappyFunTimes the same IP addess. Consult your router's manual for
+    gives the machine running the server the same IP addess. Consult your router's manual for
     how to do this.
+
+    Also note you can run the server on it's own machine and set `--hft-master` to another
+    machine. In other words for our example of 3 machine above adding a 4 macihne just for the
+    server. You'd set `--hft-master` to some other machine (see below) and you'd just never
+    switch any players to that machine. The advantage to doing that is with the 3 machine example
+    above one machine is doing double duty. It's running both one of the games AND it's running
+    the server. By adding a 4th machine the 3 machines running games just run games and the 4th
+    machine is only the server.
+
+    Whether this is important I have no idea. if the machines are low-powered like Mac-Minis or
+    Intel NUCs or Raspberry PIs then maybe it is important. You'll have to test.
 
 *   `--hft-master`
 
-    This tells HappyFunTimes which machine should receive new players. By default the first game
-    to connect to HappyFunTimes will receive the players unless you pass in `--hft-master`.
-
-    If you setup an installation with 10 machines and turn the power on you probably have no idea
-    which machine will boot fastest and connect to HappyFunTimes first so you need to tell HappyFunTimes
-    which machine should receive new players.
+    This tells the server which machine should receive new players. By default the game the
+    server is on will receive the players first unless you pass in `--hft-master` to some other machine.
 
     Of course if you'd like them to be randomly assigned then setup some logic in your `InitializeNetPlayer`
-    function that if the player just connect randomly picks a game id and sends them to that game.
+    function for a player that just connected randomly picks a game id and `SwitchGame` sends them to that game.
 
 ## Custom Command Line Arguments
 
-If you look in the sample above in `Assets/HappyFunTimes/Scripts/LevelSettings.cs` you can see
+If you look in the sample above in `Assets/HappyFunTimes/Scripts/MutliMachineLevelSettings.cs` you can see
 some code like this
 
     void Awake()
@@ -274,14 +311,14 @@ some code like this
         ...
     }
 
-Feel free to change that script to meet your needs. If you'd like to get command line arguments
+Feel free to edit or better copy and change that script to meet your needs. If you'd like to get command line arguments
 somewhere else create an `ArgParser` and then use it to read any commmand line arguments you want. The sample
 above uses "--num-games" to allow an infinite number of games. If you are designing
 a specific game with a specific number of machines you probably wouldn't need a `numGames`
 setting at all as you'd probably hard code game ids for your specific setup.
 
 On the other hand a common command line argument you might need would be which level to load or
-which part of a larger level to view. If you had a 3d installation where each monitor was
+which part of a larger level to view. If you had a [3d installation](https://www.youtube.com/watch?v=64TcBiqmVko) where each monitor was
 like a portal into 3d space your arguments might be the position, target and field of view
 for the camera, etc...
 

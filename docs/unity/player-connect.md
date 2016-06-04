@@ -68,7 +68,7 @@ script.
 
     <img src="images/hft-components.png" class="halfsize lesson" />
 
-    <img src="images/hft-playerconnector-script.png" class="halfsize" />
+    <img src="images/hft-playerconnector-script.png" class="halfsize lesson" />
 
 3.  Open the player property and set the size to the number of players
     you support, then drag in each of your player GameObjects into the

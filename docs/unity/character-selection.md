@@ -1,6 +1,8 @@
 Title: Character Selection
 Description: Selecting Characters on the Phone and then spawning the corresponding prefab in Unity
 
+<img src="images/character-select.png" class="lesson" />
+
 This is just one example. Selecting characters is a very game specific feature so it's hard to give a
 specific answer. Do you have just 2 characters? That's relatively easy as you can put 2 images
 of 2 characters on your controller. Do you have 50 characters? Well now you need to put 50
@@ -147,7 +149,7 @@ Relevent CSS in `Assets/WebPlayerTemplates/HappyFunTimes/character-select/css/co
 
 It shows up like this
 
-<img src="characterselect.png" width="50%" height="50%" />
+<img src="images/characterselect.png" width="50%" height="50%" />
 
 I then added code to send which character the user selected. You can see it
 in `Assets/WebPlayerTemplates/HappyFunTimes/character-select/scripts/controller.js`

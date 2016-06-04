@@ -17,7 +17,8 @@ There are currently 2 ways to make sounds for the sample gamepad controllers.
     2.  Adjust the values until you get a sound you like.
 
     3.  Copy the sound values (near top of the page just below the buttons) to a text file with the extension ".jsfx.txt"
-        putting a name in front of each set of values. Save that file in Assets/WebPlayerTemplates/HappyFunTimes
+        putting a name in front of each set of values. Save that file some where below
+        `Assets/WebPlayerTemplates/HappyFunTimes`
 
     For example here is the sample `sounds.jsfx.txt` file
 
@@ -32,7 +33,7 @@ There are currently 2 ways to make sounds for the sample gamepad controllers.
 
 2.  Use sounds files
 
-    Put sound files (`.mp3` or `.wav`) in `Assets/WebPlayerTemplates/HappyFunTimes/sounds`
+    Put sound files (`.mp3` or `.wav`) somewhere below `Assets/WebPlayerTemplates/HappyFunTimes`
     They have to be in there because they must be served to the phone.
 
     **Note**: it's a good idea to keep them as small as possible because each time a player connects to
@@ -45,7 +46,7 @@ To use the sounds:
 1.  on some global gameobject (like LevelManager in all the samples)
     add an `HFTGlobalSoundHelper` script component.
 
-    This component scans for and loads the sounds from `Assets/WebPlayerTemplates/HappyFunTimes/sound`
+    This component scans for and loads the sounds from all folders below `Assets/WebPlayerTemplates/HappyFunTimes`
     looking for `.mp3` and `.wav` and `.jsfx.txt` files
 
 2.  on the prefab that gets spawned for your players, the same prefab you put
@@ -76,5 +77,16 @@ To use the sounds:
         m_soundPlayer.PlaySound("bounce");
 
 That's it!
+
+## Names must be Unique!
+
+Note that sounds are referenced by name only so you can't have 2 sounds with the same filename
+even if they are in different folders. Simiarly they can't clash with the names in the sounds.jsfx.txt
+file. So for example if you look at the example sounds.jsfx.txt file above you'll see there's a sound
+called `coin`. That would conflict with a sound file called `coin.mp3`.
+
+If you don't like those limits see `HFTGlobalSoundHelper.cs`, `HFTSoundPlayer.cs`, and `HTFSounds.cs` as well
+as the corresponding support in `Assets/WebPlayerTemplates/HappyFunTimes/controllers/gamepad/scripts/controller.js`
+and edit or better copy them and add your own features.
 
 

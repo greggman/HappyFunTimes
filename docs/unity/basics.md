@@ -147,7 +147,7 @@ you'd like the let AI take over for that player. Or maybe you'd like to [keep
 it around and either let the player reconnect or let some other player use it](reusing-players.html).
 It's really up to you.
 
-## HappyFunTimes on the contoller
+## HappyFunTimes on the phone
 
 If you open `Assets/WebPlayerTemplates/HappyFunTimes/controllers/simple/controller.html` you'll
 see the HTML for a sample controller. You can see it includes 3 scripts
@@ -159,7 +159,7 @@ see the HTML for a sample controller. You can see it includes 3 scripts
 `hft.js` is HappyFunTimes. This script connects the phone to the game. it is the only part 100% required
 for HappyFunTimes.
 
-It exposes just one class `HFT.GameClient` which you initialize like this
+It exposes `HFT.GameClient` which you initialize like this
 
     var client = new hft.GameClient();
 
@@ -250,6 +250,10 @@ The last line
 Tries to disable the context menu. Otherwise if the player holds their finger on the
 phone it browser menu will pop up asking them if they want to copy etc...
 
+## Docs for the sample-ui
+
+[The various JavaScript functions of the sample-ui are documented here](/docs/hft/).
+
 ## Dealing with the player's name
 
 One other thing the sample-ui does is let the player enter and edit a name. On the C# side
@@ -281,3 +285,6 @@ Be sure to cleanup when your `GameObject` is destroyed.
         }
     }
 
+## More
+
+See [Make Controllers](self-control.md) for a few more details.
