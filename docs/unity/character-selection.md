@@ -7,12 +7,15 @@ of 2 characters on your controller. Do you have 50 characters? Well now you need
 images. Since 50 images probably won't fit on the phone you're going to have to design some
 kind of selection UI. Do you want users to select clothing, weapons, armor? Now you're going to
 have to make a relatively complex UI on the controller and send all of the user's selections
-to the game. Do you want players to be able to change characters during player. Now you're
-getting into really complex stuff that has nothing to do with HappyFunTimes really. Find
-a game that lets you do that and add inputs from a happyfuntimes controller to let the player
-do it from their phone.
+to the game. Do you want players to be able to change characters during play. Again that's
+up to you to create. HappyFunTimes will just let you communicate between the game and
+the controller/phone..
 
 To keep it simple though here's one example of letting players pick characters.
+
+Open the scene `Assets/HappyFunTimes/MoreSamples/character-select/Scenes/HappyFunTimesCharacterSelectExample`.
+You can [download this sample here](http://docs.happyfuntimes.net/docs/unity/samples.html?owner=greggman&repo=hft-unity3d).
+The description below closely follows that scene.
 
 Using the default `PlayerSpawer` script make a prefab that is just a single GameObject with
 just one script. That script waits for a message from the controller as to which character
@@ -60,12 +63,16 @@ So for example here's a script.
 
             // The ExampleCharacterSelect GameObject no longer
             // needs to care about m_netPlayer
-            m_netPlayer.RemoveAllHandlers();
+            m_netPlayer.OnDisconnect -= Remove;
+            m_netPlayer.UnregisterCmdHandler("character");
+
             // Create the character
             GameObject newGameObject = (GameObject)Instantiate(characterPrefabs[ndx]);
+
             // Send the netplayer to the character. We use a message
             // because then every character can have a differnet script if we want.
             newGameObject.SendMessage("InitializeNetPlayer", m_netPlayer);
+
             // We're done. Destory ourselves
             Destroy(gameObject);
         }
@@ -83,9 +90,9 @@ in the slots shown in Unity
 After that you need to make a controller that lets the user select a character
 and sends a message to the game about which character was selected.
 
-I made one by modifying the [htf-unitysimple](http://github.com/greggman/hft-unitysimple) controller
+I made one by modifying the [simple](basic.md) controller
 
-HTML:
+Relevant HTML in `Assets/WebPlayerTemplates/HappyFunTimes/character-select/controller.html`
 
     <div id="gamearea" class="fixheight">
       <h1 id="gamestatus">status</h1>
@@ -103,7 +110,7 @@ HTML:
         </div>
     </div>
 
-CSS:
+Relevent CSS in `Assets/WebPlayerTemplates/HappyFunTimes/character-select/css/controller.css`
 
     #choose {
         z-index: 20;
@@ -142,8 +149,9 @@ It shows up like this
 
 <img src="characterselect.png" width="50%" height="50%" />
 
-I then added code to send which character the user selected. It also hides the selection HTML
-which was covering up the normal game controls.
+I then added code to send which character the user selected. You can see it
+in `Assets/WebPlayerTemplates/HappyFunTimes/character-select/scripts/controller.js`
+It also hides the selection HTML which was covering up the normal game controls.
 
       function selectCharacter(id) {
         // only do this once
@@ -164,19 +172,10 @@ which was covering up the normal game controls.
       $("choice1").addEventListener('touchstart', function() { selectCharacter(1); });
       $("choice2").addEventListener('touchstart', function() { selectCharacter(2); });
 
-[There's a working sample here](http://docs.happyfuntimes.net/docs/unity/samples.html?owner=greggman&repo=hft-unity-multi-character-select).
 
-To use this with the character example first off you'd need different character prefabs.
-Otherwise the only change is your `InitializeNetPlayer` function only
-receives a `NetPlayer` so you only need to change the first 2 lines from
+Run the scene `Assets/HappyFunTimes/MoreSamples/character-select/Scenes/HappyFunTimesCharacterSelectExample`
+to see it work.
 
-    function InitializeNetPlayer(spawnInfo : HappyFunTimes.SpawnInfo) {
-        _netPlayer = spawnInfo.netPlayer;
-
-to
-
-    function InitializeNetPlayer(netPlayer : HappyFunTimes.NetPlayer) {
-       _netPlayer = netPlayer;
 
 
 

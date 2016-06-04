@@ -122,7 +122,7 @@ One problem right now is all the spheres are the same color. Let's fix that
             m_gamepad = GetComponent<HFTGamepad>();
 
             Renderer renderer = GetComponent<Renderer>();
-            renderer.material.color = m_gamepad.Color;
+            renderer.material.color = m_gamepad.color;
         }
 
 3.  Create a new Material and assign it to the player prefab
@@ -132,7 +132,7 @@ One problem right now is all the spheres are the same color. Let's fix that
 <img src="images/hft-unity-3-browsers.png" class="quartersize lesson" />
 
 You should see each sphere matches the color of the controller that connects it.
-If you want to pick colors yourself you can also set `m_gamepad.Color` to some
+If you want to pick colors yourself you can also set `m_gamepad.color` to some
 color and the controller will change color.
 
 ## The Gamepad API
@@ -148,7 +148,20 @@ The sample controller here is just that, a sample. Feel free to change it
 or add any other features need. Don't limit yourself to the sample controllers.
 You can make the phones do all kinds of things. To see how to make controllers
 from scratch dig through the code in `Assets/HappyFunTimes/Script/HFTGamepad.cs`
-and `Assets/WebPlayerTemplates/HappyFunTimes/scripts/controller.js` and
+and `Assets/WebPlayerTemplates/HappyFunTimes/controllers/gamepad/controller.js` and
 [see this document](basics.md).
+
+Other controllers pairs are found in
+
+The simple controller
+
+    Assets/HappyFunTimes/MoreSamples/simple/Scripts/ExampleSimplePlayer.cs
+    Assets/WebPlayerTemplates/HappyFunTimes/controllers/simple/scripts/controller.js
+
+The character-select controller
+
+    Assets/HappyFunTimes/MoreSamples/simple/Scripts/ExampleCharacterSelect.cs
+    Assets/HappyFunTimes/MoreSamples/simple/Scripts/ExampleCharacterSelectPlayer.cs
+    Assets/WebPlayerTemplates/HappyFunTimes/controllers/character-select/scripts/controller.js
 
 
