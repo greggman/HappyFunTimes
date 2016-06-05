@@ -20,7 +20,7 @@ Pick `File->Build Settings...` from the menus
 <img src="images/multi-machine-build-settings-menu.png" class="halfsize lesson" />
 
 Make sure the multi-machine scene is the only scene selected.
-It it doesn't appear click the `Add Open Scenes` button to add it.
+If it doesn't appear click the `Add Open Scenes` button to add it.
 
 <img src="images/multi-machine-build-settings.png" class="halfsize lesson" />
 
@@ -29,6 +29,8 @@ on Windows.
 
 Then on OSX open the Terminal, cd to the older you exported the game to, then type or copy
 and paste each of these lines. You will need to get Unity to run the game in a window.
+
+** NOTE: It's important to put the `&` at the end of each line **
 
 ```
 test.app/Contents/MacOS/test --num-games=3 --hft-master --hft-id=game0 &
@@ -53,8 +55,8 @@ size it such that you can see all 3 games and the window. To go to `http://local
 and a player should appear. Jumping off the left / right edges of a window should
 make you go to the next window.
 
-If you actually have 3 separate machines to run on, if the are all on the same network
-run the game one on each machine except look up the IP address of the first machine
+If you actually have 3 separate machines to run on and they are all on the same network
+run the game once on each machine except look up the IP address of the first machine
 and change `localhost` to that ipaddress. For example my ip address is `192.168.2.9` so
 I'd use `--hft-url=ws://192.168.2.9:18679`
 
@@ -318,16 +320,7 @@ a specific game with a specific number of machines you probably wouldn't need a 
 setting at all as you'd probably hard code game ids for your specific setup.
 
 On the other hand a common command line argument you might need would be which level to load or
-which part of a larger level to view. If you had a [3d installation](https://www.youtube.com/watch?v=64TcBiqmVko) where each monitor was
-like a portal into 3d space your arguments might be the position, target and field of view
-for the camera, etc...
+which part of a larger level to view.
 
-
-
-
-
-
-
-
-
+Also see [sending messages between games](talking-between-games.md).
 

@@ -159,7 +159,7 @@ see the HTML for a sample controller. You can see it includes 3 scripts
 `hft.js` is HappyFunTimes. This script connects the phone to the game. it is the only part 100% required
 for HappyFunTimes.
 
-It exposes `HFT.GameClient` which you initialize like this
+It exposes `hft.GameClient` which you initialize like this
 
     var client = new hft.GameClient();
 
