@@ -75,59 +75,70 @@ JavaScript, Images and whatever else you need for your
 controllers.</p>
 <p>The easist path is to choose one of the existing games
 and start modifying.</p>
-<p>For Unity games the files for controllers exist in
-<code>Assets/WebPlayerTemplates/HappyFunTimes</code>. The relevant files are:</p>
+<p>For Unity games the files for samples controllers exist in
+<code>Assets/WebPlayerTemplates/HappyFunTimes/controllers</code>. For each
+controller the relevant files are:</p>
 <pre><code>controller.html           // The HTML for your controller
 css/controller.css        // The CSS for your controller
 scripts/controller.js     // The main script for your controller
-</code></pre><p>Edit those 3 files to create your controller. If you need other
+</code></pre><p>Edit or better copy those 3 files to create your controller. If you need other
 JavaScript libraries or other assets (image, sounds) put them
-in <code>Assets/WebPlayerTemplates/HappyFunTimes</code> or a deeper like
+somewhere under <code>Assets/WebPlayerTemplates/HappyFunTimes</code> or a deeper like
 <code>Assets/WebPlayerTemplates/HappyFunTimes/images</code> and/or
-<code>Assets/WebPlayerTemplates/HappyFunTimes/sounds</code></p>
-<p><code>contoller.html</code> is inserted into a template at runtime. The template provides
-common UI features like the settings icon in the top right corner, name input,
-and support for switching games.</p>
+<code>Assets/WebPlayerTemplates/HappyFunTimes/mygame/sounds</code></p>
+<h3 id="controller-html">controller.html</h3>
+<p>The minimum content of controller.html is</p>
+<pre><code>&lt;script src=&quot;/hft/hft.js&quot;&gt;&lt;/script&gt;
+</code></pre><p>Everything else is option. You can put your own script directly in the HTML
+or put outside with another script tag. All of the sample controller load
+at least 2 more scripts</p>
+<pre><code>&lt;script src=&quot;/sample-ui/sample-ui.js&quot;&gt;&lt;/script&gt;
+&lt;script src=&quot;scripts/controller.js&quot;&gt;&lt;/script&gt;
+</code></pre><p>Some load more for 3rdparty libraries etc...</p>
 <h3 id="controller-js">controller.js</h3>
-<p>The minimum contents of a <code>controller.js</code> is</p>
-<pre><code>&quot;use strict&quot;;
+<p>The minimum contents of a <code>controller.js</code> (or wherever you put your JavaScript) is</p>
+<pre><code>var client = new hft.GameClient();
+</code></pre><p>That&#39;s it. If you&#39;d like to use the sample ui
+then you&#39;d also add something like</p>
+<pre><code>var commonUI = sampleUI.commonUI;
+var input = sampleUI.input;
+var misc = sampleUI.misc;
+var mobileHacks = sampleUI.mobileHacks;
+var strings = sampleUI.strings;
+var touch = sampleUI.touch;
 
-// Start the main app logic.
-requirejs(
-  [ &#39;hft/gameclient&#39;,
-    &#39;hft/commonui&#39;,
-    &#39;hft/misc/misc&#39;,
-    &#39;hft/misc/mobilehacks&#39;,
-  ], function(
-    GameClient,
-    CommonUI,
-    Misc,
-    MobileHacks) {
-  var g_client;
+var globals = {
+  debug: false,
+  //orientation: &quot;landscape-primary&quot;,
+};
+misc.applyUrlSettings(globals);
+mobileHacks.fixHeightHack();
+mobileHacks.disableContextMenu();
 
-  var globals = {
-    debug: false,
-  };
-  Misc.applyUrlSettings(globals);
-  MobileHacks.fixHeightHack();
+var client = new hft.GameClient();   // -------- NOTICE LINE FROM ABOVE -----------
 
-  g_client = new GameClient();
+commonUI.setupStandardControllerUI(client, globals);
+commonUI.askForNameOnce();
+commonUI.showMenu(true);
+</code></pre><p>If you use the sample-ui put your elements inside the the <code>id=&quot;hft-content&quot;</code> div and before
+the <code>id=&quot;hft-menu&quot;</code> div.</p>
+<pre><code>&lt;div id=&quot;hft-content&quot;&gt;
 
-  CommonUI.setupStandardControllerUI(g_client, globals);
+    &lt;!-- your elements go here if you&#39;re using the sample-ui --&gt;
 
-  // Insert your controller specific code here.
-});
-</code></pre><p>Currently the rest is up to you. Add HTML elements as you see fit. Read HTML events and
-call <code>g_client.sendCmd</code> to pass whatever events you want back to the game. Add listeners
-with <code>g_client.addEventListener</code> for any events you want to send from the game back to the
+    &lt;div id=&quot;hft-menu&quot;&gt;&lt;img src=&quot;/hft/assets/gear-icon.svg&quot;&gt;&lt;/div&gt;
+&lt;/div&gt;
+</code></pre><p>The rest is up to you. Add HTML elements as you see fit. Read HTML events and
+call <code>client.sendCmd</code> to pass whatever events you want back to the game. Add listeners
+with <code>client.addEventListener</code> for any events you want to send from the game back to the
 controller.</p>
-<pre><code>g_client.sendCmd(&#39;foo&#39;, { someNumber: 123, someString, &quot;abc&quot;, someBool: true});
+<pre><code>client.sendCmd(&#39;foo&#39;, { someNumber: 123, someString, &quot;abc&quot;, someBool: true});
 </code></pre><p>Will emit a message on the corresponding <code>NetPlayer</code> in the game.</p>
 <pre><code>using HappyFunTimes;
 
 ...
 
-class FooMsg : MessageCmdData {
+class FooMsg {
   public int someNumber;
   public string someString;
   public bool someBool;
@@ -150,7 +161,7 @@ void OnFooMsg(FooMsg msgData) {
   Debug.Log(&quot;someBool: &quot; + msgData.someBool);
 }
 </code></pre><p>Similary any message sent by the game</p>
-<pre><code>class BarMsg : MessageCmdData {
+<pre><code>class BarMsg {
   BarMsg(string s, bool b, float n) {
     aString = s;
     aBool = b;
@@ -164,7 +175,7 @@ void OnFooMsg(FooMsg msgData) {
 
 m_netPlayer.sendCmd(&quot;bar&quot;, new BarMsg((&quot;hello&quot;, true, 1.23));
 </code></pre><p>Will emit an event back in the controller.</p>
-<pre><code>g_client.addEventListener(&#39;bar&#39;, handleBar);
+<pre><code>client.addEventListener(&#39;bar&#39;, handleBar);
 
 function handleBar(data) {
   console.log(data);
@@ -173,13 +184,24 @@ function handleBar(data) {
 </code></pre><h3 id="dealing-with-different-phone-sizes">Dealing with different phone sizes</h3>
 <p>The hardest part of creating a controller is handling
 CSS and placement across browser versions and devices. For example iOS6.1,
-iOS7.0, iOS7.1, iOS8.3 all provide a different size usable area
+iOS7.0, iOS7.1, iOS8.3, iOS9.x all provide a different size usable area
 in Safari. On top fo that 3.5inch iPhones vs 4inch iPhones and newer provide a different usable area.
 And finally add Android on top of that and possibly iPad and other tablets and you can see
 this is the hardest part.</p>
 <p>If you design on a iPhone6 plus be sure to test on some smaller phones like an iPhone4s.
-If you happen to be on a Mac the iOS Simulator that comes with XCode is your friend.</p>
-<p>Keep your controllers simple or look up responsive design</p>
+Keep your controllers simple or look up responsive design. Possibly consider using a
+<a href="https://www.google.com/search?q=css%20frameworks&amp;rct=j">CSS framework</a>.</p>
+<h2 id="debugging">Debugging</h2>
+<p>If you happen to be on a Mac <a href="https://developer.apple.com/library/ios/documentation/IDEs/Conceptual/iOS_Simulator_Guide/Introduction/Introduction.html">the iOS Simulator</a>
+that comes with <a href="https://developer.apple.com/xcode/download/">XCode</a> is your friend.
+Also see <a href="https://developers.google.com/web/tools/chrome-devtools/iterate/device-mode/emulate-mobile-viewports">Chrome&#39;s phone emulation mode</a>.
+<a href="https://developers.google.com/web/tools/chrome-devtools/iterate/device-mode/device-input-and-sensors?hl=en">Chrome&#39;s dev tools can even emulate phone orientation</a>.</p>
+<p><a href="https://developers.google.com/web/tools/chrome-devtools/debug/remote-debugging/remote-debugging?hl=en">Chrome&#39;s Remote Debugging</a>
+and <a href="https://developer.apple.com/library/iad/documentation/AppleApplications/Conceptual/Safari_Developer_Guide/GettingStarted/GettingStarted.html#//apple_ref/doc/uid/TP40007874-CH2-SW8">Safari Remote Debugging</a>
+are super useful. You plug you phone into the computer with a USB cable and you can
+debug webpages running on your phone from your computer.</p>
+<h2 id="more-info">More info</h2>
+<p>For more info see <a href="basics.html">The Basics of HappyFunTimes and Unity</a></p>
 
       <hr/>
       <div>
@@ -209,46 +231,42 @@ If you happen to be on a Mac the iOS Simulator that comes with XCode is your fri
     </div>
     <div class="col-sm-3 col-sm-offset-1 lesson-sidebar">
         <ul class="toc">
-<li>HappyFunTimes & Unity
+<li>HappyFunTimes for Unity
   <ul>
-    <li><a href="getting-started.html">Getting Started</a><span class="hide">: Do this first!!</span></li>
-    <li><a href="first-game.html">Your First HappyFunTimes Game</a><span class="hide">: Do this second!!</span></li>
-    <li><a href="gamepad.html">The Sample Gamepad</a><span class="hide": Read this!!!</li>
-    <li><a href="basics.html">How it Works</a><span class="hide">: Read this!!!</span></li>
+    <li><a href="getting-started.html">Getting Started</a><span class="hide">Do this first!!</span></li>
+    <li><a href="first-game.html">Your First HappyFunTimes Game</a><span class="hide">Do this second!!</span></li>
+    <li><a href="gamepad.html">The Sample Gamepad</a><span class="hide">Read this!!!</span></li>
+    <li><a href="basics.html">How it Works</a><span class="hide">Read this!!!</span></li>
   </ul>
 </li>
 <li>Specifics
   <ul>
-    <li><a href="player-connect.html">Spawn players</a></li>
-    <li><a href="self-control.html">Making controllers (the phone part)</a></li>
-    <li><a href="gamepad-sounds.html">Playing sounds on the phone</a></li>
+    <li><a href="player-connect.html">Spawning Players</a></li>
+    <li><a href="self-control.html">Making Controllers (the phone part)</a></li>
+    <li><a href="gamepad-sounds.html">Playing Sounds on the Phone</a></li>
     <li><a href="gamepad-multitouch.html">Handling Multi-Touch</a></li>
-  </ul>
-</li>
-<li>Examples
-  <ul>
-    <li><a href="3d-characters.html">3d Characters</a></li>
-    <li><a href="2d-platformer.html">2d Platformer</a></li>
-
   </ul>
 </li>
 <li>Techinques
   <ul>
-    <li><a href="reusing-players.html">Handling disconnect and reconnect</a></li>
-    <li><a href="too-many-players.html">Preventing too many players</a></li>
+    <li><a href="reusing-players.html">Handling Disconnect and Reconnect</a></li>
+    <li><a href="too-many-players.html">Preventing Too Many Players</a></li>
     <li><a href="device-orientation.html">Using Device Orientation</a></li>
     <li><a href="accelerometer.html">Using the Accelerometer</a></li>
-    <li><a href="character-selection.html">Spawning different characters per Player</a></li>
+    <li><a href="character-selection.html">Spawning Different Characters per Player</a></li>
     <li><a href="multi-machine.html">Multiple Computers</a></li>
+    <li><a href="talking-between-games.html">Talking Between Multiple Computers</a></li>
   </ul>
 </li>
-<li>API Reference
+<li>Sample-UI API Reference
   <ul>
-    <li><a href="/docs/hft/">Controller (HTML/JavaScript) API</a></li>
+    <li><a href="/docs/hft/">Sample UI (HTML/JavaScript) API</a></li>
   </ul>
 </li>
 <li>Other
   <ul>
+    <li><a href="rendezvous-server.html">Publishing your Game</a><span class="hide">Read this!!!</span></li>
+    <li><a href="installation-mode.html">Installations and Museums</a></li>
     <li><a href="changelog.html">Changelog</a></li>
   </ul>
 </li>

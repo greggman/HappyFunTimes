@@ -13,61 +13,81 @@ controllers.
 The easist path is to choose one of the existing games
 and start modifying.
 
-For Unity games the files for controllers exist in
-`Assets/WebPlayerTemplates/HappyFunTimes`. The relevant files are:
+For Unity games the files for samples controllers exist in
+`Assets/WebPlayerTemplates/HappyFunTimes/controllers`. For each
+controller the relevant files are:
 
     controller.html           // The HTML for your controller
     css/controller.css        // The CSS for your controller
     scripts/controller.js     // The main script for your controller
 
-Edit those 3 files to create your controller. If you need other
+Edit or better copy those 3 files to create your controller. If you need other
 JavaScript libraries or other assets (image, sounds) put them
-in `Assets/WebPlayerTemplates/HappyFunTimes` or a deeper like
+somewhere under `Assets/WebPlayerTemplates/HappyFunTimes` or a deeper like
 `Assets/WebPlayerTemplates/HappyFunTimes/images` and/or
-`Assets/WebPlayerTemplates/HappyFunTimes/sounds`
+`Assets/WebPlayerTemplates/HappyFunTimes/mygame/sounds`
 
-`contoller.html` is inserted into a template at runtime. The template provides
-common UI features like the settings icon in the top right corner, name input,
-and support for switching games.
+### controller.html
+
+The minimum content of controller.html is
+
+    <script src="/hft/hft.js"></script>
+
+Everything else is option. You can put your own script directly in the HTML
+or put outside with another script tag. All of the sample controller load
+at least 2 more scripts
+
+    <script src="/sample-ui/sample-ui.js"></script>
+    <script src="scripts/controller.js"></script>
+
+Some load more for 3rdparty libraries etc...
 
 ### controller.js
 
-The minimum contents of a `controller.js` is
+The minimum contents of a `controller.js` (or wherever you put your JavaScript) is
 
-    "use strict";
+    var client = new hft.GameClient();
 
-    // Start the main app logic.
-    requirejs(
-      [ 'hft/gameclient',
-        'hft/commonui',
-        'hft/misc/misc',
-        'hft/misc/mobilehacks',
-      ], function(
-        GameClient,
-        CommonUI,
-        Misc,
-        MobileHacks) {
-      var g_client;
+That's it. If you'd like to use the sample ui
+then you'd also add something like
 
-      var globals = {
-        debug: false,
-      };
-      Misc.applyUrlSettings(globals);
-      MobileHacks.fixHeightHack();
+    var commonUI = sampleUI.commonUI;
+    var input = sampleUI.input;
+    var misc = sampleUI.misc;
+    var mobileHacks = sampleUI.mobileHacks;
+    var strings = sampleUI.strings;
+    var touch = sampleUI.touch;
 
-      g_client = new GameClient();
+    var globals = {
+      debug: false,
+      //orientation: "landscape-primary",
+    };
+    misc.applyUrlSettings(globals);
+    mobileHacks.fixHeightHack();
+    mobileHacks.disableContextMenu();
 
-      CommonUI.setupStandardControllerUI(g_client, globals);
+    var client = new hft.GameClient();   // -------- NOTICE LINE FROM ABOVE -----------
 
-      // Insert your controller specific code here.
-    });
+    commonUI.setupStandardControllerUI(client, globals);
+    commonUI.askForNameOnce();
+    commonUI.showMenu(true);
 
-Currently the rest is up to you. Add HTML elements as you see fit. Read HTML events and
-call `g_client.sendCmd` to pass whatever events you want back to the game. Add listeners
-with `g_client.addEventListener` for any events you want to send from the game back to the
+If you use the sample-ui put your elements inside the the `id="hft-content"` div and before
+the `id="hft-menu"` div.
+
+    <div id="hft-content">
+
+        <!-- your elements go here if you're using the sample-ui -->
+
+        <div id="hft-menu"><img src="/hft/assets/gear-icon.svg"></div>
+    </div>
+
+The rest is up to you. Add HTML elements as you see fit. Read HTML events and
+call `client.sendCmd` to pass whatever events you want back to the game. Add listeners
+with `client.addEventListener` for any events you want to send from the game back to the
 controller.
 
-    g_client.sendCmd('foo', { someNumber: 123, someString, "abc", someBool: true});
+    client.sendCmd('foo', { someNumber: 123, someString, "abc", someBool: true});
 
 Will emit a message on the corresponding `NetPlayer` in the game.
 
@@ -75,7 +95,7 @@ Will emit a message on the corresponding `NetPlayer` in the game.
 
     ...
 
-    class FooMsg : MessageCmdData {
+    class FooMsg {
       public int someNumber;
       public string someString;
       public bool someBool;
@@ -100,7 +120,7 @@ Will emit a message on the corresponding `NetPlayer` in the game.
 
 Similary any message sent by the game
 
-    class BarMsg : MessageCmdData {
+    class BarMsg {
       BarMsg(string s, bool b, float n) {
         aString = s;
         aBool = b;
@@ -116,7 +136,7 @@ Similary any message sent by the game
 
 Will emit an event back in the controller.
 
-    g_client.addEventListener('bar', handleBar);
+    client.addEventListener('bar', handleBar);
 
     function handleBar(data) {
       console.log(data);
@@ -127,16 +147,32 @@ Will emit an event back in the controller.
 
 The hardest part of creating a controller is handling
 CSS and placement across browser versions and devices. For example iOS6.1,
-iOS7.0, iOS7.1, iOS8.3 all provide a different size usable area
+iOS7.0, iOS7.1, iOS8.3, iOS9.x all provide a different size usable area
 in Safari. On top fo that 3.5inch iPhones vs 4inch iPhones and newer provide a different usable area.
 And finally add Android on top of that and possibly iPad and other tablets and you can see
 this is the hardest part.
 
 If you design on a iPhone6 plus be sure to test on some smaller phones like an iPhone4s.
-If you happen to be on a Mac the iOS Simulator that comes with XCode is your friend.
+Keep your controllers simple or look up responsive design. Possibly consider using a
+[CSS framework](https://www.google.com/search?q=css%20frameworks&rct=j).
 
-Keep your controllers simple or look up responsive design
+## Debugging
 
+If you happen to be on a Mac [the iOS Simulator](https://developer.apple.com/library/ios/documentation/IDEs/Conceptual/iOS_Simulator_Guide/Introduction/Introduction.html)
+that comes with [XCode](https://developer.apple.com/xcode/download/) is your friend.
+Also see [Chrome's phone emulation mode](https://developers.google.com/web/tools/chrome-devtools/iterate/device-mode/emulate-mobile-viewports).
+[Chrome's dev tools can even emulate phone orientation](https://developers.google.com/web/tools/chrome-devtools/iterate/device-mode/device-input-and-sensors?hl=en).
+
+[Chrome's Remote Debugging](https://developers.google.com/web/tools/chrome-devtools/debug/remote-debugging/remote-debugging?hl=en)
+and [Safari Remote Debugging](https://developer.apple.com/library/iad/documentation/AppleApplications/Conceptual/Safari_Developer_Guide/GettingStarted/GettingStarted.html#//apple_ref/doc/uid/TP40007874-CH2-SW8)
+are super useful. You plug you phone into the computer with a USB cable and you can
+debug webpages running on your phone from your computer.
+
+
+
+## More info
+
+For more info see [The Basics of HappyFunTimes and Unity](basics.md)
 
 
 

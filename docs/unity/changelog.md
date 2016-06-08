@@ -1,6 +1,20 @@
 Title: Changelog for Unity Plugin
 Description: Changes for Unity Plugin
 
+*   2.0
+
+    *   Make it 100% self contained.
+
+        No more need for node.js. Now you can easily build using the normal builder
+        and post your games on itch.io or steam, etc...
+
+    *   Move almost all the samples into the plugin.
+
+        Before each sample was a separate repo. This was to make it easy to export
+        and install each one into the HappyFunTimes app. Now that it's all
+        standalone there's no need for that feature and all the samples can
+        happily co-exist in the same project.
+
 *   1.3
 
     *   Fixed `GetAxis` bug where asking for the wrong axis returned the first axis

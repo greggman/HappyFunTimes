@@ -1,4 +1,9 @@
 .hide {
     display: inline !important;
+    color: red;
+    font-weight: bold;
+    margin-left: 5em;
 }
-
+.hide:before {
+    content: "⬅ ";
+}

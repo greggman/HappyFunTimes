@@ -68,7 +68,7 @@ script.
 
     <img src="images/hft-components.png" class="halfsize lesson" />
 
-    <img src="images/hft-playerconnector-script.png" class="halfsize" />
+    <img src="images/hft-playerconnector-script.png" class="halfsize lesson" />
 
 3.  Open the player property and set the size to the number of players
     you support, then drag in each of your player GameObjects into the
@@ -144,7 +144,7 @@ When the game switches to players needing buttons on their phone or players
 needing slingshots on their phone you send a message to them you made up something
 like
 
-    class ShowControllerMsg : MessageCmdData {
+    class ShowControllerMsg {
       ShowControllerMsg(string s) : { control = s; }
       public string control;
     };

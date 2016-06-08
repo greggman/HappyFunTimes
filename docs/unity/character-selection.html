@@ -66,17 +66,20 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
   </div>
   <div class="row">
     <div class="col-sm-8 lesson-main">
-      <p>This is just one example. Selecting characters is a very game specific feature so it&#39;s hard to give a
+      <p><img src="images/character-select.png" class="lesson" /></p>
+<p>This is just one example. Selecting characters is a very game specific feature so it&#39;s hard to give a
 specific answer. Do you have just 2 characters? That&#39;s relatively easy as you can put 2 images
 of 2 characters on your controller. Do you have 50 characters? Well now you need to put 50
 images. Since 50 images probably won&#39;t fit on the phone you&#39;re going to have to design some
 kind of selection UI. Do you want users to select clothing, weapons, armor? Now you&#39;re going to
 have to make a relatively complex UI on the controller and send all of the user&#39;s selections
-to the game. Do you want players to be able to change characters during player. Now you&#39;re
-getting into really complex stuff that has nothing to do with HappyFunTimes really. Find
-a game that lets you do that and add inputs from a happyfuntimes controller to let the player
-do it from their phone.</p>
+to the game. Do you want players to be able to change characters during play. Again that&#39;s
+up to you to create. HappyFunTimes will just let you communicate between the game and
+the controller/phone..</p>
 <p>To keep it simple though here&#39;s one example of letting players pick characters.</p>
+<p>Open the scene <code>Assets/HappyFunTimes/MoreSamples/character-select/Scenes/HappyFunTimesCharacterSelectExample</code>.
+You can <a href="http://docs.happyfuntimes.net/docs/unity/samples.html?owner=greggman&amp;repo=hft-unity3d">download this sample here</a>.
+The description below closely follows that scene.</p>
 <p>Using the default <code>PlayerSpawer</code> script make a prefab that is just a single GameObject with
 just one script. That script waits for a message from the controller as to which character
 the player picked. It then spawns yet another prefab based on the player&#39;s selection and
@@ -93,7 +96,7 @@ class ExampleCharacterSelect : MonoBehaviour {
 
     // Message received from controller about which
     // character the player picked.
-    private class MessageCharacter : MessageCmdData {
+    private class MessageCharacter {
         public int id = 0;
     }
 
@@ -121,12 +124,16 @@ class ExampleCharacterSelect : MonoBehaviour {
 
         // The ExampleCharacterSelect GameObject no longer
         // needs to care about m_netPlayer
-        m_netPlayer.RemoveAllHandlers();
+        m_netPlayer.OnDisconnect -= Remove;
+        m_netPlayer.UnregisterCmdHandler(&quot;character&quot;);
+
         // Create the character
         GameObject newGameObject = (GameObject)Instantiate(characterPrefabs[ndx]);
+
         // Send the netplayer to the character. We use a message
         // because then every character can have a differnet script if we want.
         newGameObject.SendMessage(&quot;InitializeNetPlayer&quot;, m_netPlayer);
+
         // We&#39;re done. Destory ourselves
         Destroy(gameObject);
     }
@@ -139,8 +146,8 @@ in the slots shown in Unity</p>
 <p><img src="images/characterselectsettings.png" width="50%" height="50%" /></p>
 <p>After that you need to make a controller that lets the user select a character
 and sends a message to the game about which character was selected.</p>
-<p>I made one by modifying the <a href="http://github.com/greggman/hft-unitysimple">htf-unitysimple</a> controller</p>
-<p>HTML:</p>
+<p>I made one by modifying the <a href="basic.html">simple</a> controller</p>
+<p>Relevant HTML in <code>Assets/WebPlayerTemplates/HappyFunTimes/character-select/controller.html</code></p>
 <pre><code>&lt;div id=&quot;gamearea&quot; class=&quot;fixheight&quot;&gt;
   &lt;h1 id=&quot;gamestatus&quot;&gt;status&lt;/h1&gt;
   &lt;div id=&quot;display&quot; class=&quot;hft-fullcenter fixheight&quot;&gt;
@@ -156,7 +163,7 @@ and sends a message to the game about which character was selected.</p>
       &lt;div id=&quot;choice2&quot; class=&quot;choice&quot;&gt;&lt;img src=&quot;images/cylinder.svg&quot;&gt;&lt;/div&gt;
     &lt;/div&gt;
 &lt;/div&gt;
-</code></pre><p>CSS:</p>
+</code></pre><p>Relevent CSS in <code>Assets/WebPlayerTemplates/HappyFunTimes/character-select/css/controller.css</code></p>
 <pre><code>#choose {
     z-index: 20;
     position: absolute;
@@ -190,9 +197,10 @@ img {
     pointer-events: none;
 }
 </code></pre><p>It shows up like this</p>
-<p><img src="characterselect.png" width="50%" height="50%" /></p>
-<p>I then added code to send which character the user selected. It also hides the selection HTML
-which was covering up the normal game controls.</p>
+<p><img src="images/characterselect.png" width="50%" height="50%" /></p>
+<p>I then added code to send which character the user selected. You can see it
+in <code>Assets/WebPlayerTemplates/HappyFunTimes/character-select/scripts/controller.js</code>
+It also hides the selection HTML which was covering up the normal game controls.</p>
 <pre><code>  function selectCharacter(id) {
     // only do this once
     if (choice &lt; 0) {
@@ -211,16 +219,9 @@ which was covering up the normal game controls.</p>
   $(&quot;choice0&quot;).addEventListener(&#39;touchstart&#39;, function() { selectCharacter(0); });
   $(&quot;choice1&quot;).addEventListener(&#39;touchstart&#39;, function() { selectCharacter(1); });
   $(&quot;choice2&quot;).addEventListener(&#39;touchstart&#39;, function() { selectCharacter(2); });
-</code></pre><p><a href="http://docs.happyfuntimes.net/docs/unity/samples.html?owner=greggman&amp;repo=hft-unity-multi-character-select">There&#39;s a working sample here</a>.</p>
-<p>To use this with the character example first off you&#39;d need different character prefabs.
-Otherwise the only change is your <code>InitializeNetPlayer</code> function only
-receives a <code>NetPlayer</code> so you only need to change the first 2 lines from</p>
-<pre><code>function InitializeNetPlayer(spawnInfo : HappyFunTimes.SpawnInfo) {
-    _netPlayer = spawnInfo.netPlayer;
-</code></pre><p>to</p>
-<pre><code>function InitializeNetPlayer(netPlayer : HappyFunTimes.NetPlayer) {
-   _netPlayer = netPlayer;
-</code></pre>
+</code></pre><p>Run the scene <code>Assets/HappyFunTimes/MoreSamples/character-select/Scenes/HappyFunTimesCharacterSelectExample</code>
+to see it work.</p>
+
       <hr/>
       <div>
         <div>Questions? <a href="http://stackoverflow.com/questions/tagged/happyfuntimes">Ask on stackoverflow</a>.</div>
@@ -249,46 +250,42 @@ receives a <code>NetPlayer</code> so you only need to change the first 2 lines f
     </div>
     <div class="col-sm-3 col-sm-offset-1 lesson-sidebar">
         <ul class="toc">
-<li>HappyFunTimes & Unity
+<li>HappyFunTimes for Unity
   <ul>
-    <li><a href="getting-started.html">Getting Started</a><span class="hide">: Do this first!!</span></li>
-    <li><a href="first-game.html">Your First HappyFunTimes Game</a><span class="hide">: Do this second!!</span></li>
-    <li><a href="gamepad.html">The Sample Gamepad</a><span class="hide": Read this!!!</li>
-    <li><a href="basics.html">How it Works</a><span class="hide">: Read this!!!</span></li>
+    <li><a href="getting-started.html">Getting Started</a><span class="hide">Do this first!!</span></li>
+    <li><a href="first-game.html">Your First HappyFunTimes Game</a><span class="hide">Do this second!!</span></li>
+    <li><a href="gamepad.html">The Sample Gamepad</a><span class="hide">Read this!!!</span></li>
+    <li><a href="basics.html">How it Works</a><span class="hide">Read this!!!</span></li>
   </ul>
 </li>
 <li>Specifics
   <ul>
-    <li><a href="player-connect.html">Spawn players</a></li>
-    <li><a href="self-control.html">Making controllers (the phone part)</a></li>
-    <li><a href="gamepad-sounds.html">Playing sounds on the phone</a></li>
+    <li><a href="player-connect.html">Spawning Players</a></li>
+    <li><a href="self-control.html">Making Controllers (the phone part)</a></li>
+    <li><a href="gamepad-sounds.html">Playing Sounds on the Phone</a></li>
     <li><a href="gamepad-multitouch.html">Handling Multi-Touch</a></li>
-  </ul>
-</li>
-<li>Examples
-  <ul>
-    <li><a href="3d-characters.html">3d Characters</a></li>
-    <li><a href="2d-platformer.html">2d Platformer</a></li>
-
   </ul>
 </li>
 <li>Techinques
   <ul>
-    <li><a href="reusing-players.html">Handling disconnect and reconnect</a></li>
-    <li><a href="too-many-players.html">Preventing too many players</a></li>
+    <li><a href="reusing-players.html">Handling Disconnect and Reconnect</a></li>
+    <li><a href="too-many-players.html">Preventing Too Many Players</a></li>
     <li><a href="device-orientation.html">Using Device Orientation</a></li>
     <li><a href="accelerometer.html">Using the Accelerometer</a></li>
-    <li><a href="character-selection.html">Spawning different characters per Player</a></li>
+    <li><a href="character-selection.html">Spawning Different Characters per Player</a></li>
     <li><a href="multi-machine.html">Multiple Computers</a></li>
+    <li><a href="talking-between-games.html">Talking Between Multiple Computers</a></li>
   </ul>
 </li>
-<li>API Reference
+<li>Sample-UI API Reference
   <ul>
-    <li><a href="/docs/hft/">Controller (HTML/JavaScript) API</a></li>
+    <li><a href="/docs/hft/">Sample UI (HTML/JavaScript) API</a></li>
   </ul>
 </li>
 <li>Other
   <ul>
+    <li><a href="rendezvous-server.html">Publishing your Game</a><span class="hide">Read this!!!</span></li>
+    <li><a href="installation-mode.html">Installations and Museums</a></li>
     <li><a href="changelog.html">Changelog</a></li>
   </ul>
 </li>

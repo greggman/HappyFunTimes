@@ -69,8 +69,9 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
       <p>This is just one example. There is no &quot;correct&quot; way. There&#39;s whatever
 works for your game. Maybe you&#39;d like to make it so players
 tilt their phone left or right to move their character and
-shake it to jump. It&#39;s really up to you.</p>
-<p>You can <a href="http://docs.happyfuntimes.net/docs/unity/samples.html?owner=greggman&amp;repo=hft-unity2dplatformer">download this sample here</a>.</p>
+shake it to jump. It&#39;s really up to you but as a simple
+version this example uses the [HFTGamepad]</p>
+<p>You can <a href="http://docs.happyfuntimes.net/docs/unity/samples.html?owner=greggman&amp;repo=hft-unity3d">download this sample here</a>.</p>
 <p>Note: You should consider checking out the <a href="gamepad.html">HappyFunTimes Unity GamePad example</a>
 which is easier than this sample. This sample is still 100% valid and server as a good example
 of doing everything with custom code.</p>
@@ -335,13 +336,13 @@ to the phone.</p>
 <h4 id="messages-received-from-the-phone">Messages received from the phone</h4>
 <p>We need to define classes to receive the data we defined above from the phone</p>
 <pre><code>// Message when player presses or release jump button
-private class MessageJump : MessageCmdData
+private class MessageJump
 {
     public bool jump = false;
 }
 
 // Message when player pressed left or right
-private class MessageMove : MessageCmdData
+private class MessageMove
 {
     public int dir = 0;  // will be -1, 0, or +1
 }
@@ -387,7 +388,7 @@ to test just using the keyboard.</p>
 // values. Finally they are converted back to RGB.
 // The min/max values are a hue range. Anything outside that range will
 // not be adjusted.
-private class MessageSetColor : MessageCmdData
+private class MessageSetColor
 {
     public MessageSetColor() { }  // for deserialization
     public MessageSetColor(float _h, float _s, float _v, float _min, float _max)
@@ -486,46 +487,42 @@ can access the global settings using <code>LevelSettings.settings.&lt;nameOfSett
     </div>
     <div class="col-sm-3 col-sm-offset-1 lesson-sidebar">
         <ul class="toc">
-<li>HappyFunTimes & Unity
+<li>HappyFunTimes for Unity
   <ul>
-    <li><a href="getting-started.html">Getting Started</a><span class="hide">: Do this first!!</span></li>
-    <li><a href="first-game.html">Your First HappyFunTimes Game</a><span class="hide">: Do this second!!</span></li>
-    <li><a href="gamepad.html">The Sample Gamepad</a><span class="hide": Read this!!!</li>
-    <li><a href="basics.html">How it Works</a><span class="hide">: Read this!!!</span></li>
+    <li><a href="getting-started.html">Getting Started</a><span class="hide">Do this first!!</span></li>
+    <li><a href="first-game.html">Your First HappyFunTimes Game</a><span class="hide">Do this second!!</span></li>
+    <li><a href="gamepad.html">The Sample Gamepad</a><span class="hide">Read this!!!</span></li>
+    <li><a href="basics.html">How it Works</a><span class="hide">Read this!!!</span></li>
   </ul>
 </li>
 <li>Specifics
   <ul>
-    <li><a href="player-connect.html">Spawn players</a></li>
-    <li><a href="self-control.html">Making controllers (the phone part)</a></li>
-    <li><a href="gamepad-sounds.html">Playing sounds on the phone</a></li>
+    <li><a href="player-connect.html">Spawning Players</a></li>
+    <li><a href="self-control.html">Making Controllers (the phone part)</a></li>
+    <li><a href="gamepad-sounds.html">Playing Sounds on the Phone</a></li>
     <li><a href="gamepad-multitouch.html">Handling Multi-Touch</a></li>
-  </ul>
-</li>
-<li>Examples
-  <ul>
-    <li><a href="3d-characters.html">3d Characters</a></li>
-    <li><a href="2d-platformer.html">2d Platformer</a></li>
-
   </ul>
 </li>
 <li>Techinques
   <ul>
-    <li><a href="reusing-players.html">Handling disconnect and reconnect</a></li>
-    <li><a href="too-many-players.html">Preventing too many players</a></li>
+    <li><a href="reusing-players.html">Handling Disconnect and Reconnect</a></li>
+    <li><a href="too-many-players.html">Preventing Too Many Players</a></li>
     <li><a href="device-orientation.html">Using Device Orientation</a></li>
     <li><a href="accelerometer.html">Using the Accelerometer</a></li>
-    <li><a href="character-selection.html">Spawning different characters per Player</a></li>
+    <li><a href="character-selection.html">Spawning Different Characters per Player</a></li>
     <li><a href="multi-machine.html">Multiple Computers</a></li>
+    <li><a href="talking-between-games.html">Talking Between Multiple Computers</a></li>
   </ul>
 </li>
-<li>API Reference
+<li>Sample-UI API Reference
   <ul>
-    <li><a href="/docs/hft/">Controller (HTML/JavaScript) API</a></li>
+    <li><a href="/docs/hft/">Sample UI (HTML/JavaScript) API</a></li>
   </ul>
 </li>
 <li>Other
   <ul>
+    <li><a href="rendezvous-server.html">Publishing your Game</a><span class="hide">Read this!!!</span></li>
+    <li><a href="installation-mode.html">Installations and Museums</a></li>
     <li><a href="changelog.html">Changelog</a></li>
   </ul>
 </li>

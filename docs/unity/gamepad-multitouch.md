@@ -22,16 +22,16 @@ function
 
 And then anywhere you'd use `Input.something` you instead use `m_hftInput.something`.
 
-**Note**: those functions return `HFTInput.Touch` objects, not Unity `Touch` objects.
+**Note**: `HFTInput`'s touch functions return `HFTInput.Touch` objects, not Unity `Touch` objects.
 
 **Note**: The `Touch.rawPosition` is currently in screen pixels of the Unity game
 not the controller.
 
-The Unity `Input` API says those value are in pixels but they are
+The Unity `Input` API says those values are in pixels but they are
 assuming the game is running on the phone. In the case of HappyFunTimes
-though each phone is different so having it be in phone screen pixels
+each phone is different so having it be in phone screen pixels
 would make no sense unless you also knew the resolution of each phone.
-I could provide that but that would make it more complicated for you.
+The controller could provide that info but that would make it more complicated for you.
 
 Personally I'd prefer normalized values (0.0 to 1.0). If you want those
 then take  `Touch.rawPosition` and divide `x` by `Screen.width` and `y` by `Screen.height`
@@ -109,8 +109,8 @@ Up to ten touches are supported (limited of course by the phone and the browser'
         HFTGamepad.BUTTON_TOUCH8
         HFTGamepad.BUTTON_TOUCH9
 
-You can see this in action by opening the `ControllerTestScene` in `HappyFunTimes/Scenes` included with the plugin.
-Run it. For each phone you connect you should see all of the buttons and axes.
+You can see this in action by opening the `ControllerTestScene` in `Assets/HappyFunTimes/Samples/Scenes`
+included with the plugin. Run it. For each phone you connect you should see all of the buttons and axes.
 
 <img src="images/hft-unity-controllertestscene.png" class="halfsize lesson" />
 
@@ -122,19 +122,20 @@ And set the `controller type` to `c_touch`
 
 <img src="images/hft-ctouch.png" class="halfsize lesson" />
 
-## Caution
+## Caution! Optimize your controller!
 
 Multi-touch in the sample Gamepad controller is really just there for you to play with. For a 1-4 player
 game it might be fine but if you'd 40 players each sending 5 to 10 fingers of input every frame you're
 quickly going to run out of bandwidth
 
 The truth is if you really want to do something fancy with touch controls you should create a custom controller.
-By that I mean you should edit `WebPlayerTemplates/HappyFunTimes/scripts/controller.js` and
-`WebPlayerTemplates/HappyFunTimes/controller.html` and process touch events in JavaScript on the phone. Figure
-out as much on the phone as you can and then only send the result to the game. For example lets say you wanted
+By that I mean you should edit or better copy `Assets/WebPlayerTemplates/HappyFunTimes/controllers/gamepad/scripts/controller.js`
+and `Assets/WebPlayerTemplates/HappyFunTimes/controllers/gamepad/controller.html` and process touch events in JavaScript on the phone.
+Figure out as much on the phone as you can and then only send the result to the game. For example lets say you wanted
 the phone to look like a slingshot. You should actually draw the band of the sling shot on the phone
 in JavaScript. Do touch processing on the phone to stretch the band to where the player is putting their
-finger and when they finally lift their finger just send the tension and direction to the game. That would
-keep communication between the game and the phone to a minimum and help ensure a good experience.
+finger and when they finally lift their finger just send the tension and direction to the game and maybe
+the orientation. That would keep communication between the game and the phone to a minimum and help ensure
+a good experience.
 
 

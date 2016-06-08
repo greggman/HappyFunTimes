@@ -220,8 +220,7 @@ It's in `Assets/HappyFunTimes/Scripts/Example3rdPersonController.js`
 The first thing we need to do is define a matching class to receive
 the input from the phone.
 
-    @HappyFunTimes.CmdName("pad")
-    class MessagePad extends HappyFunTimes.MessageCmdData {
+    class MessagePad {
         var pad : int;
         var dir : int;
     };
@@ -241,7 +240,7 @@ when that message comes in.
         _netPlayer = spawnInfo.netPlayer;
 
         // Call the `OnPad` function
-        _netPlayer.RegisterCmdHandler(OnPad);
+        _netPlayer.RegisterCmdHandler("pad", OnPad);
 
     }
 

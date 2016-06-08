@@ -4,9 +4,10 @@ Description: Using HappyFunTimes with a 2d platformer
 This is just one example. There is no "correct" way. There's whatever
 works for your game. Maybe you'd like to make it so players
 tilt their phone left or right to move their character and
-shake it to jump. It's really up to you.
+shake it to jump. It's really up to you but as a simple
+version this example uses the [HFTGamepad]
 
-You can [download this sample here](http://docs.happyfuntimes.net/docs/unity/samples.html?owner=greggman&repo=hft-unity2dplatformer).
+You can [download this sample here](http://docs.happyfuntimes.net/docs/unity/samples.html?owner=greggman&repo=hft-unity3d).
 
 Note: You should consider checking out the [HappyFunTimes Unity GamePad example](gamepad.md)
 which is easier than this sample. This sample is still 100% valid and server as a good example
@@ -338,13 +339,13 @@ to the phone.
 We need to define classes to receive the data we defined above from the phone
 
     // Message when player presses or release jump button
-    private class MessageJump : MessageCmdData
+    private class MessageJump
     {
         public bool jump = false;
     }
 
     // Message when player pressed left or right
-    private class MessageMove : MessageCmdData
+    private class MessageMove
     {
         public int dir = 0;  // will be -1, 0, or +1
     }
@@ -399,7 +400,7 @@ To send our color choice to the phone we define a class for that
     // values. Finally they are converted back to RGB.
     // The min/max values are a hue range. Anything outside that range will
     // not be adjusted.
-    private class MessageSetColor : MessageCmdData
+    private class MessageSetColor
     {
         public MessageSetColor() { }  // for deserialization
         public MessageSetColor(float _h, float _s, float _v, float _min, float _max)
