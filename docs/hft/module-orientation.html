@@ -3,7 +3,7 @@
 <html lang="en">
 <head>
 	<meta charset="utf-8">
-	<title>HappyFunTimes Class: Ticker</title>
+	<title>HappyFunTimes Module: orientation</title>
 
 	<link type="text/css" rel="stylesheet" href="styles/site.cerulean.css">
 
@@ -183,12 +183,12 @@
 					
 
 
-	<h1 class="page-title">Class: Ticker</h1>
+	<h1 class="page-title">Module: orientation</h1>
 <section>
 
 <header>
     <h2>
-    Ticker
+    orientation
     </h2>
     
 </header>
@@ -199,30 +199,8 @@
 
     
         
-<dt>
-    <h4 class="name" id="Ticker"><span class="type-signature"></span>new Ticker<span class="signature">()</span><span class="type-signature"></span></h4>
-    
-    
-</dt>
-<dd>
-    
-    
-    <div class="description">
-        <p>An object that calls a funciton once every N second for Y seconds</p>
-<p>Example: You want a flashing light that flashes 5 times a second
-and continues to flash for 10 seconds</p>
-<pre><code>var ticker = new Ticker();
-ticker.tick(10, 1/5, flashTheLight);</code></pre>
-    </div>
-    
 
-    
-    
-    
-    
-    
-    
-    
+        
 <dl class="details">
 	
 
@@ -253,20 +231,8 @@ ticker.tick(10, 1/5, flashTheLight);</code></pre>
 	
 </dl>
 
-    
-    
 
-    
-
-    
-    
-    
-    
-    
-    
-    
-</dd>
-
+        
     
     </div>
 
@@ -288,7 +254,7 @@ ticker.tick(10, 1/5, flashTheLight);</code></pre>
         <dl>
             
 <dt>
-    <h4 class="name" id="cancel"><span class="type-signature"></span>cancel<span class="signature">()</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="canOrient"><span class="type-signature"> </span>canOrient<span class="signature">()</span><span class="type-signature"> &rarr; {boolean}</span></h4>
     
     
 </dt>
@@ -296,7 +262,7 @@ ticker.tick(10, 1/5, flashTheLight);</code></pre>
     
     
     <div class="description">
-        <p>Cancels the ticker before it's done</p>
+        <p>Returns true if orientation is supported.</p>
     </div>
     
 
@@ -347,6 +313,28 @@ ticker.tick(10, 1/5, flashTheLight);</code></pre>
     
     
     
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    <p>true if orientation is supported</p>
+</div>
+
+
+
+<dl>
+	<dt>
+		Type
+	</dt>
+	<dd>
+		
+<span class="param-type">boolean</span>
+
+	</dd>
+</dl>
+
+
+        
     
     
 </dd>
@@ -354,7 +342,7 @@ ticker.tick(10, 1/5, flashTheLight);</code></pre>
         
             
 <dt>
-    <h4 class="name" id="tick"><span class="type-signature"></span>tick<span class="signature">(durationInSeconds, intervalInSeconds, fn)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="set"><span class="type-signature"> </span>set<span class="signature">(<span class="optional">orienation</span>)</span><span class="type-signature"></span></h4>
     
     
 </dt>
@@ -362,7 +350,14 @@ ticker.tick(10, 1/5, flashTheLight);</code></pre>
     
     
     <div class="description">
-        <p>Starts the ticker</p>
+        <p>Sets the orientation of the screen</p>
+<p>  Only works on Android or the App.</p>
+<p>  Valid values are:</p>
+<pre><code>&quot;portrait-primary&quot;    // normal way people hold phones
+&quot;portrait-secondary&quot;  // upsidedown
+&quot;landscape-primary&quot;   // phone turned clockwise 90 degrees from normal
+&quot;landscape-secondary&quot; // phone turned counter-clockwise 90 degrees from normal
+&quot;none&quot; (or undefined) // unlocked</code></pre>
     </div>
     
 
@@ -384,6 +379,8 @@ ticker.tick(10, 1/5, flashTheLight);</code></pre>
 		<th>Type</th>
 
 		
+		<th>Argument</th>
+		
 
 		
 
@@ -396,66 +393,32 @@ ticker.tick(10, 1/5, flashTheLight);</code></pre>
 
         <tr>
             
-                <td class="name"><code>durationInSeconds</code></td>
+                <td class="name"><code>orienation</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">number</span>
+<span class="param-type">string</span>
 
             
             </td>
 
             
-
-            
-
-            <td class="description last"><p>duration in seconds to tick.</p></td>
-        </tr>
-
-	
-
-        <tr>
-            
-                <td class="name"><code>intervalInSeconds</code></td>
-            
-
-            <td class="type">
-            
+                <td class="attributes">
                 
-<span class="param-type">number</span>
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>duration of a single tick</p></td>
-        </tr>
-
-	
-
-        <tr>
-            
-                <td class="name"><code>fn</code></td>
-            
-
-            <td class="type">
-            
+                    &lt;optional><br>
                 
-<span class="param-type">callback</span>
 
-            
-            </td>
+                
 
-            
-
+                
+                </td>
             
 
-            <td class="description last"><p>function to call at each tick.</p></td>
+            
+
+            <td class="description last"><p>The orientation to set the phone.</p></td>
         </tr>
 
 	
