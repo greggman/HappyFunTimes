@@ -13,14 +13,11 @@ as possible see the included gamepads](gamepad.md).
 Otherwise the following covers the basics of how to
 make everything custom.
 
-HappyFunTimes also does not supply a game engine. That's
-what Unity3D is for.
-
 ## Open the simple example
 
 The closest example to the code below is contained in the simple scene
 in `Assets/HappyFunTimes/MoreSamples/Simple/Scenes/HappyFunTimesSimpleExample`
-Inside you'll find `ExampleSimpleSpawner` that contains the `PlayerSpawner`
+Inside you'll find `ExampleSimpleSpawner` GameObject that contains the `PlayerSpawner`
 mentioned below. Similarly you'll find it spawns a prefab called `PrefabForExampleSimple`
 that contains a script `ExampleSimplePlayer` that is very similar to the code
 below.
@@ -190,7 +187,7 @@ A typical example looks like this. First we pull out all the libraries into loca
     var strings = sampleUI.strings;
     var touch = sampleUI.touch;
 
-Then after we've created the `HFT.GameClient` (see above) we call a few functions
+Then after we've created the `hft.GameClient` (see above) we call a few functions
 
     commonUI.setupStandardControllerUI(client, globals);
     commonUI.askForNameOnce();
@@ -200,14 +197,28 @@ The first one
 
     commonUI.setupStandardControllerUI(client, globals);
 
-Lets the sample-ui look for disconnect and messages related to the player's name
+Lets the sample-ui look for disconnect and messages related to the player's name.
+If possible it will try to take the display fullscreen (Android).
+
+The `globals` parameter is a set of options. For example
+
+    var globals = {
+      debug: false,
+      // orientation: "landscape-primary",
+    };
+
+If `orientation` is set and it's an Android phone it will try to set the display orientation.
+On iOS it will tell the player to rotate their phone.
+
+Setting `debug` to true will display some extra html to allow you to show messages using
+`commonUI.log(msg)` and `commonUI.error(msg)`.
 
 The second line
 
     commonUI.askForNameOnce();
 
 says "if the player hasn't set their name ask them to enter one".
-If you're game doesn't need a player name delete that line.
+If your game doesn't need a player name delete that line.
 
 The last line
 
@@ -235,7 +246,8 @@ This line
 parses the query string into globals. In particular a JSON string assigned to settings
 so if your controller URL is `http://localhost:18679?settings={foo:123,bar:"abc"}`
 then `globals.foo` will be `123` and `globals.bar` will be `"abc"`.
-You can use this during development to pass in stuff for testing etc.
+You can use this during development to pass in stuff for testing etc or for example
+to turn on debugging `http://localhost:18679?settings={debug:true"}`
 
 This line
 
@@ -248,7 +260,7 @@ The last line
     mobileHacks.disableContextMenu();
 
 Tries to disable the context menu. Otherwise if the player holds their finger on the
-phone it browser menu will pop up asking them if they want to copy etc...
+phone a browser menu will pop up asking them if they want to copy etc...
 
 ## Docs for the sample-ui
 

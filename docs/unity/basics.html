@@ -76,12 +76,10 @@ start from. In fact <a href="gamepad.html">if you want to get started quick
 as possible see the included gamepads</a>.
 Otherwise the following covers the basics of how to
 make everything custom.</p>
-<p>HappyFunTimes also does not supply a game engine. That&#39;s
-what Unity3D is for.</p>
 <h2 id="open-the-simple-example">Open the simple example</h2>
 <p>The closest example to the code below is contained in the simple scene
 in <code>Assets/HappyFunTimes/MoreSamples/Simple/Scenes/HappyFunTimesSimpleExample</code>
-Inside you&#39;ll find <code>ExampleSimpleSpawner</code> that contains the <code>PlayerSpawner</code>
+Inside you&#39;ll find <code>ExampleSimpleSpawner</code> GameObject that contains the <code>PlayerSpawner</code>
 mentioned below. Similarly you&#39;ll find it spawns a prefab called <code>PrefabForExampleSimple</code>
 that contains a script <code>ExampleSimplePlayer</code> that is very similar to the code
 below.</p>
@@ -204,17 +202,27 @@ var misc = sampleUI.misc;
 var mobileHacks = sampleUI.mobileHacks;
 var strings = sampleUI.strings;
 var touch = sampleUI.touch;
-</code></pre><p>Then after we&#39;ve created the <code>HFT.GameClient</code> (see above) we call a few functions</p>
+</code></pre><p>Then after we&#39;ve created the <code>hft.GameClient</code> (see above) we call a few functions</p>
 <pre><code>commonUI.setupStandardControllerUI(client, globals);
 commonUI.askForNameOnce();
 commonUI.showMenu(true);
 </code></pre><p>The first one</p>
 <pre><code>commonUI.setupStandardControllerUI(client, globals);
-</code></pre><p>Lets the sample-ui look for disconnect and messages related to the player&#39;s name</p>
+</code></pre><p>Lets the sample-ui look for disconnect and messages related to the player&#39;s name.
+If possible it will try to take the display fullscreen (Android).</p>
+<p>The <code>globals</code> parameter is a set of options. For example</p>
+<pre><code>var globals = {
+  debug: false,
+  // orientation: &quot;landscape-primary&quot;,
+};
+</code></pre><p>If <code>orientation</code> is set and it&#39;s an Android phone it will try to set the display orientation.
+On iOS it will tell the player to rotate their phone.</p>
+<p>Setting <code>debug</code> to true will display some extra html to allow you to show messages using
+<code>commonUI.log(msg)</code> and <code>commonUI.error(msg)</code>.</p>
 <p>The second line</p>
 <pre><code>commonUI.askForNameOnce();
 </code></pre><p>says &quot;if the player hasn&#39;t set their name ask them to enter one&quot;.
-If you&#39;re game doesn&#39;t need a player name delete that line.</p>
+If your game doesn&#39;t need a player name delete that line.</p>
 <p>The last line</p>
 <pre><code>commonUI.showMenu(true);
 </code></pre><p>says show the gear menu in the top right that lets the player change their name
@@ -233,14 +241,15 @@ mobileHacks.disableContextMenu();
 </code></pre><p>parses the query string into globals. In particular a JSON string assigned to settings
 so if your controller URL is <code>http://localhost:18679?settings={foo:123,bar:&quot;abc&quot;}</code>
 then <code>globals.foo</code> will be <code>123</code> and <code>globals.bar</code> will be <code>&quot;abc&quot;</code>.
-You can use this during development to pass in stuff for testing etc.</p>
+You can use this during development to pass in stuff for testing etc or for example
+to turn on debugging <code>http://localhost:18679?settings={debug:true&quot;}</code></p>
 <p>This line</p>
 <pre><code>mobileHacks.fixHeightHack();
 </code></pre><p>Tries to deal with some quirks of mobile browsers.</p>
 <p>The last line</p>
 <pre><code>mobileHacks.disableContextMenu();
 </code></pre><p>Tries to disable the context menu. Otherwise if the player holds their finger on the
-phone it browser menu will pop up asking them if they want to copy etc...</p>
+phone a browser menu will pop up asking them if they want to copy etc...</p>
 <h2 id="docs-for-the-sample-ui">Docs for the sample-ui</h2>
 <p><a href="/docs/hft/">The various JavaScript functions of the sample-ui are documented here</a>.</p>
 <h2 id="dealing-with-the-player-s-name">Dealing with the player&#39;s name</h2>

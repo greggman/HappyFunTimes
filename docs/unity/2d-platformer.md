@@ -1,6 +1,8 @@
 Title: 2d Platformer
 Description: Using HappyFunTimes with a 2d platformer
 
+## **Depecated**
+
 This is just one example. There is no "correct" way. There's whatever
 works for your game. Maybe you'd like to make it so players
 tilt their phone left or right to move their character and

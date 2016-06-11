@@ -33,8 +33,8 @@ The minimum content of controller.html is
 
     <script src="/hft/hft.js"></script>
 
-Everything else is option. You can put your own script directly in the HTML
-or put outside with another script tag. All of the sample controller load
+Everything else is optional. You can put your own scripts directly in the HTML
+or put them outside with more script tags. All of the sample controllers load
 at least 2 more scripts
 
     <script src="/sample-ui/sample-ui.js"></script>

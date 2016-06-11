@@ -1,6 +1,8 @@
 Title: 3d Characters
 Description: How to control 3D characters with HappyFunTimes
 
+## depecated
+
 How do you control 3D characters with HappyFunTimes? The short answer is
 "it depends".
 
