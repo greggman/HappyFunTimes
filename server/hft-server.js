@@ -107,7 +107,7 @@ var HFTServer = function(options, startedCallback) {
   var self = this;
   var g = {
     port: config.getSettings().settings.port,
-    extraPorts: [80, 8080],
+    extraPorts: [80, 8080, 443],
     screenshotCount: 0,
     baseDir: 'public',
     cwd: process.cwd(),
@@ -546,6 +546,14 @@ var HFTServer = function(options, startedCallback) {
     };
   }();
 
+  app.get(/^\/generate_204$/, function(req, res) {
+      res.removeHeader("X-Powered-By");
+      res.removeHeader("Connection");
+      res.writeHead(204, {
+        'Content-Length': 0,
+      });
+      res.end('');
+  });
   app.get(/^\/hft\/0.x.x\/scripts\/runtime\/live-settings\.js$/, function(req, res) {
     var data = {
       system: {
