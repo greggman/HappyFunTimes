@@ -1,0 +1,13 @@
+#!/bin/sh
+set -e
+pushd `dirname $0` > /dev/null
+script_dir=`pwd`
+popd > /dev/null
+cd "$script_dir"
+../node_modules/webpack/bin/webpack.js --config hft.config.js
+#../node_modules/webpack/bin/webpack.js --config hft-min.config.js
+#../node_modules/webpack/bin/webpack.js --config sample-ui.config.js
+#../node_modules/webpack/bin/webpack.js --config sample-ui-min.config.js
+../node_modules/webpack/bin/webpack.js --config game-utils.config.js
+#../node_modules/webpack/bin/webpack.js --config game-utils-min.config.js
+

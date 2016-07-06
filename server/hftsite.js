@@ -31,14 +31,20 @@
 
 "use strict";
 
-var config  = require('../lib/config');
 var debug   = require('debug')('hftsite');
 var io      = require('../lib/io');
 var url     = require('url');
 
 var g = {
   throttleTime: 1000,
+  rendezvousRetryTimes: 100,
+  rendezvousRetryTimeout: 5,
 };
+
+console.log("make settable");
+var settings = {
+  rendezvousUrl: "http://happyfuntimes.net/api/inform2",
+}
 
 var getTime = function() {
   return Date.now();
@@ -62,13 +68,13 @@ var sendForAWhile = (function() {
         if (err) {
           ++tries[localOptions.family];
           if (tries[localOptions.family] > 1 && !success) {
-            console.error("Try " + tries[localOptions.family] + " of " + config.getSettings().settings.rendezvousRetryTimes + ": Could not contact: " + parsedUrl.host + " family: " + localOptions.family);
+            console.error("Try " + tries[localOptions.family] + " of " + g.rendezvousRetryTimes + ": Could not contact: " + parsedUrl.host + " family: " + localOptions.family);
             console.error(err);
           }
-          if (tries[localOptions.family] <= config.getSettings().settings.rendezvousRetryTimes) {
+          if (tries[localOptions.family] <= g.rendezvousRetryTimes) {
             // If one family succeeds then the other only needs 1 try.
             if (!success) {
-              setTimeout(tryUntilSuccess, config.getSettings().settings.rendezvousRetryTimeout * 1000);
+              setTimeout(tryUntilSuccess, g.rendezvousRetryTimeout * 1000);
             }
           }
         } else {
@@ -108,7 +114,7 @@ var inform = (function() {
         lastTime = now;
         lastAddressesAsStr = g.addressesAsStr;
         lastPort = g.port;
-        var hftUrl = process.env.HFT_RENDEZVOUS_URL || config.getSettings().settings.rendezvousUrl;
+        var hftUrl = process.env.HFT_RENDEZVOUS_URL || settings.rendezvousUrl;
         debug("ping: " + hftUrl);
         var options = { headers: {},  };
         var rendezvousIp = process.env.HFT_RENDEZVOUS_IP;
