@@ -31,20 +31,17 @@
 
 'use strict';
 
-var settingsOptionSpec = {
-      option: 'settings',         type: 'String',     description: 'settings: key=value, ',
-};
-
 var optionSpec = {
   options: [
-    { option: 'help', alias: 'h', type: 'Boolean',    description: 'displays help'},
-    { option: 'config-path',      type: 'String',     description: 'config path'},
-    { option: 'settings-path',    type: 'String',     description: 'settings path'},
-    { option: 'private-server',   type: 'Boolean',    description: 'do not inform happyfuntimes.net about this server. Users will not be able to use happyfuntimes.net to connect to your games'},
-    { option: 'debug',            type: 'Boolean',    description: 'check more things'},
-    { option: 'verbose',          type: 'Boolean',    description: 'print more stuff'},
-    settingsOptionSpec,
-  ].concat(require('./common-cli-options').options),
+   { option: 'port', alias: 'p', type: 'Int',     description: 'port. Default 18679', default: `18679`},
+   { option: 'dns',              type: 'Boolean', description: 'enable dns server'},
+   { option: 'address',          type: 'String',  description: 'ip address for dns and controller url conversion'},
+   { option: 'help', alias: 'h', type: 'Boolean', description: 'displays help'},
+   { option: 'private-server',   type: 'Boolean', description: 'do not inform happyfuntimes.net about this server. Users will not be able to use happyfuntimes.net to connect to your games'},
+   { option: 'debug',            type: 'Boolean', description: 'check more things'},
+   { option: 'verbose',          type: 'Boolean', description: 'print more stuff'},
+   { option: 'system-name',      type: 'String',  description: 'name used if multiple happyFunTimes servers are running on the same network. Default = computer name'},
+  ],
   helpStyle: {
     typeSeparator: '=',
     descriptionSeparator: ' : ',
@@ -53,7 +50,6 @@ var optionSpec = {
 };
 
 var debug      = require('debug')('server');
-var config     = require('../lib/config');
 var log        = require('../lib/log');
 var Promise    = require('promise');
 var optionator = require('optionator')(optionSpec);
@@ -67,12 +63,6 @@ try {
 }
 
 var printHelp = function() {
-  var settings = [];
-  Object.keys(require('../lib/config').getSettings().settings).forEach(function(key) {
-    settings.push(key);
-  });
-  settingsOptionSpec.description += settings.join(', ');
-
   console.log(optionator.generateHelp());
   process.exit(0);  // eslint-disable-line
 };
@@ -82,90 +72,24 @@ if (args.help) {
 }
 
 log.config(args);
-config.setup(args);
-if (args.settings) {
-  settings = config.getSettings().settings;
-  args.settings.split(',').forEach(function(setting) {
-    var keyValue = setting.split('=');
-    var key = keyValue[0];
-    var value = keyValue[1];
-    if (!settings[key]) {
-      console.error('no setting: "' + key + '"');
-      printHelp();
-    }
-    settings[key] = value;
-  });
-}
-if (args.port) {
-  settings = config.getSettings().settings;
-  settings.port = args.port;
-}
-
-
 
 function exitBecauseAlreadyRunning() {
   console.error("HappyFunTimes is already running");
 }
 
-function checkForPrerequisites() {
-  var platInfo = require('../lib/platform-info');
-  return platInfo.checkForPrerequisites();
+function startGame() {
+  console.log("TODO: start game");
 }
 
 function startServer() {
-  if (args.appMode) {
-    require('../lib/games').init();
-  }
-  var browser   = require('../lib/browser');
   var DNSServer = require('./dnsserver');
   var iputils   = require('../lib/iputils');
   var HFTServer = require('./hft-server');
 
-  var server;
-  var launchBrowser = function(err) {
-    var next = function() {
-      if (err) {
-        console.error(err);
-        process.exit(1);  // eslint-disable-line
-      } else {
-        if (args.appMode) {
-          console.log([
-            '',
-            '---==> HappyFunTimes Running <==---',
-            '',
-          ].join('\n'));
-        }
-      }
-    };
-
-    var p;
-    if (args.appMode || args.show) {
-      var name = args.show || 'games';
-      p = checkForPrerequisites()
-          .catch(function(err) {
-             console.error(err);
-             process.exit(1);  // eslint-disable-line
-          })
-          .then(function() {
-            return browser.launch('http://localhost:' + server.getSettings().port + '/' + name + '.html', config.getConfig().preferredBrowser);
-          })
-          .then(function(browser) {
-            debug("launched: " + browser);
-          });
-    } else {
-      p = Promise.resolve();
-    }
-    p.then(function() {
-       next();
-    }).catch(function(err) {
-      console.error(err);
-      next();
-    });
-  };
-
-  server = new HFTServer(args, launchBrowser);
+  var server = new HFTServer(args, startGame);
 
   if (args.dns) {
+    console.log("TODO: OSX, launch in separate process");
     // This doesn't need to dynamicallly check for a change in ip address
     // because it should only be used in a static ip address sitaution
     // since DNS has to be static for our use-case.
@@ -184,10 +108,10 @@ function startServer() {
 
 function launchIfNotRunning() {
   var io = require('../lib/io');
-  var settings = config.getSettings().settings;
   var sendJSON = Promise.denodeify(io.sendJSON);
 
-  var url = "http://localhost:" + settings.port;
+console.log("TODO: fix");
+  var url = "http://localhost:" + args.port;
   sendJSON(url, { cmd: "happyFunTimesPing" }, {}).then(exitBecauseAlreadyRunning, startServer).done();
 }
 

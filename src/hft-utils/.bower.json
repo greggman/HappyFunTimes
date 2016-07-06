@@ -1,0 +1,44 @@
+{
+  "name": "hft-utils",
+  "version": "0.5.1",
+  "authors": [
+    "Gregg Tavares <github@greggman.com>"
+  ],
+  "description": "A few JavaScript utils for happy fun times example games",
+  "main": "dist/whatisthisfor.js",
+  "moduleType": [
+    "amd"
+  ],
+  "keywords": [
+    "games",
+    "happy",
+    "HappyFunTimes"
+  ],
+  "license": "MIT",
+  "homepage": "https://github.com/greggman/hft-utils",
+  "ignore": [
+    "**/.*",
+    "*.md",
+    "Gruntfile.js",
+    "package.json",
+    "bower.json",
+    "node_modules",
+    "docs",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "tdl": "https://github.com/greggman/tdl.git#0.0.8",
+    "pako": "~0.2.5"
+  },
+  "_release": "0.5.1",
+  "_resolution": {
+    "type": "version",
+    "tag": "v0.5.1",
+    "commit": "566a04ab1a800c004477302e308abdbab0e0757d"
+  },
+  "_source": "https://github.com/greggman/hft-utils.git",
+  "_target": "0.5.1",
+  "_originalSource": "https://github.com/greggman/hft-utils.git"
+}

@@ -36,7 +36,6 @@ var debug        = require('debug')('relayserver');
 var events       = require('events');
 var fs           = require('fs');
 var GameGroup    = require('./game-group');
-var gameInfo     = require('../lib/gameinfo');
 var path         = require('path');
 var Player       = require('./player');
 var strings      = require('../lib/strings');
@@ -84,9 +83,7 @@ var RelayServer = function(servers, inOptions) {
   var options = {};
   var socketServers = [];
   var eventEmitter = new events.EventEmitter();
-  var gameDB = inOptions.gameDB;
   var hftServer = inOptions.hftServer;
-  var languages = inOptions.languages;
 
   this.setOptions = function(srcOptions) {
     ["baseUrl"].forEach(function(key) {
@@ -146,7 +143,7 @@ var RelayServer = function(servers, inOptions) {
     } else {
       gameGroup = gameGroups[gameId];
       if (!gameGroup && makeGroup) {
-        gameGroup = new GameGroup(gameId, this, { gameDB: gameDB });
+        gameGroup = new GameGroup(gameId, this, { });
         gameGroups[gameId] = gameGroup;
         ++numGameGroups;
         debug("added game group: " + gameId + ", num game groups = " + numGameGroups);
@@ -162,28 +159,6 @@ var RelayServer = function(servers, inOptions) {
    */
   this.getGameGroupById = function(gameId) {
     return gameGroups[gameId];
-  };
-
-  /**
-   * Gets an array of game currently running.
-   * @method
-   * @returns {RelayServer~GameEntry[]}
-   */
-  this.getGames = function() {
-    var gameList = [];
-    for (var id in gameGroups) {
-      var gameGroup = gameGroups[id];
-      if (gameGroup.showInList()) {
-        gameList.push({
-          gameId: id,
-          serverName: computerName.get().trim(),
-          numPlayers: gameGroup.getNumPlayers(),
-          controllerUrl: gameGroup.getControllerUrl(options.baseUrl),
-          runtimeInfo: gameGroup.runtimeInfo,
-        });
-      }
-    }
-    return gameList;
   };
 
   /**
@@ -219,19 +194,6 @@ var RelayServer = function(servers, inOptions) {
     delete gameGroups[gameId];
   };
 
-  var findPackageJSON = function(dirPath) {
-    for (;;) {
-      if (path.dirname(dirPath).length < 10) {
-        break;
-      }
-      var testPath = path.join(dirPath, "package.json");
-      if (fs.existsSync(testPath)) {
-        return testPath;
-      }
-      dirPath = path.dirname(dirPath);
-    }
-  };
-
   /**
    * Assigns a client as the server for a specific game.
    * @method
@@ -239,117 +201,11 @@ var RelayServer = function(servers, inOptions) {
    * @param {Client} client Websocket client object.
    */
   this.assignAsClientForGame = function(data, client) {
-    var gameId = data.gameId;
-    var runtimeInfo;
-    var cwd = data.cwd;
-    if (cwd) {
-      var origCwd = cwd;
-      debug("cwd: " + cwd);
-      // Not clear where this belongs. Unity can be in bin
-      // so should we fix it in unity or here? Seems like
-      // here since Unity isn't aware. It's HFT that specifies
-      // the 'bin' convension
-
-      // First check deeper
-      // First check deeper
-      var checkPaths = [
-        "WebPlayerTemplates/HappyFunTimes",
-        "../../../Assets/WebPlayerTemplates/HappyFunTimes",
-        "../../Assets/WebPlayerTemplates/HappyFunTimes",
-      ];
-      for (var cp = 0; cp < checkPaths.length; ++cp) {
-        cwd = path.join(origCwd, checkPaths[cp]);
-        cwd = findPackageJSON(cwd);
-        if (cwd) {
-          break;
-        }
-      }
-
-      var read = false;
-      if (cwd) {
-        var suffixes = [
-          "Assets/WebPlayerTemplates/HappyFunTimes/package.json",
-          "HappyFunTimes/package.json",
-          "package.json",
-        ];
-        cwd = cwd.replace(/\\/g, "/");
-        for (var xx = 0; xx < suffixes.length; ++xx) {
-          var suffix = suffixes[xx];
-          if (strings.endsWith(cwd, suffix)) {
-            cwd = cwd.substring(0, cwd.length - suffix.length - 1);
-            break;
-          }
-        }
-        try {
-          runtimeInfo = gameInfo.readGameInfo(cwd);
-          if (runtimeInfo) {
-            gameId = runtimeInfo.info.happyFunTimes.gameId;
-            gameDB.add(runtimeInfo);
-            read = true;
-          }
-        } catch (e) {  // eslint-disable-line
-        }
-      }
-      if (!read) {
-        gameId = gameInfo.makeRuntimeGameId(gameId, origCwd);
-      }
-    }
-    if (data.packageInfo) {
-      // Is this a total hack? Normally a game needs to be registered with HFT.
-      // That's because HFT needs to know where to get the files for the game. Usually it does
-      // this by url as in `http://localhost:18679/games/foobar/index.html` the game id is `foobar`.
-      // From that it can find out the package.json for the game either by looking in the installed
-      // games or by guessing at the folder.
-      //
-      // But, a game running off a different web server's URL won't have any info in it.
-      // So, this "hack" makes up a package.json for it and inserts it.
-      //
-      // Fill in some stuff. Should I let the game pass all this in? My feeling is NO because
-      // it might be a security risk.
-      try {
-        gameId = gameId.replace(/[^a-zA-Z0-9_-]/g, "-").substr(0, 60);
-        var fakePackageInfo = {
-          name: data.packageInfo.happyFunTimes.name || data.packageInfo.name || gameId,
-          happyFunTimes: {
-            gameId: gameId,
-            apiVersion: data.packageInfo.happyFunTimes.apiVersion,
-            category: "does not matter",
-            gameType: "html",  // this really doesn't matter because the game is already running
-            minPlayers: 0,
-          },
-        };
-      } catch (e) {
-        console.error(e);
-        console.error("trouble making runtimeInfo for gameId:", gameId);
-        eventEmitter.emit('gameStartFailed');
-        return;
-      }
-      runtimeInfo = gameInfo.parseGameInfo(JSON.stringify(fakePackageInfo), path.join(gameId, "--unnamed-pkg--"), gameId);
-      if (!runtimeInfo) {
-        console.error("can't make runtimeInfo for gameId:", gameId);
-        eventEmitter.emit('gameStartFailed');
-        return;
-      } else {
-        gameId = runtimeInfo.info.happyFunTimes.gameId;
-        gameDB.add(runtimeInfo);
-      }
-    }
-    if (!gameId) {
-      console.error("unknown game id. Can not start game");
-      eventEmitter.emit('gameStartFailed');
-      return;
-    }
+    var gameId = data.gameId || "HFTHTML5";
     debug("starting game: " + gameId);
     var gameGroup = getGameGroup(gameId, true);
     var game = gameGroup.assignClient(client, data);
-    if (inOptions.instructions) {
-      game.sendInstructions(languages.getString("connect"), inOptions.instructionsPosition);
-    }
     eventEmitter.emit('gameStarted', {gameId: gameId});
-  };
-
-  this.addFilesForGame = function(gameId, files) {
-    hftServer.addFilesForGame(gameId, files);
   };
 
   servers.forEach(function(server) {

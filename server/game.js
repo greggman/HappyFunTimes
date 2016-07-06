@@ -33,7 +33,6 @@
 
 var debug        = require('debug')('game');
 var hftSite      = require('./hftsite');
-var semverUtils  = require('../lib/semver-utils');
 
 /**
  * @typedef {object} Game~Options
@@ -51,7 +50,6 @@ var semverUtils  = require('../lib/semver-utils');
 var Game = function(id, gameGroup, options) {
   options = options || {};
   this.id = id;
-  this.runtimeInfo = gameGroup.runtimeInfo;
   this.gameGroup = gameGroup;
   this.players = {};
   this.numPlayers = 0;
@@ -62,11 +60,11 @@ var Game = function(id, gameGroup, options) {
 };
 
 Game.prototype.getControllerUrl = function(baseUrl) {
-  return this.runtimeInfo ? baseUrl + "/games/" + this.runtimeInfo.info.happyFunTimes.gameId + "/index.html" : undefined;
+  return "/controller.html";
 };
 
 Game.prototype.setGameId = function() {
-  this.gameId = (this.runtimeInfo ? this.runtimeInfo.info.happyFunTimes.gameId : "") + " id=" + this.id;
+  this.gameId = " id=" + this.id;
 };
 
 /**
@@ -339,25 +337,12 @@ Game.prototype.sendQuit = function() {
   this.sendSystemCmd('exit', {});
 };
 
-Game.prototype.sendInstructions = function(msg, pos) {
-  if (!this.runtimeInfo) {
-    return;
-  }
-  pos = pos || this.runtimeInfo.info.happyFunTimes.instructionsPosition;
-  this.sendSystemCmd('instructions', {
-    msg: msg,
-    bottom: pos === "bottom",
-  });
-};
-
 Game.prototype.sendGameDisconnect = function(otherGame) {
   if (this.client) {  // this check is needed because in GameGroup.assignClient the new game has been added to games but not yet assigned a client
 
     var data = {};
 
-    if (semverUtils.canUse(this.runtimeInfo.info.happyFunTimes.apiVersion, "1.14.0")) {
-      data.id = otherGame.id;
-    }
+    data.id = otherGame.id;
 
     this.client.send({
       cmd: 'upgame',

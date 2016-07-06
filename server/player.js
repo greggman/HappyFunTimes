@@ -53,8 +53,8 @@ var Player = function(client, relayServer, id) {
     var game = this.relayServer.addPlayerToGame(this, data.gameId, data.data);
     if (!game) {
       // TODO: Make this URL set from some global so we can set it some place else.
-      debug("game does not exist");
-      this.sendCmd('_hft_redirect_', { url: "/" });
+      debug("game does not exist:", data.gameId);
+      this.disconnect();
     } else {
       this.setGame(game);
     }
