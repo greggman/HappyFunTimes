@@ -92,7 +92,7 @@ in the slots shown in Unity
 After that you need to make a controller that lets the user select a character
 and sends a message to the game about which character was selected.
 
-I made one by modifying the [simple](basic.md) controller
+I made one by modifying the [simple](basic.md) controller.
 
 Relevant HTML in `Assets/WebPlayerTemplates/HappyFunTimes/character-select/controller.html`
 
@@ -174,10 +174,5 @@ It also hides the selection HTML which was covering up the normal game controls.
       $("choice1").addEventListener('touchstart', function() { selectCharacter(1); });
       $("choice2").addEventListener('touchstart', function() { selectCharacter(2); });
 
-
 Run the scene `Assets/HappyFunTimes/MoreSamples/character-select/Scenes/HappyFunTimesCharacterSelectExample`
 to see it work.
-
-
-
-

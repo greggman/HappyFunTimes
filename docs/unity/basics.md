@@ -241,14 +241,14 @@ This line
 
     mobileHacks.fixHeightHack();
 
-Tries to deal with some quirks of mobile browsers.
+tries to deal with some quirks of mobile browsers.
 
 The last line
 
     mobileHacks.disableContextMenu();
 
-Tries to disable the context menu. Otherwise if the player holds their finger on the
-phone it browser menu will pop up asking them if they want to copy etc...
+tries to disable the context menu. Otherwise if the player holds their finger on the
+phone its browser menu will pop up asking them if they want to copy etc...
 
 ## Docs for the sample-ui
 
