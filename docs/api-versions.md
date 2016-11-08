@@ -14,8 +14,9 @@ game. Otherwise they'll try to run your game and it will just
 fail because you're counting on newer features.
 
 To use a feature below be sure to set your apiVersion to
-the correct version
+the correct version.
 
+## API Versions
 
 *   v1.1.0
 
@@ -38,7 +39,7 @@ the correct version
               ..
             });
 
-        Warning: es6 has not shipped yet which means the spec can
+        Warning: ES6 has not shipped yet which means the spec can
         change. HappyFunTimes is using [google-traceur](https://github.com/google/traceur-compiler)
         to supply this feature.
 
@@ -46,7 +47,7 @@ the correct version
 
     *   Supports using `<script>` tags instead of [require.js](http://requirejs.org).
 
-        I really like [require.js](http://requirejs.org) style of modules. It encourages
+        I really like [require.js](http://requirejs.org)' style of modules. It encourages
         dependency injection, it also suppots module independence. But, for many it's non
         standard.
 

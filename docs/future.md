@@ -47,7 +47,3 @@ and render rotated 90 degrees and that problem would be solved. No need to unloc
 
 Unfortunately, there are drawbacks as well. HTML5 defines lots of styling, and
 other features what would all have to be hand drawn if done in canvas.
-
-
-
-
