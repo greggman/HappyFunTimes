@@ -66,7 +66,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
   </div>
   <div class="row">
     <div class="col-sm-8 lesson-main">
-      <p>HappyFunTimes is a small app and a library that lets you
+      <p>HappyFunTimes library that lets you
 make games that use smartphones as controllers. The games
 can be created in HTML5 or Unity3D (more coming).</p>
 <p>HappyFunTimes only provides the communications. It does
@@ -78,8 +78,17 @@ Otherwise the following covers the basics of how to
 make everything custom.</p>
 <p>HappyFunTimes also does not supply a game engine. That&#39;s
 what Unity3D is for.</p>
+<h2 id="open-the-simple-example">Open the simple example</h2>
+<p>The closest example to the code below is contained in the simple scene
+in <code>Assets/HappyFunTimes/MoreSamples/Simple/Scenes/HappyFunTimesSimpleExample</code>
+Inside you&#39;ll find <code>ExampleSimpleSpawner</code> that contains the <code>PlayerSpawner</code>
+mentioned below. Similarly you&#39;ll find it spawns a prefab called <code>PrefabForExampleSimple</code>
+that contains a script <code>ExampleSimplePlayer</code> that is very similar to the code
+below.</p>
+<p>For the JavaScript parts look inside
+<code>Assets/WebPlayerTemplates/HappyFunTimes/controllers/simple/scripts/controller.js</code></p>
 <h2 id="how-it-works">How it works</h2>
-<p>When a player connects the HappyFunTimes unity plugin
+<p>When a player connects the HappyFunTimes script <code>PlayerSpawner</code>
 spawns prefab in your game and calls the
 <code>InitializeNetPlayer</code> method in any scripts attached
 to that prefab. <code>InitializeNetPlayer</code> is passed a
@@ -107,8 +116,8 @@ void InitializeNetPlayer(SpawnInfo spawnInfo) {
 <pre><code>m_netPlayer.RegisterCmdHandler&lt;MessageMove&gt;(&quot;move&quot;, OnMove);
 </code></pre><p>says when the command &quot;move&quot; comes in, convert the data in that message to
 a <code>MessageMove</code> class and then call the method <code>OnMove</code>.</p>
-<p>The <code>MessageMove</code> class must inherit from <code>MessageCmdData</code> looks like this</p>
-<pre><code>private class MessageMove : MessageCmdData {
+<p>The <code>MessageMove</code> class makes all its fields public</p>
+<pre><code>private class MessageMove {
     public float x = 0;
     public float y = 0;
 };
@@ -128,12 +137,12 @@ a <code>MessageMove</code> class and then call the method <code>OnMove</code>.</
 method we registered with <code>RegisterCmdHandler</code> will get called.</p>
 <p><strong>Note: It&#39;s up to you to make up commands appropriate for your game.
 It&#39;s also up to you to decide what data to pass from the phone to the
-game and create the approriate class to receive the data.</strong></p>
+game and create the approriate class and function to receive the data.</strong></p>
 <p>Of course you can always start with one of the samples</p>
 <h2 id="sending-data-to-the-phone">Sending data to the phone</h2>
 <p>Sending data to the phone is just the reverse. First we make
 class to represent the data we want to send.</p>
-<pre><code>private class MessageScored : MessageCmdData {
+<pre><code>private class MessageScored {
     public MessageScored(int _points) {
         points = _points;
     }
@@ -166,6 +175,102 @@ a player disconnects</strong>. For example maybe rather than kill the <code>Game
 you&#39;d like the let AI take over for that player. Or maybe you&#39;d like to <a href="reusing-players.html">keep
 it around and either let the player reconnect or let some other player use it</a>.
 It&#39;s really up to you.</p>
+<h2 id="happyfuntimes-on-the-phone">HappyFunTimes on the phone</h2>
+<p>If you open <code>Assets/WebPlayerTemplates/HappyFunTimes/controllers/simple/controller.html</code> you&#39;ll
+see the HTML for a sample controller. You can see it includes 3 scripts</p>
+<pre><code>&lt;script src=&quot;/hft/hft.js&quot;&gt;&lt;/script&gt;
+&lt;script src=&quot;/sample-ui/sample-ui.js&quot;&gt;&lt;/script&gt;
+&lt;script src=&quot;scripts/controller.js&quot;&gt;&lt;/script&gt;
+</code></pre><p><code>hft.js</code> is HappyFunTimes. This script connects the phone to the game. it is the only part 100% required
+for HappyFunTimes.</p>
+<p>It exposes <code>hft.GameClient</code> which you initialize like this</p>
+<pre><code>var client = new hft.GameClient();
+</code></pre><p>At at that point you can add handlers and send messages like above.</p>
+<p>If you want to display something when the player is disconnected, for example if you stop the game,
+you can add a handle</p>
+<pre><code>client.addEventListener(&#39;disconnect&#39;, functionToCallWhenDisconnected);
+</code></pre><p>The sample-ui, see below, already handles this message but if you&#39;re not using the sample-ui then
+this is how you check for being disconnected. Other than displaying a message there&#39;s not much to
+do. HappyFunTimes will take care of reconnecting the player if the game restarts.</p>
+<h2 id="the-sample-ui">The sample-ui</h2>
+<p>All of the sample controllers are based off some code called the &quot;sample-ui&quot;. It&#39;s just that, a sample.
+You&#39;re free to use it or not. The sample UI manages orientation, fullscreen, letting the player enter
+a name, etc.. It also has functions for reading touch input etc.. Look at any sample to see how it&#39;s
+used.</p>
+<p>A typical example looks like this. First we pull out all the libraries into local variables</p>
+<pre><code>var commonUI = sampleUI.commonUI;
+var input = sampleUI.input;
+var misc = sampleUI.misc;
+var mobileHacks = sampleUI.mobileHacks;
+var strings = sampleUI.strings;
+var touch = sampleUI.touch;
+</code></pre><p>Then after we&#39;ve created the <code>HFT.GameClient</code> (see above) we call a few functions</p>
+<pre><code>commonUI.setupStandardControllerUI(client, globals);
+commonUI.askForNameOnce();
+commonUI.showMenu(true);
+</code></pre><p>The first one</p>
+<pre><code>commonUI.setupStandardControllerUI(client, globals);
+</code></pre><p>Lets the sample-ui look for disconnect and messages related to the player&#39;s name</p>
+<p>The second line</p>
+<pre><code>commonUI.askForNameOnce();
+</code></pre><p>says &quot;if the player hasn&#39;t set their name ask them to enter one&quot;.
+If you&#39;re game doesn&#39;t need a player name delete that line.</p>
+<p>The last line</p>
+<pre><code>commonUI.showMenu(true);
+</code></pre><p>says show the gear menu in the top right that lets the player change their name
+If you don&#39;t want the menu change this <code>true</code> to <code>false</code>.</p>
+<p>Above that in most controllers is this</p>
+<pre><code>var globals = {
+  debug: false,
+  //orientation: &quot;landscape-primary&quot;,
+};
+misc.applyUrlSettings(globals);
+mobileHacks.fixHeightHack();
+mobileHacks.disableContextMenu();
+</code></pre><p>The first part just declares some global object to hold various settings</p>
+<p>This line</p>
+<pre><code>misc.applyUrlSettings(globals);
+</code></pre><p>parses the query string into globals. In particular a JSON string assigned to settings
+so if your controller URL is <code>http://localhost:18679?settings={foo:123,bar:&quot;abc&quot;}</code>
+then <code>globals.foo</code> will be <code>123</code> and <code>globals.bar</code> will be <code>&quot;abc&quot;</code>.
+You can use this during development to pass in stuff for testing etc.</p>
+<p>This line</p>
+<pre><code>mobileHacks.fixHeightHack();
+</code></pre><p>Tries to deal with some quirks of mobile browsers.</p>
+<p>The last line</p>
+<pre><code>mobileHacks.disableContextMenu();
+</code></pre><p>Tries to disable the context menu. Otherwise if the player holds their finger on the
+phone it browser menu will pop up asking them if they want to copy etc...</p>
+<h2 id="docs-for-the-sample-ui">Docs for the sample-ui</h2>
+<p><a href="/docs/hft/">The various JavaScript functions of the sample-ui are documented here</a>.</p>
+<h2 id="dealing-with-the-player-s-name">Dealing with the player&#39;s name</h2>
+<p>One other thing the sample-ui does is let the player enter and edit a name. On the C# side
+there is a corresponding class <code>HFTPlayerNameManager</code> that deals with the messages related
+to name editing from the sample-ui. To use it create an instance of that class in your
+<code>InitializeNetPlayer</code> function. For example</p>
+<pre><code>private HFTPlayerNameManager m_playerNameManager;
+
+void InitializeNetPlayer(SpawnInfo spawnInfo) {
+    ...
+    // Track name changes
+    m_playerNameManager = new HFTPlayerNameManager(m_netPlayer);
+    m_playerNameManager.OnNameChange += ChangeName;
+
+    ...
+}
+
+private void ChangeName(string name) {
+    Debug.Log(&quot;new name is: &quot; + name);
+}
+</code></pre><p>Be sure to cleanup when your <code>GameObject</code> is destroyed.</p>
+<pre><code>void OnDestroy() {
+    if (m_playerNameManager != null) {
+      m_playerNameManager.Close();
+      m_playerNameManager = null;
+    }
+}
+</code></pre><h2 id="more">More</h2>
+<p>See <a href="self-control.html">Make Controllers</a> for a few more details.</p>
 
       <hr/>
       <div>
@@ -226,11 +331,12 @@ It&#39;s really up to you.</p>
     <li><a href="accelerometer.html">Using the Accelerometer</a></li>
     <li><a href="character-selection.html">Spawning different characters per Player</a></li>
     <li><a href="multi-machine.html">Multiple Computers</a></li>
+    <li><a href="talking-between-games.html">Talking Between Multiple Computers</li>
   </ul>
 </li>
-<li>API Reference
+<li>Sample-UI API Reference
   <ul>
-    <li><a href="/docs/hft/">Controller (HTML/JavaScript) API</a></li>
+    <li><a href="/docs/hft/">Sample UI (HTML/JavaScript) API</a></li>
   </ul>
 </li>
 <li>Other
