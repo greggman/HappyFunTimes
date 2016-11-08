@@ -77,7 +77,8 @@ the user will know to upgrade happyfuntimes to run your
 game. Otherwise they&#39;ll try to run your game and it will just
 fail because you&#39;re counting on newer features.</p>
 <p>To use a feature below be sure to set your apiVersion to
-the correct version</p>
+the correct version.</p>
+<h2 id="api-versions">API Versions</h2>
 <ul>
 <li><p>v1.1.0</p>
 <ul>
@@ -98,7 +99,7 @@ will automatically transpile it into es5 at runtime</p>
   SomeES6File) {
   ..
 });
-</code></pre><p>Warning: es6 has not shipped yet which means the spec can
+</code></pre><p>Warning: ES6 has not shipped yet which means the spec can
 change. HappyFunTimes is using <a href="https://github.com/google/traceur-compiler">google-traceur</a>
 to supply this feature.</p>
 </li>
@@ -107,7 +108,7 @@ to supply this feature.</p>
 <li><p>v1.3.0</p>
 <ul>
 <li><p>Supports using <code>&lt;script&gt;</code> tags instead of <a href="http://requirejs.org">require.js</a>.</p>
-<p>I really like <a href="http://requirejs.org">require.js</a> style of modules. It encourages
+<p>I really like <a href="http://requirejs.org">require.js</a>&#39; style of modules. It encourages
 dependency injection, it also suppots module independence. But, for many it&#39;s non
 standard.</p>
 <p>So, if you want to just use standard script tags make sure your <code>package.json</code> has its

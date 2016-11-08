@@ -70,26 +70,26 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 <ul>
 <li><p>0.0.47</p>
 <ul>
-<li><p>handle ipv6</p>
+<li><p>Handle ipv6</p>
 </li>
-<li><p>handle case where computer name is not set on OSX</p>
+<li><p>Handle case where computer name is not set on OSX</p>
 </li>
 </ul>
 </li>
 <li><p>0.0.44</p>
 <ul>
-<li><p>switched from HANDJS to PEP for pointerevents support</p>
-<p>Should fix sticky buttons</p>
+<li><p>Switched from HANDJS to PEP for pointerevents support
+Should fix sticky buttons</p>
 </li>
-<li><p>added fake hft ping to prevent error message in installation mode</p>
+<li><p>Added fake hft ping to prevent error message in installation mode</p>
 </li>
 </ul>
 </li>
 <li><p>0.0.43</p>
 <ul>
-<li><p>removed launchpad dependency</p>
+<li><p>Removed launchpad dependency</p>
 </li>
-<li><p>added node version to htf version</p>
+<li><p>Added node version to htf version</p>
 </li>
 </ul>
 </li>
@@ -100,10 +100,10 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 </li>
 <li><p>0.0.40</p>
 <ul>
-<li><p>don&#39;t allow games for a different platform to be installed.</p>
+<li><p>Don&#39;t allow games for a different platform to be installed.</p>
 </li>
-<li><p>remove css <code>cursor: pointer</code> from controllers.</p>
-<p>it was messing up android!?! WTFBBQ!</p>
+<li><p>Remove css <code>cursor: pointer</code> from controllers as it
+was messing up Android.</p>
 </li>
 </ul>
 </li>
@@ -111,15 +111,15 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 <ul>
 <li><p>Games have context menu with &quot;GetInfo&quot;, &quot;Uninstall&quot; and/or &quot;Remove&quot;</p>
 </li>
-<li><p>Add drag and drop install support</p>
-<p>You can drag a zip file onto HappyFunTimes and it will install it.</p>
+<li><p>Add drag and drop install support.
+You can drag a zip file onto HappyFunTimes and it will install it.</p>
 </li>
-<li><p>Change instructions to use game sys messages.</p>
-<p>That way both HTML and Unity (etc..) can use the same system
+<li><p>Change instructions to use game sys messages.
+That way both HTML and Unity (etc..) can use the same system
 for instructions</p>
 </li>
-<li><p>move langauges.js to server</p>
-<p>That way both HTML and Unity can use the same language strings</p>
+<li><p>Move langauges.js to server
+That way both HTML and Unity can use the same language strings</p>
 </li>
 <li><p>Allow Unity to use <code>HFT_INSTUCTIONS</code> and <code>HFT_INSTRUCTIONSPOSITION</code>
 environment variables to specify instructions.</p>
@@ -151,37 +151,37 @@ my fingers.</p>
 to see that html. If &quot;game&quot; console.log and console.error are sent back to the game. This
 can be used to try to debug something when there&#39;s no way to connect a debugger.</p>
 </li>
-<li><p>make <code>hft start --port</code> option work.</p>
+<li><p>Make <code>hft start --port</code> option work.</p>
 </li>
-<li><p>fixed <code>hft remove --bad</code>.</p>
-<p>It was removing everything :(</p>
+<li><p>Fixed <code>hft remove --bad</code>.</p>
+<p>It was removing everything.</p>
 </li>
-<li><p>fixed notifications for added/removed games.</p>
-<p>It broke when support for running uninstalled games like hft-gamepad-api was added</p>
+<li><p>Fixed notifications for added/removed games.</p>
+<p>It broke when support for running uninstalled games like hft-gamepad-api was added.</p>
 </li>
-<li><p>made it save 5 backups of <code>installed-games.json</code></p>
+<li><p>Made it save 5 backups of <code>installed-games.json</code>.</p>
 </li>
 </ul>
 </li>
 <li><p>0.0.36</p>
 <ul>
-<li><p>added <code>--instructions</code> which puts a scrolling banner on top of each
+<li><p>Added <code>--instructions</code> which puts a scrolling banner on top of each
 game that says something like &quot;connect to HappyFunTimes wifi, on iOS
-just wait, on Android use Chrome and go to &quot;h.com&quot;&quot;</p>
+just wait, on Android use Chrome and go to &quot;h.com&quot;.</p>
 </li>
-<li><p>added <code>--langs</code> to specify which languages games should use.</p>
+<li><p>Added <code>--langs</code> to specify which languages games should use.</p>
 <p>For controllers, if you support multiple languages you should probaby
 use <code>navigator.language</code> but for the games since they are running on
 my computer I needed a way to choose.</p>
 </li>
-<li><p>added <code>--wifi-name</code>, <code>--wifi-pass</code></p>
-<p>This is to specify the name and password in the connect messages. See <code>--instructions</code></p>
+<li><p>Added <code>--wifi-name</code>, <code>--wifi-pass</code></p>
+<p>This is to specify the name and password in the connect messages. See <code>--instructions</code>.</p>
 </li>
 <li><p>Hacked in more name support</p>
 <p>gameclient now gets name and sends it automatically when controller starts.
 On the one hand it feels &quot;impure&quot; to do it this way. On the other pragmatism wins.</p>
 </li>
-<li><p>fixed bug in hftSettings. haveVersion should only check for version not fail if
+<li><p>Fixed bug in hftSettings. haveVersion should only check for version not fail if
 if version is old.</p>
 </li>
 </ul>
@@ -203,7 +203,7 @@ URL bar has the focus the page itself does not.</p>
 </li>
 <li><p>Made controlellers report to game if they need new apiVersion.</p>
 </li>
-<li><p>added <code>orientationOptional</code> to <code>CommonUI.setupStandardControllerUI</code></p>
+<li><p>Added <code>orientationOptional</code> to <code>CommonUI.setupStandardControllerUI</code>.</p>
 <p>Setting it to true makes the commonUI not tell the user to orient their
 phone if their phone doesn&#39;t support orientation. Example usage is
 are the device orientation examples. They want the phone to be in
@@ -211,7 +211,7 @@ portrait but as of iOS 8.3 Safari doesn&#39;t support orientation. So
 the message that used to come up would be confusing as the user
 orients their phone.</p>
 </li>
-<li><p>added <code>--optimize-controller</code> option</p>
+<li><p>Added <code>--optimize-controller</code> option.</p>
 <p>This is probably only useful for <a href="network.html">installation mode</a>. If you&#39;re
 using require.js (the standard way HappyFunTimes controllers work) then
 happyfuntimes can try to concatinate and compress most of the JavaScript
@@ -233,14 +233,14 @@ the --minify part automatically.</p>
 <li><p>0.0.33</p>
 <ul>
 <li>Fix for firefox. I totally broke it around 0.0.27. Firefox needed different
-stuff for making scripts load at runtime :(</li>
+stuff for making scripts load at runtime.</li>
 </ul>
 </li>
 <li><p>0.0.32</p>
 <ul>
-<li><p>fixed fullscreen for Android Chrome</p>
+<li><p>Fixed fullscreen for Android Chrome.</p>
 <p>I have no idea how this ever worked when I tested it before. Hopefully it works
-now</p>
+now.</p>
 </li>
 </ul>
 </li>
@@ -255,15 +255,15 @@ stuff there&#39;s nothing to do. The code will just work.</p>
 </li>
 <li><p>0.0.30</p>
 <ul>
-<li><p>added <code>--no-check-for-app</code></p>
+<li><p>Added <code>--no-check-for-app</code>.</p>
 </li>
-<li><p>added <code>hft/0.x.x/scripts/runtime/live-settings.js</code> so HFT can deliver live setttings easily.</p>
+<li><p>Added <code>hft/0.x.x/scripts/runtime/live-settings.js</code> so HFT can deliver live setttings easily.</p>
 <p>a little worried there&#39;s too many ways to deliver options. As in code is not organized.
 To games data comes in index.html through a template. Maybe that should change to
 <code>/game/&lt;gameid&gt;/scripts/runtime/live-game-settings.js</code>? One difference is we allow
 minifying on game but minifying is at runtime so that doesn&#39;t seem like it would matter.</p>
 </li>
-<li><p>added changelist.md</p>
+<li><p>Added changelist.md.</p>
 </li>
 </ul>
 </li>
@@ -271,14 +271,14 @@ minifying on game but minifying is at runtime so that doesn&#39;t seem like it w
 <ul>
 <li><p>0.0.29</p>
 <ul>
-<li><p>fixed touch pad code.</p>
+<li><p>Fixed touch pad code.</p>
 <p>Issue was it was possible for button to get stuck down because we don&#39;t always
 get pointerup events. Also didn&#39;t handle pointerout then sliding back on to button.</p>
 </li>
-<li><p>added <code>GameClient.log</code> and <code>GameClient.error</code></p>
-<p>allows the controller to send debug messages that make it to game.</p>
+<li><p>Added <code>GameClient.log</code> and <code>GameClient.error</code>.</p>
+<p>Allows the controller to send debug messages that make it to game.</p>
 </li>
-<li><p>added way for game to supply files for controller.</p>
+<li><p>Added way for game to supply files for controller.</p>
 <p>This allows games to participate in HappyFunTimes without being registered.
 So for example <a href="http://greggman.github.io/hft-gamepad-api/">http://greggman.github.io/hft-gamepad-api/</a></p>
 </li>
@@ -296,30 +296,30 @@ HTML/CSS so a message appears to turn the phone in the wrong orientation.</p>
 </li>
 <li><p><code>NetPlayer.name</code>, <code>NetPlayer.busy</code> and <code>NetPlayer.hft_namechange</code> and <code>NetPlayer.hft_busy</code> events.</p>
 </li>
-<li><p>added code to disablecontext menus.</p>
+<li><p>Added code to disablecontext menus.</p>
 <p>Wondering if I should just always do this.</p>
 </li>
 </ul>
 </li>
 <li><p>0.0.27</p>
 <ul>
-<li><p>make hft-publish optionally use HFT_PUBLISH_USER for user:pass</p>
+<li><p>Make hft-publish optionally use HFT_PUBLISH_USER for user:pass.</p>
 </li>
-<li><p>send headers so hopefully browser never caches.</p>
+<li><p>Send headers so hopefully browser never caches.</p>
 </li>
-<li><p>switch to node 0.12</p>
+<li><p>Switch to node 0.12.</p>
 </li>
-<li><p>made &quot;Install&quot; message pop to front</p>
+<li><p>Made &quot;Install&quot; message pop to front.</p>
 </li>
 </ul>
 </li>
 <li><p>0.0.26</p>
 <ul>
-<li><p>Add session ids. See <code>Netplayer.sessionId</code></p>
+<li><p>Add session ids. See <code>Netplayer.sessionId</code>.</p>
 </li>
-<li><p>switch docs to use handlebars</p>
+<li><p>Switch docs to use handlebars.</p>
 </li>
-<li><p>add docs.happyfuntimes.net</p>
+<li><p>Add docs.happyfuntimes.net.</p>
 </li>
 </ul>
 </li>
