@@ -33,7 +33,7 @@ on Windows.
 Then on OSX open the Terminal, cd to the older you exported the game to, then type or copy
 and paste each of these lines. You will need to get Unity to run the game in a window.
 
-** NOTE: It's important to put the `&` at the end of each line **
+**Note: It's important to put the `&` at the end of each line**
 
 ```
 test.app/Contents/MacOS/test --mm-full-width=1680 --mm-full-height=1050 --mm-x=0 --mm-y=0 --mm-width=400 --mm-height=300 &
@@ -187,7 +187,3 @@ long as they are based on `HFTSyncedClock.Now` they'll match across machines.
 
 The synchronized clock is also available for phones. See the example in
 `Assets/HappyFunTimes/MoreSamples/synchedclock/Scenes/SyncedClockScene`
-
-
-
-

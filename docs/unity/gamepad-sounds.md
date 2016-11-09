@@ -43,13 +43,13 @@ There are currently 2 ways to make sounds for the sample gamepad controllers.
 
 To use the sounds:
 
-1.  on some global gameobject (like LevelManager in all the samples)
+1.  On some global gameobject (like LevelManager in all the samples)
     add an `HFTGlobalSoundHelper` script component.
 
     This component scans for and loads the sounds from all folders below `Assets/WebPlayerTemplates/HappyFunTimes`
     looking for `.mp3` and `.wav` and `.jsfx.txt` files
 
-2.  on the prefab that gets spawned for your players, the same prefab you put
+2.  On the prefab that gets spawned for your players, the same prefab you put
     an `HFTInput` or `HFTGamepad` script component add the `HFTSoundPlayer` script
     component.
 
@@ -88,5 +88,3 @@ called `coin`. That would conflict with a sound file called `coin.mp3`.
 If you don't like those limits see `HFTGlobalSoundHelper.cs`, `HFTSoundPlayer.cs`, and `HTFSounds.cs` as well
 as the corresponding support in `Assets/WebPlayerTemplates/HappyFunTimes/controllers/gamepad/scripts/controller.js`
 and edit or better copy them and add your own features.
-
-

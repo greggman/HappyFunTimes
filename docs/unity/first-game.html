@@ -172,7 +172,7 @@ void Start () {
     m_gamepad = GetComponent&lt;HFTGamepad&gt;();
 
     Renderer renderer = GetComponent&lt;Renderer&gt;();
-    renderer.material.color = m_gamepad.Color;
+    renderer.material.color = m_gamepad.color;
 }
 </code></pre></li>
 <li><p>Create a new Material and assign it to the player prefab</p>
@@ -182,7 +182,7 @@ void Start () {
 </ol>
 <p><img src="images/hft-unity-3-browsers.png" class="quartersize lesson" /></p>
 <p>You should see each sphere matches the color of the controller that connects it.
-If you want to pick colors yourself you can also set <code>m_gamepad.Color</code> to some
+If you want to pick colors yourself you can also set <code>m_gamepad.color</code> to some
 color and the controller will change color.</p>
 <h2 id="the-gamepad-api">The Gamepad API</h2>
 <p><code>HFTGamepad</code> implements the Unity side of the sample gamepad controller.
@@ -193,9 +193,17 @@ For a more through explanation of how to use it <a href="gamepad.html">see &quot
 or add any other features need. Don&#39;t limit yourself to the sample controllers.
 You can make the phones do all kinds of things. To see how to make controllers
 from scratch dig through the code in <code>Assets/HappyFunTimes/Script/HFTGamepad.cs</code>
-and <code>Assets/WebPlayerTemplates/HappyFunTimes/scripts/controller.js</code> and
+and <code>Assets/WebPlayerTemplates/HappyFunTimes/controllers/gamepad/controller.js</code> and
 <a href="basics.html">see this document</a>.</p>
-
+<p>Other controllers pairs are found in</p>
+<p>The simple controller</p>
+<pre><code>Assets/HappyFunTimes/MoreSamples/simple/Scripts/ExampleSimplePlayer.cs
+Assets/WebPlayerTemplates/HappyFunTimes/controllers/simple/scripts/controller.js
+</code></pre><p>The character-select controller</p>
+<pre><code>Assets/HappyFunTimes/MoreSamples/simple/Scripts/ExampleCharacterSelect.cs
+Assets/HappyFunTimes/MoreSamples/simple/Scripts/ExampleCharacterSelectPlayer.cs
+Assets/WebPlayerTemplates/HappyFunTimes/controllers/character-select/scripts/controller.js
+</code></pre>
       <hr/>
       <div>
         <div>Questions? <a href="http://stackoverflow.com/questions/tagged/happyfuntimes">Ask on stackoverflow</a>.</div>
@@ -255,11 +263,12 @@ and <code>Assets/WebPlayerTemplates/HappyFunTimes/scripts/controller.js</code> a
     <li><a href="accelerometer.html">Using the Accelerometer</a></li>
     <li><a href="character-selection.html">Spawning different characters per Player</a></li>
     <li><a href="multi-machine.html">Multiple Computers</a></li>
+    <li><a href="talking-between-games.html">Talking Between Multiple Computers</li>
   </ul>
 </li>
-<li>API Reference
+<li>Sample-UI API Reference
   <ul>
-    <li><a href="/docs/hft/">Controller (HTML/JavaScript) API</a></li>
+    <li><a href="/docs/hft/">Sample UI (HTML/JavaScript) API</a></li>
   </ul>
 </li>
 <li>Other

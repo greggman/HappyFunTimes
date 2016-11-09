@@ -28,10 +28,10 @@ Description: Changes for Unity Plugin
 
     *   Added Export/Install/Publish menu items
 
-    *   added HFTGamepad.BUTTON_TOUCH for whether or not the user is touching the screen
+    *   Added HFTGamepad.BUTTON_TOUCH for whether or not the user is touching the screen
         on the orientation and touch controllers.
 
-    *   added ability to play sound through controller
+    *   Added ability to play sound through controller
 
         There are currently 2 ways to make sounds for the controllers.
 
@@ -166,11 +166,9 @@ Description: Changes for Unity Plugin
 
 *   1.0
 
-    *   made the plugin based on [hft-unity-gamepad](http://github.com/greggman/hft-unity-gamepad)
+    *   Made the plugin based on [hft-unity-gamepad](http://github.com/greggman/hft-unity-gamepad)
         that implements 12 controllers.
 
 *   0.0.7
 
     *   Added `maxPlayers` to PlayerSpawner
-
-

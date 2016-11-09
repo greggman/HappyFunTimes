@@ -4,12 +4,12 @@ Description: How to contribute to HappyFunTimes
 *   Versioning the API
 
     If you add new functionality to the public API (the api games and controllers call) increment
-    the API in `hft.hanson`
+    the API in `hft.hanson`.
 
     If it's not backward compatible make a new major version second in the `hft.hanson` file
     and make sure you've made new versions of files in `templates` and `scripts`.
 
-    The flow for HFT is
+    The flow for HFT is:
 
     *   When a game is installed, checks if HFT supports at least the required version of the API
 
@@ -36,7 +36,7 @@ Description: How to contribute to HappyFunTimes
 
          grunt eslint
 
-    Will run eslint
+    Will run eslint.
 
 *   JavaScript style
 

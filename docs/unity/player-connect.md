@@ -7,7 +7,7 @@ here are the steps.
 The easiest thing to do when a player joins your HappyFunTimes game
 is to spawn a prefab. To do this
 
-1.  make new `GameObject`
+1.  Make new `GameObject`
 
     <img src="images/create-game-object.png" class="halfsize lesson" />
 
@@ -16,7 +16,7 @@ is to spawn a prefab. To do this
 
     <img src="images/name-gameobject.png" class="halfsize lesson" />
 
-2.  click `Add Component` and then pick `HappyFunTimes->PlayerSpawner`
+2.  Click `Add Component` and then pick `HappyFunTimes->PlayerSpawner`
 
     <img src="images/hft-components.png" class="halfsize lesson" />
 
@@ -55,7 +55,7 @@ as a controller.
 The easist way to do this is to use the HappyFunTimes PlayerConnector
 script.
 
-1.  make new `GameObject`
+1.  Make new `GameObject`
 
     <img src="images/create-game-object.png" class="halfsize lesson" />
 
@@ -64,7 +64,7 @@ script.
 
     <img src="images/name-gameobject.png" class="halfsize lesson" />
 
-2.  click `Add Component` and then pick `HappyFunTimes->PlayerConnectorr`
+2.  Click `Add Component` and then pick `HappyFunTimes->PlayerConnectorr`
 
     <img src="images/hft-components.png" class="halfsize lesson" />
 
@@ -157,5 +157,3 @@ the slingshot controls.
 
 So, when your `InitializeNetPlayer` function gets called you need to send that
 message to tell the phone to switch to slingshot mode.
-
-

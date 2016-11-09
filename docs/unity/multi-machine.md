@@ -30,7 +30,7 @@ on Windows.
 Then on OSX open the Terminal, cd to the older you exported the game to, then type or copy
 and paste each of these lines. You will need to get Unity to run the game in a window.
 
-** NOTE: It's important to put the `&` at the end of each line **
+**Note: It's important to put the `&` at the end of each line**
 
 ```
 test.app/Contents/MacOS/test --num-games=3 --hft-master --hft-id=game0 &
@@ -323,4 +323,3 @@ On the other hand a common command line argument you might need would be which l
 which part of a larger level to view.
 
 Also see [sending messages between games](talking-between-games.md).
-

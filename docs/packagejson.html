@@ -109,14 +109,14 @@ and <code>null</code>.</p>
   }
 }
 </code></pre><h4 id="-name-"><code>name</code></h4>
-<p>A name for your game. Used on the main screen of HappyFunTimes and SuperHappyFunTimes</p>
+<p>A name for your game. Used on the main screen of HappyFunTimes and SuperHappyFunTimes.</p>
 <h4 id="-description-"><code>description</code></h4>
 <p>A description. Used on superhappyfuntimes. No HTML allowed currently.</p>
 <h4 id="-version-"><code>version</code></h4>
 <p>Used on superhappyfuntimes so users can know if there is a newer version for them to download.</p>
 <h4 id="-happyfuntimes-gameid-"><code>happyFunTimes.gameId</code></h4>
 <p>This is the id for your game. Every game on superhappyfuntimes must have a unique id.
-only A-Z, 0-9, _, - are allowed and no more than 60 charactera.</p>
+only A-Z, 0-9, _, - are allowed and no more than 60 characters.</p>
 <h4 id="-happyfuntimes-apiversion-"><code>happyFunTimes.apiVersion</code></h4>
 <p>This is the happyFunTimes API version needed by this game. If this number is higher
 than the version of happyFunTimes the user has installed they will be asked to upgrade.
@@ -132,12 +132,12 @@ how to launch the game and how to publish it.</p>
 </ul>
 <h4 id="-happyfuntimes-minplayers-"><code>happyFunTimes.minPlayers</code></h4>
 <p>How many players are required to play this game. For example, jumpjump you can play with
-one player. It&#39;s probably not any fun but you can player. boomboom on the otherhand
+one player. It&#39;s probably not any fun but you can play it. boomboom on the otherhand
 requires 2 players. It will not start until there are 2 players.</p>
 <p>This is only used on the superhappyfuntimes to set expectations. If you have a game that requires
 10 players please consider marking it here.</p>
 <h4 id="-happyfuntimes-category-"><code>happyFunTimes.category</code></h4>
-<p>This is also only used on superhappyfuntimes to set expections and hopefully to, um, categories
+<p>This is also only used on superhappyfuntimes to set expections and hopefully to categories
 things. Current values</p>
 <ul>
 <li><code>game</code> A game</li>
@@ -168,11 +168,11 @@ added for you and so is the script tag that includes <code>scripts/game.js</code
 (like three.js or pixi.js or jquery) add script tags to
 either <code>game.html</code> or <code>controller.html</code>.  The HappyFunTimes libraries will be inserted before
 those tags. The <code>game.js</code> or <code>controller.js</code> will be inserted after.</p>
-<p>See example: <a href="http://github.com/hft-simple-script/">http://github.com/hft-simple-script/</a></p>
+<p>See example: <a href="http://github.com/hft-simple-script/">github.com/hft-simple-script</a></p>
 <h4 id="-happyfuntimes-ignore-"><code>happyFunTimes.ignore</code></h4>
 <p>Used to prevent certainly files from being part of the published game.</p>
 <p>This is an array of strings in the format of <code>.gitignore</code> (<a href="http://git-scm.com/docs/gitignore">see git docs</a>)
-not including the double asterix syntax. So for example</p>
+not including the double asterix syntax. For example</p>
 <pre><code>{
   ...
   &quot;happyFunTimes&quot;: {
@@ -184,10 +184,10 @@ not including the double asterix syntax. So for example</p>
     ...
   }
 }
-</code></pre><p>would exclude the <code>&lt;projectdir&gt;/src</code> folder as well as any photoshop files.</p>
+</code></pre><p>would exclude the <code>&lt;projectdir&gt;/src</code> folder as well as any Photoshop files.</p>
 <h4 id="-happyfuntimes-templatefileoptions-"><code>happyFunTimes.templateFileOptions</code></h4>
-<p>requires apiVersion <code>1.15.0</code> or higher.</p>
-<p>by default <code>game.html</code> automatically gets inserted into <code>templates/game.gameview.html</code>.
+<p>Requires apiVersion <code>1.15.0</code> or higher.</p>
+<p>By default <code>game.html</code> automatically gets inserted into <code>templates/game.gameview.html</code>.
 &#39;controller.html<code>automatically gets inserted into</code>templates/controller.index.html`.</p>
 <p>If your project needs other files to be treated similarly you can use this option. A good example
 is <a href="http://github.com/greggman/hft-tonde-iko">Tonde-Iko</a>. Its <code>game.html</code> is just a menu for
@@ -211,7 +211,7 @@ this was added to the package.json</p>
 }
 </code></pre><p>That basically says for those 3 files use the <code>game</code> template. They will automatically use
 their respective scripts and css so for example <code>realgame.html</code> uses <code>scripts/realgame.js</code>
-and <code>css/realgame.css</code></p>
+and <code>css/realgame.css</code>.</p>
 
       <hr/>
       <div>

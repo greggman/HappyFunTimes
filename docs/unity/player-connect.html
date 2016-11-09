@@ -112,7 +112,7 @@ what it&#39;s doing.</p>
 </li>
 <li><p>click <code>Add Component</code> and then pick <code>HappyFunTimes-&gt;PlayerConnectorr</code></p>
 <p><img src="images/hft-components.png" class="halfsize lesson" /></p>
-<p><img src="images/hft-playerconnector-script.png" class="halfsize" /></p>
+<p><img src="images/hft-playerconnector-script.png" class="halfsize lesson" /></p>
 </li>
 <li><p>Open the player property and set the size to the number of players
 you support, then drag in each of your player GameObjects into the
@@ -171,7 +171,7 @@ shows 3 buttons (yes, no, maybe). In the other mode the phone shows a slingshot.
 When the game switches to players needing buttons on their phone or players
 needing slingshots on their phone you send a message to them you made up something
 like</p>
-<pre><code>class ShowControllerMsg : MessageCmdData {
+<pre><code>class ShowControllerMsg {
   ShowControllerMsg(string s) : { control = s; }
   public string control;
 };
@@ -242,11 +242,12 @@ message to tell the phone to switch to slingshot mode.</p>
     <li><a href="accelerometer.html">Using the Accelerometer</a></li>
     <li><a href="character-selection.html">Spawning different characters per Player</a></li>
     <li><a href="multi-machine.html">Multiple Computers</a></li>
+    <li><a href="talking-between-games.html">Talking Between Multiple Computers</li>
   </ul>
 </li>
-<li>API Reference
+<li>Sample-UI API Reference
   <ul>
-    <li><a href="/docs/hft/">Controller (HTML/JavaScript) API</a></li>
+    <li><a href="/docs/hft/">Sample UI (HTML/JavaScript) API</a></li>
   </ul>
 </li>
 <li>Other

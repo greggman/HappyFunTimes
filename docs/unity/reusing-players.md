@@ -60,12 +60,8 @@ There's 2 ways around this.
             ....
         }
 
-
 Of course it's not that simple. What do you do if they never reconnect? Maybe
 it got too late and they left. Maybe they got sucked into a conversation
 and are no longer interested in playing. Maybe their battery died on their
 phone. All of that is a design issue and I can't really help but it's something
 you should think about if you're designing a long play game.
-
-
-

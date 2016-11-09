@@ -18,29 +18,29 @@ will list all the commands. Typing `hft cmd --help` will list the help for a spe
 
 ### `hft add`
 
-adds the game in the current folder to happyfuntimes
+Adds the game in the current folder to happyfuntimes
 
 ### `hft check`
 
-checks if the `package.json` in the current folder is correct
+Checks if the `package.json` in the current folder is correct
 and if other things like `controller.html` are missing.
 
 ### `hft download gameId`
 
-downloads and installs a game from superhappyfuntimes.
+Downloads and installs a game from superhappyfuntimes.
 
 ### `hft install srcpath`
 
-installs a zip file created with `hft make-release`. Can be used for testing otherwise
+Installs a zip file created with `hft make-release`. Can be used for testing otherwise
 there's no reason to run this.
 
 ### `hft list`
 
-lists all the games currently added or installed in happyfuntimes
+Lists all the games currently added or installed in happyfuntimes
 
 ### `hft make-release dstpath`
 
-makes a releases, a zip file, of the game in the current folder and saves it to
+Makes a releases, a zip file, of the game in the current folder and saves it to
 a path `dstpath`. Note `dstpath` must be a folder. Also note if the game is
 a unity game you must exit unity as unity will be called to export the game.
 This is mostly for testing. See [hft publish](#-hft-publish-)
@@ -84,11 +84,11 @@ happyFunTimes. No files are deleted.
 
 ### `hft start`
 
-starts happyFunTimes.
+Starts the happyFunTimes server.
 
 #### `--app-mode`
 
-launches the browser to `http://localhost:18679/games.html`. This is the same way HappyFunTimes
+Launches the browser to `http://localhost:18679/games.html`. This is the same way HappyFunTimes
 is started when you launch by clicking the HappyFunTimes program icon.
 
 #### `--system-name=<somename>`
@@ -124,7 +124,7 @@ Displays a scrolling message on the screen telling users how to connect to the g
 
 Chooses which languages to display instructions. Example `--langs=en,ja`
 
-Note: To add more languages [please submit a pull request for this file](https://github.com/greggman/HappyFunTimes/blob/master/server/languages.js)
+Note: To add more languages [please submit a pull request for this file](https://github.com/greggman/HappyFunTimes/blob/master/server/languages.js).
 
 #### `--instructionsPosition=<position>`
 
@@ -166,7 +166,4 @@ probably only use this option with [installation mode](network.md).
 
 ### `hft uninstall gameId`
 
-Un-installs a game from happyfuntimes. **WARNING!!! this DELETES FILES!!!**
-
-
-
+Un-installs a game from happyfuntimes. **WARNING! This DELETES FILES!!!**

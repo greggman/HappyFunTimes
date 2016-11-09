@@ -3,23 +3,22 @@ Changelist
 
 *   0.0.47
 
-    *   handle ipv6
+    *   Handle ipv6
 
-    *   handle case where computer name is not set on OSX
+    *   Handle case where computer name is not set on OSX
 
 *   0.0.44
 
-    *   switched from HANDJS to PEP for pointerevents support
-
+    *   Switched from HANDJS to PEP for pointerevents support
         Should fix sticky buttons
 
-    *   added fake hft ping to prevent error message in installation mode
+    *   Added fake hft ping to prevent error message in installation mode
 
 *   0.0.43
 
-    *   removed launchpad dependency
+    *   Removed launchpad dependency
 
-    *   added node version to htf version
+    *   Added node version to htf version
 
 *   0.0.41
 
@@ -27,27 +26,23 @@ Changelist
 
 *   0.0.40
 
-    *   don't allow games for a different platform to be installed.
+    *   Don't allow games for a different platform to be installed.
 
-    *   remove css `cursor: pointer` from controllers.
-
-        it was messing up android!?! WTFBBQ!
+    *   Remove css `cursor: pointer` from controllers as it
+        was messing up Android.
 
 *   0.0.39
 
     *   Games have context menu with "GetInfo", "Uninstall" and/or "Remove"
 
-    *   Add drag and drop install support
-
+    *   Add drag and drop install support.
         You can drag a zip file onto HappyFunTimes and it will install it.
 
     *   Change instructions to use game sys messages.
-
         That way both HTML and Unity (etc..) can use the same system
         for instructions
 
-    *   move langauges.js to server
-
+    *   Move langauges.js to server
         That way both HTML and Unity can use the same language strings
 
     *   Allow Unity to use `HFT_INSTUCTIONS` and `HFT_INSTRUCTIONSPOSITION`
@@ -80,40 +75,40 @@ Changelist
         to see that html. If "game" console.log and console.error are sent back to the game. This
         can be used to try to debug something when there's no way to connect a debugger.
 
-    *   make `hft start --port` option work.
+    *   Make `hft start --port` option work.
 
-    *   fixed `hft remove --bad`.
+    *   Fixed `hft remove --bad`.
 
-        It was removing everything :(
+        It was removing everything.
 
-    *   fixed notifications for added/removed games.
+    *   Fixed notifications for added/removed games.
 
-        It broke when support for running uninstalled games like hft-gamepad-api was added
+        It broke when support for running uninstalled games like hft-gamepad-api was added.
 
-    *   made it save 5 backups of `installed-games.json`
+    *   Made it save 5 backups of `installed-games.json`.
 
 *   0.0.36
 
-    *   added `--instructions` which puts a scrolling banner on top of each
+    *   Added `--instructions` which puts a scrolling banner on top of each
         game that says something like "connect to HappyFunTimes wifi, on iOS
-        just wait, on Android use Chrome and go to "h.com""
+        just wait, on Android use Chrome and go to "h.com".
 
-    *   added `--langs` to specify which languages games should use.
+    *   Added `--langs` to specify which languages games should use.
 
         For controllers, if you support multiple languages you should probaby
         use `navigator.language` but for the games since they are running on
         my computer I needed a way to choose.
 
-    *   added `--wifi-name`, `--wifi-pass`
+    *   Added `--wifi-name`, `--wifi-pass`
 
-        This is to specify the name and password in the connect messages. See `--instructions`
+        This is to specify the name and password in the connect messages. See `--instructions`.
 
     *   Hacked in more name support
 
         gameclient now gets name and sends it automatically when controller starts.
         On the one hand it feels "impure" to do it this way. On the other pragmatism wins.
 
-    *   fixed bug in hftSettings. haveVersion should only check for version not fail if
+    *   Fixed bug in hftSettings. haveVersion should only check for version not fail if
         if version is old.
 
 *   0.0.35
@@ -132,7 +127,7 @@ Changelist
 
     *   Made controlellers report to game if they need new apiVersion.
 
-    *   added `orientationOptional` to `CommonUI.setupStandardControllerUI`
+    *   Added `orientationOptional` to `CommonUI.setupStandardControllerUI`.
 
         Setting it to true makes the commonUI not tell the user to orient their
         phone if their phone doesn't support orientation. Example usage is
@@ -141,7 +136,7 @@ Changelist
         the message that used to come up would be confusing as the user
         orients their phone.
 
-    *   added `--optimize-controller` option
+    *   Added `--optimize-controller` option.
 
         This is probably only useful for [installation mode](network.md). If you're
         using require.js (the standard way HappyFunTimes controllers work) then
@@ -165,14 +160,14 @@ Changelist
 *   0.0.33
 
     *   Fix for firefox. I totally broke it around 0.0.27. Firefox needed different
-        stuff for making scripts load at runtime :(
+        stuff for making scripts load at runtime.
 
 *   0.0.32
 
-    *   fixed fullscreen for Android Chrome
+    *   Fixed fullscreen for Android Chrome.
 
         I have no idea how this ever worked when I tested it before. Hopefully it works
-        now
+        now.
 
 *   0.0.31
 
@@ -184,30 +179,30 @@ Changelist
 
 *   0.0.30
 
-    *   added `--no-check-for-app`
+    *   Added `--no-check-for-app`.
 
-    *   added `hft/0.x.x/scripts/runtime/live-settings.js` so HFT can deliver live setttings easily.
+    *   Added `hft/0.x.x/scripts/runtime/live-settings.js` so HFT can deliver live setttings easily.
 
         a little worried there's too many ways to deliver options. As in code is not organized.
         To games data comes in index.html through a template. Maybe that should change to
         `/game/<gameid>/scripts/runtime/live-game-settings.js`? One difference is we allow
         minifying on game but minifying is at runtime so that doesn't seem like it would matter.
 
-    *   added changelist.md
+    *   Added changelist.md.
 
 
 *   0.0.29
 
-    *   fixed touch pad code.
+    *   Fixed touch pad code.
 
         Issue was it was possible for button to get stuck down because we don't always
         get pointerup events. Also didn't handle pointerout then sliding back on to button.
 
-    *   added `GameClient.log` and `GameClient.error`
+    *   Added `GameClient.log` and `GameClient.error`.
 
-        allows the controller to send debug messages that make it to game.
+        Allows the controller to send debug messages that make it to game.
 
-    *   added way for game to supply files for controller.
+    *   Added way for game to supply files for controller.
 
         This allows games to participate in HappyFunTimes without being registered.
         So for example http://greggman.github.io/hft-gamepad-api/
@@ -226,26 +221,26 @@ Changelist
 
     *   `NetPlayer.name`, `NetPlayer.busy` and `NetPlayer.hft_namechange` and `NetPlayer.hft_busy` events.
 
-    *   added code to disablecontext menus.
+    *   Added code to disablecontext menus.
 
         Wondering if I should just always do this.
 
 *   0.0.27
 
-    *   make hft-publish optionally use HFT_PUBLISH_USER for user:pass
+    *   Make hft-publish optionally use HFT_PUBLISH_USER for user:pass.
 
-    *   send headers so hopefully browser never caches.
+    *   Send headers so hopefully browser never caches.
 
-    *   switch to node 0.12
+    *   Switch to node 0.12.
 
-    *   made "Install" message pop to front
+    *   Made "Install" message pop to front.
 
 *   0.0.26
 
-    *   Add session ids. See `Netplayer.sessionId`
+    *   Add session ids. See `Netplayer.sessionId`.
 
-    *   switch docs to use handlebars
+    *   Switch docs to use handlebars.
 
-    *   add docs.happyfuntimes.net
+    *   Add docs.happyfuntimes.net.
 
 

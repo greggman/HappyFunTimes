@@ -25,7 +25,7 @@ Description: Tips for making the best HappyFunTimes experiences
 
 *   Always make the player press something
 
-    So far a browser can't prevent the phone from sleeping
+    So far a browser can't prevent the phone from sleeping.
     A solution is to make sure the player has a reason to
     interact with the phone often.
 
@@ -46,7 +46,7 @@ Description: Tips for making the best HappyFunTimes experiences
 *   Preventing images from popping up a context menu
 
     Both Safari on iOS and Chrome on Android will pop
-    up a context menu "Save Image?" if the user long
+    up a context menu "Save Image" if the user long
     presses an image. So prevent that you need both this CSS:
 
         img {
@@ -61,13 +61,13 @@ Description: Tips for making the best HappyFunTimes experiences
 
         mobileHacks.disableContextMenu();
 
-*   Use the iOS simulator
+*   Use the iOS Simulator
 
     You probably need to test both landscape and portrait
     and 3.5 inch (iPhone4-) and 4.0 inch (iPhone5+) sizes
     iOS6, 7, and 8, as well as iPad.
 
-    I'd recommend the Android sim but it's so damn slow.
+    I'd recommend the Android simulator but it's damn slow.
     I know it can be configured to run faster but even then
     it takes forever to start where as the iOS simulator
     runs nearly immediately and lets you switch devices
@@ -82,14 +82,14 @@ Description: Tips for making the best HappyFunTimes experiences
 
     Powpow, Shootshoot, Jumpjump will all use the local
     keyboard to run a player if you put `?settings={haveServer:false}`
-    at the end of the URL. Boomboom you have to put
+    at the end of the URL. For Boomboom you have to set
     `?settings={haveServer:false,numLocalPlayers:2}`
 
 *   Use URL settings for testing.
 
     Most of the samples, both controllers and games, support
     various flags and settings passed in on the URL. This is great
-    for testing. Example: `?settings={debug:true,showState:true,gravity:500}` etc..
+    for testing. Example: `?settings={debug:true,showState:true,gravity:500}` etc.
 
 *   Show the player's colors/avatar on the controller.
 
@@ -103,97 +103,46 @@ Description: Tips for making the best HappyFunTimes experiences
 
 *   Use media queries to adjust the controller by device and/or orientation
 
-    In CSS you can use media queries something like this
+    You may search [this overview](https://css-tricks.com/snippets/css/media-queries-for-standard-devices/)
+    for media queries for specifix devices. However it's not recommended to try
+    to add media queries for _every device_ as this will unnecessarily bloat your CSS files.
+    Just make sure that your UI is optimized for different screen sizes and the device orientation.
 
-        /* Smartphones (portrait and landscape) ----------- */
-        @media only screen
-        and (min-device-width : 320px)
-        and (max-device-width : 480px) {
-        /* Styles */
+        @media only screen 
+          and (min-device-width: 320px) {
+          /* Styles for devices larger than 320px */
+        }
+        
+        @media only screen 
+          and (min-device-width: 768px) {
+          /* Styles for devices larger than 768px */
         }
 
-        /* Smartphones (landscape) ----------- */
-        @media only screen
-        and (min-width : 321px) {
-        /* Styles */
+    If you want to change the style based on the orientation, you may add a media query for the
+    orientation:
+    
+        @media all and (orientation:portrait) {
+          /* Styles for Portrait screen */
         }
-
-        /* Smartphones (portrait) ----------- */
-        @media only screen
-        and (max-width : 320px) {
-        /* Styles */
-        }
-
-        /* iPads (portrait and landscape) ----------- */
-        @media only screen
-        and (min-device-width : 768px)
-        and (max-device-width : 1024px) {
-        /* Styles */
-        }
-
-        /* iPads (landscape) ----------- */
-        @media only screen
-        and (min-device-width : 768px)
-        and (max-device-width : 1024px)
-        and (orientation : landscape) {
-        /* Styles */
-        }
-
-        /* iPads (portrait) ----------- */
-        @media only screen
-        and (min-device-width : 768px)
-        and (max-device-width : 1024px)
-        and (orientation : portrait) {
-        /* Styles */
-        }
-
-        /* iPhone 4 ----------- */
-        @media
-        only screen and (-webkit-min-device-pixel-ratio : 1.5),
-        only screen and (min-device-pixel-ratio : 1.5) {
-        /* Styles */
-        }
-
-    The samples pretty much only use 4 settings
-
-        /* Smartphones (portrait and landscape) ----------- */
-        @media only screen
-        and (min-device-width : 320px)
-        and (max-device-width : 480px) {
-        /* Styles */
-        }
-
-        /* Smartphones (landscape) ----------- */
-        @media only screen
-        and (min-width : 321px) {
-        /* Styles */
-        }
-
-        /* Smartphones (portrait) ----------- */
-        @media only screen
-        and (max-width : 320px) {
-        /* Styles */
-        }
-
-        /* Everything not a phone ----------- */
-        @media only screen
-        and (min-device-width : 768px) {
-        /* Styles */
+        
+        @media all and (orientation:landscape) {
+          /* Styles for Landscape screen */
         }
 
 *   If the controllers doesn't work in portrait or landscape consider using using the CSS above to inform the user.
 
-    Example, if it doesn't work in portrait then in your HTML
+    Example
+    If you don't want the user to use his device in portrait mode, place this HTML at the top of your page
 
         <div id="turnthescreen"><div>Turn the Screen &#x21ba;</div></div>
 
-    Then in your CSS something like
+    Then add the following in your HTML
 
         #turnthescreen {
             display: none;
         }
 
-        @media only screen and (max-width : 360px) {
+        @media only screen and (orientation:portrait) {
         /* Styles */
             #turnthescreen {
                 position: absolute;
@@ -202,13 +151,14 @@ Description: Tips for making the best HappyFunTimes experiences
                 width: 100%;
                 height: 100%;
                 display: block;
-                z-index: 1000;
+                z-index: 9999;
                 background-color: red;
                 color: white;
             }
         }
 
-    Note: powpow and jumpjump already do this with standard HappyFunTimes support. Copy them.
+    Note: powpow and jumpjump already do this with standard HappyFunTimes support.
+    Feel free to copy the code.
 
 *   Use HandJS
 
@@ -216,7 +166,7 @@ Description: Tips for making the best HappyFunTimes experiences
     called Pointer events and they provided a polyfill for all browsers
     called HandJS that provides pointer events across browser.
 
-    NOTE: HandJS is a standard part of HappyFunTimes already and will be
+    Note: HandJS is a standard part of HappyFunTimes already and will be
     included if you use the [`Touch` module](http://docs.happyfuntimes.net/docs/hft/module-Touch.html).
     I recommend you use the touch module where possible as we can then fix bugs as they come up
     across games.
@@ -270,7 +220,6 @@ Description: Tips for making the best HappyFunTimes experiences
 
 *   Consider using Canvas to draw your controllers
 
-    CSS sucks balls or rather I can never figure out how to get it to do what I want.
     I literally spend 1-3 hours doing something I expect to take me 5 minutes like
     trying to get some unicode bullet centered in a button.
 
@@ -332,8 +281,7 @@ Description: Tips for making the best HappyFunTimes experiences
     Now it would call the function that was passed to `yetanotherlib.js:define()`. That funtion returns an
     object with single property `astrofy`. The system then calls the functions that were passed to
     `somelib.js:define` and `otherlib.js:define` passing in the object from `yetanotherlib`.
-    It finally calls the function that was passed to `game.js:requirejs`
-
+    It finally calls the function that was passed to `game.js:requirejs`.
 
 *   Disable caching in your browser
 
@@ -341,6 +289,5 @@ Description: Tips for making the best HappyFunTimes experiences
     pays attention to this is up to the browser.
 
     You can also often turn off caching in the browser. In Chrome for example, open the
-    devtools. Click the gear icon near the top right of the tools. Check
+    Developer Tools. Click the gear icon near the top right of the tools. Check
     "Disable Cache (when Devtools is open)"
-

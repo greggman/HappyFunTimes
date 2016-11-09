@@ -168,15 +168,6 @@ and [Safari Remote Debugging](https://developer.apple.com/library/iad/documentat
 are super useful. You plug you phone into the computer with a USB cable and you can
 debug webpages running on your phone from your computer.
 
-
-
 ## More info
 
 For more info see [The Basics of HappyFunTimes and Unity](basics.md)
-
-
-
-
-
-
-

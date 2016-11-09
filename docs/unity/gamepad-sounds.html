@@ -79,7 +79,8 @@ like. This document is specifically about playing sounds from the sample <a href
 <li><p>Adjust the values until you get a sound you like.</p>
 </li>
 <li><p>Copy the sound values (near top of the page just below the buttons) to a text file with the extension &quot;.jsfx.txt&quot;
-putting a name in front of each set of values. Save that file in Assets/WebPlayerTemplates/HappyFunTimes</p>
+putting a name in front of each set of values. Save that file some where below
+<code>Assets/WebPlayerTemplates/HappyFunTimes</code></p>
 </li>
 </ol>
 <p>For example here is the sample <code>sounds.jsfx.txt</code> file</p>
@@ -93,7 +94,7 @@ dropkick  [&quot;sine&quot;,0.0000,1.0000,0.0000,0.0880,0.0000,0.3680,20.0000,65
 bounce    [&quot;noise&quot;,0.0000,1.0000,0.0000,0.0220,0.0000,0.1480,20.0000,309.0000,2400.0000,-0.3300,0.0000,0.0000,0.0100,0.0003,0.0000,0.0000,0.0000,0.0000,0.0000,0.0000,0.0000,0.0000,1.0000,0.0000,0.0000,0.0000,0.0000]
 </code></pre></li>
 <li><p>Use sounds files</p>
-<p>Put sound files (<code>.mp3</code> or <code>.wav</code>) in <code>Assets/WebPlayerTemplates/HappyFunTimes/sounds</code>
+<p>Put sound files (<code>.mp3</code> or <code>.wav</code>) somewhere below <code>Assets/WebPlayerTemplates/HappyFunTimes</code>
 They have to be in there because they must be served to the phone.</p>
 <p><strong>Note</strong>: it&#39;s a good idea to keep them as small as possible because each time a player connects to
 the game the phone will have to download all the sounds.</p>
@@ -104,7 +105,7 @@ the game the phone will have to download all the sounds.</p>
 <ol>
 <li><p>on some global gameobject (like LevelManager in all the samples)
 add an <code>HFTGlobalSoundHelper</code> script component.</p>
-<p>This component scans for and loads the sounds from <code>Assets/WebPlayerTemplates/HappyFunTimes/sound</code>
+<p>This component scans for and loads the sounds from all folders below <code>Assets/WebPlayerTemplates/HappyFunTimes</code>
 looking for <code>.mp3</code> and <code>.wav</code> and <code>.jsfx.txt</code> files</p>
 </li>
 <li><p>on the prefab that gets spawned for your players, the same prefab you put
@@ -130,6 +131,14 @@ the user&#39;s phone with</p>
 </code></pre></li>
 </ol>
 <p>That&#39;s it!</p>
+<h2 id="names-must-be-unique-">Names must be Unique!</h2>
+<p>Note that sounds are referenced by name only so you can&#39;t have 2 sounds with the same filename
+even if they are in different folders. Simiarly they can&#39;t clash with the names in the sounds.jsfx.txt
+file. So for example if you look at the example sounds.jsfx.txt file above you&#39;ll see there&#39;s a sound
+called <code>coin</code>. That would conflict with a sound file called <code>coin.mp3</code>.</p>
+<p>If you don&#39;t like those limits see <code>HFTGlobalSoundHelper.cs</code>, <code>HFTSoundPlayer.cs</code>, and <code>HTFSounds.cs</code> as well
+as the corresponding support in <code>Assets/WebPlayerTemplates/HappyFunTimes/controllers/gamepad/scripts/controller.js</code>
+and edit or better copy them and add your own features.</p>
 
       <hr/>
       <div>
@@ -190,11 +199,12 @@ the user&#39;s phone with</p>
     <li><a href="accelerometer.html">Using the Accelerometer</a></li>
     <li><a href="character-selection.html">Spawning different characters per Player</a></li>
     <li><a href="multi-machine.html">Multiple Computers</a></li>
+    <li><a href="talking-between-games.html">Talking Between Multiple Computers</li>
   </ul>
 </li>
-<li>API Reference
+<li>Sample-UI API Reference
   <ul>
-    <li><a href="/docs/hft/">Controller (HTML/JavaScript) API</a></li>
+    <li><a href="/docs/hft/">Sample UI (HTML/JavaScript) API</a></li>
   </ul>
 </li>
 <li>Other

@@ -66,19 +66,19 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
   </div>
   <div class="row">
     <div class="col-sm-8 lesson-main">
-      <p><strong>Disclaimer:</strong> These samples are only meant to show how to use HappyFunTimes. Specifically for
-controllers the class <code>GameClient</code>. For games the classes <code>GameServer</code> and <code>NetPlayer</code>.
+      <p><strong>Disclaimer:</strong> These samples are only meant to show you how to use HappyFunTimes. Specifically
+for controllers the class <code>GameClient</code>. For games the classes <code>GameServer</code> and <code>NetPlayer</code>.
 Everything else is just game jam quality example code. If you&#39;re going to make a real game
 please consider using an existing game framework or writing your own. If these examples fit
 your needs then by all means feel free to use, clone, or modify them. My only point is they
 are not neccessily showing best practices for games in JavaScript.</p>
 <h2 id="some-terms">Some terms</h2>
-<p><strong>controller</strong> = The code running on the player&#39;s smartphone browser (or desktop/tablet browser)</p>
-<p><strong>game</strong> = The code running the game on the on PC connected to some large display everyone can see</p>
-<p><strong>relayserver</strong> = A node based server that passes messages to and from contollers to games</p>
+<p><strong>controller</strong> = The code running on the player&#39;s smartphone browser (or desktop/tablet browser).</p>
+<p><strong>game</strong> = The code running the game on the on PC connected to some large display everyone can see.</p>
+<p><strong>relayserver</strong> = A node based server that passes messages to and from contollers to games.</p>
 <p><strong>GameClient</strong> = An object running in the <strong>controller</strong> that lets the controller send and
-receive messages with the <strong>game</strong></p>
-<p><strong>GameServer</strong> = An object running in the <strong>game</strong> that lets the game receive new players</p>
+receive messages with the <strong>game</strong>.</p>
+<p><strong>GameServer</strong> = An object running in the <strong>game</strong> that lets the game receive new players.</p>
 <p><strong>NetPlayer</strong> = An object created by the <strong>GameServer</strong> anytime a new <strong>controller</strong> joins the game.
 It is passed to the game in a <code>playerconnected</code> event. It is used to send and receive messages from
 an individual <strong>controller</strong>.</p>
@@ -101,13 +101,14 @@ in the URL with something like</p>
 </code></pre><p>Some useful examples are</p>
 <pre><code>...?settings={debug:true,haveServer:false}
 </code></pre><p>On some games and some controllers <code>debug:true</code> will turn on onscreen status. On some games
-<code>haveServer:false</code> will make the game run in a local mode where keyboard keys will control one or more players.
+<code>haveServer:false</code> will make the game run in a local mode where keyboard keys will control one or
+more players.
 This can be very useful for quick iteration.</p>
 <h2 id="-simple-http-github-com-greggman-hft-simple-"><a href="http://github.com/greggman/hft-simple">Simple</a></h2>
-<p>Basically the same as SuperSimple except uses normalized cooridinates and uses a canvas element to draw the game
-rather than HTML5 elements.</p>
+<p>Basically the same as SuperSimple except uses normalized cooridinates and uses a canvas element to draw
+the game rather than HTML5 elements.</p>
 <h2 id="-powpow-http-github-com-greggman-hft-powpow-"><a href="http://github.com/greggman/hft-powpow">PowPow</a></h2>
-<p><img src="../images/scene-01-powpow.jpg" /></p>
+<p><img src="../images/scene-01-powpow.jpg" alt="PowPow"></p>
 <p>A space wars style game. The first 6 players battle it out. If there are more than 6 players they wait
 in the <em>launch</em> queue. They collectively control a ghost ship they can use to try to kill other players
 so they can get back into the game.</p>
@@ -116,24 +117,24 @@ so they can get back into the game.</p>
 <p>This demonstrates dual 8pad emulation on <strong>controller</strong>. In <code>haveServer:false</code> mode and if using
 a desktop PC as a <strong>controller</strong> ASWD are the move dpad and cursor keys the fire dpad.</p>
 <h2 id="-jumpjump-http-github-com-greggman-hft-jumpjump-"><a href="(http://github.com/greggman/hft-jumpjump">JumpJump</a>)</h2>
-<p><img src="../images/scene-00-jumpjump.jpg" /></p>
+<p><img src="../images/scene-00-jumpjump.jpg" alt="JumpJump"></p>
 <p>A simple platformer. Players try to get the one coin.</p>
 <h2 id="-boomboom-http-github-com-greggman-hft-boomboom-"><a href="(http://github.com/greggman/hft-boomboom">Boomboom</a></h2>
-<p><img src="../image/scene-04-boomboom.jpg" /></p>
+<p><img src="../image/scene-04-boomboom.jpg" alt="Boomboom">)</p>
 <p>A bomberman like game. One thing it shows over other games is round based control. Players
 joining the game have to wait for the current round to finish before they are added.</p>
 <h2 id="-deviceorientation-http-github-com-greggman-hft-deviceorientation-"><a href="http://github.com/greggman/hft-deviceorientation">Deviceorientation</a></h2>
 <p>Orient a 3d ship to shoot a ball.</p>
 <p>Demonstrates using device orientation. The game is nearly impossible to play but it least
-demonstrates using device orientation as well as three.js</p>
+demonstrates using device orientation as well as three.js.</p>
 <h2 id="-jamjam-http-github-com-greggman-hft-jamjam-"><a href="http://github.com/greggman/hft-jamjam">JamJam</a></h2>
-<p><img src="../images/scene-02-jamjam.jpg" /></p>
+<p><img src="../images/scene-02-jamjam.jpg" alt="JamJam"></p>
 <p>A collective drum sequencer. Each player has one drum they can set the sequence for.
 All the machines are synced using a <code>SyncedClock</code>. Each player must turn on the volume
 on their phone so everyone can hear their drum.</p>
 <p>Shows using the synced clock. Shows how to sync using the Web Audio API.</p>
 <h2 id="-unitycharacterexample-http-github-com-greggman-hft-unitycharacterexample-"><a href="http://github.com/greggman/hft-unitycharacterexample">UnityCharacterExample</a></h2>
-<p><img src="../images/scene-03-unity.jpg" /></p>
+<p><img src="../images/scene-03-unity.jpg" alt="UnityCharacterExample"></p>
 <p>For each <strong>controller</strong> that connects to the <strong>game</strong> the game spawns a 3d unity character.
 The character is controlled by a <em>3rd person character contoller*</em> which is a modified
 version of the standard 3rd person character contoller included with unity. The only changes
@@ -144,8 +145,8 @@ How to pass a <code>NetPlayer</code> object into the spawned prefab. Also how to
 unity parts from UnityScript (or as Unity wrongly used to call it, JavaScript).</p>
 <p>First, See <strong>Installation</strong> in the <a href="unitydocs.html">Unity Docs</a></p>
 <p>Now run the game. If you see an error in the console maybe you didn&#39;t start the
-relaysever?. (See above)</p>
-<p>Now connect a browser <code>http://localhost:18679</code></p>
+relaysever. (See above)</p>
+<p>Now connect a browser <code>http://localhost:18679</code>.</p>
 <h2 id="-unitysimpleexample-http-github-com-greggman-hft-unitysimpleexample-"><a href="http://github.com/greggman/hft-unitysimpleexample">UnitySimpleExample</a></h2>
 <p>This is the same as the <em>Simple</em> example above and users the same <strong>controller</strong>. Follow the
 instructions above for the <strong>UnityCharacterExample</strong> but open the scene

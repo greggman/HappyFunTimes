@@ -49,30 +49,30 @@ A standard package.json looks like this
       }
     }
 
-####   `name`
+#### `name`
 
-A name for your game. Used on the main screen of HappyFunTimes and SuperHappyFunTimes
+A name for your game. Used on the main screen of HappyFunTimes and SuperHappyFunTimes.
 
-####   `description`
+#### `description`
 
 A description. Used on superhappyfuntimes. No HTML allowed currently.
 
-####   `version`
+#### `version`
 
 Used on superhappyfuntimes so users can know if there is a newer version for them to download.
 
-####   `happyFunTimes.gameId`
+#### `happyFunTimes.gameId`
 
 This is the id for your game. Every game on superhappyfuntimes must have a unique id.
-only A-Z, 0-9, _, - are allowed and no more than 60 charactera.
+only A-Z, 0-9, _, - are allowed and no more than 60 characters.
 
-####   `happyFunTimes.apiVersion`
+#### `happyFunTimes.apiVersion`
 
 This is the happyFunTimes API version needed by this game. If this number is higher
 than the version of happyFunTimes the user has installed they will be asked to upgrade.
 It is also used by happyFunTimes to provide the correct API for the game.
 
-####   `happyFunTimes.gameType`
+#### `happyFunTimes.gameType`
 
 This is used by happyFunTimes to figure out how to deal with the game. For example
 how to launch the game and how to publish it.
@@ -83,18 +83,18 @@ Valid values are
 *   `Unity3D`
 *   `Unity3DLibrary`
 
-####   `happyFunTimes.minPlayers`
+#### `happyFunTimes.minPlayers`
 
 How many players are required to play this game. For example, jumpjump you can play with
-one player. It's probably not any fun but you can player. boomboom on the otherhand
+one player. It's probably not any fun but you can play it. boomboom on the otherhand
 requires 2 players. It will not start until there are 2 players.
 
 This is only used on the superhappyfuntimes to set expectations. If you have a game that requires
 10 players please consider marking it here.
 
-####   `happyFunTimes.category`
+#### `happyFunTimes.category`
 
-This is also only used on superhappyfuntimes to set expections and hopefully to, um, categories
+This is also only used on superhappyfuntimes to set expections and hopefully to categories
 things. Current values
 
 *   `game` A game
@@ -131,14 +131,14 @@ added for you and so is the script tag that includes `scripts/game.js` for your 
 either `game.html` or `controller.html`.  The HappyFunTimes libraries will be inserted before
 those tags. The `game.js` or `controller.js` will be inserted after.
 
-See example: http://github.com/hft-simple-script/
+See example: [github.com/hft-simple-script](http://github.com/hft-simple-script/)
 
 ####   `happyFunTimes.ignore`
 
 Used to prevent certainly files from being part of the published game.
 
 This is an array of strings in the format of `.gitignore` ([see git docs](http://git-scm.com/docs/gitignore))
-not including the double asterix syntax. So for example
+not including the double asterix syntax. For example
 
     {
       ...
@@ -152,13 +152,13 @@ not including the double asterix syntax. So for example
       }
     }
 
-would exclude the `<projectdir>/src` folder as well as any photoshop files.
+would exclude the `<projectdir>/src` folder as well as any Photoshop files.
 
 ####   `happyFunTimes.templateFileOptions`
 
-requires apiVersion `1.15.0` or higher.
+Requires apiVersion `1.15.0` or higher.
 
-by default `game.html` automatically gets inserted into `templates/game.gameview.html`.
+By default `game.html` automatically gets inserted into `templates/game.gameview.html`.
 'controller.html` automatically gets inserted into `templates/controller.index.html`.
 
 If your project needs other files to be treated similarly you can use this option. A good example
@@ -186,5 +186,4 @@ this was added to the package.json
 
 That basically says for those 3 files use the `game` template. They will automatically use
 their respective scripts and css so for example `realgame.html` uses `scripts/realgame.js`
-and `css/realgame.css`
-
+and `css/realgame.css`.

@@ -81,14 +81,14 @@ void Start () {
     m_hftInput = GetComponent&lt;HFTInput&gt;();
 }
 </code></pre><p>And then anywhere you&#39;d use <code>Input.something</code> you instead use <code>m_hftInput.something</code>.</p>
-<p><strong>Note</strong>: those functions return <code>HFTInput.Touch</code> objects, not Unity <code>Touch</code> objects.</p>
+<p><strong>Note</strong>: <code>HFTInput</code>&#39;s touch functions return <code>HFTInput.Touch</code> objects, not Unity <code>Touch</code> objects.</p>
 <p><strong>Note</strong>: The <code>Touch.rawPosition</code> is currently in screen pixels of the Unity game
 not the controller.</p>
-<p>The Unity <code>Input</code> API says those value are in pixels but they are
+<p>The Unity <code>Input</code> API says those values are in pixels but they are
 assuming the game is running on the phone. In the case of HappyFunTimes
-though each phone is different so having it be in phone screen pixels
+each phone is different so having it be in phone screen pixels
 would make no sense unless you also knew the resolution of each phone.
-I could provide that but that would make it more complicated for you.</p>
+The controller could provide that info but that would make it more complicated for you.</p>
 <p>Personally I&#39;d prefer normalized values (0.0 to 1.0). If you want those
 then take  <code>Touch.rawPosition</code> and divide <code>x</code> by <code>Screen.width</code> and <code>y</code> by <code>Screen.height</code>
 as in</p>
@@ -154,25 +154,26 @@ void Start () {
     HFTGamepad.BUTTON_TOUCH7
     HFTGamepad.BUTTON_TOUCH8
     HFTGamepad.BUTTON_TOUCH9
-</code></pre><p>You can see this in action by opening the <code>ControllerTestScene</code> in <code>HappyFunTimes/Scenes</code> included with the plugin.
-Run it. For each phone you connect you should see all of the buttons and axes.</p>
+</code></pre><p>You can see this in action by opening the <code>ControllerTestScene</code> in <code>Assets/HappyFunTimes/Samples/Scenes</code>
+included with the plugin. Run it. For each phone you connect you should see all of the buttons and axes.</p>
 <p><img src="images/hft-unity-controllertestscene.png" class="halfsize lesson" /></p>
 <p>To see the touch inputs select one of the connected phone&#39;s in the scene</p>
 <p><img src="images/hft-testplayer.png" class="halfsize lesson" /></p>
 <p>And set the <code>controller type</code> to <code>c_touch</code></p>
 <p><img src="images/hft-ctouch.png" class="halfsize lesson" /></p>
-<h2 id="caution">Caution</h2>
+<h2 id="caution-optimize-your-controller-">Caution! Optimize your controller!</h2>
 <p>Multi-touch in the sample Gamepad controller is really just there for you to play with. For a 1-4 player
 game it might be fine but if you&#39;d 40 players each sending 5 to 10 fingers of input every frame you&#39;re
 quickly going to run out of bandwidth</p>
 <p>The truth is if you really want to do something fancy with touch controls you should create a custom controller.
-By that I mean you should edit <code>WebPlayerTemplates/HappyFunTimes/scripts/controller.js</code> and
-<code>WebPlayerTemplates/HappyFunTimes/controller.html</code> and process touch events in JavaScript on the phone. Figure
-out as much on the phone as you can and then only send the result to the game. For example lets say you wanted
+By that I mean you should edit or better copy <code>Assets/WebPlayerTemplates/HappyFunTimes/controllers/gamepad/scripts/controller.js</code>
+and <code>Assets/WebPlayerTemplates/HappyFunTimes/controllers/gamepad/controller.html</code> and process touch events in JavaScript on the phone.
+Figure out as much on the phone as you can and then only send the result to the game. For example lets say you wanted
 the phone to look like a slingshot. You should actually draw the band of the sling shot on the phone
 in JavaScript. Do touch processing on the phone to stretch the band to where the player is putting their
-finger and when they finally lift their finger just send the tension and direction to the game. That would
-keep communication between the game and the phone to a minimum and help ensure a good experience.</p>
+finger and when they finally lift their finger just send the tension and direction to the game and maybe
+the orientation. That would keep communication between the game and the phone to a minimum and help ensure
+a good experience.</p>
 
       <hr/>
       <div>
@@ -233,11 +234,12 @@ keep communication between the game and the phone to a minimum and help ensure a
     <li><a href="accelerometer.html">Using the Accelerometer</a></li>
     <li><a href="character-selection.html">Spawning different characters per Player</a></li>
     <li><a href="multi-machine.html">Multiple Computers</a></li>
+    <li><a href="talking-between-games.html">Talking Between Multiple Computers</li>
   </ul>
 </li>
-<li>API Reference
+<li>Sample-UI API Reference
   <ul>
-    <li><a href="/docs/hft/">Controller (HTML/JavaScript) API</a></li>
+    <li><a href="/docs/hft/">Sample UI (HTML/JavaScript) API</a></li>
   </ul>
 </li>
 <li>Other

@@ -163,5 +163,3 @@ The character-select controller
     Assets/HappyFunTimes/MoreSamples/simple/Scripts/ExampleCharacterSelect.cs
     Assets/HappyFunTimes/MoreSamples/simple/Scripts/ExampleCharacterSelectPlayer.cs
     Assets/WebPlayerTemplates/HappyFunTimes/controllers/character-select/scripts/controller.js
-
-

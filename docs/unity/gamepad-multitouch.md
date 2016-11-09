@@ -137,5 +137,3 @@ in JavaScript. Do touch processing on the phone to stretch the band to where the
 finger and when they finally lift their finger just send the tension and direction to the game and maybe
 the orientation. That would keep communication between the game and the phone to a minimum and help ensure
 a good experience.
-
-
