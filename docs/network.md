@@ -1,6 +1,7 @@
 Title: Museums & Installations
 Description: Setting up for a Museum or Installation - Instant Connect Mode
 
+
 Asking players to connect to a local network and then type in URL like
 `happyfuntimes.net` works just fine but HappyFunTimes supports an even
 simpiler style for things like museums, events, and art installations.
@@ -12,8 +13,7 @@ game, nothing to type. On Android they can type any url, for example,
 
 No internet connection is needed in this mode.
 
-Networking Basics
------------------
+## Networking Basics
 
 A quick note on IP addresses. First, in your router's manual it will most likely
 tell you to set it up, open a browser and go to `http://192.168.0.1` or `http://192.168.1.1`
@@ -48,15 +48,14 @@ DNS is the way computers translate a name like "google.com" to a number like `17
 for converting names to numbers (DNS) happyfuntimes can redirect the phone
 to your installation.
 
-Looking Up Your MAC Address
----------------------------
+## Looking Up Your MAC Address
 
-MAC address *does not stand for machintosh*. It stands for Media Access Control Address.
+MAC address *does not stand for Macintosh*. It stands for Media Access Control Address.
 
 To look it up on Windows open a command prompt and type `getmac`
 To look it up on OSX open the network settings in the system preferences
 
-NOTE!!!: Your computer has a different MAC address for WiFi vs Wired networking. **The MAC address
+**NOTE**: Your computer has a different MAC address for WiFi vs Wired networking. **The MAC address
 you need to look up is the MAC address for the way you'll connect the happyfuntimes machine
 to the router!**
 
@@ -68,8 +67,7 @@ computer's WiFi MAC address.
 
 **Be sure to look up the correct MAC address**
 
-Setup for most routers
-----------------------
+## Setup for most routers
 
 First, get a router. You probably have an old one sitting around or if you want to be portable I
 recommend the [TP-Link TL-WR702N](http://google.com/#q=TP-Link+TL-WR702N) though
@@ -118,8 +116,7 @@ password just so people not playing don't get accidentally connected.
 With that done, reboot the router, connect your machine.
 [Now follow the instructions below](#starting-happyfuntimes-in-installation-mode)
 
-Using your router for normal internet access
---------------------------------------------
+## Using your router for normal internet access
 
 Once you've made these changes on your router the only things you should need to
 to use it as a normal router again are
@@ -134,8 +131,7 @@ to use it as a normal router again are
 
     If you made your WiFi open/unsecured you probably want to turn that back on
 
-Starting HappyFunTimes in installation mode
--------------------------------------------
+## Starting HappyFunTimes in installation mode
 
 Open a node command prompt or terminal and on OSX type
 
@@ -164,8 +160,7 @@ or
 
 [See the start command for details](commands.md#hft-start).
 
-Setting Up an Airport Extreme
------------------------------
+## Setting Up an Airport Extreme
 
 Unlike every other router in existence the Airport Extreme requires custom
 software to configure it. If you're on Windows or Linux you'll need to
@@ -227,8 +222,7 @@ Finally click "update" at the bottom to update your Airport Extreme.
 
 [Now follow the instructions above](#starting-happyfuntimes-in-installation-mode)
 
-Maximum Number of Players
-=========================
+## Maximum Number of Players
 
 Apparently the TP-Link TL-WR702N only supports around 15 wireless devices at a time which
 means the main computer running the game and 14 players.
@@ -255,5 +249,3 @@ Or should we go to business routers? Unfortunately at this time I have no idea.
 
 If you try this setup with a different router please post your results. Add to this doc or file an issue
 or something so that others can learn how to configure their routers.
-
-

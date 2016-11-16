@@ -40,9 +40,7 @@ Description: How to contribute to HappyFunTimes
 
 *   JavaScript style
 
-    In general.
-
-    *   variable declaration
+    *   Variable declaration
 
         One per line
 
@@ -51,8 +49,7 @@ Description: How to contribute to HappyFunTimes
 
             var a, b;  // bad
 
-
-    *   braces
+    *   Braces
 
         k&r style
 
@@ -66,14 +63,14 @@ Description: How to contribute to HappyFunTimes
                  // bad
             }
 
-    *   use `===`
+    *   Use `===`
 
             if (a === b) {  // good
             if (a !== b) {  // good
             if (a == b)  {  // bad
             if (a != b)  {  // bad
 
-    *   use `v = option || default` when appropriate
+    *   Use `v = option || default` when appropriate
 
             function(width) {
                width = width || 300; // good
@@ -83,7 +80,7 @@ Description: How to contribute to HappyFunTimes
 
         Of course use good judgement. Sometimes the second form is more appropriate
 
-    *   use positive options
+    *   Use positive options
 
             options.autoResize    // good
             options.dontResize    // bad
@@ -93,15 +90,14 @@ Description: How to contribute to HappyFunTimes
 
             var autoResize = options.autoResize === undefined ? true : options.autoResize;
 
-    *   naming
+    *   Naming
 
             someVariable;
             SomeClass;
             someFunction;
 
-    *   loops
-
-        prefer forEach
+    *   Loops
+        Prefer forEach
 
             someArray.forEach(... // good
             Object(someObject).keys().forEach(... // good
@@ -115,17 +111,17 @@ Description: How to contribute to HappyFunTimes
         the form most work will be spent on optimizing since it's the language's preferred
         way of iterating.
 
-    *   trailing commas
+    *   Trailing commas
 
             var someObj = {
-               prop1: value1,
-               prop2: value2,
-               prop3: value3,   // good
+                prop1: value1,
+                prop2: value2,
+                prop3: value3,   // good
             };
 
-           var someObj = {
-              prop1: value1,
-              prop2: value2,
-              prop3: value3     // bad
-           };
+            var someObj = {
+                prop1: value1,
+                prop2: value2,
+                prop3: value3     // bad
+            };
 

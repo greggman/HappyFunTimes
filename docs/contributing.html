@@ -32,41 +32,46 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 -->
 <html>
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0, user-scalable=yes">
-<meta property="og:title" content="Contributing" />
-<meta property="og:type" content="website" />
-<meta property="og:image" content="http://docs.happyfuntimes.net/docs/images/happyfuntimes.jpg" />
-<meta property="og:description" content="How to contribute to HappyFunTimes" />
-<meta property="og:url" content="http://docs.happyfuntimes.net/docs/contributing.html" />
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0, user-scalable=yes">
+    <meta property="og:title" content="Contributing"/>
+    <meta property="og:type" content="website"/>
+    <meta property="og:image" content="http://docs.happyfuntimes.net/docs/images/happyfuntimes.jpg"/>
+    <meta property="og:description" content="How to contribute to HappyFunTimes"/>
+    <meta property="og:url" content="http://docs.happyfuntimes.net/docs/contributing.html"/>
 
-<meta name="twitter:card" content="summary_large_image" />
-<meta name="twitter:site" content="@greggman" />
-<meta name="twitter:creator" content="@greggman" />
-<meta name="twitter:domain" content="docs.happyfuntimes.net" />
-<meta name="twitter:title" content="Contributing" />
-<meta name="twitter:url" content="http://docs.happyfuntimes.net/docs/contributing.html" />
-<meta name="twitter:description" content="How to contribute to HappyFunTimes" />
-<meta name="twitter:image:src" content="http://docs.happyfuntimes.net/docs/images/happyfuntimes.jpg" />
+    <meta name="twitter:card" content="summary_large_image"/>
+    <meta name="twitter:site" content="@greggman"/>
+    <meta name="twitter:creator" content="@greggman"/>
+    <meta name="twitter:domain" content="docs.happyfuntimes.net"/>
+    <meta name="twitter:title" content="Contributing"/>
+    <meta name="twitter:url" content="http://docs.happyfuntimes.net/docs/contributing.html"/>
+    <meta name="twitter:description" content="How to contribute to HappyFunTimes"/>
+    <meta name="twitter:image:src" content="http://docs.happyfuntimes.net/docs/images/happyfuntimes.jpg"/>
 
-<title>Contributing</title>
-<link href="/public/hft-icon.png" rel="shortcut icon" type="image/png">
-<link rel="stylesheet" href="/docs/css/base.css" type="text/css" />
-<link rel="stylesheet" href="/docs/css/lesson.css" type="text/css" />
+    <title>Contributing</title>
+
+    <link href="/public/hft-icon.png" rel="shortcut icon" type="image/png">
+    <link rel="stylesheet" href="/docs/assets/css/styles.css" type="text/css"/>
 </head>
 <body>
+
 <div class="header">
   <h1><a href="/docs">HappyFunTimes Docs</a></h1>
 </div>
 
 
+
 <div class="container">
-  <div class="lesson-title">
-    <h1>Contributing</h1>
-  </div>
-  <div class="row">
-    <div class="col-sm-8 lesson-main">
-      <ul>
+
+    <div class="docs-title">
+        <h1>Contributing</h1>
+    </div>
+
+    <div class="row">
+        <div class="col-xs-12 col-lg-8 docs-content">
+
+            <ul>
 <li><p>Versioning the API</p>
 <p>If you add new functionality to the public API (the api games and controllers call) increment
 the API in <code>hft.hanson</code>.</p>
@@ -98,174 +103,185 @@ scripts/&lt;version&gt;
 </code></pre><p>Will run eslint.</p>
 </li>
 <li><p>JavaScript style</p>
-<p>In general.</p>
 <ul>
-<li><p>variable declaration</p>
+<li><p>Variable declaration</p>
 <p>One per line</p>
 <pre><code>var a;  // good
 var b;
 
 var a, b;  // bad
 </code></pre></li>
+<li><p>Braces</p>
+<p>k&amp;r style</p>
+<pre><code>if (cond) {   // good
+   ...code..
+}
+
+if (cond) { ..code.. } // bad
+if (cond)
+{
+     // bad
+}
+</code></pre></li>
+<li><p>Use <code>===</code></p>
+<pre><code>if (a === b) {  // good
+if (a !== b) {  // good
+if (a == b)  {  // bad
+if (a != b)  {  // bad
+</code></pre></li>
+<li><p>Use <code>v = option || default</code> when appropriate</p>
+<pre><code>function(width) {
+   width = width || 300; // good
+
+function(width) {
+   width = (width !== undefined) ? width : 300;  // bad
+</code></pre><p>Of course use good judgement. Sometimes the second form is more appropriate</p>
+</li>
+<li><p>Use positive options</p>
+<pre><code>options.autoResize    // good
+options.dontResize    // bad
+</code></pre><p>If the default is for the options to be <code>true</code> then make check that check for
+undefined</p>
+<pre><code>var autoResize = options.autoResize === undefined ? true : options.autoResize;
+</code></pre></li>
+<li><p>Naming</p>
+<pre><code>someVariable;
+SomeClass;
+someFunction;
+</code></pre></li>
+<li><p>Loops
+Prefer forEach</p>
+<pre><code>someArray.forEach(... // good
+Object(someObject).keys().forEach(... // good
+
+for (var ndx = 0; ndx &lt; someArray.length; ++ndx)  // ok if neded
+
+for (var key in someObject)  // bad
+</code></pre><p>Yes I know that other methods might be faster today. First off we&#39;re not processing
+a million things so the perf doens&#39;t matter. Second JS gets faster and this is
+the form most work will be spent on optimizing since it&#39;s the language&#39;s preferred
+way of iterating.</p>
+</li>
+<li><p>Trailing commas</p>
+<pre><code>var someObj = {
+    prop1: value1,
+    prop2: value2,
+    prop3: value3,   // good
+};
+
+var someObj = {
+    prop1: value1,
+    prop2: value2,
+    prop3: value3     // bad
+};
+</code></pre></li>
 </ul>
 </li>
 </ul>
-<pre><code>*   braces
 
-    k&amp;r style
 
-        if (cond) {   // good
-           ...code..
-        }
+            <div class="docs-footer">
 
-        if (cond) { ..code.. } // bad
-        if (cond)
-        {
-             // bad
-        }
+                <div>Found a bug? <a href="http://github.com/greggman/happyfuntimes/issues">Create an issue on Github</a></div>
 
-*   use `===`
+                <div class="docs-comments">
+                    <div id="disqus_thread"></div>
+                    <script type="text/javascript">
+                        var disqus_shortname = 'happyfuntimes';
+                        var disqus_identifier = 'Contributing';
+                        var disqus_title = 'Contributing';
 
-        if (a === b) {  // good
-        if (a !== b) {  // good
-        if (a == b)  {  // bad
-        if (a != b)  {  // bad
+                        /* * * DON'T EDIT BELOW THIS LINE * * */
+                        (function () {
+                            if (window.location.hostname.indexOf("happyfuntimes") < 0) {
+                                return;
+                            }
+                            var dsq = document.createElement('script');
+                            dsq.type = 'text/javascript';
+                            dsq.async = true;
+                            dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+                            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+                        })();
+                    </script>
+                    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments
+                        powered by Disqus.</a></noscript>
+                    <a href="http://disqus.com" class="dsq-brlink">
+                        comments powered by <span class="logo-disqus">Disqus</span>
+                    </a>
+                </div>
 
-*   use `v = option || default` when appropriate
+            </div>
+        </div>
 
-        function(width) {
-           width = width || 300; // good
-
-        function(width) {
-           width = (width !== undefined) ? width : 300;  // bad
-
-    Of course use good judgement. Sometimes the second form is more appropriate
-
-*   use positive options
-
-        options.autoResize    // good
-        options.dontResize    // bad
-
-    If the default is for the options to be `true` then make check that check for
-    undefined
-
-        var autoResize = options.autoResize === undefined ? true : options.autoResize;
-
-*   naming
-
-        someVariable;
-        SomeClass;
-        someFunction;
-
-*   loops
-
-    prefer forEach
-
-        someArray.forEach(... // good
-        Object(someObject).keys().forEach(... // good
-
-        for (var ndx = 0; ndx &lt; someArray.length; ++ndx)  // ok if neded
-
-        for (var key in someObject)  // bad
-
-    Yes I know that other methods might be faster today. First off we&#39;re not processing
-    a million things so the perf doens&#39;t matter. Second JS gets faster and this is
-    the form most work will be spent on optimizing since it&#39;s the language&#39;s preferred
-    way of iterating.
-
-*   trailing commas
-
-        var someObj = {
-           prop1: value1,
-           prop2: value2,
-           prop3: value3,   // good
-        };
-
-       var someObj = {
-          prop1: value1,
-          prop2: value2,
-          prop3: value3     // bad
-       };
-</code></pre>
-      <hr/>
-      <div>
-        <div>Questions? <a href="http://stackoverflow.com/questions/tagged/happyfuntimes">Ask on stackoverflow</a>.</div>
-        <div>Issue/Bug? <a href="http://github.com/greggman/happyfuntimes/issues">Create an issue on github</a>.</div>
-
-        <div id="disqus_thread"></div>
-        <script type="text/javascript">
-            /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
-            var disqus_shortname = 'happyfuntimes'; // required: replace example with your forum shortname
-            var disqus_identifier = 'Contributing';
-            var disqus_title = 'Contributing';
-
-            /* * * DON'T EDIT BELOW THIS LINE * * */
-            (function() {
-                if (window.location.hostname.indexOf("happyfuntimes") < 0) {
-                    return;
-                }
-                var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
-                dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
-                (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
-            })();
-        </script>
-        <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
-        <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
-      </div>
-    </div>
-    <div class="col-sm-3 col-sm-offset-1 lesson-sidebar">
-        <ul>
-  <li>Setup
-    <ul>
-      <li><a href="osx.html">OSX</a></li>
-      <li><a href="windows.html">Windows</a></li>
-      <li><a href="linux.html">Linux</a></li>
-    </ul>
-  </li>
-  <li>Making Games
-    <ul>
-      <li><a href="makinggames.html">Making games in HTML5</a></li>
-      <li><a href="unity">Making games in Unity3D</a></li>
-      <li><a href="ideas.html">Ideas</a></li>
-      <li><a href="tips.html">Tips</a></li>
-      <li><a href="examples.html">Examples</a></li>
-      <li><a href="api-versions.html">API Versions</a></li>
-      <li><a href="commands.html">hft command</a></li>
-    </ul>
-  </li>
-  <li>Special Stuff
-    <ul>
-      <li><a href="network.html">Museums & Installations</a></li>
-      <li><a href="migration.html">Migrating from older APIs</a></li>
-    </ul>
-  </li>
-  <li>Contributing
-    <ul>
-      <li><a href="contributing.html">Contributing</a></li>
-      <li><a href="future.html">Future Features</a></li>
-    </ul>
-  </li>
+        <div class="col-xs-12 col-lg-4 docs-sidebar">
+            <ul class="nav">
+    <li><a href="introduction.html">Introduction</a></li>
+    <li>
+        <b>Setup</b>
+        <ul class="nav">
+            <li><a href="setup/macos.html">OSX</a></li>
+            <li><a href="setup/windows.html">Windows</a></li>
+            <li><a href="setup/linux.html">Linux</a></li>
+        </ul>
+    </li>
+    <li>
+        <b>Making Games</b>
+        <ul class="nav">
+            <li><a href="making-games/">Making games in HTML5</a></li>
+            <li><a href="unity/">Making games in Unity3D</a></li>
+            <li><a href="tips.html">Tips</a></li>
+            <li><a href="commands.html">hft command</a></li>
+        </ul>
+    </li>
+    <li>
+        <b>Ideas and Examples</b>
+        <ul class="nav">
+            <li><a href="ideas.html">Ideas</a></li>
+            <li><a href="examples.html">Examples</a></li>
+        </ul>
+    </li>
+    <li>
+        <b>API</b>
+        <ul class="nav">
+            <li><a href="api-versions.html">API Versions</a></li>
+            <li><a href="migration.html">Migrating from older APIs</a></li>
+        </ul>
+    </li>
+    <li>
+        <b>Other Content</b>
+        <ul class="nav">
+            <li><a href="network.html">Museums & Installations</a></li>
+        </ul>
+    </li>
+    <li>
+        <b>Contributing</b>
+        <ul class="nav">
+            <li><a href="contributing.html">Contributing</a></li>
+            <li><a href="future.html">Future Features</a></li>
+        </ul>
+    </li>
 </ul>
 
+        </div>
+
     </div>
-  </div>
 </div>
-</body>
-<script src="/docs/3rdparty/jquery-1.11.2.min.js"></script>
-<script src="/docs/3rdparty/prettify.js"></script>
-<script src="/docs/js/lesson.js"></script>
+
+<script src="/docs/assets/3rdparty/jquery.js"></script>
+<script src="/docs/assets/3rdparty/highlight.js"></script>
+<script src="/docs/assets/js/lesson.js"></script>
+
 <script>
   (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
   (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
   m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
   })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-
   ga('create', 'UA-51764205-4', 'auto');
   ga('send', 'pageview');
-
 </script>
 
 
+</body>
 </html>
 
 

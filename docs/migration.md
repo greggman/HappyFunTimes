@@ -1,53 +1,52 @@
 Title: Migrating Older Games
 Description: What you need to do up upgrade your game to a newer API
 
-*   [Migrating from 0.x.x to 1.x.x](#migrate-from-0xx-to-1xx)
-
 ## Migrating from 0.x.x to 1.x.x
 
-I'm really sorry but to separate the games and turn happyfuntimes into a kind
+I'm really sorry but to separate the games and turn HappyFunTimes into a kind
 of virtual console required some non-backward compatible changes. I'll do my
 best not to break things in the future.
 
 If you made a game for HappyFunTimes before they were separated from HappyFunTimes
 here are some of the steps you need to take.
 
-*   First, [install happyfuntimes](http://docs.happyfuntimes.net/install.html) and run it at least once.
+*   First, [install HappyFunTimes](http://docs.happyfuntimes.net/install.html) and
+    run it at least once.
 
 *   Install the hft command. Type `npm install -g hft-cli`
 
-*   copy or move your game to a new folder outside of happyfuntimes
+*   Copy or move your game to a new folder outside of happyfuntimes
 
-    pre version 1 all games existed side happyfuntimes in `public/examples/gameid` or
+    Pre version 1 all games existed side happyfuntimes in `public/examples/gameid` or
     `public/games/gameid`. Now they should be completely outside of happyfuntimes
     in their own folder
 
-*   add a `.gitignore` file. Copy one from one of the examples. Ideally of the same type
+*   Add a `.gitignore` file. Copy one from one of the examples. Ideally of the same type
     so for example if it's a unity game [use this one](https://github.com/greggman/hft-unitycharacterexample/blob/master/.gitignore).
     If it's an html5 game [try this one](https://github.com/greggman/hft-boomboom/blob/master/.gitignore).
 
-*   inside that the folder type `git init`
+*   Inside that the folder type `git init`
 
-*   edit `package.json'
+*   Edit `package.json'
 
     [It should only have these fields](makinggames.md#packagejson).
     Delete any others and edit appropriately
 
-*   if you were using audio in HTML5 or TDL from one of the previous samples [copy a bower.json file](https://github.com/greggman/hft-jumpjump/blob/master/bower.json)
+*   If you were using audio in HTML5 or TDL from one of the previous samples [copy a bower.json file](https://github.com/greggman/hft-jumpjump/blob/master/bower.json)
 
-    *   edit bower.json
+    * Edit bower.json
 
-           "name"
-           "deps"
-           private: true // this is not itself a bower package
+            "name"
+            "deps"
+            private: true // this is not itself a bower package
 
-    *   run `bower install`
+    * Run `bower install`
 
 *   Make an icon.png/jpg/gif (64x64 or 128x128)
 
 *   Make a screenshot.jpg/png/gif (640x480)
 
-*   delete `gameview.html` and `index.html`
+*   Delete `gameview.html` and `index.html`
 
     Note: in the past there was a script, `build.py` that copied the contents of `game.html` into
     `gameview.html` and `controller.html` into `index.html`. These operation now happen at runtime.
@@ -56,11 +55,11 @@ here are some of the steps you need to take.
     by hand so before you delete them make sure you copy the relavent changes into `game.html`
     and `controller.html`
 
-*   if you had a script before like `mygame.js` or `mycontroller.js` they must be specifically
+*   If you had a script before like `mygame.js` or `mycontroller.js` they must be specifically
     called `scripts/game.js` and `scripts/controller.js`. They will get included automatically
     so don't add any `<script>` tags for them in the files above.
 
-*   in all your .js files there was a `requirejs` or `define` function call that listed
+*   In all your .js files there was a `requirejs` or `define` function call that listed
     other files to include.
 
         define(['../../../somefile`])
@@ -76,7 +75,7 @@ here are some of the steps you need to take.
 
     Any reference to `imageprocess` is now `imageutils`
 
-    tersely
+    Tersely
 
         '../../../3rdparty/tdl/???' -> '../bower_components/tdl/tdl/???'
         '../../../scripts'          -> 'hft'
@@ -85,21 +84,21 @@ here are some of the steps you need to take.
 
 *   Edit your `game.js` and where you make `GameServer` don't pass in anything anymore.
 
-    old
+    Old
 
         g_server = new GameServer({gameId: "someidformygame"});
 
-    new
+    New
 
         g_server = new GameServer();
 
 *   Edit your `controller.js` and where you make `GameClient` don't pass in anything
 
-    old
+    Old
 
         g_client = new GameClient({gameId: "someidformygame"});
 
-    new
+    New
 
         g_client = new GameClient();
 
@@ -127,7 +126,7 @@ here are some of the steps you need to take.
 
         UnityScript
 
-        old
+        Old
 
             function Start () {
                 var options : HappyFunTimes.GameServer.Options = new HappyFunTimes.GameServer.Options();
@@ -137,7 +136,7 @@ here are some of the steps you need to take.
                 ...
             }
 
-        new
+        New
 
             function Start () {
                 var options : HappyFunTimes.GameServer.Options = new HappyFunTimes.GameServer.Options();
@@ -147,7 +146,7 @@ here are some of the steps you need to take.
 
         C#
 
-        old
+        Old
 
             void Start () {
                 GameServer.Options options = new GameServer.Options();
@@ -158,7 +157,7 @@ here are some of the steps you need to take.
                 ...
             }
 
-        new
+        New
 
             void Start () {
                 GameServer.Options options = new GameServer.Options();
@@ -171,11 +170,11 @@ here are some of the steps you need to take.
         in the new HappyFunTimes plugin dlls you just installed. More [docs on how to use it
         here](https://github.com/greggman/HappyFunTimes/blob/master/docs/unitydocs.md#spawning-player-gameobjects).
 
-*   type `hft check`
+*   Type `hft check`
 
-    it should say things look ok
+    It should say things look ok
 
-*   type `hft add`
+*   Type `hft add`
 
     This should add your game to your local happyfuntimes installation
 
@@ -183,9 +182,9 @@ here are some of the steps you need to take.
 
     Run the new happyfuntimes and see if your game works
 
-*   make a repo on github
+*   Make a repo on github
 
-*   execute these git commands (of course replease `<githubname>` and `<reponame>`)
+*   Execute these git commands (of course replease `<githubname>` and `<reponame>`)
 
         git add . --all
         git remote add origin git@github.com:<githubname>/<reponame>.git
@@ -194,7 +193,4 @@ here are some of the steps you need to take.
 If you can't get your old game to work, commit it github and send me a link. I'll fork it, fix it, and submit a pull request.
 
 Once it works you can publish it as well. [For html games see](makinggames.md#hft-publish).
-[For Unity3D games see](unitydocs.md#publishing).
-
-
-
+[Guide for Unity3D games](unitydocs.md#publishing).

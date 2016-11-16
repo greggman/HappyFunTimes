@@ -8,8 +8,7 @@ please consider using an existing game framework or writing your own. If these e
 your needs then by all means feel free to use, clone, or modify them. My only point is they
 are not neccessily showing best practices for games in JavaScript.
 
-Some terms
-----------
+## Common terms
 
 **controller** = The code running on the player's smartphone browser (or desktop/tablet browser).
 
@@ -28,8 +27,7 @@ an individual **controller**.
 
 Here are a few random notes on the examples.
 
-Player Names
-------------
+## Player Names
 
 Many of the samples support a user name. This feature is not technically part of the
 **HappyFunTimes** library but is rather just part of the samples using the library.
@@ -44,8 +42,7 @@ and `false` when they finish.
 On the **controller** side this is mostly handled by shared code `PlayerNameManager` (playername.js).
 On the **game** this is handled by each game directly.
 
-Globals
--------
+## Globals
 
 Most of the **game**s and **controllers**s have a `globals` object. This object's settings can be set
 in the URL with something like
@@ -61,15 +58,15 @@ On some games and some controllers `debug:true` will turn on onscreen status. On
 more players.
 This can be very useful for quick iteration.
 
+---
 
-[Simple](http://github.com/greggman/hft-simple)
-------
+### [Simple](http://github.com/greggman/hft-simple)
 
 Basically the same as SuperSimple except uses normalized cooridinates and uses a canvas element to draw
 the game rather than HTML5 elements.
 
-[PowPow](http://github.com/greggman/hft-powpow)
-------
+
+### [PowPow](http://github.com/greggman/hft-powpow)
 
 ![PowPow](../images/scene-01-powpow.jpg)
 
@@ -77,39 +74,39 @@ A space wars style game. The first 6 players battle it out. If there are more th
 in the *launch* queue. They collectively control a ghost ship they can use to try to kill other players
 so they can get back into the game.
 
-[ShootShoot](http://github.com/greggman/hft-shootshoot)
-----------
+
+### [ShootShoot](http://github.com/greggman/hft-shootshoot)
 
 A Robotron like game.
 
 This demonstrates dual 8pad emulation on **controller**. In `haveServer:false` mode and if using
 a desktop PC as a **controller** ASWD are the move dpad and cursor keys the fire dpad.
 
-[JumpJump]((http://github.com/greggman/hft-jumpjump))
---------
+
+### [JumpJump]((http://github.com/greggman/hft-jumpjump))
 
 ![JumpJump](../images/scene-00-jumpjump.jpg)
 
 A simple platformer. Players try to get the one coin.
 
-[Boomboom]((http://github.com/greggman/hft-boomboom)
---------
+
+### [Boomboom](http://github.com/greggman/hft-boomboom)
 
 ![Boomboom](../image/scene-04-boomboom.jpg))
 
 A bomberman like game. One thing it shows over other games is round based control. Players
 joining the game have to wait for the current round to finish before they are added.
 
-[Deviceorientation](http://github.com/greggman/hft-deviceorientation)
------------------
+
+### [Deviceorientation](http://github.com/greggman/hft-deviceorientation)
 
 Orient a 3d ship to shoot a ball.
 
 Demonstrates using device orientation. The game is nearly impossible to play but it least
 demonstrates using device orientation as well as three.js.
 
-[JamJam](http://github.com/greggman/hft-jamjam)
-------
+
+### [JamJam](http://github.com/greggman/hft-jamjam)
 
 ![JamJam](../images/scene-02-jamjam.jpg)
 
@@ -119,8 +116,8 @@ on their phone so everyone can hear their drum.
 
 Shows using the synced clock. Shows how to sync using the Web Audio API.
 
-[UnityCharacterExample](http://github.com/greggman/hft-unitycharacterexample)
----------------------
+
+### [UnityCharacterExample](http://github.com/greggman/hft-unitycharacterexample)
 
 ![UnityCharacterExample](../images/scene-03-unity.jpg)
 
@@ -141,8 +138,8 @@ relaysever. (See above)
 
 Now connect a browser `http://localhost:18679`.
 
-[UnitySimpleExample](http://github.com/greggman/hft-unitysimpleexample)
-------------------
+
+### [UnitySimpleExample](http://github.com/greggman/hft-unitysimpleexample)
 
 This is the same as the *Simple* example above and users the same **controller**. Follow the
 instructions above for the **UnityCharacterExample** but open the scene

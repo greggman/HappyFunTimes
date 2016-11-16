@@ -1,6 +1,7 @@
 Title: Commands
 Description: hft commandline commands.
 
+
 `hft` is a command to help manage happyfuntimes for developers. For the basics typing `hft`
 will list all the commands. Typing `hft cmd --help` will list the help for a specific command.
 
@@ -25,11 +26,11 @@ Adds the game in the current folder to happyfuntimes
 Checks if the `package.json` in the current folder is correct
 and if other things like `controller.html` are missing.
 
-### `hft download gameId`
+### `hft download [gameId]`
 
 Downloads and installs a game from superhappyfuntimes.
 
-### `hft install srcpath`
+### `hft install [srcpath]`
 
 Installs a zip file created with `hft make-release`. Can be used for testing otherwise
 there's no reason to run this.
@@ -38,7 +39,7 @@ there's no reason to run this.
 
 Lists all the games currently added or installed in happyfuntimes
 
-### `hft make-release dstpath`
+### `hft make-release [dstpath]`
 
 Makes a releases, a zip file, of the game in the current folder and saves it to
 a path `dstpath`. Note `dstpath` must be a folder. Also note if the game is
@@ -164,6 +165,6 @@ on `controller.js` using [almond](https://github.com/jrburke/almond) as a wrappe
 This option is not the default because it's very hard to debug optimized code. You would
 probably only use this option with [installation mode](network.md).
 
-### `hft uninstall gameId`
+### `hft uninstall [gameId]`
 
 Un-installs a game from happyfuntimes. **WARNING! This DELETES FILES!!!**

@@ -17,6 +17,8 @@ or find stuff.
 So some random ideas I'd like to explore if I have time. Maybe they'll trigger some
 ideas for you
 
+---
+
 ### Sequences by team
 
 Each team member's phone shows a symbol.
@@ -46,9 +48,11 @@ screen. If any other player touches their line they die.
 * Q: How long do the lines last? 1 second? Forever?
 * Q: How to aim? Auto sweep? Tilt phone?
 
+
 ### Using orientation: use phone as a laser pointer
 
 Make a team laser pointer game, e.g. where they have to shoot objects or solve puzzles.
+
 
 ### Coreography game
 
@@ -59,18 +63,22 @@ phone won't turn off and press a button when they can hear the sound.
 Computer then plays dance music on the TV and gives each player individual dance instructions in their headphones
 for a coreographied dance.
 
+
 ### Shake phone to race
 
 The faster you shake the faster it goes.
+
 
 ### Fly ship in 2d using orienation. Hold buttons to spread particles, effects, interact
 
 Have glow or other interaction when players touch, 2, 3, 4 etc.
 
+
 ### Balance platforms with balls melodic.
 
 Each player controls one platform they can place and rotate with their phone. Balls bounce off them,
 Or rain producing sounds. Think elektroplancton.
+
 
 ### Bucket brigade
 
@@ -78,6 +86,7 @@ Players have to pass things from player to player either on the big screen or on
 Divide into teams. Red (A, B, C, D) vs Blue (A, B, C, D). A and B have to press at the same time?
 Then B and C, then C and D. But must let off? Controls could be just L<->R. Or just one button.
 Hold for Left, release for Right. But, discourage just mashing the button some how.
+
 
 ### Given at least 4 players divide into groups.
 
@@ -96,6 +105,7 @@ Put a number on each phone and a diagram
 Then, players push a character from on phone to the next or flick a ball.
 Teams that make the most laps win or points win
 
+
 ### Number the phones, have players stand in a circle by number.
 
 Play some Kind of pass the ball game where the server passes things around
@@ -107,9 +117,11 @@ where they are in relation to each other
 
 Could limit to groups of ~12, split groups?
 
+
 ### Players lineup their screens to figure out code
 
 Maybe a colored background for each team/group.
+
 
 ### Go Fish
 
@@ -128,12 +140,14 @@ How can I make it social. I'd prefer if you can't cheat so you'd pick the card
 on your screen you want to match. And it would tell you? Or maybe the other person
 would have to answer but if they lie there's some penalty or something?
 
+
 ### Fist bump game
 
 Asing accelerometers and synced clock maybe we can tell when two people fist bump?
 Heck, maybe if 3 or more people have the same time stamp we can assume all of them bumped?
 
 Players have to fist bump everyone?
+
 
 ### Games with physical movements
 
@@ -145,15 +159,19 @@ jump, etc...
 
 Maybe it's a group dance.
 
+
 ### Just press button most times?
 
 Various track and field / hyper bishi bashi games.
 
+
 ### Find your name on other person's phone. Fist bump.
+
 
 ### Find your picture on other person's phone.
 
 iOS Safari can't do pictures yet
+
 
 ### Players have to find matching piece of puzzle
 
@@ -174,6 +192,7 @@ Not sure what you'd do at that point. Type the message that's across N
 displays. Or maybe trace some line across all 3? Hard to do unless you
 set the phones down.
 
+
 ### You slide character from one phone to the other by sliding finger across both phones
 
 Variation of above idea. If you know 2 phones are partners then you could slide
@@ -181,7 +200,9 @@ your finger from one to the other to drag a character across screens. The game w
 know the 2 controllers belong together and based on time (syncedclock) and where fingers
 are dragged could tell if you dragged from the correct N phones.
 
+
 ### Racing up or down screen using device orientation for steering
+
 
 ### Use device orientation like a paddle controller
 
@@ -189,10 +210,12 @@ Tilting left / right moves basket across screen. Pressing button puts your
 basket high for a moment. Try to catch more falling things than other
 players? Think Kaboom.
 
-### drawing game
+
+### Drawing game
 
 Player's draw on their phone, add drawing to level? Maybe Crayon Physics like?
 Heck, just stop erasing the canvas with the simple example. Problem.
+
 
 ### Racing game
 
@@ -200,6 +223,7 @@ Maybe like micro machines or moto roader where the camera keeps up with the lead
 and others get put in place.
 
 Like grand prix, tiny cars on a track the fits on the screen.
+
 
 ### Rapunzel
 
@@ -210,6 +234,7 @@ the angle and power of the bow to shoot an arrow into her window.
 That's been updated by a zillion people into showing little cannons
 trying to hit each other and having easier input. Well, a ton-o-players
 playing it. Could use orientation to aim cannon.
+
 
 ### Johann sabastian joust
 
@@ -223,9 +248,11 @@ should be possible ot make a similar game with HFT.
 
 Apparently they aren't happy about clones.
 
+
 ### Games where each player gets a different contoller
 
 Players have different roles.
+
 
 ### Quiz
 
@@ -234,13 +261,16 @@ In 10 seconds show correct answer and winner on game and on phone?
 Make sure answers after game has moved on do not affect results.
 Add score for players.
 
+
 ### Sliced Shapes
 
 Each player is assigned a piece of a shape, they have to rotate their device to
 get the shape to line up (ie, jigsaw puzzle). Anytime a new player is added the 
 urrent shape is subdivided.
 
+
 ### Use device motion to play tennis like Wii (shake controller to return ball)
+
 
 ### Use the Speech Synthesis API
 
@@ -252,49 +282,60 @@ Not sure the speech API is available on phones but you could use audio files
 "Walk forward", "turn left", "jump", "wave", "tap the person on your right"
 or longer "You're the spy. Try to find the player with the red screen and press it"
 
+
 ### Grab for all
 
 Just put stuff on the screen, people grab it as fast as they can (same controls as simple?)
 or maybe a grid of buttons? Characters that rotate and jump? Highest score wins. Bombs
 fail.
 
+
 ### Skeet ball or mega bowling
 
 Everyone uses their phone to flick their ball up the screen trying to get more points or knock over more pins.
 
+
 ### Nation ball / Dodge Ball
 
 Players in the middle must dog things. Players knocked out throw things in to knock other players out.
+
 
 ### Go on adventure in the room
 
 Your phone lists what you need to find and what you have to give. People go around the room
 trying to find the next thing in their fetch quest.
 
+
 ### Portals
 
 Use LED tapes across room to visually display portals. Jump in portal on 1 computer, see light
 go across tape. Arrive at other computer.
 
-### draw pattern, thing follows pattern
+
+### Draw pattern, thing follows pattern
+
 
 ### Sequence across phones. Each phone screams at random?
+
 
 ### Give everyone different controls
 
 Give them N seconds to do their thing. Then show graph/percent of people who finished.
 Figure out way for crowd to route for each other trying to get 100%.
 
+
 ### Sorting game
 
 Each player gets a letter (or a number). Make teams by color. Players press left or right
 to swap position. First team to get their team in order wins. Fun? More than Once?
+
 
 ### Find your symbol.
 
 Inspired by Alistar Aitcheson's games, each player is assigned a symbol. Sock, Ball, Chicken, Bat,
 The symbols appear on the screen in different ways. Players must press their button when they
 see their symbol but not press it when there symbol is not visible.
+
 
 ### Find matching background.
 
@@ -306,17 +347,20 @@ others are looking for your background. Maybe two people are always looking for 
 Since there are 4 symbols is there a way to make all 4 of those people have to find each
 other?
 
+
 ### Co-op tetris
 
 Except figure out a way good players can power up and help bad players. Maybe they can
 start shooting. Maybe have teams so there's an insentive to help teammates (don't want to
 lose to other team).
 
+
 ### Press to not DIE!
 
 Some kind of game where it shows a video or something and then someone screams "ABUNAI!!!"
 If you have to press your button or the right button within 1 seconds or you fail. Show
 precent of people that succeeded. Teams might make it competative.
+
 
 ### Artillary game
 
@@ -325,6 +369,7 @@ Draw string to set power, Release to fire. Projectiles of one team all come from
 
 Could make this asymetric where some players control shields or the movement of the base.
 or get different weapons.
+
 
 ### Chanting game
 
