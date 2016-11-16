@@ -1,9 +1,9 @@
 Title: HappyFunTimes Development
-Description: Working on HappyFunTimes itself (not happyfuntimes games)
+Description: Working on HappyFunTimes itself (not the games)
+
 
 This is a few tips for working on HappyFunTimes itself. If you're making a game
-there's probably no reason for you to read this document. This is mostly
-notes to myself and whoever else is working on HappyFunTimes itself.
+there's probably no reason for you to read this document.
 
 ## Environment Variables
 

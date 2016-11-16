@@ -3,20 +3,13 @@ Description: What each version of HappyFunTimes adds or changes
 
 In the `package.json` you set an `apiVersion`. The versions follows
 the [semver](http://semver.org) standard meaning version 1.2.x is
-supposed to be backward compatible with 1.1.x but 2.0.x is NOT
+supposed to be backward compatible with 1.1.x but 2.0.x is not
 backward compatible.
-
-As much as possible I'm trying to make it so you must set the
-correct API version. Features not available for the version
-you request will not be available to your game. This is so
-the user will know to upgrade happyfuntimes to run your
-game. Otherwise they'll try to run your game and it will just
-fail because you're counting on newer features.
 
 To use a feature below be sure to set your apiVersion to
 the correct version.
 
-## API Versions
+## Overview
 
 *   v1.1.0
 

@@ -2,4 +2,3 @@
   <iframe class="example" style="width: {{width}}px; height: {{height}}px;" src="{{url}}"></iframe>
   <a class="center" href="{{url}}" target="_blank">click here to open in a separate window</a>
 </div>
-

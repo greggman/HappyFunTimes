@@ -32,41 +32,46 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 -->
 <html>
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0, user-scalable=yes">
-<meta property="og:title" content="Commands" />
-<meta property="og:type" content="website" />
-<meta property="og:image" content="http://docs.happyfuntimes.net/docs/images/happyfuntimes.jpg" />
-<meta property="og:description" content="hft commandline commands." />
-<meta property="og:url" content="http://docs.happyfuntimes.net/docs/commands.html" />
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0, user-scalable=yes">
+    <meta property="og:title" content="Commands"/>
+    <meta property="og:type" content="website"/>
+    <meta property="og:image" content="http://docs.happyfuntimes.net/docs/images/happyfuntimes.jpg"/>
+    <meta property="og:description" content="hft commandline commands."/>
+    <meta property="og:url" content="http://docs.happyfuntimes.net/docs/commands.html"/>
 
-<meta name="twitter:card" content="summary_large_image" />
-<meta name="twitter:site" content="@greggman" />
-<meta name="twitter:creator" content="@greggman" />
-<meta name="twitter:domain" content="docs.happyfuntimes.net" />
-<meta name="twitter:title" content="Commands" />
-<meta name="twitter:url" content="http://docs.happyfuntimes.net/docs/commands.html" />
-<meta name="twitter:description" content="hft commandline commands." />
-<meta name="twitter:image:src" content="http://docs.happyfuntimes.net/docs/images/happyfuntimes.jpg" />
+    <meta name="twitter:card" content="summary_large_image"/>
+    <meta name="twitter:site" content="@greggman"/>
+    <meta name="twitter:creator" content="@greggman"/>
+    <meta name="twitter:domain" content="docs.happyfuntimes.net"/>
+    <meta name="twitter:title" content="Commands"/>
+    <meta name="twitter:url" content="http://docs.happyfuntimes.net/docs/commands.html"/>
+    <meta name="twitter:description" content="hft commandline commands."/>
+    <meta name="twitter:image:src" content="http://docs.happyfuntimes.net/docs/images/happyfuntimes.jpg"/>
 
-<title>Commands</title>
-<link href="/public/hft-icon.png" rel="shortcut icon" type="image/png">
-<link rel="stylesheet" href="/docs/css/base.css" type="text/css" />
-<link rel="stylesheet" href="/docs/css/lesson.css" type="text/css" />
+    <title>Commands</title>
+
+    <link href="/public/hft-icon.png" rel="shortcut icon" type="image/png">
+    <link rel="stylesheet" href="/docs/assets/css/styles.css" type="text/css"/>
 </head>
 <body>
+
 <div class="header">
   <h1><a href="/docs">HappyFunTimes Docs</a></h1>
 </div>
 
 
+
 <div class="container">
-  <div class="lesson-title">
-    <h1>Commands</h1>
-  </div>
-  <div class="row">
-    <div class="col-sm-8 lesson-main">
-      <p><code>hft</code> is a command to help manage happyfuntimes for developers. For the basics typing <code>hft</code>
+
+    <div class="docs-title">
+        <h1>Commands</h1>
+    </div>
+
+    <div class="row">
+        <div class="col-xs-12 col-lg-8 docs-content">
+
+            <p><code>hft</code> is a command to help manage happyfuntimes for developers. For the basics typing <code>hft</code>
 will list all the commands. Typing <code>hft cmd --help</code> will list the help for a specific command.</p>
 <ul>
 <li><strong><a href="#-hft-add-"><code>hft add</code></a></strong></li>
@@ -86,14 +91,14 @@ will list all the commands. Typing <code>hft cmd --help</code> will list the hel
 <h3 id="-hft-check-"><code>hft check</code></h3>
 <p>Checks if the <code>package.json</code> in the current folder is correct
 and if other things like <code>controller.html</code> are missing.</p>
-<h3 id="-hft-download-gameid-"><code>hft download gameId</code></h3>
+<h3 id="-hft-download-gameid-"><code>hft download [gameId]</code></h3>
 <p>Downloads and installs a game from superhappyfuntimes.</p>
-<h3 id="-hft-install-srcpath-"><code>hft install srcpath</code></h3>
+<h3 id="-hft-install-srcpath-"><code>hft install [srcpath]</code></h3>
 <p>Installs a zip file created with <code>hft make-release</code>. Can be used for testing otherwise
 there&#39;s no reason to run this.</p>
 <h3 id="-hft-list-"><code>hft list</code></h3>
 <p>Lists all the games currently added or installed in happyfuntimes</p>
-<h3 id="-hft-make-release-dstpath-"><code>hft make-release dstpath</code></h3>
+<h3 id="-hft-make-release-dstpath-"><code>hft make-release [dstpath]</code></h3>
 <p>Makes a releases, a zip file, of the game in the current folder and saves it to
 a path <code>dstpath</code>. Note <code>dstpath</code> must be a folder. Also note if the game is
 a unity game you must exit unity as unity will be called to export the game.
@@ -176,88 +181,112 @@ on <code>controller.js</code> using <a href="https://github.com/jrburke/almond">
 <p><strong>BE SURE TO TEST</strong> as optimizers are not perfect.</p>
 <p>This option is not the default because it&#39;s very hard to debug optimized code. You would
 probably only use this option with <a href="network.html">installation mode</a>.</p>
-<h3 id="-hft-uninstall-gameid-"><code>hft uninstall gameId</code></h3>
+<h3 id="-hft-uninstall-gameid-"><code>hft uninstall [gameId]</code></h3>
 <p>Un-installs a game from happyfuntimes. <strong>WARNING! This DELETES FILES!!!</strong></p>
 
-      <hr/>
-      <div>
-        <div>Questions? <a href="http://stackoverflow.com/questions/tagged/happyfuntimes">Ask on stackoverflow</a>.</div>
-        <div>Issue/Bug? <a href="http://github.com/greggman/happyfuntimes/issues">Create an issue on github</a>.</div>
 
-        <div id="disqus_thread"></div>
-        <script type="text/javascript">
-            /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
-            var disqus_shortname = 'happyfuntimes'; // required: replace example with your forum shortname
-            var disqus_identifier = 'Commands';
-            var disqus_title = 'Commands';
+            <div class="docs-footer">
 
-            /* * * DON'T EDIT BELOW THIS LINE * * */
-            (function() {
-                if (window.location.hostname.indexOf("happyfuntimes") < 0) {
-                    return;
-                }
-                var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
-                dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
-                (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
-            })();
-        </script>
-        <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
-        <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
-      </div>
-    </div>
-    <div class="col-sm-3 col-sm-offset-1 lesson-sidebar">
-        <ul>
-  <li>Setup
-    <ul>
-      <li><a href="osx.html">OSX</a></li>
-      <li><a href="windows.html">Windows</a></li>
-      <li><a href="linux.html">Linux</a></li>
-    </ul>
-  </li>
-  <li>Making Games
-    <ul>
-      <li><a href="makinggames.html">Making games in HTML5</a></li>
-      <li><a href="unity">Making games in Unity3D</a></li>
-      <li><a href="ideas.html">Ideas</a></li>
-      <li><a href="tips.html">Tips</a></li>
-      <li><a href="examples.html">Examples</a></li>
-      <li><a href="api-versions.html">API Versions</a></li>
-      <li><a href="commands.html">hft command</a></li>
-    </ul>
-  </li>
-  <li>Special Stuff
-    <ul>
-      <li><a href="network.html">Museums & Installations</a></li>
-      <li><a href="migration.html">Migrating from older APIs</a></li>
-    </ul>
-  </li>
-  <li>Contributing
-    <ul>
-      <li><a href="contributing.html">Contributing</a></li>
-      <li><a href="future.html">Future Features</a></li>
-    </ul>
-  </li>
+                <div>Found a bug? <a href="http://github.com/greggman/happyfuntimes/issues">Create an issue on Github</a></div>
+
+                <div class="docs-comments">
+                    <div id="disqus_thread"></div>
+                    <script type="text/javascript">
+                        var disqus_shortname = 'happyfuntimes';
+                        var disqus_identifier = 'Commands';
+                        var disqus_title = 'Commands';
+
+                        /* * * DON'T EDIT BELOW THIS LINE * * */
+                        (function () {
+                            if (window.location.hostname.indexOf("happyfuntimes") < 0) {
+                                return;
+                            }
+                            var dsq = document.createElement('script');
+                            dsq.type = 'text/javascript';
+                            dsq.async = true;
+                            dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+                            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+                        })();
+                    </script>
+                    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments
+                        powered by Disqus.</a></noscript>
+                    <a href="http://disqus.com" class="dsq-brlink">
+                        comments powered by <span class="logo-disqus">Disqus</span>
+                    </a>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="col-xs-12 col-lg-4 docs-sidebar">
+            <ul class="nav">
+    <li><a href="introduction.html">Introduction</a></li>
+    <li>
+        <b>Setup</b>
+        <ul class="nav">
+            <li><a href="setup/macos.html">OSX</a></li>
+            <li><a href="setup/windows.html">Windows</a></li>
+            <li><a href="setup/linux.html">Linux</a></li>
+        </ul>
+    </li>
+    <li>
+        <b>Making Games</b>
+        <ul class="nav">
+            <li><a href="making-games/">Making games in HTML5</a></li>
+            <li><a href="unity/">Making games in Unity3D</a></li>
+            <li><a href="tips.html">Tips</a></li>
+            <li><a href="commands.html">hft command</a></li>
+        </ul>
+    </li>
+    <li>
+        <b>Ideas and Examples</b>
+        <ul class="nav">
+            <li><a href="ideas.html">Ideas</a></li>
+            <li><a href="examples.html">Examples</a></li>
+        </ul>
+    </li>
+    <li>
+        <b>API</b>
+        <ul class="nav">
+            <li><a href="api-versions.html">API Versions</a></li>
+            <li><a href="migration.html">Migrating from older APIs</a></li>
+        </ul>
+    </li>
+    <li>
+        <b>Other Content</b>
+        <ul class="nav">
+            <li><a href="network.html">Museums & Installations</a></li>
+        </ul>
+    </li>
+    <li>
+        <b>Contributing</b>
+        <ul class="nav">
+            <li><a href="contributing.html">Contributing</a></li>
+            <li><a href="future.html">Future Features</a></li>
+        </ul>
+    </li>
 </ul>
 
+        </div>
+
     </div>
-  </div>
 </div>
-</body>
-<script src="/docs/3rdparty/jquery-1.11.2.min.js"></script>
-<script src="/docs/3rdparty/prettify.js"></script>
-<script src="/docs/js/lesson.js"></script>
+
+<script src="/docs/assets/3rdparty/jquery.js"></script>
+<script src="/docs/assets/3rdparty/highlight.js"></script>
+<script src="/docs/assets/js/lesson.js"></script>
+
 <script>
   (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
   (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
   m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
   })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-
   ga('create', 'UA-51764205-4', 'auto');
   ga('send', 'pageview');
-
 </script>
 
 
+</body>
 </html>
 
 

@@ -3,7 +3,7 @@ Description: Stuff to purse in HappyFunTimes
 
 These would be very nice to have. I don't know if or when I'll have time to
 implement them. Feel free to implement them yourself and submit a pull request
-or pick one of the other 1000+ things [to do](../todo.md).
+or pick one of the other 1000+ things from the [To Do list](../todo.md).
 
 ### Simpler controller creation
 

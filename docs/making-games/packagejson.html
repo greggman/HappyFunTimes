@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<!-- this file is auto-generated from docs/making-games/packagejson.md. Do not edited directly -->
+<!--
+Copyright 2012, Gregg Tavares.
+All rights reserved.
+
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions are
+met:
+
+    * Redistributions of source code must retain the above copyright
+notice, this list of conditions and the following disclaimer.
+    * Redistributions in binary form must reproduce the above
+copyright notice, this list of conditions and the following disclaimer
+in the documentation and/or other materials provided with the
+distribution.
+    * Neither the name of Gregg Tavares. nor the names of his
+contributors may be used to endorse or promote products derived from
+this software without specific prior written permission.
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+"AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+-->
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0, user-scalable=yes">
+    <meta property="og:title" content=""/>
+    <meta property="og:type" content="website"/>
+    <meta property="og:image" content="http://docs.happyfuntimes.net/docs/images/happyfuntimes.jpg"/>
+    <meta property="og:description" content=""/>
+    <meta property="og:url" content="http://docs.happyfuntimes.net/docs/making-games/packagejson.html"/>
+
+    <meta name="twitter:card" content="summary_large_image"/>
+    <meta name="twitter:site" content="@greggman"/>
+    <meta name="twitter:creator" content="@greggman"/>
+    <meta name="twitter:domain" content="docs.happyfuntimes.net"/>
+    <meta name="twitter:title" content=""/>
+    <meta name="twitter:url" content="http://docs.happyfuntimes.net/docs/making-games/packagejson.html"/>
+    <meta name="twitter:description" content=""/>
+    <meta name="twitter:image:src" content="http://docs.happyfuntimes.net/docs/images/happyfuntimes.jpg"/>
+
+    <title></title>
+
+    <link href="/public/hft-icon.png" rel="shortcut icon" type="image/png">
+    <link rel="stylesheet" href="/docs/assets/css/styles.css" type="text/css"/>
+</head>
+<body>
+
+<div class="header">
+  <h1><a href="/docs/making-games">HappyFunTimes Docs</a></h1>
+</div>
+
+
+
+<div class="container">
+
+    <div class="docs-title">
+        <h1></h1>
+    </div>
+
+    <div class="row">
+        <div class="col-xs-12 col-lg-8 docs-content">
+
+            <h1 id="-package-json">﻿Package.json</h1>
+<p>HappyFunTimes uses a <code>package.json</code> file to hold some extra data about a
+game or installation needed to run the game correctly.</p>
+<p>This file defines some data about your game. It is a JSON file and JSON has a very strict format.</p>
+<ul>
+<li><p>No trailing commmas.</p>
+<p>Good</p>
+<pre><code>{
+  &quot;a&quot;: 123,
+  &quot;b&quot;: 456
+}
+</code></pre><p>Bad</p>
+<pre><code>{
+  &quot;a&quot;: 123,
+  &quot;b&quot;: 456,
+}
+</code></pre></li>
+<li><p>No comments! JSON is NOT JavaScript.</p>
+</li>
+<li><p>All Strings and identifiers must be quoted with double quotes. The only things not quoted are numbers and <code>true</code>, <code>false</code>,
+and <code>null</code>.</p>
+</li>
+<li><p>It&#39;s case sensitive. <code>&quot;HappyFunTimes&quot;</code> is NOT the same as <code>&quot;happyFunTimes&quot;</code></p>
+</li>
+</ul>
+<h3 id="required-fields">Required fields</h3>
+<p>A standard package.json looks like this</p>
+<pre><code>{
+  &quot;name&quot;: &quot;JumpJump&quot;,
+  &quot;description&quot;: &quot;A game with Jumping&quot;,
+  &quot;version&quot;: &quot;0.0.2&quot;,
+  &quot;private&quot;: false,
+  &quot;dependencies&quot;: {
+  },
+  &quot;happyFunTimes&quot;: {
+    &quot;gameId&quot;: &quot;jumpjump&quot;,
+    &quot;category&quot;: &quot;game&quot;,
+    &quot;apiVersion&quot;: &quot;1.3.0&quot;,
+    &quot;gameType&quot;: &quot;html&quot;,
+    &quot;minPlayers&quot;: 1
+  }
+}
+</code></pre><h4 id="-name-"><code>name</code></h4>
+<p>A name for your game. Used on the main screen of HappyFunTimes and SuperHappyFunTimes.</p>
+<h4 id="-description-"><code>description</code></h4>
+<p>A description. Used on superhappyfuntimes. No HTML allowed currently.</p>
+<h4 id="-version-"><code>version</code></h4>
+<p>Used on superhappyfuntimes so users can know if there is a newer version for them to download.</p>
+<h4 id="-happyfuntimes-gameid-"><code>happyFunTimes.gameId</code></h4>
+<p>This is the id for your game. Every game on superhappyfuntimes must have a unique id.
+only A-Z, 0-9, _, - are allowed and no more than 60 characters.</p>
+<h4 id="-happyfuntimes-apiversion-"><code>happyFunTimes.apiVersion</code></h4>
+<p>This is the happyFunTimes API version needed by this game. If this number is higher
+than the version of happyFunTimes the user has installed they will be asked to upgrade.
+It is also used by happyFunTimes to provide the correct API for the game.</p>
+<h4 id="-happyfuntimes-gametype-"><code>happyFunTimes.gameType</code></h4>
+<p>This is used by happyFunTimes to figure out how to deal with the game. For example
+how to launch the game and how to publish it.</p>
+<p>Valid values are</p>
+<ul>
+<li><code>html</code></li>
+<li><code>Unity3D</code></li>
+<li><code>Unity3DLibrary</code></li>
+</ul>
+<h4 id="-happyfuntimes-minplayers-"><code>happyFunTimes.minPlayers</code></h4>
+<p>How many players are required to play this game. For example, jumpjump you can play with
+one player. It&#39;s probably not any fun but you can play it. boomboom on the otherhand
+requires 2 players. It will not start until there are 2 players.</p>
+<p>This is only used on the superhappyfuntimes to set expectations. If you have a game that requires
+10 players please consider marking it here.</p>
+<h4 id="-happyfuntimes-category-"><code>happyFunTimes.category</code></h4>
+<p>This is also only used on superhappyfuntimes to set expections and hopefully to categories
+things. Current values</p>
+<ul>
+<li><code>game</code> A game</li>
+<li><code>example</code> Not a game, not really meant to be played, just an example</li>
+<li><code>demo</code> Not a game, something else like an exhibit, possibly not playable without more stuff</li>
+</ul>
+<h4 id="-happyfuntimes-usescripttag-"><code>happyFunTimes.useScriptTag</code></h4>
+<p>True indicates you don&#39;t want to use requirejs instead you want to use <code>&lt;script&gt;</code> tags. Your <code>apiVerison</code>
+must be <code>1.3.0</code> or higher</p>
+<p>I really like <a href="http://requirejs.org">require.js</a> style of modules. It encourages
+dependency injection, it also supports module independence. But, for many it&#39;s non
+standard and they&#39;re not used to it.</p>
+<p>So, if you want to just use standard script tags make sure your <code>package.json</code> has its
+<code>happyFunTimes.apiVersion</code> set to <code>1.3.0</code> or higher and add the flag <code>happyFunTimes.useScriptTag</code> set
+to <code>true</code>. Example:</p>
+<pre><code>{
+  ...
+  &quot;happyFunTimes&quot;: {
+    ...
+    &quot;apiVersion&quot;: &quot;1.3.0&quot;,
+    &quot;useScriptTag&quot;: true,
+    ...
+  }
+}
+</code></pre><p>The <code>&lt;script&gt;</code> tags for HappyFunTimes are automatically
+added for you and so is the script tag that includes <code>scripts/game.js</code> for your game and
+<code>scripts/controller.js</code> for your controller. If you need any other scripts
+(like three.js or pixi.js or jquery) add script tags to
+either <code>game.html</code> or <code>controller.html</code>.  The HappyFunTimes libraries will be inserted before
+those tags. The <code>game.js</code> or <code>controller.js</code> will be inserted after.</p>
+<p>See example: <a href="http://github.com/hft-simple-script/">github.com/hft-simple-script</a></p>
+<h4 id="-happyfuntimes-ignore-"><code>happyFunTimes.ignore</code></h4>
+<p>Used to prevent certainly files from being part of the published game.</p>
+<p>This is an array of strings in the format of <code>.gitignore</code> (<a href="http://git-scm.com/docs/gitignore">see git docs</a>)
+not including the double asterix syntax. For example</p>
+<pre><code>{
+  ...
+  &quot;happyFunTimes&quot;: {
+    ...
+    ignore: [
+      &quot;/src/&quot;,
+      &quot;*.psd&quot;
+    ],
+    ...
+  }
+}
+</code></pre><p>would exclude the <code>&lt;projectdir&gt;/src</code> folder as well as any Photoshop files.</p>
+<h4 id="-happyfuntimes-templatefileoptions-"><code>happyFunTimes.templateFileOptions</code></h4>
+<p>Requires apiVersion <code>1.15.0</code> or higher.</p>
+<p>By default <code>game.html</code> automatically gets inserted into <code>templates/game.gameview.html</code>.
+&#39;controller.html<code>automatically gets inserted into</code>templates/controller.index.html`.</p>
+<p>If your project needs other files to be treated similarly you can use this option. A good example
+is <a href="http://github.com/greggman/hft-tonde-iko">Tonde-Iko</a>. Its <code>game.html</code> is just a menu for
+debugging, testing, and lanching individual screens. The game itself is run from <code>realgame.html</code>.
+There&#39;s also a network stress test in <code>stress.html</code> and a file that creates the controller avatar
+texture atlas in <code>makeimage.html</code>.</p>
+<p>Each of those needed the templating treatment to get the happyfuntimes support libraries etc so
+this was added to the package.json</p>
+<pre><code>{
+  &quot;name&quot;: &quot;Tonde-Iko&quot;,
+  ...
+  &quot;happyFunTimes&quot;: {
+    &quot;gameId&quot;: &quot;tonde-iko&quot;,
+    ...
+    &quot;templateFileOptions&quot;: [
+      { &quot;filename&quot;: &quot;realgame.html&quot;,  &quot;template&quot;: &quot;game&quot; },
+      { &quot;filename&quot;: &quot;stress.html&quot;,    &quot;template&quot;: &quot;game&quot; },
+      { &quot;filename&quot;: &quot;makeimage.html&quot;, &quot;template&quot;: &quot;game&quot; }
+    ]
+  }
+}
+</code></pre><p>That basically says for those 3 files use the <code>game</code> template. They will automatically use
+their respective scripts and css so for example <code>realgame.html</code> uses <code>scripts/realgame.js</code>
+and <code>css/realgame.css</code>.</p>
+
+
+            <div class="docs-footer">
+
+                <div>Found a bug? <a href="http://github.com/greggman/happyfuntimes/issues">Create an issue on Github</a></div>
+
+                <div class="docs-comments">
+                    <div id="disqus_thread"></div>
+                    <script type="text/javascript">
+                        var disqus_shortname = 'happyfuntimes';
+                        var disqus_identifier = '';
+                        var disqus_title = '';
+
+                        /* * * DON'T EDIT BELOW THIS LINE * * */
+                        (function () {
+                            if (window.location.hostname.indexOf("happyfuntimes") < 0) {
+                                return;
+                            }
+                            var dsq = document.createElement('script');
+                            dsq.type = 'text/javascript';
+                            dsq.async = true;
+                            dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+                            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+                        })();
+                    </script>
+                    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments
+                        powered by Disqus.</a></noscript>
+                    <a href="http://disqus.com" class="dsq-brlink">
+                        comments powered by <span class="logo-disqus">Disqus</span>
+                    </a>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="col-xs-12 col-lg-4 docs-sidebar">
+            <ul class="nav">
+    <li><a href="../introduction.html">Introduction</a></li>
+    <li>
+        <b>Setup</b>
+        <ul class="nav">
+            <li><a href="../setup/macos.html">OSX</a></li>
+            <li><a href="../setup/windows.html">Windows</a></li>
+            <li><a href="../setup/linux.html">Linux</a></li>
+        </ul>
+    </li>
+    <li>
+        <b>Making Games</b>
+        <ul class="nav">
+            <li><a href="index.html">Making games in HTML5</a></li>
+            <li><a href="../unity">Making games in Unity3D</a></li>
+            <li><a href="../tips.html">Tips</a></li>
+            <li><a href="../commands.html">hft command</a></li>
+        </ul>
+    </li>
+    <li>
+        <b>Ideas and Examples</b>
+        <ul class="nav">
+            <li><a href="../ideas.html">Ideas</a></li>
+            <li><a href="../examples.html">Examples</a></li>
+        </ul>
+    </li>
+    <li>
+        <b>API</b>
+        <ul class="nav">
+            <li><a href="../api-versions.html">API Versions</a></li>
+            <li><a href="../migration.html">Migrating from older APIs</a></li>
+        </ul>
+    </li>
+    <li>
+        <b>Other Content</b>
+        <ul class="nav">
+            <li><a href="../network.html">Museums & Installations</a></li>
+        </ul>
+    </li>
+    <li>
+        <b>Contributing</b>
+        <ul class="nav">
+            <li><a href="../contributing.html">Contributing</a></li>
+            <li><a href="../future.html">Future Features</a></li>
+        </ul>
+    </li>
+</ul>
+
+        </div>
+
+    </div>
+</div>
+
+<script src="/docs/assets/3rdparty/jquery.js"></script>
+<script src="/docs/assets/3rdparty/highlight.js"></script>
+<script src="/docs/assets/js/lesson.js"></script>
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+  ga('create', 'UA-51764205-4', 'auto');
+  ga('send', 'pageview');
+</script>
+
+
+</body>
+</html>
+
+
+
