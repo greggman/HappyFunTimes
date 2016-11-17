@@ -33,6 +33,21 @@ module.exports = function(grunt) {
         'docs/dotnet',
       ],
     },
+    sass: {
+      docs: {
+        options: {
+          sourceMap: true,
+          outputStyle: 'compressed',
+        },
+        files: [{
+          expand: true,
+          cwd: 'docs/assets/scss',
+          dest: 'docs/assets/css',
+          src: ['**/*.scss'],
+          ext: '.css',
+        }]
+      },
+    },
     uglify: {
       docs_js: {
         files: {
@@ -42,9 +57,16 @@ module.exports = function(grunt) {
       },
     },
     watch: {
+      docs_sass: {
+        files: ['docs/assets/scss/**/*.scss'],
+        tasks: ['sass:docs'],
+        options: {
+          spawn: false,
+        },
+      },
       docs_md: {
-        files: ['docs/**/*.md'],
-        tasks: ['build_docs'],
+        files: ['docs/**/*.md', 'docs/**/toc.html'],
+        tasks: ['builddocs'],
         options: {
           spawn: false,
         },
@@ -73,6 +95,7 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-watch');
   grunt.loadNpmTasks('grunt-jsdoc');
   grunt.loadNpmTasks('grunt-eslint');
+  grunt.loadNpmTasks('grunt-sass');
 
   // Docs
   grunt.registerTask('unitydocsgen', function() {
@@ -113,6 +136,7 @@ module.exports = function(grunt) {
   });
 
   grunt.registerTask('docsassets', [
+    'sass:docs',
     'uglify:docs_js',
   ]);
 
@@ -123,10 +147,10 @@ module.exports = function(grunt) {
     'watch',
   ]);
 
-  grunt.registerTask('docs_build', [
+  grunt.registerTask('docsbuild', [
     'clean:docs',
-    'build_docs',
-    'docs_assets',
+    'builddocs',
+    'docsassets',
   ]);
 
   grunt.registerTask('default', ['eslint', 'clean:docs', 'jsdoc']);

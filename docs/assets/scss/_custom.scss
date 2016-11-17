@@ -1,0 +1,71 @@
+// Custom
+
+img {
+  max-width: 100%;
+  height: auto;
+}
+
+.header {
+  margin: ($spacer * 2) auto;
+  text-align: center;
+  letter-spacing: 1px;
+
+  h1 {
+    border-top: 10px solid $gray-dark;
+    border-bottom: 10px solid $gray-dark;
+    background-color: $brand-primary;
+    color: white;
+    padding: $spacer $spacer ($spacer * 1.8);
+    text-shadow: 0 0 0 rgb(91, 144, 236), -1px 1px 0 rgb(81, 134, 226), -2px 2px 0 rgb(71, 124, 216), -3px 3px 0 rgb(60, 113, 205), -4px 4px 0 rgb(50, 103, 195), -5px 5px 0 rgb(40, 93, 185), -6px 6px 0 rgb(30, 83, 175), -7px 7px 0 rgb(20, 73, 165), -8px 8px 0 rgb(10, 63, 155), -9px 9px 0 rgb(-1, 52, 144), -10px 10px 0 rgb(-11, 42, 134), -11px 11px 0 rgb(-21, 32, 124), -12px 12px 0 rgb(-31, 22, 114), -13px 13px 12px rgba(0, 0, 0, 0.8), -13px 13px 1px rgba(0, 0, 0, 0.5), 0px 0px 12px rgba(0, 0, 0, .2);
+  }
+
+  a {
+    color: $gray-lightest;
+
+    &:hover {
+      text-decoration: none;
+    }
+  }
+}
+
+.docs-title {
+  margin-bottom: $spacer;
+}
+
+.docs-content {
+  hr {
+    margin: ($spacer * 2) auto;
+  }
+}
+
+.docs-footer {
+  margin: ($spacer * 2) 0;
+  padding-top: $spacer * 2;
+  border-top: 2px solid $hr-border-color;
+  font-size: $font-size-sm;
+}
+
+.docs-comments {
+  margin-top: $spacer * 2;
+}
+
+.docs-sidebar {
+  opacity: .6;
+  transition: opacity 200ms;
+
+  &:hover {
+    opacity: 1;
+    transition: opacity 200ms;
+  }
+}
+
+.toc {
+  list-style: none;
+  padding: 0;
+
+  ul {
+    list-style: none;
+    margin-left: $spacer;
+    padding: 0;
+  }
+}
