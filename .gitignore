@@ -3,6 +3,10 @@ public/games
 public/examples
 docs/hft
 docs/relayserver
+docs/**/*.html
+!docs/**/toc.html
+!docs/unity/install.html
+!docs/unity/samples.html
 images/src
 .DS_Store
 *~

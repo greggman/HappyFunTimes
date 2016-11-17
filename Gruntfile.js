@@ -115,6 +115,16 @@ module.exports = function(grunt) {
           filespec: "docs/*.md",
         },
         {
+          filespec: "docs/making-games/*.md",
+          mainURL: "/docs/making-games",
+          toc: "docs/making-games/toc.html",
+        },
+        {
+          filespec: "docs/setup/*.md",
+          mainURL: "/docs/setup",
+          toc: "docs/setup/toc.html",
+        },
+        {
           filespec: "docs/unity/*.md",
           mainURL: "/docs/unity",
           toc: "docs/unity/toc.html",
