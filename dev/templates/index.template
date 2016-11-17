@@ -53,9 +53,9 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 <title>{{title}}</title>
 
 <link href="/public/hft-icon.png" rel="shortcut icon" type="image/png">
-<link rel="stylesheet" href="/docs/css/base.css" type="text/css" />
-<link rel="stylesheet" href="/docs/css/lesson.css" type="text/css" />
-<link rel="stylesheet" href="/docs/css/index.css" type="text/css" />
+<link rel="stylesheet" href="/docs/assets/css/base.css" type="text/css" />
+<link rel="stylesheet" href="/docs/assets/css/lesson.css" type="text/css" />
+<link rel="stylesheet" href="/docs/assets/css/index.css" type="text/css" />
 </head>
 <body>
 {{{include "dev/templates/header.template"}}}

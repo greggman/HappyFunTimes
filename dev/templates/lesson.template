@@ -51,8 +51,8 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 <title>{{title}}</title>
 <link href="/public/hft-icon.png" rel="shortcut icon" type="image/png">
-<link rel="stylesheet" href="/docs/css/base.css" type="text/css" />
-<link rel="stylesheet" href="/docs/css/lesson.css" type="text/css" />
+<link rel="stylesheet" href="/docs/assets/css/base.css" type="text/css" />
+<link rel="stylesheet" href="/docs/assets/css/lesson.css" type="text/css" />
 </head>
 <body>
 {{{include "dev/templates/header.template"}}}
@@ -95,9 +95,9 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
   </div>
 </div>
 </body>
-<script src="/docs/3rdparty/jquery.js"></script>
-<script src="/docs/js/lesson.js"></script>
-<script src="/docs/3rdparty/highlight.js"></script>
+<script src="/docs/assets/3rdparty/jquery.js"></script>
+<script src="/docs/assets/js/lesson.js"></script>
+<script src="/docs/assets/3rdparty/highlight.js"></script>
 <script>hljs.initHighlightingOnLoad();</script>
 {{{include "dev/templates/analytics.template" }}}
 </html>

@@ -168,109 +168,99 @@ code {
     height: auto;
 }
 
-/* --- Prettify --- */
-/* desert scheme ported from vim to google prettify */
-pre.prettyprint {
+/* --- HighlightJS ---
+Atom One Light by Daniel Gamage
+Original One Light Syntax theme from https://github.com/atom/one-light-syntax
+
+base:    #fafafa
+mono-1:  #383a42
+mono-2:  #686b77
+mono-3:  #a0a1a7
+hue-1:   #0184bb
+hue-2:   #4078f2
+hue-3:   #a626a4
+hue-4:   #50a14f
+hue-5:   #e45649
+hue-5-2: #c91243
+hue-6:   #986801
+hue-6-2: #c18401
+
+*/
+
+.hljs {
     display: block;
-    font-size: .9rem;
-    font-family: Menlo, "Bitstream Vera Sans Mono", "DejaVu Sans Mono", Monaco, Consolas, monospace;
-    background-color: #f5f5f5;
-    padding: 10px;
+    overflow-x: auto;
+    padding: 0.5em;
+    color: #383a42;
+    background: #fafafa;
 }
 
-pre ol,
-pre ul {
-    list-style: none;
-    margin: 0;
-    padding: 0;
+.hljs-comment,
+.hljs-quote {
+    color: #a0a1a7;
+    font-style: italic;
 }
 
-pre .nocode {
-    background-color: transparent;
-    color: #000
+.hljs-doctag,
+.hljs-keyword,
+.hljs-formula {
+    color: #a626a4;
 }
 
-pre .str {
-    color: #718c00;
+.hljs-section,
+.hljs-name,
+.hljs-selector-tag,
+.hljs-deletion,
+.hljs-subst {
+    color: #e45649;
 }
 
-pre .kwd {
-    color: #8959a8;
+.hljs-literal {
+    color: #0184bb;
 }
 
-pre .com {
-    color: #8e908c;
+.hljs-string,
+.hljs-regexp,
+.hljs-addition,
+.hljs-attribute,
+.hljs-meta-string {
+    color: #50a14f;
 }
 
-pre .typ {
-    color: #4271ae;
+.hljs-built_in,
+.hljs-class .hljs-title {
+    color: #c18401;
 }
 
-pre .lit {
-    color: #f5871f;
+.hljs-attr,
+.hljs-variable,
+.hljs-template-variable,
+.hljs-type,
+.hljs-selector-class,
+.hljs-selector-attr,
+.hljs-selector-pseudo,
+.hljs-number {
+    color: #986801;
 }
 
-pre .pun {
-    color: #4d4d4c;
+.hljs-symbol,
+.hljs-bullet,
+.hljs-link,
+.hljs-meta,
+.hljs-selector-id,
+.hljs-title {
+    color: #4078f2;
 }
 
-pre .opn {
-    color: #4d4d4c;
+.hljs-emphasis {
+    font-style: italic;
 }
 
-pre .clo {
-    color: #4d4d4c;
+.hljs-strong {
+    font-weight: bold;
 }
 
-pre .tag {
-    color: #c82829;
+.hljs-link {
+    text-decoration: underline;
 }
 
-pre .atn {
-    color: #f5871f;
-}
-
-pre .atv {
-    color: #3e999f;
-}
-
-pre .dec {
-    color: #f5871f;
-}
-
-pre .var {
-    color: #c82829;
-}
-
-pre .fun {
-    color: #4271ae;
-}
-
-ol.linenums {
-    margin-top: 0;
-    margin-bottom: 0;
-    color: #AEAEAE
-}
-
-/* IE indents via margin-left */
-li.L0, li.L1, li.L2, li.L3, li.L5, li.L6, li.L7, li.L8 {
-    list-style-type: none
-}
-
-/* Alternate shading for lines */
-li.L1, li.L3, li.L5, li.L7, li.L9 {
-}
-
-@media print {
-    pre.prettyprint { background-color: transparent }
-    pre .str, code .str { color: #060 }
-    pre .kwd, code .kwd { color: #006; font-weight: bold }
-    pre .com, code .com { color: #600; font-style: italic }
-    pre .typ, code .typ { color: #404; font-weight: bold }
-    pre .lit, code .lit { color: #044 }
-    pre .pun, code .pun { color: #440 }
-    pre .pln, code .pln { color: #000 }
-    pre .tag, code .tag { color: #006; font-weight: bold }
-    pre .atn, code .atn { color: #404 }
-    pre .atv, code .atv { color: #060 }
-}

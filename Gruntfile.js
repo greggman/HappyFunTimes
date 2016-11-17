@@ -36,8 +36,8 @@ module.exports = function(grunt) {
     uglify: {
       docs_js: {
         files: {
-          'docs/3rdparty/jquery.js': ['node_modules/jquery/dist/jquery.min.js'],
-          'docs/3rdparty/require.js': ['node_modules/requirejs/require.js'],
+          'docs/assets/3rdparty/jquery.js': ['node_modules/jquery/dist/jquery.min.js'],
+          'docs/assets/3rdparty/require.js': ['node_modules/requirejs/require.js'],
         },
       },
     },
