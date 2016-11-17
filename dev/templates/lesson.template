@@ -95,9 +95,10 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
   </div>
 </div>
 </body>
-<script src="/docs/3rdparty/jquery-1.11.2.min.js"></script>
-<script src="/docs/3rdparty/prettify.js"></script>
+<script src="/docs/3rdparty/jquery.js"></script>
 <script src="/docs/js/lesson.js"></script>
+<script src="/docs/3rdparty/highlight.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
 {{{include "dev/templates/analytics.template" }}}
 </html>
 

@@ -33,6 +33,23 @@ module.exports = function(grunt) {
         'docs/dotnet',
       ],
     },
+    uglify: {
+      docs_js: {
+        files: {
+          'docs/3rdparty/jquery.js': ['node_modules/jquery/dist/jquery.min.js'],
+          'docs/3rdparty/require.js': ['node_modules/requirejs/require.js'],
+        },
+      },
+    },
+    watch: {
+      docs_md: {
+        files: ['docs/**/*.md'],
+        tasks: ['build_docs'],
+        options: {
+          spawn: false,
+        },
+      },
+    },
     eslint: {
         target: [
           'cli',
@@ -51,10 +68,13 @@ module.exports = function(grunt) {
   });
 
   grunt.loadNpmTasks('grunt-contrib-clean');
+  grunt.loadNpmTasks('grunt-contrib-concat');
+  grunt.loadNpmTasks('grunt-contrib-uglify');
+  grunt.loadNpmTasks('grunt-contrib-watch');
   grunt.loadNpmTasks('grunt-jsdoc');
   grunt.loadNpmTasks('grunt-eslint');
 
-  // WIP!!!
+  // Docs
   grunt.registerTask('unitydocsgen', function() {
     var done = this.async();
     var foo = require('./dev/js/dotnetdocs');
@@ -91,6 +111,23 @@ module.exports = function(grunt) {
       disqusCheckStr: 'happyfuntimes',  // this is not in the hostname don't show disqus comments. Prevents disqus from showing on localhost
     });
   });
+
+  grunt.registerTask('docsassets', [
+    'uglify:docs_js',
+  ]);
+
+  grunt.registerTask('docsdev', [
+    'clean:docs',
+    'builddocs',
+    'docsassets',
+    'watch',
+  ]);
+
+  grunt.registerTask('docs_build', [
+    'clean:docs',
+    'build_docs',
+    'docs_assets',
+  ]);
 
   grunt.registerTask('default', ['eslint', 'clean:docs', 'jsdoc']);
 };
