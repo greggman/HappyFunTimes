@@ -33,8 +33,8 @@ The minimum content of controller.html is
 
     <script src="/hft/hft.js"></script>
 
-Everything else is optional. You can put your own scripts directly in the HTML
-or put them outside with more script tags. All of the sample controllers load
+Everything else is option. You can put your own script directly in the HTML
+or put outside with another script tag. All of the sample controller load
 at least 2 more scripts
 
     <script src="/sample-ui/sample-ui.js"></script>
@@ -168,15 +168,6 @@ and [Safari Remote Debugging](https://developer.apple.com/library/iad/documentat
 are super useful. You plug you phone into the computer with a USB cable and you can
 debug webpages running on your phone from your computer.
 
-
-
 ## More info
 
 For more info see [The Basics of HappyFunTimes and Unity](basics.md)
-
-
-
-
-
-
-

@@ -70,13 +70,13 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 there&#39;s probably no reason for you to read this document. This is mostly
 notes to myself and whoever else is working on HappyFunTimes itself.</p>
 <h2 id="environment-variables">Environment Variables</h2>
-<p>There are a bunch of ENV vars you can set for testing</p>
+<p>There are a bunch of ENV vars you can set for testing.</p>
 <h3 id="hft_publish_user">HFT_PUBLISH_USER</h3>
-<p>Can be used to set a user:pass for calling <code>hft publish</code> vs command line arguments</p>
+<p>Can be used to set a user:pass for calling <code>hft publish</code> vs command line arguments.</p>
 <h3 id="hft_settings">HFT_SETTINGS</h3>
 <p>Used to set any setting in <code>hft.hanson</code>.</p>
 <p>It&#39;s a JSON string which will be applied to the settings in <code>hft.hanson</code>. For example
-when testing the rendevous server locally</p>
+when testing the rendevous server locally.</p>
 <pre><code>HFT_SETTINGS={settings:{rendezvousUrl:\&quot;http://localhost:1337/api/inform2\&quot;}} hft start
 </code></pre><p>Also see <a href="#hft-rendezvous-ip"><code>HFT_RENDEZVOUS_IP</code></a>.</p>
 <h3 id="hft_rendezvous_ip">HFT_RENDEZVOUS_IP</h3>

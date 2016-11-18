@@ -7,18 +7,18 @@ notes to myself and whoever else is working on HappyFunTimes itself.
 
 ## Environment Variables
 
-There are a bunch of ENV vars you can set for testing
+There are a bunch of ENV vars you can set for testing.
 
 ### HFT_PUBLISH_USER
 
-Can be used to set a user:pass for calling `hft publish` vs command line arguments
+Can be used to set a user:pass for calling `hft publish` vs command line arguments.
 
 ### HFT_SETTINGS
 
 Used to set any setting in `hft.hanson`.
 
 It's a JSON string which will be applied to the settings in `hft.hanson`. For example
-when testing the rendevous server locally
+when testing the rendevous server locally.
 
     HFT_SETTINGS={settings:{rendezvousUrl:\"http://localhost:1337/api/inform2\"}} hft start
 
@@ -51,5 +51,3 @@ I did all of that because I wanted the cordova stuff to be up and running and re
 any user scripts execute what-so-ever. Without that user scripts would have to wait on some kind
 of `hft-ready` event or register a callback or something. While I'd be fine with that my experience
 with students using HFT is the less "must do it this ways" the better.
-
-

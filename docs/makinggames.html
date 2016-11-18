@@ -68,10 +68,10 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
     <div class="col-sm-8 lesson-main">
       <h3 id="table-of-contents">Table of Contents</h3>
 <ul>
-<li><strong><a href="#setting-up-for-development">Setting up for devlopment</a></strong></li>
-<li><strong><a href="#running-games-during-development">Running Games During Development</a></strong></li>
+<li><strong><a href="#setting-up-for-development">Setting up for Development</a></strong></li>
+<li><strong><a href="#running-games-during-development">Running Games during Development</a></strong></li>
 <li><strong><a href="#writing-games">Writing Games</a></strong><ul>
-<li><strong><a href="#making-the-controller">Making the controller (phone part)</a></strong></li>
+<li><strong><a href="#making-the-controller">Making the Controller (phone part)</a></strong></li>
 <li><strong><a href="#requirejs">requirejs</a></strong></li>
 <li><strong><a href="#controller-js">controller.js</a></strong></li>
 <li><strong><a href="#dealing-with-different-phone-sizes">Dealing with different phone sizes</a></strong></li>
@@ -93,52 +93,55 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 <li><strong><a href="#misc">Misc</a></strong></li>
 <li><strong><a href="future.html">Future Features</a></strong></li>
 </ul>
-<h2 id="setting-up-for-development">Setting up for development</h2>
-<p>I&#39;m sorry there&#39;s so many steps. It&#39;s not as hard as it looks. Trust me.</p>
+<h2 id="setting-up-for-development">Setting up for Development</h2>
 <h3 id="tl-dr-version">TL;DR version</h3>
-<p>These instructions are for HTML5 games. If you&#39;re using Unity3D <a href="unity">see here</a>.</p>
+<p>These instructions are for HTML5 games. If you&#39;re using Unity3D <a href="unity">use this guide</a>.</p>
 <ul>
-<li>install happyfuntimes (<a href="http://docs.happyfuntimes.net/install.html">http://docs.happyfuntimes.net/install.html</a>) <a href="#happyfuntimes">(info)</a></li>
-<li>install node.js (<a href="http://nodejs.org/download/">http://nodejs.org/download/</a>) <a href="#nodejs">(info)</a></li>
-<li>if on windows install msysgit (<a href="http://msysgit.github.io/">http://msysgit.github.io/</a>) <a href="#msysgit">(info)</a></li>
-<li>install bower <code>sudo npm install -g bower</code> (no sudo on windows) <a href="#bower">(info)</a></li>
-<li>clone a game <a href="#clone">(info)</a></li>
-<li>edit <code>package.json</code> inside the game you cloned, change <code>gameId</code> and <code>name</code> <a href="#packagejson">(info)</a></li>
-<li>type <code>hft add</code> <a href="#hftadd">(info)</a></li>
+<li><a href="http://docs.happyfuntimes.net/install.html">Install HappyFunTimes</a> <a href="#happyfuntimes">(info)</a></li>
+<li>Install Node.js (<a href="http://nodejs.org/download/">http://nodejs.org/download/</a>) <a href="#nodejs">(info)</a></li>
+<li>If on Windows, install <a href="http://msysgit.github.io/">msysgit</a> <a href="#msysgit">(info)</a></li>
+<li>Install bower. <a href="#bower">(info)</a><ul>
+<li>On Windows:  <code>npm install -g bower</code></li>
+<li>macOS / Linux: <code>sudo npm install -g bower</code> </li>
 </ul>
-<h3 id="verbose-vesrion">Verbose vesrion</h3>
+</li>
+<li>Clone a game <a href="#clone">(info)</a></li>
+<li>Edit <code>package.json</code> inside the game you cloned, change <code>gameId</code> and <code>name</code> <a href="#packagejson">(info)</a></li>
+<li>Type <code>hft add</code> <a href="#hftadd">(info)</a></li>
+</ul>
+<h3 id="verbose-version">Verbose version</h3>
 <ul>
-<li><p><a id="happyfuntimes"/>Install HappyFunTimes (http://docs.happyfuntimes.net/install.html)</p>
+<li><p><a id="happyfuntimes"></a>Install HappyFunTimes (<a href="http://docs.happyfuntimes.net/install.html">http://docs.happyfuntimes.net/install.html</a>)</p>
 <p>On Windows you might run into security issues: <a href="windows.html">See here</a>.</p>
-<p><strong>IMPORTANT</strong> You can <strong>NOT</strong> have 2 installations of happyFunTimes.</p>
-<p>So, if you install above do NOT clone the happyfuntimes repo.</p>
-<p>If you clone the repo do NOT install happyfuntimes with the installer.</p>
-<p>Note: There is no reason to clone the repo AFAIK unless you want to
-contribute to happyfuntimes itself. For making games installing
+<p><strong>IMPORTANT</strong> You can <strong>NOT</strong> have 2 installations of HappyFunTimes.</p>
+<p>So, if you install above do NOT clone the HappyFunTimes repo.</p>
+<p>If you clone the repo do NOT install HappyFunTimes with the installer.</p>
+<p>Note: There is no reason to clone the repo unless you want to
+contribute to HappyFunTimes itself. For making games installing
 with the installer is fine.</p>
 <p>If you accidentally install twice you&#39;ll need to delete the configuration
 files because they&#39;ll be pointing to one installation.</p>
-<pre><code>OSX: ~/Library/Application Support/HappyFunTimes
-Windows: /Users/&lt;name&gt;/AppData/Local/HappyFunTimes
+<pre><code>OSX: ~/Library/Application Support/happyfuntimes
+Windows: /Users/&lt;name&gt;/AppData/Local/happyfuntimes
 Linux: ~/.happyfuntimes
-</code></pre><p>After that either run happyfuntimes you installed using the installer to make that
+</code></pre><p>After that either run HappyFunTimes you installed using the installer to make that
 the configured version, or, type <code>node start.js --app-mode</code> from the
 cloned folder if you&#39;re using a cloned repo.</p>
 </li>
-<li><p><a id="msysgit"/>If on Windows install msysgit (http://msysgit.github.io/)</p>
-<p>when asked choose to <a href="../images/msysgit-option-01.png">&quot;Use Git from the Windows Commmand Prompt&quot;</a>.</p>
+<li><p><a id="msysgit"></a>If on Windows install msysgit (<a href="http://msysgit.github.io/">http://msysgit.github.io/</a>)</p>
+<p>When asked choose to <a href="../images/msysgit-option-01.png">&quot;Use Git from the Windows Commmand Prompt&quot;</a>.</p>
 </li>
-<li><p>Open a shell/terminal/command prompt</p>
+<li><p>Open a shell / terminal / command prompt</p>
 <p>on Windows open a <a href="../images/node-js-command-prompt.png">node.js command prompt</a>.</p>
 </li>
-<li><p><a id="bower"/>Install Bower.</p>
+<li><p><a id="bower"></a>Install Bower.</p>
 <p>Bower is a program that downloads JavaScript libraries. For example
 if a controller or game needs jquery or three.js bower handles that.</p>
 <p>Type <code>npm install -g bower</code>.</p>
-<p>Don&#39;t forget that <code>-g</code>. Also you might need <code>sudo</code> on OSX or Linux</p>
+<p>Don&#39;t forget that <code>-g</code>. Also you might need <code>sudo</code> on OSX or Linux.</p>
 </li>
-<li><p><a id="clone"/>Download or Clone a game. <a href="examples.html">Pick one from the list</a></p>
-<p>for example, assuming you have git installed</p>
+<li><p><a id="clone"></a>Download or Clone a game. <a href="examples.html">Pick one from the list</a></p>
+<p>For example, assuming you have git installed</p>
 <pre><code>git clone https://github.com/greggman/hft-simple.git
 </code></pre><p>Or you can download a zip. For example if you go to
 <a href="http://github.com/greggman/hft-simple">http://github.com/greggman/hft-simple</a> you should see a &quot;Download ZIP&quot;
@@ -147,47 +150,49 @@ button on the right side.</p>
 <li><p>If this is <strong>not a unity</strong> sample then cd into the root of the repo you cloned or you unzipped.</p>
 <p>(eg. <code>cd hft-simple</code>)</p>
 </li>
-<li><p>type <code>bower install</code> which will install needed javascript modules locally</p>
+<li><p>Type <code>bower install</code> which will install needed javascript modules locally</p>
 <p>This step is only needed for some games. If there is no <code>bower.json</code>
 in the folder you can skip this step.</p>
 </li>
-<li><p><a id="packagejson"/>edit the <code>package.json</code> file and change the <code>gameId</code> and <code>name</code> to something unique.</p>
+<li><p><a id="packagejson"></a>Edit the <code>package.json</code> file and change the <code>gameId</code> and <code>name</code>
+to something unique.</p>
 <p>Note: If you are collaborating on a game don&#39;t change this stuff. Only change it
 if you&#39;re making a new game based off of an existing game.</p>
 </li>
-<li><p><a id="hftadd"/>add the game to happyfuntimes</p>
-<p>type <code>hft add</code></p>
+<li><p><a id="hftadd"></a>Add the game to HappyFunTimes</p>
+<p>Type <code>hft add</code></p>
 </li>
-<li><p>Run happyfuntimes</p>
+<li><p>Run HappyFunTimes</p>
 <p>You can run it by clicking its icon from when you installed it in step 1
 or you can run it by typing <code>hft start --app-mode</code></p>
 </li>
 </ul>
 <h2 id="running-games-during-development">Running Games during development</h2>
-<p>For HTML based games you can always just run them from happyfuntimes. Launch it,
+<p>For HTML based games you can always just run them from HappyFunTimes. Launch it,
 pick your game. For Unity3D see <a href="unitydocs.html">the unity docs</a>.</p>
-<p>Alternatively run happyfuntimes with one of the methods above and in your
+<p>Alternatively run HappyFunTimes with one of the methods above and in your
 browser window and go to <code>http://localhost:18679/games.html</code> and choose a game.
-In other window go to <code>http://localhost:18679</code>.  Note use a window, not a tab
+In other window go to <code>http://localhost:18679</code>.  Note: use a window, not a tab
 so you can see both at the same time.</p>
 <p>You can simulate other machines joining the game by opening more windows
 or tabs in your browser.</p>
 <p><img src="../images/windows-for-controllers.jpg" width="840" height="525" /></p>
-<p>Inside happyfuntimes, games with <code>(*)</code> by their name are games in development. In other words
-they are games you used <code>hft add</code> to add to happyfuntimes. Games without the <code>(*)</code> are games
-that were installed from inside happyfuntimes by going to <a href="http://superhappyfuntimes.net">superhappyfuntimes.net</a>
+<p>Inside HappyFunTimes, games with <code>(*)</code> by their name are games in development. In other words
+they are games you used <code>hft add</code> to add to HappyFunTimes. Games without the <code>(*)</code> are games
+that were installed from inside HappyFunTimes by going to <a href="http://superhappyfuntimes.net">superhappyfuntimes.net</a>
 and installing them.</p>
 <p>If you have other computers or smartphones <strong>on the same network</strong> go to <code>http://happyfuntimes.net</code>
-and they <em>should</em> connect to your game. Alternatively you can lookup the ip address of
+and they <em>should</em> connect to your game. Alternatively you can lookup the IP address of
 the machine running the game (see <code>ifconfig</code> on OSX/Linux, the Network Preferneces on OSX,
-or <code>ipconfig</code> on Windows) then go to <code>http://ipaddress:18679</code> from those machines.
+or <code>ipconfig</code> on Windows) then go to <code>http://ipaddress:18679</code> from the other devices.
 For example on my home network it was <code>http://192.168.2.9:18679</code>. For installations, museums,
 and places with no internet consider <a href="network.html">setting up for instant connect</a>.</p>
 <h2 id="writing-games">Writing Games</h2>
 <p>If you&#39;re doing it in JavaScript use any game framework you want, copy one of the examples,
 or write from scratch but a few <em>rules</em>. If you&#39;re doing it in Unity3D or any other language
 you should still follow the info below.</p>
-<p>The easist way to get started is to clone one of the existing games. Pick from</p>
+<p>The easist way to get started is to clone one of the existing games.</p>
+<h3 id="available-example-games">Available example games</h3>
 <ul>
 <li><p><a href="http://github.com/greggman/hft-jumpjump">JumpJump</a> A simple platform game written in JavaScript using WebGL / TDL</p>
 </li>
@@ -204,6 +209,7 @@ you should still follow the info below.</p>
 <li><p><a href="http://github.com/greggman/hft-simple">Unitysimple</a> A Unity3D example that just positions a sphere for each player written in C#.</p>
 </li>
 </ul>
+<h3 id="using-an-example-game">Using an example game</h3>
 <p>For example to clone JumpJump you&#39;d type</p>
 <pre><code>git clone https://github.com/greggman/hft-jumpjump.git
 </code></pre><p>This should clone game into the folder <code>hft-jumpjump</code>.</p>
@@ -222,7 +228,7 @@ hft add
 <p>Controllers are the part that runs on the phone. This part MUST be written
 in HTML/JavaScript as that&#39;s kind of the point. It needs to run on the phone
 with out requiring the user to install anything.</p>
-<p>These files are <strong>REQUIRED</strong> for all happyfuntimes games</p>
+<p>These files are <strong>REQUIRED</strong> for all HappyFunTimes games</p>
 <pre><code>controller.html           // The HTML for your controller
 css/controller.css        // The CSS for your controller
 scripts/controller.js     // The main script for your controller
@@ -291,21 +297,37 @@ function handleBar(data) {
 }
 </code></pre><h3 id="dealing-with-different-phone-sizes">Dealing with different phone sizes</h3>
 <p>The hardest part of creating a controller (I have ideas for a solution) is handling
-CSS and placement across browser versions
-and devices. For example iOS6.1, iOS7.0 and iOS7.1 all provide a different size usable area
-in Safari. On top fo that 3.5inch iPhones vs 4inch iPhones and newer provide a different usable area.
+CSS and placement across browser versions and devices. For example iOS6.1, iOS7.0 and iOS7.1
+all provide a different size usable area in Safari. On top fo that 3.5inch iPhones vs 4inch
+iPhones and newer provide a different usable area.
 And finally add Android on top of that and possibly iPad and other tablets and you can see
 this is the hardest part.</p>
 <p>Be sure to test before you demo! If you happen to be on a Mac the iOS Simulator that
 comes with XCode is your friend.</p>
+<h4 id="possible-solution-for-newer-devices">Possible solution for newer devices</h4>
+<p>If you want to support only newer devices with browsers that are actually up to date, you may
+use CSS viewport units. Viewport units use the actual size of the devices&#39; screen to calculate
+the width or height. 
+This means that if you use viewport units like <code>10vh</code> instead of fixed values like <code>60px</code> the
+browser will calculate the height based on the screen size.</p>
+<p><strong>Example</strong></p>
+<p>An element with the following CSS styles:</p>
+<pre><code>.box {
+    width: 50vh;
+    height: 50vh;
+}
+</code></pre><p>will have a width and height of 50% of the usable screen.</p>
+<p><code>50vh</code> equals <code>50%</code> of the browser size. <code>10vh</code> would equal <code>10%</code>.</p>
+<p>If you want to know which browsers support viewport units, see <a href="http://caniuse.com/#feat=viewport-units">this overview</a>.
+Make sure to set the units for each portrait and landscape mode.</p>
 <h2 id="games-in-javascript">Games in JavaScript</h2>
-<p>For a game in JavaScript, on top of the controller files there are 3 main files <strong>REQUIRED</strong></p>
+<p>For a game in JavaScript, on top of the controller files there are 3 main files which are <strong>REQUIRED</strong>:</p>
 <pre><code>game.html           // The HTML for your game
 css/game.css        // The CSS for your game
 scripts/game.js     // The main script for your game
 </code></pre><p>game.html is loaded into a template at runtime. The template provides the following features</p>
 <ul>
-<li><p>Handles displaying a disconnected message if the game gets disconnected from happyfuntimes</p>
+<li><p>Handles displaying a disconnected message if the game gets disconnected from HappyFunTimes</p>
 </li>
 <li><p>Will display an FPS meter if <code>showFPS</code> is set to <code>true</code>.</p>
 </li>
@@ -438,7 +460,6 @@ Player.prototype.handleDisconnect = function() {
   }
 };
 
-
 function someFunctionThatCreatesAPlayeer(netPlayer, name) {
    // create a new player and add it to our array of players.
    players.push(new Player(netPlayer, name));
@@ -455,23 +476,23 @@ Player.prototype.handleMove = function(data) {
 </code></pre><p>That code assumes there&#39;s corresponding code in <code>controller.js</code> something like</p>
 <pre><code>g_client.sendCmd(&#39;move&#39;, {x: someDeltaX, y: someDeltaY});
 </code></pre><p>Similarly send messages to the phone with</p>
-<pre><code>   this.netPlayer.sendCmd(&#39;boom&#39;, {powerLevel: somePowerLevel});
+<pre><code>this.netPlayer.sendCmd(&#39;boom&#39;, {powerLevel: somePowerLevel});
 </code></pre><p>And back in <code>controller.js</code></p>
 <pre><code>g_client.addEventListener(&#39;boom&#39;, handleBoom);
 
 funciton handleBoom(data) {
    // do something with data.powerLevel
 }
-</code></pre><h3 id="handling-names">handling names</h3>
-<p>The CommonUI allows the player to choose name. That name is sent when the player connects
-but the player can set their name anytime by choosing the wrench menu and picking &quot;Set Name&quot;.</p>
+</code></pre><h3 id="handling-names">Handling names</h3>
+<p>The CommonUI allows the player to choose a name. That name is sent when the player connects
+but the player can set their name anytime by choosing the wrench menu and selecting &quot;Set Name&quot;.</p>
 <p>Two messages are sent, <code>busy</code> and <code>setName</code>.</p>
 <p><code>busy</code> indicates the player is on system menu which means they are not playing at the moment.
 It will be passed an object with <code>busy:true</code> or <code>busy:false</code> when they enter and exit the system
 menus.</p>
-<p>Its up to you to decide if you care. For example maybe you&#39;d like to remove them from the game when you
+<p>It&#39;s up to you to decide if you care. For example maybe you&#39;d like to remove them from the game when you
 receive the message something like</p>
-<pre><code>    netPlayer.addEventListener(&#39;busy&#39;, Player.prototype.handleBusyMsg.bind(this));
+<pre><code>netPlayer.addEventListener(&#39;busy&#39;, Player.prototype.handleBusyMsg.bind(this));
 
 Player.prototype.handleBusyMsg = function(data) {
    if (data.busy) {
@@ -485,7 +506,7 @@ Player.prototype.handleBusyMsg = function(data) {
 };
 </code></pre><p><code>setName</code> indicates the player has chosen a new name. If the name is blank you can send a name
 back to the controller.</p>
-<pre><code>    netPlayer.addEventListenter(&#39;setName&#39;, Player.prototype.handleSetNameMsg.bind(this));
+<pre><code>netPlayer.addEventListenter(&#39;setName&#39;, Player.prototype.handleSetNameMsg.bind(this));
 
 Player.prototype.handleSetNameMsg = function(data) {
   player.name = data.name || &quot;The Unknown Solider&quot;;
@@ -503,7 +524,7 @@ Player.prototype.handleSetNameMsg = function(data) {
 If it does not exist your <code>icon.png/jpg/gif</code> will be used.</p>
 <h2 id="other-languages">Other Languages</h2>
 <p>Coming Soon. Techinally games can be written in any language although currently only library for JavaScript and
-Unity3D exist (working on more)</p>
+Unity3D exist (working on more).</p>
 
       <hr/>
       <div>

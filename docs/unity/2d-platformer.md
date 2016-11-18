@@ -1,15 +1,12 @@
 Title: 2d Platformer
 Description: Using HappyFunTimes with a 2d platformer
 
-## **Depecated**
-
 This is just one example. There is no "correct" way. There's whatever
 works for your game. Maybe you'd like to make it so players
 tilt their phone left or right to move their character and
-shake it to jump. It's really up to you but as a simple
-version this example uses the [HFTGamepad]
+shake it to jump. It's really up to you.
 
-You can [download this sample here](http://docs.happyfuntimes.net/docs/unity/samples.html?owner=greggman&repo=hft-unity3d).
+You can [download this sample here](http://docs.happyfuntimes.net/docs/unity/samples.html?owner=greggman&repo=hft-unity2dplatformer).
 
 Note: You should consider checking out the [HappyFunTimes Unity GamePad example](gamepad.md)
 which is easier than this sample. This sample is still 100% valid and server as a good example

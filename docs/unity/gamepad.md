@@ -8,7 +8,8 @@ the part that runs on the phone, but using this sample is a good way to skip
 that part if you're looking to get started with HappyFunTimes as quickly as possible.
 
 Once you get the hang of it feel free to modify this sample for new features
-or look at one of the many other samples.
+or look at one of the many other samples. For example if you want to see how a controller
+(the part on the phone) actually works [check out the 2d platformer example](2d-platformer.md)
 
 This sample is included with the [Unity HappyFunTimes plugin](https://www.assetstore.unity3d.com/en/#!/content/19668).
 Or, you can [download the plugin here](http://docs.happyfuntimes.net/docs/unity/samples.html?owner=greggman&repo=hft-unity3d).

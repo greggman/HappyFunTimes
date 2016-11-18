@@ -87,7 +87,7 @@ moved to the side AND we had to tell them on their controller
 to keep playing.</p>
 </li>
 <li><p>Always make the player press something</p>
-<p>So far a browser can&#39;t prevent the phone from sleeping
+<p>So far a browser can&#39;t prevent the phone from sleeping.
 A solution is to make sure the player has a reason to
 interact with the phone often.</p>
 <p>So for example the hft-garden game requires you press
@@ -104,7 +104,7 @@ game and eventually their phone would go to sleep.</p>
 </code></pre></li>
 <li><p>Preventing images from popping up a context menu</p>
 <p>Both Safari on iOS and Chrome on Android will pop
-up a context menu &quot;Save Image?&quot; if the user long
+up a context menu &quot;Save Image&quot; if the user long
 presses an image. So prevent that you need both this CSS:</p>
 <pre><code>img {
     -moz-user-select: none;
@@ -116,11 +116,11 @@ presses an image. So prevent that you need both this CSS:</p>
 </code></pre><p>And this JavaScript in your <code>controller.js</code></p>
 <pre><code>mobileHacks.disableContextMenu();
 </code></pre></li>
-<li><p>Use the iOS simulator</p>
+<li><p>Use the iOS Simulator</p>
 <p>You probably need to test both landscape and portrait
 and 3.5 inch (iPhone4-) and 4.0 inch (iPhone5+) sizes
 iOS6, 7, and 8, as well as iPad.</p>
-<p>I&#39;d recommend the Android sim but it&#39;s so damn slow.
+<p>I&#39;d recommend the Android simulator but it&#39;s damn slow.
 I know it can be configured to run faster but even then
 it takes forever to start where as the iOS simulator
 runs nearly immediately and lets you switch devices
@@ -133,13 +133,13 @@ It&#39;s awesome!</p>
 <li><p>Make options that don&#39;t need contollers to test your game.</p>
 <p>Powpow, Shootshoot, Jumpjump will all use the local
 keyboard to run a player if you put <code>?settings={haveServer:false}</code>
-at the end of the URL. Boomboom you have to put
+at the end of the URL. For Boomboom you have to set
 <code>?settings={haveServer:false,numLocalPlayers:2}</code></p>
 </li>
 <li><p>Use URL settings for testing.</p>
 <p>Most of the samples, both controllers and games, support
 various flags and settings passed in on the URL. This is great
-for testing. Example: <code>?settings={debug:true,showState:true,gravity:500}</code> etc..</p>
+for testing. Example: <code>?settings={debug:true,showState:true,gravity:500}</code> etc.</p>
 </li>
 <li><p>Show the player&#39;s colors/avatar on the controller.</p>
 <p>Since the controller for each game is HTML there&#39;s
@@ -150,90 +150,39 @@ Other games the game pics the color/style and sends it to the controller
 (powpow, jumpjump, boomboom, ...)</p>
 </li>
 <li><p>Use media queries to adjust the controller by device and/or orientation</p>
-<p>In CSS you can use media queries something like this</p>
-<pre><code>/* Smartphones (portrait and landscape) ----------- */
-@media only screen
-and (min-device-width : 320px)
-and (max-device-width : 480px) {
-/* Styles */
+<p>You may search <a href="https://css-tricks.com/snippets/css/media-queries-for-standard-devices/">this overview</a>
+for media queries for specifix devices. However it&#39;s not recommended to try
+to add media queries for <em>every device</em> as this will unnecessarily bloat your CSS files.
+Just make sure that your UI is optimized for different screen sizes and the device orientation.</p>
+<pre><code>@media only screen 
+  and (min-device-width: 320px) {
+  /* Styles for devices larger than 320px */
 }
 
-/* Smartphones (landscape) ----------- */
-@media only screen
-and (min-width : 321px) {
-/* Styles */
+@media only screen 
+  and (min-device-width: 768px) {
+  /* Styles for devices larger than 768px */
+}
+</code></pre><p>If you want to change the style based on the orientation, you may add a media query for the
+orientation:</p>
+<pre><code>@media all and (orientation:portrait) {
+  /* Styles for Portrait screen */
 }
 
-/* Smartphones (portrait) ----------- */
-@media only screen
-and (max-width : 320px) {
-/* Styles */
-}
-
-/* iPads (portrait and landscape) ----------- */
-@media only screen
-and (min-device-width : 768px)
-and (max-device-width : 1024px) {
-/* Styles */
-}
-
-/* iPads (landscape) ----------- */
-@media only screen
-and (min-device-width : 768px)
-and (max-device-width : 1024px)
-and (orientation : landscape) {
-/* Styles */
-}
-
-/* iPads (portrait) ----------- */
-@media only screen
-and (min-device-width : 768px)
-and (max-device-width : 1024px)
-and (orientation : portrait) {
-/* Styles */
-}
-
-/* iPhone 4 ----------- */
-@media
-only screen and (-webkit-min-device-pixel-ratio : 1.5),
-only screen and (min-device-pixel-ratio : 1.5) {
-/* Styles */
-}
-</code></pre><p>The samples pretty much only use 4 settings</p>
-<pre><code>/* Smartphones (portrait and landscape) ----------- */
-@media only screen
-and (min-device-width : 320px)
-and (max-device-width : 480px) {
-/* Styles */
-}
-
-/* Smartphones (landscape) ----------- */
-@media only screen
-and (min-width : 321px) {
-/* Styles */
-}
-
-/* Smartphones (portrait) ----------- */
-@media only screen
-and (max-width : 320px) {
-/* Styles */
-}
-
-/* Everything not a phone ----------- */
-@media only screen
-and (min-device-width : 768px) {
-/* Styles */
+@media all and (orientation:landscape) {
+  /* Styles for Landscape screen */
 }
 </code></pre></li>
 <li><p>If the controllers doesn&#39;t work in portrait or landscape consider using using the CSS above to inform the user.</p>
-<p>Example, if it doesn&#39;t work in portrait then in your HTML</p>
+<p>Example
+If you don&#39;t want the user to use his device in portrait mode, place this HTML at the top of your page</p>
 <pre><code>&lt;div id=&quot;turnthescreen&quot;&gt;&lt;div&gt;Turn the Screen &amp;#x21ba;&lt;/div&gt;&lt;/div&gt;
-</code></pre><p>Then in your CSS something like</p>
+</code></pre><p>Then add the following in your HTML</p>
 <pre><code>#turnthescreen {
     display: none;
 }
 
-@media only screen and (max-width : 360px) {
+@media only screen and (orientation:portrait) {
 /* Styles */
     #turnthescreen {
         position: absolute;
@@ -242,18 +191,19 @@ and (min-device-width : 768px) {
         width: 100%;
         height: 100%;
         display: block;
-        z-index: 1000;
+        z-index: 9999;
         background-color: red;
         color: white;
     }
 }
-</code></pre><p>Note: powpow and jumpjump already do this with standard HappyFunTimes support. Copy them.</p>
+</code></pre><p>Note: powpow and jumpjump already do this with standard HappyFunTimes support.
+Feel free to copy the code.</p>
 </li>
 <li><p>Use HandJS</p>
 <p>Touch events suck balls. Microsoft proposed a much better system
 called Pointer events and they provided a polyfill for all browsers
 called HandJS that provides pointer events across browser.</p>
-<p>NOTE: HandJS is a standard part of HappyFunTimes already and will be
+<p>Note: HandJS is a standard part of HappyFunTimes already and will be
 included if you use the <a href="http://docs.happyfuntimes.net/docs/hft/module-Touch.html"><code>Touch</code> module</a>.
 I recommend you use the touch module where possible as we can then fix bugs as they come up
 across games.</p>
@@ -295,8 +245,7 @@ class <code>fixheight</code> and set their height to their parent&#39;s clientHe
 all the issues.</p>
 </li>
 <li><p>Consider using Canvas to draw your controllers</p>
-<p>CSS sucks balls or rather I can never figure out how to get it to do what I want.
-I literally spend 1-3 hours doing something I expect to take me 5 minutes like
+<p>I literally spend 1-3 hours doing something I expect to take me 5 minutes like
 trying to get some unicode bullet centered in a button.</p>
 <p>So, I realized I could just make a canvas and hand draw the controls I want in it.
 I did this for the DPad examples although I use a separate canvas for each. I could
@@ -349,15 +298,13 @@ would load <code>somelib.js</code> and <code>otherlib.js</code> and call <code>d
 Now it would call the function that was passed to <code>yetanotherlib.js:define()</code>. That funtion returns an
 object with single property <code>astrofy</code>. The system then calls the functions that were passed to
 <code>somelib.js:define</code> and <code>otherlib.js:define</code> passing in the object from <code>yetanotherlib</code>.
-It finally calls the function that was passed to <code>game.js:requirejs</code></p>
+It finally calls the function that was passed to <code>game.js:requirejs</code>.</p>
 </li>
-</ul>
-<ul>
 <li><p>Disable caching in your browser</p>
 <p>Right now the relayserver tells the browser not to cache anything. Whether the browser
 pays attention to this is up to the browser.</p>
 <p>You can also often turn off caching in the browser. In Chrome for example, open the
-devtools. Click the gear icon near the top right of the tools. Check
+Developer Tools. Click the gear icon near the top right of the tools. Check
 &quot;Disable Cache (when Devtools is open)&quot;</p>
 </li>
 </ul>

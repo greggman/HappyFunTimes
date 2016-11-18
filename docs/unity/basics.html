@@ -76,10 +76,12 @@ start from. In fact <a href="gamepad.html">if you want to get started quick
 as possible see the included gamepads</a>.
 Otherwise the following covers the basics of how to
 make everything custom.</p>
+<p>HappyFunTimes also does not supply a game engine. That&#39;s
+what Unity3D is for.</p>
 <h2 id="open-the-simple-example">Open the simple example</h2>
 <p>The closest example to the code below is contained in the simple scene
 in <code>Assets/HappyFunTimes/MoreSamples/Simple/Scenes/HappyFunTimesSimpleExample</code>
-Inside you&#39;ll find <code>ExampleSimpleSpawner</code> GameObject that contains the <code>PlayerSpawner</code>
+Inside you&#39;ll find <code>ExampleSimpleSpawner</code> that contains the <code>PlayerSpawner</code>
 mentioned below. Similarly you&#39;ll find it spawns a prefab called <code>PrefabForExampleSimple</code>
 that contains a script <code>ExampleSimplePlayer</code> that is very similar to the code
 below.</p>
@@ -202,27 +204,17 @@ var misc = sampleUI.misc;
 var mobileHacks = sampleUI.mobileHacks;
 var strings = sampleUI.strings;
 var touch = sampleUI.touch;
-</code></pre><p>Then after we&#39;ve created the <code>hft.GameClient</code> (see above) we call a few functions</p>
+</code></pre><p>Then after we&#39;ve created the <code>HFT.GameClient</code> (see above) we call a few functions</p>
 <pre><code>commonUI.setupStandardControllerUI(client, globals);
 commonUI.askForNameOnce();
 commonUI.showMenu(true);
 </code></pre><p>The first one</p>
 <pre><code>commonUI.setupStandardControllerUI(client, globals);
-</code></pre><p>Lets the sample-ui look for disconnect and messages related to the player&#39;s name.
-If possible it will try to take the display fullscreen (Android).</p>
-<p>The <code>globals</code> parameter is a set of options. For example</p>
-<pre><code>var globals = {
-  debug: false,
-  // orientation: &quot;landscape-primary&quot;,
-};
-</code></pre><p>If <code>orientation</code> is set and it&#39;s an Android phone it will try to set the display orientation.
-On iOS it will tell the player to rotate their phone.</p>
-<p>Setting <code>debug</code> to true will display some extra html to allow you to show messages using
-<code>commonUI.log(msg)</code> and <code>commonUI.error(msg)</code>.</p>
+</code></pre><p>Lets the sample-ui look for disconnect and messages related to the player&#39;s name</p>
 <p>The second line</p>
 <pre><code>commonUI.askForNameOnce();
 </code></pre><p>says &quot;if the player hasn&#39;t set their name ask them to enter one&quot;.
-If your game doesn&#39;t need a player name delete that line.</p>
+If you&#39;re game doesn&#39;t need a player name delete that line.</p>
 <p>The last line</p>
 <pre><code>commonUI.showMenu(true);
 </code></pre><p>says show the gear menu in the top right that lets the player change their name
@@ -241,15 +233,14 @@ mobileHacks.disableContextMenu();
 </code></pre><p>parses the query string into globals. In particular a JSON string assigned to settings
 so if your controller URL is <code>http://localhost:18679?settings={foo:123,bar:&quot;abc&quot;}</code>
 then <code>globals.foo</code> will be <code>123</code> and <code>globals.bar</code> will be <code>&quot;abc&quot;</code>.
-You can use this during development to pass in stuff for testing etc or for example
-to turn on debugging <code>http://localhost:18679?settings={debug:true&quot;}</code></p>
+You can use this during development to pass in stuff for testing etc.</p>
 <p>This line</p>
 <pre><code>mobileHacks.fixHeightHack();
 </code></pre><p>Tries to deal with some quirks of mobile browsers.</p>
 <p>The last line</p>
 <pre><code>mobileHacks.disableContextMenu();
 </code></pre><p>Tries to disable the context menu. Otherwise if the player holds their finger on the
-phone a browser menu will pop up asking them if they want to copy etc...</p>
+phone it browser menu will pop up asking them if they want to copy etc...</p>
 <h2 id="docs-for-the-sample-ui">Docs for the sample-ui</h2>
 <p><a href="/docs/hft/">The various JavaScript functions of the sample-ui are documented here</a>.</p>
 <h2 id="dealing-with-the-player-s-name">Dealing with the player&#39;s name</h2>
@@ -309,31 +300,38 @@ private void ChangeName(string name) {
     </div>
     <div class="col-sm-3 col-sm-offset-1 lesson-sidebar">
         <ul class="toc">
-<li>HappyFunTimes for Unity
+<li>HappyFunTimes & Unity
   <ul>
-    <li><a href="getting-started.html">Getting Started</a><span class="hide">Do this first!!</span></li>
-    <li><a href="first-game.html">Your First HappyFunTimes Game</a><span class="hide">Do this second!!</span></li>
-    <li><a href="gamepad.html">The Sample Gamepad</a><span class="hide">Read this!!!</span></li>
-    <li><a href="basics.html">How it Works</a><span class="hide">Read this!!!</span></li>
+    <li><a href="getting-started.html">Getting Started</a><span class="hide">: Do this first!!</span></li>
+    <li><a href="first-game.html">Your First HappyFunTimes Game</a><span class="hide">: Do this second!!</span></li>
+    <li><a href="gamepad.html">The Sample Gamepad</a><span class="hide": Read this!!!</li>
+    <li><a href="basics.html">How it Works</a><span class="hide">: Read this!!!</span></li>
   </ul>
 </li>
 <li>Specifics
   <ul>
-    <li><a href="player-connect.html">Spawning Players</a></li>
-    <li><a href="self-control.html">Making Controllers (the phone part)</a></li>
-    <li><a href="gamepad-sounds.html">Playing Sounds on the Phone</a></li>
+    <li><a href="player-connect.html">Spawn players</a></li>
+    <li><a href="self-control.html">Making controllers (the phone part)</a></li>
+    <li><a href="gamepad-sounds.html">Playing sounds on the phone</a></li>
     <li><a href="gamepad-multitouch.html">Handling Multi-Touch</a></li>
+  </ul>
+</li>
+<li>Examples
+  <ul>
+    <li><a href="3d-characters.html">3d Characters</a></li>
+    <li><a href="2d-platformer.html">2d Platformer</a></li>
+
   </ul>
 </li>
 <li>Techinques
   <ul>
-    <li><a href="reusing-players.html">Handling Disconnect and Reconnect</a></li>
-    <li><a href="too-many-players.html">Preventing Too Many Players</a></li>
+    <li><a href="reusing-players.html">Handling disconnect and reconnect</a></li>
+    <li><a href="too-many-players.html">Preventing too many players</a></li>
     <li><a href="device-orientation.html">Using Device Orientation</a></li>
     <li><a href="accelerometer.html">Using the Accelerometer</a></li>
-    <li><a href="character-selection.html">Spawning Different Characters per Player</a></li>
+    <li><a href="character-selection.html">Spawning different characters per Player</a></li>
     <li><a href="multi-machine.html">Multiple Computers</a></li>
-    <li><a href="talking-between-games.html">Talking Between Multiple Computers</a></li>
+    <li><a href="talking-between-games.html">Talking Between Multiple Computers</li>
   </ul>
 </li>
 <li>Sample-UI API Reference
@@ -343,8 +341,6 @@ private void ChangeName(string name) {
 </li>
 <li>Other
   <ul>
-    <li><a href="rendezvous-server.html">Publishing your Game</a><span class="hide">Read this!!!</span></li>
-    <li><a href="installation-mode.html">Installations and Museums</a></li>
     <li><a href="changelog.html">Changelog</a></li>
   </ul>
 </li>

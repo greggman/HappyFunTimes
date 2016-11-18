@@ -82,19 +82,19 @@ will list all the commands. Typing <code>hft cmd --help</code> will list the hel
 <li><strong><a href="#-hft-uninstall-gameid-"><code>hft uninstall</code></a></strong></li>
 </ul>
 <h3 id="-hft-add-"><code>hft add</code></h3>
-<p>adds the game in the current folder to happyfuntimes</p>
+<p>Adds the game in the current folder to happyfuntimes</p>
 <h3 id="-hft-check-"><code>hft check</code></h3>
-<p>checks if the <code>package.json</code> in the current folder is correct
+<p>Checks if the <code>package.json</code> in the current folder is correct
 and if other things like <code>controller.html</code> are missing.</p>
 <h3 id="-hft-download-gameid-"><code>hft download gameId</code></h3>
-<p>downloads and installs a game from superhappyfuntimes.</p>
+<p>Downloads and installs a game from superhappyfuntimes.</p>
 <h3 id="-hft-install-srcpath-"><code>hft install srcpath</code></h3>
-<p>installs a zip file created with <code>hft make-release</code>. Can be used for testing otherwise
+<p>Installs a zip file created with <code>hft make-release</code>. Can be used for testing otherwise
 there&#39;s no reason to run this.</p>
 <h3 id="-hft-list-"><code>hft list</code></h3>
-<p>lists all the games currently added or installed in happyfuntimes</p>
+<p>Lists all the games currently added or installed in happyfuntimes</p>
 <h3 id="-hft-make-release-dstpath-"><code>hft make-release dstpath</code></h3>
-<p>makes a releases, a zip file, of the game in the current folder and saves it to
+<p>Makes a releases, a zip file, of the game in the current folder and saves it to
 a path <code>dstpath</code>. Note <code>dstpath</code> must be a folder. Also note if the game is
 a unity game you must exit unity as unity will be called to export the game.
 This is mostly for testing. See <a href="#-hft-publish-">hft publish</a></p>
@@ -127,9 +127,9 @@ It is called by <code>hft publish</code>.</p>
 <p>This is the opposite of <code>hft add</code>. It removes the game in the current folder from
 happyFunTimes. No files are deleted.</p>
 <h3 id="-hft-start-"><code>hft start</code></h3>
-<p>starts happyFunTimes.</p>
+<p>Starts the happyFunTimes server.</p>
 <h4 id="-app-mode-"><code>--app-mode</code></h4>
-<p>launches the browser to <code>http://localhost:18679/games.html</code>. This is the same way HappyFunTimes
+<p>Launches the browser to <code>http://localhost:18679/games.html</code>. This is the same way HappyFunTimes
 is started when you launch by clicking the HappyFunTimes program icon.</p>
 <h4 id="-system-name-somename-"><code>--system-name=&lt;somename&gt;</code></h4>
 <p>If you&#39;re at a gamejam or some other place where there are multiple happyfuntimes
@@ -152,7 +152,7 @@ go directly to the game with this option.</p>
 <p>Displays a scrolling message on the screen telling users how to connect to the game</p>
 <h4 id="-langs-"><code>--langs</code></h4>
 <p>Chooses which languages to display instructions. Example <code>--langs=en,ja</code></p>
-<p>Note: To add more languages <a href="https://github.com/greggman/HappyFunTimes/blob/master/server/languages.js">please submit a pull request for this file</a></p>
+<p>Note: To add more languages <a href="https://github.com/greggman/HappyFunTimes/blob/master/server/languages.js">please submit a pull request for this file</a>.</p>
 <h4 id="-instructionsposition-position-"><code>--instructionsPosition=&lt;position&gt;</code></h4>
 <p>Selects where to put the connection instructions. Valid values are <code>top</code>, and <code>bottom</code>.
 Games can also select where to put the messages in their <a href="packagejson.html">package.json</a>.</p>
@@ -177,7 +177,7 @@ on <code>controller.js</code> using <a href="https://github.com/jrburke/almond">
 <p>This option is not the default because it&#39;s very hard to debug optimized code. You would
 probably only use this option with <a href="network.html">installation mode</a>.</p>
 <h3 id="-hft-uninstall-gameid-"><code>hft uninstall gameId</code></h3>
-<p>Un-installs a game from happyfuntimes. <strong>WARNING!!! this DELETES FILES!!!</strong></p>
+<p>Un-installs a game from happyfuntimes. <strong>WARNING! This DELETES FILES!!!</strong></p>
 
       <hr/>
       <div>

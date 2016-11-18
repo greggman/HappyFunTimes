@@ -1,8 +1,6 @@
 Title: 3d Characters
 Description: How to control 3D characters with HappyFunTimes
 
-## depecated
-
 How do you control 3D characters with HappyFunTimes? The short answer is
 "it depends".
 
@@ -12,7 +10,7 @@ control pad emualtor.
 
 At the moment there is [one sample you can find here](http://docs.happyfuntimes.net/docs/unity/samples.html?owner=greggman&repo=hft-unitycharacterexample).
 
-## A short explaination:
+## A short explanation:
 
 ### HTML
 
@@ -262,4 +260,3 @@ Otherwise we've just gone through the code and repalced `Input.` with
 
 The emulation is just a basic shell. It's up to you if you'd like it to
 handle other cases.
-
