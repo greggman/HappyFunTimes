@@ -1,13 +1,18 @@
 {
   "name": "happyfuntimes",
-  "description": "happyfuntimes framework",
+  "description": "happyfuntimes massively local multiplayer electron framework",
   "version": "0.0.49",
   "scripts": {
-    "test": "node node_modules/mocha/bin/mocha --recursive",
-    "start": "node start.js --app-mode"
+    "build": "webpack --config src/hft.config.js"
   },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/greggman/HappFunTimes.git"
+  },
+  "main": "start.js",
   "files": [
-    "server/server.js"
+    "server",
+    "dist"
   ],
   "dependencies": {
     "connect-busboy": "0.0.2",

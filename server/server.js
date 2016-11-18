@@ -33,7 +33,7 @@
 
 var optionSpec = {
   options: [
-   { option: 'port', alias: 'p', type: 'Int',     description: 'port. Default 18679', default: `18679`},
+   { option: 'port', alias: 'p', type: 'Int',     description: 'port. Default 18679', default: '18679'},
    { option: 'dns',              type: 'Boolean', description: 'enable dns server'},
    { option: 'address',          type: 'String',  description: 'ip address for dns and controller url conversion'},
    { option: 'help', alias: 'h', type: 'Boolean', description: 'displays help'},
@@ -49,11 +49,9 @@ var optionSpec = {
   },
 };
 
-var debug      = require('debug')('server');
 var log        = require('../lib/log');
 var Promise    = require('promise');
 var optionator = require('optionator')(optionSpec);
-var settings;
 
 try {
   var args = optionator.parse(process.argv);

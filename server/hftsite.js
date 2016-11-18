@@ -44,7 +44,7 @@ var g = {
 console.log("make settable");
 var settings = {
   rendezvousUrl: "http://happyfuntimes.net/api/inform2",
-}
+};
 
 var getTime = function() {
   return Date.now();

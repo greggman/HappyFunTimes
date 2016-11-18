@@ -31,14 +31,10 @@
 
 "use strict";
 
-var computerName = require('../lib/computername');
 var debug        = require('debug')('relayserver');
 var events       = require('events');
-var fs           = require('fs');
 var GameGroup    = require('./game-group');
-var path         = require('path');
 var Player       = require('./player');
-var strings      = require('../lib/strings');
 var WSServer     = require('./websocketserver');
 
 /**
@@ -83,7 +79,6 @@ var RelayServer = function(servers, inOptions) {
   var options = {};
   var socketServers = [];
   var eventEmitter = new events.EventEmitter();
-  var hftServer = inOptions.hftServer;
 
   this.setOptions = function(srcOptions) {
     ["baseUrl"].forEach(function(key) {
@@ -204,7 +199,7 @@ var RelayServer = function(servers, inOptions) {
     var gameId = data.gameId || "HFTHTML5";
     debug("starting game: " + gameId);
     var gameGroup = getGameGroup(gameId, true);
-    var game = gameGroup.assignClient(client, data);
+    gameGroup.assignClient(client, data);
     eventEmitter.emit('gameStarted', {gameId: gameId});
   };
 
