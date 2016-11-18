@@ -51,8 +51,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 <title>Handling Disconnect and Reconnect.</title>
 <link href="/public/hft-icon.png" rel="shortcut icon" type="image/png">
-<link rel="stylesheet" href="/docs/css/base.css" type="text/css" />
-<link rel="stylesheet" href="/docs/css/lesson.css" type="text/css" />
+<link rel="stylesheet" href="/docs/assets/css/styles.css" type="text/css" />
 </head>
 <body>
 <div class="header">
@@ -61,11 +60,11 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 
 <div class="container">
-  <div class="lesson-title">
+  <div class="docs-title">
     <h1>Handling Disconnect and Reconnect.</h1>
   </div>
   <div class="row">
-    <div class="col-sm-8 lesson-main">
+    <div class="col-sm-8 docs-content">
       <p>For many games this doesn&#39;t matter. Do nothing. A player that disconnects
 and reconnects later just starts as a new player. The majority of samples
 HappyFunTimes games work this way.</p>
@@ -123,13 +122,12 @@ and are no longer interested in playing. Maybe their battery died on their
 phone. All of that is a design issue and I can&#39;t really help but it&#39;s something
 you should think about if you&#39;re designing a long play game.</p>
 
-      <hr/>
-      <div>
+      <div class="docs-footer">
         <div>Questions? <a href="http://stackoverflow.com/questions/tagged/happyfuntimes">Ask on stackoverflow</a>.</div>
         <div>Issue/Bug? <a href="http://github.com/greggman/happyfuntimes/issues">Create an issue on github</a>.</div>
-
-        <div id="disqus_thread"></div>
-        <script type="text/javascript">
+        <div class="docs-comments">
+          <div id="disqus_thread"></div>
+          <script type="text/javascript">
             /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
             var disqus_shortname = 'happyfuntimes'; // required: replace example with your forum shortname
             var disqus_identifier = 'Handling Disconnect and Reconnect.';
@@ -137,64 +135,65 @@ you should think about if you&#39;re designing a long play game.</p>
 
             /* * * DON'T EDIT BELOW THIS LINE * * */
             (function() {
-                if (window.location.hostname.indexOf("happyfuntimes") < 0) {
-                    return;
-                }
-                var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
-                dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
-                (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+              if (window.location.hostname.indexOf("happyfuntimes") < 0) {
+                return;
+              }
+              var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+              dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+              (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
             })();
-        </script>
-        <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
-        <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+          </script>
+          <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+          <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+        </div>
       </div>
     </div>
-    <div class="col-sm-3 col-sm-offset-1 lesson-sidebar">
+    <div class="col-sm-3 col-sm-offset-1 docs-sidebar">
         <ul class="toc">
-<li>HappyFunTimes & Unity
-  <ul>
-    <li><a href="getting-started.html">Getting Started</a><span class="hide">: Do this first!!</span></li>
-    <li><a href="first-game.html">Your First HappyFunTimes Game</a><span class="hide">: Do this second!!</span></li>
-    <li><a href="gamepad.html">The Sample Gamepad</a><span class="hide": Read this!!!</li>
-    <li><a href="basics.html">How it Works</a><span class="hide">: Read this!!!</span></li>
-  </ul>
-</li>
-<li>Specifics
-  <ul>
-    <li><a href="player-connect.html">Spawn players</a></li>
-    <li><a href="self-control.html">Making controllers (the phone part)</a></li>
-    <li><a href="gamepad-sounds.html">Playing sounds on the phone</a></li>
-    <li><a href="gamepad-multitouch.html">Handling Multi-Touch</a></li>
-  </ul>
-</li>
-<li>Examples
-  <ul>
-    <li><a href="3d-characters.html">3d Characters</a></li>
-    <li><a href="2d-platformer.html">2d Platformer</a></li>
-
-  </ul>
-</li>
-<li>Techinques
-  <ul>
-    <li><a href="reusing-players.html">Handling disconnect and reconnect</a></li>
-    <li><a href="too-many-players.html">Preventing too many players</a></li>
-    <li><a href="device-orientation.html">Using Device Orientation</a></li>
-    <li><a href="accelerometer.html">Using the Accelerometer</a></li>
-    <li><a href="character-selection.html">Spawning different characters per Player</a></li>
-    <li><a href="multi-machine.html">Multiple Computers</a></li>
-    <li><a href="talking-between-games.html">Talking Between Multiple Computers</li>
-  </ul>
-</li>
-<li>Sample-UI API Reference
-  <ul>
-    <li><a href="/docs/hft/">Sample UI (HTML/JavaScript) API</a></li>
-  </ul>
-</li>
-<li>Other
-  <ul>
-    <li><a href="changelog.html">Changelog</a></li>
-  </ul>
-</li>
+    <li>HappyFunTimes & Unity
+        <ul>
+            <li><a href="getting-started.html">Getting Started</a><span class="hide">: Do this first!</span></li>
+            <li><a href="first-game.html">Your First HappyFunTimes Game</a><span class="hide">: Do this second!</span>
+            </li>
+            <li><a href="gamepad.html">The Sample Gamepad</a><span class="hide">: Read this!</span></li>
+            <li><a href="basics.html">How it Works</a><span class="hide">: Read this!</span></li>
+        </ul>
+    </li>
+    <li>Specifics
+        <ul>
+            <li><a href="player-connect.html">Spawn players</a></li>
+            <li><a href="self-control.html">Making controllers (the phone part)</a></li>
+            <li><a href="gamepad-sounds.html">Playing sounds on the phone</a></li>
+            <li><a href="gamepad-multitouch.html">Handling Multi-Touch</a></li>
+        </ul>
+    </li>
+    <li>Examples
+        <ul>
+            <li><a href="3d-characters.html">3d Characters</a></li>
+            <li><a href="2d-platformer.html">2d Platformer</a></li>
+        </ul>
+    </li>
+    <li>Techinques
+        <ul>
+            <li><a href="reusing-players.html">Handling disconnect and reconnect</a></li>
+            <li><a href="too-many-players.html">Preventing too many players</a></li>
+            <li><a href="device-orientation.html">Using Device Orientation</a></li>
+            <li><a href="accelerometer.html">Using the Accelerometer</a></li>
+            <li><a href="character-selection.html">Spawning different characters per Player</a></li>
+            <li><a href="multi-machine.html">Multiple Computers</a></li>
+            <li><a href="talking-between-games.html">Talking Between Multiple Computers</a></li>
+        </ul>
+    </li>
+    <li>Sample-UI API Reference
+        <ul>
+            <li><a href="/docs/hft/">Sample UI (HTML/JavaScript) API</a></li>
+        </ul>
+    </li>
+    <li>Other
+        <ul>
+            <li><a href="changelog.html">Changelog</a></li>
+        </ul>
+    </li>
 </ul>
 
 
@@ -204,9 +203,10 @@ you should think about if you&#39;re designing a long play game.</p>
   </div>
 </div>
 </body>
-<script src="/docs/3rdparty/jquery-1.11.2.min.js"></script>
-<script src="/docs/3rdparty/prettify.js"></script>
-<script src="/docs/js/lesson.js"></script>
+<script src="/docs/assets/3rdparty/jquery.js"></script>
+<script src="/docs/assets/js/lesson.js"></script>
+<script src="/docs/assets/3rdparty/highlight.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
 <script>
   (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
   (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),

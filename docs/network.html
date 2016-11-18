@@ -51,8 +51,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 <title>Museums &amp; Installations</title>
 <link href="/public/hft-icon.png" rel="shortcut icon" type="image/png">
-<link rel="stylesheet" href="/docs/css/base.css" type="text/css" />
-<link rel="stylesheet" href="/docs/css/lesson.css" type="text/css" />
+<link rel="stylesheet" href="/docs/assets/css/styles.css" type="text/css" />
 </head>
 <body>
 <div class="header">
@@ -61,11 +60,11 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 
 <div class="container">
-  <div class="lesson-title">
+  <div class="docs-title">
     <h1>Museums &amp; Installations</h1>
   </div>
   <div class="row">
-    <div class="col-sm-8 lesson-main">
+    <div class="col-sm-8 docs-content">
       <p>Asking players to connect to a local network and then type in URL like
 <code>happyfuntimes.net</code> works just fine but HappyFunTimes supports an even
 simpiler style for things like museums, events, and art installations.</p>
@@ -120,7 +119,7 @@ recommend the <a href="http://google.com/#q=TP-Link+TL-WR702N">TP-Link TL-WR702N
 it will only handle 13-14 players and it&#39;s under $20.</p>
 <p>Find the IP address of your router. If the URL in your browser looks something like <code>http://192.168.2.254/???</code>
 then that&#39;s the IP address of your router. Otherwise check the lan settings. For example</p>
-<div style="text-align: center;"><a href="images/router-network-lan-settings.png">&lt;img width=&quot;50% height=&quot;50%&quot; src=&quot;images/router-network-lan-settings.png&quot; /&gt;</a></div>
+<div style="text-align: center;"><a href="images/router-network-lan-settings.png"><img width="50% height="50%" src="images/router-network-lan-settings.png" /></a></div>
 
 <p>Now that we know the router&#39;s IP address is <code>192.168.2.254</code> we know our network&#39;s address
 is <code>192.168.2</code> (<a href="#networking-basics">see above</a>). If yours is different remember that <strong>for all the ip addresses below
@@ -195,16 +194,16 @@ from the image then select edit.</p>
 
 <p>Under the Network section click the <code>+</code> button to add your machine
 to the DHCP reservation list.</p>
-<div style="text-align: center;">&lt;img src=&quot;images/airport-extreme-reserve-ip.png&quot; width=&quot;50% height=&quot;50%&quot; /&gt;</div>
+<div style="text-align: center;"><img src="images/airport-extreme-reserve-ip.png" width="50% height="50%" /></div>
 
 <p>Then add your machine. You&#39;ll need to know your machine&#39;s <a href="#looking-up-your-mac-address">mac address</a>.</p>
 <p>On Mac you can look that up in the the menus by picking
 <code>Apple Menu-&gt;System Preferences</code> then clicking on <code>Network</code>.
 Select the Thunderbolt connection</p>
-<div style="text-align: center;">&lt;img src=&quot;images/osx-network-thunderbolt.png&quot; width=&quot;50% height=&quot;50%&quot; /&gt;</div>
+<div style="text-align: center;"><img src="images/osx-network-thunderbolt.png" width="50% height="50%" /></div>
 
 <p>and then clicking the hardware section</p>
-<div style="text-align: center;">&lt;img src=&quot;images/osx-macaddress.png&quot; width=&quot;50% height=&quot;50%&quot; /&gt;</div>
+<div style="text-align: center;"><img src="images/osx-macaddress.png" width="50% height="50%" /></div>
 
 <p>On Windows you can look up your Mac address by opening a command prompt
 and typing <code>getmac</code>. You want the mac address for wired/ethernet networking.</p>
@@ -212,13 +211,13 @@ and typing <code>getmac</code>. You want the mac address for wired/ethernet netw
 picutres don&#39;t match. For you they should match).
 In description put whatever you want to remember
 that&#39;s your machine. Select &quot;Mac Address&quot; for &quot;Reserve Address By&quot;.</p>
-<div style="text-align: center;">&lt;img src=&quot;images/airport-extreme-reserve-ip-details.png&quot; width=&quot;50% height=&quot;50%&quot; /&gt;</div>
+<div style="text-align: center;"><img src="images/airport-extreme-reserve-ip-details.png" width="50% height="50%" /></div>
 
 <p>Note the number under IPv4 Address. It probably defaults to the correct
 number for your setup. Note the number.</p>
 <p>In the Internet section of the Airport Utility put that number in the
 2 spaces for DNS Servers</p>
-<div style="text-align: center;">&lt;img src=&quot;images/airport-extreme-dns.png&quot; width=&quot;50% height=&quot;50%&quot; /&gt;</div>
+<div style="text-align: center;"><img src="images/airport-extreme-dns.png" width="50% height="50%" /></div>
 
 <p>Note: with these numbers set in DNS server your Airport Extreme will no longer work for internet
 access. You can only use it for HappyFunTimes installation mode. To use it for internet run
@@ -250,13 +249,12 @@ Or should we go to business routers? Unfortunately at this time I have no idea.<
 <p>If you try this setup with a different router please post your results. Add to this doc or file an issue
 or something so that others can learn how to configure their routers.</p>
 
-      <hr/>
-      <div>
+      <div class="docs-footer">
         <div>Questions? <a href="http://stackoverflow.com/questions/tagged/happyfuntimes">Ask on stackoverflow</a>.</div>
         <div>Issue/Bug? <a href="http://github.com/greggman/happyfuntimes/issues">Create an issue on github</a>.</div>
-
-        <div id="disqus_thread"></div>
-        <script type="text/javascript">
+        <div class="docs-comments">
+          <div id="disqus_thread"></div>
+          <script type="text/javascript">
             /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
             var disqus_shortname = 'happyfuntimes'; // required: replace example with your forum shortname
             var disqus_identifier = 'Museums &amp; Installations';
@@ -264,19 +262,20 @@ or something so that others can learn how to configure their routers.</p>
 
             /* * * DON'T EDIT BELOW THIS LINE * * */
             (function() {
-                if (window.location.hostname.indexOf("happyfuntimes") < 0) {
-                    return;
-                }
-                var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
-                dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
-                (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+              if (window.location.hostname.indexOf("happyfuntimes") < 0) {
+                return;
+              }
+              var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+              dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+              (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
             })();
-        </script>
-        <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
-        <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+          </script>
+          <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+          <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+        </div>
       </div>
     </div>
-    <div class="col-sm-3 col-sm-offset-1 lesson-sidebar">
+    <div class="col-sm-3 col-sm-offset-1 docs-sidebar">
         <ul>
   <li>Setup
     <ul>
@@ -314,9 +313,10 @@ or something so that others can learn how to configure their routers.</p>
   </div>
 </div>
 </body>
-<script src="/docs/3rdparty/jquery-1.11.2.min.js"></script>
-<script src="/docs/3rdparty/prettify.js"></script>
-<script src="/docs/js/lesson.js"></script>
+<script src="/docs/assets/3rdparty/jquery.js"></script>
+<script src="/docs/assets/js/lesson.js"></script>
+<script src="/docs/assets/3rdparty/highlight.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
 <script>
   (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
   (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),

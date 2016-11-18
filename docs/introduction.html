@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- this file is auto-generated from docs/future.md. Do not edited directly -->
+<!-- this file is auto-generated from docs/introduction.md. Do not edited directly -->
 <!--
 Copyright 2012, Gregg Tavares.
 All rights reserved.
@@ -34,22 +34,22 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0, user-scalable=yes">
-<meta property="og:title" content="Future" />
+<meta property="og:title" content="HappyFunTimes Introduction" />
 <meta property="og:type" content="website" />
 <meta property="og:image" content="http://docs.happyfuntimes.net/docs/images/happyfuntimes.jpg" />
-<meta property="og:description" content="Stuff to purse in HappyFunTimes" />
-<meta property="og:url" content="http://docs.happyfuntimes.net/docs/future.html" />
+<meta property="og:description" content="An introduction about HappyFunTimes" />
+<meta property="og:url" content="http://docs.happyfuntimes.net/docs/introduction.html" />
 
 <meta name="twitter:card" content="summary_large_image" />
 <meta name="twitter:site" content="@greggman" />
 <meta name="twitter:creator" content="@greggman" />
 <meta name="twitter:domain" content="docs.happyfuntimes.net" />
-<meta name="twitter:title" content="Future" />
-<meta name="twitter:url" content="http://docs.happyfuntimes.net/docs/future.html" />
-<meta name="twitter:description" content="Stuff to purse in HappyFunTimes" />
+<meta name="twitter:title" content="HappyFunTimes Introduction" />
+<meta name="twitter:url" content="http://docs.happyfuntimes.net/docs/introduction.html" />
+<meta name="twitter:description" content="An introduction about HappyFunTimes" />
 <meta name="twitter:image:src" content="http://docs.happyfuntimes.net/docs/images/happyfuntimes.jpg" />
 
-<title>Future</title>
+<title>HappyFunTimes Introduction</title>
 <link href="/public/hft-icon.png" rel="shortcut icon" type="image/png">
 <link rel="stylesheet" href="/docs/assets/css/styles.css" type="text/css" />
 </head>
@@ -61,45 +61,22 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 <div class="container">
   <div class="docs-title">
-    <h1>Future</h1>
+    <h1>HappyFunTimes Introduction</h1>
   </div>
   <div class="row">
     <div class="col-sm-8 docs-content">
-      <p>These would be very nice to have. I don&#39;t know if or when I&#39;ll have time to
-implement them. Feel free to implement them yourself and submit a pull request
-or pick one of the other 1000+ things <a href="../todo.html">to do</a>.</p>
-<h3 id="simpler-controller-creation">Simpler controller creation</h3>
-<p>Making controllers in JavaScript can be frustrating. One idea is to make
-that easy is to use some kind of structured drawing program like InkScape
-or Powerpoint or even Google Docs Presentation so design a controller.
-Export it to SVG, then run some tool on it that generates the controller or
-use the SVG directly in the controller.</p>
-<p>The idea is somehow you&#39;d label different areas as buttons, sliders, dpads, whatever
-with ids and there&#39;d be some higher level API that would just automatically emit
-messages inside Unity based on those ids and or keep track of their state &quot;pressed&quot;,
-&quot;not pressed&quot;, etc.</p>
-<p>It would make some things easier but at the possible expensive of flexibility.</p>
-<p>One issue is I don&#39;t know of any structured drawing programs that let you
-set ids or other metadata on shapes so some other creative ideas would be needed
-like using text boxes in groups to label things or something.</p>
-<p>For now, copying an existing controller from another game and modifying it is
-probably the way to go</p>
-<h3 id="using-canvas-to-draw-the-contollers">Using Canvas to draw the contollers</h3>
-<p>One of the biggest issues with controllers is they&#39;re written in HTML5 using
-HTML5 elements. Those elements get shifted around in different ways with CSS
-and various browsers, phones, etc.</p>
-<p>Drawing them in a canvas would make it very easy to just scale the drawing or
-scale the canvas removing most of those issues.</p>
-<p>Another issue is unlike a native app the browser can not pick an orientation.
-That means if the contoller is landscape and phone is portrait the controller
-will just show up funny. Up to now I&#39;ve worked around this by using CSS
-to show a &quot;Turn the phone&quot; msg when held in the wrong orientation for the game.
-Unfortunately many people have their phone locked and so they rotate their phone
-and nothing happens. Some of them realize they have to unlock the orientation
-but if I switched to rendering in a canvas I could just detect the orientation
-and render rotated 90 degrees and that problem would be solved. No need to unlock.</p>
-<p>Unfortunately, there are drawbacks as well. HTML5 defines lots of styling, and
-other features what would all have to be hand drawn if done in canvas.</p>
+      <h2 id="what-is-happyfuntimes-">What is HappyFunTimes?</h2>
+<p>HappyFunTimes is a system for playing party games that are meant to be
+played with a bunch of people in the same room and 1 ideally large display.</p>
+<p><em>HappyFunTimes is abbreviated with HFT in this documentation.</em></p>
+<h2 id="how-does-it-work-">How does it work?</h2>
+<p>HFT consists of two components:</p>
+<ul>
+<li>The HFT server</li>
+<li>The Games</li>
+</ul>
+<p>While the HFT server is running on Node.js, the games can run in your browser
+by using HTML and JavaScript or by using the Unity game framework.</p>
 
       <div class="docs-footer">
         <div>Questions? <a href="http://stackoverflow.com/questions/tagged/happyfuntimes">Ask on stackoverflow</a>.</div>
@@ -109,8 +86,8 @@ other features what would all have to be hand drawn if done in canvas.</p>
           <script type="text/javascript">
             /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
             var disqus_shortname = 'happyfuntimes'; // required: replace example with your forum shortname
-            var disqus_identifier = 'Future';
-            var disqus_title = 'Future';
+            var disqus_identifier = 'HappyFunTimes Introduction';
+            var disqus_title = 'HappyFunTimes Introduction';
 
             /* * * DON'T EDIT BELOW THIS LINE * * */
             (function() {
