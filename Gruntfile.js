@@ -163,6 +163,6 @@ module.exports = function(grunt) {
     'docsassets',
   ]);
 
-  grunt.registerTask('default', ['eslint', 'clean:docs', 'jsdoc']);
+  grunt.registerTask('default', ['eslint', 'docsbuild']);
 };
 
