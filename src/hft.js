@@ -1,14 +1,17 @@
 define([
     './hft/scripts/gameclient',
     './hft/scripts/gameserver',
+    './hft/scripts/localnetplayer',
     './hft/scripts/syncedclock',
   ], function (
     GameClient,
     GameServer,
+    LocalNetPlayer,
     SyncedClock) {
-    window.hft = window.hft || {};
-    var api = window.hft;
-    api.GameClient = GameClient;
-    api.GameServer = GameServer;
-    api.SyncedClock = SyncedClock;
+    return {
+      GameClient: GameClient,
+      GameServer: GameServer,
+      LocalNetPlayer: LocalNetPlayer,
+      SyncedClock: SyncedClock,
+    };
 });
