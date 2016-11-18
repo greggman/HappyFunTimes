@@ -1,9 +1,10 @@
 Title: Windows
 Description: Troubleshooting HappyFunTimes on Windows
 
-## Installing
 
-[To install click here](http://docs.happyfuntimes.net/install.html).
+You can install HT on Windows machines by downloading the precompile [instller](http://docs.happyfuntimes.net/install.html).
+
+## Problems with Windows code signing
 
 As of Windows 8 programs for Windows need to be "code signed". Signing costs $200-$500 a year
 which for an open source project is very *NOT COOL*. If anyone knows how to get a cheaper
