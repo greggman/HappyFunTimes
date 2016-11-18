@@ -59,7 +59,7 @@ var Game = function(id, gameGroup, options) {
   debug("create game " + this.gameId);
 };
 
-Game.prototype.getControllerUrl = function(baseUrl) {
+Game.prototype.getControllerUrl = function() {
   return "/controller.html";
 };
 

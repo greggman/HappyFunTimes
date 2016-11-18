@@ -32,7 +32,6 @@
 'use strict';
 
 var AppleCaptivePortalHandler = require('./apple-captive-portal-handler');
-var busboy                    = require('connect-busboy');
 var computerName              = require('../lib/computername');
 var debug                     = require('debug')('hft-server');
 var events                    = require('events');
@@ -43,11 +42,8 @@ var highResClock              = require('../lib/highresclock');
 var http                      = require('http');
 var iputils                   = require('../lib/iputils');
 var mime                      = require('mime');
-var msgbox                    = require('native-msg-box');
 var path                      = require('path');
 var strings                   = require('../lib/strings');
-var url                       = require('url');
-var utils                     = require('../lib/utils');
 
 /**
  * @typedef {Object} HFTServer~Options
@@ -78,7 +74,6 @@ var utils                     = require('../lib/utils');
  *        of error, undefined if successful.
  */
 var HFTServer = function(options, startedCallback) {
-  var self = this;
   var g = {
     port: options.port || 18679,
     extraPorts: [80, 8080],
@@ -138,8 +133,6 @@ var HFTServer = function(options, startedCallback) {
     privateServer: g.privateServer,
   });
 
-  g.cwd = path.normalize(path.join(__dirname, '..'));
-
   function send404(res, msg) {
     msg = msg || '';
     res.writeHead(404);
@@ -191,27 +184,6 @@ var HFTServer = function(options, startedCallback) {
     res.end('{}');
   }
 
-  var isFolder = (function() {
-    // Keep a cache of all paths because fs.statSync is sync
-    // this should never be that big because we're only serving
-    // a few files and are not online.... hopefully.
-    var fileDB = { };
-    return function(filepath) {
-      var dir = fileDB[filepath];
-      if (dir === undefined) {
-        var stats;
-        try {
-          stats = fs.statSync(filepath);
-          dir = stats.isDirectory();
-        } catch (e) {
-          dir = false;
-        }
-        fileDB[path] = dir;
-      }
-      return dir;
-    };
-  }());
-
   function sendStringResponse(res, data, opt_mimeType) {
     res.writeHead(200, {
       'Content-Type': opt_mimeType || 'text/html',
@@ -241,7 +213,7 @@ var HFTServer = function(options, startedCallback) {
     return ip;
   }
 
-  function setHeaders(res, path, stat) {
+  function setHeaders(res /*, path, stat */) {
     res.set({
       'Cache-Control': 'no-cache, no-store, must-revalidate', // HTTP 1.1.
       'Pragma':        'no-cache',                            // HTTP 1.0.
@@ -249,7 +221,7 @@ var HFTServer = function(options, startedCallback) {
     });
   }
 
-  var sendFileResponse = function(req, res, fullPath, opt_prepFn, runtimeInfo) {
+  var sendFileResponse = function(req, res, fullPath, opt_prepFn) {
     debug('path: ' + fullPath);
     var mimeType = mime.lookup(fullPath);
     if (mimeType) {
@@ -314,8 +286,7 @@ var HFTServer = function(options, startedCallback) {
     fallthrough: true,
     setHeaders: setHeaders,
   };
-  app.use(express.static('public', { ));
-  app.use(express.static('../hft-simple'));
+  app.use(express.static(g.cwd, staticOptions));
   app.post(/.*/, bodyParser);
 
   var postCmdHandlers = {
