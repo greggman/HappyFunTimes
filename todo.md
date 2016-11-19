@@ -1,6 +1,22 @@
 To Do
 =====
 
+*   make hft a lib for electron
+    *   port bombbomb
+        *   handle disconnect/reconnect
+        *   handle port changing (2 apps)
+        *   fix fixes
+        *   handle external server
+    *   port powpow
+    *   port jumpjump
+    *   port device-orientation
+    *   port simple
+    *   port 2d sync
+    *   port 3d sync
+    *   port multi-platform
+    *   make pixi example?
+    *   make cocos2d example?
+
 *   figure out why retry didn't work at National Videogame Arcade
 *   fix bombbomb hard to press button
 *   fix buttons in jumpjump/powpow (bigger!)
