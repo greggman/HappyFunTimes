@@ -43,6 +43,7 @@ var http                      = require('http');
 var iputils                   = require('../lib/iputils');
 var mime                      = require('mime');
 var path                      = require('path');
+var querystring               = require('querystring');
 var strings                   = require('../lib/strings');
 
 /**
@@ -272,20 +273,36 @@ var HFTServer = function(options, startedCallback) {
       });
       res.end('');
   });
-  app.get(/^\/hft\/0.x.x\/scripts\/runtime\/live-settings\.js$/, function(req, res) {
-    var data = {
-      system: {
-        checkForApp: options.checkForApp,
-      },
-    };
-    var src = "define([], function() { return " + JSON.stringify(data) + "; })\n";
-    sendStringResponse(res, src, "application/javascript");
-  });
+
+  // No app support for now
+  //app.get(/^\/hft\/0.x.x\/scripts\/runtime\/live-settings\.js$/, function(req, res) {
+  //  var data = {
+  //    system: {
+  //      checkForApp: options.checkForApp,
+  //    },
+  //  };
+  //  var src = "define([], function() { return " + JSON.stringify(data) + "; })\n";
+  //  sendStringResponse(res, src, "application/javascript");
+  //});
 
   var staticOptions = {
     fallthrough: true,
     setHeaders: setHeaders,
   };
+
+  // This is left over from the original implementation.
+  // happyfuntimes.net sends players here. I could update happyfuntimes.net
+  // so you ping it with a version and if it's a newer version it redirects
+  // you to controller.html or index.html or whatever you specifiy when
+  // you ping it but for now I just hacked this to work.
+  // check for /
+  // check for index.html
+  // check for enter-name.html
+  app.get(/^\/(|enter-name\.html|index\.html)$/, (req, res) => {
+    res.redirect('/controller.html?' + querystring.stringify(req.query));
+  });
+
+
   app.use(express.static(g.cwd, staticOptions));
   app.post(/.*/, bodyParser);
 
