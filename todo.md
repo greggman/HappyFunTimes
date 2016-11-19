@@ -3,10 +3,20 @@ To Do
 
 *   make hft a lib for electron
     *   port bombbomb
-        *   handle disconnect/reconnect
+        .   handle disconnect/reconnect
         *   handle port changing (2 apps)
         *   fix fixes
         *   handle external server
+        *   pass arguments through from server (actually don't parse in server)
+        *   make server return something, not auto start?
+        *   test captive portal
+        *   add settings dialog?
+        *   add setings from command line?
+        *   export to app
+        *   make app use real name
+        *   supply app icon
+        *   fix about (send about to game)
+        *   check we can set name
     *   port powpow
     *   port jumpjump
     *   port device-orientation
