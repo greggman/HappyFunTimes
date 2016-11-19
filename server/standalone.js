@@ -33,7 +33,7 @@
 
 var optionSpec = {
   options: [
-   { option: 'port', alias: 'p', type: 'Int',     description: 'port. Default 18679', default: '18679'},
+   { option: 'port', alias: 'p', type: 'Int',     description: 'port. Default 18679'},
    { option: 'dns',              type: 'Boolean', description: 'enable dns server'},
    { option: 'address',          type: 'String',  description: 'ip address for dns and controller url conversion'},
    { option: 'help', alias: 'h', type: 'Boolean', description: 'displays help'},
@@ -49,9 +49,8 @@ var optionSpec = {
   },
 };
 
-var log        = require('../lib/log');
-var Promise    = require('promise');
-var optionator = require('optionator')(optionSpec);
+const Promise    = require('promise');
+const optionator = require('optionator')(optionSpec);
 
 try {
   var args = optionator.parse(process.argv);
@@ -69,38 +68,22 @@ if (args.help) {
   printHelp();
 }
 
-log.config(args);
+args.port = args.port || (args.dns ? 80 : 18679);
 
 function exitBecauseAlreadyRunning() {
-  console.error("HappyFunTimes is already running");
-}
-
-function startGame() {
-  console.log("TODO: start game");
+  console.error("HappyFunTimes is already running on port:", args.port);
 }
 
 function startServer() {
-  var DNSServer = require('./dnsserver');
-  var iputils   = require('../lib/iputils');
-  var HFTServer = require('./hft-server');
-
-  var server = new HFTServer(args, startGame);
-
-  if (args.dns) {
-    // This doesn't need to dynamicallly check for a change in ip address
-    // because it should only be used in a static ip address sitaution
-    // since DNS has to be static for our use-case.
-    (function() {
-      return new DNSServer({address: args.address || iputils.getIpAddresses()[0]});
-    }());
-    server.on('ports', function(ports) {
-      if (ports.indexOf('80') < 0) {
-        console.error('You specified --dns but happyFunTimes could not use port 80.');
-        console.error('Do you need to run this as admin or use sudo?');
-        process.exit(1);  // eslint-disable-line
-      }
-    });
-  }
+  const server = require('./server');
+  server.start(args)
+  .then((port) => {
+    console.log("Listening on ports:", ports);
+  })
+  .catch((err) => {
+    console.error("error:", err);
+    process.exit(1);
+  });
 }
 
 function launchIfNotRunning() {
