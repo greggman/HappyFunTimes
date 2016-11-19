@@ -8,13 +8,25 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/greggman/HappFunTimes.git"
+    "url": "https://github.com/greggman/HappyFunTimes.git"
   },
   "main": "start.js",
   "files": [
     "server",
     "dist"
   ],
+  "keywords": [
+    "happyfuntimes",
+    "hft",
+    "games",
+    "multiplayer"
+  ],
+  "author": "Gregg Tavares",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/greggman/HappyFunTimes/issues"
+  },
+  "homepage": "https://github.com/greggman/HappyFunTimes#readme",
   "dependencies": {
     "connect-busboy": "0.0.2",
     "debug": "0.7.4",
@@ -22,7 +34,7 @@
     "mime": "1.2.11",
     "native-dns": "^0.7.0",
     "optionator": "^0.4.0",
-    "promise": "^5.0.0",
+    "promise": "^7.1.1",
     "rest-url": "0.0.4",
     "sprintf-js": "0.0.7",
     "ws": "0.4.31"
