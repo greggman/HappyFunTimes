@@ -1,6 +1,15 @@
 {
+  "parserOptions": {
+      "ecmaVersion": 6,
+      "sourceType": "module",
+      "ecmaFeatures": {
+      }
+  },
   "env": {
-    "node": true
+    "node": true,
+    "browser": true,
+    "es6": true,
+    "amd": true,
   },
   "plugins": [
     "eslint-plugin-optional-comma-spacing",
