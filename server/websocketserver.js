@@ -31,7 +31,7 @@
 
 'use strict';
 
-var debug        = require('debug')('websocketserver');
+var debug        = require('debug')('happyfuntimes:websocketserver');
 var HeartMonitor = require('./heart-monitor');
 
 var WSServer = function(server) {

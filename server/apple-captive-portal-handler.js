@@ -31,7 +31,7 @@
 
 "use strict";
 
-var debug       = require('debug')('captivep');
+var debug       = require('debug')('happyfuntimes:captivep');
 var ipUtils     = require('../lib/iputils');
 var path        = require('path');
 var querystring = require('querystring');

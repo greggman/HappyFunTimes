@@ -31,7 +31,7 @@
 
 "use strict";
 
-var debug        = require('debug')('relayserver');
+var debug        = require('debug')('happyfuntimes:relayserver');
 var events       = require('events');
 var GameGroup    = require('./game-group');
 var Player       = require('./player');

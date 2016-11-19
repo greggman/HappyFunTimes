@@ -31,7 +31,7 @@
 
 "use strict";
 
-var debug        = require('debug')('game');
+var debug        = require('debug')('happyfuntimes:game');
 var hftSite      = require('./hftsite');
 
 /**
