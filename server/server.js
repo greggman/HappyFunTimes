@@ -31,89 +31,49 @@
 
 'use strict';
 
-var optionSpec = {
-  options: [
-   { option: 'port', alias: 'p', type: 'Int',     description: 'port. Default 18679', default: '18679'},
-   { option: 'dns',              type: 'Boolean', description: 'enable dns server'},
-   { option: 'address',          type: 'String',  description: 'ip address for dns and controller url conversion'},
-   { option: 'help', alias: 'h', type: 'Boolean', description: 'displays help'},
-   { option: 'private-server',   type: 'Boolean', description: 'do not inform happyfuntimes.net about this server. Users will not be able to use happyfuntimes.net to connect to your games'},
-   { option: 'debug',            type: 'Boolean', description: 'check more things'},
-   { option: 'verbose',          type: 'Boolean', description: 'print more stuff'},
-   { option: 'system-name',      type: 'String',  description: 'name used if multiple happyFunTimes servers are running on the same network. Default = computer name'},
-  ],
-  helpStyle: {
-    typeSeparator: '=',
-    descriptionSeparator: ' : ',
-    initialIndent: 4,
-  },
-};
+function startServer(options) {
+  return new Promise(function(resolve, reject) {
+    const DNSServer = require('./dnsserver');
+    const iputils   = require('../lib/iputils');
+    const HFTServer = require('./hft-server');
+    const server = new HFTServer(options);
+    let responsesNeeded = 1;
+    let usedPorts;
 
-var log        = require('../lib/log');
-var Promise    = require('promise');
-var optionator = require('optionator')(optionSpec);
-
-try {
-  var args = optionator.parse(process.argv);
-} catch (e) {
-  console.error(e);
-  process.exit(1);  // eslint-disable-line
-}
-
-var printHelp = function() {
-  console.log(optionator.generateHelp());
-  process.exit(0);  // eslint-disable-line
-};
-
-if (args.help) {
-  printHelp();
-}
-
-log.config(args);
-
-function exitBecauseAlreadyRunning() {
-  console.error("HappyFunTimes is already running");
-}
-
-function startGame() {
-  console.log("TODO: start game");
-}
-
-function startServer() {
-  var DNSServer = require('./dnsserver');
-  var iputils   = require('../lib/iputils');
-  var HFTServer = require('./hft-server');
-
-  var server = new HFTServer(args, startGame);
-
-  if (args.dns) {
-    console.log("TODO: OSX, launch in separate process");
-    // This doesn't need to dynamicallly check for a change in ip address
-    // because it should only be used in a static ip address sitaution
-    // since DNS has to be static for our use-case.
-    (function() {
-      return new DNSServer({address: args.address || iputils.getIpAddresses()[0]});
-    }());
-    server.on('ports', function(ports) {
-      if (ports.indexOf('80') < 0 && ports.indexOf(80) < 0) {
-        console.error('You specified --dns but happyFunTimes could not use port 80.');
-        console.error('Do you need to run this as admin or use sudo?');
-        process.exit(1);  // eslint-disable-line
+    function reportReady() {
+      --responsesNeeded;
+      if (responsesNeeded == 0) {
+        resolve(usedPorts);
       }
+    }
+
+    server.on('ports', (ports) => {
+      usedPorts = ports;
+      reportReady();
     });
-  }
+    server.on('error', reject);
+
+    if (options.dns) {
+      ++responsesNeeded;
+
+      // This doesn't need to dynamicallly check for a change in ip address
+      // because it should only be used in a static ip address sitaution
+      // since DNS has to be static for our use-case.
+      const dns = new DNSServer({address: options.address || iputils.getIpAddresses()[0]});
+      dns.on('listening', reportReady);
+      dns.on('error', (err) => {
+        console.error('You specified --dns but happyFunTimes could not use port 53.');
+        console.error('Do you need to run this as admin or use sudo?');
+        reject(err);
+      });
+    }
+  });
 }
 
-function launchIfNotRunning() {
-  var io = require('../lib/io');
-  var sendJSON = Promise.denodeify(io.sendJSON);
+module.exports = {
+  start: startServer,
+};
 
-console.log("TODO: fix");
-  var url = "http://localhost:" + args.port;
-  sendJSON(url, { cmd: "happyFunTimesPing" }, {}).then(exitBecauseAlreadyRunning, startServer).done();
-}
-
-launchIfNotRunning();
 
 
 
