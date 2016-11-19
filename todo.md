@@ -4,7 +4,7 @@ To Do
 *   make hft a lib for electron
     *   port bombbomb
         .   handle disconnect/reconnect
-        *   handle port changing (2 apps)
+        .   handle port changing (2 apps)
         *   fix fixes
         *   handle external server
         *   pass arguments through from server (actually don't parse in server)
