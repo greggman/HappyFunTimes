@@ -31,7 +31,7 @@
 
 'use strict';
 
-var debug = require('debug')('socketioserver');
+var debug = require('debug')('happyfuntimes:socketioserver');
 
 var SocketIOServer = function(server) {
   debug('Using Socket.io');

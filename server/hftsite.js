@@ -31,7 +31,7 @@
 
 "use strict";
 
-var debug   = require('debug')('hftsite');
+var debug   = require('debug')('happyfuntimes:hftsite');
 var io      = require('../lib/io');
 var url     = require('url');
 
@@ -41,8 +41,9 @@ var g = {
   rendezvousRetryTimeout: 5,
 };
 
-console.log("make settable");
 var settings = {
+  // NOTE: You can override this with the environment variable
+  //       HFT_RENDEZVOUS_URL
   rendezvousUrl: "http://happyfuntimes.net/api/inform2",
 };
 

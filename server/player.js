@@ -31,7 +31,7 @@
 
 "use strict";
 
-var debug        = require('debug')('player');
+var debug        = require('debug')('happyfuntimes:player');
 
 /**
  * A Player in a game.

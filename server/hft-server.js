@@ -33,7 +33,7 @@
 
 const AppleCaptivePortalHandler = require('./apple-captive-portal-handler');
 const computerName              = require('../lib/computername');
-const debug                     = require('debug')('hft-server');
+const debug                     = require('debug')('happyfuntimes:hft-server');
 const events                    = require('events');
 const express                   = require('express');
 const fs                        = require('fs');
