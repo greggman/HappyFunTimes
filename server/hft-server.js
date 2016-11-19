@@ -348,6 +348,7 @@ var HFTServer = function(options) {
 
   function makeServerErrorHandler(server, portnum, address) {
     return function(err) {
+      console.log("could not create server on", address, ":", portnum, ":", err);
       const wasIPV6 = !!address;
       if (wasIPV6) {
         makeServerAndListen(portnum, '');

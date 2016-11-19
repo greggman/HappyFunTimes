@@ -42,7 +42,7 @@ function startServer(options) {
 
     function reportReady() {
       --responsesNeeded;
-      if (responsesNeeded == 0) {
+      if (responsesNeeded === 0) {
         resolve(usedPorts);
       }
     }

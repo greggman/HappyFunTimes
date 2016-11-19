@@ -23,6 +23,7 @@
     "comma-spacing": 0,
     "comma-style": [2, "last"],
     "optional-comma-spacing/optional-comma-spacing": [2, {after: true}],
+    "no-underscore-dangle": ["error", { "allowAfterThis": true }],
     "dot-notation": 0,
     "eol-last": [0],
     "hft-camelcase": [2],

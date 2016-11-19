@@ -77,12 +77,12 @@ function exitBecauseAlreadyRunning() {
 function startServer() {
   const server = require('./server');
   server.start(args)
-  .then((port) => {
+  .then((ports) => {
     console.log("Listening on ports:", ports);
   })
   .catch((err) => {
     console.error("error:", err);
-    process.exit(1);
+    process.exit(1);  // eslint-disable-line
   });
 }
 
