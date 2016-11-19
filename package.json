@@ -3,6 +3,7 @@
   "description": "happyfuntimes massively local multiplayer electron framework",
   "version": "0.0.49",
   "scripts": {
+    "start": "node start.js",
     "build": "webpack --config src/hft.config.js"
   },
   "repository": {
