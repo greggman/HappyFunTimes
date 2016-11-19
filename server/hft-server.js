@@ -77,7 +77,7 @@ var strings                   = require('../lib/strings');
 var HFTServer = function(options, startedCallback) {
   var g = {
     port: options.port || 18679,
-    extraPorts: [80, 8080],
+    extraPorts: [],
     screenshotCount: 0,
     baseDir: 'public',
     cwd: process.cwd(),
@@ -341,7 +341,9 @@ var HFTServer = function(options, startedCallback) {
     }
     if (numResponsesNeeded === 0) {
       if (goodPorts.length === 0) {
-        startedCallback(new Error('NO PORTS available. Tried port(s) ' + ports.join(', ')));
+        var error = new Error('NO PORTS available. Tried port(s) ' + ports.join(', '));
+        startedCallback(error);
+        eventEmitter.emit('error', error);
         return;
       }
       var RelayServer = require('./relayserver.js');
