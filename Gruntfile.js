@@ -74,9 +74,7 @@ module.exports = function(grunt) {
     },
     eslint: {
         target: [
-          'cli',
           'lib',
-          'management',
           'public',
           'server',
           'test',
