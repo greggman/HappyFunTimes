@@ -49,8 +49,6 @@ const strings                   = require('../lib/strings');
 /**
  * @typedef {Object} HFTServer~Options
  * @property {number} [port] port to listen on. Default 18679
- * @property {number[]} [extraPorts] other ports to listen on.
- *           Default [80, 8080]
  * @property {string} [hftDomain] Domain to inform our internal
  *           ip address. Default: "happyfuntimes.net"
  * @property {string} [baseDir] path to server files from
@@ -71,13 +69,10 @@ const strings                   = require('../lib/strings');
  * HappyFunTimes Server
  *
  * @param {HFTServer~Options} options
- * @param {function(err): void} startedCallback called with err
- *        of error, undefined if successful.
  */
-var HFTServer = function(options, startedCallback) {
+var HFTServer = function(options) {
   var g = {
     port: options.port || 18679,
-    extraPorts: [],
     screenshotCount: 0,
     baseDir: 'public',
     cwd: process.cwd(),
@@ -127,12 +122,6 @@ var HFTServer = function(options, startedCallback) {
 
   var eventEmitter = new events.EventEmitter();
   var app = express();
-
-  hftSite.setup({
-    address: getAddress(),
-    port: g.port,
-    privateServer: g.privateServer,
-  });
 
   function send404(res, msg) {
     msg = msg || '';
@@ -323,51 +312,32 @@ var HFTServer = function(options, startedCallback) {
 
   app.options(/.*/, handleOPTIONS);
 
-  var ports = [g.port];
-  g.extraPorts.forEach((p) => {
-    if (g.port.toString() !== p) {
-      ports.push(p);
-    }
-  });
+  var server;
 
-  var numResponsesNeeded = ports.length;
-  var servers = [];
-  var goodPorts = [];
-
-  var tryStartRelayServer = function() {
-    --numResponsesNeeded;
-    if (numResponsesNeeded < 0) {
-      throw 'numReponsese is negative';
-    }
-    if (numResponsesNeeded === 0) {
-      if (goodPorts.length === 0) {
-        var error = new Error('NO PORTS available. Tried port(s) ' + ports.join(', '));
-        startedCallback(error);
-        eventEmitter.emit('error', error);
-        return;
-      }
-      var RelayServer = require('./relayserver.js');
-      relayServer = options.relayServer || new RelayServer(servers, {
-        baseUrl: getBaseUrl(),
-        noMessageTimout: options.inactivityTimeout,
-        hftServer: this,
-      });
-      console.log('Listening on port(s): ' + goodPorts.join(', ') + '\n');
-      eventEmitter.emit('ports', goodPorts);
-      startedCallback();
-    }
+  var tryStartRelayServer = function(port) {
+    var RelayServer = require('./relayserver.js');
+    relayServer = options.relayServer || new RelayServer([server], {
+      baseUrl: getBaseUrl(),
+      noMessageTimout: options.inactivityTimeout,
+      hftServer: this,
+    });
+    hftSite.setup({
+      address: getAddress(),
+      port: port,
+      privateServer: g.privateServer,
+    });
+    eventEmitter.emit('ports', [port]);
   }.bind(this);
 
   function makeServerListeningHandler(theServer, portnum) {
     return function() {
-      servers.push(theServer);
-      goodPorts.push(portnum);
-      tryStartRelayServer();
+      server = theServer;
+      tryStartRelayServer(portnum);
     };
   }
 
   function makeServerAndListen(port, address) {
-    var server = options.httpServer || http.createServer(app);
+    const server = options.httpServer || http.createServer(app);
 
     server.once('error', makeServerErrorHandler(server, port, address));  // eslint-disable-line
     server.once('listening', makeServerListeningHandler(server, port));
@@ -378,18 +348,16 @@ var HFTServer = function(options, startedCallback) {
 
   function makeServerErrorHandler(server, portnum, address) {
     return function(err) {
-      if (address) {
+      const wasIPV6 = !!address;
+      if (wasIPV6) {
         makeServerAndListen(portnum, '');
-        return;
+      } else {
+        makeServerAndListen(portnum + 1, '::');
       }
-      console.warn('WARNING!!!: ' + err.code + ': could NOT connect to port: ' + portnum);
-      tryStartRelayServer();
     };
   }
 
-  ports.forEach((port) => {
-     makeServerAndListen(port, '::');
-  });
+  makeServerAndListen(g.port, '::');  // try IPV6
 
   /**
    * Close the HFTServer
@@ -399,9 +367,7 @@ var HFTServer = function(options, startedCallback) {
     if (relayServer) {
       relayServer.close();
     }
-    servers.forEach((server) => {
-      server.close();
-    });
+    server.close();
     if (ipIntervalId) {
       clearInterval(ipIntervalId);
       ipIntervalId = undefined;
@@ -412,16 +378,16 @@ var HFTServer = function(options, startedCallback) {
     return g;
   };
 
-  this.on = () => {
-    eventEmitter.on.apply(eventEmitter, arguments);
+  this.on = (...args) => {
+    eventEmitter.on(...args);
   };
 
-  this.addListener = () => {
-    eventEmitter.addListener.apply(eventEmitter, arguments);
+  this.addListener = (...args) => {
+    eventEmitter.addListener(...args);
   };
 
-  this.removeListener = () => {
-    eventEmitter.removeListener.apply(eventEmitter, arguments);
+  this.removeListener = (...args) => {
+    eventEmitter.removeListener(...args);
   };
 
   this.handleRequest = (req, res) => {
