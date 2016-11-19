@@ -31,20 +31,20 @@
 
 'use strict';
 
-var AppleCaptivePortalHandler = require('./apple-captive-portal-handler');
-var computerName              = require('../lib/computername');
-var debug                     = require('debug')('hft-server');
-var events                    = require('events');
-var express                   = require('express');
-var fs                        = require('fs');
-var hftSite                   = require('./hftsite');
-var highResClock              = require('../lib/highresclock');
-var http                      = require('http');
-var iputils                   = require('../lib/iputils');
-var mime                      = require('mime');
-var path                      = require('path');
-var querystring               = require('querystring');
-var strings                   = require('../lib/strings');
+const AppleCaptivePortalHandler = require('./apple-captive-portal-handler');
+const computerName              = require('../lib/computername');
+const debug                     = require('debug')('hft-server');
+const events                    = require('events');
+const express                   = require('express');
+const fs                        = require('fs');
+const hftSite                   = require('./hftsite');
+const highResClock              = require('../lib/highresclock');
+const http                      = require('http');
+const iputils                   = require('../lib/iputils');
+const mime                      = require('mime');
+const path                      = require('path');
+const querystring               = require('querystring');
+const strings                   = require('../lib/strings');
 
 /**
  * @typedef {Object} HFTServer~Options
@@ -85,12 +85,12 @@ var HFTServer = function(options, startedCallback) {
   var relayServer;
   var appleCaptivePortalHandler;
 
-  Object.keys(options).forEach(function(prop) {
+  Object.keys(options).forEach((prop) => {
     g[prop] = options[prop];
   });
 
   var getBaseUrl;
-  var updateIpAddresses = function(addresses) {
+  var updateIpAddresses = (addresses) => {
     if (relayServer) {
       relayServer.setOptions({baseUrl: getBaseUrl()});
     }
@@ -145,11 +145,11 @@ var HFTServer = function(options, startedCallback) {
     var query = { };
     var content = [];
 
-    req.addListener('data', function(chunk) {
+    req.addListener('data', (chunk) => {
       content.push(chunk);
     });
 
-    req.addListener('end', function() {
+    req.addListener('end', () => {
       try {
         query = JSON.parse(content.join(""));
       } catch (e) {
@@ -265,7 +265,7 @@ var HFTServer = function(options, startedCallback) {
     appleCaptivePortalHandler.setFirstPath('/index.html');
   }
 
-  app.get(/^\/generate_204$/, function(req, res) {
+  app.get(/^\/generate_204$/, (req, res) => {
       res.removeHeader("X-Powered-By");
       res.removeHeader("Connection");
       res.writeHead(204, {
@@ -275,7 +275,7 @@ var HFTServer = function(options, startedCallback) {
   });
 
   // No app support for now
-  //app.get(/^\/hft\/0.x.x\/scripts\/runtime\/live-settings\.js$/, function(req, res) {
+  //app.get(/^\/hft\/0.x.x\/scripts\/runtime\/live-settings\.js$/, (req, res) => {
   //  var data = {
   //    system: {
   //      checkForApp: options.checkForApp,
@@ -324,7 +324,7 @@ var HFTServer = function(options, startedCallback) {
   app.options(/.*/, handleOPTIONS);
 
   var ports = [g.port];
-  g.extraPorts.forEach(function(p) {
+  g.extraPorts.forEach((p) => {
     if (g.port.toString() !== p) {
       ports.push(p);
     }
@@ -387,7 +387,7 @@ var HFTServer = function(options, startedCallback) {
     };
   }
 
-  ports.forEach(function(port) {
+  ports.forEach((port) => {
      makeServerAndListen(port, '::');
   });
 
@@ -395,11 +395,11 @@ var HFTServer = function(options, startedCallback) {
    * Close the HFTServer
    * @todo make it no-op after it's closed?
    */
-  this.close = function() {
+  this.close = () => {
     if (relayServer) {
       relayServer.close();
     }
-    servers.forEach(function(server) {
+    servers.forEach((server) => {
       server.close();
     });
     if (ipIntervalId) {
@@ -408,23 +408,23 @@ var HFTServer = function(options, startedCallback) {
     }
   };
 
-  this.getSettings = function() {
+  this.getSettings = () => {
     return g;
   };
 
-  this.on = function() {
+  this.on = () => {
     eventEmitter.on.apply(eventEmitter, arguments);
   };
 
-  this.addListener = function() {
+  this.addListener = () => {
     eventEmitter.addListener.apply(eventEmitter, arguments);
   };
 
-  this.removeListener = function() {
+  this.removeListener = () => {
     eventEmitter.removeListener.apply(eventEmitter, arguments);
   };
 
-  this.handleRequest = function(req, res) {
+  this.handleRequest = (req, res) => {
     app(req, res);
   };
 };
