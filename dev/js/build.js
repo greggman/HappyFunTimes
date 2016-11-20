@@ -194,12 +194,12 @@ function Builder(options) {
       return '';
     }
     url = url.replace('.md', '.html');
-    return `
-      <meta http-equiv="refresh" content="0; URL='${url}'" />
-      <script>
-         window.location.href = "${url}"
-      </script>
-    `;
+    return [
+      '<meta http-equiv="refresh" content="0; URL=\'${url}\'" />',
+      '<script>',
+      '   window.location.href = "${url}"',
+      '</script>',
+    ].join("\n").replace(/\$\{url\}/g, url);
   }
 
   function applyTemplateToFile(defaultTemplatePath, contentFileName, outFileName, opt_extra) {
