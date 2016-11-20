@@ -58,6 +58,7 @@
     "grunt-jsdoc": "^0.5.6",
     "grunt-sass": "^1.2.1",
     "handlebars": "^3.0.2",
+    "inmemfilecache": "0.0.5",
     "jquery": "^3.1.1",
     "marked": "^0.3.3",
     "mocha": "^1.20.1",
@@ -65,6 +66,7 @@
     "requirejs": "^2.3.2",
     "should": "^7.0.2",
     "sitemap": "^0.8.1",
+    "tmp": "0.0.30",
     "webpack": "^1.13.1",
     "webpack-load-plugins": "^0.1.2",
     "xml2js": "^0.4.8"
