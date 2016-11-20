@@ -189,6 +189,19 @@ function Builder(options) {
     return link;
   }
 
+  function makeRedirect(url) {
+    if (!url) {
+      return '';
+    }
+    url = url.replace('.md', '.html');
+    return `
+      <meta http-equiv="refresh" content="0; URL='${url}'" />
+      <script>
+         window.location.href = "${url}"
+      </script>
+    `;
+  }
+
   function applyTemplateToFile(defaultTemplatePath, contentFileName, outFileName, opt_extra) {
     console.log("processing: ", contentFileName);
     opt_extra = opt_extra || {};
@@ -213,6 +226,7 @@ function Builder(options) {
     metaData['url'] = joinUrl(mergedOptions.baseurl, outFileName);
     metaData['screenshot'] = mergedOptions.defaultOGImageURL;
     metaData['bs'] = mergedOptions;
+    metaData['redirect'] = makeRedirect(metaData['redirect']);
 
     var output = templateManager.apply(templatePath, metaData);
     writeFileIfChanged(outFileName, output);
