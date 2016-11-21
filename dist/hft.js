@@ -1349,10 +1349,12 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	!(__WEBPACK_AMD_DEFINE_ARRAY__ = [
 	    __webpack_require__(2),
+	    __webpack_require__(4),
 	    __webpack_require__(7),
 	    __webpack_require__(5),
 	  ], __WEBPACK_AMD_DEFINE_RESULT__ = function(
 	    Cookie,
+	    misc,
 	    NetPlayer,
 	    VirtualSocket) {
 
@@ -1377,6 +1379,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	    var log = options.quiet ? function() {} : console.log.bind(console);
 	    var _connected = false;
 	    var _socket;
+
+	    if (!options.url) {
+	      var query = misc.parseUrlQuery();
+	      options.url = query.hftUrl;
+	    }
+
 	    // Used in case the game tries to send messages to the server before it's connected.
 	    // This way the game does not have to wait for a connection to send startup messages.
 	    // Not sure there's a point to that :(
