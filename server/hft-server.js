@@ -289,7 +289,6 @@ var HFTServer = function(options) {
     res.redirect('/controller.html?' + querystring.stringify(req.query));
   });
 
-
   app.use(express.static(g.baseDir, staticOptions));
   app.post(/.*/, bodyParser);
 
