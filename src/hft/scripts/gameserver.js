@@ -33,10 +33,12 @@
 
 define([
     './misc/cookies',
+    './misc/misc',
     './netplayer',
     './virtualsocket',
   ], function(
     Cookie,
+    misc,
     NetPlayer,
     VirtualSocket) {
 
@@ -61,6 +63,12 @@ define([
     var log = options.quiet ? function() {} : console.log.bind(console);
     var _connected = false;
     var _socket;
+
+    if (!options.url) {
+      var query = misc.parseUrlQuery();
+      options.url = query.hftUrl;
+    }
+
     // Used in case the game tries to send messages to the server before it's connected.
     // This way the game does not have to wait for a connection to send startup messages.
     // Not sure there's a point to that :(
