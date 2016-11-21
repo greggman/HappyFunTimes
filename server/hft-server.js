@@ -72,10 +72,8 @@ const strings                   = require('../lib/strings');
  */
 var HFTServer = function(options) {
   var g = {
-    port: options.port || 18679,
-    screenshotCount: 0,
-    baseDir: 'public',
-    cwd: process.cwd(),
+    port: 18679,
+    baseDir: process.cwd(),
   };
   var relayServer;
   var appleCaptivePortalHandler;
@@ -244,7 +242,7 @@ var HFTServer = function(options) {
   };
 
   appleCaptivePortalHandler = new AppleCaptivePortalHandler({
-    baseDir: path.join(g.cwd, g.baseDir),
+    baseDir: path.join(__dirname, '..', 'public'),  // FIX
     address: getAddress(),
     port: g.port,
     sendFileFn: sendFileResponse,
@@ -292,7 +290,7 @@ var HFTServer = function(options) {
   });
 
 
-  app.use(express.static(g.cwd, staticOptions));
+  app.use(express.static(g.baseDir, staticOptions));
   app.post(/.*/, bodyParser);
 
   var postCmdHandlers = {
