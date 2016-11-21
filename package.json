@@ -13,6 +13,7 @@
   "main": "start.js",
   "files": [
     "server",
+    "lib",
     "dist"
   ],
   "keywords": [
