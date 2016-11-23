@@ -1,3 +1,0 @@
-this file is not in fakegame but is in fakegame2
-used to test upgrading
-
