@@ -34,34 +34,40 @@
 <html>
 <head>
   <meta charset="utf-8">
-  <title>HappyFunTimes Options</title>
-  <link rel="stylesheet" href="css/menu.css">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=no, minimal-ui">
+  <meta name="format-detection" content="telephone=no" />
+  <title>HappyFunTimes Redirect</title>
+  <link rel="stylesheet" href="/hft-support.css">
   <style>
+  #start {
+    width: 80%;
+    font-size: xx-large;
+  }
+  #start>div {
+    width: 100%;
+    display: block;
+  }
+  a {
+    display: block;
+    width: 100%;
+    height: 100%;
+    margin: 0px;
+  }
   </style>
 </head>
 <body>
-<h1>Options</h1>
-<!--
-<form class="options">
-  <fieldset>
-    <ul>
-      <li><input type="checkbox" id="dns"          /><label for="dns">Enable DNS server</label></li>
-      <li><input type="checkbox" id="private"      /><label for="private">Do not contact HappyFunTimes.net</label></li>
-      <li><input type="checkbox" id="phonecontrol" /><label for="phonecontrol">Allow Phone Control</label></li>
-    </ul>
-  </fieldset>
-</form>
--->
-coming soon
-<div><a href="games.html">Back</a></div>
+  <h1>HappyFunTimes</h1>
+  <div id="hft-settings">
+    <div class="hft-fullcenter">
+      <div id="start" class="hft-menubutton"><div><a href="%(startUrl)s">Start</a></div></div>
+    </div>
+  </div>
 </body>
-<script data-main="scripts/options.js" src="3rdparty/require.js"></script>
-<script>
-requirejs.config({
-  paths: {
-    hft: '/hft/0.x.x/scripts',
-  },
-});
-</script>
 </html>
+
 
