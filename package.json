@@ -14,7 +14,8 @@
   "files": [
     "server",
     "lib",
-    "dist"
+    "dist",
+    "hft-support"
   ],
   "keywords": [
     "happyfuntimes",
