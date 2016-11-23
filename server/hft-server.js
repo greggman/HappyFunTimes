@@ -241,12 +241,22 @@ var HFTServer = function(options) {
     }
   };
 
-  appleCaptivePortalHandler = new AppleCaptivePortalHandler({
-    baseDir: path.join(__dirname, '..', 'public'),  // FIX
-    address: getAddress(),
-    port: g.port,
-    sendFileFn: sendFileResponse,
-  });
+  if (g.dns) {
+    appleCaptivePortalHandler = new AppleCaptivePortalHandler({
+      baseDir: path.join(__dirname, '..', 'hft-support'),  // FIX
+      address: getAddress(),
+      port: g.port,
+      sendFileFn: sendFileResponse,
+    });
+    app.get(/^/, (req, res, next) => {
+      if (!appleCaptivePortalHandler.check(req, res)) {
+        next();
+      }
+    });
+    app.get('/xtra2.bin', (req, res) => {
+      res.sendFile(path.join(__dirname, '..', 'hft-support', 'xtra2.bin'));
+    });
+  }
 
   app.get(/^\/generate_204$/, (req, res) => {
       res.removeHeader("X-Powered-By");
