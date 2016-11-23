@@ -248,10 +248,6 @@ var HFTServer = function(options) {
     sendFileFn: sendFileResponse,
   });
 
-  if (!options.askName) {
-    appleCaptivePortalHandler.setFirstPath('/index.html');
-  }
-
   app.get(/^\/generate_204$/, (req, res) => {
       res.removeHeader("X-Powered-By");
       res.removeHeader("Connection");

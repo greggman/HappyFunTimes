@@ -82,7 +82,7 @@ var AppleCaptivePortalHandler = function(options) {
   // return my redirection page the first time and apple's success page the second time
   this.sessions = {};
   this.options = {};
-  this.firstPath = "/enter-name.html";
+  this.firstPath = "/index.html";
   this.setOptions(options);
 };
 
