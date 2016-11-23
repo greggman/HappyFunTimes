@@ -9,12 +9,12 @@
     "node": true,
     "browser": true,
     "es6": true,
-    "amd": true,
+    "amd": true
   },
   "plugins": [
     "eslint-plugin-optional-comma-spacing",
     "eslint-plugin-one-variable-per-var",
-    "eslint-plugin-require-trailing-comma",
+    "eslint-plugin-require-trailing-comma"
   ],
   "rules": {
     "brace-style": [2, "1tbs", { "allowSingleLine": false }],
@@ -22,7 +22,7 @@
     "comma-dangle": 0,
     "comma-spacing": 0,
     "comma-style": [2, "last"],
-    "optional-comma-spacing/optional-comma-spacing": [2, {after: true}],
+    "optional-comma-spacing/optional-comma-spacing": [2, {"after": true}],
     "no-underscore-dangle": ["error", { "allowAfterThis": true }],
     "dot-notation": 0,
     "eol-last": [0],
@@ -32,7 +32,6 @@
     "no-irregular-whitespace": 2,
     "no-multi-spaces": [0],
     "no-obj-calls": 2,
-    //"no-redeclare": [0],
     "no-shadow": [0],
     "no-undef": [0],
     "no-undef-init": [0],
@@ -42,6 +41,7 @@
     "require-trailing-comma/require-trailing-comma": [2],
     "semi": [2, "always"],
     "space-after-function-name": [2, "never"],
-    "space-after-keywords": [1, "always" ],
+    "space-after-keywords": [1, "always" ]
   }
 }
+
