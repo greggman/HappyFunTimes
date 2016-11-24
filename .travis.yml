@@ -1,9 +1,9 @@
 sudo: false
 language: node_js
 node_js:
-  - "4.1"
+  - "stable"
 script:
-  - grunt eslint
+  - npm run check
+  - npm run build
   - npm test
 
-before_install: npm install -g grunt-cli
