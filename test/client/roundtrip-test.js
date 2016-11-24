@@ -37,9 +37,6 @@ var testUtils      = require('../../lib/test/test-utils');
 var TestGame       = require('../../lib/test/test-game');
 var TestController = require('../../lib/test/test-controller');
 
-var g_configPath             = path.join(__dirname, "..", "testgames", "config.json");
-var g_installedGamesListPath = path.join(__dirname, "..", "testgames", "installed-games.json");
-
 describe('roundtrip', function() {
 
   var hftServer;
