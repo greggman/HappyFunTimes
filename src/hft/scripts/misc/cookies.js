@@ -29,7 +29,18 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-/*eslint strict:0*/
+"use strict";
+
+(function(root, factory) {
+
+    var window = (root && root.document)
+      ? root
+      : {
+          document: {
+            cookie: '',
+          },
+        };
+    var document = window.document;
 
 define(function() {
 
@@ -116,4 +127,5 @@ define(function() {
   return Cookie;
 });
 
+}(this));
 

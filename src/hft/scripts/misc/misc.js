@@ -30,6 +30,16 @@
  */
 "use strict";
 
+(function(root, factory) {
+
+    var window = root && root.location
+      ? root
+      : {
+          location: {
+            search: '',
+          }
+        }
+
 /**
  * @module Misc
  */
@@ -536,4 +546,6 @@ define(function() {
   };
 });
 
+
+}(this));
 
