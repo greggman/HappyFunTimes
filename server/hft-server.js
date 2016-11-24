@@ -345,7 +345,7 @@ var HFTServer = function(options) {
     server.once('error', makeServerErrorHandler(server, port, address));  // eslint-disable-line
     server.once('listening', makeServerListeningHandler(server, port));
 
-    debug("try listen port", port, "address: ", address);
+    debug("try listen port", port, "address:", address);
     server.listen(port, address);
   }
 
@@ -361,7 +361,9 @@ var HFTServer = function(options) {
     };
   }
 
-  makeServerAndListen(g.port, '::');  // try IPV6
+  process.nextTick(() => {
+    makeServerAndListen(g.port, '::');  // try IPV6
+  });
 
   /**
    * Close the HFTServer
