@@ -47,7 +47,7 @@ define(function() {
    * @param {number} id
    * @param {string} name
    */
-  var NetPlayer = function(server, id, data, name) {
+  var NetPlayer = function(server, id, data) {
     var _server = server;
     var _id = id;
     var _eventListeners = { };
@@ -56,12 +56,7 @@ define(function() {
     var _sessionId = data ? data.__hft_session_id__ : undefined;
     var _self = this;
     var _emptyMsg = {};
-    var _name = name;
     var _busy = false;
-
-    if (data && data.__hft_name__) {
-      _name = data.__hft_name__;
-    }
 
     function sendCmd(cmd, msg) {
       if (!_connected) {
@@ -180,27 +175,11 @@ define(function() {
     function ignoreMsg() {
     }
 
-    function handleSetNameMsg(data) {
-      if (data.name && data.name.length > 0) {
-        _name = data.name;
-        _sendEventIfHandler('hft_namechange');
-      }
-    }
-
-    function handleBusyMsg(data) {
-      _busy = data.busy;
-      _sendEventIfHandler('hft_busy');
-    }
-
     function handleLogMsg(data) {
       var fn = console[data.type] || console.log;
       fn.call(console, data.msg);
     }
 
-    _internalListeners["setName"] = ignoreMsg;
-    _internalListeners["_hft_setname_"] = handleSetNameMsg;
-    _internalListeners["busy"] = ignoreMsg;
-    _internalListeners["_hft_busy_"] = handleBusyMsg;
     _internalListeners["_hft_log_"] = handleLogMsg;
 
     /**
@@ -232,44 +211,11 @@ define(function() {
     this.getId = function() {
       return _id;
     };
-
-    /**
-     * The players's name.
-     * Use event 'hft_namechange' to watch for a change.
-     * @return {string} name of player
-     */
-    this.getName = function() {
-      return _name;
-    };
-
-    /**
-     * Whether or not player is in system menu on controller (editing name)
-     * Use event 'hft_busy' to watch for a change.
-     * @return {boolean} true if busy.
-     */
-    this.isBusy = function() {
-      return _busy;
-    };
   };
 
   /**
    * Event that the player has left.
    * @event NetPlayer#disconnected
-   */
-
-  /**
-   * Event that player has changed their name
-   *
-   * check `getName` to get their new name.
-   * @event NetPlayer#hft_namechange
-   */
-
-  /**
-   * Event that player entered or exited the system menu
-   *
-   * Meaning they aren't playing the game.
-   * check `isBusy` to find out if they are in the menu or not.
-   * @event NetPlayer#hft_busy
    */
 
   return NetPlayer;
