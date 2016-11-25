@@ -88,6 +88,11 @@ define(function() {
   };
 
   /**
+   * see {@link NetPlayer.addEventListener}
+   */
+  LocalNetPlayer.prototype.on = LocalNetPlayer.prototype.addEventListener;
+
+  /**
    * see {@link NetPlayer.removeEventListener}
    */
   LocalNetPlayer.prototype.removeEventListener = function(eventType) {
