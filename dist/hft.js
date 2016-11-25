@@ -391,9 +391,14 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 	 */
 
-	/*eslint strict:0*/
+	"use strict";
 
 	!(__WEBPACK_AMD_DEFINE_RESULT__ = function() {
+
+	  const window = (Function('return this;')());
+	  const document = window.document || {
+	    cookie: '',
+	  };
 
 	  /**
 	   * Represents a cookie.
@@ -667,6 +672,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * @module Misc
 	 */
 	!(__WEBPACK_AMD_DEFINE_RESULT__ = function() {
+
+	  const window = (Function('return this;')());
+
 	  /**
 	   * Copies properties from obj to dst recursively.
 	   * @param {Object} obj Object with new settings.
@@ -1168,7 +1176,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	    searchStringToObject: searchStringToObject,
 	  };
 	}.call(exports, __webpack_require__, exports, module), __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
-
 
 
 
@@ -1908,10 +1915,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	      fn.call(console, data.msg);
 	    }
 
-	    _internalListeners["setName"] = ignoreMsg;
-	    _internalListeners["_hft_setname_"] = handleSetNameMsg;
-	    _internalListeners["busy"] = ignoreMsg;
-	    _internalListeners["_hft_busy_"] = handleBusyMsg;
+	    //_internalListeners["setName"] = ignoreMsg;
+	    //_internalListeners["_hft_setname_"] = handleSetNameMsg;
+	    //_internalListeners["busy"] = ignoreMsg;
+	    //_internalListeners["_hft_busy_"] = handleBusyMsg;
 	    _internalListeners["_hft_log_"] = handleLogMsg;
 
 	    /**
@@ -2080,6 +2087,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	  LocalNetPlayer.prototype.addEventListener = function(eventType, handler) {
 	    this.eventHandlers[eventType] = handler;
 	  };
+
+	  /**
+	   * see {@link NetPlayer.addEventListener}
+	   */
+	  LocalNetPlayer.prototype.on = LocalNetPlayer.prototype.addEventListener;
 
 	  /**
 	   * see {@link NetPlayer.removeEventListener}
