@@ -31,18 +31,12 @@
 
 "use strict";
 
-(function(root, factory) {
-
-    var window = (root && root.document)
-      ? root
-      : {
-          document: {
-            cookie: '',
-          },
-        };
-    var document = window.document;
-
 define(function() {
+
+  const window = (Function('return this;')());
+  const document = window.document || {
+    cookie: '',
+  };
 
   /**
    * Represents a cookie.
@@ -127,5 +121,4 @@ define(function() {
   return Cookie;
 });
 
-}(this));
 

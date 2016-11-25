@@ -30,20 +30,18 @@
  */
 "use strict";
 
-(function(root, factory) {
-
-    var window = root && root.location
-      ? root
-      : {
-          location: {
-            search: '',
-          }
-        }
-
 /**
  * @module Misc
  */
 define(function() {
+
+  const window = (Function('return this;')());
+  if (!window.location) {
+    window.location = {
+      search: '',
+    };
+  }
+
   /**
    * Copies properties from obj to dst recursively.
    * @param {Object} obj Object with new settings.
@@ -545,7 +543,4 @@ define(function() {
     searchStringToObject: searchStringToObject,
   };
 });
-
-
-}(this));
 
