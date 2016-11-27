@@ -31,6 +31,27 @@
 
 'use strict';
 
+class ServerHelper {
+  constructor(hftServer, dnsServer, ports) {
+    this._hftServer = hftServer;
+    this._dnsServer = dnsServer;
+    this._ports = ports;
+  }
+  get ports() {
+    return this._ports;
+  }
+  close() {
+    if (this._dnsServer) {
+      this._dnsServer.close();
+      this._dnsServer = null;
+    }
+    if (this._hftServer) {
+      this._hftServer.close();
+      this._hftServer = null;
+    }
+  }
+}
+
 function startServer(options) {
   return new Promise(function(resolve, reject) {
     const DNSServer = require('./dnsserver');
@@ -39,11 +60,12 @@ function startServer(options) {
     const server = new HFTServer(options);
     let responsesNeeded = 1;
     let usedPorts;
+    let dns;
 
     function reportReady() {
       --responsesNeeded;
       if (responsesNeeded === 0) {
-        resolve(usedPorts);
+        resolve(new ServerHelper(server, dns, usedPorts));
       }
     }
 
@@ -59,7 +81,7 @@ function startServer(options) {
       // This doesn't need to dynamicallly check for a change in ip address
       // because it should only be used in a static ip address sitaution
       // since DNS has to be static for our use-case.
-      const dns = new DNSServer({address: options.address || iputils.getIpAddresses()[0]});
+      dns = new DNSServer({address: options.address || iputils.getIpAddresses()[0]});
       dns.on('listening', reportReady);
       dns.on('error', (err) => {
         console.error('You specified --dns but happyFunTimes could not use port 53.');

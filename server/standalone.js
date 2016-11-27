@@ -77,8 +77,8 @@ function exitBecauseAlreadyRunning() {
 function startServer() {
   const server = require('./server');
   server.start(args)
-  .then((ports) => {
-    console.log("Listening on ports:", ports);
+  .then((helper) => {
+    console.log("Listening on ports:", helper.ports);
   })
   .catch((err) => {
     console.error("error:", err);
