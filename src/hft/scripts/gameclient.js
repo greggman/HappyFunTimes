@@ -109,6 +109,11 @@ define([
     };
 
     /**
+     * Same as addEventListener
+     */
+    this.on = this.addEventListener;
+
+    /**
      * Removes an eventListener
      * @param {string} eventType name of event
      */

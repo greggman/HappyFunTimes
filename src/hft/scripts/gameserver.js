@@ -141,6 +141,11 @@ define([
     };
 
     /**
+     * Same as addEventListener
+     */
+    this.on = this.addEventListener;
+
+    /**
      * @callback GameServer~Listener
      * @param {Object} data data from sender.
      */
