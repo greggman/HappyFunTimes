@@ -81,16 +81,10 @@ It's awesome!
 
 ### Make options that don't need contollers to test your game.
 
-Powpow, Shootshoot, Jumpjump will all use the local
-keyboard to run a player if you put `?settings={haveServer:false}`
-at the end of the URL. For Boomboom you have to set
-`?settings={haveServer:false,numLocalPlayers:2}`
-
-### Use URL settings for testing.
-
-Most of the samples, both controllers and games, support
-various flags and settings passed in on the URL. This is great
-for testing. Example: `?settings={debug:true,showState:true,gravity:500}` etc.
+Pass in some option or look at an environment variable to
+decide to add a player that can be controlled with the keybarod.
+That you can test your game on your PC without having to launch
+other browsers or get out your smartphone.
 
 ### Show the player's colors/avatar on the controller.
 
@@ -109,12 +103,12 @@ for media queries for specifix devices. However it's not recommended to try
 to add media queries for _every device_ as this will unnecessarily bloat your CSS files.
 Just make sure that your UI is optimized for different screen sizes and the device orientation.
 
-    @media only screen 
+    @media only screen
       and (min-device-width: 320px) {
       /* Styles for devices larger than 320px */
     }
-    
-    @media only screen 
+
+    @media only screen
       and (min-device-width: 768px) {
       /* Styles for devices larger than 768px */
     }
@@ -125,7 +119,7 @@ orientation:
     @media all and (orientation:portrait) {
       /* Styles for Portrait screen */
     }
-    
+
     @media all and (orientation:landscape) {
       /* Styles for Landscape screen */
     }
@@ -160,7 +154,7 @@ Then add the following in your HTML
         }
     }
 
-Note: powpow and jumpjump already do this with standard HappyFunTimes support.
+Note: powpow and jumpjump already do this with HappyFunTimes sample-ui library.
 Feel free to copy the code.
 
 ### Use HandJS
@@ -168,11 +162,6 @@ Feel free to copy the code.
 Touch events suck balls. Microsoft proposed a much better system
 called Pointer events and they provided a polyfill for all browsers
 called HandJS that provides pointer events across browser.
-
-Note: HandJS is a standard part of HappyFunTimes already and will be
-included if you use the [`Touch` module](http://docs.happyfuntimes.net/docs/hft/module-Touch.html).
-I recommend you use the touch module where possible as we can then fix bugs as they come up
-across games.
 
 ### Add invisible divs for input if needed.
 
@@ -204,8 +193,8 @@ And in CSS
 
     #inputarea {
        position: absolute;
-       left: 0px;
-       top: 0px;
+       left: 0;
+       top: 0;
        z-index: 5;
     }
 
@@ -234,61 +223,9 @@ the position of an event relative to some element is slow in JavaScript since
 you have to compute the position of the element by decending through all of its
 parents.
 
-### What's with the weird `define()` stuff.
-
-It's part of [require.js](http://requirejs.org/). See [Why AMD](http://requirejs.org/docs/whyamd.html)?
-
-The simple explaination is. There's a script tag (in HFTs case it's in the template) that looks like this
-
-    <script data-main="scripts/game.js" src="/3rdparty/require.js"></script>
-
-This loads `require.js` which then asynchronously loads `scripts/games.js`. It calls `requirejs` from
-that file. `requirejs` returns an array of dependencies and a function. The system starts loading the
-dependinces. Each of those has a `define` function which itself has an optional list of dependencies
-and a function. The system continues to load dependencies until all of them are loaded. It will load
-each file only once. When all of them are loaded it will call the functions that each of them returned
-in the correct order and pass whatever those functions returned into the functions the depend on them.
-
-In other words.
-
-     // game.js
-     requirejs(['./somelib', './otherlib'], function(SomeLib, OtherLib) {
-        console.log(SomeLib.bar);
-        console.log(SomeLib.foo);
-     });
-
-     // somelib.js
-     define(['./yetanotherlib'], function(YetAnotherLib) {
-        return {
-           bar: YetAnotherLib.astrofy("abc");
-        }
-     });
-
-     // otherlib.js
-     define(['./yetanotherlib'], function(YetAnotherLib) {
-        return {
-           foo: YetAnotherLib.astrofy("123");
-        }
-     });
-
-     // yetanotherlib.js
-     define(function(YetAnotherLib) {
-        return {
-           astrofy: function(v) { return "**" + v + "**"; };
-        }
-     });
-
-Would first load game.js and call `requirejs()` see it dependes on `./somelib` and `./otherlib` so it
-would load `somelib.js` and `otherlib.js` and call `define()` in each. Each of those depend on
-`./yetanotherlib` so it would load `yetanotherlib.js`. `yetanotherlib.js` has no dependencies.
-Now it would call the function that was passed to `yetanotherlib.js:define()`. That funtion returns an
-object with single property `astrofy`. The system then calls the functions that were passed to
-`somelib.js:define` and `otherlib.js:define` passing in the object from `yetanotherlib`.
-It finally calls the function that was passed to `game.js:requirejs`.
-
 ### Disable caching in your browser
 
-Right now the relayserver tells the browser not to cache anything. Whether the browser
+Right now the server tells the browser not to cache anything. Whether the browser
 pays attention to this is up to the browser.
 
 You can also often turn off caching in the browser. In Chrome for example, open the

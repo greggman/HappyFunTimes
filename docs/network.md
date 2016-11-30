@@ -139,11 +139,11 @@ Starting HappyFunTimes in installation mode
 
 Open a node command prompt or terminal and on OSX type
 
-    sudo hft start --dns
+    sudo npm run start -- --dns
 
 On Windows just
 
-    hft start --dns
+    npm run start -- --dns
 
 You need `sudo` on OSX because port 80 is normally restricted to admin users only.
 
@@ -152,17 +152,6 @@ Go to `http://localhost/games.html` and pick a game.
 Now try connecting a smartphone to your router. If it's an iOS device it *should*
 automatcally come up with a page that says "Start". If it's an Android device
 open the browser and go to `hft.com` or any `http://` url.
-
-If you're planning on running only one game on your installation you might want to use
-these one or more of these [options](commands.md#hft-start) to start
-
-    hft start --dns --no-ask-name --no-menu --kiosk
-
-or
-
-    hft start --dns --no-ask-name --no-menu --kiosk --optimize-controller
-
-[See the start command for details](commands.md#hft-start).
 
 Setting Up an Airport Extreme
 -----------------------------
