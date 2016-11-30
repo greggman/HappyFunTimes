@@ -1,42 +1,15 @@
 Title: Contributing
 Description: How to contribute to HappyFunTimes
 
-*   Versioning the API
-
-    If you add new functionality to the public API (the api games and controllers call) increment
-    the API in `hft.hanson`.
-
-    If it's not backward compatible make a new major version second in the `hft.hanson` file
-    and make sure you've made new versions of files in `templates` and `scripts`.
-
-    The flow for HFT is:
-
-    *   When a game is installed, checks if HFT supports at least the required version of the API
-
-    *   When a game is run, find the highest compaitible verison of the API. There should only be
-        one major version of each API since [by defintion](http://semver.org) they are supposed to
-        backward compatible within a major version.
-
-    For example: If the game requires 0.3.5 but HFT only supports up to 0.3.4 then fail to install/run.
-    If the game requires 0.1.2 and we have 0.9.12, 0.9.12 should be compatible so use it.
-
-    Places that need API version path updates generally
-    ---------------------------------------------------
-
-        hft.hanson
-        public/index.html
-        public/enter-name.html
-        public/games.html
-        public/options.html
-
-        templates/<version>/*
-        scripts/<version>
-
 *   Make sure it passes the linter
 
-         grunt eslint
+        npm run check
 
-    Will run eslint.
+    Will run eslint
+
+    And the tests
+
+        npm test
 
 *   JavaScript style
 

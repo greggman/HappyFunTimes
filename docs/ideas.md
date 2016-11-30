@@ -17,25 +17,74 @@ or find stuff.
 So some random ideas I'd like to explore if I have time. Maybe they'll trigger some
 ideas for you
 
+### Give & Get
+
+Divide the room into teams (does it tell you which team you're on)? Phone shows something like
+
+
+    +---------------+
+    |               |
+    |               |
+    |               |
+    |               |
+    |               |
+    |               |
+    |               |
+    +---------------+
+    |               |
+    |   Press and   |
+    |   Hold Here   |
+    |   Do Not      |
+    |   Let Go!     |
+    |               |
+    +---------------+
+
+On the top area it shows an item "Give" or a matching silhouette and "Get".
+You have to find the person with the matching item. When you see them the giver
+touches "Give" and the getter touches "Get". The item is exchanged. If both
+players do not press their buttons within 1 second of each other the player
+who pressed their button alone loses a point. On a successful exchange both
+players get a point. Play lasts for 2 mins?  Too complicated?
+
 ### Sequences by team
 
 Each team member's phone shows a symbol.
-The symbol needed for that team is shown. That team member member needs to press their button
+The symbol needed for that team is shown on the TV. That team member who has the matching symbol
+needs to press their button.
 If the wrong team member presses their button the team has to start over
-First team wins?
+First team wins to complete the sequence wins.
+
+Three variations
+
+1.  Only the currently needed symbol for each team is shown on the big screen
+
+2.  Only the current and next symbol for each team is show on the big screen.
+
+    This gives the next player a chance to get ready
+
+3.  All symbols are show for each team in a line (or as many as will fit).
+
+    So a quick team can really go fast.
 
 Simple example: show a hurdle race. Each hurdle has a symbol above it. Each person
 on a team has 1 symbol on their phone. For that team to advance the person with
 the matching symbol has to press their button to jump the hurdle.
 
+Another, maybe better way is objects come down the screen to team colored buckets.
+When a player on that team presses their button the bucket shows that player's
+symbol. If object above the bucket matches it goes in the bucket. If the object
+above does not match then (explosion and previous item from machine gets put back on list?)
+or explosion and points go down or bucket breaks ....
+
 Complications:
 
 *   Each player on each team needs a unique symbol. If one someone on a
-    team quits that symbol needs to be removed. If a play joins in the middle they need
+    team quits that symbol needs to be removed. If a player joins in the middle they need
     to be added.
 
 *   Given a lot of player per team most team members have nothing to do.
 
+    Solution, more teams. Max 5 up to 4 teams, then teams of 6, 7, 8
 
 ### Spider game
 
@@ -237,7 +286,7 @@ Add score for players.
 ### Sliced Shapes
 
 Each player is assigned a piece of a shape, they have to rotate their device to
-get the shape to line up (ie, jigsaw puzzle). Anytime a new player is added the 
+get the shape to line up (ie, jigsaw puzzle). Anytime a new player is added the
 urrent shape is subdivided.
 
 ### Use device motion to play tennis like Wii (shake controller to return ball)

@@ -1,6 +1,10 @@
 Changelist
 ==========
 
+*   1.0.0
+
+    *   change happyfuntimes to a library only. No more virtual console
+
 *   0.0.47
 
     *   Handle ipv6
