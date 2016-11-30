@@ -6,6 +6,7 @@
     "start": "node start.js",
     "check": "grunt eslint",
     "build": "webpack --config src/hft.config.js",
+    "builddocs": "grunt",
     "test": "mocha --recursive"
   },
   "repository": {
