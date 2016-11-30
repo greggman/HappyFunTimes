@@ -69,18 +69,15 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
       <p>This is a few tips for working on HappyFunTimes itself. If you&#39;re making a game
 there&#39;s probably no reason for you to read this document. This is mostly
 notes to myself and whoever else is working on HappyFunTimes itself.</p>
-<h2 id="environment-variables">Environment Variables</h2>
-<p>There are a bunch of ENV vars you can set for testing.</p>
-<h3 id="hft_publish_user">HFT_PUBLISH_USER</h3>
-<p>Can be used to set a user:pass for calling <code>hft publish</code> vs command line arguments.</p>
-<h3 id="hft_settings">HFT_SETTINGS</h3>
-<p>Used to set any setting in <code>hft.hanson</code>.</p>
-<p>It&#39;s a JSON string which will be applied to the settings in <code>hft.hanson</code>. For example
-when testing the rendevous server locally.</p>
-<pre><code>HFT_SETTINGS={settings:{rendezvousUrl:\&quot;http://localhost:1337/api/inform2\&quot;}} hft start
-</code></pre><p>Also see <a href="#hft-rendezvous-ip"><code>HFT_RENDEZVOUS_IP</code></a>.</p>
+<h3 id="hft_rendezvous_url">HFT_RENDEZVOUS_URL</h3>
+<p>Setting <code>HFT_RENDEZVOUS_URL</code> to a URL lets you specific a custom rendezvous server.
+The default url is <code>http://happyfuntimes.net/api/inform2</code>. You&#39;d set this if you
+want to run your own so that you can tell users go to for example <code>mygame.com</code> instead
+of <code>happyfuntimes.net</code>.</p>
+<p><a href="https://github.com/greggman/happyfuntimes.net">The source for the rendezvous server is here</a>.</p>
 <h3 id="hft_rendezvous_ip">HFT_RENDEZVOUS_IP</h3>
-<p>Used to specify the IP address to report to the rendevous server. Normally the IP address
+<p>This is for dev/debugging only</p>
+<p><code>HFT_RENDEZVOUS_IP</code> is Used to specify the IP address to report to the rendevous server. Normally the IP address
 is derived from the network connection. The rendezvous server generally sees your NAT router&#39;s
 ip. But, when testing locally, with happyfuntimes and the rendezvous server running on the same
 machine it will just see <code>127.0.0.1</code> as the ip. So, it will record that some system at <code>127.0.0.1</code>
@@ -88,19 +85,9 @@ is hosting games at say <code>192.168.0.10</code>. You then try to connect by go
 another machine on your local net who&#39;s IP address is <code>192.168.0.11</code>. Because you&#39;re not both
 behind NAT the rendezvous server sees different IP addresses for you and your test machine.</p>
 <p>That&#39;s the long way of saying you need to set <code>HFT_RENDEZVOUS_IP</code> to the same IP address
-as your test machine / phone.</p>
-<pre><code>HFT_RENDEZVOUS_IP=192.168.0.11 HFT_SETTINGS={settings:{rendezvousUrl:\&quot;http://localhost:1337/api/inform2\&quot;}} hft start
-</code></pre><h2 id="controller-startup">Controller Startup</h2>
-<p>I&#39;m sure there&#39;s a much more organized way to do this but.... To get cordova/phonegap support I hacked
-a bunch of stuff. Basically as of version 1.10.0 happyfuntimes emits script tags for your app
-with <code>type=&quot;hft-late&quot;</code> so that they don&#39;t execute. It then tries to load the cordva/phonegap bridge.
-After success or failure it then finds all the scripts with <code>type=&quot;hft-late&quot;</code> and creates
-new scripts with <code>type=&quot;text/javascript&quot;</code>.</p>
-<p>I did all of that because I wanted the cordova stuff to be up and running and ready to use before
-any user scripts execute what-so-ever. Without that user scripts would have to wait on some kind
-of <code>hft-ready</code> event or register a callback or something. While I&#39;d be fine with that my experience
-with students using HFT is the less &quot;must do it this ways&quot; the better.</p>
-
+as your test machine / phone if you want to test a local rendezvous server.</p>
+<pre><code>HFT_RENDEZVOUS_IP=192.168.0.11 HFT_RENDEZVOUS_URL=http://localhost:1337/api/inform2 npm start
+</code></pre>
       <div class="docs-footer">
         <div>Questions? <a href="http://stackoverflow.com/questions/tagged/happyfuntimes">Ask on stackoverflow</a>.</div>
         <div>Issue/Bug? <a href="http://github.com/greggman/happyfuntimes/issues">Create an issue on github</a>.</div>
@@ -152,13 +139,6 @@ with students using HFT is the less &quot;must do it this ways&quot; the better.
         <ul>
             <li><a href="ideas.html">Ideas</a></li>
             <li><a href="examples.html">Examples</a></li>
-        </ul>
-    </li>
-    <li>
-        <b>API</b>
-        <ul>
-            <li><a href="api-versions.html">API Versions</a></li>
-            <li><a href="migration.html">Migrating from older APIs</a></li>
         </ul>
     </li>
     <li>

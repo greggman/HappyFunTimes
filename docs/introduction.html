@@ -71,13 +71,26 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 played with a bunch of people in the same room and 1 ideally large display.</p>
 <p><em>HappyFunTimes is abbreviated with HFT in this documentation.</em></p>
 <h2 id="how-does-it-work-">How does it work?</h2>
-<p>HFT consists of two components:</p>
-<ul>
-<li>The HFT server</li>
-<li>The Games</li>
-</ul>
-<p>While the HFT server is running on Node.js, the games can run in your browser
-by using HTML and JavaScript or by using the Unity game framework.</p>
+<p>HFT is a library you add to your game that runs a small webserver.
+There are currenty 3 forms of this library. <a href="unity/index.html">A Unity version</a>,
+An Electron version and a stand alone server version.</p>
+<p>Users connect to this server with their smartphone and it serves
+them a webpage you create that presents a controller for your game.
+The game and the controllers then talk over WebSockets through
+the server. Note that the smartphones must be on the same network
+on the computer.</p>
+<p>HFT also includes a rendezvous server that helps users easily
+connect to your game. Users go to <code>happyfuntimes.net</code> on their
+phones and it will redirect them back to your game&#39;s server
+(for example <code>http://192.168.1.123:18769</code>)</p>
+<p>HFT also supports running without the internet. To do this it
+supplies it&#39;s own DNS server so that when the use connects
+their phone to your WiFi all websites will lead to your game.
+It even includes support for iOS devices captive portal
+detector so that when an iOS use connects to your WiFi they&#39;ll
+automatically join the game without typing anything.</p>
+<p>HFT also supports coordinating players between mutliple machines.
+As an example <a href="https://greggman.github.io/hft-tonde-iko">see this game that runs across 7 machines</a>.</p>
 
       <div class="docs-footer">
         <div>Questions? <a href="http://stackoverflow.com/questions/tagged/happyfuntimes">Ask on stackoverflow</a>.</div>
@@ -130,13 +143,6 @@ by using HTML and JavaScript or by using the Unity game framework.</p>
         <ul>
             <li><a href="ideas.html">Ideas</a></li>
             <li><a href="examples.html">Examples</a></li>
-        </ul>
-    </li>
-    <li>
-        <b>API</b>
-        <ul>
-            <li><a href="api-versions.html">API Versions</a></li>
-            <li><a href="migration.html">Migrating from older APIs</a></li>
         </ul>
     </li>
     <li>

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- this file is auto-generated from docs/unitydocs.md. Do not edited directly -->
+<!-- this file is auto-generated from docs/making-games/publishing.md. Do not edited directly -->
 <!--
 Copyright 2012, Gregg Tavares.
 All rights reserved.
@@ -38,14 +38,14 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 <meta property="og:type" content="website" />
 <meta property="og:image" content="http://docs.happyfuntimes.net/docs/images/happyfuntimes.jpg" />
 <meta property="og:description" content="" />
-<meta property="og:url" content="http://docs.happyfuntimes.net/docs/unitydocs.html" />
+<meta property="og:url" content="http://docs.happyfuntimes.net/docs/making-games/publishing.html" />
 
 <meta name="twitter:card" content="summary_large_image" />
 <meta name="twitter:site" content="@greggman" />
 <meta name="twitter:creator" content="@greggman" />
 <meta name="twitter:domain" content="docs.happyfuntimes.net" />
 <meta name="twitter:title" content="" />
-<meta name="twitter:url" content="http://docs.happyfuntimes.net/docs/unitydocs.html" />
+<meta name="twitter:url" content="http://docs.happyfuntimes.net/docs/making-games/publishing.html" />
 <meta name="twitter:description" content="" />
 <meta name="twitter:image:src" content="http://docs.happyfuntimes.net/docs/images/happyfuntimes.jpg" />
 
@@ -56,7 +56,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 </head>
 <body>
 <div class="header">
-  <h1><a href="/docs">HappyFunTimes Docs</a></h1>
+  <h1><a href="/docs/making-games">HappyFunTimes Docs</a></h1>
 </div>
 
 
@@ -66,8 +66,54 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
   </div>
   <div class="row">
     <div class="col-sm-8 docs-content">
-      <h1 id="unity-docs-for-happyfuntimes">Unity Docs for HappyFunTimes</h1>
-<p><a href="http://docs.happyfuntimes.net/docs/unity/">The unity docs have moved here</a></p>
+      <p>To publish a HappyFunTimes app</p>
+<p>If Unity just export from Unity <a href="../unity">see unity docs</a>.</p>
+<p>If HTML5 the easist way to start with an existing happyfuntimes app.</p>
+<ol>
+<li>Install node.js</li>
+<li>Open a terminal or <code>node command prompt</code> on Windows</li>
+<li>git clone (or download) <a href="writing-games.html#available-example-games">an example</a></li>
+<li><p>Install any packages it needs by</p>
+<pre><code>cd path/it/was/cloned-or-unzipped-to
+npm install
+bower install     # only if there is a bower.json file
+</code></pre></li>
+<li><p>Test that it works</p>
+<pre><code>npm run start
+</code></pre><p>Will run the game in development mode.</p>
+<pre><code>npm run startp
+</code></pre><p>Will run the game in production mode. (fullscreen)</p>
+</li>
+<li><p>copy your files in.</p>
+<p>Your game should be a webpage named <code>game.html</code> and your controller a controller named <code>controller.html</code>.
+Use any HTML game engines or libraries you want. You can use <code>&lt;script&gt;</code> tags or AMD or CommonJS to load
+your javascript. Note I can&#39;t help you write a game but you can read the docs about the specific happyfuntimes
+parts and look at the existing games as examples</p>
+</li>
+<li><p>Check that it works in both development and production modes</p>
+<pre><code>npm run start   # starts in development mode
+npm run startp  # starts in production mode
+</code></pre></li>
+<li><p>Make an icon.png file and convert it to both an .ico and .icns file</p>
+<p>I did this using an online service like <a href="https://iconverticons.com/online/">https://iconverticons.com/online/</a></p>
+<p>Download and copy the results to <code>build/icon.icns</code> and <code>build/icon.ico</code> respectively</p>
+<p><strong>NOTE: Your icon should be 256x256 or you&#39;ll get an error</strong></p>
+</li>
+<li><p>Edit the <code>package.json</code> file and change the <code>name</code>, <code>productName</code>, <code>description</code>, <code>version</code>, <code>appId</code></p>
+<p><a href="packagejson.html">See package.json</a>.</p>
+</li>
+<li><p>type <code>npm run pack</code></p>
+<p>When it&#39;s finished there should be an app in <code>dist/mac</code> or <code>dist/win</code> which you can test.</p>
+</li>
+<li><p>type <code>npm run dist</code></p>
+<p>This will make a <code>.dmg</code> file on mac or an installer file on windows again in <code>dist/mac</code> or <code>dist/win</code></p>
+<p>The installers are compressed so they will likely be much smaller then the apps from the previous step.</p>
+</li>
+</ol>
+<p>Publish your game wherever you want. Note that if you expect your game to be super popular you may want to
+consider running your own rendezvous server (the server that connects player&#39;s phones to the game). By that
+I mean players normally connect to the game by going to <code>happyfuntimes.net</code> but you can run your own
+server like <code>my100playergame.com</code> and tell users to go there.</p>
 
       <div class="docs-footer">
         <div>Questions? <a href="http://stackoverflow.com/questions/tagged/happyfuntimes">Ask on stackoverflow</a>.</div>
@@ -97,42 +143,49 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
     </div>
     <div class="col-sm-3 col-sm-offset-1 docs-sidebar">
         <ul class="toc">
-    <li><a href="introduction.html">Introduction</a></li>
+    <li><a href="../introduction.html">Introduction</a></li>
     <li>
         <b>Setup</b>
         <ul>
-            <li><a href="setup/macos.html">OSX</a></li>
-            <li><a href="setup/windows.html">Windows</a></li>
-            <li><a href="setup/linux.html">Linux</a></li>
+            <li><a href="../setup/macos.html">OSX</a></li>
+            <li><a href="../setup/windows.html">Windows</a></li>
+            <li><a href="../setup/linux.html">Linux</a></li>
         </ul>
     </li>
     <li>
         <b>Making Games</b>
         <ul>
-            <li><a href="making-games/index.html">Making games in HTML5</a></li>
-            <li><a href="unity">Making games in Unity3D</a></li>
-            <li><a href="making-games/tips.html">Tips</a></li>
-            <li><a href="commands.html">hft command</a></li>
+            <li><a href="index.html">Making games in HTML5</a></li>
+            <li><a href="../unity">Making games in Unity3D</a></li>
+            <li><a href="tips.html">Tips</a></li>
+            <li><a href="../commands.html">hft command</a></li>
         </ul>
     </li>
     <li>
         <b>Ideas and Examples</b>
         <ul>
-            <li><a href="ideas.html">Ideas</a></li>
-            <li><a href="examples.html">Examples</a></li>
+            <li><a href="../ideas.html">Ideas</a></li>
+            <li><a href="../examples.html">Examples</a></li>
+        </ul>
+    </li>
+    <li>
+        <b>API</b>
+        <ul>
+            <li><a href="../api-versions.html">API Versions</a></li>
+            <li><a href="../migration.html">Migrating from older APIs</a></li>
         </ul>
     </li>
     <li>
         <b>Other Content</b>
         <ul>
-            <li><a href="network.html">Museums & Installations</a></li>
+            <li><a href="../network.html">Museums & Installations</a></li>
         </ul>
     </li>
     <li>
         <b>Contributing</b>
         <ul>
-            <li><a href="contributing.html">Contributing</a></li>
-            <li><a href="future.html">Future Features</a></li>
+            <li><a href="../contributing.html">Contributing</a></li>
+            <li><a href="../future.html">Future Features</a></li>
         </ul>
     </li>
 </ul>

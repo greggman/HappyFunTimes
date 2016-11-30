@@ -67,9 +67,13 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
   <div class="row">
     <div class="col-sm-8 docs-content">
       <h1 id="-package-json">﻿Package.json</h1>
-<p>HappyFunTimes uses a <code>package.json</code> file to hold some extra data about a
-game or installation needed to run the game correctly.</p>
-<p>This file defines some data about your game. It is a JSON file and JSON has a very strict format.</p>
+<p><code>package.json</code> isn&#39;t really specifically a happyfuntimes thing. It&#39;s part
+of <code>npm</code> (the Node Package Manager). It makes it easy to add libraries
+to your project, one of those libaries being <code>happyfuntimes</code></p>
+<p>If you&#39;re planning on shipping a game and you started with one of
+the sample projects you&#39;ll need to edit your <code>package.json</code> file
+to set the name of your game, etc.</p>
+<p><code>package.json</code> is a JSON file and JSON has a very strict format.</p>
 <ul>
 <li><p>No trailing commmas.</p>
 <p>Good</p>
@@ -88,130 +92,52 @@ game or installation needed to run the game correctly.</p>
 <li><p>All Strings and identifiers must be quoted with double quotes. The only things not quoted are numbers and <code>true</code>, <code>false</code>,
 and <code>null</code>.</p>
 </li>
-<li><p>It&#39;s case sensitive. <code>&quot;HappyFunTimes&quot;</code> is NOT the same as <code>&quot;happyFunTimes&quot;</code></p>
+<li><p>It&#39;s case sensitive. <code>&quot;productName&quot;</code> is <strong>NOT</strong> the same as <code>&quot;ProductName&quot;</code></p>
 </li>
 </ul>
 <h3 id="required-fields">Required fields</h3>
 <p>A standard package.json looks like this</p>
 <pre><code>{
   &quot;name&quot;: &quot;JumpJump&quot;,
+  &quot;productName&quot;: &quot;Jump Jump&quot;,
   &quot;description&quot;: &quot;A game with Jumping&quot;,
   &quot;version&quot;: &quot;0.0.2&quot;,
   &quot;private&quot;: false,
-  &quot;dependencies&quot;: {
+  &quot;build&quot;: {
+    &quot;appId&quot;: &quot;com.greggman.hftJumpJump&quot;,
+    &quot;asar&quot;: false,
+    &quot;mac&quot;: {
+      &quot;category&quot;: &quot;public.app-category.games&quot;
+    }
   },
-  &quot;happyFunTimes&quot;: {
-    &quot;gameId&quot;: &quot;jumpjump&quot;,
-    &quot;category&quot;: &quot;game&quot;,
-    &quot;apiVersion&quot;: &quot;1.3.0&quot;,
-    &quot;gameType&quot;: &quot;html&quot;,
-    &quot;minPlayers&quot;: 1
+  &quot;main&quot;: &quot;main.js&quot;,
+  &quot;scripts&quot;: {
+    &quot;start&quot;: &quot;cross-env NODE_ENV=development electron main.js&quot;,
+    &quot;startp&quot;: &quot;cross-env NODE_ENV=production electron main.js&quot;,
+    &quot;pack&quot;: &quot;build --dir&quot;,
+    &quot;dist&quot;: &quot;build&quot;
+  },
+  &quot;dependencies&quot;: {
+    &quot;happyfuntimes&quot;: &quot;^0.1.1&quot;,
+    &quot;optionator&quot;: &quot;^0.8.2&quot;
+  },
+  &quot;devDependencies&quot;: {
+    &quot;cross-env&quot;: &quot;^3.1.3&quot;,
+    &quot;electron&quot;: &quot;^1.4.5&quot;,
+    &quot;electron-builder&quot;: &quot;^8.6.0&quot;
   }
 }
 </code></pre><h4 id="-name-"><code>name</code></h4>
-<p>A name for your game. Used on the main screen of HappyFunTimes and SuperHappyFunTimes.</p>
+<p>A name for your game. No spaces, ascii only</p>
+<h4 id="-productname-"><code>productName</code></h4>
+<p>A name for your game. Can include spaces. UTF-8</p>
 <h4 id="-description-"><code>description</code></h4>
-<p>A description. Used on superhappyfuntimes. No HTML allowed currently.</p>
+<p>A description.</p>
+<h4 id="-build-appid-"><code>build.appId</code></h4>
+<p>A app id for the various stores</p>
 <h4 id="-version-"><code>version</code></h4>
-<p>Used on superhappyfuntimes so users can know if there is a newer version for them to download.</p>
-<h4 id="-happyfuntimes-gameid-"><code>happyFunTimes.gameId</code></h4>
-<p>This is the id for your game. Every game on superhappyfuntimes must have a unique id.
-only A-Z, 0-9, _, - are allowed and no more than 60 characters.</p>
-<h4 id="-happyfuntimes-apiversion-"><code>happyFunTimes.apiVersion</code></h4>
-<p>This is the happyFunTimes API version needed by this game. If this number is higher
-than the version of happyFunTimes the user has installed they will be asked to upgrade.
-It is also used by happyFunTimes to provide the correct API for the game.</p>
-<h4 id="-happyfuntimes-gametype-"><code>happyFunTimes.gameType</code></h4>
-<p>This is used by happyFunTimes to figure out how to deal with the game. For example
-how to launch the game and how to publish it.</p>
-<p>Valid values are</p>
-<ul>
-<li><code>html</code></li>
-<li><code>Unity3D</code></li>
-<li><code>Unity3DLibrary</code></li>
-</ul>
-<h4 id="-happyfuntimes-minplayers-"><code>happyFunTimes.minPlayers</code></h4>
-<p>How many players are required to play this game. For example, jumpjump you can play with
-one player. It&#39;s probably not any fun but you can play it. boomboom on the otherhand
-requires 2 players. It will not start until there are 2 players.</p>
-<p>This is only used on the superhappyfuntimes to set expectations. If you have a game that requires
-10 players please consider marking it here.</p>
-<h4 id="-happyfuntimes-category-"><code>happyFunTimes.category</code></h4>
-<p>This is also only used on superhappyfuntimes to set expections and hopefully to categories
-things. Current values</p>
-<ul>
-<li><code>game</code> A game</li>
-<li><code>example</code> Not a game, not really meant to be played, just an example</li>
-<li><code>demo</code> Not a game, something else like an exhibit, possibly not playable without more stuff</li>
-</ul>
-<h4 id="-happyfuntimes-usescripttag-"><code>happyFunTimes.useScriptTag</code></h4>
-<p>True indicates you don&#39;t want to use requirejs instead you want to use <code>&lt;script&gt;</code> tags. Your <code>apiVerison</code>
-must be <code>1.3.0</code> or higher</p>
-<p>I really like <a href="http://requirejs.org">require.js</a> style of modules. It encourages
-dependency injection, it also supports module independence. But, for many it&#39;s non
-standard and they&#39;re not used to it.</p>
-<p>So, if you want to just use standard script tags make sure your <code>package.json</code> has its
-<code>happyFunTimes.apiVersion</code> set to <code>1.3.0</code> or higher and add the flag <code>happyFunTimes.useScriptTag</code> set
-to <code>true</code>. Example:</p>
-<pre><code>{
-  ...
-  &quot;happyFunTimes&quot;: {
-    ...
-    &quot;apiVersion&quot;: &quot;1.3.0&quot;,
-    &quot;useScriptTag&quot;: true,
-    ...
-  }
-}
-</code></pre><p>The <code>&lt;script&gt;</code> tags for HappyFunTimes are automatically
-added for you and so is the script tag that includes <code>scripts/game.js</code> for your game and
-<code>scripts/controller.js</code> for your controller. If you need any other scripts
-(like three.js or pixi.js or jquery) add script tags to
-either <code>game.html</code> or <code>controller.html</code>.  The HappyFunTimes libraries will be inserted before
-those tags. The <code>game.js</code> or <code>controller.js</code> will be inserted after.</p>
-<p>See example: <a href="http://github.com/hft-simple-script/">github.com/hft-simple-script</a></p>
-<h4 id="-happyfuntimes-ignore-"><code>happyFunTimes.ignore</code></h4>
-<p>Used to prevent certainly files from being part of the published game.</p>
-<p>This is an array of strings in the format of <code>.gitignore</code> (<a href="http://git-scm.com/docs/gitignore">see git docs</a>)
-not including the double asterix syntax. For example</p>
-<pre><code>{
-  ...
-  &quot;happyFunTimes&quot;: {
-    ...
-    ignore: [
-      &quot;/src/&quot;,
-      &quot;*.psd&quot;
-    ],
-    ...
-  }
-}
-</code></pre><p>would exclude the <code>&lt;projectdir&gt;/src</code> folder as well as any Photoshop files.</p>
-<h4 id="-happyfuntimes-templatefileoptions-"><code>happyFunTimes.templateFileOptions</code></h4>
-<p>Requires apiVersion <code>1.15.0</code> or higher.</p>
-<p>By default <code>game.html</code> automatically gets inserted into <code>templates/game.gameview.html</code>.
-&#39;controller.html<code>automatically gets inserted into</code>templates/controller.index.html`.</p>
-<p>If your project needs other files to be treated similarly you can use this option. A good example
-is <a href="http://github.com/greggman/hft-tonde-iko">Tonde-Iko</a>. Its <code>game.html</code> is just a menu for
-debugging, testing, and lanching individual screens. The game itself is run from <code>realgame.html</code>.
-There&#39;s also a network stress test in <code>stress.html</code> and a file that creates the controller avatar
-texture atlas in <code>makeimage.html</code>.</p>
-<p>Each of those needed the templating treatment to get the happyfuntimes support libraries etc so
-this was added to the package.json</p>
-<pre><code>{
-  &quot;name&quot;: &quot;Tonde-Iko&quot;,
-  ...
-  &quot;happyFunTimes&quot;: {
-    &quot;gameId&quot;: &quot;tonde-iko&quot;,
-    ...
-    &quot;templateFileOptions&quot;: [
-      { &quot;filename&quot;: &quot;realgame.html&quot;,  &quot;template&quot;: &quot;game&quot; },
-      { &quot;filename&quot;: &quot;stress.html&quot;,    &quot;template&quot;: &quot;game&quot; },
-      { &quot;filename&quot;: &quot;makeimage.html&quot;, &quot;template&quot;: &quot;game&quot; }
-    ]
-  }
-}
-</code></pre><p>That basically says for those 3 files use the <code>game</code> template. They will automatically use
-their respective scripts and css so for example <code>realgame.html</code> uses <code>scripts/realgame.js</code>
-and <code>css/realgame.css</code>.</p>
+<p>A version number in <a href="http://semver.org/">semver format</a>.</p>
+<p>This will be used when building your app.</p>
 
       <div class="docs-footer">
         <div>Questions? <a href="http://stackoverflow.com/questions/tagged/happyfuntimes">Ask on stackoverflow</a>.</div>

@@ -74,44 +74,31 @@ have corresponding Javascript and CSS files.</p>
 <li><a href="#basic-file-structure">Basic file structure</a></li>
 <li><a href="#game-component">Game Component</a></li>
 <li><a href="#controller-component">Controller Component</a></li>
-<li><a href="#require-js">Require.js</a></li>
 </ul>
 <hr>
 <h2 id="basic-file-structure">Basic file structure</h2>
 <p>These files are <strong>required</strong> for all HappyFunTimes games</p>
-<pre><code>css/controller.css          // The CSS for your controller
-css/game.css                // The CSS for your controller
-scripts/controller.js       // The main script for your controller
-scripts/game.js             // The main script for your controller
-controller.html             // The HTML for your controller
+<pre><code>controller.html             // The HTML for your controller
 game.html                   // The HTML for your game
-package.json                // The data about your game.
-screenshot.png              // At least one screenshot 640x480 is good
-icon.png                    // An icon, 128x128
+main.js                     // The code that launches your game in Electron
+package.json                // Names your game and your dependencies
+</code></pre><p>These files are required if you want to ship your game as a standalone app</p>
+<pre><code>build/icon.icns             // An Icon for your app on Mac at least 256x256
+build/icon.ico              // An Icon for your app on Windows at least 256x256
 </code></pre><p>For more information about the <code>package.json</code> file, visit the <a href="packagejson.html">Package Json</a>
 page.</p>
 <hr>
 <h3 id="game-component">Game Component</h3>
-<p>The game component runs on the main device that opened the game, in most cases a
-PC that is connected to a TV. The component receives input from the controllers
-and displays the computed results on the screen.
-There is only one game active at a time.</p>
+<p>The game component runs on PC that is connected to a TV.
+This component receives input from the controllers
+and displays the computed results on the screen.</p>
 <h4 id="game-html">game.html</h4>
 <p>The <code>game.html</code> file contains the HTML that will be used to display the game
-itself. It can contain various elements which depend on what you need to display
-for all players.
-In most cases it will contain the elements that represent the players and a goal
-that needs to be reached or whatever the game is about.</p>
-<h4 id="game-js">game.js</h4>
-<p>The <code>game.js</code> file contains the main logic that runs the whole game. It starts
-the game itself, manages connecting players, receives player input and handles
-how the input is processed and displayed to the players.
-You will get more information about the contents of this file in
-<a href="writing-games.html#game-js">Writing Games &gt; <code>game.js</code></a>.</p>
-<h4 id="game-css">game.css</h4>
-<p>The <code>game.css</code> file contains the styling for the game. It can be static but you can
-also generate a CSS file by using a CSS preprocessor. There are no specific
-requirements regarding this file. Styling is completely up to you.</p>
+itself. You can use any HTML5 based game library like <a href="https://phaser.io/">Phasar</a>,
+<a href="http://www.pixijs.com">Pixi.js</a>, <a href="http://biz.turbulenz.com/developers">Turbulenz</a>,
+<a href="https://github.com/cocos2d/cocos2d-html5">Cocos-2DX</a>, <a href="http://threejs.org/">Three.js</a>,
+etc. Happyfuntimes itself is only a library that provides a way to use smartphones
+as controllers.</p>
 <hr>
 <h3 id="controller-component">Controller Component</h3>
 <p>The controller component is what runs on the mobile devices that are used by the
@@ -120,25 +107,8 @@ There can be multiple active controllers at the same time as they represent the
 single players of the game.</p>
 <h4 id="controller-html">controller.html</h4>
 <p>The <code>controller.html</code> file contains the HTML that will be displayed on the mobile
-device. Dependin on the type of the game, there could be a single touch area,
+device. Depending on the type of the game, there could be a single touch area,
 gamepad-like move controllers or input fields for text.</p>
-<h4 id="controller-js">controller.js</h4>
-<p>The <code>controller.js</code> file contains the main logic that controls how the controller
-behaves, how he reacts to what happens in the game and how player input should be
-pushed to the game component.
-You will get more information about the contents of this file in
-<a href="writing-games.html#controller-js">Writing Games &gt; <code>controller.js</code></a>.</p>
-<h4 id="controller-css">controller.css</h4>
-<p>The <code>controller.css</code> file contains the styling for the controller. It can be static
-but you can also generate a CSS file by using a CSS preprocessor. There are no specific
-requirements regarding this file. Styling is completely up to you.</p>
-<p><em>Hint: There are multiple CSS snippets in the <a href="../tips.html">Tips docs</a> that can be used
-to eliminate unwanted behaviour like context menus.</em></p>
-<hr>
-<h3 id="require-js">Require.js</h3>
-<p>Currently most JavaScript in HappyFunTimes uses <a href="http://requirejs.org">require.js</a> to load and
-reference files. Requirejs is awesome because it provides both dependency injection
-and a module system.</p>
 <hr>
 <p>Next step: <a href="writing-games.html">Writing Games</a></p>
 

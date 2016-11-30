@@ -67,36 +67,12 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
   <div class="row">
     <div class="col-sm-8 docs-content">
       <ul>
-<li><p>Versioning the API</p>
-<p>If you add new functionality to the public API (the api games and controllers call) increment
-the API in <code>hft.hanson</code>.</p>
-<p>If it&#39;s not backward compatible make a new major version second in the <code>hft.hanson</code> file
-and make sure you&#39;ve made new versions of files in <code>templates</code> and <code>scripts</code>.</p>
-<p>The flow for HFT is:</p>
-<ul>
-<li><p>When a game is installed, checks if HFT supports at least the required version of the API</p>
-</li>
-<li><p>When a game is run, find the highest compaitible verison of the API. There should only be
-one major version of each API since <a href="http://semver.org">by defintion</a> they are supposed to
-backward compatible within a major version.</p>
-</li>
-</ul>
-<p>For example: If the game requires 0.3.5 but HFT only supports up to 0.3.4 then fail to install/run.
-If the game requires 0.1.2 and we have 0.9.12, 0.9.12 should be compatible so use it.</p>
-<h2 id="places-that-need-api-version-path-updates-generally">Places that need API version path updates generally</h2>
-<pre><code>hft.hanson
-public/index.html
-public/enter-name.html
-public/games.html
-public/options.html
-
-templates/&lt;version&gt;/*
-scripts/&lt;version&gt;
-</code></pre></li>
 <li><p>Make sure it passes the linter</p>
-<pre><code> grunt eslint
-</code></pre><p>Will run eslint.</p>
-</li>
+<pre><code>npm run check
+</code></pre><p>Will run eslint</p>
+<p>And the tests</p>
+<pre><code>npm test
+</code></pre></li>
 <li><p>JavaScript style</p>
 <p>In general.</p>
 <ul>
@@ -238,13 +214,6 @@ var a, b;  // bad
         <ul>
             <li><a href="ideas.html">Ideas</a></li>
             <li><a href="examples.html">Examples</a></li>
-        </ul>
-    </li>
-    <li>
-        <b>API</b>
-        <ul>
-            <li><a href="api-versions.html">API Versions</a></li>
-            <li><a href="migration.html">Migrating from older APIs</a></li>
         </ul>
     </li>
     <li>

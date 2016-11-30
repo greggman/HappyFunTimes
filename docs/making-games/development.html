@@ -78,93 +78,35 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 <hr>
 <h2 id="setting-up-for-development">Setting up for Development</h2>
 <h3 id="quick-setup">Quick Setup</h3>
-<p>These instructions are for HTML5 games. If you&#39;re using Unity3D <a href="../unity">use this guide</a>.</p>
+<p>These instructions are for HTML5/<a href="https://electron.github.io">Electron</a> games.
+If you&#39;re using Unity3D <a href="../unity">use this guide</a>.</p>
 <ul>
-<li><a href="http://docs.happyfuntimes.net/install.html">Install HappyFunTimes</a></li>
-<li>Install <a href="http://nodejs.org/download/">Node.js</a></li>
-<li>If on Windows, install <a href="http://msysgit.github.io/">msysgit</a></li>
-<li>Install bower.<ul>
-<li>On Windows:  <code>npm install -g bower</code></li>
-<li>macOS / Linux: <code>sudo npm install -g bower</code> </li>
-</ul>
-</li>
-<li>Clone an example game to your machine</li>
-<li>Edit <code>package.json</code> inside the game you cloned and change <code>gameId</code> and <code>name</code></li>
-<li>Type <code>hft add</code> to add the game to your HFT server</li>
+<li>Install <a href="http://nodejs.org/">Node.js</a></li>
+<li>Clone/Download a sample game. I&#39;d suggest <a href="https://github.com/greggman/hft-clean">hft-clean</a>
+or <a href="https://githib.com/greggman/hft-simple">hft-simple</a></li>
+<li>cd to the the folder you clone/unzipped the download and type <code>npm install</code></li>
+<li>type <code>npm start</code> to see it run</li>
 </ul>
 <h3 id="detailed-guide">Detailed Guide</h3>
 <h4 id="install-happyfuntimes">Install HappyFunTimes</h4>
-<p>A guide on how to install a HFT server can be found <a href="http://docs.happyfuntimes.net/install.html">here</a>.</p>
-<p>On Windows you might run into security issues: <a href="windows.html">See here</a>.</p>
-<p><strong>IMPORTANT</strong> You can <strong>NOT</strong> have 2 installations of HappyFunTimes.</p>
-<p>If you install above do NOT clone the HappyFunTimes repo.
-If you clone the repo do NOT install HappyFunTimes with the installer.</p>
-<p>Note: There is no reason to clone the repo unless you want to
-contribute to HappyFunTimes itself. For making games installing
-with the installer is fine.</p>
-<p>If you accidentally install twice you&#39;ll need to delete the configuration
-files because they&#39;ll be pointing to one installation.</p>
-<pre><code>OSX: ~/Library/Application Support/happyfuntimes
-Windows: /Users/&lt;name&gt;/AppData/Local/happyfuntimes
-Linux: ~/.happyfuntimes
-</code></pre><p>After that either run HappyFunTimes you installed using the installer to make that
-the configured version, or, type <code>node start.js --app-mode</code> from the
-cloned folder if you&#39;re using a cloned repo.</p>
-<h4 id="windows-install-msysgit">Windows: Install msysgit</h4>
-<p>If you are on a Windows machine, install <a href="http://msysgit.github.io/">msysgit</a>.</p>
-<p>When asked, choose to <a href="../images/msysgit-option-01.png">&quot;Use Git from the Windows Commmand Prompt&quot;</a>.</p>
-<p>On Windows open a <a href="../images/node-js-command-prompt.png">node.js command prompt</a>.</p>
-<h4 id="install-bower">Install Bower</h4>
-<p>Bower is a program that downloads JavaScript libraries. For example
-if a controller or game needs jquery or three.js bower handles that.</p>
-<pre><code>npm install -g bower
-</code></pre><p>Don&#39;t forget that <code>-g</code>. Also you might need <code>sudo</code> on OSX or Linux.</p>
+<p>HappyFuntTimes can be used as an HTML5 web server OR as a library for <a href="https://electron.github.io">Electron</a>.
+Electron let&#39;s you package an HTML5 web page into a standalone native app.</p>
+<p>Both require you to have node.js installed so install it from <a href="http://nodejs.org/">here</a>.</p>
+<p>Once installed up a terminal or Node Command Prompt (should appear on your Start screen)</p>
 <h4 id="download-or-clone-an-example-game">Download or clone an example Game</h4>
-<p><a href="examples.html">Pick one from the list</a></p>
+<p>Clone/Download a sample game. I&#39;d suggest <a href="https://github.com/greggman/hft-clean">hft-clean</a>
+or <a href="https://githib.com/greggman/hft-simple">hft-simple</a></p>
 <p>For example, assuming you have git installed</p>
 <pre><code>git clone https://github.com/greggman/hft-simple.git
 </code></pre><p>Or you can download a zip. For example if you go to
 <a href="http://github.com/greggman/hft-simple">http://github.com/greggman/hft-simple</a> you should see a &quot;Download ZIP&quot;
 button on the right side.</p>
-<ul>
-<li><p>If this is <strong>not a unity</strong> sample then change into the root directory of the repo you
-cloned or you unzipped (e.g. <code>cd hft-simple</code>).</p>
-</li>
-<li><p>Type <code>bower install</code> which will install needed javascript modules locally</p>
-<p>This step is only needed for some games. If there is no <code>bower.json</code>
-in the folder you can skip this step.</p>
-</li>
-</ul>
-<h4 id="edit-the-package-json-file">Edit the package.json file</h4>
-<p>Open the <code>package.json</code> file and change the <code>gameId</code> and <code>name</code> entries to something unique.</p>
-<p>Note: If you are collaborating on a game don&#39;t change this stuff. Only change it
-if you&#39;re making a new game based off of an existing game.</p>
-<h4 id="add-the-game-to-happyfuntimes">Add the game to HappyFunTimes</h4>
-<p>Add the game to your HFT server by running</p>
-<pre><code>hft add
-</code></pre><h4 id="run-happyfuntimes">Run HappyFunTimes</h4>
-<p>You can run it by clicking its icon from when you installed it in step 1
-or you can run it by typing <code>hft start --app-mode</code></p>
-<h2 id="running-games-during-development">Running Games during Development</h2>
-<p>For HTML based games you can always just run them from HappyFunTimes. Launch it,
-pick your game. For Unity3D see the <a href="unitydocs.html">unity docs</a>.</p>
-<p>Alternatively run HappyFunTimes with one of the methods above and in your
-browser window and go to <code>http://localhost:18679/games.html</code> and choose a game.
-In other window go to <code>http://localhost:18679</code>.  Note: use a window, not a tab
-so you can see both at the same time.</p>
-<p>You can simulate other machines joining the game by opening more windows
-or tabs in your browser.</p>
-<p><img src="../images/windows-for-controllers.jpg" alt="windows for controllers"></p>
-<p>Inside HappyFunTimes, games with <code>(*)</code> by their name are games in development. In other words
-they are games you used <code>hft add</code> to add to HappyFunTimes. Games without the <code>(*)</code> are games
-that were installed from inside HappyFunTimes by going to <a href="http://superhappyfuntimes.net">superhappyfuntimes.net</a>
-and installing them.</p>
-<p>If you have other computers or smartphones <strong>on the same network</strong> go to <code>http://happyfuntimes.net</code>
-and they <em>should</em> connect to your game. Alternatively you can lookup the IP address of
-the machine running the game (see <code>ifconfig</code> on OSX/Linux, the Network Preferneces on OSX,
-or <code>ipconfig</code> on Windows) then go to <code>http://ipaddress:18679</code> from the other devices.
-For example on my home network it was <code>http://192.168.2.9:18679</code>. For installations, museums,
-and places with no internet consider <a href="network.html">setting up for instant connect</a>.</p>
+<h4 id="cd-to-the-the-folder-you-clone-unzipped-the-download-and-type-npm-install-">cd to the the folder you clone/unzipped the download and type <code>npm install</code></h4>
+<p>This will install various JavaScript libraries the samples depend on including
+the <code>happyfuntimes</code> library.</p>
+<h4 id="run-it">Run It</h4>
+<pre><code>npm start
+</code></pre><p>Should launch the game</p>
 <hr>
 <p>Next step: <a href="game-structure.html">Game Structure</a></p>
 

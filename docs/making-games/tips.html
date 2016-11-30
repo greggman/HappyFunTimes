@@ -123,14 +123,10 @@ nearly immediately.</p>
 <p>Both iOS Safari and Chrome Android support remote debugging. Google for it.
 It&#39;s awesome!</p>
 <h3 id="make-options-that-don-t-need-contollers-to-test-your-game-">Make options that don&#39;t need contollers to test your game.</h3>
-<p>Powpow, Shootshoot, Jumpjump will all use the local
-keyboard to run a player if you put <code>?settings={haveServer:false}</code>
-at the end of the URL. For Boomboom you have to set
-<code>?settings={haveServer:false,numLocalPlayers:2}</code></p>
-<h3 id="use-url-settings-for-testing-">Use URL settings for testing.</h3>
-<p>Most of the samples, both controllers and games, support
-various flags and settings passed in on the URL. This is great
-for testing. Example: <code>?settings={debug:true,showState:true,gravity:500}</code> etc.</p>
+<p>Pass in some option or look at an environment variable to
+decide to add a player that can be controlled with the keybarod.
+That you can test your game on your PC without having to launch
+other browsers or get out your smartphone.</p>
 <h3 id="show-the-player-s-colors-avatar-on-the-controller-">Show the player&#39;s colors/avatar on the controller.</h3>
 <p>Since the controller for each game is HTML there&#39;s
 no reason not to show the player&#39;s colors and/or
@@ -143,12 +139,12 @@ Other games the game pics the color/style and sends it to the controller
 for media queries for specifix devices. However it&#39;s not recommended to try
 to add media queries for <em>every device</em> as this will unnecessarily bloat your CSS files.
 Just make sure that your UI is optimized for different screen sizes and the device orientation.</p>
-<pre><code>@media only screen 
+<pre><code>@media only screen
   and (min-device-width: 320px) {
   /* Styles for devices larger than 320px */
 }
 
-@media only screen 
+@media only screen
   and (min-device-width: 768px) {
   /* Styles for devices larger than 768px */
 }
@@ -185,16 +181,12 @@ If you don&#39;t want the user to use his device in portrait mode, place this HT
         color: white;
     }
 }
-</code></pre><p>Note: powpow and jumpjump already do this with standard HappyFunTimes support.
+</code></pre><p>Note: powpow and jumpjump already do this with HappyFunTimes sample-ui library.
 Feel free to copy the code.</p>
 <h3 id="use-handjs">Use HandJS</h3>
 <p>Touch events suck balls. Microsoft proposed a much better system
 called Pointer events and they provided a polyfill for all browsers
 called HandJS that provides pointer events across browser.</p>
-<p>Note: HandJS is a standard part of HappyFunTimes already and will be
-included if you use the <a href="http://docs.happyfuntimes.net/docs/hft/module-Touch.html"><code>Touch</code> module</a>.
-I recommend you use the touch module where possible as we can then fix bugs as they come up
-across games.</p>
 <h3 id="add-invisible-divs-for-input-if-needed-">Add invisible divs for input if needed.</h3>
 <p>For games that have large input areas, like the Simple example, you may
 need a large invisible div that covers the entire input area. For example
@@ -216,8 +208,8 @@ stop getting pointermove events.</p>
 </code></pre><p>And in CSS</p>
 <pre><code>#inputarea {
    position: absolute;
-   left: 0px;
-   top: 0px;
+   left: 0;
+   top: 0;
    z-index: 5;
 }
 </code></pre><p>This will make the inputarea be above the the first 2 nested divs and will receive
@@ -239,52 +231,8 @@ Touch/Click detection would also be easier and faster because looking up the
 the position of an event relative to some element is slow in JavaScript since
 you have to compute the position of the element by decending through all of its
 parents.</p>
-<h3 id="what-s-with-the-weird-define-stuff-">What&#39;s with the weird <code>define()</code> stuff.</h3>
-<p>It&#39;s part of <a href="http://requirejs.org/">require.js</a>. See <a href="http://requirejs.org/docs/whyamd.html">Why AMD</a>?</p>
-<p>The simple explaination is. There&#39;s a script tag (in HFTs case it&#39;s in the template) that looks like this</p>
-<pre><code>&lt;script data-main=&quot;scripts/game.js&quot; src=&quot;/3rdparty/require.js&quot;&gt;&lt;/script&gt;
-</code></pre><p>This loads <code>require.js</code> which then asynchronously loads <code>scripts/games.js</code>. It calls <code>requirejs</code> from
-that file. <code>requirejs</code> returns an array of dependencies and a function. The system starts loading the
-dependinces. Each of those has a <code>define</code> function which itself has an optional list of dependencies
-and a function. The system continues to load dependencies until all of them are loaded. It will load
-each file only once. When all of them are loaded it will call the functions that each of them returned
-in the correct order and pass whatever those functions returned into the functions the depend on them.</p>
-<p>In other words.</p>
-<pre><code> // game.js
- requirejs([&#39;./somelib&#39;, &#39;./otherlib&#39;], function(SomeLib, OtherLib) {
-    console.log(SomeLib.bar);
-    console.log(SomeLib.foo);
- });
-
- // somelib.js
- define([&#39;./yetanotherlib&#39;], function(YetAnotherLib) {
-    return {
-       bar: YetAnotherLib.astrofy(&quot;abc&quot;);
-    }
- });
-
- // otherlib.js
- define([&#39;./yetanotherlib&#39;], function(YetAnotherLib) {
-    return {
-       foo: YetAnotherLib.astrofy(&quot;123&quot;);
-    }
- });
-
- // yetanotherlib.js
- define(function(YetAnotherLib) {
-    return {
-       astrofy: function(v) { return &quot;**&quot; + v + &quot;**&quot;; };
-    }
- });
-</code></pre><p>Would first load game.js and call <code>requirejs()</code> see it dependes on <code>./somelib</code> and <code>./otherlib</code> so it
-would load <code>somelib.js</code> and <code>otherlib.js</code> and call <code>define()</code> in each. Each of those depend on
-<code>./yetanotherlib</code> so it would load <code>yetanotherlib.js</code>. <code>yetanotherlib.js</code> has no dependencies.
-Now it would call the function that was passed to <code>yetanotherlib.js:define()</code>. That funtion returns an
-object with single property <code>astrofy</code>. The system then calls the functions that were passed to
-<code>somelib.js:define</code> and <code>otherlib.js:define</code> passing in the object from <code>yetanotherlib</code>.
-It finally calls the function that was passed to <code>game.js:requirejs</code>.</p>
 <h3 id="disable-caching-in-your-browser">Disable caching in your browser</h3>
-<p>Right now the relayserver tells the browser not to cache anything. Whether the browser
+<p>Right now the server tells the browser not to cache anything. Whether the browser
 pays attention to this is up to the browser.</p>
 <p>You can also often turn off caching in the browser. In Chrome for example, open the
 Developer Tools. Click the gear icon near the top right of the tools. Check

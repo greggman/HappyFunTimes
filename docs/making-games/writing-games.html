@@ -74,14 +74,9 @@ you should still follow the info below.</p>
 <ul>
 <li><a href="#available-example-games">Available example games</a></li>
 <li><a href="#using-an-example-game">Using an example Game</a></li>
+<li><a href="#the-game">The Game</a></li>
 <li><a href="#the-controller">The Controller</a><ul>
-<li><a href="#controller-js">controller.js</a></li>
 <li><a href="#dealing-with-different-device-sizes">Dealing with different device sizes</a></li>
-</ul>
-</li>
-<li><a href="#the-game">The Game</a><ul>
-<li><a href="#game-js">game.js</a></li>
-<li><a href="#game-html">game.html</a></li>
 </ul>
 </li>
 <li><a href="#player-handling">Player Handling</a><ul>
@@ -97,19 +92,23 @@ you should still follow the info below.</p>
 <hr>
 <h2 id="available-example-games">Available example Games</h2>
 <ul>
-<li><p><a href="http://github.com/greggman/hft-jumpjump">JumpJump</a><br>A simple platform game written in JavaScript using WebGL / TDL</p>
+<li><p><a href="http://github.com/greggman/hft-jumpjump">JumpJump</a>
+A simple platform game written in JavaScript using WebGL / TDL</p>
 </li>
-<li><p><a href="http://github.com/greggman/hft-boomboom">BoomBoom</a><br>A bomb placing game written in JavaScript using WebGL / TDL</p>
+<li><p><a href="http://github.com/greggman/hft-boomboom">BoomBoom</a>
+A bomb placing game written in JavaScript using WebGL / TDL</p>
 </li>
-<li><p><a href="http://github.com/greggman/hft-powpow">PowPow</a><br>A space wars game written in JavaScript using WebGL / TDL</p>
+<li><p><a href="http://github.com/greggman/hft-powpow">PowPow</a>
+A space wars game written in JavaScript using WebGL / TDL</p>
 </li>
-<li><p><a href="http://github.com/greggman/hft-simple">Simple</a><br>The simplest example. Just moves dots around.</p>
+<li><p><a href="http://github.com/greggman/hft-simple">Simple</a>
+The simplest example using hft-sample-ui. Just moves dots around.</p>
 </li>
-<li><p><a href="http://github.com/greggman/hft-deviceorientation">Deviceorientation</a><br>A device orientation sample written in JavaScript using WebGL / Three.js</p>
+<li><p><a href="http://github.com/greggman/hft-clean">Clean</a>
+The simplest example with no other libraries. Just moves dots around.</p>
 </li>
-<li><p><a href="http://github.com/greggman/hft-unitycharacterexample">Unitychararacterexample</a><br>A Unity3D example that spawns characters written in UnityScript.</p>
-</li>
-<li><p><a href="http://github.com/greggman/hft-simple">Unitysimple</a><br>A Unity3D example that just positions a sphere for each player written in C#.</p>
+<li><p><a href="http://github.com/greggman/hft-deviceorientation">Deviceorientation</a>
+A device orientation sample written in JavaScript using WebGL / Three.js</p>
 </li>
 </ul>
 <h2 id="using-an-example-game">Using an example Game</h2>
@@ -118,282 +117,139 @@ you should still follow the info below.</p>
 </code></pre><p>This should clone game into the folder <code>hft-jumpjump</code>.</p>
 <p>Or alternatively click one of the links above and click &quot;Download ZIP&quot; on the right side of the page and
 then unzip it.</p>
-<p>After cloning you must edit <code>package.json</code>. At a minimum change the <code>gameId</code> to something original like</p>
-<pre><code>&quot;gameId&quot;: &quot;MyAwesomePartyGame&quot;,
-</code></pre><p>Choose something original unlikely to clash with other games since ids must be unique.
-The id may only use A-Z 0-9 _ and -. No spaces. No other punctuation or non alpha numerica characters.</p>
-<p>You&#39;ll probably also want to edit the <code>name</code> and <code>description</code>.</p>
-<p>Finally cd to the folder you cloned to and add the game. In our example</p>
+<p>Make sure you have <a href="http://nodejs.org">node.js installed</a> and also <a href="http://bower.io">bower</a>. Then...</p>
 <pre><code>cd hft-jumpjump
-hft add
-</code></pre><p>It should say game added. Now run HappyFunTimes. You should see your game added.</p>
-<hr>
+npm install
+bower install      # only if there is a bower.json file
+npm start
+</code></pre><hr>
 <h2 id="the-controller">The Controller</h2>
 <p>Controllers are the component that runs on the mobile devices. This part must be
 written in HTML/JavaScript as that&#39;s kind of the point. It needs to run on the
 device without requiring the user to install anything.</p>
-<p><code>contoller.html</code> is inserted into a template at runtime. The template provides
-common UI features like the settings icon in the top right corner, a name input
-and support for switching games.</p>
-<p>The CommonUI currently consists of the gear menu top right of the display as well
-has handling of name editing, disconnecting, and auto switching to the new games.</p>
-<h3 id="controller-js">controller.js</h3>
-<p>The minimum contents of a <code>controller.js</code> is</p>
-<pre><code>&quot;use strict&quot;;
-
-// Start the main app logic.
-requirejs(
-  [ &#39;hft/gameclient&#39;,
-    &#39;hft/commonui&#39;,
-    &#39;hft/misc/misc&#39;,
-    &#39;hft/misc/mobilehacks&#39;,
-  ], function(
-    GameClient,
-    CommonUI,
-    Misc,
-    MobileHacks) {
-  var g_client;
-
-  var globals = {
-    debug: false,
-  };
-  Misc.applyUrlSettings(globals);
-  MobileHacks.fixHeightHack();
-
-  g_client = new GameClient();
-
-  CommonUI.setupStandardControllerUI(g_client, globals);
-
-  // Insert your controller specific code here.
-});
-</code></pre><h3 id="dealing-with-different-device-sizes">Dealing with different device sizes</h3>
-<p>The hardest part of creating a controller is handling CSS and placement across browser
-versions and devices. There are thousands of different mobile devices from mobile
-phones to tablets that all have different screens sizes and software running, resulting
-in thousand of different viewport sizes. The viewport is the actual space of a browser
-that is available for the controller: screen size minus notification bar minus the browsers
-URL bar and other elements.</p>
-<h4 id="possible-solution-for-newer-devices">Possible solution for newer devices</h4>
-<p>If you want to support newer devices with browsers that are actually up to date, you may
-use CSS viewport units. Viewport units use the actual size of the devices&#39; viewport to calculate
-the width or height or an element. 
-This means that if you use viewport units like <code>10vh</code> instead of fixed values like <code>60px</code>, the
-elements height will be equally larger on all devices instead of very large on 4&quot; phones and pretty
-small on 10&quot; tablets.</p>
-<p><strong>Example</strong><br>A controller element gets the following CSS styling:</p>
-<pre><code>.box {
-    width: 50vh;
-    height: 50vh;
-}
-</code></pre><p>The elements height and with will equal 50% of the available viewport size.</p>
-<p><code>50vh</code> equals <code>50%</code> of the browser size. <code>10vh</code> would equal <code>10%</code>.</p>
-<p>If you want to know which browsers support viewport units, see <a href="http://caniuse.com/#feat=viewport-units">this overview</a>.
-Make sure to set the units for each portrait and landscape mode.</p>
-<hr>
-<h2 id="the-game">The Game</h2>
-<p>The game component is what is displayed on the big screen and that is visible to all players
-at the same time. The <code>game.js</code> file must contain some code to initialize the game and run
-the corresponding HFT server for controllers to connect.</p>
-<h3 id="game-js">game.js</h3>
-<p>The minimum content of the <code>game.js</code> file is</p>
-<pre><code>&quot;use strict&quot;;
-
-requirejs(
-  [ &#39;hft/scripts/gameserver&#39;,
-    &#39;hft/scripts/gamesupport&#39;,
-    &#39;hft/scripts/misc/misc&#39;,
-  ], function(
-    GameServer,
-    GameSupport,
-    Misc) {
-
-  // You can set these from the URL with
-  // http://localhost:18679/games/&lt;gameid&gt;/gameview.html?settings={name:value,name:value}
-  var globals = {
-    haveServer: true,
-    debug: false,
-  };
-  Misc.applyUrlSettings(globals);
-
-  var server;
-  if (globals.haveServer) {
-    server = new GameServer();
-
-    server.addEventListener(&#39;playerconnect&#39;, someFunctionThatCreatesAPlayer);
-  }
-
-  GameSupport.init(server, globals);
-
-  // Your init code goes here.
+<p><code>contoller.html</code> is served to the phone. You supply it and any libraries you
+want to use with it. Most of the samples use the <a href="https://github.com/greggman/hft-sample-ui"><code>hft-sample-ui</code></a>
+library which provides common UI features like the settings icon in the top right corner, name input, cross
+platform orientation support and a few other things.</p>
+<p>The only &quot;required&quot; part of a controller is that you include happyfuntimes in some
+method or another. You could use</p>
+<pre><code>&lt;script src=&quot;../node_modules/happyfuntimes/dist/hft.js&quot;&gt;
+</code></pre><p>In which case the happyfuntimes API will appear as a global <code>hft</code>.</p>
+<p>Or other methods like <a href="https://webpack.github.io">webpack</a> or <a href="http://requirejs.org/">require.js</a>
+etc. Most of the samples use require.js.</p>
+<pre><code>requirejs([
+    &#39;../node_modules/happyfuntimes/dist/hft&#39;,
+  ], function(hft) {
 
   ...
 
-  var mainloop = function() {
-
-     // your game&#39;s main loop code goes here.
-  };
-
-  GameSupport.run(globals, mainloop);
 });
-</code></pre><p>GameSupport will set <code>globals.elapsedTime</code> to the time in seconds that have elapsed
-since the last call to your mainloop. <code>globals.gameTime</code> is the time since the game
-started.<br><code>global.frameCount</code> is the number of times your main loop has been called.</p>
-<h3 id="game-html">game.html</h3>
-<p>game.html is loaded into a template at runtime. The template provides the following features</p>
-<ul>
-<li>Handles displaying a disconnected message if the game gets disconnected from the
-HFT server.</li>
-<li>Will display an FPS meter if <code>showFPS</code> is set to <code>true</code>.</li>
-<li>Provides a requestAnimationFrame based mainloop callback.</li>
-<li>Provides an <code>elapsedTime</code> and <code>frameCount</code>.<br>The elapsed time is in seconds since the last frame and is limited to being no longer
-than 1/20th of a second. Otherwise if you pause the game for a few seconds you&#39;d get
-a giant elapsedTime and your game would probably break.</li>
-<li><p>Will add a few HTML overlays for debugging if <code>debug</code> is set to <code>true</code></p>
-<ul>
-<li><p>You can display per frame info with</p>
-<pre><code>GameSupport.setStatus(msg);
-</code></pre><p>For example:</p>
-<pre><code>var globals = {
-  debug: true,
-}
-
-GameSupport.init(server, globals);
-
-var mainloop = function() {
-  var msgs = [];
-  msgs.push(&quot;elapsedTime: &quot; + globals.elapsedtIme);
-  msgs.push(&quot;frames: + globals.frameCount);
-  GameSupport.setStatus(msgs.join(&quot;\n&quot;));
-};
-</code></pre></li>
-<li><p>You can display to an onscreen console with</p>
-<pre><code>GameSupport.log(&quot;hello&quot;);
-GameSupport.error(&quot;oops&quot;);
-</code></pre><p>These are not that useful given debugging tools in the browser but they can be
-useful on devices for which there is no easily accessable console. Note that
-you can get a remote debug from both <a href="https://developer.apple.com/library/safari/documentation/AppleApplications/Conceptual/Safari_Developer_Guide/Safari_Developer_Guide.pdf">iOS devices and the iOS simulator</a>
-and similarly in <a href="https://developer.chrome.com/devtools/docs/remote-debugging">Chrome on Android</a>.</p>
-</li>
-</ul>
-</li>
-<li><p>Will optionally pause when the game does not have the focus.</p>
-<p>Games running at 60fps eat up battery like crazy. Normally on modern OSes with fancy
-compositied desktops, bringing your editor to the front is not enough to tell an app
-to stop rendering.
-Therefore HFT games will stop rendering if they are not in the focus of the user.</p>
-<p>If you have the Chome developer tools open and they have the focus, the game will stop.
-That can be confusing. Simiarly, if you are debugging controllers by opening other
-browser windows / tabs the game will stop when you try to use the controller.</p>
-<p>You can make the game playable without controllers by passing <code>haveServer: false</code>. If
-you see that the init code will spawn 2 players with <code>LocalNetPlayer</code> for their
-<code>NetPlayer</code>. You may then setup some keyboard or mouse input to generate events on
-the <code>LocalNetPlayer</code> which the player code will see as inputs from a controller.</p>
-<p>This means you can play the game by going to the game&#39;s URL like</p>
-<pre><code>http://localhost:18679/games/jumpjump/game.html?settings={haveServer:false}
-</code></pre><p>When you want to test with real controllers you remove the <code>haveServer:false</code>. That
-way the game continues to run even when a controller window has the focus.</p>
-</li>
-</ul>
-<hr>
-<h3 id="handling-players">Handling Players</h3>
-<p>Remember the line <code>server.addEventListener(&#39;playerconnect&#39;, someFunctionThatCreatesAPlayer);</code>
-from the <code>game.js</code> file? That function is used to register players. It get&#39;s passed a
-<code>NetPlayer</code> object which represents the connction between your game and a player&#39;s device.</p>
-<p>Simple handling of players might look like this:</p>
-<pre><code>var players = [];  // Array of all players
-
-// Make a &quot;class&quot; Player.
-function Player(netPlayer, name) {
-  this.netPlayer = netPlayer;
-  this.name = name;
-
-  // at a minimum handle disconnecting
-  netPlayer.addEventListener(&#39;disconnect&#39;, Player.prototype.handleDisconnect.bind(this));
-}
-
-Player.prototype.handleDisconnect = function() {
-  var index = players.indexOf(this);
-  if (index &gt;= 0) {
-    players.splice(index, 1);  // removes this player from the list of players
-  }
-};
-
-function someFunctionThatCreatesAPlayeer(netPlayer, name) {
-   // create a new player and add it to our array of players.
-   players.push(new Player(netPlayer, name));
-}
-</code></pre><p>As you can see we created a Player class that is used to store all data and functions
-for a connected player. You may also move this class to a separate file and add it
-to the <code>requirejs</code> function. This is a good practise to keep your game files small and 
-clear.</p>
-<h3 id="handling-player-names">Handling Player Names</h3>
-<p>The CommonUI allows the player to choose a name. That name is sent when the player connects
-but the player can set their name anytime by choosing the wrench menu and selecting &quot;Set Name&quot;.</p>
-<p>Two messages are sent from the controller to the game: <code>busy</code> and <code>setName</code>.</p>
-<p><code>busy</code> indicates the player is on system menu which means they are not playing at the moment.
-It will be passed an object with <code>busy:true</code> or <code>busy:false</code> when they enter and exit the system
-menus.</p>
-<p>It&#39;s up to you to decide if you care. For example maybe you&#39;d like to remove them from the game when you
-receive the message something like</p>
-<pre><code>netPlayer.addEventListener(&#39;busy&#39;, Player.prototype.handleBusyMsg.bind(this));
-
-Player.prototype.handleBusyMsg = function(data) {
-   if (data.busy) {
-      // the player is on the system menu
-      player.hidden = true;
-      player.collisionsOff = true;
-   } else {
-      player.hidden = false;
-      player.collisionsOn = true;
-   }
-};
-</code></pre><p><code>setName</code> indicates the player has chosen a new name. If the name is blank you can send a name
-back to the controller.</p>
-<pre><code>netPlayer.addEventListenter(&#39;setName&#39;, Player.prototype.handleSetNameMsg.bind(this));
-
-Player.prototype.handleSetNameMsg = function(data) {
-  player.name = data.name || &quot;The Unknown Solider&quot;;
-
-  // If we picked name send it back to the phone
-  if (!data.name) {
-    this.netPlayer.sendCmd(&#39;setName&#39;, {name: player.name});
-  }
-};
-</code></pre><hr>
-<h2 id="communication-between-game-and-controllers">Communication between Game and Controllers</h2>
-<p>To exchange data or send events from the game to the controllers or input from the
-controller back to the game, use simple JavaScript events. Both the game and controllers
-use event listeners to react to emitted events.</p>
-<h3 id="send-commands-from-the-game-to-controllers">Send Commands from the Game to Controllers</h3>
-<p>The game can send commands to individual players only. To send a command like a broadcast 
-to all players, you have to loop trough all players and send the command to each player
-individually.</p>
-<p>In <code>game.js</code> you can send a command by using the following code:</p>
-<pre><code>someNetPlayer.sendCmd(&#39;bar&#39;, { someColor: &quot;red&quot;});
-</code></pre><p>Then in <code>controller.js</code> you have to create an event listener that listens to the command:</p>
-<pre><code>g_client.addEventListener(&#39;bar&#39;, handleBar);
-
-function handleBar(data) {
-  document.body.style.backgroundColor = data.someColor;
-}
-</code></pre><p><code>data</code> will contain whatever is sent from <code>sendCmd</code>, in this example an object with the
-property <code>someColor</code>.
-A command may also be empty to toggle global events like the start of a new round.</p>
-<h3 id="send-commands-from-the-controller-to-the-game">Send Commands from the Controller to the Game</h3>
-<p>Each time the player interacts with his controller, the controller may send the input to
+</code></pre><p>However you get a reference to happyfuntimes you need to create an instance
+of <code>GameClient</code></p>
+<pre><code>const GameClient = hft.GameClient;
+const g_client = new GameClient();
+</code></pre><h3 id="send-commands-from-the-controller-to-the-game">Send Commands from the Controller to the Game</h3>
+<p>Each time the player interacts with the controller, the controller may send the input to
 the game. This can be touch operations, the use of a gamepad, button clicks or text
 input.</p>
-<p>In <code>controller.js</code> you can send a command by using the following code:</p>
+<p>In your script you can send a command by using the following code:</p>
 <pre><code>g_client.sendCmd(&#39;foo&#39;, { someNumber: 123, someString, &quot;abc&quot;, someBool: true});
-</code></pre><p>Then in <code>controller.js</code> you have to create an event listener that listens to the command:</p>
-<pre><code>g_server.addEventListener(&#39;foo&#39;, handleFoo);
+</code></pre><p>Then in in the game you would create an event listener that listens for the command:</p>
+<pre><code>g_server.on(&#39;foo&#39;, handleFoo);
 
 function handleFoo(data) {
    console.log(JSON.stringify(data));
 };
 </code></pre><p>This example would print the following to the browser console of the game:</p>
 <pre><code>{&quot;someNumber&quot;:123,&quot;someString&quot;:&quot;abc&quot;,&quot;someBool&quot;:true}
+</code></pre><p>It&#39;s up to you to decide what commands to send to the game from your controller. The most
+common would be to send commands related to player input like touching or releasing a button,
+entering a name, orienting their phone, whatever messages you want to send.</p>
+<hr>
+<h2 id="the-game">The Game</h2>
+<p>The game component is what is displayed on the big screen that is visible to all players
+at the same time. By default all the HTML5 games have the game in <code>game.html</code>. <code>game.html</code>
+is just a regular HTML5 file and it&#39;s up to you to supply it with scripts and libraries
+and whatever else you need to create your game. At a minimum you need to include
+happyfuntimes. You can do this with a script tag if that&#39;s what you&#39;re used to</p>
+<pre><code>&lt;script src=&quot;../node_modules/happyfuntimes/dist/hft.js&quot;&gt;
+</code></pre><p>Of course because we&#39;re running in Electron you can also use require as in</p>
+<pre><code>const hft = require(&#39;happyfuntimes&#39;);
+</code></pre><p>Or many of the samples use <a href="http://requirejs.org/"><code>require.js</code></a> as it can make it
+easier to share code with the controllers.</p>
+<pre><code>const requirejs = require(&#39;requirejs&#39;);
+requirejs.config({
+  nodeRequire: require,
+  baseUrl: __dirname,
+});
+
+requirejs([
+    &#39;happyfuntimes&#39;,
+  ], function(hft) {
+
+  ...
+
+});
+</code></pre><p>However you get a reference to happyfuntimes you need to create an instance
+of <code>GameServer</code> and then listen for players to connect.</p>
+<pre><code>const server = new hft.GameServer();
+
+server.on(&#39;playerconnect&#39;, someFunctionThatCreatesAPlayer);
 </code></pre><hr>
+<h3 id="handling-players">Handling Players</h3>
+<p>From the code above the line <code>server.addEventListener(&#39;playerconnect&#39;, someFunctionThatCreatesAPlayer);</code>
+specifies taht <code>someFunctionTheCreatesAPlayer</code> will be called any time a new player connects to the game.
+It get&#39;s passed a <code>NetPlayer</code> object which represents the connection between your game and a player&#39;s phone.</p>
+<p>Simple handling of players might look like this:</p>
+<pre><code>var players = [];  // Array of all players
+
+// Make a &quot;class&quot; Player.
+class Player {
+  constructor(netPlayer) {
+    this.netPlayer = netPlayer;
+
+    // at a minimum handle disconnecting
+    netPlayer.on(&#39;disconnect&#39;, this.handleDisconnect.bind(this));
+  }
+  handleDisconnect() {
+    var index = players.indexOf(this);
+    if (index &gt;= 0) {
+      players.splice(index, 1);  // removes this player from the list of players
+    }
+  };
+}
+
+function someFunctionThatCreatesAPlayeer(netPlayer, name) {
+   // create a new player and add it to our array of players.
+   players.push(new Player(netPlayer, name));
+}
+</code></pre><p>As you can see we create a <code>Player</code> class that is used to store all data and functions
+for a connected player.</p>
+<h3 id="send-commands-from-the-game-to-controllers">Send Commands from the Game to Controllers</h3>
+<p>In your game code use the <code>NetPlayer</code> for a particular player. Using the Player class from above
+we might do something like</p>
+<pre><code>class Player {
+
+  ...
+
+  someFunction() {
+     this.netPlayer.sendCmd(&#39;bar&#39;, { someColor: &quot;red&quot;});
+  }
+
+  ...
+</code></pre><p>Then in the controller you&#39;d create an event listener that listens to the command:</p>
+<pre><code>g_client.on(&#39;bar&#39;, handleBar);
+
+function handleBar(data) {
+  document.body.style.backgroundColor = data.someColor;
+}
+</code></pre><p><code>data</code> will contain whatever is sent from <code>sendCmd</code>, in this example an object with the
+property <code>someColor</code>.</p>
+<p>It&#39;s up to you to decide what messages to send from the game to the controller. Examples include
+telling the controller to display a message like &quot;You Win&quot; or &quot;You Died&quot;. Telling the phone to
+switch modes like &quot;Enter next move&quot; or &quot;Select location on map&quot;. Telling the phone to change
+color or which avatar to display. Telling the phone to play a sound, etc...</p>
+<hr>
 <p>Next step: <a href="tips.html">Tips for writing Games</a></p>
 
       <div class="docs-footer">
