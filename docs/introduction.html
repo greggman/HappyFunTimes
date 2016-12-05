@@ -73,18 +73,19 @@ played with a bunch of people in the same room and 1 ideally large display.</p>
 <h2 id="how-does-it-work-">How does it work?</h2>
 <p>HFT is a library you add to your game that runs a small webserver.
 There are currenty 3 forms of this library. <a href="unity/index.html">A Unity version</a>,
-An Electron version and a stand alone server version.</p>
+<a href="https://www.npmjs.com/package/happyfuntimes">An Electron version</a> and a
+<a href="https://github.com/greggman/happyfuntimes">stand alone server version</a>.</p>
 <p>Users connect to this server with their smartphone and it serves
 them a webpage you create that presents a controller for your game.
 The game and the controllers then talk over WebSockets through
-the server. Note that the smartphones must be on the same network
-on the computer.</p>
-<p>HFT also includes a rendezvous server that helps users easily
-connect to your game. Users go to <code>happyfuntimes.net</code> on their
-phones and it will redirect them back to your game&#39;s server
+the server. Note that the smartphones must be on the same WiFi
+as the computer.</p>
+<p>There is a <a href="https://github.com/greggman/happyfuntimes.net">rendezvous server</a>
+that helps users easily connect to your game. Users go to <code>happyfuntimes.net</code>
+on their phones and it will redirect them back to your game&#39;s server
 (for example <code>http://192.168.1.123:18769</code>)</p>
-<p>HFT also supports running without the internet. To do this it
-supplies it&#39;s own DNS server so that when the use connects
+<p>HFT also supports <a href="network.html">running without the internet for use in installations</a>.
+To do this it supplies it&#39;s own DNS server so that when the user connects
 their phone to your WiFi all websites will lead to your game.
 It even includes support for iOS devices captive portal
 detector so that when an iOS use connects to your WiFi they&#39;ll
