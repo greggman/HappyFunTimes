@@ -58,6 +58,16 @@ the `happyfuntimes` library.
 
 Should launch the game
 
+#### Connect Controllers
+
+Open a browser window, make it small enough to see both the game and the browser window
+at the same time. Go to `http://happyfuntimes.net`. It should connect to the game.
+Make sure your smartphone is on the same WiFi as your computer. Use its browser and
+go to `http://happyfuntimes.net` and it should also connect to the game
+
+NOTE: Only works on home networks. It's unlikely to work on corp networks, coffee shops,
+airport wifi, etc...
+
 ---
 
 Next step: [Game Structure](game-structure.md)
