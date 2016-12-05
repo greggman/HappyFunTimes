@@ -9,7 +9,7 @@ shake it to jump. It's really up to you.
 You can [download this sample here](http://docs.happyfuntimes.net/docs/unity/samples.html?owner=greggman&repo=hft-unity2dplatformer).
 
 Note: You should consider checking out the [HappyFunTimes Unity GamePad example](gamepad.md)
-which is easier than this sample. This sample is still 100% valid and server as a good example
+which is easier than this sample. This sample is still 100% valid and serves as a good example
 of doing everything with custom code.
 
 ## A short explaination:
@@ -131,9 +131,9 @@ The ones that start with `hft/` are part of HappyFunTimes and are
         'hft/misc/misc',
         'hft/misc/mobilehacks',
         'hft/misc/touch',
-        '../bower_components/hft-utils/dist/audio',
-        '../bower_components/hft-utils/dist/imageloader',
-        '../bower_components/hft-utils/dist/imageutils',
+        '../3rdparty/hft-utils/dist/audio',
+        '../3rdparty/hft-utils/dist/imageloader',
+        '../3rdparty/hft-utils/dist/imageutils',
       ], function(
         CommonUI,
         GameClient,
