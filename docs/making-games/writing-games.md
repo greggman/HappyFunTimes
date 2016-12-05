@@ -50,11 +50,10 @@ This should clone game into the folder `hft-jumpjump`.
 Or alternatively click one of the links above and click "Download ZIP" on the right side of the page and
 then unzip it.
 
-Make sure you have [node.js installed](http://nodejs.org) and also [bower](http://bower.io). Then...
+Make sure you have [node.js installed](http://nodejs.org). Then...
 
     cd hft-jumpjump
     npm install
-    bower install      # only if there is a bower.json file
     npm start
 
 ---

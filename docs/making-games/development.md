@@ -47,7 +47,9 @@ Or you can download a zip. For example if you go to
 http://github.com/greggman/hft-simple you should see a "Download ZIP"
 button on the right side.
 
-####  cd to the the folder you clone/unzipped the download and type `npm install`
+#### cd to the the folder you clone/unzipped the download and type
+
+    npm install
 
 This will install various JavaScript libraries the samples depend on including
 the `happyfuntimes` library.

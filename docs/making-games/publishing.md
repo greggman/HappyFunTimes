@@ -11,7 +11,6 @@ If HTML5 the easist way to start with an existing happyfuntimes app.
 
         cd path/it/was/cloned-or-unzipped-to
         npm install
-        bower install     # only if there is a bower.json file
 
 5.  Test that it works
 
