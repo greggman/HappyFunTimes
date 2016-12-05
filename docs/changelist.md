@@ -1,7 +1,7 @@
 Changelist
 ==========
 
-*   1.0.0
+*   0.2.0
 
     *   change happyfuntimes to a library only. No more virtual console
 
