@@ -19,7 +19,7 @@ These files are **required** for all HappyFunTimes games
 
     controller.html             // The HTML for your controller
     game.html                   // The HTML for your game
-    main.js                     // The code that launches your game in Electron
+    main.js                     // The code that launches game.html in Electron
     package.json                // Names your game and your dependencies
 
 These files are required if you want to ship your game as a standalone app

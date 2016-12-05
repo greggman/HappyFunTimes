@@ -39,9 +39,6 @@ The easist way to get started is to clone one of the existing games.
 *   [Clean](http://github.com/greggman/hft-clean)
     The simplest example with no other libraries. Just moves dots around.
 
-*   [Deviceorientation](http://github.com/greggman/hft-deviceorientation)
-    A device orientation sample written in JavaScript using WebGL / Three.js
-
 ## Using an example Game
 
 For example to clone JumpJump you'd type
