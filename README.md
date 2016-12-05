@@ -27,7 +27,6 @@ HappyFunTimes
 
 # Support
 
-*   [Developer Mailing List](https://groups.google.com/d/forum/hft-dev)
 *   [Blog](http://blog.happyfuntimes.net)
 *   [Facebook Group](https://www.facebook.com/groups/timesfunhappy/)
 
