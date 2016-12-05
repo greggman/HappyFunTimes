@@ -5,7 +5,7 @@ HappyFunTimes
 
 # Want to play?
 
-*   [Install HappyFunTimes](http://docs.happyfuntimes.net/install.html)
+*   [Try a few examples](https://itch.io/games/tag-happyfuntimes)
 
 # Make games with Unity?
 
@@ -13,8 +13,7 @@ HappyFunTimes
 
 # Make games with HTML5?
 
-*   [Get started with a single line script](http://greggman.github.io/hft-gamepad-api)
-*   [Make custom controllers](makking-games.md)
+*   [Making games](makking-games.md)
 
 # Docs
 
