@@ -2163,7 +2163,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * Synced clock support
 	 * @module SyncedClock
 	 */
-	!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(3)], __WEBPACK_AMD_DEFINE_RESULT__ = function(IO) {
+	!(__WEBPACK_AMD_DEFINE_ARRAY__ = [
+	    __webpack_require__(3),
+	    __webpack_require__(4),
+	  ], __WEBPACK_AMD_DEFINE_RESULT__ = function(
+	    io,
+	    misc) {
 
 	  /**
 	   * A clock, optionally synced across the network
@@ -2241,13 +2246,15 @@ return /******/ (function(modules) { // webpackBootstrap
 	     * @constructor
 	     */
 	    var SyncedClock = function(opt_syncRateSeconds, callback) {
-	      var url = window.location.href;
+	      var query = misc.parseUrlQuery();
+	      var url = (query.hftUrl || window.location.href).replace("ws:", "http:");
+
 	      var syncRateMS = (opt_syncRateSeconds || 10) * 1000;
 	      var timeOffset = 0;
 
 	      var syncToServer = function(queueNext) {
 	        var sendTime = getLocalTime();
-	        IO.sendJSON(url, {cmd: 'time'}, function(exception, obj) {
+	        io.sendJSON(url, {cmd: 'time'}, function(exception, obj) {
 	          if (exception) {
 	            console.error("syncToServer: " + exception);
 	          } else {
