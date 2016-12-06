@@ -35,7 +35,12 @@
  * Synced clock support
  * @module SyncedClock
  */
-define(["./io"], function(IO) {
+define([
+    './io',
+    './misc/misc',
+  ], function(
+    io,
+    misc) {
 
   /**
    * A clock, optionally synced across the network
@@ -113,13 +118,15 @@ define(["./io"], function(IO) {
      * @constructor
      */
     var SyncedClock = function(opt_syncRateSeconds, callback) {
-      var url = window.location.href;
+      var query = misc.parseUrlQuery();
+      var url = (query.hftUrl || window.location.href).replace("ws:", "http:");
+
       var syncRateMS = (opt_syncRateSeconds || 10) * 1000;
       var timeOffset = 0;
 
       var syncToServer = function(queueNext) {
         var sendTime = getLocalTime();
-        IO.sendJSON(url, {cmd: 'time'}, function(exception, obj) {
+        io.sendJSON(url, {cmd: 'time'}, function(exception, obj) {
           if (exception) {
             console.error("syncToServer: " + exception);
           } else {
