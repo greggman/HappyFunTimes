@@ -1,6 +1,10 @@
 Changelist
 ==========
 
+*   0.2.1
+
+    *   Fix SyncedClock so it gets correct URL for server
+
 *   0.2.0
 
     *   change happyfuntimes to a library only. No more virtual console

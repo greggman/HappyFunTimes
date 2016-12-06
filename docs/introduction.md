@@ -27,12 +27,15 @@ on their phones and it will redirect them back to your game's server
 (for example `http://192.168.1.123:18769`)
 
 HFT also supports [running without the internet for use in installations](network.md).
-To do this it supplies it's own DNS server so that when the user connects
+To do this it supplies its own DNS server so that when the user connects
 their phone to your WiFi all websites will lead to your game.
 It even includes support for iOS devices captive portal
-detector so that when an iOS use connects to your WiFi they'll
+detector so that when an iOS user connects to your WiFi they'll
 automatically join the game without typing anything.
 
-HFT also supports coordinating players between mutliple machines.
+HFT supports a synchronized clock across all devices.
+This can be used to coordinate multiple machines.
+
+HFT also supports passing players between mutliple machines running games.
 As an example [see this game that runs across 7 machines](https://greggman.github.io/hft-tonde-iko).
 
