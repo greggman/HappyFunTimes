@@ -24,6 +24,12 @@ The easist way to get started is to clone one of the existing games.
 
 ## Available example Games
 
+*   [Clean](http://github.com/greggman/hft-clean)
+    The simplest example with no other libraries. Just moves dots around.
+
+*   [Simple](http://github.com/greggman/hft-simple)
+    The simplest example using hft-sample-ui. Just moves dots around.
+
 *   [JumpJump](http://github.com/greggman/hft-jumpjump)
     A simple platform game written in JavaScript using WebGL / TDL
 
@@ -33,11 +39,11 @@ The easist way to get started is to clone one of the existing games.
 *   [PowPow](http://github.com/greggman/hft-powpow)
     A space wars game written in JavaScript using WebGL / TDL
 
-*   [Simple](http://github.com/greggman/hft-simple)
-    The simplest example using hft-sample-ui. Just moves dots around.
+*   [FlutterBy](http://github.com/greggman/hft-garden)
+    Fly butterflies using device orientation and acceleration
 
-*   [Clean](http://github.com/greggman/hft-clean)
-    The simplest example with no other libraries. Just moves dots around.
+*   [FaceClap](http://github.com/greggman/hft-faceclap)
+    A multiplayer rythym game
 
 ## Using an example Game
 
