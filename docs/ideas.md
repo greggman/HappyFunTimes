@@ -17,6 +17,60 @@ or find stuff.
 So some random ideas I'd like to explore if I have time. Maybe they'll trigger some
 ideas for you
 
+### Team Mini Games
+
+Play 5 or 6 of the simplest games below as teams. For example the [sorting game](#sorting-game),
+the [Jump/Duck game](#jump-duck-the-x) game, the [Hot Potato](#hot-potato) game,
+the [Team Race](#team-race) game, [Team Race 2](team-race-2).
+
+### Jump/Duck the X
+
+Players a lined up across the screen by team. Things go across
+the screen high or low. Each player has to either duck under the
+thing or jump over it as it passes their character. They don't
+change position. It's team game so one point for each player that
+succesfully dodges gets a point? Or maybe only a point of all players
+on the team dodge. In that case the first player should get swapped
+to the last otherwise players at the end may never see action
+
+Variation: Sometimes you have to catch the thing instead of dodge
+it? Maybe it turns into a coin/start for a few players
+
+### Team Race
+
+Just press the buttons fast
+
+Variation:
+
+*   2 buttons, it's like track and field.
+
+    Do the rate on the phone, just send the rate to the game
+
+*   Shake the phone for speed
+
+*   Turn a virtual crank
+
+### Team Race 2
+
+Each player must press their button in order. This is basically
+[bucket brigade](#bucket-brigade) with a different view
+
+
+### Hot potato
+
+I think this is basically a variation of [another game below](number-the-phones--have-players-stand-in-a-circle-by-number).
+
+Players are divided into teams. When the item lands on their player they have N seconds
+to pass it on or it explodes. Progress by having more than one item.
+
+Variations:
+
+*  Use orientation. You need to tilt the phone? Problem, browsers rotate :(
+
+*  Flick the bomb off your screen.
+
+*  Show the random names of teammates on left/right/top. Flick to pass to a certain teammate
+
 ### Give & Get
 
 Divide the room into teams (does it tell you which team you're on)? Phone shows something like
@@ -145,7 +199,7 @@ Put a number on each phone and a diagram
 Then, players push a character from on phone to the next or flick a ball.
 Teams that make the most laps win or points win
 
-### Number the phones, have players stand in a circle by number.
+### Number the phones, have players stand in a circle by number
 
 Play some Kind of pass the ball game where the server passes things around
 the circle and players have to forward them. Maybe like pong ?
