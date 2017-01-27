@@ -13,7 +13,7 @@ to monitor and walk up and down a large level.
 If you `hft add` it to your happyfuntimes, then run happyfuntimes and click
 on the game you'll get a launcher screen that looks like this.
 
-<img src="images/multi-machine-launcher.png" />
+<img src="assets/images/multi-machine-launcher.png" />
 
 This is only for testing. It is the standard `game.html` and `scripts/game.js` combination that is
 usually run when picking an HTML5 game. I did this because
