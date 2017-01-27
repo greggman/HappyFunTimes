@@ -78,7 +78,7 @@ it will only handle 13-14 players and it's under $20.
 Find the IP address of your router. If the URL in your browser looks something like `http://192.168.2.254/???`
 then that's the IP address of your router. Otherwise check the lan settings. For example
 
-<div style="text-align: center;"><a href="images/router-network-lan-settings.png"><img width="50% height="50%" src="images/router-network-lan-settings.png" /></a></div>
+<div style="text-align: center;"><a href="images/router-network-lan-settings.png"><img width="50% height="50%" src="assets/images/router-network-lan-settings.png" /></a></div>
 
 Now that we know the router's IP address is `192.168.2.254` we know our network's address
 is `192.168.2` ([see above](#networking-basics)). If yours is different remember that **for all the ip addresses below
@@ -93,22 +93,22 @@ address. On TL-WR702N that's under Advanced Settings->DHCP->Address Reservations
 I [looked up the MAC address for my machine](#looking-up-your-mac-address) (the machine running HappyFunTimes) and assigned it
 directly to `192.168.2.9`.
 
-<div style="text-align: center;"><a href="images/router-address-reservation.png"><img width="50%" height="50%" src="images/router-address-reservation.png"></a></div>
+<div style="text-align: center;"><a href="images/router-address-reservation.png"><img width="50%" height="50%" src="assets/images/router-address-reservation.png"></a></div>
 
 I then went to the DHCP settings at Advanced Settings->DHCP->DHCP Settings and
 configured it to give out IP addresses from to `192.168.2.10` to `192.168.2.250`.
 Finally I set the DNS there to the same address I used for the HappyFunTimes machine.
 (`192.168.2.9`)
 
-<div style="text-align: center;"><a href="images/router-dhcp-settings.png"><img width="50%" height="50%" src="images/router-dhcp-settings.png"></a></div>
+<div style="text-align: center;"><a href="images/router-dhcp-settings.png"><img width="50%" height="50%" src="assets/images/router-dhcp-settings.png"></a></div>
 
 With that done I picked a nice name for my WiFi's SSID under
 Basic Settings->Wireless->Wireless Settings
 
-<div style="text-align: center;"><a href="images/router-wifi-settings.png"><img width="50%" height="50%" src="images/router-wifi-settings.png"></a></div>
+<div style="text-align: center;"><a href="images/router-wifi-settings.png"><img width="50%" height="50%" src="assets/images/router-wifi-settings.png"></a></div>
 
 and in my case I decided to turn off security so no password is needed.
-<div style="text-align: center;"><a href="images/router-wifi-security.png"><img width="50%" wheight="50%" src="images/router-wifi-security.png"></a></div>
+<div style="text-align: center;"><a href="images/router-wifi-security.png"><img width="50%" wheight="50%" src="assets/images/router-wifi-security.png"></a></div>
 
 This may or may not be a good idea since lots of people's devices are set to automatically
 connect to open routers. If you're in a relatively isolated location and everyone is going to
@@ -167,12 +167,12 @@ Use one of the top 3 sockets on the airport extreme to connect
 Start the Airport Utility on your computer and select the airport extreme
 from the image then select edit.
 
-<div style="text-align: center;"><img src="images/airport-extreme.png" width="50%" height="50%" /></div>
+<div style="text-align: center;"><img src="assets/images/airport-extreme.png" width="50%" height="50%" /></div>
 
 Under the Network section click the `+` button to add your machine
 to the DHCP reservation list.
 
-<div style="text-align: center;"><img src="images/airport-extreme-reserve-ip.png" width="50% height="50%" /></div>
+<div style="text-align: center;"><img src="assets/images/airport-extreme-reserve-ip.png" width="50% height="50%" /></div>
 
 Then add your machine. You'll need to know your machine's [mac address](#looking-up-your-mac-address).
 
@@ -180,11 +180,11 @@ On Mac you can look that up in the the menus by picking
 `Apple Menu->System Preferences` then clicking on `Network`.
 Select the Thunderbolt connection
 
-<div style="text-align: center;"><img src="images/osx-network-thunderbolt.png" width="50% height="50%" /></div>
+<div style="text-align: center;"><img src="assets/images/osx-network-thunderbolt.png" width="50% height="50%" /></div>
 
 and then clicking the hardware section
 
-<div style="text-align: center;"><img src="images/osx-macaddress.png" width="50% height="50%" /></div>
+<div style="text-align: center;"><img src="assets/images/osx-macaddress.png" width="50% height="50%" /></div>
 
 On Windows you can look up your Mac address by opening a command prompt
 and typing `getmac`. You want the mac address for wired/ethernet networking.
@@ -194,7 +194,7 @@ picutres don't match. For you they should match).
 In description put whatever you want to remember
 that's your machine. Select "Mac Address" for "Reserve Address By".
 
-<div style="text-align: center;"><img src="images/airport-extreme-reserve-ip-details.png" width="50% height="50%" /></div>
+<div style="text-align: center;"><img src="assets/images/airport-extreme-reserve-ip-details.png" width="50% height="50%" /></div>
 
 Note the number under IPv4 Address. It probably defaults to the correct
 number for your setup. Note the number.
@@ -202,7 +202,7 @@ number for your setup. Note the number.
 In the Internet section of the Airport Utility put that number in the
 2 spaces for DNS Servers
 
-<div style="text-align: center;"><img src="images/airport-extreme-dns.png" width="50% height="50%" /></div>
+<div style="text-align: center;"><img src="assets/images/airport-extreme-dns.png" width="50% height="50%" /></div>
 
 Note: with these numbers set in DNS server your Airport Extreme will no longer work for internet
 access. You can only use it for HappyFunTimes installation mode. To use it for internet run
