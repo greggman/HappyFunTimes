@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- this file is auto-generated from docs/setup/index.md. Do not edited directly -->
+<!-- this file is auto-generated from docs/troubleshooting.md. Do not edited directly -->
 <!--
 Copyright 2012, Gregg Tavares.
 All rights reserved.
@@ -34,43 +34,57 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-<meta property="og:title" content="Installation of HappyFunTimes" />
+<meta property="og:title" content="Troubleshooting" />
 <meta property="og:type" content="website" />
 <meta property="og:image" content="http://docs.happyfuntimes.net/docs/images/happyfuntimes.jpg" />
-<meta property="og:description" content="Guides on how to install HappyFunTimes" />
-<meta property="og:url" content="http://docs.happyfuntimes.net/docs/setup/index.html" />
+<meta property="og:description" content="Troubleshooting HappyFunTimes" />
+<meta property="og:url" content="http://docs.happyfuntimes.net/docs/troubleshooting.html" />
 
 <meta name="twitter:card" content="summary_large_image" />
 <meta name="twitter:site" content="@greggman" />
 <meta name="twitter:creator" content="@greggman" />
 <meta name="twitter:domain" content="docs.happyfuntimes.net" />
-<meta name="twitter:title" content="Installation of HappyFunTimes" />
-<meta name="twitter:url" content="http://docs.happyfuntimes.net/docs/setup/index.html" />
-<meta name="twitter:description" content="Guides on how to install HappyFunTimes" />
+<meta name="twitter:title" content="Troubleshooting" />
+<meta name="twitter:url" content="http://docs.happyfuntimes.net/docs/troubleshooting.html" />
+<meta name="twitter:description" content="Troubleshooting HappyFunTimes" />
 <meta name="twitter:image:src" content="http://docs.happyfuntimes.net/docs/images/happyfuntimes.jpg" />
 
-<title>Installation of HappyFunTimes</title>
+<title>Troubleshooting</title>
 
 <link href="/public/hft-icon.png" rel="shortcut icon" type="image/png">
 <link rel="stylesheet" href="/docs/assets/css/styles.css" type="text/css" />
 </head>
 <body>
 <div class="header">
-  <h1><a href="/docs/setup">HappyFunTimes Docs</a></h1>
+  <h1><a href="/docs">HappyFunTimes Docs</a></h1>
 </div>
 
 
 <div class="container">
   <div class="docs-title">
-    <h1>Installation of HappyFunTimes</h1>
+    <h1>Troubleshooting</h1>
   </div>
   <div class="row">
     <div class="col-sm-8 docs-content">
-      <h3 id="contents">Contents</h3>
+      <h2 id="common-issues">Common Issues</h2>
+<h3 id="phones-can-t-connect">Phones can&#39;t connect</h3>
 <ul>
-<li><a href="linux.html">Linux</a></li>
-<li><a href="macos.html">macOS / Mac OSX</a></li>
-<li><a href="windows.html">Windows</a></li>
+<li><p>Are they on the same WiFi / same router as the game?</p>
+<p>HappyFunTimes requires the phones to be able to talk directly
+to the system running the game so the first thing to do is
+check the phones are on the same WiFi</p>
+<p>Additionally Corporate WiFi and Internet Cafe WiFi is often
+configured so that phone can not connect to computers.
+HappyFunTimes, in general, only supports home routers.</p>
+</li>
+<li><p>Does the game have pemission to access the internet?</p>
+<p>On Windows in particular, the first time a game (or Unity) is run
+Windows will pop up a window asking to give the game permission
+to access the internet or not. If you said <em>no</em> or if the system
+is configured to automically deny access then you need to go into
+your Windows Firefall settings and grant access</p>
+<p><a href="https://www.technipages.com/blockunblock-programs-in-windows-firewall">This article might be helpful</a></p>
+</li>
 </ul>
 
       <div class="docs-footer">
@@ -81,8 +95,8 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
           <script type="text/javascript">
             /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
             var disqus_shortname = 'happyfuntimes'; // required: replace example with your forum shortname
-            var disqus_identifier = 'Installation of HappyFunTimes';
-            var disqus_title = 'Installation of HappyFunTimes';
+            var disqus_identifier = 'Troubleshooting';
+            var disqus_title = 'Troubleshooting';
 
             /* * * DON'T EDIT BELOW THIS LINE * * */
             (function() {
@@ -101,34 +115,35 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
     </div>
     <div class="col-sm-3 col-sm-offset-1 docs-sidebar">
         <ul class="toc">
-    <li><a href="../introduction.html">Introduction</a></li>
+    <li><a href="introduction.html">Introduction</a></li>
     <li>
         <b>Making Games</b>
         <ul>
-            <li><a href="../making-games/">Making games in HTML5</a></li>
-            <li><a href="../unity/">Making games in Unity3D</a></li>
-            <li><a href="../making-games/tips.html">Tips</a></li>
-            <li><a href="../commands.html">hft command</a></li>
+            <li><a href="making-games/index.html">Making games in HTML5</a></li>
+            <li><a href="unity">Making games in Unity3D</a></li>
+            <li><a href="making-games/tips.html">Tips</a></li>
         </ul>
     </li>
     <li>
         <b>Ideas and Examples</b>
         <ul>
-            <li><a href="../ideas.html">Ideas</a></li>
-            <li><a href="../examples.html">Examples</a></li>
+            <li><a href="ideas.html">Ideas</a></li>
+            <li><a href="examples.html">Examples</a></li>
         </ul>
     </li>
     <li>
-        <b>Other Content</b>
+        <b>Other</b>
         <ul>
-            <li><a href="../network.html">Museums & Installations</a></li>
+            <li><a href="network.html">Museums & Installations</a></li>
+            <li><a href="troubleshooting.html">Troubleshooting</a></li>
+            <li><a href="https://github.com/greggman/happyfuntimes/issues/">Support</a></li>
         </ul>
     </li>
     <li>
         <b>Contributing</b>
         <ul>
-            <li><a href="../contributing.html">Contributing</a></li>
-            <li><a href="../future.html">Future Features</a></li>
+            <li><a href="contributing.html">Contributing</a></li>
+            <li><a href="future.html">Future Features</a></li>
         </ul>
     </li>
 </ul>
