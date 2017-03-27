@@ -1,4 +1,4 @@
-Title: Game Structure
+Title: HTML5/Electron Game Structure
 Description: The Structure of HappyFunTimes Games
 
 Each HFT game consists of two different components that must exist to run the game
