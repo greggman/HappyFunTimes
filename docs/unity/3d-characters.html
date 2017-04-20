@@ -66,7 +66,15 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
   </div>
   <div class="row">
     <div class="col-sm-8 docs-content">
-      <p>Follow these steps</p>
+      <p>I wanted to include a 3D game but I don&#39;t own any 3D assets
+and it seemed improper to include Unity&#39;s Standard Assets
+so, here are the instructions to create a 3D example
+from scratch. I&#39;m only guessing it will take around 20-30 minutes
+(5 minutes if you&#39;ve already done it once).</p>
+<p>It will hopefully also be a good tutorial on how to take
+something that&#39;s already designed to work with controllers
+and make it work with HappyFunTimes</p>
+<p>Follow these steps</p>
 <ul>
 <li><p>Make a new project</p>
 <p><img width="1000" height="570" src="images/3d-001-new-project.png" /></p>
@@ -107,14 +115,18 @@ and move it to the <code>Asset</code> folder (or somewhere outside of Standard A
 <p>The steps are</p>
 <ol>
 <li>rename it <code>ThirdPersonUserControllerHFT</code></li>
-<li>add a <code>private HFTInput m_hftInput;</code></li>
-<li>In <code>Start</code> set <code>m_hftInput = GetComponent&lt;HFTInput&gt;();</code>;</li>
+<li>add a <code>private HFTInput m_hftInput;</code> and <code>private HFTGamepad m_gamepad;</code></li>
+<li>In <code>Start</code> set <code>m_hftInput = GetComponent&lt;HFTInput&gt;();</code> and <code>m_gamepad = GetComponent&lt;HTFGamepad&gt;();</code>.</li>
+<li>Add <code>m_gamepad.OnDisconnect += Remove</code>;</li>
+<li>Add a <code>Remove</code> method that calls <code>Destroy</code>.</li>
 <li>In <code>Update</code> check for <code>m_hftInput.GetButtonDown(&quot;fire1&quot;);</code></li>
 <li>In <code>FixedUpdate</code> add in <code>+ m_hftInput.GetAxis(&quot;Horizontal&quot;)</code> and
 <code>- m_hftInput.GetAxis(&quot;Vertical&quot;)</code></li>
 <li>Also add <code>m_hftInput.GetButton(&quot;fire2&quot;)</code> to the crouch check</li>
 </ol>
-<p><img width="643" height="353" src="images/3d-011-edit-script.gif" /></p>
+<p><img width="696" height="342" src="images/3d-011-edit-script.gif" /></p>
+<p><a href="assets/3d-step1-diff.html" target="_blank">Here&#39;s a diff of the changes (click here for a new tab)</a>.</p>
+<iframe src="assets/3d-step1-diff.html" width="900" height="500"></iframe>
 </li>
 <li><p>Select the prefab again</p>
 <p><img width="486" height="682" src="images/3d-007-select-prefab.gif" /></p>
@@ -137,6 +149,48 @@ add the <code>ThirdPersonUserControlHFT</code> script on the prefab</p>
 </li>
 </ul>
 <p>Hopefully that shows how simple it is to get started.</p>
+<h2 id="colors-and-names">Colors and Names</h2>
+<p>Let&#39;s had a little more code to show names and colors.</p>
+<p><a href="assets/3d-step2-diff.html">Here are the changes to the script (click here for a new tab)</a>.</p>
+<iframe src="assets/3d-step2-diff.html" width="900" height="500"></iframe>
+
+<p>We added a <code>nameTransform</code> Transform public field. We need to set that to a transform <strong>inside the prefab</strong>
+so we&#39;ll follow these steps</p>
+<ol>
+<li>Drag the <code>ThirdPersonController</code> prefab into the scene hierarchy</li>
+<li>Create a GameObject.</li>
+<li>Drag the GameObject under the root of the prefab</li>
+<li>Rename it to <code>name</code> (or anything)</li>
+<li>Move it above the character&#39;s head</li>
+<li>Drag it to the <code>Name Transform</code> field of our <code>ThirdPersonUserControlHFT</code> script.</li>
+<li>From the menus pick <code>GameObject-&gt;Apply Changes to Prefab</code></li>
+<li>Delete the prefab from the scene</li>
+</ol>
+<p>Here&#39;s a silent video of the steps</p>
+<iframe width="853" height="480" src="https://www.youtube.com/embed/Sp2-vWM14_M" frameborder="0" allowfullscreen></iframe>
+
+<p>Now run it. There should be a &quot;name&quot; box showing the players name in a color matching
+the player&#39;s controller.</p>
+<p><img width="637" height="389" src="images/3d-120-run.gif" /></p>
+<p><strong>NOTE</strong>, this way of showing names is <strong>not</strong> the recommended Unity way. The point of this example
+is to show how to use HappyFunTimes to set colors and read names, <strong>not how to use Unity</strong>.
+To display names the Unity way please <a href="https://www.google.com/search?q=displaying+a+name+above+a+character+unity">search for examples</a>.</p>
+<p>Similarly in the example above all players spawn at the same place and if they fall over the edge
+of the world they fall forever. <a href="https://www.google.com/search?q=unity+spawn+at+random+location">Spawning at random locations</a>
+and <a href="https://www.google.com/search?q=reset+when+player+falls+of+world+unity">dying or resetting if the player falls off the world</a>
+are standard Unity game development issues and have nothing to do with HappyFuntTimes.
+While I want to be helpful I can&#39;t teach you Unity. I can only teach you HappyFunTimes. For Unity issues
+please use the <a href="https://forum.unity3d.com/">Unity Forums</a> and/or <a href="http://answers.unity3d.com/">Unity Answers</a>.
+Also see the samples.</p>
+<p>The Simple and Clean examples in <code>Assets/HappyFunTimes/MoreSamples</code> spawn players at random locations given a globally defined area.
+For Spawn points you can apply ideas from the example above. On the LevelManager (or some global object)
+you make an array of <code>Transform</code>s. <code>public Transform[] spawnPoints;</code>
+You then make a bunch of GameObjects, as many as you want, one for each spawn point and add them to the list
+of spawn points Unity just like we added the <code>name</code> GameObject to the <code>nameTransform</code> above. When player
+is added, then either in their <code>Start</code> or <code>InitNetPlayer</code> functions (if you&#39;re not using the HFTGamepad)
+you&#39;d find that list and either pick one of the spawn points at random or pick the next one or whaever fits
+your game. Again, these are Unity game development issues not HappyFunTimes issues. I hope that doesn&#39;t
+come across as harsh but I also hope you see my point.</p>
 
       <div class="docs-footer">
         <div>Questions? <a href="http://stackoverflow.com/questions/tagged/happyfuntimes">Ask on stackoverflow</a>.</div>
