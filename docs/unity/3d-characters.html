@@ -66,216 +66,77 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
   </div>
   <div class="row">
     <div class="col-sm-8 docs-content">
-      <p>How do you control 3D characters with HappyFunTimes? The short answer is
-&quot;it depends&quot;.</p>
-<p>What controls do you want? Maybe you want just left and right and forward.
-Maybe you want an 8 directional control pad emulator. Maybe you want an analog
-control pad emualtor.</p>
-<p>At the moment there is <a href="http://docs.happyfuntimes.net/docs/unity/samples.html?owner=greggman&amp;repo=hft-unitycharacterexample">one sample you can find here</a>.</p>
-<h2 id="a-short-explanation-">A short explanation:</h2>
-<h3 id="html">HTML</h3>
-<p>First the HTML in <code>Assets/WebPlayerTemplates/HappyFunTimes/controller.html</code></p>
-<p>These lines create an area to hold the visual representation of the dpads</p>
-<pre><code>&lt;div id=&quot;dpads&quot; class=&quot;fixheight&quot;&gt;
-  &lt;div id=&quot;dpadleft&quot;&gt;&lt;/div&gt;
-  &lt;div id=&quot;dpadright&quot;&gt;&lt;/div&gt;
-&lt;/div&gt;
-</code></pre><p>And these lines create a <code>&lt;div&gt;</code> that will placed above everything else
-that&#39;s the fullsize of the browser window to receive all input. This let&#39;s
-us get input even outside of the dpad images.</p>
-<pre><code>&lt;div id=&quot;dpadinput&quot;&gt;
-&lt;/div&gt;
-</code></pre><h3 id="css">CSS</h3>
-<p>The corresponding CSS from <code>Assets/WebPlayerTemplates/HappyFunTimes/css/controller.css</code></p>
-<p>First the dpad area</p>
-<pre><code>/* the area that contains the visual representation of our dpads */
-#dpads {
-    /* make the dpads area fill the browser */
-    width: 100%;
-    height: 100%;
-
-    /* make positioned children of #dpads use this as their origin */
-    position: relative;
-}
-</code></pre><p>And the individual dpads</p>
-<pre><code>#dpadleft, #dpadright {
-  /* these are relative to #dpads */
-  position: absolute;
-  width: 160px;
-}
-#dpads canvas {
-    /* the dpads are each drawn with a canvas */
-    width: 160px;
-    height: 160px;
-}
-#dpadleft {
-  /* position the left pad */
-  left: 2em;
-  bottom: 3em;
-}
-#dpadright {
-  /* position the right pad */
-  right: 2em;
-  bottom: 3em;
-}
-</code></pre><p>and finally the div that will receive all input</p>
-<pre><code>/* an invisible area that covers everything and receives all input */
-#dpadinput {
-    /* fill the browser */
-    width: 100%;
-    height: 100%;
-    /* position at the top */
-    position: absolute;
-    left: 0px;
-    top: 0px;
-
-    /* make us appear over other stuff */
-    z-index: 2;
-
-    /* make it so dragging your finger or the mouse on
-       this area does not start selecting stuff */
-    -moz-user-select: none;
-    -webkit-user-select: none;
-    -o-user-select: none;
-    user-select: none;
-}
-</code></pre><h3 id="javascript">JavaScript</h3>
-<p>And the JavaScript from <code>Assets/WebPlayerTemplates/HappyFunTimes/scripts/controller.js</code></p>
-<p>This part says which libraries to include. The important ones are <code>input</code>, <code>dpad</code>
-and <code>touch</code>. The first part is the path to each library. The second part is a
-list of variables to assign the libraries to.</p>
-<pre><code>// Start the main app logic.
-requirejs([
-    &#39;hft/commonui&#39;,
-    &#39;hft/gameclient&#39;,
-    &#39;hft/misc/dpad&#39;,
-    &#39;hft/misc/input&#39;,
-    &#39;hft/misc/misc&#39;,
-    &#39;hft/misc/mobilehacks&#39;,
-    &#39;hft/misc/touch&#39;,
-  ], function(
-    CommonUI,
-    GameClient,
-    DPad,
-    Input,
-    Misc,
-    MobileHacks,
-    Touch) {
-</code></pre><p>We then create 2 dpads</p>
-<pre><code>var dpadSize = 160;
-var dpads = [
-  new DPad({size: dpadSize, element: $(&quot;dpadleft&quot;)}),
-  new DPad({size: dpadSize, element: $(&quot;dpadright&quot;)}),
-];
-</code></pre><p>We setup so keyboard keys work. This makes it easy to test in a desktop browser</p>
-<pre><code>Input.setupKeyboardDPadKeys(sendPad);
-</code></pre><p>Then we setup the touch based dpads</p>
-<pre><code>var container = $(&quot;dpadinput&quot;);
-Touch.setupVirtualDPads({
-
-  // the container that receives all input
-  inputElement: container,
-
-  // the function to call when we get inupt
-  callback: sendPad,
-
-  // whether or not the center stays fixed. If false
-  // the system will assume the place the player touchs
-  // is the center, they then have to move their finger
-  // from that spot to move. That doesn&#39;t seem to work
-  // well or maybe it just needs some iteration
-  fixedCenter: true,
-
-  // an array of pads and were their center is.
-  pads: [
-    {
-      referenceElement: $(&quot;dpadleft&quot;),
-      offsetX: dpadSize / 2,
-      offsetY: dpadSize / 2,
-    },
-    {
-      referenceElement: $(&quot;dpadright&quot;),
-      offsetX: dpadSize / 2,
-      offsetY: dpadSize / 2,
-    },
-  ],
-});
-</code></pre><p>Finally we need to supply the <code>sendPad</code> function to actually send
-data to the game</p>
-<pre><code>function sendPad(e) {
-  // Draw the dpad
-  dpads[e.pad].draw(e.info);
-
-  // Send it to the game.
-  g_client.sendCmd(&#39;pad&#39;, {pad: e.pad, dir: e.info.direction});
-};
-</code></pre><p>The <code>Touch</code> library provides various kinds of data for each dpad. Above
-we are chosing to send <code>e.pad</code> which is the index of the pad and <code>e.info.direction</code>
-which is a direction number that goes from -1 to 7</p>
-<pre><code>        2     -1 = no touch
-      3 | 1
-       \|/
-     4--+--0
-       /|\
-      5 | 7
-        6
-</code></pre><p>From <a href="http://docs.happyfuntimes.net/docs/hft/module-Touch.html#setupVirtualDPads">the docs</a></p>
-<blockquote>
-<p>Note: this matches trig functions so you can do this</p>
-<pre><code>if (dir &gt;= 0) {
-  var angle = dir * Math.PI / 4;
-  var dx    = Math.cos(angle);
-  var dy    = Math.sin(angle);
-}
-</code></pre><p>for +y up (ie, normal for 3d)</p>
-<p>In 2d you&#39;d probably want to flip dy</p>
-<pre><code>if (dir &gt;= 0) {
-  var angle =  dir * Math.PI / 4;
-  var dx    =  Math.cos(angle);
-  var dy    = -Math.sin(angle);
-}
-</code></pre></blockquote>
-<p>Some other info we could have sent instead</p>
-<pre><code> e.info.dx   = -1, 0, 1
- e.info.dy   = -1, 0, 1
- e.info.bits = 1 for right, 2 for left, 4 for up, 8 for down
-</code></pre><h3 id="now-on-the-game-side-in-unity-">Now on the game side, in Unity.</h3>
-<p>We&#39;re using the Character Controller example which was written in UnityScript.
-It&#39;s in <code>Assets/HappyFunTimes/Scripts/Example3rdPersonController.js</code></p>
-<p>The first thing we need to do is define a matching class to receive
-the input from the phone.</p>
-<pre><code>class MessagePad {
-    var pad : int;
-    var dir : int;
-};
-</code></pre><p>We&#39;re using a helper library to help emulate a dpad. It&#39;s defined
-in <code>Assets/HappyFunTimes/Scripts/DPadEmuJS.js</code>. You can look inside
-if you&#39;d like to see how it works. The important part is we need
-to send it the data we receive from the phone. First set one
-and at init time we need to tell HappyFunTimes to call a function
-when that message comes in.</p>
-<pre><code>private var _netPlayer : HappyFunTimes.NetPlayer;
-private var _padEmu : DPadEmuJS = new DPadEmuJS();
-
-function InitializeNetPlayer(spawnInfo : HappyFunTimes.SpawnInfo) {
-
-    _netPlayer = spawnInfo.netPlayer;
-
-    // Call the `OnPad` function
-    _netPlayer.RegisterCmdHandler(&quot;pad&quot;, OnPad);
-
-}
-</code></pre><p>OnPad looks like this</p>
-<pre><code>function OnPad(data : MessagePad) {
-    _padEmu.Update(data.pad, data.dir);
-}
-</code></pre><p>It just passed the data on to the DPadEmu library.</p>
-<p>Otherwise we&#39;ve just gone through the code and repalced <code>Input.</code> with
-<code>_padEmu.</code> so for example the code that lets the player move looks like this</p>
-<pre><code>var v = _padEmu.GetAxisRaw(&quot;Vertical&quot;);
-var h = _padEmu.GetAxisRaw(&quot;Horizontal&quot;);
-</code></pre><p>The emulation is just a basic shell. It&#39;s up to you if you&#39;d like it to
-handle other cases.</p>
+      <p>Follow these steps</p>
+<ul>
+<li><p>Make a new project</p>
+<p><img width="1000" height="570" src="images/3d-001-new-project.png" /></p>
+</li>
+<li><p>Open the asset store</p>
+<p><img width="212" height="336" src="images/3d-002-asset-store.png" /></p>
+</li>
+<li><p>Download HappyFunTimes</p>
+<p><img width="975" height="559" src="images/3d-003-dl-hft.png" /></p>
+</li>
+<li><p>Import the standard character assets</p>
+<p><img width="405" height="400" src="images/3d-004-import-characters.png" /></p>
+</li>
+<li><p>Create an empty GameObject for a level manager</p>
+<p><img width="245" height="583" src="images/3d-005-create-empty.png" /></p>
+</li>
+<li><p>Rename it &quot;LevelManager&quot; and add a player spawner, then click the little circle
+on the far right of <code>prefab to spawn for player</code></p>
+<p><img width="357" height="516" src="images/3d-006-add-playerspanwer.gif" /></p>
+</li>
+<li><p>Select the &quot;ThirdPersonContoller&quot; prefab (setting the <code>prefab to spawn for player</code>)</p>
+<p><img width="486" height="682" src="images/3d-007-select-prefab.gif" /></p>
+</li>
+<li><p>Select the prefab in the hierarchy, It&#39;s in <code>Assets/Standard Assets/Characters/ThirdPersonCharacter/Prefabs</code>.</p>
+<p><img width="516" height="429" src="images/3d-008-edit-prefab.gif" /></p>
+</li>
+<li><p>Add an <code>HFTInput</code> script to the prefab.</p>
+<p><img width="357" height="582" src="images/3d-008b-add-hftinput.gif" /></p>
+</li>
+<li><p>Select the <code>ThirdPersonUserControl</code> script in <code>Assets/Standard Assets/Characters/ThirdPersonCharacter/Scripts</code>.</p>
+<p><img width="712" height="432" src="images/3d-009-select-script.gif" /></p>
+</li>
+<li><p>Duplicate it (Cmd-D / Ctrl-D or Edit-&gt;Duplicate from the menus), Rename it <code>ThirdPersonUserControlHFT</code>,
+and move it to the <code>Asset</code> folder (or somewhere outside of Standard Assets)</p>
+<p><img width="826" height="431" src="images/3d-010-dup-script.gif" /></p>
+</li>
+<li><p>Edit the script (see <a href="gamepad.html">the gamepad docs</a>)</p>
+<p>The steps are</p>
+<ol>
+<li>rename it <code>ThirdPersonUserControllerHFT</code></li>
+<li>add a <code>private HFTInput m_hftInput;</code></li>
+<li>In <code>Start</code> set <code>m_hftInput = GetComponent&lt;HFTInput&gt;();</code>;</li>
+<li>In <code>Update</code> check for <code>m_hftInput.GetButtonDown(&quot;fire1&quot;);</code></li>
+<li>In <code>FixedUpdate</code> add in <code>+ m_hftInput.GetAxis(&quot;Horizontal&quot;)</code> and
+<code>- m_hftInput.GetAxis(&quot;Vertical&quot;)</code></li>
+<li>Also add <code>m_hftInput.GetButton(&quot;fire2&quot;)</code> to the crouch check</li>
+</ol>
+<p><img width="643" height="353" src="images/3d-011-edit-script.gif" /></p>
+</li>
+<li><p>Select the prefab again</p>
+<p><img width="486" height="682" src="images/3d-007-select-prefab.gif" /></p>
+</li>
+<li><p>Delete the <code>ThirdPersonUserControl</code> script on the prefab, and
+add the <code>ThirdPersonUserControlHFT</code> script on the prefab</p>
+<p><img width="355" height="581" src="images/3d-012-replace-script.gif" /></p>
+</li>
+<li><p>Create a Plane GameObject</p>
+<p><img width="355" height="481" src="images/3d-013-create-plane.png" /></p>
+</li>
+<li><p>Add a Box Collider</p>
+<p><img width="400" height="435" src="images/3d-014-add-box-collider.png" /></p>
+</li>
+<li><p>Set the Box center and size. center = <code>x:0, y:-0.5, z:0</code>, size = <code>x:10, y:1, z:10</code></p>
+<p><img width="369" height="123" src="images/3d-015-set-box-size.gif" /></p>
+</li>
+<li><p>Run it</p>
+<p><img width="789" height="483" src="images/3d-016-run.gif" /></p>
+</li>
+</ul>
+<p>Hopefully that shows how simple it is to get started.</p>
 
       <div class="docs-footer">
         <div>Questions? <a href="http://stackoverflow.com/questions/tagged/happyfuntimes">Ask on stackoverflow</a>.</div>
