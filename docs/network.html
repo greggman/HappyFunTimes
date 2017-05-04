@@ -120,7 +120,11 @@ recommend the <a href="http://google.com/#q=TP-Link+TL-WR702N">TP-Link TL-WR702N
 it will only handle 13-14 players and it&#39;s under $20.</p>
 <p>Find the IP address of your router. If the URL in your browser looks something like <code>http://192.168.2.254/???</code>
 then that&#39;s the IP address of your router. Otherwise check the lan settings. For example</p>
-<div style="text-align: center;"><a href="images/router-network-lan-settings.png">&lt;img width=&quot;50% height=&quot;50%&quot; src=&quot;assets/images/router-network-lan-settings.png&quot; /&gt;</a></div>
+<div style="text-align: center;">
+  <a href="images/router-network-lan-settings.png">
+     <img width="50%" height="50%" src="assets/images/router-network-lan-settings.png" />
+  </a>
+</div>
 
 <p>Now that we know the router&#39;s IP address is <code>192.168.2.254</code> we know our network&#39;s address
 is <code>192.168.2</code> (<a href="#networking-basics">see above</a>). If yours is different remember that <strong>for all the ip addresses below
@@ -132,20 +136,36 @@ should be a place that lets you assign a specfiic IP address to a specific MAC
 address. On TL-WR702N that&#39;s under Advanced Settings-&gt;DHCP-&gt;Address Reservations</p>
 <p>I <a href="#looking-up-your-mac-address">looked up the MAC address for my machine</a> (the machine running HappyFunTimes) and assigned it
 directly to <code>192.168.2.9</code>.</p>
-<div style="text-align: center;"><a href="images/router-address-reservation.png"><img width="50%" height="50%" src="assets/images/router-address-reservation.png"></a></div>
+<div style="text-align: center;">
+  <a href="images/router-address-reservation.png">
+     <img width="50%" height="50%" src="assets/images/router-address-reservation.png" />
+  </a>
+</div>
 
 <p>I then went to the DHCP settings at Advanced Settings-&gt;DHCP-&gt;DHCP Settings and
 configured it to give out IP addresses from to <code>192.168.2.10</code> to <code>192.168.2.250</code>.
 Finally I set the DNS there to the same address I used for the HappyFunTimes machine.
 (<code>192.168.2.9</code>)</p>
-<div style="text-align: center;"><a href="images/router-dhcp-settings.png"><img width="50%" height="50%" src="assets/images/router-dhcp-settings.png"></a></div>
+<div style="text-align: center;">
+   <a href="images/router-dhcp-settings.png">
+      <img width="50%" height="50%" src="assets/images/router-dhcp-settings.png">
+    </a>
+</div>
 
 <p>With that done I picked a nice name for my WiFi&#39;s SSID under
 Basic Settings-&gt;Wireless-&gt;Wireless Settings</p>
-<div style="text-align: center;"><a href="images/router-wifi-settings.png"><img width="50%" height="50%" src="assets/images/router-wifi-settings.png"></a></div>
+<div style="text-align: center;">
+  <a href="images/router-wifi-settings.png">
+    <img width="50%" height="50%" src="assets/images/router-wifi-settings.png">
+  </a>
+</div>
 
 <p>and in my case I decided to turn off security so no password is needed.</p>
-<div style="text-align: center;"><a href="images/router-wifi-security.png"><img width="50%" wheight="50%" src="assets/images/router-wifi-security.png"></a></div>
+<div style="text-align: center;">
+  <a href="images/router-wifi-security.png">
+    <img width="50%" wheight="50%" src="assets/images/router-wifi-security.png">
+  </a>
+</div>
 
 <p>This may or may not be a good idea since lots of people&#39;s devices are set to automatically
 connect to open routers. If you&#39;re in a relatively isolated location and everyone is going to
@@ -167,13 +187,40 @@ clear that setting or set it to a real DNS server like Google&#39;s Public DNS s
 </li>
 </ol>
 <h2 id="starting-happyfuntimes-in-installation-mode">Starting HappyFunTimes in installation mode</h2>
+<p>Depending on the version</p>
+<h3 id="if-you-re-using-the-unity-version-of-happyfuntimes">If you&#39;re using the Unity version of HappyFunTimes</h3>
+<p>There are 2 ways to run installation mode.</p>
+<ul>
+<li><p>From the Editor</p>
+<ol>
+<li><p>Pick Window-&gt;HappyFunTimes-&gt;Settings in Unity</p>
+</li>
+<li><p>Check &quot;Installation Mode&quot;</p>
+<p><img src="unity/images/happyfuntimes-settings.png" width="50%" height="50%"/></p>
+</li>
+<li><p>Run the game</p>
+</li>
+</ol>
+</li>
+<li><p>From an exported game</p>
+<ol>
+<li><p>Start the game from the command line and add the option <code>--hft-installation-mode</code></p>
+<p>On OSX</p>
+<pre><code>nameofgame.app/Contents/MacOS/nameofgame --hft-installation-mode
+</code></pre><p>On Windows</p>
+<pre><code>nameofgame.exe --hft-installation-mode
+</code></pre></li>
+</ol>
+</li>
+</ul>
+<h3 id="if-you-re-using-the-electron-verison-of-happyfuntimes">If you&#39;re using the electron verison of HappyFunTimes</h3>
 <p>Open a node command prompt or terminal and on OSX type</p>
 <pre><code>sudo npm run start -- --dns
 </code></pre><p>On Windows just</p>
 <pre><code>npm run start -- --dns
 </code></pre><p>You need <code>sudo</code> on OSX because port 80 is normally restricted to admin users only.</p>
-<p>Go to <code>http://localhost/games.html</code> and pick a game.</p>
-<p>Now try connecting a smartphone to your router. If it&#39;s an iOS device it <em>should</em>
+<h3 id="after-starting-in-installation-mode">After starting in installation mode</h3>
+<p>Try connecting a smartphone to your router. If it&#39;s an iOS device it <em>should</em>
 automatcally come up with a page that says &quot;Start&quot;. If it&#39;s an Android device
 open the browser and go to <code>hft.com</code> or any <code>http://</code> url.</p>
 <h2 id="setting-up-an-airport-extreme">Setting Up an Airport Extreme</h2>
@@ -185,20 +232,28 @@ Use one of the top 3 sockets on the airport extreme to connect
 (not to be confused with the bottom socket which is for incoming internet).</p>
 <p>Start the Airport Utility on your computer and select the airport extreme
 from the image then select edit.</p>
-<div style="text-align: center;"><img src="assets/images/airport-extreme.png" width="50%" height="50%" /></div>
+<div style="text-align: center;">
+  <img src="assets/images/airport-extreme.png" width="50%" height="50%" />
+</div>
 
 <p>Under the Network section click the <code>+</code> button to add your machine
 to the DHCP reservation list.</p>
-<div style="text-align: center;">&lt;img src=&quot;assets/images/airport-extreme-reserve-ip.png&quot; width=&quot;50% height=&quot;50%&quot; /&gt;</div>
+<div style="text-align: center;">
+  <img src="assets/images/airport-extreme-reserve-ip.png" width="50%" height="50%" />
+</div>
 
 <p>Then add your machine. You&#39;ll need to know your machine&#39;s <a href="#looking-up-your-mac-address">mac address</a>.</p>
 <p>On Mac you can look that up in the the menus by picking
 <code>Apple Menu-&gt;System Preferences</code> then clicking on <code>Network</code>.
 Select the Thunderbolt connection</p>
-<div style="text-align: center;">&lt;img src=&quot;assets/images/osx-network-thunderbolt.png&quot; width=&quot;50% height=&quot;50%&quot; /&gt;</div>
+<div style="text-align: center;">
+  <img src="assets/images/osx-network-thunderbolt.png" width="50%" height="50%" />
+</div>
 
 <p>and then clicking the hardware section</p>
-<div style="text-align: center;">&lt;img src=&quot;assets/images/osx-macaddress.png&quot; width=&quot;50% height=&quot;50%&quot; /&gt;</div>
+<div style="text-align: center;">
+  <img src="assets/images/osx-macaddress.png" width="50%" height="50%" />
+</div>
 
 <p>On Windows you can look up your Mac address by opening a command prompt
 and typing <code>getmac</code>. You want the mac address for wired/ethernet networking.</p>
@@ -206,13 +261,17 @@ and typing <code>getmac</code>. You want the mac address for wired/ethernet netw
 picutres don&#39;t match. For you they should match).
 In description put whatever you want to remember
 that&#39;s your machine. Select &quot;Mac Address&quot; for &quot;Reserve Address By&quot;.</p>
-<div style="text-align: center;">&lt;img src=&quot;assets/images/airport-extreme-reserve-ip-details.png&quot; width=&quot;50% height=&quot;50%&quot; /&gt;</div>
+<div style="text-align: center;">
+  <img src="assets/images/airport-extreme-reserve-ip-details.png" width="50%" height="50%" />
+</div>
 
 <p>Note the number under IPv4 Address. It probably defaults to the correct
 number for your setup. Note the number.</p>
 <p>In the Internet section of the Airport Utility put that number in the
 2 spaces for DNS Servers</p>
-<div style="text-align: center;">&lt;img src=&quot;assets/images/airport-extreme-dns.png&quot; width=&quot;50% height=&quot;50%&quot; /&gt;</div>
+<div style="text-align: center;">
+  <img src="assets/images/airport-extreme-dns.png" width="50%" height="50%" />
+</div>
 
 <p>Note: with these numbers set in DNS server your Airport Extreme will no longer work for internet
 access. You can only use it for HappyFunTimes installation mode. To use it for internet run

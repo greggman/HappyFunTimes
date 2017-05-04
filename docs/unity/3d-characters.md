@@ -151,9 +151,9 @@ The Simple and Clean examples in `Assets/HappyFunTimes/MoreSamples` spawn player
 For Spawn points you can apply ideas from the example above. On the LevelManager (or some global object)
 you make an array of `Transform`s. `public Transform[] spawnPoints;`
 You then make a bunch of GameObjects, as many as you want, one for each spawn point and add them to the list
-of spawn points Unity just like we added the `name` GameObject to the `nameTransform` above. When player
-is added, then either in their `Start` or `InitNetPlayer` functions (if you're not using the HFTGamepad)
-you'd find that list and either pick one of the spawn points at random or pick the next one or whaever fits
+of spawn points on the LevelManager in Unity just like we added the `name` GameObject to the `nameTransform` above. When a player
+is added, then in their `Start` method (or `InitNetPlayer` functions if you're not using the HFTGamepad/HFTInput)
+you'd find that list from the LevelManager and either pick one of the spawn points at random or pick the next one or whaever fits
 your game. Again, these are Unity game development issues not HappyFunTimes issues. I hope that doesn't
 come across as harsh but I also hope you see my point.
 

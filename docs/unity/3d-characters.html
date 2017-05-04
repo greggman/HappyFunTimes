@@ -186,9 +186,9 @@ Also see the samples.</p>
 For Spawn points you can apply ideas from the example above. On the LevelManager (or some global object)
 you make an array of <code>Transform</code>s. <code>public Transform[] spawnPoints;</code>
 You then make a bunch of GameObjects, as many as you want, one for each spawn point and add them to the list
-of spawn points Unity just like we added the <code>name</code> GameObject to the <code>nameTransform</code> above. When player
-is added, then either in their <code>Start</code> or <code>InitNetPlayer</code> functions (if you&#39;re not using the HFTGamepad)
-you&#39;d find that list and either pick one of the spawn points at random or pick the next one or whaever fits
+of spawn points on the LevelManager in Unity just like we added the <code>name</code> GameObject to the <code>nameTransform</code> above. When a player
+is added, then in their <code>Start</code> method (or <code>InitNetPlayer</code> functions if you&#39;re not using the HFTGamepad/HFTInput)
+you&#39;d find that list from the LevelManager and either pick one of the spawn points at random or pick the next one or whaever fits
 your game. Again, these are Unity game development issues not HappyFunTimes issues. I hope that doesn&#39;t
 come across as harsh but I also hope you see my point.</p>
 
