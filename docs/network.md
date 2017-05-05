@@ -204,6 +204,54 @@ Try connecting a smartphone to your router. If it's an iOS device it *should*
 automatcally come up with a page that says "Start". If it's an Android device
 open the browser and go to `hft.com` or any `http://` url.
 
+### Troubleshooting
+
+If installation mode is not working for you it's possible your router can't
+handle it BUT here's a few steps to check
+
+After you've setup installation mode on your router:
+
+#### Windows
+
+open a command prompt and type `ipconfig`
+
+<div style="text-align: center;">
+  <img src="assets/images/windows-ipconfig.png" width="50%" height="50%" />
+</div>
+
+The IPv4 address should match the one you specified in your router configuration when assigning a static IP address for your computer
+
+Then if you run the game **in installation mode** and then alt-tab back to the command prompt and type `nslookup foo.com`
+
+<div style="text-align: center;">
+  <img src="assets/images/windows-nslookup.png" width="50%" height="50%" />
+</div>
+
+The 1st and 2nd with the 3rd maybe being your Default Gateway from above numbers should match your IPv4 address from ipconfig
+
+If those don't match then your router is not setup correctly or else you've maybe you manually put DNS addresses in your computer's network configuration and need to remove them.
+
+#### macOS / Linux
+
+open a terminal and type `ifconfig`
+
+<div style="text-align: center;">
+  <img src="assets/images/macos-ifconfig.png" width="66%" height="66%" />
+</div>
+
+The IPv4 address should match the one you specified in your router configuration when assigning a static IP address for your computer
+
+Then if you run the game **in installation mode** and then alt-tab/cmd-tab back to the terminal and type `dig foo.com`
+
+<div style="text-align: center;">
+  <img src="assets/images/macos-dig.png" width="66%" height="66%"/>
+</div>
+
+The 1st and 2nd with the 3rd maybe being your Default Gateway from above numbers should match your IPv4 address from ipconfig
+
+If those don't match then your router is not setup correctly or else you've maybe you manually put DNS addresses in your computer's network configuration and need to remove them.
+
+
 Setting Up an Airport Extreme
 -----------------------------
 

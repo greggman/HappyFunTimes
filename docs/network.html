@@ -223,6 +223,38 @@ clear that setting or set it to a real DNS server like Google&#39;s Public DNS s
 <p>Try connecting a smartphone to your router. If it&#39;s an iOS device it <em>should</em>
 automatcally come up with a page that says &quot;Start&quot;. If it&#39;s an Android device
 open the browser and go to <code>hft.com</code> or any <code>http://</code> url.</p>
+<h3 id="troubleshooting">Troubleshooting</h3>
+<p>If installation mode is not working for you it&#39;s possible your router can&#39;t
+handle it BUT here&#39;s a few steps to check</p>
+<p>After you&#39;ve setup installation mode on your router:</p>
+<h4 id="windows">Windows</h4>
+<p>open a command prompt and type <code>ipconfig</code></p>
+<div style="text-align: center;">
+  <img src="assets/images/windows-ipconfig.png" width="50%" height="50%" />
+</div>
+
+<p>The IPv4 address should match the one you specified in your router configuration when assigning a static IP address for your computer</p>
+<p>Then if you run the game <strong>in installation mode</strong> and then alt-tab back to the command prompt and type <code>nslookup foo.com</code></p>
+<div style="text-align: center;">
+  <img src="assets/images/windows-nslookup.png" width="50%" height="50%" />
+</div>
+
+<p>The 1st and 2nd with the 3rd maybe being your Default Gateway from above numbers should match your IPv4 address from ipconfig</p>
+<p>If those don&#39;t match then your router is not setup correctly or else you&#39;ve maybe you manually put DNS addresses in your computer&#39;s network configuration and need to remove them.</p>
+<h4 id="macos-linux">macOS / Linux</h4>
+<p>open a terminal and type <code>ifconfig</code></p>
+<div style="text-align: center;">
+  <img src="assets/images/macos-ifconfig.png" width="66%" height="66%" />
+</div>
+
+<p>The IPv4 address should match the one you specified in your router configuration when assigning a static IP address for your computer</p>
+<p>Then if you run the game <strong>in installation mode</strong> and then alt-tab/cmd-tab back to the terminal and type <code>dig foo.com</code></p>
+<div style="text-align: center;">
+  <img src="assets/images/macos-dig.png" width="66%" height="66%"/>
+</div>
+
+<p>The 1st and 2nd with the 3rd maybe being your Default Gateway from above numbers should match your IPv4 address from ipconfig</p>
+<p>If those don&#39;t match then your router is not setup correctly or else you&#39;ve maybe you manually put DNS addresses in your computer&#39;s network configuration and need to remove them.</p>
 <h2 id="setting-up-an-airport-extreme">Setting Up an Airport Extreme</h2>
 <p>Unlike every other router in existence the Airport Extreme requires custom
 software to configure it. If you&#39;re on Windows or Linux you&#39;ll need to
