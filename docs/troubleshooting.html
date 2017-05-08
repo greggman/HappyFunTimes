@@ -86,6 +86,126 @@ your Windows Firefall settings and grant access</p>
 <p><a href="https://www.technipages.com/blockunblock-programs-in-windows-firewall">This article might be helpful</a></p>
 </li>
 </ul>
+<h2 id="how-happyfuntimes-works">How HappyFunTimes Works</h2>
+<p>HappyFunTimes works by running a small web server. The web server serves the webpages to the phones.
+It also implements websockets which allow the phone and the game to pass messages between each other.</p>
+<p>Look up the IP address of your computer</p>
+<p>On Windows</p>
+<ul>
+<li><p>Open a command prompt and type <code>ipconfig</code></p>
+<p><img src="assets/images/windows-ipconfig-normal.png" /></p>
+</li>
+</ul>
+<p>On macOS/Linux</p>
+<ul>
+<li><p>Open a terminal and type <code>ifconfig</code></p>
+<p><img src="assets/images/macos-ifconfig-normal.png" width="66%" height="66%" /></p>
+</li>
+</ul>
+<p>If you run your game you should be able to connect the phone to the game going directly to
+that address.</p>
+<p>On your phone open your browser and type <code>http://&lt;ipaddress&gt;:18679</code> where <code>&lt;ipaddress&gt;</code> is
+the address of the computer running the game. For example looking at the windows machine
+above its ip address is <code>171.16.1.191</code> so you&#39;d type <code>http://171.16.1.191:18679</code> into your
+phone.</p>
+<p>If the phone does NOT connect to game one of 2 things are wrong</p>
+<ol>
+<li><p>If you are using Unity then one possiblity is  the path to the controller in the happyfuntimes options
+is not set correctly</p>
+<p>See <a href="unity/happyfuntimes-options.html#Controller-Filename">Unity3D HappyFunTimes Options</a></p>
+</li>
+<li><p>Your router is not configured correctly</p>
+<p>Generally home internet routers let all devices connected to them to talk to each other.
+On the other hand corporate networks, university and school networks, and internet cafe networks
+often do <strong>not</strong> let devices on the same network talk to each other.</p>
+<p>You&#39;ll need to figure out how to allow those devies to talk to each other.</p>
+<p>One way to test is to use a <code>ping</code> program.</p>
+<p>For iOS you can use <a href="https://itunes.apple.com/us/app/ping-network-reachability-test/id576773404?mt=8">a program like this</a>
+or for Android <a href="https://play.google.com/store/apps/details?id=ua.com.streamsoft.pingtools&amp;hl=en">a program like this</a>.</p>
+<p>Download the app, make sure the phone is connected to the same network as your computer. Look up the computer&#39;s
+ip address. Then, using the app, try to <em>ping</em> the computer.</p>
+<p>If you can not ping the computer from your phone then your router either needs to be reconfigured OR
+you need to get another router for your happyfuntimes project (they cost as little as $15).</p>
+</li>
+</ol>
+<h2 id="-happyfuntimes-net-"><code>happyfuntimes.net</code></h2>
+<p>When using happyfuntimes you normally tell users to go to <code>happyfuntimes.net</code>. happyfuntimes.net sole
+purpose is to type <code>http://&lt;ipaddress&gt;:18679</code> for your users since telling users to type something like
+<strong><em>aitch tee tee pee colon slash slash one nine two dot one six eight dot two dot seven nine colon one
+eight six seven nine</em></strong> is way harder then just telling them to type <strong><em>happy fun times dot net</em></strong>.</p>
+<p>happyfuntimes.net works because on a normal home router all devices (your phones, your computer, etc)
+look like they are the same to machines on the internet.</p>
+<p>So, when a happyfuntimes game starts it sends a message to <code>happyfuntimes.net</code> saying &quot;hey! I started a game.
+My local ip address is <ipaddress>&quot;. That <code>&lt;ipaddress&gt;</code> is the <em>local</em> ip address. The one we looked up above.
+It&#39;s only a useful address for computers using the same router to talk to each other.</p>
+<p>happyfuntimes.net sees the message. It also sees your router&#39;s public IP address. Your router&#39;s public IP
+address is the address computers on the internet use to talk to your router and hence the machines
+connected to your router. Let&#39;s pretend your router&#39;s public ip address is <code>12.34.56.78</code>.
+happyfuntimes.net then records that there is a game running at local ip address <code>171.16.1.191</code>
+on a machine at public ip address <code>12.34.56.78</code>.</p>
+<p>Now a user who&#39;s phone is connected to the same router goes to happyfuntimes.net. Happyfuntimes.net sees
+that this phone is also from the same router&#39;s public ip address. In this case <code>12.34.56.78</code>. So it sees there is
+a game associated with that public ip address of <code>12.34.56.78</code> and so it tells the phone <code>go to http://171.16.1.191:18679</code>.</p>
+<p>Once that is done happyfuntimes.net is out of the loop. The phone is now talking directy to the game and the
+game to the phone.</p>
+<h3 id="troubleshooting-happyfuntimes-net">Troubleshooting happyfuntimes.net</h3>
+<p>Reading the section above there are things that can go wrong. If the router gives the computer and the phone
+different public IP addresses then happyfuntimes.net will not find any maching ip address to direct the phone
+to connect to.</p>
+<p>You can see what happyfuntimes.net thinks your public IP address is by typing this into your browser</p>
+<pre><code>http://happyfuntimes.net?verbose=true&amp;go=false
+</code></pre><p>Do this on <strong>both</strong> your computer <em>and</em> your phone. You will get a list of numbers on the screen. Example</p>
+<pre><code>checking: http://happyfuntimes.net/api/getgames2
+hft response: {&quot;gameIps&quot;:[],&quot;publicIps&quot;:[&quot;12.34.56.78&quot;]}
+</code></pre><p>One of the public IP addresses (there may be more than one) on the phone and the computer must match.
+If they do not match then happyfuntimes can not tell your computer and your phone are on the same network.
+Either the are actually <em>not</em> on the same network, verify that they are. Or, your router is reporting different
+ip addresses for different devices in which case you&#39;ll need to configure your router or use
+a different one or tell your users to type the entire local ip address into their phones.</p>
+<h3 id="ipv6">IPv6</h3>
+<p>IPv6 uses different and longer numbers. If you are on an IPv6 network then if you run the commands above
+you might see something like this</p>
+<ul>
+<li><p>On the computer</p>
+<pre><code>checking: http://happyfuntimes.net/api/getgames2
+hft response: {&quot;gameIps&quot;:[],&quot;publicIps&quot;:[&quot;2601:204:c702:5f87:3d3e:d184:f486:1e8a&quot;]}
+</code></pre></li>
+<li><p>On the phone:</p>
+<pre><code>checking: http://happyfuntimes.net/api/getgames2
+hft response: {&quot;gameIps&quot;:[],&quot;publicIps&quot;:[&quot;2601:204:c702:5f87:c541:9c94:3c2c:7d45&quot;]}
+</code></pre></li>
+</ul>
+<p>For IPv6 what&#39;s generally important is that the first 12-24 numbers match. The last few should
+not matter. You&#39;ll notice above the phone and the computer&#39;s first 15 numbers match (<code>2601:204:c702:5f87</code>).</p>
+<p>To check that your phone can connect using IPv6 you can first try it&#39;s public IPv6 address by
+typing for example (using the number above)</p>
+<pre><code> http://[2601:204:c702:5f87:3d3e:d184:f486:1e8a]:18679
+</code></pre><p>If that does not work you can try typing your computer&#39;s local IPv6 address. Use the example above
+for <code>ipconfig</code> (windows) or <code>ifconfig</code> (macos/linux). Find your IPv6 address and type that in
+in the format <code>http://[IPv6address]:18679</code></p>
+<p>You can also try the ping IPv6 addresses with the tools mentioned above.</p>
+<h3 id="debugging-further">Debugging further</h3>
+<p>If you run your game and then go to the webpages mentioned above the <code>gameIps:[]</code> section
+should list the local addresses happyfuntimes returns for games that match the public ip address</p>
+<h4 id="unity">Unity</h4>
+<p>If you&#39;re using Unity you can enable debugging, in this case from the menus pick
+<code>Window-&gt;HappyFunTimes-&gt;HappyFunTimes Settings</code>.</p>
+<p>In the debug area type <code>HFTSite</code></p>
+<div style="text-align: center;">
+  <img src="unity/images/debug-setting.png" />
+</div>
+
+<p>Now run the game. You should see a message like this in the console.</p>
+<div style="text-align: center;">
+  <img src="unity/images/hftsite-console.png" />
+</div>
+
+<p>The first message shows what the happyfuntimes unity plugin reported to happyfuntimes.net.
+These are the local IP addresses.</p>
+<p>The second message shows what those local ipaddress and what public ipaddress were associated
+with them.</p>
+<h4 id="electron-hft-command-line">Electron / hft command line</h4>
+<p>You should be able to tell happyfuntimes which local IP address to send by using <code>--address=ipaddress</code></p>
 
       <div class="docs-footer">
         <div>Questions? <a href="http://stackoverflow.com/questions/tagged/happyfuntimes">Ask on stackoverflow</a>.</div>
