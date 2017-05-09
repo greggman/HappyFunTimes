@@ -52,14 +52,18 @@ the address of the computer running the game. For example looking at the windows
 above its ip address is `171.16.1.191` so you'd type `http://171.16.1.191:18679` into your
 phone.
 
-If the phone does NOT connect to game one of 2 things are wrong
+If the phone does NOT connect to game one of 3 things are wrong
 
-1.  If you are using Unity then one possiblity is  the path to the controller in the happyfuntimes options
+1.  Your phone is not actually on the same network
+
+    Double check.
+
+2.  If you are using Unity then one possiblity is the path to the controller in the happyfuntimes options
     is not set correctly
 
     See [Unity3D HappyFunTimes Options](unity/happyfuntimes-options.html#Controller-Filename)
 
-2.  Your router is not configured correctly
+3.  Your router is not allowing devices to talk to each other.
 
     Generally home internet routers let all devices connected to them to talk to each other.
     On the other hand corporate networks, university and school networks, and internet cafe networks
@@ -103,7 +107,7 @@ that this phone is also from the same router's public ip address. In this case `
 a game associated with that public ip address of `12.34.56.78` and so it tells the phone `go to http://171.16.1.191:18679`.
 
 Once that is done happyfuntimes.net is out of the loop. The phone is now talking directy to the game and the
-game to the phone.
+game to the phone just as if you had typed `http://171.16.1.191:18679` directly into the phone's browser.
 
 ### Troubleshooting happyfuntimes.net
 
@@ -128,7 +132,7 @@ a different one or tell your users to type the entire local ip address into thei
 
 ### IPv6
 
-IPv6 uses different and longer numbers. If you are on an IPv6 network then if you run the commands above
+IPv6 uses different and longer numbers. If you are on an IPv6 network then if you go to the web pages above
 you might see something like this
 
 *   On the computer
@@ -142,15 +146,16 @@ you might see something like this
         hft response: {"gameIps":[],"publicIps":["2601:204:c702:5f87:c541:9c94:3c2c:7d45"]}
 
 For IPv6 what's generally important is that the first 12-24 numbers match. The last few should
-not matter. You'll notice above the phone and the computer's first 15 numbers match (`2601:204:c702:5f87`).
+not matter. You'll notice above the phone's and the computer's first 15 numbers match (`2601:204:c702:5f87`).
 
-To check that your phone can connect using IPv6 you can first try your computer's public IPv6 address by
+To check that your phone can connect using IPv6 you can try your computer's public IPv6 address by
 typing for example (using the number above).
 
      http://[2601:204:c702:5f87:3d3e:d184:f486:1e8a]:18679
 
-If that does not work you can try typing your computer's local IPv6 address. Use the example above
-for `ipconfig` (windows) or `ifconfig` (macos/linux). Find your IPv6 address and type that in
+If that does not work you can try typing your computer's local IPv6 address. With IPv6 isn't
+not common to have a local address. Local addresses start with `FC00`. Use the examples above
+for `ipconfig` (windows) or `ifconfig` (macos/linux). Find you have a local IPv6 address and type that in
 in the format `http://[IPv6address]:18679`
 
 You can also try the ping IPv6 addresses with the tools mentioned above.
@@ -158,7 +163,7 @@ You can also try the ping IPv6 addresses with the tools mentioned above.
 ### Debugging further
 
 If you run your game and then go to the webpages mentioned above the `gameIps:[]` section
-should list the local addresses happyfuntimes returns for games that match the public ip address
+should list the local addresses happyfuntimes returns for games that match the public ip address.
 
 #### Unity
 
@@ -185,7 +190,10 @@ with them.
 
 #### Electron / hft command line
 
-You should be able to tell happyfuntimes which local IP address to send by using `--address=ipaddress`
+You should be able to tell happyfuntimes which local IP address to send by using `--address=ipaddress`.
+By default happyfuntimes uses all local ip addresses. It's not common to have more than one but
+if you have complex networking or run VMs you might have more than one.
+
 
 
 
