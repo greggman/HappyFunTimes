@@ -144,8 +144,8 @@ you might see something like this
 For IPv6 what's generally important is that the first 12-24 numbers match. The last few should
 not matter. You'll notice above the phone and the computer's first 15 numbers match (`2601:204:c702:5f87`).
 
-To check that your phone can connect using IPv6 you can first try it's public IPv6 address by
-typing for example (using the number above)
+To check that your phone can connect using IPv6 you can first try your computer's public IPv6 address by
+typing for example (using the number above).
 
      http://[2601:204:c702:5f87:3d3e:d184:f486:1e8a]:18679
 
