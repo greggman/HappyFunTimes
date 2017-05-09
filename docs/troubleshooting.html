@@ -108,13 +108,16 @@ that address.</p>
 the address of the computer running the game. For example looking at the windows machine
 above its ip address is <code>171.16.1.191</code> so you&#39;d type <code>http://171.16.1.191:18679</code> into your
 phone.</p>
-<p>If the phone does NOT connect to game one of 2 things are wrong</p>
+<p>If the phone does NOT connect to game one of 3 things are wrong</p>
 <ol>
-<li><p>If you are using Unity then one possiblity is  the path to the controller in the happyfuntimes options
+<li><p>Your phone is not actually on the same network</p>
+<p>Double check.</p>
+</li>
+<li><p>If you are using Unity then one possiblity is the path to the controller in the happyfuntimes options
 is not set correctly</p>
 <p>See <a href="unity/happyfuntimes-options.html#Controller-Filename">Unity3D HappyFunTimes Options</a></p>
 </li>
-<li><p>Your router is not configured correctly</p>
+<li><p>Your router is not allowing devices to talk to each other.</p>
 <p>Generally home internet routers let all devices connected to them to talk to each other.
 On the other hand corporate networks, university and school networks, and internet cafe networks
 often do <strong>not</strong> let devices on the same network talk to each other.</p>
@@ -147,7 +150,7 @@ on a machine at public ip address <code>12.34.56.78</code>.</p>
 that this phone is also from the same router&#39;s public ip address. In this case <code>12.34.56.78</code>. So it sees there is
 a game associated with that public ip address of <code>12.34.56.78</code> and so it tells the phone <code>go to http://171.16.1.191:18679</code>.</p>
 <p>Once that is done happyfuntimes.net is out of the loop. The phone is now talking directy to the game and the
-game to the phone.</p>
+game to the phone just as if you had typed <code>http://171.16.1.191:18679</code> directly into the phone&#39;s browser.</p>
 <h3 id="troubleshooting-happyfuntimes-net">Troubleshooting happyfuntimes.net</h3>
 <p>Reading the section above there are things that can go wrong. If the router gives the computer and the phone
 different public IP addresses then happyfuntimes.net will not find any maching ip address to direct the phone
@@ -163,7 +166,7 @@ Either the are actually <em>not</em> on the same network, verify that they are. 
 ip addresses for different devices in which case you&#39;ll need to configure your router or use
 a different one or tell your users to type the entire local ip address into their phones.</p>
 <h3 id="ipv6">IPv6</h3>
-<p>IPv6 uses different and longer numbers. If you are on an IPv6 network then if you run the commands above
+<p>IPv6 uses different and longer numbers. If you are on an IPv6 network then if you go to the web pages above
 you might see something like this</p>
 <ul>
 <li><p>On the computer</p>
@@ -176,17 +179,18 @@ hft response: {&quot;gameIps&quot;:[],&quot;publicIps&quot;:[&quot;2601:204:c702
 </code></pre></li>
 </ul>
 <p>For IPv6 what&#39;s generally important is that the first 12-24 numbers match. The last few should
-not matter. You&#39;ll notice above the phone and the computer&#39;s first 15 numbers match (<code>2601:204:c702:5f87</code>).</p>
-<p>To check that your phone can connect using IPv6 you can first try your computer&#39;s public IPv6 address by
+not matter. You&#39;ll notice above the phone&#39;s and the computer&#39;s first 15 numbers match (<code>2601:204:c702:5f87</code>).</p>
+<p>To check that your phone can connect using IPv6 you can try your computer&#39;s public IPv6 address by
 typing for example (using the number above).</p>
 <pre><code> http://[2601:204:c702:5f87:3d3e:d184:f486:1e8a]:18679
-</code></pre><p>If that does not work you can try typing your computer&#39;s local IPv6 address. Use the example above
-for <code>ipconfig</code> (windows) or <code>ifconfig</code> (macos/linux). Find your IPv6 address and type that in
+</code></pre><p>If that does not work you can try typing your computer&#39;s local IPv6 address. With IPv6 isn&#39;t
+not common to have a local address. Local addresses start with <code>FC00</code>. Use the examples above
+for <code>ipconfig</code> (windows) or <code>ifconfig</code> (macos/linux). Find you have a local IPv6 address and type that in
 in the format <code>http://[IPv6address]:18679</code></p>
 <p>You can also try the ping IPv6 addresses with the tools mentioned above.</p>
 <h3 id="debugging-further">Debugging further</h3>
 <p>If you run your game and then go to the webpages mentioned above the <code>gameIps:[]</code> section
-should list the local addresses happyfuntimes returns for games that match the public ip address</p>
+should list the local addresses happyfuntimes returns for games that match the public ip address.</p>
 <h4 id="unity">Unity</h4>
 <p>If you&#39;re using Unity you can enable debugging, in this case from the menus pick
 <code>Window-&gt;HappyFunTimes-&gt;HappyFunTimes Settings</code>.</p>
@@ -205,7 +209,9 @@ These are the local IP addresses.</p>
 <p>The second message shows what those local ipaddress and what public ipaddress were associated
 with them.</p>
 <h4 id="electron-hft-command-line">Electron / hft command line</h4>
-<p>You should be able to tell happyfuntimes which local IP address to send by using <code>--address=ipaddress</code></p>
+<p>You should be able to tell happyfuntimes which local IP address to send by using <code>--address=ipaddress</code>.
+By default happyfuntimes uses all local ip addresses. It&#39;s not common to have more than one but
+if you have complex networking or run VMs you might have more than one.</p>
 
       <div class="docs-footer">
         <div>Questions? <a href="http://stackoverflow.com/questions/tagged/happyfuntimes">Ask on stackoverflow</a>.</div>
