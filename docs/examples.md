@@ -85,7 +85,7 @@ A Robotron like game.
 This demonstrates dual 8pad emulation on **controller**. In `haveServer:false` mode and if using
 a desktop PC as a **controller** ASWD are the move dpad and cursor keys the fire dpad.
 
-[JumpJump]((http://github.com/greggman/hft-jumpjump))
+[JumpJump]((http://github.com/greggman/hft-jumpjump)
 --------
 
 ![JumpJump](../images/scene-00-jumpjump.jpg)
@@ -95,7 +95,7 @@ A simple platformer. Players try to get the one coin.
 [Boomboom]((http://github.com/greggman/hft-boomboom)
 --------
 
-![Boomboom](../image/scene-04-boomboom.jpg))
+![Boomboom](../image/scene-04-boomboom.jpg)
 
 A bomberman like game. One thing it shows over other games is round based control. Players
 joining the game have to wait for the current round to finish before they are added.
@@ -108,44 +108,13 @@ Orient a 3d ship to shoot a ball.
 Demonstrates using device orientation. The game is nearly impossible to play but it least
 demonstrates using device orientation as well as three.js.
 
-[JamJam](http://github.com/greggman/hft-jamjam)
+[Simple-no-electron](http://github.com/greggman/hft-simple-no-electron)
 ------
 
-![JamJam](../images/scene-02-jamjam.jpg)
+Same as simple above but without electron.
 
-A collective drum sequencer. Each player has one drum they can set the sequence for.
-All the machines are synced using a `SyncedClock`. Each player must turn on the volume
-on their phone so everyone can hear their drum.
+## Unity
 
-Shows using the synced clock. Shows how to sync using the Web Audio API.
+For Unity examples download [the HappyFunTimes plugin](https://www.assetstore.unity3d.com/en/#!/content/19668).
 
-[UnityCharacterExample](http://github.com/greggman/hft-unitycharacterexample)
----------------------
 
-![UnityCharacterExample](../images/scene-03-unity.jpg)
-
-For each **controller** that connects to the **game** the game spawns a 3d unity character.
-The character is controlled by a *3rd person character contoller** which is a modified
-version of the standard 3rd person character contoller included with unity. The only changes
-are passing in a `NetPlayer` and then using input from the NetPlayer to control the movement
-of the character instead of Unity's `Input` object.
-
-This shows how to spawn unity prefabs when a **controller** connects to the **game**.
-How to pass a `NetPlayer` object into the spawned prefab. Also how to use the HappyFunTimes
-unity parts from UnityScript (or as Unity wrongly used to call it, JavaScript).
-
-First, See **Installation** in the [Unity Docs](unitydocs.md)
-
-Now run the game. If you see an error in the console maybe you didn't start the
-relaysever. (See above)
-
-Now connect a browser `http://localhost:18679`.
-
-[UnitySimpleExample](http://github.com/greggman/hft-unitysimpleexample)
-------------------
-
-This is the same as the *Simple* example above and users the same **controller**. Follow the
-instructions above for the **UnityCharacterExample** but open the scene
-Unity3D/Examples/Scenes/HappyFunTimesSimpleExample
-
-This one shows using HappyFunTimes in C# with Unity.
