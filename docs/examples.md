@@ -69,7 +69,7 @@ A simple platformer. Players try to get the one coin.
 [Boomboom]((http://github.com/greggman/hft-boomboom)
 --------
 
-![Boomboom](../image/scene-04-boomboom.jpg)
+![Boomboom](../images/scene-04-boomboom.jpg)
 
 A bomberman like game. One thing it shows over other games is round based control. Players
 joining the game have to wait for the current round to finish before they are added.
