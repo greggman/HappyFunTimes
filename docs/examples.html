@@ -94,16 +94,6 @@ sent is <code>setName</code> in both directions, controller to game, game to con
 and <code>false</code> when they finish.</p>
 <p>On the <strong>controller</strong> side this is mostly handled by shared code <code>PlayerNameManager</code> (playername.js).
 On the <strong>game</strong> this is handled by each game directly.</p>
-<h2 id="globals">Globals</h2>
-<p>Most of the <strong>game</strong>s and <strong>controllers</strong>s have a <code>globals</code> object. This object&#39;s settings can be set
-in the URL with something like</p>
-<pre><code>http://addressofgame/examples/game/gameview.html?settings={name:value,name:value}
-</code></pre><p>Some useful examples are</p>
-<pre><code>...?settings={debug:true,haveServer:false}
-</code></pre><p>On some games and some controllers <code>debug:true</code> will turn on onscreen status. On some games
-<code>haveServer:false</code> will make the game run in a local mode where keyboard keys will control one or
-more players.
-This can be very useful for quick iteration.</p>
 <h2 id="-simple-http-github-com-greggman-hft-simple-"><a href="http://github.com/greggman/hft-simple">Simple</a></h2>
 <p>Basically the same as SuperSimple except uses normalized cooridinates and uses a canvas element to draw
 the game rather than HTML5 elements.</p>
@@ -112,10 +102,6 @@ the game rather than HTML5 elements.</p>
 <p>A space wars style game. The first 6 players battle it out. If there are more than 6 players they wait
 in the <em>launch</em> queue. They collectively control a ghost ship they can use to try to kill other players
 so they can get back into the game.</p>
-<h2 id="-shootshoot-http-github-com-greggman-hft-shootshoot-"><a href="http://github.com/greggman/hft-shootshoot">ShootShoot</a></h2>
-<p>A Robotron like game.</p>
-<p>This demonstrates dual 8pad emulation on <strong>controller</strong>. In <code>haveServer:false</code> mode and if using
-a desktop PC as a <strong>controller</strong> ASWD are the move dpad and cursor keys the fire dpad.</p>
 <h2 id="-jumpjump-http-github-com-greggman-hft-jumpjump-"><a href="(http://github.com/greggman/hft-jumpjump">JumpJump</a></h2>
 <p><img src="../images/scene-00-jumpjump.jpg" alt="JumpJump"></p>
 <p>A simple platformer. Players try to get the one coin.</p>

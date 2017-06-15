@@ -44,24 +44,6 @@ and `false` when they finish.
 On the **controller** side this is mostly handled by shared code `PlayerNameManager` (playername.js).
 On the **game** this is handled by each game directly.
 
-Globals
--------
-
-Most of the **game**s and **controllers**s have a `globals` object. This object's settings can be set
-in the URL with something like
-
-    http://addressofgame/examples/game/gameview.html?settings={name:value,name:value}
-
-Some useful examples are
-
-    ...?settings={debug:true,haveServer:false}
-
-On some games and some controllers `debug:true` will turn on onscreen status. On some games
-`haveServer:false` will make the game run in a local mode where keyboard keys will control one or
-more players.
-This can be very useful for quick iteration.
-
-
 [Simple](http://github.com/greggman/hft-simple)
 ------
 
@@ -76,14 +58,6 @@ the game rather than HTML5 elements.
 A space wars style game. The first 6 players battle it out. If there are more than 6 players they wait
 in the *launch* queue. They collectively control a ghost ship they can use to try to kill other players
 so they can get back into the game.
-
-[ShootShoot](http://github.com/greggman/hft-shootshoot)
-----------
-
-A Robotron like game.
-
-This demonstrates dual 8pad emulation on **controller**. In `haveServer:false` mode and if using
-a desktop PC as a **controller** ASWD are the move dpad and cursor keys the fire dpad.
 
 [JumpJump]((http://github.com/greggman/hft-jumpjump)
 --------
