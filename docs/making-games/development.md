@@ -6,7 +6,6 @@ Description: Making games with HappyFunTimes
 *   [Setting up for Development](#setting-up-for-development)
     * [Quick Setup](#quick-setup)
     * [Detailed Guide](#detailed-guide)
-*   [Running Games during Development](#running-games-during-development)
 
 ---
 
