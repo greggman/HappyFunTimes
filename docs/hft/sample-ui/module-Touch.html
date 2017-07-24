@@ -1,0 +1,808 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Module: Touch</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Module: Touch</h1>
+
+    
+
+
+
+
+<section>
+
+<header>
+    
+        
+            
+        
+    
+</header>
+
+<article>
+    <div class="container-overview">
+    
+        
+            <div class="description"><p>Various functions for touch input.</p></div>
+        
+
+        
+            
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="sample-ui.js.html">sample-ui.js</a>, <a href="sample-ui.js.html#line3447">line 3447</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+    
+    </div>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+        <h3 class="subsection-title">Methods</h3>
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id=".setupButtons"><span class="type-signature">(static) </span>setupButtons<span class="signature">(options)</span><span class="type-signature"></span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    <p>Sets up touch buttons.</p>
+<p>For example</p>
+<pre class="prettyprint source"><code>var $ = document.getElementById.bind(document);
+
+Touch.setupButtons({
+  inputElement: $(&quot;buttons&quot;),
+  buttons: [
+    { element: $(&quot;abuttoninput&quot;), callback: handleAbutton, },
+    { element: $(&quot;avatarinput&quot;),  callback: handleShow, },
+  ],
+});</code></pre><p>The code above sets up 2 buttons. The HTML elements &quot;abuttoninput&quot; and &quot;avatarinput&quot;.
+The actual touch input events come from an HTML element &quot;buttons&quot; which is an div
+that covers the entire display.</p>
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>options</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="module-Touch.Buttons.html#~Options">module:Touch.Buttons~Options</a></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="sample-ui.js.html">sample-ui.js</a>, <a href="sample-ui.js.html#line3787">line 3787</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id=".setupVirtualDPads"><span class="type-signature">(static) </span>setupVirtualDPads<span class="signature">(options)</span><span class="type-signature"></span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    <p>Simulates N virtual dpads using touch events</p>
+<p>For each change in direction callback will be
+called with an event info where</p>
+<pre class="prettyprint source"><code>pad = (index of pad)
+direction =
+
+
+   2     -1 = no touch
+ 3 | 1
+  \|/
+4--+--0
+  /|\
+ 5 | 7
+   6
+
+dx   = -1, 0, 1
+dy   = -1, 0, 1
+bits = 1 for right, 2 for left, 4 for up, 8 for down</code></pre><p>Note: this matches trig functions so you can do this</p>
+<pre class="prettyprint source"><code>if (dir >= 0) {
+  var angle = dir * Math.PI / 4;
+  var dx    = Math.cos(angle);
+  var dy    = Math.sin(angle);
+}</code></pre><p>for +y up (ie, normal for 3d)</p>
+<p>In 2d you'd probably want to flip dy</p>
+<pre class="prettyprint source"><code>if (dir >= 0) {
+  var angle =  dir * Math.PI / 4;
+  var dx    =  Math.cos(angle);
+  var dy    = -Math.sin(angle);
+}</code></pre><p>The default way of figuring out the direction is to take the angle from the center to
+the place of touch, compute an angle, divide a circle into octants, which ever octant is the direction</p>
+<p>If axisSize is passed in then instead the space is divided into 3x3 boxes. Which ever box the finger is
+in is the direction. axisSize determines the width height of the axis boxes</p>
+<pre class="prettyprint source"><code>     | ax |
+     | is |
+-----+----+-----
+     |    | axis
+-----+----+-----
+     |    |
+     |    |</code></pre><p>if <code>divisions: 4</code> is passed in then instead of getting 8 directions decided
+by octant you get 4 decided by quadrant as in</p>
+<pre class="prettyprint source"><code>       2
+    \  |  /
+     \ | /
+4 &lt;---   ---> 0
+     / | \
+    /  V  \
+       6</code></pre>
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>options</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="module-Touch.TouchDPad.html#~Options">module:Touch.TouchDPad~Options</a></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="sample-ui.js.html">sample-ui.js</a>, <a href="sample-ui.js.html#line3545">line 3545</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+    
+
+    
+        <h3 class="subsection-title">Type Definitions</h3>
+
+        
+                
+<h4 class="name" id=".ButtonInfo">ButtonInfo</h4>
+
+
+
+
+
+
+    <h5>Type:</h5>
+    <ul>
+        <li>
+            
+<span class="param-type">Object</span>
+
+
+        </li>
+    </ul>
+
+
+
+
+
+    <h5 class="subsection-title">Properties:</h5>
+
+    
+
+<table class="props">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>element</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">HTMLElement</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>element that represents area of buttton (need not be visible)</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>callback</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">callback</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>function to call when button is pressed or released</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="sample-ui.js.html">sample-ui.js</a>, <a href="sample-ui.js.html#line3752">line 3752</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+            
+                
+<h4 class="name" id=".PadInfo">PadInfo</h4>
+
+
+
+
+
+
+    <h5>Type:</h5>
+    <ul>
+        <li>
+            
+<span class="param-type">Object</span>
+
+
+        </li>
+    </ul>
+
+
+
+
+
+    <h5 class="subsection-title">Properties:</h5>
+
+    
+
+<table class="props">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>referenceElement</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">HTMLElement</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>element that is reference for position of pad</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>offsetX</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>offset from left of reference element to center of pad</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>offsetY</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>offset from top of reference element to center of pad</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="sample-ui.js.html">sample-ui.js</a>, <a href="sample-ui.js.html#line3457">line 3457</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+            
+    
+
+    
+</article>
+
+</section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-CommonUI.html">CommonUI</a></li><li><a href="module-Input.html">Input</a></li><li><a href="module-IO.html">IO</a></li><li><a href="module-Misc.html">Misc</a></li><li><a href="module-MobileHacks.html">MobileHacks</a></li><li><a href="module-Strings.html">Strings</a></li><li><a href="module-Touch.html">Touch</a></li></ul><h3>Classes</h3><ul><li><a href="Cookie.html">Cookie</a></li><li><a href="DPad.html">DPad</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.3</a> on Mon Jul 24 2017 11:36:27 GMT+0900 (JST)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

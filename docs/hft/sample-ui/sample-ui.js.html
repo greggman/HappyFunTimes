@@ -1,0 +1,3975 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: sample-ui.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: sample-ui.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>(function webpackUniversalModuleDefinition(root, factory) {
+	if(typeof exports === 'object' &amp;&amp; typeof module === 'object')
+		module.exports = factory();
+	else if(typeof define === 'function' &amp;&amp; define.amd)
+		define([], factory);
+	else if(typeof exports === 'object')
+		exports["sampleUI"] = factory();
+	else
+		root["sampleUI"] = factory();
+})(this, function() {
+return /******/ (function(modules) { // webpackBootstrap
+/******/ 	// The module cache
+/******/ 	var installedModules = {};
+
+/******/ 	// The require function
+/******/ 	function __webpack_require__(moduleId) {
+
+/******/ 		// Check if module is in cache
+/******/ 		if(installedModules[moduleId])
+/******/ 			return installedModules[moduleId].exports;
+
+/******/ 		// Create a new module (and put it into the cache)
+/******/ 		var module = installedModules[moduleId] = {
+/******/ 			exports: {},
+/******/ 			id: moduleId,
+/******/ 			loaded: false
+/******/ 		};
+
+/******/ 		// Execute the module function
+/******/ 		modules[moduleId].call(module.exports, module, module.exports, __webpack_require__);
+
+/******/ 		// Flag the module as loaded
+/******/ 		module.loaded = true;
+
+/******/ 		// Return the exports of the module
+/******/ 		return module.exports;
+/******/ 	}
+
+
+/******/ 	// expose the modules object (__webpack_modules__)
+/******/ 	__webpack_require__.m = modules;
+
+/******/ 	// expose the module cache
+/******/ 	__webpack_require__.c = installedModules;
+
+/******/ 	// __webpack_public_path__
+/******/ 	__webpack_require__.p = "";
+
+/******/ 	// Load entry module and return exports
+/******/ 	return __webpack_require__(0);
+/******/ })
+/************************************************************************/
+/******/ ([
+/* 0 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [
+	    __webpack_require__(1),
+	    __webpack_require__(13),
+	    __webpack_require__(5),
+	    __webpack_require__(15),
+	    __webpack_require__(16),
+	    __webpack_require__(9),
+	    __webpack_require__(10),
+	    __webpack_require__(17),
+	    __webpack_require__(18),
+	  ], __WEBPACK_AMD_DEFINE_RESULT__ = function (
+	    commonUI,
+	    PlayerNameManager,
+	    dialog,
+	    DPad,
+	    input,
+	    misc,
+	    mobileHacks,
+	    strings,
+	    touch) {
+	  return {
+	    commonUI: commonUI,
+	    PlayerNameManager: PlayerNameManager,
+	    dialog: dialog,
+	    DPad: DPad,
+	    input: input,
+	    misc: misc,
+	    mobileHacks: mobileHacks,
+	    strings: strings,
+	    touch: touch,
+	  };
+	}.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__), __WEBPACK_AMD_DEFINE_RESULT__ !== undefined &amp;&amp; (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
+
+
+
+/***/ },
+/* 1 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*
+	 * Copyright 2014, Gregg Tavares.
+	 * All rights reserved.
+	 *
+	 * Redistribution and use in source and binary forms, with or without
+	 * modification, are permitted provided that the following conditions are
+	 * met:
+	 *
+	 *     * Redistributions of source code must retain the above copyright
+	 * notice, this list of conditions and the following disclaimer.
+	 *     * Redistributions in binary form must reproduce the above
+	 * copyright notice, this list of conditions and the following disclaimer
+	 * in the documentation and/or other materials provided with the
+	 * distribution.
+	 *     * Neither the name of Gregg Tavares. nor the names of its
+	 * contributors may be used to endorse or promote products derived from
+	 * this software without specific prior written permission.
+	 *
+	 * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+	 * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+	 * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+	 * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+	 * OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+	 * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+	 * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+	 * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+	 * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+	 * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+	 * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+	 */
+	"use strict";
+
+	/**
+	 * Implements the common UI parts of HappyFunTimes for
+	 * contollers.
+	 * @module CommonUI
+	 */
+	!(__WEBPACK_AMD_DEFINE_ARRAY__ = [
+	    __webpack_require__(3),
+	    __webpack_require__(8),
+	    __webpack_require__(4),
+	    __webpack_require__(5),
+	    __webpack_require__(6),
+	    __webpack_require__(2),
+	    __webpack_require__(9),
+	    __webpack_require__(10),
+	    __webpack_require__(11),
+	    __webpack_require__(12),
+	  ], __WEBPACK_AMD_DEFINE_RESULT__ = function(
+	    IO,
+	    HFTSplash,
+	    Cookie,
+	    dialog,
+	    fullScreen,
+	    logger,
+	    misc,
+	    mobilehacks,
+	    orientation,
+	    PlayerNameHandler) {
+
+	  var $ = function(id) {
+	    return document.getElementById(id);
+	  };
+
+	  var g = {
+	    logger: new logger.NullLogger(),
+	  };
+	  var s = {
+	  };
+
+	  var requireLandscapeHTML = [
+	      '&lt;div id="hft-portrait" class="hft-fullsize hft-fullcenter">',
+	      '  &lt;div class="hft-portrait-rot90">                         ',
+	      '    &lt;div class="hft-instruction">                          ',
+	      '      Turn the Screen                                      ',
+	      '    &lt;/div>                                                 ',
+	      '    &lt;div class="hft-xlarge">                               ',
+	      '      &amp;#x21ba;                                             ',
+	      '    &lt;/div>                                                 ',
+	      '  &lt;/div>                                                   ',
+	      '&lt;/div>                                                     ',
+	  ].join("\n");
+	  var requirePortraitHTML = [
+	    '&lt;div id="hft-landscape" class="hft-fullsize hft-fullcenter">',
+	    '  &lt;div class="hft-landscape-rot90">                         ',
+	    '    &lt;div class="hft-instruction">                           ',
+	    '      Turn the Screen                                       ',
+	    '    &lt;/div>                                                  ',
+	    '    &lt;div class="hft-xlarge">                                ',
+	    '      &amp;#x21bb;                                              ',
+	    '    &lt;/div>                                                  ',
+	    '  &lt;/div>                                                    ',
+	    '&lt;/div>                                                      ',
+	  ].join("\n");
+	  var orientationDiv;
+
+	  //function isSemiValidOrientation(o) {
+	  //  o = o || "";
+	  //  return o.indexOf("portrait") >= 0 || o.indexOf("landscape") >= 0;
+	  //}
+
+	  function setOrientationHTML(desiredOrientation) {
+	    desiredOrientation = desiredOrientation || "";
+	    if (!orientationDiv) {
+	      orientationDiv = document.createElement("div");
+	      //document.body.appendChild(orientationDiv);
+	      var h = document.getElementById("hft-menu");
+	      h.parentNode.insertBefore(orientationDiv, h);
+	    }
+	    if (desiredOrientation.indexOf("portrait") >= 0) {
+	      orientationDiv.innerHTML = requirePortraitHTML;
+	    } else if (desiredOrientation.indexOf("landscape") >= 0) {
+	      orientationDiv.innerHTML = requireLandscapeHTML;
+	    } else {
+	      orientationDiv.innerHTML = "";
+	    }
+	  }
+
+	  function resetOrientation() {
+	    if (fullScreen.isFullScreen()) {
+	      orientation.set(g.orientation);
+	    }
+	  }
+
+	  /**
+	   * Sets the orientation of the screen. Doesn't work on desktop
+	   * nor iOS unless in app.
+	   * @param {string} [desiredOrientation] The orientation. Valid options are
+	   *
+	   *     "portrait-primary"    // normal way people hold phones
+	   *     "portrait-secondary"  // upsidedown
+	   *     "landscape-primary"   // phone turned clockwise 90 degrees from normal
+	   *     "landscape-secondary" // phone turned counter-clockwise 90 degrees from normal
+	   *     "none" (or undefined) // unlocked
+	   * @param {bool} [orientationOptional]
+	   */
+	  function setOrientation(desiredOrientation, orientationOptional) {
+	    g.orientation = desiredOrientation;
+	    if (orientation.canOrient()) {
+	      resetOrientation();
+	    } else {
+	      var orient = g.orientation;
+	      if (orientationOptional) {
+	        orient = "none";
+	      }
+	      setOrientationHTML(orient);
+	    }
+	  }
+
+	  function showRequireApp() {
+	    dialog.modal({
+	      title: "HappyFunTimes",
+	      msg: "This game requires the HappyFunTimes App&lt;br/>Please download it from your app store",
+	    }, function() {
+	      var ua = window.navigator.userAgent;
+	      if (ua.indexOf("iPhone") >= 0 ||
+	          ua.indexOf("iPad") >= 0) {
+	        misc.gotoIFrame("itms://itunes.apple.com/");
+	      } else if (ua.indexOf("Android") >= 0) {
+	        misc.gotoIFrame("market://details?id=com.greggman.HappyFunTimes");
+	      } else {
+	        showRequiredApp();
+	      }
+	    });
+	  }
+
+	  function showMenu(show) {
+	    var menuElement = $("hft-menu");
+	    menuElement.style.display = show ? "block" : "none";
+	  }
+
+	  /**
+	   * @typedef {Object} ControllerUI~Options
+	   * @property {callback} [connectFn] function to call when controller
+	   *           connects to HappyFunTimes
+	   * @property {callback} [disconnectFn] function to call when controller is
+	   *           disconncted from game.
+	   * @property {boolean} [debug] True displays a status and debug
+	   *           html element
+	   * @property {number} [numConsoleLines] number of lines to show for the debug console.
+	   * @property {string} [orienation] The orientation to set the phone. Only works on Android or the App. See {@link setOrientation}.
+	   * @property {boolean} [orientationOptional] Don't ask the user to orient the phone if their device does not support orientation
+	   * @property {boolean} [requireApp] If true and we're not in the app will present a dialog saying you must use the app
+	   * @memberOf module:CommonUI
+	   */
+
+	  /**
+	   * Sets up the standard UI for a happyFunTimes controller
+	   * (phone). Including handling being disconnected from the
+	   * current game and switching to new games as well as name
+	   * input and the gear menu.
+	   *
+	   * @param {GameClient} client The `GameClient` for the phone
+	   * @param {module:CommonUI.ControllerUI~Options} [options] the options
+	   * @memberOf module:CommonUI
+	   */
+	  var setupStandardControllerUI = function(client, options) {
+	    options = options || {};
+	    var settingsElement = $("hft-settings");
+	    var disconnectedElement = $("hft-disconnected");
+	    var touchStartElement = $("hft-touchstart");
+
+	    var menuElement = $("hft-menu");
+	    menuElement.addEventListener('click', function() {
+	      settingsElement.style.display = "block";
+	    }, false);
+	    menuElement.addEventListener('touchstart', function() {
+	      settingsElement.style.display = "block";
+	    }, false);
+
+	    showMenu(false);
+
+	    function makeHFTPingRequest(fn) {
+	      IO.sendJSON(window.location.href, {cmd: 'happyFunTimesPing'}, function(err, obj) {
+	        fn(err, obj);
+	      }, { timeout: 2000 });
+	    };
+
+	    // setup full screen support
+	    var requestFullScreen = function() {
+	      if (!fullScreen.isFullScreen()) {
+	        touchStartElement.removeEventListener('touchstart', requestFullScreen, false);
+	        touchStartElement.style.display = "none";
+	        fullScreen.requestFullScreen(document.body);
+	      }
+	    };
+
+	    var goFullScreenIfNotFullScreen = function() {
+	      if (fullScreen.isFullScreen()) {
+	        resetOrientation();
+	      } else {
+	        if (fullScreen.canGoFullScreen()) {
+	          touchStartElement.addEventListener('touchstart', requestFullScreen, false);
+	          touchStartElement.style.display = "block";
+	        }
+	      }
+	    };
+	    fullScreen.onFullScreenChange(document.body, goFullScreenIfNotFullScreen);
+
+	    if (mobilehacks.isMobile()) {
+	       goFullScreenIfNotFullScreen();
+	    }
+
+	    s.playerNameHandler = new PlayerNameHandler(client, $("hft-name"));
+
+	    $("hft-setname").addEventListener('click', function() {
+	      settingsElement.style.display = "none";
+	      s.playerNameHandler.startNameEntry();
+	    }, false);
+	    $("hft-restart").addEventListener('click', function() {
+	      window.location.reload();
+	    }, false);
+	    $("hft-back").addEventListener('click', function() {
+	      settingsElement.style.display = "none";
+	    });
+
+	//    $("hft-mainmenu").addEventListener('click', function() {
+	//      window.location.href = "/";
+	//    }, false);
+	//    $("hft-reload").addEventListener('click', function() {
+	//      window.location.reload();
+	//    });
+
+	    // This is not currently needed. The idea
+	    // was to show something else like "connecting"
+	    // until the user connected but that's mostly
+	    // pointless.
+	    client.addEventListener('connect', function() {
+	      disconnectedElement.style.display = "none";
+	      if (options.connectFn) {
+	        options.connectFn();
+	      }
+	    });
+
+	    client.addEventListener('disconnect', function() {
+	      disconnectedElement.style.display = "block";
+	      if (options.disconnectFn) {
+	        options.disconnectFn();
+	      }
+
+	      function waitForPing() {
+	        makeHFTPingRequest(function(err, obj) {
+	          if (err) {
+	            setTimeout(waitForPing, 1000);
+	            return;
+	          }
+	          window.location.href = "/";
+	        });
+	      }
+	      // give it a moment to recover
+	      setTimeout(waitForPing, 2000);
+
+	      // Maybe needed for app?
+	      // var redirCookie = new Cookie("redir");
+	      // var url = redirCookie.get() || "http://happyfuntimes.net";
+	      // console.log("goto: " + url);
+	      // window.location.href = url;
+	    });
+
+	    client.addEventListener('_hft_redirect_', function(data) {
+	      window.location.href = data.url;
+	    });
+
+	    setOrientation(options.orientation, options.orientationOptional);
+
+	    if (options.requireApp) {
+	      showRequireApp();
+	    }
+
+	    if (options.debug) {
+	      g.statusNode = document.createTextNode("");
+	      $("hft-status").appendChild(g.statusNode);
+	      var debugCSS = misc.findCSSStyleRule("#hft-debug");
+	      debugCSS.style.display = "block";
+
+	      g.logger = new logger.HTMLLogger($("hft-console"), options.numConsoleLines);
+	    }
+
+	    if (options.consoleTarget) {
+	      switch (options.consoleTarget.toLowerCase()) {
+	        case "html":
+	          g.logger = g.logger || new logger.HTMLLogger($("hft-console"), options.numConsoleLines);
+	          console.log = g.logger.log.bind(g.logger);
+	          console.error = g.logger.error.bind(g.logger);
+	          window.addEventListener('error', function(errorMsg, url, lineNo) {
+	             console.error(url, lineNo, errorMsg);
+	          });
+	          break;
+	        case "game":
+	          g.logger = new logger.GameLogger(client);
+	          console.log = g.logger.log.bind(g.logger);
+	          console.error = g.logger.error.bind(g.logger);
+	          window.addEventListener('error', function(errorMsg, url, lineNo) {
+	             console.error(url, lineNo, errorMsg);
+	          });
+	          break;
+	      }
+	      console.log("here");
+	    }
+	  };
+
+	  var askForNameOnce = function() {
+	    askForNameOnce = function() {};
+	    if (!s.playerNameHandler.isNameSet()) {
+	      s.playerNameHandler.startNameEntry();
+	    }
+	  };
+
+	  /**
+	   * Sets the content of the status element. Only visible of debug
+	   * is true.
+	   * @memberOf module:CommonUI
+	   * @param {string} str value to set the status
+	   */
+	  var setStatus = function(msg) {
+	    if (g.statusNode) {
+	      g.statusNode.nodeValue = msg;
+	    }
+	  };
+
+	  /**
+	   * Logs a msg to the HTML based console that is only visible
+	   * when debug = true.
+	   * @memberOf module:CommonUI
+	   * @param {string} str msg to add to log
+	   */
+	  var log = function(str) {
+	    g.logger.log(str);
+	  };
+
+	  /**
+	   * Logs an error to the HTML based console that is only visible
+	   * when debug = true.
+	   * @memberOf module:CommonUI
+	   * @param {string} str msg to add to log
+	   */
+	  var error = function(str) {
+	    g.logger.error(str);
+	  };
+
+	  return {
+	    askForNameOnce: askForNameOnce,
+	    log: log,
+	    error: error,
+	    setOrientation: setOrientation,
+	    setStatus: setStatus,
+	    setupStandardControllerUI: setupStandardControllerUI,
+	    showMenu: showMenu,
+	  };
+	}.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__), __WEBPACK_AMD_DEFINE_RESULT__ !== undefined &amp;&amp; (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
+
+
+
+
+
+/***/ },
+/* 2 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var __WEBPACK_AMD_DEFINE_RESULT__;/*
+	 * Copyright 2014, Gregg Tavares.
+	 * All rights reserved.
+	 *
+	 * Redistribution and use in source and binary forms, with or without
+	 * modification, are permitted provided that the following conditions are
+	 * met:
+	 *
+	 *     * Redistributions of source code must retain the above copyright
+	 * notice, this list of conditions and the following disclaimer.
+	 *     * Redistributions in binary form must reproduce the above
+	 * copyright notice, this list of conditions and the following disclaimer
+	 * in the documentation and/or other materials provided with the
+	 * distribution.
+	 *     * Neither the name of Gregg Tavares. nor the names of its
+	 * contributors may be used to endorse or promote products derived from
+	 * this software without specific prior written permission.
+	 *
+	 * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+	 * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+	 * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+	 * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+	 * OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+	 * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+	 * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+	 * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+	 * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+	 * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+	 * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+	 */
+
+	"use strict";
+
+	!(__WEBPACK_AMD_DEFINE_RESULT__ = function() {
+	  var NullLogger = function() {
+	  };
+
+	  NullLogger.prototype.log = function() {
+	  };
+
+	  NullLogger.prototype.error = function() {
+	  };
+
+	  var ConsoleLogger = function() {
+	  };
+
+	  ConsoleLogger.prototype.log = function() {
+	    console.log.apply(console, arguments);
+	  };
+
+	  ConsoleLogger.prototype.error = function() {
+	    console.error.apply(console, arguments);
+	  };
+
+	  var HTMLLogger = function(element, opt_maxLines) {
+	    this.container = element;
+	    this.maxLines = opt_maxLines || 10;
+	    this.lines = [];
+	  };
+
+	  HTMLLogger.prototype.addLine_ = function(msg, color) {
+	    var line;
+	    var text;
+	    if (this.lines.length &lt; this.maxLines) {
+	      line = document.createElement("div");
+	      text = document.createTextNode("");
+	      line.appendChild(text);
+	    } else {
+	      line = this.lines.shift();
+	      line.parentNode.removeChild(line);
+	      text = line.firstChild;
+	    }
+
+	    this.lines.push(line);
+	    text.nodeValue = msg;
+	    line.style.color = color;
+	    this.container.appendChild(line);
+	  };
+
+	  // FIX! or move to strings.js
+	  var argsToString = function(args) {
+	    var lastArgWasNumber = false;
+	    var numArgs = args.length;
+	    var strs = [];
+	    for (var ii = 0; ii &lt; numArgs; ++ii) {
+	      var arg = args[ii];
+	      if (arg === undefined) {
+	        strs.push('undefined');
+	      } else if (typeof arg === 'number') {
+	        if (lastArgWasNumber) {
+	          strs.push(", ");
+	        }
+	        if (arg === Math.floor(arg)) {
+	          strs.push(arg.toFixed(0));
+	        } else {
+	        strs.push(arg.toFixed(3));
+	        }
+	        lastArgWasNumber = true;
+	      } else if (window.Float32Array &amp;&amp; arg instanceof Float32Array) {
+	        // TODO(gman): Make this handle other types of arrays.
+	        strs.push(tdl.string.argsToString(arg));
+	      } else {
+	        strs.push(arg.toString());
+	        lastArgWasNumber = false;
+	      }
+	    }
+	    return strs.join("");
+	  };
+
+	  HTMLLogger.prototype.log = function() {
+	    this.addLine_(argsToString(arguments), undefined);
+	  };
+
+	  HTMLLogger.prototype.error = function() {
+	    this.addLine_(argsToString(arguments), "red");
+	  };
+
+	  var GameLogger = function(client) {
+	    this.log = client.logImpl.bind(client);
+	    this.error = client.errorImpl.bind(client);
+	  };
+
+	  return {
+	    ConsoleLogger: ConsoleLogger,
+	    GameLogger: GameLogger,
+	    HTMLLogger: HTMLLogger,
+	    NullLogger: NullLogger,
+	  };
+	}.call(exports, __webpack_require__, exports, module), __WEBPACK_AMD_DEFINE_RESULT__ !== undefined &amp;&amp; (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
+
+
+
+
+/***/ },
+/* 3 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var __WEBPACK_AMD_DEFINE_RESULT__;/*
+	 * Copyright 2014, Gregg Tavares.
+	 * All rights reserved.
+	 *
+	 * Redistribution and use in source and binary forms, with or without
+	 * modification, are permitted provided that the following conditions are
+	 * met:
+	 *
+	 *     * Redistributions of source code must retain the above copyright
+	 * notice, this list of conditions and the following disclaimer.
+	 *     * Redistributions in binary form must reproduce the above
+	 * copyright notice, this list of conditions and the following disclaimer
+	 * in the documentation and/or other materials provided with the
+	 * distribution.
+	 *     * Neither the name of Gregg Tavares. nor the names of its
+	 * contributors may be used to endorse or promote products derived from
+	 * this software without specific prior written permission.
+	 *
+	 * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+	 * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+	 * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+	 * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+	 * OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+	 * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+	 * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+	 * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+	 * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+	 * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+	 * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+	 */
+
+	"use strict";
+
+	/**
+	 * Misc IO functions
+	 * @module IO
+	 */
+	!(__WEBPACK_AMD_DEFINE_RESULT__ = function() {
+	  var log = function() { };
+	  //var log = console.log.bind(console);
+
+	  /**
+	   * @typedef {Object} SendJson~Options
+	   * @memberOf module:IO
+	   * @property {number?} timeout. Timeout in ms to abort.
+	   *        Default = no-timeout
+	   */
+
+	  /**
+	   * sends a JSON 'POST' request, returns JSON repsonse
+	   * @memberOf module:IO
+	   * @param {string} url url to POST to.
+	   * @param {Object=} jsonObject JavaScript object on which to
+	   *        call JSON.stringify.
+	   * @param {!function(error, object)} callback Function to call
+	   *        on success or failure. If successful error will be
+	   *        null, object will be json result from request.
+	   * @param {module:IO~SendJson~Options?} options
+	   */
+	  var sendJSON = function(url, jsonObject, callback, option) {
+	    option = option || { };
+	//    var error = 'sendJSON failed to load url "' + url + '"';
+	    var request = new XMLHttpRequest();
+	    if (request.overrideMimeType) {
+	      request.overrideMimeType('text/plain');
+	    }
+	    var timeout = option.timeout || 0;
+	    if (timeout) {
+	      request.timeout = timeout;
+	      log("set timeout to: " + request.timeout);
+	    }
+	    request.open('POST', url, true);
+	    var js = JSON.stringify(jsonObject);
+	    var callCallback = function(error, json) {
+	      if (callback) {
+	        log("calling-callback:" + (error ? " has error" : "success"));
+	        callback(error, json);
+	        callback = undefined;  // only call it once.
+	      }
+	    };
+	//    var handleAbort = function(e) {
+	//      log("--abort--");
+	//      callCallback("error (abort) sending json to " + url);
+	//    }
+	    var handleError = function(/*e*/) {
+	      log("--error--");
+	      callCallback("error sending json to " + url);
+	    };
+	    var handleTimeout = function(/*e*/) {
+	      log("--timeout--");
+	      callCallback("timeout sending json to " + url);
+	    };
+	    var handleForcedTimeout = function(/*e*/) {
+	      if (callback) {
+	        log("--forced timeout--");
+	        request.abort();
+	        callCallback("forced timeout sending json to " + url);
+	      }
+	    };
+	    var handleFinish = function() {
+	      log("--finish--");
+	      var json = undefined;
+	      // HTTP reports success with a 200 status. The file protocol reports
+	      // success with zero. HTTP does not use zero as a status code (they
+	      // start at 100).
+	      // https://developer.mozilla.org/En/Using_XMLHttpRequest
+	      var success = request.status === 200 || request.status === 0;
+	      if (success) {
+	        try {
+	          json = JSON.parse(request.responseText);
+	        } catch (e) {
+	          success = false;
+	        }
+	      }
+	      callCallback(success ? null : 'could not load: ' + url, json);
+	    };
+	    try {
+	      // Safari 7 seems to ignore the timeout.
+	      if (timeout) {
+	        setTimeout(handleForcedTimeout, timeout + 50);
+	      }
+	      request.addEventListener('load', handleFinish, false);
+	      request.addEventListener('timeout', handleTimeout, false);
+	      request.addEventListener('error', handleError, false);
+	      request.setRequestHeader("Content-type", "application/json");
+	      request.send(js);
+	      log("--sent: " + url);
+	    } catch (e) {
+	      log("--exception--");
+	      setTimeout(function() {
+	        callCallback('could not load: ' + url, null);
+	      }, 0);
+	    }
+	  };
+
+	  return {
+	    sendJSON: sendJSON,
+	  };
+	}.call(exports, __webpack_require__, exports, module), __WEBPACK_AMD_DEFINE_RESULT__ !== undefined &amp;&amp; (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
+
+
+
+/***/ },
+/* 4 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var __WEBPACK_AMD_DEFINE_RESULT__;/*
+	 * Copyright 2014, Gregg Tavares.
+	 * All rights reserved.
+	 *
+	 * Redistribution and use in source and binary forms, with or without
+	 * modification, are permitted provided that the following conditions are
+	 * met:
+	 *
+	 *     * Redistributions of source code must retain the above copyright
+	 * notice, this list of conditions and the following disclaimer.
+	 *     * Redistributions in binary form must reproduce the above
+	 * copyright notice, this list of conditions and the following disclaimer
+	 * in the documentation and/or other materials provided with the
+	 * distribution.
+	 *     * Neither the name of Gregg Tavares. nor the names of its
+	 * contributors may be used to endorse or promote products derived from
+	 * this software without specific prior written permission.
+	 *
+	 * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+	 * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+	 * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+	 * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+	 * OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+	 * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+	 * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+	 * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+	 * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+	 * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+	 * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+	 */
+
+	/*eslint strict:0*/
+
+	!(__WEBPACK_AMD_DEFINE_RESULT__ = function() {
+
+	  /**
+	   * Represents a cookie.
+	   *
+	   * This is an object, that way you set the name just once so
+	   * calling set or get you don't have to worry about getting the
+	   * name wrong.
+	   *
+	   * @example
+	   *     var fooCookie = new Cookie("foo");
+	   *     var value = fooCookie.get();
+	   *     fooCookie.set(newValue);
+	   *     fooCookie.erase();
+	   *
+	   * @constructor
+	   * @alias Cookie
+	   * @param {string} name of cookie
+	   * @param {string?} opt_path path for cookie. Default "/"
+	   */
+	  var Cookie = function(name, opt_path) {
+	    var path = opt_path || "/";
+
+	    /**
+	     * Sets the cookie
+	     * @param {string} value value for cookie
+	     * @param {number?} opt_days number of days until cookie
+	     *        expires. Default = none
+	     */
+	    this.set = function(value, opt_days) {
+	      if (value === undefined) {
+	        this.erase();
+	        return;
+	      }
+	      // Cordova/Phonegap doesn't support cookies so use localStorage?
+	      if (window.hftSettings &amp;&amp; window.hftSettings.inApp) {
+	        window.localStorage.setItem(name, value);
+	        return;
+	      }
+	      var expires = "";
+	      opt_days = opt_days || 9999;
+	      var date = new Date();
+	      date.setTime(Date.now() + Math.floor(opt_days * 24 * 60 * 60 * 1000));  // > 32bits. Don't use | 0
+	      expires = "; expires=" + date.toGMTString();
+	      var cookie = encodeURIComponent(name) + "=" + encodeURIComponent(value) + expires + "; path=" + path;
+	      document.cookie = cookie;
+	    };
+
+	    /**
+	     * Gets the value of the cookie
+	     * @return {string?} value of cookie
+	     */
+	    this.get = function() {
+	      // Cordova/Phonegap doesn't support cookies so use localStorage?
+	      if (window.hftSettings &amp;&amp; window.hftSettings.inApp) {
+	        return window.localStorage.getItem(name);
+	      }
+
+	      var nameEQ = encodeURIComponent(name) + "=";
+	      var ca = document.cookie.split(';');
+	      for (var i = 0; i &lt; ca.length; ++i) {
+	        var c = ca[i];
+	        while (c.charAt(0) === ' ') {
+	          c = c.substring(1, c.length);
+	        }
+	        if (c.indexOf(nameEQ) === 0) {
+	          return decodeURIComponent(c.substring(nameEQ.length, c.length));
+	        }
+	      }
+	    };
+
+	    /**
+	     * Erases the cookie.
+	     */
+	    this.erase = function() {
+	      if (window.hftSettings &amp;&amp; window.hftSettings.inApp) {
+	        return window.localStorage.removeItem(name);
+	      }
+	      document.cookie = this.set(" ", -1);
+	    };
+	  };
+
+	  return Cookie;
+	}.call(exports, __webpack_require__, exports, module), __WEBPACK_AMD_DEFINE_RESULT__ !== undefined &amp;&amp; (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
+
+
+
+
+/***/ },
+/* 5 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*
+	 * Copyright 2014, Gregg Tavares.
+	 * All rights reserved.
+	 *
+	 * Redistribution and use in source and binary forms, with or without
+	 * modification, are permitted provided that the following conditions are
+	 * met:
+	 *
+	 *     * Redistributions of source code must retain the above copyright
+	 * notice, this list of conditions and the following disclaimer.
+	 *     * Redistributions in binary form must reproduce the above
+	 * copyright notice, this list of conditions and the following disclaimer
+	 * in the documentation and/or other materials provided with the
+	 * distribution.
+	 *     * Neither the name of Gregg Tavares. nor the names of its
+	 * contributors may be used to endorse or promote products derived from
+	 * this software without specific prior written permission.
+	 *
+	 * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+	 * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+	 * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+	 * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+	 * OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+	 * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+	 * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+	 * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+	 * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+	 * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+	 * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+	 */
+
+	"use strict";
+
+	!(__WEBPACK_AMD_DEFINE_ARRAY__ = [], __WEBPACK_AMD_DEFINE_RESULT__ = function() {
+	  var zIndex = 15000;
+
+	  function create(name, options) {
+	    var elem = document.createElement(name);
+	    if (options.className) {
+	      elem.className = options.className;
+	    }
+	    var style = options.style;
+	    if (style) {
+	      Object.keys(style).forEach(function(key) {
+	        elem.style[key] = style[key];
+	      });
+	    }
+	    if (options.parent) {
+	      options.parent.appendChild(elem);
+	    }
+	    return elem;
+	  }
+
+	  function addElem(content, options) {
+	    var elem = create("div", options);
+	    if (content instanceof HTMLElement) {
+	      elem.appendChild(content);
+	    } else {
+	      elem.innerHTML = content;
+	    }
+	    return elem;
+	  }
+
+	  function close(elem) {
+	    elem.parentNode.removeChild(elem);
+	    --zIndex;
+	  }
+
+	  /**
+	   * @typedef {Object} Dialog~Choice
+	   * @property {string} msg message to display
+	   * @property {function} [callback] callback if this choice is picked.
+	   */
+
+	  /**
+	   * @typedef {Object} Dialog~Options
+	   * @property {string} [title] unused?
+	   * @property {(string|HTMLElement)} [msg]
+	   * @property {Dialog~Choice[]} [choices]
+	   */
+
+	  /**
+	   * Puts up a fullscreen dialog
+	   * @param {Dialog~Options} options options for dialog.
+	   * @param {function(?)) [callback] callback when dialog closes
+	   */
+	  function modal(options, callback) {
+	    if (!callback) {
+	      callback = function() {};
+	    }
+
+	    var cover     = create("div", { className: "hft-dialog-cover", style: { zIndex: zIndex++ } });
+	    var filler    = create("div", { className: "hft-fullcenter", parent: cover });
+	    var container = create("div", { className: "hft-dialog-container", parent: filler });
+
+	    var closeIt = function() {
+	      close(cover);
+	      callback();
+	    };
+
+	    if (options.title) {
+	      addElem(options.title, { className: "hft-dialog-title", parent: container });
+	    }
+
+	    addElem(options.msg, { className: "hft-dialog-content", parent: container });
+
+	    function addObjectChoice(choice, ndx) {
+	      var div = addElem("div", { className: "hft-dialog-choice", parent: container });
+	      div.innerHTML = choice.msg;
+	      var choiceCallback = function() {
+	        close(cover);
+	        (choice.callback || callback)(ndx);
+	      };
+	      div.addEventListener('click', choiceCallback);
+	      div.addEventListener('touchend', choiceCallback);
+	      return div;
+	    }
+
+	    function addStringChoice(msg, ndx) {
+	      addObjectChoice({
+	        msg: msg,
+	        callback: function() {
+	          callback(ndx);
+	        },
+	      });
+	    }
+
+	    if (options.choices) {
+	      options.choices.forEach(function(choice, ndx) {
+	       if (typeof choice === 'string') {
+	         addStringChoice(choice, ndx);
+	       } else {
+	         addObjectChoice(choice, ndx);
+	       }
+	      });
+	    } else if (callback) {
+	      container.addEventListener('click', closeIt, false);
+	      container.addEventListener('touchend', closeIt, false);
+	    }
+
+	    document.body.appendChild(cover);
+	  }
+
+	  return {
+	    modal: modal,
+	  };
+	}.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__), __WEBPACK_AMD_DEFINE_RESULT__ !== undefined &amp;&amp; (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
+
+
+
+/***/ },
+/* 6 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*
+	 * Copyright 2014, Gregg Tavares.
+	 * All rights reserved.
+	 *
+	 * Redistribution and use in source and binary forms, with or without
+	 * modification, are permitted provided that the following conditions are
+	 * met:
+	 *
+	 *     * Redistributions of source code must retain the above copyright
+	 * notice, this list of conditions and the following disclaimer.
+	 *     * Redistributions in binary form must reproduce the above
+	 * copyright notice, this list of conditions and the following disclaimer
+	 * in the documentation and/or other materials provided with the
+	 * distribution.
+	 *     * Neither the name of Gregg Tavares. nor the names of its
+	 * contributors may be used to endorse or promote products derived from
+	 * this software without specific prior written permission.
+	 *
+	 * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+	 * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+	 * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+	 * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+	 * OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+	 * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+	 * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+	 * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+	 * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+	 * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+	 * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+	 */
+	"use strict";
+
+	!(__WEBPACK_AMD_DEFINE_ARRAY__ = [
+	    __webpack_require__(7),
+	  ], __WEBPACK_AMD_DEFINE_RESULT__ = function(
+	    hftSettings) {
+
+	  var requestFullScreen = function(element) {
+	    if (element.requestFullscreen) {
+	      element.requestFullscreen();
+	    } else if (element.msRequestFullscreen) {
+	      element.msRequestFullscreen();
+	    } else if (element.webkitRequestFullScreen) {
+	      element.webkitRequestFullScreen(Element.ALLOW_KEYBOARD_INPUT);
+	    } else if (element.webkitRequestFullscreen) {
+	      element.webkitRequestFullscreen(Element.ALLOW_KEYBOARD_INPUT);
+	    } else if (element.mozRequestFullScreen) {
+	      element.mozRequestFullScreen();
+	    } else if (element.mozRequestFullscreen) {
+	      element.mozRequestFullscreen();
+	    }
+	  };
+
+	  var noop = function() {
+	  };
+
+	  var cancelFullScreen = (
+	      document.exitFullscreen ||
+	      document.exitFullScreen ||
+	      document.msExitFullscreen ||
+	      document.msExitFullScreen ||
+	      document.webkitCancelFullscreen ||
+	      document.webkitCancelFullScreen ||
+	      document.mozCancelFullScreen ||
+	      document.mozCancelFullscreen ||
+	      noop).bind(document);
+
+	  function isFullScreen() {
+	    var f = document.fullscreenElement ||
+	            document.fullScreenElement ||
+	            document.webkitFullscreenElement ||
+	            document.mozFullScreenElement ||
+	            document.webkitIsFullScreen;
+	    return (f !== undefined &amp;&amp; f !== null &amp;&amp; f !== false) || hftSettings.isApp;
+	  }
+
+	  var onFullScreenChange = function(element, callback) {
+	    document.addEventListener('fullscreenchange', function(/*event*/) {
+	        callback(isFullScreen());
+	      });
+	    element.addEventListener('webkitfullscreenchange', function(/*event*/) {
+	        callback(isFullScreen());
+	      });
+	    document.addEventListener('mozfullscreenchange', function(/*event*/) {
+	        callback(isFullScreen());
+	      });
+	  };
+
+	  function canGoFullScreen() {
+	    var body = window.document.body || {};
+	    var r = body.requestFullscreen ||
+	            body.requestFullScreen ||
+	            body.msRequestFullscreen ||
+	            body.msRequestFullScreen ||
+	            body.webkitRequestFullScreen ||
+	            body.webkitRequestFullscreen ||
+	            body.mozRequestFullScreen ||
+	            body.mozRequestFullscreen;
+	    return r !== undefined &amp;&amp; r !== null;
+	  }
+
+	  return {
+	    cancelFullScreen: cancelFullScreen,
+	    isFullScreen: isFullScreen,
+	    canGoFullScreen: canGoFullScreen,
+	    onFullScreenChange: onFullScreenChange,
+	    requestFullScreen: requestFullScreen,
+	  };
+	}.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__), __WEBPACK_AMD_DEFINE_RESULT__ !== undefined &amp;&amp; (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
+
+
+/***/ },
+/* 7 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*
+	 * Copyright 2014, Gregg Tavares.
+	 * All rights reserved.
+	 *
+	 * Redistribution and use in source and binary forms, with or without
+	 * modification, are permitted provided that the following conditions are
+	 * met:
+	 *
+	 *     * Redistributions of source code must retain the above copyright
+	 * notice, this list of conditions and the following disclaimer.
+	 *     * Redistributions in binary form must reproduce the above
+	 * copyright notice, this list of conditions and the following disclaimer
+	 * in the documentation and/or other materials provided with the
+	 * distribution.
+	 *     * Neither the name of Gregg Tavares. nor the names of its
+	 * contributors may be used to endorse or promote products derived from
+	 * this software without specific prior written permission.
+	 *
+	 * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+	 * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+	 * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+	 * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+	 * OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+	 * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+	 * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+	 * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+	 * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+	 * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+	 * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+	 */
+	"use strict";
+	(function(window) {
+
+	!(__WEBPACK_AMD_DEFINE_ARRAY__ = [], __WEBPACK_AMD_DEFINE_RESULT__ = function() {
+
+	  if (window === undefined) {
+	    window = {};
+	  }
+	  window.hftSettings = window.hftSettings || {};
+
+	  return window.hftSettings;
+	}.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__), __WEBPACK_AMD_DEFINE_RESULT__ !== undefined &amp;&amp; (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
+	}(this));
+
+
+
+/***/ },
+/* 8 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var __WEBPACK_AMD_DEFINE_RESULT__;/*
+	 * Copyright 2014, Gregg Tavares.
+	 * All rights reserved.
+	 *
+	 * Redistribution and use in source and binary forms, with or without
+	 * modification, are permitted provided that the following conditions are
+	 * met:
+	 *
+	 *     * Redistributions of source code must retain the above copyright
+	 * notice, this list of conditions and the following disclaimer.
+	 *     * Redistributions in binary form must reproduce the above
+	 * copyright notice, this list of conditions and the following disclaimer
+	 * in the documentation and/or other materials provided with the
+	 * distribution.
+	 *     * Neither the name of Gregg Tavares. nor the names of its
+	 * contributors may be used to endorse or promote products derived from
+	 * this software without specific prior written permission.
+	 *
+	 * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+	 * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+	 * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+	 * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+	 * OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+	 * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+	 * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+	 * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+	 * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+	 * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+	 * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+	 */
+	"use strict";
+
+	!(__WEBPACK_AMD_DEFINE_RESULT__ = function() {
+	  console.log(
+	    [ "%c",
+	      "---------------------------------------------------------------------------------------------",
+	      "If you'd like to know more about this sytem check out http://docs.happyfuntimes.net/docs",
+	      "---------------------------------------------------------------------------------------------",
+	      "",
+	    ].join("\n"), "color:blue; font-weight: bold;");
+
+	  return {
+	  };
+	}.call(exports, __webpack_require__, exports, module), __WEBPACK_AMD_DEFINE_RESULT__ !== undefined &amp;&amp; (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
+
+
+
+
+
+
+/***/ },
+/* 9 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var __WEBPACK_AMD_DEFINE_RESULT__;/*
+	 * Copyright 2014, Gregg Tavares.
+	 * All rights reserved.
+	 *
+	 * Redistribution and use in source and binary forms, with or without
+	 * modification, are permitted provided that the following conditions are
+	 * met:
+	 *
+	 *     * Redistributions of source code must retain the above copyright
+	 * notice, this list of conditions and the following disclaimer.
+	 *     * Redistributions in binary form must reproduce the above
+	 * copyright notice, this list of conditions and the following disclaimer
+	 * in the documentation and/or other materials provided with the
+	 * distribution.
+	 *     * Neither the name of Gregg Tavares. nor the names of its
+	 * contributors may be used to endorse or promote products derived from
+	 * this software without specific prior written permission.
+	 *
+	 * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+	 * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+	 * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+	 * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+	 * OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+	 * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+	 * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+	 * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+	 * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+	 * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+	 * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+	 */
+	"use strict";
+
+	/**
+	 * @module Misc
+	 */
+	!(__WEBPACK_AMD_DEFINE_RESULT__ = function() {
+	  /**
+	   * Copies properties from obj to dst recursively.
+	   * @param {Object} obj Object with new settings.
+	   * @param {Object} dst Object to receive new settings.
+	   * @param {number?} opt_overwriteBehavior
+	   *     *   0/falsy = overwrite
+	   *
+	   *         src    = {foo:'bar'}
+	   *         dst    = {foo:'abc'}
+	   *         result = {foo:'bar'}
+	   *
+	   *     *   1 = don't overwrite but descend if deeper
+	   *
+	   *         src    = {foo:{bar:'moo','abc':def}}
+	   *         dst    = {foo:{bar:'ghi'}}
+	   *         result = {foo:{bar:'ghi','abc':def}}
+	   *
+	   *         'foo' exists but we still go deeper and apply 'abc'
+	   *
+	   *     *   2 = don't overwrite don't descend
+	   *
+	   *             src    = {foo:{bar:'moo','abc':def}}
+	   *             dst    = {foo:{bar:'ghi'}}
+	   *             result = {foo:{bar:'ghi'}}
+	   *
+	   *         'foo' exists so we don't go any deeper
+	   *
+	   */
+	  var copyProperties = function(src, dst, opt_overwriteBehavior) {
+	    Object.keys(src).forEach(function(key) {
+	      if (opt_overwriteBehavior === 2 &amp;&amp; dst[key] !== undefined) {
+	        return;
+	      }
+	      var value = src[key];
+	      if (value instanceof Array) {
+	        var newDst = dst[key];
+	        if (!newDst) {
+	          newDst = [];
+	          dst[name] = newDst;
+	        }
+	        copyProperties(value, newDst, opt_overwriteBehavior);
+	      } else if (value instanceof Object &amp;&amp;
+	                 !(value instanceof Function) &amp;&amp;
+	                 !(value instanceof HTMLElement)) {
+	        var newDst2 = dst[key];
+	        if (!newDst2) {
+	          newDst2 = {};
+	          dst[key] = newDst2;
+	        }
+	        copyProperties(value, newDst2, opt_overwriteBehavior);
+	      } else {
+	        if (opt_overwriteBehavior === 1 &amp;&amp; dst[key] !== undefined) {
+	          return;
+	        }
+	        dst[key] = value;
+	      }
+	    });
+	    return dst;
+	  };
+
+	  function searchStringToObject(str, opt_obj) {
+	    if (str[0] === '?') {
+	      str = str.substring(1);
+	    }
+	    var results = opt_obj || {};
+	    str.split("&amp;").forEach(function(part) {
+	      var pair = part.split("=").map(decodeURIComponent);
+	      results[pair[0]] = pair[1] !== undefined ? pair[1] : true;
+	    });
+	    return results;
+	  }
+
+	  function objectToSearchString(obj) {
+	    return "?" + Object.keys(obj).filter(function(key) {
+	      return obj[key] !== undefined;
+	    }).map(function(key) {
+	      return encodeURIComponent(key) + "=" + encodeURIComponent(obj[key]);
+	    }).join("&amp;");
+	  }
+
+	  /**
+	   * Reads the query values from a URL like string.
+	   * @param {String} url URL like string eg. http://foo?key=value
+	   * @param {Object} [opt_obj] Object to attach key values to
+	   * @return {Object} Object with key values from URL
+	   * @memberOf module:Misc
+	   */
+	  var parseUrlQueryString = function(str, opt_obj) {
+	    var dst = opt_obj || {};
+	    try {
+	      var q = str.indexOf("?");
+	      var e = str.indexOf("#");
+	      if (e &lt; 0) {
+	        e = str.length;
+	      }
+	      var query = str.substring(q + 1, e);
+	      searchStringToObject(query, dst);
+	    } catch (e) {
+	      console.error(e);
+	    }
+	    return dst;
+	  };
+
+	  /**
+	   * Reads the query values from the current URL.
+	   * @param {Object=} opt_obj Object to attach key values to
+	   * @return {Object} Object with key values from URL
+	   * @memberOf module:Misc
+	   */
+	  var parseUrlQuery = function(opt_obj) {
+	    return searchStringToObject(window.location.search, opt_obj);
+	  };
+
+	  /**
+	   * Read `settings` from URL. Assume settings it a
+	   * JSON like URL as in http://foo?settings={key:value},
+	   * Note that unlike real JSON we don't require quoting
+	   * keys if they are alpha_numeric.
+	   *
+	   * @param {Object=} opt_obj object to apply settings to.
+	   * @param {String=} opt_argumentName name of key for settings, default = 'settings'.
+	   * @return {Object} object with settings
+	   * @func applyUrlSettings
+	   * @memberOf module:Misc
+	   */
+	  var fixKeysRE = new RegExp("([a-zA-Z0-9_]+)\:", "g");
+
+	  var applyUrlSettings = function(opt_obj, opt_argumentName) {
+	    var argumentName = opt_argumentName || 'settings';
+	    var src = parseUrlQuery();
+	    var dst = opt_obj || {};
+	    var settingsStr = src[argumentName];
+	    if (settingsStr) {
+	      var json = settingsStr.replace(fixKeysRE, '"$1":');
+	      var settings = JSON.parse(json);
+	      copyProperties(settings, dst);
+	    }
+	    return dst;
+	  };
+
+	  /**
+	   * Gets a function checking for prefixed versions
+	   *
+	   * example:
+	   *
+	   *     var lockOrientation = misc.getFunctionByPrefix(window.screen, "lockOrientation");
+	   *
+	   * @param {object} obj object that has function
+	   * @param {string} funcName name of function
+	   * @return {function?} or undefined if it doesn't exist
+	   */
+	  var prefixes = ["", "moz", "webkit", "ms"];
+	  function getFunctionByPrefix(obj, funcName) {
+	    var capitalName = funcName.substr(0, 1).toUpperCase() + funcName.substr(1);
+	    for (var ii = 0; ii &lt; prefixes.length; ++ii) {
+	      var prefix = prefixes[ii];
+	      var name = prefix + prefix ? capitalName : funcName;
+	      var func = obj[name];
+	      if (func) {
+	        return func.bind(obj);
+	      }
+	    }
+	  }
+
+	  /**
+	   * Creates an invisible iframe and sets the src
+	   * @param {string} src the source for the iframe
+	   * @return {HTMLIFrameElement} The iframe
+	   */
+	  function gotoIFrame(src) {
+	    var iframe = document.createElement("iframe");
+	    iframe.style.display = "none";
+	    iframe.src = src;
+	    document.body.appendChild(iframe);
+	    return iframe;
+	  }
+
+	  /**
+	   * get a random int
+	   * @param {number} value max value exclusive. 5 = random 0 to 4
+	   * @return {number} random int
+	   * @memberOf module:Misc
+	   */
+	  var randInt = function(value) {
+	    return Math.floor(Math.random() * value);
+	  };
+
+	  /**
+	   * get a random CSS color
+	   * @param {function(number): number?) opt_randFunc function to generate random numbers
+	   * @return {string} random css color
+	   * @memberOf module:Misc
+	   */
+	  var randCSSColor = function(opt_randFunc) {
+	    var randFunc = opt_randFunc || randInt;
+	    var strong = randFunc(3);
+	    var colors = [];
+	    for (var ii = 0; ii &lt; 3; ++ii) {
+	      colors.push(randFunc(128) + (ii === strong ? 128 : 64));
+	    }
+	    return "rgb(" + colors.join(",") + ")";
+	  };
+
+	  /**
+	   * Gets a random element from array
+	   * @param {Array&lt;*>} array array to select element from
+	   * @return {*} picked element
+	   */
+	  function pickRandomElement(array) {
+	    return array[randInt(array.length)];
+	  }
+
+	  /**
+	   * get a random 32bit color
+	   * @param {function(number): number?) opt_randFunc function to generate random numbers
+	   * @return {string} random 32bit color
+	   * @memberOf module:Misc
+	   */
+	  var rand32BitColor = function(opt_randFunc) {
+	    var randFunc = opt_randFunc || randInt;
+	    var strong = randFunc(3);
+	    var color = 0xFF;
+	    for (var ii = 0; ii &lt; 3; ++ii) {
+	      color = (color &lt;&lt; 8) | (randFunc(128) + (ii === strong ? 128 : 64));
+	    }
+	    return color;
+	  };
+
+	  /**
+	   * finds a CSS rule.
+	   * @param {string} selector
+	   * @return {Rule?} matching css rule
+	   * @memberOf module:Misc
+	   */
+	  var findCSSStyleRule = function(selector) {
+	    for (var ii = 0; ii &lt; document.styleSheets.length; ++ii) {
+	      var styleSheet = document.styleSheets[ii];
+	      var rules = styleSheet.cssRules || styleSheet.rules;
+	      if (rules) {
+	        for (var rr = 0; rr &lt; rules.length; ++rr) {
+	          var rule = rules[rr];
+	          if (rule.selectorText === selector) {
+	            return rule;
+	          }
+	        }
+	      }
+	    }
+	  };
+
+	  /**
+	   * Inserts a text node into an element
+	   * @param {HTMLElement} element element to have text node insert
+	   * @return {HTMLTextNode} the created text node
+	   * @memberOf module:Misc
+	   */
+	  var createTextNode = function(element) {
+	    var txt = document.createTextNode("");
+	    element.appendChild(txt);
+	    return txt;
+	  };
+
+	  /**
+	   * Returns the absolute position of an element for certain browsers.
+	   * @param {HTMLElement} element The element to get a position
+	   *        for.
+	   * @returns {Object} An object containing x and y as the
+	   *        absolute position of the given element.
+	   * @memberOf module:Misc
+	   */
+	  var getAbsolutePosition = function(element) {
+	    var r = { x: element.offsetLeft, y: element.offsetTop };
+	    if (element.offsetParent) {
+	      var tmp = getAbsolutePosition(element.offsetParent);
+	      r.x += tmp.x;
+	      r.y += tmp.y;
+	    }
+	    return r;
+	  };
+
+	  /**
+	   * Clamp value
+	   * @param {Number} v value to clamp
+	   * @param {Number} min min value to clamp to
+	   * @param {Number} max max value to clamp to
+	   * @returns {Number} v clamped to min and max.
+	   * @memberOf module:Misc
+	   */
+	  var clamp = function(v, min, max) {
+	    return Math.max(min, Math.min(max, v));
+	  };
+
+	  /**
+	   * Clamp in both positive and negative directions.
+	   * Same as clamp(v, -max, +max)
+	   *
+	   * @param {Number} v value to clamp
+	   * @param {Number} max max value to clamp to
+	   * @returns {Number} v clamped to -max and max.
+	   * @memberOf module:Misc
+	   */
+	  var clampPlusMinus = function(v, max) {
+	    return clamp(v, -max, max);
+	  };
+
+	  /**
+	   * Return sign of value
+	   *
+	   * @param {Number} v value
+	   * @returns {Number} -1 if v &lt; 0, 1 if v > 0, 0 if v == 0
+	   * @memberOf module:Misc
+	   */
+	  var sign = function(v) {
+	    return v &lt; 0 ? -1 : (v > 0 ? 1 : 0);
+	  };
+
+	  /**
+	   * Takes which ever is closer to zero
+	   * In other words minToZero(-2, -1) = -1 and minToZero(2, 1) = 1
+	   *
+	   * @param {Number} v value to min
+	   * @param {Number} min min value to use if v is less then -min
+	   *        or greater than +min
+	   * @returns {Number} min or v, which ever is closer to zero
+	   * @memberOf module:Misc
+	   */
+	  var minToZero = function(v, min) {
+	    return Math.abs(v) &lt; Math.abs(min) ? v : min;
+	  };
+
+	  /**
+	   * flips 0->max to max&lt;-0 and 0->min to min->0
+	   * In otherwords
+	   *     max: 3, v: 2.7  =  0.3
+	   *     max: 3, v:-2.7  = -0.3
+	   *     max: 3, v: 0.2  =  2.8
+	   *     max: 3, v:-0.2  = -2.8
+	   *
+	   * @param {Number} v value to flip.
+	   * @param {Number} max range to flip inside.
+	   * @returns {Number} flipped value.
+	   * @memberOf module:Misc
+	   */
+	  var invertPlusMinusRange = function(v, max) {
+	    return sign(v) * (max - Math.min(max, Math.abs(v)));
+	  };
+
+	  /**
+	   * Convert degrees to radians
+	   *
+	   * @param {Number} d value in degrees
+	   * @returns {Number} d in radians
+	   * @memberOf module:Misc
+	   */
+	  var degToRad = function(d) {
+	    return d * Math.PI / 180;
+	  };
+
+	  /**
+	   * Converts radians to degrees
+	   * @param {Number} r value in radians
+	   * @returns {Number} r in degrees
+	   * @memberOf module:Misc
+	   */
+	  var radToDeg = function(r) {
+	    return r * 180 / Math.PI;
+	  };
+
+	  /**
+	   * Resizes a cavnas to match its CSS displayed size.
+	   * @param {Canvas} canvas canvas to resize.
+	   * @param {boolean?} useDevicePixelRatio if true canvas will be
+	   *        created to match devicePixelRatio.
+	   * @memberOf module:Misc
+	   */
+	  var resize = function(canvas, useDevicePixelRatio) {
+	    var mult = useDevicePixelRatio ? window.devicePixelRatio : 1;
+	    mult = mult || 1;
+	    var width  = Math.floor(canvas.clientWidth  * mult);
+	    var height = Math.floor(canvas.clientHeight * mult);
+	    if (canvas.width !== width ||
+	        canvas.height !== height) {
+	      canvas.width = width;
+	      canvas.height = height;
+	      return true;
+	    }
+	  };
+
+	  /**
+	   * Copies all the src properties to the dst
+	   * @param {Object} src an object with some properties
+	   * @param {Object} dst an object to receive copes of the properties
+	   * @return returns the dst object.
+	   */
+	  function applyObject(src, dst) {
+	    Object.keys(src).forEach(function(key) {
+	      dst[key] = src[key];
+	    });
+	    return dst;
+	  }
+
+	  /**
+	   * Merges the proprties of all objects into a new object
+	   *
+	   * Example:
+	   *
+	   *     var a = { abc: "def" };
+	   *     var b = { xyz: "123" };
+	   *     var c = Misc.mergeObjects(a, b);
+	   *
+	   *     // c = { abc: "def", xyz: "123" };
+	   *
+	   * Later object properties take precedence
+	   *
+	   *     var a = { abc: "def" };
+	   *     var b = { abc: "123" };
+	   *     var c = Misc.mergeObjects(a, b);
+	   *
+	   *     // c = { abc: "123" };
+	   *
+	   * @param {...Object} object objects to merge.
+	   * @return an object containing the merged properties
+	   */
+	  function mergeObjects(object) {  // eslint-disable-line
+	    var merged = {};
+	    Array.prototype.slice.call(arguments).forEach(function(src) {
+	      if (src) {
+	        applyObject(src, merged);
+	      }
+	    });
+	    return merged;
+	  }
+
+	  /**
+	   * Creates a random id
+	   * @param {number} [digits] number of digits. default 16
+	   */
+	  function makeRandomId(digits) {
+	    digits = digits || 16;
+	    var id = "";
+	    for (var ii = 0; ii &lt; digits; ++ii) {
+	      id = id + ((Math.random() * 16 | 0)).toString(16);
+	    }
+	    return id;
+	  }
+
+	  /**
+	   * Applies an object of listeners to an emitter.
+	   *
+	   * Example:
+	   *
+	   *     applyListeners(someDivElement, {
+	   *       mousedown: someFunc1,
+	   *       mousemove: someFunc2,
+	   *       mouseup: someFunc3,
+	   *     });
+	   *
+	   * Which is the same as
+	   *
+	   *     someDivElement.addEventListener("mousedown", someFunc1);
+	   *     someDivElement.addEventListener("mousemove", someFunc2);
+	   *     someDivElement.addEventListener("mouseup", someFunc3);
+	   *
+	   * @param {Emitter} emitter some object that emits events and has a function `addEventListener`
+	   * @param {Object.&lt;string, function>} listeners eventname function pairs.
+	   */
+	  function applyListeners(emitter, listeners) {
+	    Object.keys(listeners).forEach(function(name) {
+	      emitter.addEventListener(name, listeners[name]);
+	    });
+	  }
+
+	  return {
+	    applyObject: applyObject,
+	    applyUrlSettings: applyUrlSettings,
+	    applyListeners: applyListeners,
+	    clamp: clamp,
+	    clampPlusMinus: clampPlusMinus,
+	    copyProperties: copyProperties,
+	    createTextNode: createTextNode,
+	    degToRad: degToRad,
+	    findCSSStyleRule: findCSSStyleRule,
+	    getAbsolutePosition: getAbsolutePosition,
+	    getFunctionByPrefix: getFunctionByPrefix,
+	    gotoIFrame: gotoIFrame,
+	    invertPlusMinusRange: invertPlusMinusRange,
+	    makeRandomId: makeRandomId,
+	    mergeObjects: mergeObjects,
+	    minToZero: minToZero,
+	    objectToSearchString: objectToSearchString,
+	    parseUrlQuery: parseUrlQuery,
+	    parseUrlQueryString: parseUrlQueryString,
+	    pickRandomElement: pickRandomElement,
+	    radToDeg: radToDeg,
+	    randInt: randInt,
+	    randCSSColor: randCSSColor,
+	    rand32BitColor: rand32BitColor,
+	    resize: resize,
+	    sign: sign,
+	    searchStringToObject: searchStringToObject,
+	  };
+	}.call(exports, __webpack_require__, exports, module), __WEBPACK_AMD_DEFINE_RESULT__ !== undefined &amp;&amp; (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
+
+
+
+
+/***/ },
+/* 10 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var __WEBPACK_AMD_DEFINE_RESULT__;/*
+	 * Copyright 2014, Gregg Tavares.
+	 * All rights reserved.
+	 *
+	 * Redistribution and use in source and binary forms, with or without
+	 * modification, are permitted provided that the following conditions are
+	 * met:
+	 *
+	 *     * Redistributions of source code must retain the above copyright
+	 * notice, this list of conditions and the following disclaimer.
+	 *     * Redistributions in binary form must reproduce the above
+	 * copyright notice, this list of conditions and the following disclaimer
+	 * in the documentation and/or other materials provided with the
+	 * distribution.
+	 *     * Neither the name of Gregg Tavares. nor the names of its
+	 * contributors may be used to endorse or promote products derived from
+	 * this software without specific prior written permission.
+	 *
+	 * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+	 * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+	 * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+	 * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+	 * OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+	 * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+	 * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+	 * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+	 * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+	 * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+	 * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+	 */
+	"use strict";
+
+	/**
+	 * Various hacks to try to get mobile browsers to do what I want but that
+	 * probably wouldn't be needed if I actually understood the platform.
+	 *
+	 * @module MobileHacks
+	 */
+	!(__WEBPACK_AMD_DEFINE_RESULT__ = function() {
+
+	  var $ = document.getElementById.bind(document);
+
+	  // shit hacks for iOS8 because iOS8 barfs toolbars on the screen and
+	  // (a) the user can NOT dismiss them and (b) there is no way for the
+	  // webpage to see they exist. This only happens on iPhone 4/4s/5/s.
+	  //var isIOS;
+	  var shittyOldIPhoneWithShittyIOS8Plus = function() {
+	    var iPhone4 = (window.screen.height === (960 / 2));
+	    var iPhone5 = (window.screen.height === (1136 / 2));
+	    var iOS8Plus = function() {
+	      if (/iP(hone|od|ad)/.test(navigator.platform)) {
+	        // supports iOS 2.0 and later: &lt;http://bit.ly/TJjs1V>
+	        var v = (navigator.appVersion).match(/OS (\d+)_(\d+)_?(\d+)?/);
+	        //isIOS = true;
+	        return parseInt(v[1], 10) >= 8;
+	      }
+	    }();
+	    return iOS8Plus &amp;&amp; (iPhone4 || iPhone5);
+	  }();
+
+	  var isIOS8OrNewerAndiPhone4OrIPhone5 = function() {
+	    return shittyOldIPhoneWithShittyIOS8Plus;
+	  };
+
+	  var isIOS = function() {
+	    var itsIOS = (/iP(hone|od|ad)/i).test(navigator.platform);
+	    return function() {
+	      return itsIOS;
+	    };
+	  }();
+
+	  var isMobile = function() {
+	    // yes I know I should feature detect. FUCK YOU!
+	    var mobile = (/Android|webOS|Phone|Pad|Pod|Tablet|BlackBerry/i).test(navigator.userAgent);
+	    return function() {
+	      return mobile;
+	    };
+	  }();
+
+	  /**
+	   * resets the height of any element with CSS class "fixeight"
+	   * by setting its hight to the cliehgtHeight of its parent
+	   *
+	   * The problem this is trying to solve is sometimes you have
+	   * an element set to 100% but when the phone rotates
+	   * the browser does not reset the size of the element even
+	   * though it's parent has been resized.
+	   *
+	   * This will be called automatically when the phone rotates
+	   * or the window is resized but I found I often needed to
+	   * call it manually at the start of a controller
+	   *
+	   * @memberOf module:MobileHacks
+	   */
+	  var fixHeightHack = function() {
+	    // Also fix all fucked up sizing
+	    var elements = document.querySelectorAll(".fixheight");
+	    for (var ii = 0; ii &lt; elements.length; ++ii) {
+	      var element = elements[ii];
+	      var parent = element.parentNode;
+	      if (parseInt(element.style.height) !== parent.clientHeight) {
+	        element.style.height = parent.clientHeight + "px";
+	      }
+	    }
+	  };
+
+	  var adjustCSSBasedOnPhone = function(perPhoneClasses) {
+	    perPhoneClasses.forEach(function(phone) {
+	      if (phone.test()) {
+	        Array.prototype.forEach.call(document.styleSheets, function(sheet) {
+	          var classes = sheet.rules || document.sheet.cssRules;
+	          Array.prototype.forEach.call(classes, function(c) {
+	            var adjustments = phone.styles[c.selectorText];
+	            if (adjustments) {
+	              Object.keys(adjustments).forEach(function(key) {
+	//console.log(key + ": old " + c.style[key]);
+	                if (c.style.setProperty) {
+	                  c.style.setProperty(key, adjustments[key]);
+	                } else {
+	                  c.style[key] = adjustments[key];
+	                }
+	//console.log(key + ": new " + c.style[key]);
+	              });
+	            }
+	          });
+	        });
+	      }
+	    });
+	  };
+
+	  var fixupAfterSizeChange = function() {
+	    window.scrollTo(0, 0);
+	    fixHeightHack();
+	    window.scrollTo(0, 0);
+	  };
+
+	  // When the device re-orients, at least on iOS, the page is scrolled down :(
+	  window.addEventListener('orientationchange', fixupAfterSizeChange, false);
+	  window.addEventListener('resize', fixupAfterSizeChange, false);
+
+	  // Prevents the browser from sliding the page when the user slides their finger.
+	  // At least on iOS.
+	  var stopSliding = function() {
+	    if (!document.body) {
+	      setTimeout(stopSliding, 4);
+	    } else {
+	      document.body.addEventListener('touchmove', function(e) {
+	        e.preventDefault();
+	      }, false);
+	    }
+	  };
+	  stopSliding();
+
+
+	  // This DOESN'T WORK! I'm leaving it here so I can revisit it.
+	  // The issue is all kinds of things mess up. Events are not rotated,
+	  // the page does strange things.
+	  var forceLandscape = function() {
+	    // Note: This code is for games that require a certain orientation
+	    // on phones only. I'm making the assuption that tablets don't need
+	    // this.
+	    //
+	    // The issue I ran into is I tried to show several people games
+	    // and they had their phone orientation locked to portrait. Having
+	    // to go unlock just to play the game was frustrating. So, for
+	    // controllers than require landscape just try to make the page
+	    // show up in landscape. They'll understand they need to turn the phone.
+	    //
+	    // If the orientation is unlocked they'll turn and the page will
+	    // switch to landscape. If the orientation is locked then turning
+	    // the phone will not switch to landscape NOR will we get an orientation
+	    // event.
+	    var everything = $("hft-everything");
+	    var detectPortrait = function() {
+	      if (screen.width &lt; screen.height) {
+	        everything.className = "hft-portrait-to-landscape";
+	        everything.style.width = window.innerHeight + "px";
+	        everything.style.height = window.innerWidth + "px";
+
+	        var viewport = document.querySelector("meta[name=viewport]");
+	        viewport.setAttribute('content', 'width=device-height, initial-scale=1.0, maximum-scale=1, user-scalable=no, minimal-ui');
+	      } else {
+	        everything.className = "";
+	      }
+	    };
+
+	    detectPortrait();
+	    window.addEventListener('resize', detectPortrait, false);
+	  };
+
+	  function preventEvent(e) {
+	    e.preventDefault();
+	    return false;
+	  }
+
+	  /**
+	   * Disable the context menus!
+	   * At least on Android if you long press on an image it asks if you
+	   * want to save it. I'd think "user-select: none" CSS should handle that
+	   * but nope
+	   */
+	  function disableContextMenu() {
+	    // for now just images.
+	    Array.prototype.forEach.call(document.getElementsByTagName("img"), function(img) {
+	      img.addEventListener('contextmenu', preventEvent, false);
+	    });
+	  }
+
+
+	  window.scrollTo(0, 0);
+
+	  return {
+	    disableContextMenu: disableContextMenu,
+	    fixHeightHack: fixHeightHack,
+	    forceLandscape: forceLandscape,
+	    adjustCSSBasedOnPhone: adjustCSSBasedOnPhone,
+	    isIOS8OrNewerAndiPhone4OrIPhone5: isIOS8OrNewerAndiPhone4OrIPhone5,
+	    isIOS: isIOS,
+	    isMobile: isMobile,
+	  };
+	}.call(exports, __webpack_require__, exports, module), __WEBPACK_AMD_DEFINE_RESULT__ !== undefined &amp;&amp; (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
+
+
+
+/***/ },
+/* 11 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*
+	 * Copyright 2014, Gregg Tavares.
+	 * All rights reserved.
+	 *
+	 * Redistribution and use in source and binary forms, with or without
+	 * modification, are permitted provided that the following conditions are
+	 * met:
+	 *
+	 *     * Redistributions of source code must retain the above copyright
+	 * notice, this list of conditions and the following disclaimer.
+	 *     * Redistributions in binary form must reproduce the above
+	 * copyright notice, this list of conditions and the following disclaimer
+	 * in the documentation and/or other materials provided with the
+	 * distribution.
+	 *     * Neither the name of Gregg Tavares. nor the names of its
+	 * contributors may be used to endorse or promote products derived from
+	 * this software without specific prior written permission.
+	 *
+	 * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+	 * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+	 * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+	 * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+	 * OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+	 * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+	 * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+	 * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+	 * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+	 * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+	 * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+	 */
+	"use strict";
+
+	!(__WEBPACK_AMD_DEFINE_ARRAY__ = [
+	    __webpack_require__(7),
+	    __webpack_require__(9),
+	  ], __WEBPACK_AMD_DEFINE_RESULT__ = function(
+	    hftSettings,
+	    misc) {
+
+	  var lockOrientation = misc.getFunctionByPrefix(window.screen, "lockOrientation");
+	  var unlockOrientation = misc.getFunctionByPrefix(window.screen, "unlockOrientation");
+	  var currentOrientation = "none";
+	  var _canOrient = true;
+
+	  if (!hftSettings.isApp &amp;&amp; window.screen.orientation &amp;&amp; window.screen.orientation.lock) {
+	    lockOrientation = function(orientation) {
+	      window.screen.orientation.lock(orientation).then(function() {
+	        console.log("orientation set");
+	      }, function(err) {
+	        console.error("can not set orientation:", err);
+	      });
+	    };
+	    unlockOrientation = function() {
+	      window.screen.orientation.unlock().then(function() {
+	        console.log("orientation unlocked");
+	      }, function(err) {
+	        console.error("can not unlock orientation:", err);
+	      });
+	    };
+	  }
+
+	  if (!lockOrientation) {
+	    _canOrient = false;
+	    lockOrientation = function() {
+	      console.warn("orientation locking not supported");
+	    };
+	    unlockOrientation = function() {
+	    };
+	  }
+
+	  /**
+	   * Sets the orientation of the screen
+	   * @param {string} [orienation] The orientation to set the phone.
+	   *   Only works on Android or the App.
+	   *
+	   *   Valid values are:
+	   *
+	   *     "portrait-primary"    // normal way people hold phones
+	   *     "portrait-secondary"  // upsidedown
+	   *     "landscape-primary"   // phone turned clockwise 90 degrees from normal
+	   *     "landscape-secondary" // phone turned counter-clockwise 90 degrees from normal
+	   *     "none" (or undefined) // unlocked
+	   */
+	  function set(orientation) {
+	    orientation = orientation || "none";
+	    if (orientation !== currentOrientation) {
+	      currentOrientation = orientation;
+	      if (currentOrientation === "none") {
+	        console.log("unlock orienation");
+	        unlockOrientation();
+	      } else {
+	        console.log("set orienation: " + orientation);
+	        lockOrientation(orientation);
+	      }
+	    }
+	  }
+
+	  /**
+	   * Returns true if orientation is supported.
+	   * @return {boolean} true if orientation is supported
+	   */
+	  function canOrient() {
+	    return _canOrient;
+	  }
+
+	  return {
+	    set: set,
+	    canOrient: canOrient,
+	  };
+	}.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__), __WEBPACK_AMD_DEFINE_RESULT__ !== undefined &amp;&amp; (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
+
+
+/***/ },
+/* 12 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*
+	 * Copyright 2014, Gregg Tavares.
+	 * All rights reserved.
+	 *
+	 * Redistribution and use in source and binary forms, with or without
+	 * modification, are permitted provided that the following conditions are
+	 * met:
+	 *
+	 *     * Redistributions of source code must retain the above copyright
+	 * notice, this list of conditions and the following disclaimer.
+	 *     * Redistributions in binary form must reproduce the above
+	 * copyright notice, this list of conditions and the following disclaimer
+	 * in the documentation and/or other materials provided with the
+	 * distribution.
+	 *     * Neither the name of Gregg Tavares. nor the names of its
+	 * contributors may be used to endorse or promote products derived from
+	 * this software without specific prior written permission.
+	 *
+	 * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+	 * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+	 * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+	 * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+	 * OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+	 * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+	 * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+	 * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+	 * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+	 * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+	 * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+	 */
+	"use strict";
+
+	// Functions for dealing with the player's name. The name events are arguably
+	// not part of the HappyFunTimes library but they are used in most of the samples
+	// so I put them here.
+	!(__WEBPACK_AMD_DEFINE_ARRAY__ = [
+	    __webpack_require__(4),
+	    __webpack_require__(9),
+	  ], __WEBPACK_AMD_DEFINE_RESULT__ = function(
+	    Cookie,
+	    misc) {
+
+	  var $ = function(id) {
+	    return document.getElementById(id);
+	  };
+
+	  var q = misc.parseUrlQuery();
+
+	  var startingNames = [
+	    "Aaron",    "Momo",
+	    "Michael",  "Remi",
+	    "Matt",     "Aya",
+	    "John",     "Stephanie",
+	    "Brian",    "Anna",
+	    "Danny",    "Jen",
+	    "Gregg",    "Tami",
+	    "Vincent",  "Carole",
+	    "Eric",     "Anita",
+	    "Rick",     "Joss",
+	    "Colin",    "Angel",
+	  ];
+
+	  var PlayerNameHandler = function(client, element) {
+	    var nameCookie = new Cookie("name");
+	    var name = nameCookie.get() || q.name || "";
+
+	    // UGH! I guess this name stuff should move to CommonUI. At one point
+	    // it seemed separte
+	    var nameentry = $("hft-nameentry");
+	    var content = $("hft-content");
+	    var contentOriginalDisplay = content.style.display;
+
+	    var copyNameToElement = function() {
+	      element.value = name;
+	    };
+
+	    this.getName = function() {
+	      return name;
+	    };
+
+	    var nameIsPlayerRE = /^player\d*$/i;
+	    function isNameSet() {
+	      return name &amp;&amp; !nameIsPlayerRE.test(name);
+	    };
+
+	    this.isNameSet = isNameSet;
+
+	    var handleSetNameMsg = function(msg) {
+	      name = msg.name;
+	      copyNameToElement();
+	    };
+
+	    var sendName = function() {
+	      client.sendCmd('_hft_setname_', {
+	          name: name,
+	      });
+	    };
+
+	    var sendBusy = function(busy) {
+	      client.sendCmd('_hft_busy_', {
+	          busy: busy,
+	      });
+	    };
+
+	    var startEnteringName = function() {
+	      // Allow the game to help the player by, for example, removing her character
+	      // while she's entering her name. Unfortunately that could be used to cheat
+	      // as in just before she's about to be hit she clicks the name. It's up the individual
+	      // game to decide if it want's to pay attention to the 'busy' event.
+	      sendBusy(true);
+	    };
+
+	    var finishEnteringName = function(e) {
+	      // Unfortunately hiding the controls screwed up iOS Safari. After editing
+	      // the name the page would be scrolled down a certain number of pixels
+	      // like a 2/3rd of the page worth. No idea why. So again I needed
+	      // to do some hacky fix like scroll back to the top.
+	      content.style.display = contentOriginalDisplay;
+	      nameentry.style.display = "none";
+	      window.scroll(0, 1);
+	      window.scroll(0, 0);
+	      e.preventDefault();
+	      element.blur();
+	      var newName = element.value.replace(/[&lt;>]/g, '');
+	      if (newName.length > 16) {
+	        newName = newName.substring(0, 16);
+	      }
+	      if (newName.length === 0) {
+	        element.value = name;
+	      } else if (newName !== name) {
+	        name = newName;
+	        nameCookie.set(name, 700);
+	        sendName();
+	      }
+	      sendBusy(false);
+	    };
+
+	    this.startNameEntry = function() {
+	      // Chrome on Android seems to really mess up here. Or rather my CSS-fu sucks
+	      // so where as on iOS when you edit your name it just works, on Chrome
+	      // the controls fly up over the input=text area. This was the hacky
+	      // solution. Just hide the controls while entering the name. (see below)
+	      nameentry.style.display = "block";
+	      content.style.display = "none";
+	      if (!isNameSet()) {
+	        element.value = misc.pickRandomElement(startingNames);
+	      }
+	      element.focus();
+	    };
+
+	    // If the user's name is "" the game may send a name.
+	    client.addEventListener('_hft_setname_', handleSetNameMsg);
+
+	    element.addEventListener('click', startEnteringName, false);
+	    element.addEventListener('change', finishEnteringName, false);
+	    element.addEventListener('blur', finishEnteringName, false);
+	    element.addEventListener('focus', startEnteringName, false);
+
+	    if (element.form) {
+	      element.form.addEventListener('submit', finishEnteringName, false);
+	    }
+
+	    copyNameToElement();
+	    sendName();
+	  };
+
+	  return PlayerNameHandler;
+	}.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__), __WEBPACK_AMD_DEFINE_RESULT__ !== undefined &amp;&amp; (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
+
+
+
+/***/ },
+/* 13 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*
+	 * Copyright 2014, Gregg Tavares.
+	 * All rights reserved.
+	 *
+	 * Redistribution and use in source and binary forms, with or without
+	 * modification, are permitted provided that the following conditions are
+	 * met:
+	 *
+	 *     * Redistributions of source code must retain the above copyright
+	 * notice, this list of conditions and the following disclaimer.
+	 *     * Redistributions in binary form must reproduce the above
+	 * copyright notice, this list of conditions and the following disclaimer
+	 * in the documentation and/or other materials provided with the
+	 * distribution.
+	 *     * Neither the name of Gregg Tavares. nor the names of its
+	 * contributors may be used to endorse or promote products derived from
+	 * this software without specific prior written permission.
+	 *
+	 * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+	 * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+	 * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+	 * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+	 * OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+	 * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+	 * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+	 * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+	 * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+	 * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+	 * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+	 */
+	"use strict";
+
+	!(__WEBPACK_AMD_DEFINE_ARRAY__ = [
+	  __webpack_require__(14),
+	], __WEBPACK_AMD_DEFINE_RESULT__ = function(
+	  EventEmitter
+	) {
+
+	  class PlayerNameManager extends EventEmitter {
+	    constructor(netPlayer) {
+	      super();
+	      this._netPlayer = netPlayer;
+	      this._name = "";
+	      this._busy = false;
+
+	      this._handleSetName = this._handleSetName.bind(this);
+	      this._handleBusy = this._handleBusy.bind(this);
+
+	      netPlayer.on('_hft_setname_', this._handleSetName);
+	      netPlayer.on('_hft_busy_', this._handleBusy);
+	    }
+
+	    _handleSetName(data) {
+	      if (data.name &amp;&amp; data.name !== this._name) {
+	        this._name = data.name;
+	        this.emit('setName', this._name);
+	      }
+	    }
+
+	    _handleBusy(data) {
+	      if (data.busy !== this._busy) {
+	        this._busy = data.busy;
+	        this.emit('busy', this._busy);
+	      }
+	    }
+
+	    get name() {
+	      return this._name;
+	    }
+
+	    get busy() {
+	      return this._busy;
+	    }
+	  }
+
+	  return PlayerNameManager;
+
+	}.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__), __WEBPACK_AMD_DEFINE_RESULT__ !== undefined &amp;&amp; (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
+
+
+/***/ },
+/* 14 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*
+	 * Copyright 2014, Gregg Tavares.
+	 * All rights reserved.
+	 *
+	 * Redistribution and use in source and binary forms, with or without
+	 * modification, are permitted provided that the following conditions are
+	 * met:
+	 *
+	 *     * Redistributions of source code must retain the above copyright
+	 * notice, this list of conditions and the following disclaimer.
+	 *     * Redistributions in binary form must reproduce the above
+	 * copyright notice, this list of conditions and the following disclaimer
+	 * in the documentation and/or other materials provided with the
+	 * distribution.
+	 *     * Neither the name of Gregg Tavares. nor the names of its
+	 * contributors may be used to endorse or promote products derived from
+	 * this software without specific prior written permission.
+	 *
+	 * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+	 * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+	 * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+	 * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+	 * OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+	 * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+	 * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+	 * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+	 * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+	 * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+	 * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+	 */
+
+	"use strict";
+
+	!(__WEBPACK_AMD_DEFINE_ARRAY__ = [], __WEBPACK_AMD_DEFINE_RESULT__ = function() {
+
+	  /**
+	   * This is similar to node's EventEmitter.
+	   * The major difference is calling `addEventListner`
+	   * or `removeEventListener` with `null` or `undefined`
+	   * will remove all listeners for that event.
+	   */
+	  var EventEmitter = function() {
+	    var events = {};
+	    var maxListeners = 10;
+
+	    var setMaxListeners = function(max) {
+	      maxListeners = max;
+	    };
+
+	    var addEventListener = function(name, handler) {
+	      if (!handler) {
+	        delete events[name];
+	        return;
+	      }
+
+	      var handlers = events[name];
+	      if (!handlers) {
+	        handlers = [];
+	        events[name] = handlers;
+	      }
+	      handlers.push(handler);
+	      if (handlers.length > maxListeners) {
+	        console.warn("More than " + maxListeners + " added to event " + name);
+	      }
+	    };
+
+	    var removeEventListener = function(name, handler) {
+	      if (!handler) {
+	        delete events[name];
+	        return;
+	      }
+
+	      var handlers = events[name];
+	      if (handlers) {
+	        var ndx = handlers.indexOf(handler);
+	        if (ndx >= 0) {
+	          handlers.splice(ndx, 1);
+	        }
+	      }
+	    };
+
+	    var removeAllEventListeners = function() {
+	      events = {};
+	    };
+
+	    var emit = function(name) {
+	      var handlers = events[name];
+	      if (handlers) {
+	        var args = Array.prototype.slice.call(arguments, 1);
+	        handlers.forEach(function(handler) {
+	          handler.apply(this, args);
+	        });
+	      }
+	    };
+
+	    var listeners = function(name) {
+	      return events[name];
+	    };
+
+	    this.on = addEventListener;
+	    this.addEventListener = addEventListener;
+	    this.removeEventListener = removeEventListener;
+	    this.removeAllEventListeners = removeAllEventListeners;
+	    this.addListener = addEventListener;
+	    this.removeListener = removeEventListener;
+	    this.removeAllListeners = removeAllEventListeners;
+	    this.emit = emit;
+	    this.listeners = listeners;
+	    this.setMaxListeners = setMaxListeners;
+	  };
+
+	  return EventEmitter;
+	}.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__), __WEBPACK_AMD_DEFINE_RESULT__ !== undefined &amp;&amp; (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
+
+
+
+/***/ },
+/* 15 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*
+	 * Copyright 2014, Gregg Tavares.
+	 * All rights reserved.
+	 *
+	 * Redistribution and use in source and binary forms, with or without
+	 * modification, are permitted provided that the following conditions are
+	 * met:
+	 *
+	 *     * Redistributions of source code must retain the above copyright
+	 * notice, this list of conditions and the following disclaimer.
+	 *     * Redistributions in binary form must reproduce the above
+	 * copyright notice, this list of conditions and the following disclaimer
+	 * in the documentation and/or other materials provided with the
+	 * distribution.
+	 *     * Neither the name of Gregg Tavares. nor the names of its
+	 * contributors may be used to endorse or promote products derived from
+	 * this software without specific prior written permission.
+	 *
+	 * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+	 * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+	 * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+	 * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+	 * OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+	 * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+	 * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+	 * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+	 * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+	 * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+	 * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+	 */
+	"use strict";
+
+	!(__WEBPACK_AMD_DEFINE_ARRAY__ = [ ], __WEBPACK_AMD_DEFINE_RESULT__ = function() {
+
+	  var drawCircle = function(ctx, x, y, radius, flags) {
+	    flags = flags || 1;
+	    ctx.beginPath();
+	    ctx.arc(x, y, radius, 0, Math.PI * 2);
+	    if (flags &amp; 1) {
+	      ctx.fill();
+	    }
+	    if (flags &amp; 2) {
+	      ctx.stroke();
+	    }
+	  };
+
+	  /**
+	   * @typedef {Object} DPad~Options
+	   * @property {HTMLElement} elemnt element to put dpad inside.
+	   *           DPad will be resized to fit this element or to the
+	   *           size specified
+	   * @property {number} size size in CSS pixels to make DPad
+	   */
+
+	  /**
+	   * Renders a Dpad
+	   *
+	   * @constructor
+	   * @alias DPad
+	   * @param {DPad~Options} options
+	   */
+	  var DPad = function(options) {
+	    this.element = options.element;
+	    this.size = options.size;
+	    this.canvas = document.createElement("canvas");
+	    // We have to put this in the DOM before asking it's size.
+	    this.element.appendChild(this.canvas);
+	    this.resize();
+	    this.ctx = this.canvas.getContext("2d");
+	    this.drawBits(0);
+	  };
+
+	  /**
+	   * Gets the size of the dpad
+	   * @return {number} size of dpad in CSS pixels
+	   */
+	  DPad.prototype.getSize = function() {
+	    var size = this.size;
+	    if (!size) {
+	      size = Math.min(this.canvas.width, this.canvas.height);
+	    }
+	    return size;
+	  };
+
+	  /**
+	   * Draws the dpad given a set of bits
+	   * @param {number} bits where 0x1 is right, 0x2 is left, 0x4 is
+	   *        up and 0x8 is down.
+	   */
+	  DPad.prototype.drawBits = function(bits) {
+	    var size = this.getSize();
+	    var w6 = Math.floor(size / 6.5);
+	    var cx = Math.floor(size / 2);
+	    var cy = Math.floor(size / 2);
+	    var w = Math.floor(size / 2 * 0.8);
+	    var h = Math.floor(size / 2 * 0.8);
+	    var ctx = this.ctx;
+
+	    ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+	    ctx.save();
+	    ctx.translate(cx, cy);
+	    ctx.fillStyle = "#AAA";
+	    ctx.stokeStyle = "#444";
+	    drawCircle(ctx, 0, 0, cx * 0.95, 3);
+
+	    ctx.fillStyle = "#888";
+	    ctx.fillRect(-w6, -h, w6 * 2, h * 2);
+	    ctx.fillRect(-w, -w6, w * 2, w6 * 2);
+
+	    ctx.fillStyle = "#CCC";
+
+	    if (bits &amp; 0x1) {
+	      //ctx.fillRect(  w - w6 * 2, -w6         , w6 * 2, w6 * 2 ); }
+	      drawCircle(ctx,  w - w6, 0, w6 * 0.8);
+	    }
+	    if (bits &amp; 0x2) {
+	      //ctx.fillRect( -w         , -w6         , w6 * 2, w6 * 2 ); }
+	      drawCircle(ctx, -w + w6, 0, w6 * 0.8);
+	    }
+	    if (bits &amp; 0x4) {
+	      //ctx.fillRect( -w6        , -h          , w6 * 2, w6 * 2); }
+	      drawCircle(ctx, 0, -w + w6, w6 * 0.8);
+	    }
+	    if (bits &amp; 0x8) {
+	      //ctx.fillRect( -w6        ,  h - w6 * 2 , w6 * 2, w6 * 2); }
+	      drawCircle(ctx, 0,  w - w6, w6 * 0.8);
+	    }
+
+	    ctx.restore();
+	  };
+
+	  /**
+	   * Draws the dpad given a DirInfo
+	   * @param {module:Input.DirectionInfo} dirInfo
+	   */
+	  DPad.prototype.draw = function(dirInfo) {
+	    this.drawBits(dirInfo.bits);
+	  };
+
+	  /**
+	   * Resizes the DPad to match its container or to the size
+	   * specified at creation time
+	   */
+	  DPad.prototype.resize = function() {
+	    var size = this.size;
+	    if (!size) {
+	      size = Math.min(this.canvas.clientWidth, this.canvas.clientHeight);
+	    }
+	    if (this.canvas.width !== size ||
+	        this.canvas.height !== size) {
+	      this.canvas.width = size;
+	      this.canvas.height = size;
+	    }
+	  };
+
+	  return DPad;
+	}.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__), __WEBPACK_AMD_DEFINE_RESULT__ !== undefined &amp;&amp; (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
+
+
+
+
+
+/***/ },
+/* 16 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*
+	 * Copyright 2014, Gregg Tavares.
+	 * All rights reserved.
+	 *
+	 * Redistribution and use in source and binary forms, with or without
+	 * modification, are permitted provided that the following conditions are
+	 * met:
+	 *
+	 *     * Redistributions of source code must retain the above copyright
+	 * notice, this list of conditions and the following disclaimer.
+	 *     * Redistributions in binary form must reproduce the above
+	 * copyright notice, this list of conditions and the following disclaimer
+	 * in the documentation and/or other materials provided with the
+	 * distribution.
+	 *     * Neither the name of Gregg Tavares. nor the names of its
+	 * contributors may be used to endorse or promote products derived from
+	 * this software without specific prior written permission.
+	 *
+	 * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+	 * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+	 * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+	 * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+	 * OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+	 * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+	 * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+	 * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+	 * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+	 * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+	 * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+	 */
+	"use strict";
+
+	/**
+	 * Various functions to help with user input
+	 * @module Input
+	 */
+	!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(9)], __WEBPACK_AMD_DEFINE_RESULT__ = function(Misc) {
+
+	  /**
+	   * The cursor key values. Can be used to register keys
+	   * @enum {number}
+	   * @memberOf module:Input
+	   */
+	  var cursorKeys = {
+	    kLeft: 37,
+	    kRight: 39,
+	    kUp: 38,
+	    kDown: 40,
+	  };
+
+	  /**
+	   * You can use these to make your own options for setupKeyboardDPadKeys
+	   * @const {number[]} kCursorKeys
+	   * @memberOf module:Input
+	   */
+	  var kCursorKeys = [37, 39, 38, 40];
+	  /**
+	   * You can use these to make your own options for setupKeyboardDPadKeys
+	   * @const {number[]} kASWDKeys
+	   * @memberOf module:Input
+	   */
+	  var kASWDKeys = [65, 68, 87, 83];
+
+	  /**
+	   * You can use these to make your own options for setupKeyboardDPadKeys
+	   *
+	   *     Input.setupKeyboardDPadKeys(callback, Input.kASWDPadOnly);
+	   *
+	   * @const {module:Input.DPadKeys~Options} kASWDPadOnly
+	   * @memberOf module:Input
+	   */
+	  var kASWDPadOnly = {
+	    pads: [
+	      { keys: kASWDKeys, },
+	    ],
+	  };
+	  /**
+	   * You can use these to make your own options for setupKeyboardDPadKeys
+	   *
+	   *     Input.setupKeyboardDPadKeys(callback, Input.kCursorPadOnly);
+	   *
+	   * @const {module:Input.DPadKeys~Options} kCursorPadOnly
+	   * @memberOf module:Input
+	   */
+	  var kCursorPadOnly = {
+	    pads: [
+	      { keys: kCursorKeys, },
+	    ],
+	  };
+
+	  var isNumRE = /^\d+$/;
+
+	  // Provides a map from direction to various info.
+	  //
+	  // Example:
+	  //
+	  //   Input.setupKeyboardDPadsKeys(container, function(event) {
+	  //     console.log("dir: " + event.info.symbol]);
+	  //   });
+	  var RIGHT = 0x1;
+	  var LEFT = 0x2;
+	  var UP = 0x4;
+	  var DOWN = 0x8;
+
+	  /**
+	   * Various info for a given 8 direction direction.
+	   *
+	   *        2     -1 = no touch
+	   *      3 | 1
+	   *       \|/
+	   *     4--+--0
+	   *       /|\
+	   *      5 | 7
+	   *        6
+	   *
+	   * @typedef {Object} DirectionInfo
+	   * @memberOf module:Input
+	   * @property {number} direction -1 to 7
+	   * @property {number} dx -1, 0, or 1
+	   * @property {number} dy -1, 0, or 1
+	   * @property {number} bits where `R = 0x1, L = 0x2, U = 0x4, D =
+	   *           0x8`
+	   * @property {string} unicode arrow simple for direction.
+	   */
+
+	  var dirInfo = { };
+	  dirInfo[-1] = { direction: -1, dx:  0, dy:  0, bits: 0           , symbol: String.fromCharCode(0x2751), };
+	  dirInfo[ 0] = { direction:  0, dx:  1, dy:  0, bits: RIGHT       , symbol: String.fromCharCode(0x2192), }; // right
+	  dirInfo[ 1] = { direction:  1, dx:  1, dy:  1, bits: UP | RIGHT  , symbol: String.fromCharCode(0x2197), }; // up-right
+	  dirInfo[ 2] = { direction:  2, dx:  0, dy:  1, bits: UP          , symbol: String.fromCharCode(0x2191), }; // up
+	  dirInfo[ 3] = { direction:  3, dx: -1, dy:  1, bits: UP | LEFT   , symbol: String.fromCharCode(0x2196), }; // up-left
+	  dirInfo[ 4] = { direction:  4, dx: -1, dy:  0, bits: LEFT        , symbol: String.fromCharCode(0x2190), }; // left
+	  dirInfo[ 5] = { direction:  5, dx: -1, dy: -1, bits: DOWN | LEFT , symbol: String.fromCharCode(0x2199), }; // down-left
+	  dirInfo[ 6] = { direction:  6, dx:  0, dy: -1, bits: DOWN        , symbol: String.fromCharCode(0x2193), }; // down
+	  dirInfo[ 7] = { direction:  7, dx:  1, dy: -1, bits: DOWN | RIGHT, symbol: String.fromCharCode(0x2198), }; // down-right
+
+	  /**
+	   * @typedef {Object} EventInfo
+	   * @property {number} pad the pad id 0, 1, 2, etc.
+	   * @property {module:Input.DirectionInfo} info the direction
+	   *           info for the event.
+	   * @memberOf module:Input
+	   */
+
+	  /**
+	   * Creates an EventInfo for a given padId
+	   * @returns {module:Input.EventInfo}
+	   * @memberOf module:Input
+	   */
+	  var createDirectionEventInfo = function(padId) {
+	    return {
+	      pad: padId,
+	      info: undefined,
+	    };
+	  };
+
+	  /**
+	   * @param {number} padId id of pad. eg. 0, 1, 2
+	   * @param {number} direction direction pad is being pressed -1
+	   *        to 7.
+	   * @param {EventInfo} eventInfo from createDirectionEventInfo.
+	   * @param {callback} callback to pass eventInfo once it's been
+	   *        filled out.
+	   * @memberOf module:Input
+	   */
+	  var emitDirectionEvent = function(padId, direction, eventInfo, callback) {
+	    var info = dirInfo[direction];
+	    eventInfo.pad = padId;
+	    eventInfo.info = info;
+	    callback(eventInfo);
+	  };
+
+	  /**
+	   * Given a direction returns a direction info
+	   * @param {number} direction -1 to 7
+	   * @return {module:Input.DirectionInfo}
+	   * @memberOf module:Input
+	   */
+	  var getDirectionInfo = function(direction) {
+	    return dirInfo[direction];
+	  };
+
+	  /**
+	   * @typedef {Object} Coordinate
+	   * @property {number} x the x coordinate
+	   * @property {number} y the y coordinate
+	   * @memberOf module:Input
+	   */
+
+	  /**
+	   * Gets the relative coordinates for an event
+	   * @func
+	   * @param {HTMLElement} reference html elemetn to reference
+	   * @param {Event} event from HTML mouse event
+	   * @returns {module:Input.Coordinate} the relative position
+	   * @memberOf module:Input
+	   */
+	  var getRelativeCoordinates = function(reference, event) {
+	    // Use absolute coordinates
+	    var pos = Misc.getAbsolutePosition(reference);
+	    var x = event.pageX - pos.x;
+	    var y = event.pageY - pos.y;
+	    return { x: x, y: y };
+	  };
+
+	  /**
+	   * Sets up controller key functions
+	   * @param {callback(code, down)} keyDownFn a function to be
+	   *        called when a key is pressed. It's passed the keycode
+	   *        and true.
+	   * @param {callback(code, down)} keyUpFn a function to be called
+	   *        when a key is released. It's passed the keycode and
+	   *        false.
+	   * @memberOf module:Input
+	   */
+	  var setupControllerKeys = function(keyDownFn, keyUpFn) {
+	    var g_keyState = {};
+	    var g_oldKeyState = {};
+
+	    var updateKey = function(keyCode, state) {
+	      g_keyState[keyCode] = state;
+	      if (g_oldKeyState !== g_keyState) {
+	        g_oldKeyState = state;
+	        if (state) {
+	          keyDownFn(keyCode);
+	        } else {
+	          keyUpFn(keyCode);
+	        }
+	      }
+	    };
+
+	    var keyUp = function(event) {
+	      updateKey(event.keyCode, false);
+	    };
+
+	    var keyDown = function(event) {
+	      updateKey(event.keyCode, true);
+	    };
+
+	    window.addEventListener("keyup", keyUp, false);
+	    window.addEventListener("keydown", keyDown, false);
+	  };
+
+	  /**
+	   * @typedef {Object} DPadKeys
+	   * @property {number[]} keys Array of 4 key codes that make a
+	   *           keyboard dpad in LRUD order.
+	   * @memberOf module:Input
+	   */
+
+	  /**
+	   * @typedef {Object} DPadKeys~Options
+	   * @property {module:Input.DPadKeys[]} pads Array of dpad keys
+	   * @memberOf module:Input
+	   */
+
+	  /**
+	   * Simulates N virtual dpads using keys
+	   * asdw for pad 0, arrow keys for pad 1
+	   *
+	   * For each change in direction callback will be
+	   * called with pad id (0 left, 1 right) and direction
+	   * where
+	   *
+	   *        2     -1 = not pressed
+	   *      3 | 1
+	   *       \|/
+	   *     4--+--0
+	   *       /|\
+	   *      5 | 7
+	   *        6
+	   *
+	   * Note: this matches trig functions you can do this
+	   *
+	   *     var angle = dir * Math.PI / 4;
+	   *     var dx    = Math.cos(angle);
+	   *     var dy    = Math.sin(angle);
+	   *
+	   * for +y up (ie, normal for 3d)
+	   *
+	   * In 2d you'd probably want
+	   *
+	   *     var angle =  dir * Math.PI / 4;
+	   *     var dx    =  Math.cos(angle);
+	   *     var dy    = -Math.sin(angle);
+	   *
+	   *
+	   * @param {callback} callback callback will be called with
+	   *        EventInfo objects when pads change their direction
+	   * @param {module:Input.DPadKeys~Options?} options If no options
+	   *        are passed in assumes 2 DPads one on ASWD the other on
+	   *        the cursor keys
+	   * @memberOf module:Input
+	   */
+	  var setupKeyboardDPadKeys = function(callback, options) {
+	    if (!options) {
+	      options = {
+	        pads: [
+	         { keys: kASWDKeys,   }, // LRUD
+	         { keys: kCursorKeys, }, // LRUD
+	        ],
+	      };
+	    }
+
+	    var g_dirBits = [];
+	    var g_excludeBits = [];
+	    var g_dir = [];
+	    var g_eventInfos = [];
+
+	    var bitInfos = [
+	      { bit: 1, exclude: 2, mask: 0x3 }, // left
+	      { bit: 2, exclude: 1, mask: 0x3 }, // right
+	      { bit: 4, exclude: 8, mask: 0xC }, // up
+	      { bit: 8, exclude: 4, mask: 0xC }, // down
+	    ];
+
+	    var keyToBit = { };
+
+	    for (var ii = 0; ii &lt; options.pads.length; ++ii) {
+	      var pad = options.pads[ii];
+	      g_dirBits.push(0);
+	      g_excludeBits.push(0);
+	      g_dir.push(-1);
+	      g_eventInfos.push(createDirectionEventInfo(ii));
+	      for (var kk = 0; kk &lt; 4; ++kk) {
+	        var bitInfo = bitInfos[kk];
+	        var keyInfo = { pad: ii, };
+	        Misc.copyProperties(bitInfo, keyInfo);
+	        keyToBit[pad.keys[kk]] = keyInfo;
+	      }
+	    }
+
+	    var bitsToDir = [
+	      -1, // 0
+	       4, // 1      l
+	       0, // 2     r
+	      -1, // 3     rl
+	       2, // 4    u
+	       3, // 5    u l
+	       1, // 6    ur
+	      -1, // 7    url
+	       6, // 8   d
+	       5, // 9   d  l
+	       7, // 10  d r
+	      -1, // 11  d rl
+	      -1, // 12  du
+	      -1, // 13  du l
+	      -1, // 14  dur
+	      -1, // 15  durl
+	    ];
+
+	    var setBit = function(keyCode, value) {
+	      // get info for this key
+	      var info = keyToBit[keyCode];
+	      if (info) {
+	        // or in or and out bit for button
+	        var pad = info.pad;
+	        var bit = info.bit;
+	        var bits = g_dirBits[pad];
+	        if (value) {
+	          bits |= bit;
+	          g_excludeBits[pad] = (g_excludeBits[pad] &amp; ~info.mask) | info.exclude;
+	        } else {
+	          bits &amp;= ~bit;
+	          g_excludeBits[pad] &amp;= ~info.mask;
+	        }
+	        // If they've changed
+	        if (bits !== g_dirBits[pad]) {
+	          g_dirBits[pad] = bits;
+	          var dir = bitsToDir[bits &amp; ~g_excludeBits[pad]];
+	          // If the dir has changed.
+	          if (dir !== g_dir[pad]) {
+	            g_dir[pad] = dir;
+	            emitDirectionEvent(pad, dir, g_eventInfos[pad], callback);
+	          }
+	        }
+	      }
+	    };
+
+	    var keyUp = function(keyCode) {
+	      setBit(keyCode, 0);
+	    };
+
+	    var keyDown = function(keyCode) {
+	      setBit(keyCode, 1);
+	    };
+
+	    setupControllerKeys(keyDown, keyUp);
+	  };
+
+	  /**
+	   * @typedef {Object} KeyEvent
+	   * @property {number} keyCode
+	   * @property {boolean} pressed true if pressed, false if
+	   *           released
+	   * @memberOf module:Input
+	   */
+
+	  /**
+	   * Sets up handlers for specific keys
+	   * @memberOf module:Input
+	   * @param {Object.&lt;string, callback>} array of keys to handler
+	   *        functions. Handlers are called with a KeyEvent
+	   *
+	   * @example
+	   *
+	   *      var keys = { };
+	   *      keys["Z".charCodeAt(0)] = handleJump;
+	   *      keys["X".charCodeAt(0)] = handleShow
+	   *      keys["C".charCodeAt(0)] = handleTestSound;
+	   *      keys[Input.cursorKeys.kRight] = handleMoveRight;
+	   *      Input.setupKeys(keys);
+	   *
+	   */
+	  var setupKeys = function(keys) {
+	    var keyCodes = {};
+
+	    // Convert single characters to char codes.
+	    Object.keys(keys).forEach(function(key) {
+	      var value = keys[key];
+	      if (!isNumRE.test(key)) {
+	        if (key.length !== 1) {
+	          throw "bad key code: '" + key + "'";
+	        }
+	        key = key.charCodeAt(0);
+	      }
+	      keyCodes[key] = value;
+	    });
+
+	    var handleKey = function(keyCode, state, pressed) {
+	      var key = keyCodes[keyCode];
+	      if (key) {
+	        key({keyCode: keyCode, pressed:pressed});
+	      }
+	    };
+
+	    var handleKeyDown = function(keyCode, state) {
+	      handleKey(keyCode, state, true);
+	    };
+	    var handleKeyUp = function(keyCode, state) {
+	      handleKey(keyCode, state, false);
+	    };
+
+	    setupControllerKeys(handleKeyDown, handleKeyUp);
+	  };
+
+	  return {
+	    cursorKeys: cursorKeys,
+	    createDirectionEventInfo: createDirectionEventInfo,
+	    emitDirectionEvent: emitDirectionEvent,
+	    getDirectionInfo: getDirectionInfo,
+	    kCursorKeys: kCursorKeys,
+	    kCursorPadOnly: kCursorPadOnly,
+	    kASWDKeys: kASWDKeys,
+	    kASWDPadOnly: kASWDPadOnly,
+	    getRelativeCoordinates: getRelativeCoordinates,
+	    setupControllerKeys: setupControllerKeys,
+	    setupKeyboardDPadKeys: setupKeyboardDPadKeys,
+	    setupKeys: setupKeys,
+	  };
+	}.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__), __WEBPACK_AMD_DEFINE_RESULT__ !== undefined &amp;&amp; (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
+
+
+
+/***/ },
+/* 17 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var __WEBPACK_AMD_DEFINE_RESULT__;/*
+	 * Copyright 2014, Gregg Tavares.
+	 * All rights reserved.
+	 *
+	 * Redistribution and use in source and binary forms, with or without
+	 * modification, are permitted provided that the following conditions are
+	 * met:
+	 *
+	 *     * Redistributions of source code must retain the above copyright
+	 * notice, this list of conditions and the following disclaimer.
+	 *     * Redistributions in binary form must reproduce the above
+	 * copyright notice, this list of conditions and the following disclaimer
+	 * in the documentation and/or other materials provided with the
+	 * distribution.
+	 *     * Neither the name of Gregg Tavares. nor the names of its
+	 * contributors may be used to endorse or promote products derived from
+	 * this software without specific prior written permission.
+	 *
+	 * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+	 * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+	 * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+	 * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+	 * OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+	 * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+	 * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+	 * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+	 * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+	 * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+	 * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+	 */
+	"use strict";
+
+	/**
+	 * Miscellaneous string functions
+	 * @module Strings
+	 */
+	!(__WEBPACK_AMD_DEFINE_RESULT__ = function() {
+
+	  /**
+	   * Returns a padding string large enough for the given size.
+	   * @param {string} padChar character for padding string
+	   * @param {number} len minimum length of padding.
+	   * @returns {string} string with len or more of padChar.
+	   */
+	  var getPadding = (function() {
+	    var paddingDb = {};
+
+	    return function(padChar, len) {
+	      var padStr = paddingDb[padChar];
+	      if (!padStr || padStr.length &lt; len) {
+	        padStr = new Array(len + 1).join(padChar);
+	        paddingDb[padChar] = padStr;
+	      }
+	      return padStr;
+	    };
+	  }());
+
+	  /**
+	   * Turn an unknown object into a string if it's not already.
+	   * Do I really needs this? I could just always do .toString even
+	   * on a string.
+	   */
+	  var stringIt = function(str) {
+	    return (typeof str === 'string') ? str : str.toString();
+	  };
+
+	  /**
+	   * Pad string on right
+	   * @param {string} str string to pad
+	   * @param {number} len number of characters to pad to
+	   * @param {string} padChar character to pad with
+	   * @returns {string} padded string.
+	   * @memberOf module:Strings
+	   */
+	  var padRight = function(str, len, padChar) {
+	    str = stringIt(str);
+	    if (str.length >= len) {
+	      return str;
+	    }
+	    var padStr = getPadding(padChar, len);
+	    return str + padStr.substr(str.length - len);
+	  };
+
+	  /**
+	   * Pad string on left
+	   * @param {string} str string to pad
+	   * @param {number} len number of characters to pad to
+	   * @param {string} padChar character to pad with
+	   * @returns {string} padded string.
+	   * @memberOf module:Strings
+	   */
+	  var padLeft = function(str, len, padChar) {
+	    str = stringIt(str);
+	    if (str.length >= len) {
+	      return str;
+	    }
+	    var padStr = getPadding(padChar, len);
+	    return padStr.substr(str.length - len) + str;
+	  };
+
+	  /**
+	   * Replace %(id)s in strings with values in objects(s)
+	   *
+	   * Given a string like `"Hello %(name)s from $(user.country)s"`
+	   * and an object like `{name:"Joe",user:{country:"USA"}}` would
+	   * return `"Hello Joe from USA"`.
+	   *
+	   * @function
+	   * @param {string} str string to do replacements in
+	   * @param {Object|Object[]} params one or more objects.
+	   * @returns {string} string with replaced parts
+	   * @memberOf module:Strings
+	   */
+	  var replaceParams = (function() {
+	    var replaceParamsRE = /%\(([^\)]+)\)s/g;
+
+	    return function(str, params) {
+	      if (!params.length) {
+	        params = [params];
+	      }
+
+	      return str.replace(replaceParamsRE, function(match, key) {
+	        var keys = key.split('.');
+	        for (var ii = 0; ii &lt; params.length; ++ii) {
+	          var obj = params[ii];
+	          for (var jj = 0; jj &lt; keys.length; ++jj) {
+	            var part = keys[jj];
+	            obj = obj[part];
+	            if (obj === undefined) {
+	              break;
+	            }
+	          }
+	          if (obj !== undefined) {
+	            return obj;
+	          }
+	        }
+	        console.error("unknown key: " + key);
+	        return "%(" + key + ")s";
+	      });
+	    };
+	  }());
+
+	  /**
+	   * True if string starts with prefix
+	   * @static
+	   * @param {String} str string to check for start
+	   * @param {String} prefix start value
+	   * @returns {Boolean} true if str starts with prefix
+	   * @memberOf module:Strings
+	   */
+	  var startsWith = function(str, start) {
+	    return (str.length >= start.length &amp;&amp;
+	            str.substr(0, start.length) === start);
+	  };
+
+	  /**
+	   * True if string ends with suffix
+	   * @param {String} str string to check for start
+	   * @param {String} suffix start value
+	   * @returns {Boolean} true if str starts with suffix
+	   * @memberOf module:Strings
+	   */
+	  var endsWith = function(str, end) {
+	    return (str.length >= end.length &amp;&amp;
+	            str.substring(str.length - end.length) === end);
+	  };
+
+	  /**
+	   * Make a string from unicode code points
+	   * @function
+	   * @param {Number} codePoint one or more code points
+	   * @returns {string} unicode string. Note a single code point
+	   *          can return a string with length > 1.
+	   * @memberOf module:Strings
+	   */
+	  var fromCodePoint = String.fromCodePoint ? String.fromCodePoint : (function() {
+	    var stringFromCharCode = String.fromCharCode;
+	    var floor = Math.floor;
+	    var fromCodePoint = function() {
+	      var MAX_SIZE = 0x4000;
+	      var codeUnits = [];
+	      var highSurrogate;
+	      var lowSurrogate;
+	      var index = -1;
+	      var length = arguments.length;
+	      if (!length) {
+	        return '';
+	      }
+	      var result = '';
+	      while (++index &lt; length) {
+	        var codePoint = Number(arguments[index]);
+	        if (
+	          !isFinite(codePoint) || // `NaN`, `+Infinity`, or `-Infinity`
+	          codePoint &lt; 0 || // not a valid Unicode code point
+	          codePoint > 0x10FFFF || // not a valid Unicode code point
+	          floor(codePoint) !== codePoint // not an integer
+	        ) {
+	          throw new RangeError('Invalid code point: ' + codePoint);
+	        }
+	        if (codePoint &lt;= 0xFFFF) { // BMP code point
+	          codeUnits.push(codePoint);
+	        } else { // Astral code point; split in surrogate halves
+	          // http://mathiasbynens.be/notes/javascript-encoding#surrogate-formulae
+	          codePoint -= 0x10000;
+	          highSurrogate = (codePoint >> 10) + 0xD800;
+	          lowSurrogate = (codePoint % 0x400) + 0xDC00;
+	          codeUnits.push(highSurrogate, lowSurrogate);
+	        }
+	        if (index + 1 === length || codeUnits.length > MAX_SIZE) {
+	          result += stringFromCharCode.apply(null, codeUnits);
+	          codeUnits.length = 0;
+	        }
+	      }
+	      return result;
+	    };
+	    return fromCodePoint;
+	  }());
+
+	  var exports = {
+	    endsWith: endsWith,
+	    fromCodePoint: fromCodePoint,
+	    padLeft: padLeft,
+	    padRight: padRight,
+	    replaceParams: replaceParams,
+	    startsWith: startsWith,
+	  };
+
+	  return exports;
+	}.call(exports, __webpack_require__, exports, module), __WEBPACK_AMD_DEFINE_RESULT__ !== undefined &amp;&amp; (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
+
+
+
+
+/***/ },
+/* 18 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*
+	 * Copyright 2014, Gregg Tavares.
+	 * All rights reserved.
+	 *
+	 * Redistribution and use in source and binary forms, with or without
+	 * modification, are permitted provided that the following conditions are
+	 * met:
+	 *
+	 *     * Redistributions of source code must retain the above copyright
+	 * notice, this list of conditions and the following disclaimer.
+	 *     * Redistributions in binary form must reproduce the above
+	 * copyright notice, this list of conditions and the following disclaimer
+	 * in the documentation and/or other materials provided with the
+	 * distribution.
+	 *     * Neither the name of Gregg Tavares. nor the names of its
+	 * contributors may be used to endorse or promote products derived from
+	 * this software without specific prior written permission.
+	 *
+	 * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+	 * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+	 * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+	 * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+	 * OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+	 * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+	 * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+	 * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+	 * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+	 * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+	 * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+	 */
+	"use strict";
+
+	/**
+	 * Various functions for touch input.
+	 *
+	 * @module Touch
+	 */
+	!(__WEBPACK_AMD_DEFINE_ARRAY__ = [ __webpack_require__(19),
+	    __webpack_require__(16),
+	    __webpack_require__(9),
+	  ], __WEBPACK_AMD_DEFINE_RESULT__ = function(pep, Input, Misc) {
+
+	  /**
+	   * @typedef {Object} PadInfo
+	   * @property {HTMLElement} referenceElement element that is reference for position of pad
+	   * @property {number} offsetX offset from left of reference element to center of pad
+	   * @property {number} offsetY offset from top of reference element to center of pad
+	   * @memberOf module:Touch
+	   */
+
+	  /**
+	   * @typedef {Object} TouchDPad~Options
+	   * @property {HTMLElement} inputElement element used to capture input (for example window, body,)
+	   * @property {callback} callback callback to pass event
+	   * @property {boolean?} fixedCenter true = center stays the same place, false = each time finger touches a new center is picked
+	   * @property {number?} deadSpaceRadius size of dead area in center of pad.
+	   * @property {number?} axisSize use axis.
+	   * @property {module:Touch~PadInfo[]} pads array of PadInfos, one for each DPad
+	   * @memberOf module:Touch
+	   */
+
+	  /**
+	   * Simulates N virtual dpads using touch events
+	   *
+	   * For each change in direction callback will be
+	   * called with an event info where
+	   *
+	   *     pad = (index of pad)
+	   *     direction =
+	   *
+	   *
+	   *        2     -1 = no touch
+	   *      3 | 1
+	   *       \|/
+	   *     4--+--0
+	   *       /|\
+	   *      5 | 7
+	   *        6
+	   *
+	   *     dx   = -1, 0, 1
+	   *     dy   = -1, 0, 1
+	   *     bits = 1 for right, 2 for left, 4 for up, 8 for down
+	   *
+	   * Note: this matches trig functions so you can do this
+	   *
+	   *     if (dir >= 0) {
+	   *       var angle = dir * Math.PI / 4;
+	   *       var dx    = Math.cos(angle);
+	   *       var dy    = Math.sin(angle);
+	   *     }
+	   *
+	   * for +y up (ie, normal for 3d)
+	   *
+	   * In 2d you'd probably want to flip dy
+	   *
+	   *     if (dir >= 0) {
+	   *       var angle =  dir * Math.PI / 4;
+	   *       var dx    =  Math.cos(angle);
+	   *       var dy    = -Math.sin(angle);
+	   *     }
+	   *
+	   * The default way of figuring out the direction is to take the angle from the center to
+	   * the place of touch, compute an angle, divide a circle into octants, which ever octant is the direction
+	   *
+	   * If axisSize is passed in then instead the space is divided into 3x3 boxes. Which ever box the finger is
+	   * in is the direction. axisSize determines the width height of the axis boxes
+	   *
+	   *          | ax |
+	   *          | is |
+	   *     -----+----+-----
+	   *          |    | axis
+	   *     -----+----+-----
+	   *          |    |
+	   *          |    |
+	   *
+	   * if `divisions: 4` is passed in then instead of getting 8 directions decided
+	   * by octant you get 4 decided by quadrant as in
+	   *
+	   *            2
+	   *         \  |  /
+	   *          \ | /
+	   *     4 &lt;---   ---> 0
+	   *          / | \
+	   *         /  V  \
+	   *            6
+	   *
+	   * @param {module:Touch.TouchDPad~Options} options
+	   * @memberOf module:Touch
+	   */
+
+	  var setupVirtualDPads = function(options) {
+	    var callback = options.callback;
+	    var container = options.inputElement;
+	    options.deadSpaceRadius = options.deadSpaceRadius || 10;
+	    var deadSpaceRadiusSq = options.deadSpaceRadius * options.deadSpaceRadius;
+
+	    var Vector2 = function(x, y) {
+	      this.reset(x, y);
+	    };
+
+	    Vector2.prototype.reset = function(x, y) {
+	      this.x = x;
+	      this.y = y;
+	      return this;
+	    };
+
+	    Vector2.prototype.copyFrom = function(src) {
+	      this.x = src.x;
+	      this.y = src.y;
+	    };
+
+	    Vector2.prototype.minusEq = function(v) {
+	      this.x -= v.x;
+	      this.y -= v.y;
+	      return this;
+	    };
+
+	    var makePad = function(padId) {
+	      return {
+	        pointerId: -1,                      // touch id
+	        pointerPos: new Vector2(0, 0),      // current position
+	        pointerStartPos: new Vector2(0, 0), // position when first touched
+	        vector: new Vector2(0, 0),          // vector from start to current position
+	        dir: -1,                            // octant
+	        lastDir: 0,                         // previous octant
+	        event: Input.createDirectionEventInfo(padId),
+	      };
+	    };
+
+	    var pads = [];
+	    for (var ii = 0; ii &lt; options.pads.length; ++ii) {
+	      pads.push(makePad(ii));
+	    }
+
+	    var computeDirByAngle = function(x, y) {
+	      var angle = Math.atan2(-y, x) + Math.PI * 2 + Math.PI / 8;
+	      return (Math.floor(angle / (Math.PI / 4))) % 8;
+	    };
+
+	    var computeDirByAngle4 = function(x, y) {
+	      if (Math.abs(x) &lt; Math.abs(y)) {
+	        return y &lt; 0 ? 2 : 6;
+	      } else {
+	        return x &lt; 0 ? 4 : 0;
+	      }
+	    };
+
+	    //      |   |
+	    //      | V |x
+	    // -----+---+-----
+	    //  H   |HV |x H
+	    // -----+---+-----
+	    //  y   | Vy|xy
+	    //      |   |
+
+	    var axisBitsToDir = [
+	       3, // 0
+	       4, // 1   h
+	       2, // 2    v
+	      -1, // 3   hv
+	       1, // 4     x
+	       0, // 5   h x
+	       2, // 6    vx
+	      -1, // 7   hvx
+	       5, // 8      y
+	       4, // 9   h  y
+	       6, // 10   v y
+	      -1, // 11  hv y
+	       7, // 12    xy
+	       0, // 13  h xy
+	       6, // 14   vxy
+	      -1, // 15  hvxy
+	    ];
+
+	    var computeDirByAxis = function(x, y) {
+	      var h = (Math.abs(y) &lt; options.axisSize / 2) ? 1 : 0;
+	      var v = (Math.abs(x) &lt; options.axisSize / 2) ? 2 : 0;
+	      var bits = h | v |
+	          (x > 0 ? 4 : 0) |
+	          (y > 0 ? 8 : 0);
+	      return axisBitsToDir[bits];
+	    };
+
+	    var computeDir = options.axisSize ? computeDirByAxis : computeDirByAngle;
+
+	    if (options.divisions === 4) {
+	      computeDir = computeDirByAngle4;
+	    }
+
+	    var callCallback = function(padId, dir) {
+	      var pad = pads[padId];
+	      Input.emitDirectionEvent(padId, dir, pad.event, callback);
+	    };
+
+	    var updatePad = function(pad, padId, out) {
+	      var newDir = -1;
+	      if (!out &amp;&amp; pad.pointerId >= 0) {
+	        var distSq = pad.vector.x * pad.vector.x + pad.vector.y * pad.vector.y;
+	        if (distSq > deadSpaceRadiusSq) {
+	          newDir = computeDir(pad.vector.x, pad.vector.y);
+	          pad.lastDir = newDir;
+	        }
+	      }
+	      if (pad.dir !== newDir) {
+	        pad.dir = newDir;
+	        callCallback(padId, newDir);
+	      }
+	    };
+
+	    var checkStart = function(padId, e) {
+	      var pad = pads[padId];
+	      var padOptions = options.pads[padId];
+	      pad.pointerId = e.pointerId;
+	      var relPos = Input.getRelativeCoordinates(padOptions.referenceElement, e);
+	      var x = relPos.x - (padOptions.offsetX || padOptions.referenceElement.clientWidth  / 2);
+	      var y = relPos.y - (padOptions.offsetY || padOptions.referenceElement.clientHeight / 2);
+	      if (options.fixedCenter) {
+	        pad.pointerStartPos.reset(0, 0);
+	        pad.pointerPos.reset(x, y);
+	        pad.vector.reset(x, y);
+	        updatePad(pad, padId);
+	      } else {
+	        pad.pointerStartPos.reset(x, y);
+	        pad.pointerPos.copyFrom(pad.pointerStartPos);
+	        pad.vector.reset(0, 0);
+	        pad.dir = pad.lastDir;
+	        callCallback(padId, pad.lastDir);
+	      }
+	    };
+
+	    var getClosestPad = function(e) {
+	      var closestId = 0;
+	      var closestDist;
+	      for (var ii = 0; ii &lt; pads.length; ++ii) {
+	        var padOptions = options.pads[ii];
+	        var refElement = padOptions.referenceElement;
+	        var relPos = Input.getRelativeCoordinates(refElement, e);
+	        var centerX = refElement.clientWidth / 2;
+	        var centerY = refElement.clientHeight / 2;
+	        var dx = relPos.x - centerX;
+	        var dy = relPos.y - centerY;
+	        var distSq = dx * dx + dy * dy;
+	        if (closestDist === undefined || distSq &lt; closestDist) {
+	          closestDist = distSq;
+	          closestId = ii;
+	        }
+	      }
+	      return closestId;
+	    };
+
+	    var onPointerDown = function(e) {
+	      var padId = getClosestPad(e);
+	      checkStart(padId, e);
+	    };
+
+	    var onPointerMove = function(e) {
+	      for (var ii = 0; ii &lt; pads.length; ++ii) {
+	        var pad = pads[ii];
+	        if (pad.pointerId === e.pointerId) {
+	          var padOptions = options.pads[ii];
+	          var relPos = Input.getRelativeCoordinates(padOptions.referenceElement, e);
+	          var x = relPos.x - (padOptions.offsetX || padOptions.referenceElement.clientWidth / 2);
+	          var y = relPos.y - (padOptions.offsetY || padOptions.referenceElement.clientHeight / 2);
+	          pad.pointerPos.reset(x, y);
+	          pad.vector.copyFrom(pad.pointerPos);
+	          pad.vector.minusEq(pad.pointerStartPos);
+	          updatePad(pad, ii);
+	        }
+	      }
+	    };
+
+	    var onPointerUp = function(e) {
+	      for (var ii = 0; ii &lt; pads.length; ++ii) {
+	        var pad = pads[ii];
+	        if (pad.pointerId === e.pointerId) {
+	          pad.pointerId = -1;
+	          pad.vector.reset(0, 0);
+	          updatePad(pad, ii);
+	        }
+	      }
+	    };
+
+	    var onPointerOut = function(e) {
+	      for (var ii = 0; ii &lt; pads.length; ++ii) {
+	        var pad = pads[ii];
+	        if (pad.pointerId === e.pointerId) {
+	          updatePad(pad, ii, true);
+	        }
+	      }
+	    };
+
+	    container.addEventListener('pointerdown', onPointerDown, false);
+	    container.addEventListener('pointermove', onPointerMove, false);
+	    container.addEventListener('pointerup', onPointerUp, false);
+	    container.addEventListener('pointerout', onPointerOut, false);
+	  };
+
+	  /**
+	   * @typedef {Object} ButtonInfo
+	   * @property {HTMLElement} element element that represents area of buttton (need not be visible)
+	   * @property {callback} callback function to call when button is pressed or released
+	   * @memberOf module:Touch
+	   */
+
+	  /**
+	   * @typedef {Object} Buttons~Options
+	   * @property {HTMLElement} inputElement element that receives all input. Should be above all buttons
+	   * @memberOf module:Touch
+	   */
+
+	  /**
+	   * Sets up touch buttons.
+	   *
+	   * For example
+	   *
+	   *     var $ = document.getElementById.bind(document);
+	   *
+	   *     Touch.setupButtons({
+	   *       inputElement: $("buttons"),
+	   *       buttons: [
+	   *         { element: $("abuttoninput"), callback: handleAbutton, },
+	   *         { element: $("avatarinput"),  callback: handleShow, },
+	   *       ],
+	   *     });
+	   *
+	   * The code above sets up 2 buttons. The HTML elements "abuttoninput" and "avatarinput".
+	   * The actual touch input events come from an HTML element "buttons" which is an div
+	   * that covers the entire display.
+	   *
+	   * @param {module:Touch.Buttons~Options} options
+	   * @memberOf module:Touch
+	   */
+	  var setupButtons = function(options) {
+	    var buttonInfos = [];
+	    var buttons = options.buttons;
+	    //var expirationTime = 2000;  // 2 seconds, 2000ms
+
+	    // I don't really know what to make this number
+	    // If the person has steady hands they can make
+	    // this fail but I'm going to assume most players
+	    // most of the time won't hold steady for this long.
+	    // On the other hand if the button does get stuck
+	    // It will take this long to un-stick.
+
+	    for (var ii = 0; ii &lt; buttons.length; ++ii) {
+	      var button = buttons[ii];
+	      var buttonInfo = {
+	        pointerIds: {},   // Pointers currently in this button
+	        numPointerIds: 0, // Number of pointers in this button
+	      };
+	      Misc.copyProperties(button, buttonInfo);
+	      buttonInfos.push(buttonInfo);
+	    }
+
+	    // var printButtonInfo = function(buttonInfo) {
+	    //   console.log("button: " + buttonInfo.element.id + ", " + buttonInfo.numPointerIds);
+	    // };
+
+	    var addPointerId = function(buttonInfo, pointerId, timeStamp) {
+	      if (!buttonInfo.pointerIds[pointerId]) {
+	        buttonInfo.pointerIds[pointerId] = timeStamp;
+	        ++buttonInfo.numPointerIds;
+	        buttonInfo.callback({pressed: true});
+	      }
+	    };
+
+	    var removePointerId = function(buttonInfo, pointerId) {
+	      if (buttonInfo.pointerIds[pointerId]) {
+	        delete buttonInfo.pointerIds[pointerId];
+	        --buttonInfo.numPointerIds;
+	        if (buttonInfo.numPointerIds === 0) {
+	          buttonInfo.callback({pressed: false});
+	        } else if (buttonInfo.numPointerIds &lt; 0) {
+	          throw ("numPointerIds went negative: how did I get here!?");
+	        }
+	      }
+	    };
+
+	    // This is because (maybe because my programming sucks?)
+	    // sometimes it seems we miss an out/up event and buttons
+	    // get stuck. So, for a particlar id, if no event has come in
+	    // for a while assume it was released.
+	    //var expireOldButtons = function() {
+	    //  var now = Date.now();
+	    //  buttonInfos.forEach(function(buttonInfo) {
+	    //    Object.keys(buttonInfo.pointerIds).forEach(function(pointerId) {
+	    //      var timeStamp = buttonInfo.pointerIds[pointerId];
+	    //      var age = now - timeStamp;
+	    //      if (age > expirationTime) {
+	    //        removePointerId(buttonInfo, pointerId);
+	    //      }
+	    //    });
+	    //  });
+	    //};
+
+	    var handleButtonDown = function(e, buttonInfo) {
+	      addPointerId(buttonInfo, e.pointerId, e.timeStamp);
+	    };
+
+	    var handleButtonUp = function(e, buttonInfo) {
+	      removePointerId(buttonInfo, e.pointerId, e.timeStamp);
+	    };
+
+	    var handleButtonMove = function(/*e, buttonInfo*/) {
+	//      addPointerId(buttonInfo, e.pointerId, e.timeStamp);
+	    };
+
+	    var handleButtonOut = function(e, buttonInfo) {
+	      removePointerId(buttonInfo, e.pointerId, e.timeStamp);
+	    };
+
+	    var handleButtonEnter = function(e, buttonInfo) {
+	      addPointerId(buttonInfo, e.pointerId, e.timeStamp);
+	    };
+
+	    var handleButtonLeave = function(e, buttonInfo) {
+	      removePointerId(buttonInfo, e.pointerId, e.timeStamp);
+	    };
+
+	    var handleButtonCancel = function(e, buttonInfo) {
+	      removePointerId(buttonInfo, e.pointerId, e.timeStamp);
+	    };
+
+	    var funcs = {
+	      pointerdown: handleButtonDown,
+	      pointermove: handleButtonMove,
+	      pointerup: handleButtonUp,
+	      pointerout: handleButtonOut,
+	      pointerenter: handleButtonEnter,
+	      pointerleave: handleButtonLeave,
+	      pointercancel: handleButtonCancel,
+	    };
+
+	    buttonInfos.forEach(function(buttonInfo) {
+	      var elem = buttonInfo.element;
+	      Object.keys(funcs).forEach(function(eventName) {
+	        var func = funcs[eventName];
+	        elem.addEventListener(eventName, function(buttonInfo) {
+	          return function(e) {
+	            func(e, buttonInfo);
+	          };
+	        }(buttonInfo));
+	      });
+	    });
+
+	//    setInterval(expireOldButtons, 100);
+	  };
+
+	  return {
+	    setupVirtualDPads: setupVirtualDPads,
+	    setupButtons: setupButtons,
+	  };
+	}.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__), __WEBPACK_AMD_DEFINE_RESULT__ !== undefined &amp;&amp; (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
+
+
+
+
+/***/ },
+/* 19 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/*!
+	 * PEP v0.4.1 | https://github.com/jquery/PEP
+	 * Copyright jQuery Foundation and other contributors | http://jquery.org/license
+	 */
+	!function(a,b){ true?module.exports=b():"function"==typeof define&amp;&amp;define.amd?define(b):a.PointerEventsPolyfill=b()}(this,function(){"use strict";function a(a,b){b=b||Object.create(null);var c=document.createEvent("Event");c.initEvent(a,b.bubbles||!1,b.cancelable||!1);for(var d,e=2;e&lt;k.length;e++)d=k[e],c[d]=b[d]||l[e];c.buttons=b.buttons||0;var f=0;return f=b.pressure?b.pressure:c.buttons?.5:0,c.x=c.clientX,c.y=c.clientY,c.pointerId=b.pointerId||0,c.width=b.width||0,c.height=b.height||0,c.pressure=f,c.tiltX=b.tiltX||0,c.tiltY=b.tiltY||0,c.pointerType=b.pointerType||"",c.hwTimestamp=b.hwTimestamp||0,c.isPrimary=b.isPrimary||!1,c}function b(){this.array=[],this.size=0}function c(a,b,c,d){this.addCallback=a.bind(d),this.removeCallback=b.bind(d),this.changedCallback=c.bind(d),B&amp;&amp;(this.observer=new B(this.mutationWatcher.bind(this)))}function d(a){return"body /shadow-deep/ "+e(a)}function e(a){return'[touch-action="'+a+'"]'}function f(a){return"{ -ms-touch-action: "+a+"; touch-action: "+a+"; touch-action-delay: none; }"}function g(){if(H){F.forEach(function(a){String(a)===a?(G+=e(a)+f(a)+"\n",I&amp;&amp;(G+=d(a)+f(a)+"\n")):(G+=a.selectors.map(e)+f(a.rule)+"\n",I&amp;&amp;(G+=a.selectors.map(d)+f(a.rule)+"\n"))});var a=document.createElement("style");a.textContent=G,document.head.appendChild(a)}}function h(){if(!window.PointerEvent){if(window.PointerEvent=m,window.navigator.msPointerEnabled){var a=window.navigator.msMaxTouchPoints;Object.defineProperty(window.navigator,"maxTouchPoints",{value:a,enumerable:!0}),v.registerSource("ms",ea)}else v.registerSource("mouse",Q),void 0!==window.ontouchstart&amp;&amp;v.registerSource("touch",aa);v.register(document)}}function i(a){if(!v.pointermap.has(a))throw new Error("InvalidPointerId")}function j(){window.Element&amp;&amp;!Element.prototype.setPointerCapture&amp;&amp;Object.defineProperties(Element.prototype,{setPointerCapture:{value:$},releasePointerCapture:{value:_}})}var k=["bubbles","cancelable","view","detail","screenX","screenY","clientX","clientY","ctrlKey","altKey","shiftKey","metaKey","button","relatedTarget","pageX","pageY"],l=[!1,!1,null,null,0,0,0,0,!1,!1,!1,!1,0,null,0,0],m=a,n=window.Map&amp;&amp;window.Map.prototype.forEach,o=n?Map:b;b.prototype={set:function(a,b){return void 0===b?this["delete"](a):(this.has(a)||this.size++,void(this.array[a]=b))},has:function(a){return void 0!==this.array[a]},"delete":function(a){this.has(a)&amp;&amp;(delete this.array[a],this.size--)},get:function(a){return this.array[a]},clear:function(){this.array.length=0,this.size=0},forEach:function(a,b){return this.array.forEach(function(c,d){a.call(b,c,d,this)},this)}};var p=o,q=["bubbles","cancelable","view","detail","screenX","screenY","clientX","clientY","ctrlKey","altKey","shiftKey","metaKey","button","relatedTarget","buttons","pointerId","width","height","pressure","tiltX","tiltY","pointerType","hwTimestamp","isPrimary","type","target","currentTarget","which","pageX","pageY","timeStamp"],r=[!1,!1,null,null,0,0,0,0,!1,!1,!1,!1,0,null,0,0,0,0,0,0,0,"",0,!1,"",null,null,0,0,0,0],s={pointerover:1,pointerout:1,pointerenter:1,pointerleave:1},t="undefined"!=typeof SVGElementInstance,u={pointermap:new p,eventMap:Object.create(null),captureInfo:Object.create(null),eventSources:Object.create(null),eventSourceList:[],registerSource:function(a,b){var c=b,d=c.events;d&amp;&amp;(d.forEach(function(a){c[a]&amp;&amp;(this.eventMap[a]=c[a].bind(c))},this),this.eventSources[a]=c,this.eventSourceList.push(c))},register:function(a){for(var b,c=this.eventSourceList.length,d=0;c>d&amp;&amp;(b=this.eventSourceList[d]);d++)b.register.call(b,a)},unregister:function(a){for(var b,c=this.eventSourceList.length,d=0;c>d&amp;&amp;(b=this.eventSourceList[d]);d++)b.unregister.call(b,a)},contains:function(a,b){try{return a.contains(b)}catch(c){return!1}},down:function(a){a.bubbles=!0,this.fireEvent("pointerdown",a)},move:function(a){a.bubbles=!0,this.fireEvent("pointermove",a)},up:function(a){a.bubbles=!0,this.fireEvent("pointerup",a)},enter:function(a){a.bubbles=!1,this.fireEvent("pointerenter",a)},leave:function(a){a.bubbles=!1,this.fireEvent("pointerleave",a)},over:function(a){a.bubbles=!0,this.fireEvent("pointerover",a)},out:function(a){a.bubbles=!0,this.fireEvent("pointerout",a)},cancel:function(a){a.bubbles=!0,this.fireEvent("pointercancel",a)},leaveOut:function(a){this.out(a),this.contains(a.target,a.relatedTarget)||this.leave(a)},enterOver:function(a){this.over(a),this.contains(a.target,a.relatedTarget)||this.enter(a)},eventHandler:function(a){if(!a._handledByPE){var b=a.type,c=this.eventMap&amp;&amp;this.eventMap[b];c&amp;&amp;c(a),a._handledByPE=!0}},listen:function(a,b){b.forEach(function(b){this.addEvent(a,b)},this)},unlisten:function(a,b){b.forEach(function(b){this.removeEvent(a,b)},this)},addEvent:function(a,b){a.addEventListener(b,this.boundHandler)},removeEvent:function(a,b){a.removeEventListener(b,this.boundHandler)},makeEvent:function(a,b){this.captureInfo[b.pointerId]&amp;&amp;(b.relatedTarget=null);var c=new m(a,b);return b.preventDefault&amp;&amp;(c.preventDefault=b.preventDefault),c._target=c._target||b.target,c},fireEvent:function(a,b){var c=this.makeEvent(a,b);return this.dispatchEvent(c)},cloneEvent:function(a){for(var b,c=Object.create(null),d=0;d&lt;q.length;d++)b=q[d],c[b]=a[b]||r[d],!t||"target"!==b&amp;&amp;"relatedTarget"!==b||c[b]instanceof SVGElementInstance&amp;&amp;(c[b]=c[b].correspondingUseElement);return a.preventDefault&amp;&amp;(c.preventDefault=function(){a.preventDefault()}),c},getTarget:function(a){var b=this.captureInfo[a.pointerId];return b?a._target!==b&amp;&amp;a.type in s?void 0:b:a._target},setCapture:function(a,b){this.captureInfo[a]&amp;&amp;this.releaseCapture(a),this.captureInfo[a]=b;var c=document.createEvent("Event");c.initEvent("gotpointercapture",!0,!1),c.pointerId=a,this.implicitRelease=this.releaseCapture.bind(this,a),document.addEventListener("pointerup",this.implicitRelease),document.addEventListener("pointercancel",this.implicitRelease),c._target=b,this.asyncDispatchEvent(c)},releaseCapture:function(a){var b=this.captureInfo[a];if(b){var c=document.createEvent("Event");c.initEvent("lostpointercapture",!0,!1),c.pointerId=a,this.captureInfo[a]=void 0,document.removeEventListener("pointerup",this.implicitRelease),document.removeEventListener("pointercancel",this.implicitRelease),c._target=b,this.asyncDispatchEvent(c)}},dispatchEvent:function(a){var b=this.getTarget(a);return b?b.dispatchEvent(a):void 0},asyncDispatchEvent:function(a){requestAnimationFrame(this.dispatchEvent.bind(this,a))}};u.boundHandler=u.eventHandler.bind(u);var v=u,w={shadow:function(a){return a?a.shadowRoot||a.webkitShadowRoot:void 0},canTarget:function(a){return a&amp;&amp;Boolean(a.elementFromPoint)},targetingShadow:function(a){var b=this.shadow(a);return this.canTarget(b)?b:void 0},olderShadow:function(a){var b=a.olderShadowRoot;if(!b){var c=a.querySelector("shadow");c&amp;&amp;(b=c.olderShadowRoot)}return b},allShadows:function(a){for(var b=[],c=this.shadow(a);c;)b.push(c),c=this.olderShadow(c);return b},searchRoot:function(a,b,c){if(a){var d,e,f=a.elementFromPoint(b,c);for(e=this.targetingShadow(f);e;){if(d=e.elementFromPoint(b,c)){var g=this.targetingShadow(d);return this.searchRoot(g,b,c)||d}e=this.olderShadow(e)}return f}},owner:function(a){for(var b=a;b.parentNode;)b=b.parentNode;return b.nodeType!==Node.DOCUMENT_NODE&amp;&amp;b.nodeType!==Node.DOCUMENT_FRAGMENT_NODE&amp;&amp;(b=document),b},findTarget:function(a){var b=a.clientX,c=a.clientY,d=this.owner(a.target);return d.elementFromPoint(b,c)||(d=document),this.searchRoot(d,b,c)}},x=Array.prototype.forEach.call.bind(Array.prototype.forEach),y=Array.prototype.map.call.bind(Array.prototype.map),z=Array.prototype.slice.call.bind(Array.prototype.slice),A=Array.prototype.filter.call.bind(Array.prototype.filter),B=window.MutationObserver||window.WebKitMutationObserver,C="[touch-action]",D={subtree:!0,childList:!0,attributes:!0,attributeOldValue:!0,attributeFilter:["touch-action"]};c.prototype={watchSubtree:function(a){this.observer&amp;&amp;w.canTarget(a)&amp;&amp;this.observer.observe(a,D)},enableOnSubtree:function(a){this.watchSubtree(a),a===document&amp;&amp;"complete"!==document.readyState?this.installOnLoad():this.installNewSubtree(a)},installNewSubtree:function(a){x(this.findElements(a),this.addElement,this)},findElements:function(a){return a.querySelectorAll?a.querySelectorAll(C):[]},removeElement:function(a){this.removeCallback(a)},addElement:function(a){this.addCallback(a)},elementChanged:function(a,b){this.changedCallback(a,b)},concatLists:function(a,b){return a.concat(z(b))},installOnLoad:function(){document.addEventListener("readystatechange",function(){"complete"===document.readyState&amp;&amp;this.installNewSubtree(document)}.bind(this))},isElement:function(a){return a.nodeType===Node.ELEMENT_NODE},flattenMutationTree:function(a){var b=y(a,this.findElements,this);return b.push(A(a,this.isElement)),b.reduce(this.concatLists,[])},mutationWatcher:function(a){a.forEach(this.mutationHandler,this)},mutationHandler:function(a){if("childList"===a.type){var b=this.flattenMutationTree(a.addedNodes);b.forEach(this.addElement,this);var c=this.flattenMutationTree(a.removedNodes);c.forEach(this.removeElement,this)}else"attributes"===a.type&amp;&amp;this.elementChanged(a.target,a.oldValue)}};var E=c,F=["none","auto","pan-x","pan-y",{rule:"pan-x pan-y",selectors:["pan-x pan-y","pan-y pan-x"]}],G="",H=window.PointerEvent||window.MSPointerEvent,I=!window.ShadowDOMPolyfill&amp;&amp;document.head.createShadowRoot,J=v.pointermap,K=25,L=[1,4,2,8,16],M=!1;try{M=1===new MouseEvent("test",{buttons:1}).buttons}catch(N){}var O,P={POINTER_ID:1,POINTER_TYPE:"mouse",events:["mousedown","mousemove","mouseup","mouseover","mouseout"],register:function(a){v.listen(a,this.events)},unregister:function(a){v.unlisten(a,this.events)},lastTouches:[],isEventSimulatedFromTouch:function(a){for(var b,c=this.lastTouches,d=a.clientX,e=a.clientY,f=0,g=c.length;g>f&amp;&amp;(b=c[f]);f++){var h=Math.abs(d-b.x),i=Math.abs(e-b.y);if(K>=h&amp;&amp;K>=i)return!0}},prepareEvent:function(a){var b=v.cloneEvent(a),c=b.preventDefault;return b.preventDefault=function(){a.preventDefault(),c()},b.pointerId=this.POINTER_ID,b.isPrimary=!0,b.pointerType=this.POINTER_TYPE,b},prepareButtonsForMove:function(a,b){var c=J.get(this.POINTER_ID);a.buttons=c?c.buttons:0,b.buttons=a.buttons},mousedown:function(a){if(!this.isEventSimulatedFromTouch(a)){var b=J.get(this.POINTER_ID),c=this.prepareEvent(a);M||(c.buttons=L[c.button],b&amp;&amp;(c.buttons|=b.buttons),a.buttons=c.buttons),J.set(this.POINTER_ID,a),b?v.move(c):v.down(c)}},mousemove:function(a){if(!this.isEventSimulatedFromTouch(a)){var b=this.prepareEvent(a);M||this.prepareButtonsForMove(b,a),v.move(b)}},mouseup:function(a){if(!this.isEventSimulatedFromTouch(a)){var b=J.get(this.POINTER_ID),c=this.prepareEvent(a);if(!M){var d=L[c.button];c.buttons=b?b.buttons&amp;~d:0,a.buttons=c.buttons}J.set(this.POINTER_ID,a),0===c.buttons||c.buttons===L[c.button]?(this.cleanupMouse(),v.up(c)):v.move(c)}},mouseover:function(a){if(!this.isEventSimulatedFromTouch(a)){var b=this.prepareEvent(a);M||this.prepareButtonsForMove(b,a),v.enterOver(b)}},mouseout:function(a){if(!this.isEventSimulatedFromTouch(a)){var b=this.prepareEvent(a);M||this.prepareButtonsForMove(b,a),v.leaveOut(b)}},cancel:function(a){var b=this.prepareEvent(a);v.cancel(b),this.cleanupMouse()},cleanupMouse:function(){J["delete"](this.POINTER_ID)}},Q=P,R=v.captureInfo,S=w.findTarget.bind(w),T=w.allShadows.bind(w),U=v.pointermap,V=2500,W=200,X="touch-action",Y=!1,Z={events:["touchstart","touchmove","touchend","touchcancel"],register:function(a){Y?v.listen(a,this.events):O.enableOnSubtree(a)},unregister:function(a){Y&amp;&amp;v.unlisten(a,this.events)},elementAdded:function(a){var b=a.getAttribute(X),c=this.touchActionToScrollType(b);c&amp;&amp;(a._scrollType=c,v.listen(a,this.events),T(a).forEach(function(a){a._scrollType=c,v.listen(a,this.events)},this))},elementRemoved:function(a){a._scrollType=void 0,v.unlisten(a,this.events),T(a).forEach(function(a){a._scrollType=void 0,v.unlisten(a,this.events)},this)},elementChanged:function(a,b){var c=a.getAttribute(X),d=this.touchActionToScrollType(c),e=this.touchActionToScrollType(b);d&amp;&amp;e?(a._scrollType=d,T(a).forEach(function(a){a._scrollType=d},this)):e?this.elementRemoved(a):d&amp;&amp;this.elementAdded(a)},scrollTypes:{EMITTER:"none",XSCROLLER:"pan-x",YSCROLLER:"pan-y",SCROLLER:/^(?:pan-x pan-y)|(?:pan-y pan-x)|auto$/},touchActionToScrollType:function(a){var b=a,c=this.scrollTypes;return"none"===b?"none":b===c.XSCROLLER?"X":b===c.YSCROLLER?"Y":c.SCROLLER.exec(b)?"XY":void 0},POINTER_TYPE:"touch",firstTouch:null,isPrimaryTouch:function(a){return this.firstTouch===a.identifier},setPrimaryTouch:function(a){(0===U.size||1===U.size&amp;&amp;U.has(1))&amp;&amp;(this.firstTouch=a.identifier,this.firstXY={X:a.clientX,Y:a.clientY},this.scrolling=!1,this.cancelResetClickCount())},removePrimaryPointer:function(a){a.isPrimary&amp;&amp;(this.firstTouch=null,this.firstXY=null,this.resetClickCount())},clickCount:0,resetId:null,resetClickCount:function(){var a=function(){this.clickCount=0,this.resetId=null}.bind(this);this.resetId=setTimeout(a,W)},cancelResetClickCount:function(){this.resetId&amp;&amp;clearTimeout(this.resetId)},typeToButtons:function(a){var b=0;return("touchstart"===a||"touchmove"===a)&amp;&amp;(b=1),b},touchToPointer:function(a){var b=this.currentTouchEvent,c=v.cloneEvent(a),d=c.pointerId=a.identifier+2;c.target=R[d]||S(c),c.bubbles=!0,c.cancelable=!0,c.detail=this.clickCount,c.button=0,c.buttons=this.typeToButtons(b.type),c.width=a.radiusX||a.webkitRadiusX||0,c.height=a.radiusY||a.webkitRadiusY||0,c.pressure=a.force||a.webkitForce||.5,c.isPrimary=this.isPrimaryTouch(a),c.pointerType=this.POINTER_TYPE;var e=this;return c.preventDefault=function(){e.scrolling=!1,e.firstXY=null,b.preventDefault()},c},processTouches:function(a,b){var c=a.changedTouches;this.currentTouchEvent=a;for(var d,e=0;e&lt;c.length;e++)d=c[e],b.call(this,this.touchToPointer(d))},shouldScroll:function(a){if(this.firstXY){var b,c=a.currentTarget._scrollType;if("none"===c)b=!1;else if("XY"===c)b=!0;else{var d=a.changedTouches[0],e=c,f="Y"===c?"X":"Y",g=Math.abs(d["client"+e]-this.firstXY[e]),h=Math.abs(d["client"+f]-this.firstXY[f]);b=g>=h}return this.firstXY=null,b}},findTouch:function(a,b){for(var c,d=0,e=a.length;e>d&amp;&amp;(c=a[d]);d++)if(c.identifier===b)return!0},vacuumTouches:function(a){var b=a.touches;if(U.size>=b.length){var c=[];U.forEach(function(a,d){if(1!==d&amp;&amp;!this.findTouch(b,d-2)){var e=a.out;c.push(e)}},this),c.forEach(this.cancelOut,this)}},touchstart:function(a){this.vacuumTouches(a),this.setPrimaryTouch(a.changedTouches[0]),this.dedupSynthMouse(a),this.scrolling||(this.clickCount++,this.processTouches(a,this.overDown))},overDown:function(a){U.set(a.pointerId,{target:a.target,out:a,outTarget:a.target}),v.over(a),v.enter(a),v.down(a)},touchmove:function(a){this.scrolling||(this.shouldScroll(a)?(this.scrolling=!0,this.touchcancel(a)):(a.preventDefault(),this.processTouches(a,this.moveOverOut)))},moveOverOut:function(a){var b=a,c=U.get(b.pointerId);if(c){var d=c.out,e=c.outTarget;v.move(b),d&amp;&amp;e!==b.target&amp;&amp;(d.relatedTarget=b.target,b.relatedTarget=e,d.target=e,b.target?(v.leaveOut(d),v.enterOver(b)):(b.target=e,b.relatedTarget=null,this.cancelOut(b))),c.out=b,c.outTarget=b.target}},touchend:function(a){this.dedupSynthMouse(a),this.processTouches(a,this.upOut)},upOut:function(a){this.scrolling||(v.up(a),v.out(a),v.leave(a)),this.cleanUpPointer(a)},touchcancel:function(a){this.processTouches(a,this.cancelOut)},cancelOut:function(a){v.cancel(a),v.out(a),v.leave(a),this.cleanUpPointer(a)},cleanUpPointer:function(a){U["delete"](a.pointerId),this.removePrimaryPointer(a)},dedupSynthMouse:function(a){var b=Q.lastTouches,c=a.changedTouches[0];if(this.isPrimaryTouch(c)){var d={x:c.clientX,y:c.clientY};b.push(d);var e=function(a,b){var c=a.indexOf(b);c>-1&amp;&amp;a.splice(c,1)}.bind(null,b,d);setTimeout(e,V)}}};Y||(O=new E(Z.elementAdded,Z.elementRemoved,Z.elementChanged,Z));var $,_,aa=Z,ba=v.pointermap,ca=window.MSPointerEvent&amp;&amp;"number"==typeof window.MSPointerEvent.MSPOINTER_TYPE_MOUSE,da={events:["MSPointerDown","MSPointerMove","MSPointerUp","MSPointerOut","MSPointerOver","MSPointerCancel","MSGotPointerCapture","MSLostPointerCapture"],register:function(a){v.listen(a,this.events)},unregister:function(a){v.unlisten(a,this.events)},POINTER_TYPES:["","unavailable","touch","pen","mouse"],prepareEvent:function(a){var b=a;return ca&amp;&amp;(b=v.cloneEvent(a),b.pointerType=this.POINTER_TYPES[a.pointerType]),b},cleanup:function(a){ba["delete"](a)},MSPointerDown:function(a){ba.set(a.pointerId,a);var b=this.prepareEvent(a);v.down(b)},MSPointerMove:function(a){var b=this.prepareEvent(a);v.move(b)},MSPointerUp:function(a){var b=this.prepareEvent(a);v.up(b),this.cleanup(a.pointerId)},MSPointerOut:function(a){var b=this.prepareEvent(a);v.leaveOut(b)},MSPointerOver:function(a){var b=this.prepareEvent(a);v.enterOver(b)},MSPointerCancel:function(a){var b=this.prepareEvent(a);v.cancel(b),this.cleanup(a.pointerId)},MSLostPointerCapture:function(a){var b=v.makeEvent("lostpointercapture",a);v.dispatchEvent(b)},MSGotPointerCapture:function(a){var b=v.makeEvent("gotpointercapture",a);v.dispatchEvent(b)}},ea=da,fa=window.navigator;fa.msPointerEnabled?($=function(a){i(a),this.msSetPointerCapture(a)},_=function(a){i(a),this.msReleasePointerCapture(a)}):($=function(a){i(a),v.setCapture(a,this)},_=function(a){i(a),v.releaseCapture(a,this)}),g(),h(),j();var ga={dispatcher:v,Installer:E,PointerEvent:m,PointerMap:p,targetFinding:w};return ga});
+
+/***/ }
+/******/ ])
+});
+;</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-CommonUI.html">CommonUI</a></li><li><a href="module-Input.html">Input</a></li><li><a href="module-IO.html">IO</a></li><li><a href="module-Misc.html">Misc</a></li><li><a href="module-MobileHacks.html">MobileHacks</a></li><li><a href="module-Strings.html">Strings</a></li><li><a href="module-Touch.html">Touch</a></li></ul><h3>Classes</h3><ul><li><a href="Cookie.html">Cookie</a></li><li><a href="DPad.html">DPad</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.3</a> on Mon Jul 24 2017 11:36:27 GMT+0900 (JST)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>
