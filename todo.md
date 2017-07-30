@@ -1,29 +1,6 @@
 To Do
 =====
 
-*   make hft a lib for electron
-    *   port bombbomb
-        .   handle disconnect/reconnect
-        .   handle port changing (2 apps)
-        *   fix fixes
-        *   handle external server
-        *   pass arguments through from server (actually don't parse in server)
-        *   make server return something, not auto start?
-        *   test captive portal
-        *   add settings dialog?
-        *   add setings from command line?
-        *   export to app
-        *   make app use real name
-        *   supply app icon
-        *   fix about (send about to game)
-        *   check we can set name
-    *   port powpow
-    *   port jumpjump
-    *   port device-orientation
-    *   port simple
-    *   port 2d sync
-    *   port 3d sync
-    *   port multi-platform
     *   make pixi example?
     *   make cocos2d example?
 
@@ -32,54 +9,11 @@ To Do
 *   fix buttons in jumpjump/powpow (bigger!)
 *   add analog sticks to gamepad
 *   update html gamepad to match unity gamepad
-*   add easy message to unity-gamepad
-*   make osx bring browser to front after quiting unity game
-*   add support for gameType "unity3dlibrary"
-
-    The problem is I want to be able to upload unity libraries to superhappyfuntimes
-    but not have them show up as games and also to only have a .unitypackage, no exported apps
-
-    *   make
-    *   install
-    *   download
-    *   export
-    *   run
-
-*   make unity provide files for controller
-
-    in editor send each file. On Export generate .zip.bytes. Maybe make new option
-    for "Export standalone"?
-
-    The problem is happyfuntimes needs at least a package.json to be able to add
-    the game to the happyfuntimes menu. But a standalone exe wouldn't have such
-    a file anywhere that I know of. I guess it does generate a _Data folder that
-    I could look in. not sure how Windows and Linux apps are distrubuted.
-
-    The question is basically how do I install it. Ideally there'd be just one way
-
-*   fix realgame so it auto includes realgame.js and doesn't need manual HFT stuff
-*   add system session id. When checking ip addresses from scanner
-    merge by session id. Maybe just use system name
-*   add progress bar when scanning
-*   check if HFT has page up? Go to that page.
-
-    Problem is I can't bring tab to front so if the tab is hidden the user will never
-    notice :(  Maybe I could use the Notification API to put up a notification?
-
-*   figure out why Player23, Player24, Player25
 *   add frame rate for motion data
-*   need a way for game to send binary files (how about a .zip)
-    for controller so you can have image files and sounds. That sounds
-    painful. I can either expand to base64 (easy) or need to send
-    binary websocket (yuck!). I guess I can set some state in relayserver
-    that next msg is ___. Or I could 'post' it.
 
-*   make sure options.files work in unity
 *   check kiosk mode and app
 
 
-*   make shft ask hft.net for port if it's not 18679
-*   change samples the use name to use new name system
 *   checklist
     *   ios safari works
     *   ios safari to app works
@@ -87,193 +21,21 @@ To Do
     *   android chrome
     *   android chrome to app works
     *   android app works
-*   fix launching from Safari to App
-*   put startup options in all controllers
-*   check scroll vs no-scroll option
-*   app
 
-    *   fix index to restart if no connection?
-    *   app needs a resume screen (so you can exit?).
-
-        if the app is not the front app, then next time it's the front
-        app it should have a dialog "resume? quit?" or something?
-
-    *   problem: connect to game, game exits, game restarts, controller goes
-        to index.html. Index thinks not in game because it's cleared cookie?
-    *   make hft redirect to app
-    *   when app goes to background, next launch start over or have "resume" (maybe can ping last HFT?)
-    *   make "switching games" have "search for new game"
-    *   make sure you can play sounds immediately
-    *   make sure you can play video immediately
-    *   allow URL input on timeout?
-    *   put options in settings (ios only?)
-    *   make sure --no-ask-name path works .. ??   FIX THIS!!! enter-name must happen but we can skip index?
-    *   handle can't connect to hft.net (test locally!)
-    *   check why android lag. Does it do it in chrome? If not can we turn it off? Is it related to double click
-    *   make playername send name back to controller?
-
-*   make HFT so if we can't contact HFT.net we try again every 10 seconds for 2 mins or so
 *   if controller does not have focus for > 30 seconds disconnect.
-*   add a max players option to playerspawner?
 
-*   scroll/no scroll setting
-*   zoom/no zoom setting
 
-*   put categories in unity plugin
-
-*   Make hft delete for deleting old releases
-*   Videos
-    *   Setup video
-    *   Walk through unitysimple
-    *   Make new char example
-*   figure out option for unscrollale vs scrollable controllers
-*   have plugin auto update package.json to newest API version?
-*   write docs for each sample, and/or video
-    *   unity character
-    *   unity multi games
-    *   unity playerinscene
-    *   unity 2d platform
-*   check device orientation works both android and iphone
 *   change sync clock to hft msg
 
     have clock take gameclient/gameserver. Use _hft_time_
 
-*   update all samples to newest api-version
-*   change alert for errors to html dialog
-*   have hft wait 2 seconds for ping from local:/games? if pinged bring to find instead of lanching tab
-*   add hft set or hft set-install to set which HFT is current
-*   shouldn't be able to make-package / export bad version.
-*   build should do hft check?
-*   build should add .meta files?
-*   move hft.net to it's own server
-*   upgrade servers
-*   make videos
-    *   run unity simple
-    *   run unity char
-    *   run unity cardboard
-    *   run unity accel
-    *   run unity device
-    *   run unity video? (no)
-    *   make simple project
-
-*   check 1.7.0 projects tell you you need new version of HFT
-*   unity plugin
-    *   make it warn you you need a new version of HFT.
-    *   Have LocalNewPlayer emit game msgs
-    *   remove namespaces from samples
-    *   add HFT->Export the exports all 3 to the correct palce
-    *   add HFT->Publish that does an export and then published? (needs git currently).
-    .   When running HFT from Unity don't bring up localhost../games.html
-    .   option to open controllers?
-*   Have LocalNewPlayer emit game msgs(JavaScript)
 *   add glow processing to powpow?
 *   fix samsung
 *   fix android non-chrome?
 *   fix windows phone
-*   add a session id to controller so you can continue where you left off
-
-    this can all happen automatically. GameServer playerconnect could include
-    the sessions id. At that point it's up the game to use it to save data in
-    localstorage or wherever.
-
-    Of the top of my head, gameclient would get sent and id from hft
-    which it would write to a cookie? If the game is restarted that
-    id can be sent back to the game at start up to reconnect a player
-    with their previous state in the game.
-
-    This would only work for a controlled restart of a game. Basically
-    the game would need some way for a user to request it shutdown. It
-    would then save all needed state for current players associated
-    with their session ids. I could send these ids to the controllers
-    at that time.
-
-    On restarting the game the controller would send the id back so
-    the game could reconnect them to their state.
-
-    This is only needed because networking equipment sucks and has
-    to be rebooted from time to time. If we can get networking equipment
-    that never needs to be rebooted there is no need to implement this.
-
 *   send audio example
-*   Add unity support for multiple games
-*   fix back button on shft game page. Only center is hot.
-*   make hft-publish work for html-example
-*   add optional player timeout?
 
-    I already have the ping but maybe I should also have an input timeout.
-    No input for N seconds = disconnect. Useful for installtaions as I suspect
-    people might walk away and leave their phone connected. If there's no
-    input for a while we'll assume they are no longer participating?
-
-*   add "hft remove --missing" and "--broken" to remove missing/broken ones
-*   consider using a fake inmem file system for testing, both reading and writing
-*   publish unity plugin
-*   if hft is not running, have shft save a cookie if you choose a game to install.
-
-    when hft starts it can open an iframe to shft which will read the cookie and
-    trigger and install question
-
-*   make hft newgame make a folder, ask the gametype etc.?
 *   fix names in powpow?
-*   make shft tell you you need to upgrade hft
-*   Add a support field, default to github issues
-*   make hft-exe write over old version? Should ask? --force?
-*   add purge request to manage gamedb for icon and screenshots
-*   consider porting shft to Google App Engine or something else that scales with no work.
-*   fix shft update-exe so username:password works
-*   make --export for make-release the default
-*   make option for manage to email github repo user results of registering
-*   Unity plugin can run editor script that looks for HFT. If not found forwards you to shft.
-    *   Once installed can use hft newgame to setup new projects
-*   try more CSS
-
-    can we get things to position left bottom relative etc...?
-
-        position: absolute;
-        right: ??
-        bottom:
-
-    what about groups of stuff?
-
-    One problem without scaling
-
-        +----------------+
-        |                |
-        | B U T T O N 1  |
-        |                |
-        |  B U T T O N 2 |
-        |                |
-        +----------------+
-
-    can end up as
-
-        +----------------+
-        |                |
-        | BBUUTTTTOONN12 |
-        |                |
-        +----------------+
-
-    maybe now that iOS8 is out we can forget about iOS6? I doubt it.
-    Too many iPhone4/4Ss still out there.
-
-*   make code send API version
-
-    for HTML that might be hard because we don't know the API version until after
-    most of the code as loaded. We need to know what startup code to serve
-    and we know that from the package.json
-
-    For Unity nothing happens until the game starts so we could at least check
-    and adjust? Should we complain if the package.json doesn't match? We need
-    it in the package.json so we can know before downloading if it's going
-    to work.  But, while developing you might forget? I guess it should at
-    least print a warning
-
-*   Add testing using mock request and mock websockets
-
-    I think the mock websockets will be easy as I already basically have mock websockets
-    for the __hft__ game. For request there's got to be some express/request mock already
-    out there.
-
 *   refractor hft-server
 
     like I'll ever have time to do this but it's kind of spaghetti. It might be possible
@@ -286,69 +48,6 @@ To Do
 
     Should probably look at other caches
 
-*   On mac make terminal visible or at least provide some kind of window/icon that users
-    can use to quit.
-
-*   make UX option to turn on DNS
-
-    *   Needs to ask for sudo permission or at least some how get port 80. Maybe it could reboot?
-    *   needs to show status (trying `/etc/resolv.conf`)
-
-*   write unity docs
-    *   UnityScript
-    *   C#
-    *   JavaScript
-    *   File Layout
-    *   Git
-    *   Publish
-    *   Test on Windows
-*   support 2 factor for publish
-    *   publish
-    *   update-exe
-*   make games run without hft
-
-    *   jumpjump
-    *   boomboom
-    *   powpow
-
-    I'm not sure what to do. I think I'll try to add stuff to cdnjs? Problem, they want a minified
-    version. I can concat stuff? Not sure how I do just part of it.
-
-*   update .travis.yml back to 0.10 once they release 0.10.32 (0.10.31 has a core dump bug)
-*   get rid of meteor
-
-    could port to app engine or similar for scalabiliy. Or at least consider making it a big
-    static site that just get's rebuilt when a new game is added?
-
-*   should make-release check API version?
-*   maybe shft should not install ever. It should just redirect to hft.
-
-    So, clicking "install" on say powpow would redirect to `http://localhost:18679/install.html?id=powpow`
-
-    or
-
-    maybe SHFT should redirect for games so if you're running HFT then clicking a game would go
-    to `http://localhost:18689/game/powpow`. If you're not running HFT it would go to
-    `http://shft.net/game/powpow`
-
-    Just thinking out loud.
-
-
-*   consider install using an per platform installer app
-
-    the installer app would be a generic app. It could either take an argument like `--path=pathToZip`
-    or it could just install itself and uninstall itself. The point would be a real installer
-    would ask for real OS level permission to run rather than my hacked msgbox.
-
-    In the case of taking an argument it would install the zip. In the case of just being a no-op
-    installer we'd just check for success or failure. On failure we wouldn't install the zip.
-    On success we'd use the current install process.
-
-*   just like games, games.html and options.html should maybe be put realtime in a template?
-
-    If nothing else there are common things like handling disconnect, reconnect, and maybe
-    handling quit as well as providing a common frame.
-
 *   Figure out if it's possible to make HFT.net work on more networks
 
     HFT.net currently requires NAT based networks like home routers.
@@ -360,197 +59,10 @@ To Do
 
     That way users will know immediately.
 
-*   make install screen only show your OS. Link to "other versions"
-*   Add phantomjs based tests
-*   make a test game for unit tests
-*   when listing mulitple HFTs running behind the same public IP address include
-    username and machine name?
-
-    hrm, that doesn't seem very secure. I wonder if it's
-    ok if I only send it to people on the same subnet? How would I know? Check the netmask?
-    The only phone needs this info. It's just some way to say.
-
-        Pick Game to Join:
-           jumpjump on sysg
-           boomboom on tami's mac
-
-    maybe machine name is good because it has less privacy issues?
-
-*   Make games.html detect features and suggest a different browser
-*   Have browser check if it's the default for hft. If not suggest to make it the default for hft.
-*   add option the choose browser to launch?
-*   Add options to HFT
-    *   dns (see above)
-    *   system name (name to use if multiple machine)
-    *   private
-    *   phonecontrol
-*   add option to hide it? ([x] show help on startup)
-*   make hft-exe update Info.plist version from hft version?
-*   Optionally allow games to advertise they are running.
-
-    superhappyfuntimes can show games in your area. Think
-
-        15 people playing jumpjump at Joe's Bar in Maintown, MA
-        17 people playing shootshoot at Big Burger in Anywhere, USA
-        etc..
-
-Runs Repo noid
-*     *    *   hft-boomboom
-*     *    *   hft-clocksync
-*     *    *   hft-deviceorientation
-               hft-flapflap
-*     *    *   hft-jamjam
-*     *    *   hft-jumpjump
-               hft-photopile
-*     *    *   hft-powpow
-*     *    *   hft-shootshoot
-*     *    *   hft-simple
-           *   hft-simplecamera
-           *   hft-supersimple
-               ? hft-sync2d
-               ? hft-syncThreeJS
-      *        hft-unitycharacterexample
-               hft-unitysimpleexample
-
 *   add a hft.release.ignore array to package.json. if it doesn't exist
     have it be "src". Use it in release.make
 
-*   make sync examples work. Where should they show up?
 
-*   should I switch all of the gamedb to meteor?
-
-    No, as their's no database? But I can run it through collections.
-
-*   use github oauth2 authentication.
-
-    save the token in like .happyfuntimes/repoauth or something? Is it safe to save that token?
-
-    Then, subsequent commands can use the old token. If error re-auth
-
-*   Can we make Unity plugin find the port? It could look in ~/.happyfuntimes/config or something.
-
-    I worry that it might not work in some other platform
-
-*   add loggly or other logging both client and server. Make sure you can opt in/out.
-*   make it possible to pass description to publish which becomes the "body" field.
-*   Use 'unconnected' collection to handle installed games? Copy gameDB into Collection?
-*   Is it possible to put meteor into hft so I can use it for local game sys?
-*   games installing status needs to be per game like play/itunes because 2+ games
-    could be being installed at the same time.
-*   when making a package for a native game warn if EXEs are not near same date
-*   move username/password prompt to func
-*   install meteor browser policy
-*   turn off meteor websockets and live updating
-*   make "pubish-file"? that adds a specific file to a release?
-
-    basically I want someone to be able to make an executable on
-    a particular platform and then add it to the release
-
-    maybe call it "add-to-release"?
-
-*   make hft notify
-
-    notifes the gallery of an update.
-
-*   make 'fix' command that removes games that don't exist anymore
-*   could make hft optionally register ip:port with happyfuntimes.net
-
-    If ip address is not in one of the 'normal' class ips that are scanned by happyfuntimes
-    then it could be added. Also, happyfuntimes.net could check the ip address of hft
-    and the ip address of users and match them up since they'd all be behind the same
-    nat?
-
-    Maybe hft could check netmask, if class B then do extra stuff?
-
-*   need to figure out how to handle 2+ hft's on same network.
-
-    maybe happyfuntimes.net shows 2 and game being played?
-
-*   stop using gameIds in certain ways.
-
-    *   remove the need for gameids?
-
-        I started with gameIds used for connecting contollers to games. Now I'm also using
-        them at install time. The problem is a I have a DB of gameId -> game but if you are
-        doing dev you might have 2 games with the same id. The one installed and one sitting
-        in your dev folder.
-
-        For connecting a game to a controller, I could make the server handle it. At startup
-        it knows, based on the folder it's serving the files from, which game they belong to
-        so it can send some made up id to each game.
-
-        That leaves the id only for the gallery. In which case I only care above apps installed
-        in the HFT games folder (non-dev). Meaning an id is a gallery<->installed game mapping.
-        But nothing else.
-
-        Actually that doesn't work because unity is not launched by the server when in dev
-        so it won't have a way for the server to give it an id.
-
-        So instead, there's 2 ways of mapping ids
-
-        1.  id to installed game. This is GameDB.getGameById
-
-            This is useful for install/uninstall
-
-        2.  id to running game. This is something the relayserver does. In that case
-            I don't care about installed ids. I only care to connect a controller to the
-            running game.
-
-        Except... :(  In the case of unity I don't know which controller to run because
-        it's by default http://localhost:port/games/<gameid>/controller.html when it really
-        and that's not enough info to map <gameid> to one real folder or another.
-
-
-*   remove adm-zip and replace with something else. Ideally something that streams
-    so the entire file doesn't have to be in memory. Maybe zipstream?
-
-*   fix queuing of messages. They queue objects but should queue strings.?.
-*   have server start __hft__ game.
-    *   have it mark that as not listable? (what's the point of the lists?)
-    *   make an install command
-    *   figure out what happens if disconnected
-
-*   Have superhappyfuntimes check that happyfuntimes is running and request to run it. gray out install buttons
-    until it's running. Use game to run it?
-*   Sanatize msgs to native-msg-box
-*   Make sure superhappyfuntimes can be indexed.  enable meteor spiderable
-
-*   look into openframewords.cc's http://ofxaddons.com/ how it watches github tags
-*   switch port to something less likley to be in use. How about 8123 for now. We can register one later if we get users.
-*   refactor client side js so no requirejs needed? (though still supported)
-*   need to store LRU for games somewhere. ~/.happyfuntimes
-*   In installed version
-    *   Make page shows games, tab for gallery, tab for settings
-    *   settings
-        *   allow contollers to change games (so a bar can make it so people can't change games?), only
-            the person at the computer can.
-*   Main UX (/games.html)
-
-    *   Needs to have XBox/PS like UX. At a minimum
-        *   Show recently played games
-        *   Provide UI to find games
-            *   By alphabet
-            *   Search
-        *   Should be controllable from phone. (how do we handle 25 people trying to control it?)
-        *   gallery Tab/selection
-        *   Should we have a recently updated section?
-            *   For stress on servers maybe it should be like XBox/PS. Updates are only checked if
-                you launch the game?
-        *   Should have a 'new' and 'updated' feed from public db.
-
-*   package.json needs
-    *   "gameId"
-    *   "apiVersion"  min version needed. Use it in template
-        * api version should look up defaults?
-    *   "platforms"  array of platforms support
-    *   remove "useControllerTemplate". Make the default but maybe override?
-    *   remove "screenshot.png". Make the default
-    *   use name for gameId? no. Name is unsafe, any char, id is safe? Or could gen safe id.
-    *   if controller needs certain features? WebGL, getMedia, etc. Can tell if will run on phone
-*   jumpjump: reset coin on level reset.
-*   make games.html msgs show up even when scrolled down
-*   fix docs
-*   fix localhost replacement so it includes port
 *   add timeout for input. No input from player for n seconds = disconnect?
 
     Right now we ping and expect a response. No repsonse = player is offline. But,
@@ -567,99 +79,7 @@ Runs Repo noid
     The problem with both ideas is that during testing I often have multiple tabs
     open. I'd need an option to allow multiple users if I filter by ip.
 
-*   make controllers check for other games if the game has not yet connected?
-
-    There's an issue where sometimes a controller will be waiting for a game since
-    controllers can join first. Maybe controllers should check for other games until
-    they are sure they are connected to a running game. If the see a different game
-    they can switch to it.
-
-*   make it easier to use
-
-    I've been thinking like an experienced engineer. Just passing the messages is enough,
-    people will see how to connect them up. But, I can make this much easier for the simple cases.
-
-    On the controller side, some library that takes and/or setup the client and then lets you just
-    define buttons, dpads, orientations, and it deals with the messages
-
-    On the game side some library that give a similar definition gives you similar messages
-    and/or tracks state you can just read
-
-    Can I just do it based on HTML and tags to classes
-
-        <div class="hft-dpad" />
-        <div class="hft-button" />
-        <div class="hft-area" />
-        <div class="hft-deviceorientation" />
-
-    Then on the client side just figure it out? Problem for C# / Static languages? Could write script
-    to generate class for static languagues. Could make api string based HTF.getState("dpad")
-
-    So the problems I ran into when first trying to do this
-
-    1.  I first tried to do jumpjump. The L - R buttons though act as a pair because I wanted it if
-        you happened to be using 2 fingers and you press L, while olding L you press R, then left off R
-        the direction should go back to L. All that is sent to the game is the current direction -1, 0, 1.
-        The controller is doing filtering of the 2 buttons.
-
-        The question is what to do.
-
-        *   Move the filtering to the game.
-
-            The controller just sends L up, L down, R up, R down messages. The game decides on a direction.
-            Maybe that's the best thing?
-
-        *   Figure out how to specify two buttons are connected
-
-        *   Consider the L - R buttons just a version of a DPad controller with no up or down.
-
-    2.  There's 3 parts in CSS/HTML which make this more complicated
-
-        *   The visual representation of the button
-
-        *   The element, often invisible, that defines the hit area of the button
-
-        *   The full document size element that actually receives the input from touching
-
-        I'm not sure if there's a way to make that easier. Maybe I should insert the full document size
-        element so the developer doesn't have to do that? On top of that often you'd like the visual
-        representation to change based on user input. How would I do that or maybe I shouldn't care for
-        now or make that some optional setting?!??
-
-*   Change jumpjump and powpow L - R buttons to something that looks like you can slide your finger across it.
-
-    Watching players play I've noticed many try to press those as two separate buttons where as it's
-    actually designed so you just slide your finger. Maybe drawing a rocker button or one long button
-    would help?
-
-*   Consider providing a game side library for name images/textures
-
-    The issue is a name can currently be 16 characters. That's pretty long, especially in Japanese.
-    The library would make an image of the name, optionally with background color? And format it
-    either breaking at space or scaling if too long or something.
-
-*   Make buttons on Jumpjump, PowPow full height.
-    *   add option to show buttons?
-*   Make random color pickers based on color perseption.
-
-    Currently random color are based on HSL. They often look too similar.
-
-*   Change powpow to use more ship colors
-*   Need to figure out auto-docs
 *   Need to figure out how to test. Maybe Jest would help?
-*   If UI is not part of examples but a part of HFT then need to figure out which .js file should be shared (ie, moved to public/shared/scripts) or something.
-*   change games.html title to be ip address or instructions
-*   make server serve "chose another WiFi network to browse internet"
-*   use particles for coin
-*   use particles for boomboom death
-*   Fix collisions for jumpjujmp
-
-    for both coin and player collisions I'm just checking where they tried to go
-    I'm not checking the places in between so if the frame rate gets too slow
-    bad things happen.
-
-    Ideally I should separate the collision checking into some lib/utility
-
 *   refactor sprite code to have offset (currently assumes center of image is origin)
 
     jumpjump could use this.
@@ -668,24 +88,71 @@ Runs Repo noid
 *   Make C++ version of lib
 *   touch code already debounces pressed so remove similar code from controllers?
 
-*   Game service / package installer?
+*   boomboom
+    *   implement kick (comment in kickCrate in boomboomgame globals to make powerup appear, then implement in player.js)
+    *   close off edges at 30 second point?
+    *   try to make real AI.
 
-    It might be nice to make this like many of the package installers. You could download
-    happyfuntimes then type something like
+        I don't think this would have a point for HFT but I guess it would just be fine to try.
+        Especially to see if it can be fast enough in JS for 400+ AI players. They'd have to
+        probably get one AI tick for every N players. They'd probably only be able to look
+        within some small range of tiles to decide what to do?
 
-        hft install someplatformgame
+    *   walking speed should start at 48 and progres to 64?
+    *   consider showing map "radar" on controller when game starts and point to player
 
-    Which would go and install platform game from some repo just like `npm` and other
-    package managers do. Just an idea.
+            +-------------------------------+
+            |                               |
+            |                               |
+            |               You R Here      |
+            |                       |       |
+            |                       V       |
+            |                       .       |
+            |                               |
+            +-------------------------------+
 
-    I could also change the relayserver to search for games.
+*   need to handle orientation better.
 
-    I'm mixed on this idea. I really like the idea but there's no point unless there's
-    100s of games to install. At the same time, conversely, having it might make
-    it more likely people would write games. It might also make it super easy
-    to download gamejam games etc.
+    problem: user has orientation locked to portrait. Game requires landscape. They have
+    to dig into their settings to play. Could try to CSS rotate the layout so the game
+    shows up landscape. Not sure all the implelications. Do touch events get rotated? I doubt it.
+
+    Note: I tried it. First problem, just rotating the entire page 90deg didn't work.
+
+    First problem, the content was still sized as portrait. Added code to fix the size.
+
+    Second problem, the content rotated was several pixels offscreen. On iOS 7.0 on
+    on 3.5 inch iPhone4s it was 26 pixels off. In iOS7.1 on a 4.0 inch iPhone 5s it
+    was 104 pixels off when the ui is minimized but changes when the ui comes back :(
+
+    3rd problem, if I clicked on the name to edit it it slide down around 1/2 a screen
+    and when done entering the name it did not slide back :(
+
+    4th problem, touch events are not rotated. I kind of expected that but not sure
+    what to do about it. One problem is getting a relative position of an event
+    required going thorugh
+
+    Note: See todo below, change them to canvas based would also make this easier.
+
+
+*   fix flex css (remove need for fixHeightHack)
+*   figure out why deviceorientation message is low
+*   test older ios
+    *   consider making it warn if version not good enough
+*   test older android
+    *   consider making it warn if version not good enough
+
+*   abstract out Unity3D parts of C#
+
+    Currently the C# version of the library is Unity3d specific. Should be easy to abstract that out
+    so it can be used in C# in general
+
+Done
+====
 
 *   decide on what happyfuntimes is
+
+    Decided it's just a library. below is just for history
 
     It started off as just a simple library to relay messages between game and controllers.
     But, as I added more games I started wanted to share code on the controllers. Then
@@ -768,69 +235,9 @@ Runs Repo noid
 
             You could serve the page that does that from htf.com or something like that.
 
-*   powpow
-    *   make controller say "control ghost ship"
-    *
-*   boomboom
-    *   implement kick (comment in kickCrate in boomboomgame globals to make powerup appear, then implement in player.js)
-    *   "Hurry!!!"
-    *   close off edges at 30 second point?
-    *   try to make real AI.
-
-        I don't think this would have a point for HFT but I guess it would just be fine to try.
-        Especially to see if it can be fast enough in JS for 400+ AI players. They'd have to
-        probably get one AI tick for every N players. They'd probably only be able to look
-        within some small range of tiles to decide what to do?
-
-    *   figure out what players waiting can do
-    *   walking speed should start at 48 and progres to 64?
-    *   consider showing map "radar" on controller when game starts and point to player
-
-            +-------------------------------+
-            |                               |
-            |                               |
-            |               You R Here      |
-            |                       |       |
-            |                       V       |
-            |                       .       |
-            |                               |
-            +-------------------------------+
-
-*   need to handle orientation better.
-
-    problem: user has orientation locked to portrait. Game requires landscape. They have
-    to dig into their settings to play. Could try to CSS rotate the layout so the game
-    shows up landscape. Not sure all the implelications. Do touch events get rotated? I doubt it.
-
-    Note: I tried it. First problem, just rotating the entire page 90deg didn't work.
-
-    First problem, the content was still sized as portrait. Added code to fix the size.
-
-    Second problem, the content rotated was several pixels offscreen. On iOS 7.0 on
-    on 3.5 inch iPhone4s it was 26 pixels off. In iOS7.1 on a 4.0 inch iPhone 5s it
-    was 104 pixels off when the ui is minimized but changes when the ui comes back :(
-
-    3rd problem, if I clicked on the name to edit it it slide down around 1/2 a screen
-    and when done entering the name it did not slide back :(
-
-    4th problem, touch events are not rotated. I kind of expected that but not sure
-    what to do about it. One problem is getting a relative position of an event
-    required going thorugh
-
-    Note: See todo below, change them to canvas based would also make this easier.
-
-*   refactor boomboom (and jumpjump?) to make the rendering forward driven.
-
-    For example in boobboom the layers choose their own offset.
-    where to draw. Rather that should be passed down.
-
-*   it might be a FUCK LOAD easier to make the controllers using canvas instead of HTML.
-
-    no fighting where where you want controls to appear, no trying to center a character
-    inside a div. Just draw what you want. I swear I waste 1-3 hrs per controller
-    futsuing with CSS :(
-
 *   Consider deciding the ExampleUI etc is part of happyfuntimes
+
+    This is mostly here for history.
 
     Originally I thought happyfuntimes was just the relayserver and the libraries to
     talk to it.
@@ -864,6 +271,18 @@ Runs Repo noid
 
     Not sure the menu is useful. Maybe I'll find out at a game jam?
 
+*   make unity provide files for controller
+
+    in editor send each file. On Export generate .zip.bytes. Maybe make new option
+    for "Export standalone"?
+
+    The problem is happyfuntimes needs at least a package.json to be able to add
+    the game to the happyfuntimes menu. But a standalone exe wouldn't have such
+    a file anywhere that I know of. I guess it does generate a _Data folder that
+    I could look in. not sure how Windows and Linux apps are distrubuted.
+
+    The question is basically how do I install it. Ideally there'd be just one way
+
 *   fix games so if they disconnect, when they re-connect they reload.
 
     I'm not 100% sure this matters but, the issue is if I kill the relayserver
@@ -872,79 +291,237 @@ Runs Repo noid
     indeterminent state. Ideally they'd just restart, the controllers as well.
 
 
-*   update unitydocs with UnityScript
-*   fix camera on unitycharacter example so
-    *   it works for 1 player
-    *   it doesn't swing around so much
-*   unity: see if we can figure out a way so controllers don't get disconnected if script is updated.
+*   make hft a lib for electron
+    *   port bombbomb
+        .   handle disconnect/reconnect
+        .   handle port changing (2 apps)
+        *   fix fixes
+        *   handle external server
+        *   pass arguments through from server (actually don't parse in server)
+        *   make server return something, not auto start?
+        *   test captive portal
+        *   add settings dialog?
+        *   add setings from command line?
+        *   export to app
+        *   make app use real name
+        *   supply app icon
+        *   fix about (send about to game)
+        *   check we can set name
+    *   port powpow
+    *   port jumpjump
+    *   port device-orientation
+    *   port simple
+    *   port 2d sync
+    *   port 3d sync
+    *   port multi-platform
 
-*   **Issue:** Anyone can go to the gameview.html for a game.
-
-    Curretly the relayserver assumes a new game for the same gameId is legit. It kills
-    the old game and makes a new one. This is useful during dev as you don't have to hunt
-    down any old tab that might be running the game.
-
-    At a party that's fine since you're with friends but at a bar/museum that
-    would suck because griefers can easily grief, no hacking required.
-
-    Could make it so relayserver only lets first game per gameId in. Problems. Assumes
-    games are stable. (could probably fix with timeout which might already be in there)
-
-    It doesn't solve the issue that a griefer can start other games so if you, as the party host, go to
-    start up another game you can't if the griefer has already started one. Maybe that's okay.
-    It's just at starting time so can scream at griefer.
-
-    Another idea. Maybe you can start server with optional password. Games require password in URL
-    as in http://ipaddress/example/jumpjump/gameview.html?settings={password:"foobar"}. Since
-    the griefer doesn't know the password they can't start games.
-
-    Could also make games only served on localhost or similarly ip restricted.
-
-    Of course sadly griefers can easily break games. Maybe I should fix this? They can break games
-    by sending bogus messages. Example. `sendCmd('move', {dir: "foo"})` will end up in the code as
-
-        position += msg.foo;  // exception? ... or actually position becomes NaN :(
-
-    I could put a try/catch when I call events. Unfortunately you'd like to be able to catch
-    the exceptions in the debugger when debugging. Maybe again this should be an option in
-    starting a game as in `...?settings={trycatchevents:true}`
-
-    That wouldn't prevent griefing. See NaN above.
-
-    I'm just wondering out loud if by some luck HFT was used
-    at a museum some griefer that knew the library could easily crash the game :(  I suppose,
-    at least at the beginning, the odds that some griefer is going to come to some event with
-    his laptop or tablet and hack some custom code just to be an ahole is not so likely?
-
-*   Have better splash if no games running
-
+*   Videos
+    *   Setup video
+    *   Walk through unitysimple
+    *   Make new char example
+*   write docs for each sample, and/or video
+    *   unity character
+    *   unity multi games
+    *   unity playerinscene
+    *   unity 2d platform
+*   fix realgame so it auto includes realgame.js and doesn't need manual HFT stuff
+*   check device orientation works both android and iphone
+*   move hft.net to it's own server
+*   powpow
+    *   make controller say "control ghost ship"
+*   upgrade servers
 *   stop sliding fingers from selecting stuff.
-*   make bird quack if you click him (consider random speed)
-*   fix flex css (remove need for fixHeightHack)
-*   figure out why deviceorientation message is low
-*   test older ios
-    *   consider making it warn if version not good enough
-*   test older android
-    *   consider making it warn if version not good enough
-*   should I restructure samples to wait for sounds to load?
+*   unity: see if we can figure out a way so controllers don't get disconnected if script is updated.
+*   boomboom
+    *   "Hurry!!!"
+    *   figure out what players waiting can do
+*   make videos
+    *   run unity simple
+    *   run unity char
+    *   run unity cardboard
+    *   run unity accel
+    *   run unity device
+    *   run unity video? (no)
+    *   make simple project
 
-*   Get nice designs for games. Particularly controllers
+*   Add unity support for multiple games
+*   add optional player timeout?
 
-*   remove window everywhere?
+    I already have the ping but maybe I should also have an input timeout.
+    No input for N seconds = disconnect. Useful for installtaions as I suspect
+    people might walk away and leave their phone connected. If there's no
+    input for a while we'll assume they are no longer participating?
+*   try more CSS
 
-    might be a good idea to wrap js with (function(window, undefined) { to make sure
-    all references to globals are missing
+    can we get things to position left bottom relative etc...?
 
-*   consolidate assets
+        position: absolute;
+        right: ??
+        bottom:
 
-*   abstract out Unity3D parts of C#
+    what about groups of stuff?
 
-    Currently the C# version of the library is Unity3d specific. Should be easy to abstract that out
-    so it can be used in C# in general
+    One problem without scaling
 
-Done
-====
+        +----------------+
+        |                |
+        | B U T T O N 1  |
+        |                |
+        |  B U T T O N 2 |
+        |                |
+        +----------------+
 
+    can end up as
+
+        +----------------+
+        |                |
+        | BBUUTTTTOONN12 |
+        |                |
+        +----------------+
+
+    maybe now that iOS8 is out we can forget about iOS6? I doubt it.
+    Too many iPhone4/4Ss still out there.
+
+*   add a session id to controller so you can continue where you left off
+
+    this can all happen automatically. GameServer playerconnect could include
+    the sessions id. At that point it's up the game to use it to save data in
+    localstorage or wherever.
+
+    Of the top of my head, gameclient would get sent and id from hft
+    which it would write to a cookie? If the game is restarted that
+    id can be sent back to the game at start up to reconnect a player
+    with their previous state in the game.
+
+    This would only work for a controlled restart of a game. Basically
+    the game would need some way for a user to request it shutdown. It
+    would then save all needed state for current players associated
+    with their session ids. I could send these ids to the controllers
+    at that time.
+
+    On restarting the game the controller would send the id back so
+    the game could reconnect them to their state.
+
+    This is only needed because networking equipment sucks and has
+    to be rebooted from time to time. If we can get networking equipment
+    that never needs to be rebooted there is no need to implement this.
+
+*   write unity docs
+    *   UnityScript
+    *   C#
+    *   JavaScript
+    *   File Layout
+    *   N/A Git
+    *   Publish
+    *   Test on Windows
+*   make games run without hft
+
+    *   jumpjump
+    *   boomboom
+    *   powpow
+
+    I'm not sure what to do. I think I'll try to add stuff to cdnjs? Problem, they want a minified
+    version. I can concat stuff? Not sure how I do just part of it.
+
+*   need to figure out how to handle 2+ hft's on same network.
+
+    maybe happyfuntimes.net shows 2 and game being played?
+
+*   switch port to something less likley to be in use. How about 8123 for now. We can register one later if we get users.
+*   jumpjump: reset coin on level reset.
+*   fix docs
+*   fix localhost replacement so it includes port
+*   Change jumpjump and powpow L - R buttons to something that looks like you can slide your finger across it.
+
+    Watching players play I've noticed many try to press those as two separate buttons where as it's
+    actually designed so you just slide your finger. Maybe drawing a rocker button or one long button
+    would help?
+
+*   Make random color pickers based on color perseption.
+
+    Currently random color are based on HSL. They often look too similar.
+
+*   Need to figure out auto-docs
+*   make it easier to use
+
+    This is basically covered by the gamepad code. Below is just for history
+
+    I've been thinking like an experienced engineer. Just passing the messages is enough,
+    people will see how to connect them up. But, I can make this much easier for the simple cases.
+
+    On the controller side, some library that takes and/or setup the client and then lets you just
+    define buttons, dpads, orientations, and it deals with the messages
+
+    On the game side some library that give a similar definition gives you similar messages
+    and/or tracks state you can just read
+
+    Can I just do it based on HTML and tags to classes
+
+        <div class="hft-dpad" />
+        <div class="hft-button" />
+        <div class="hft-area" />
+        <div class="hft-deviceorientation" />
+
+    Then on the client side just figure it out? Problem for C# / Static languages? Could write script
+    to generate class for static languagues. Could make api string based HTF.getState("dpad")
+
+    So the problems I ran into when first trying to do this
+
+    1.  I first tried to do jumpjump. The L - R buttons though act as a pair because I wanted it if
+        you happened to be using 2 fingers and you press L, while olding L you press R, then left off R
+        the direction should go back to L. All that is sent to the game is the current direction -1, 0, 1.
+        The controller is doing filtering of the 2 buttons.
+
+        The question is what to do.
+
+        *   Move the filtering to the game.
+
+            The controller just sends L up, L down, R up, R down messages. The game decides on a direction.
+            Maybe that's the best thing?
+
+        *   Figure out how to specify two buttons are connected
+
+        *   Consider the L - R buttons just a version of a DPad controller with no up or down.
+
+    2.  There's 3 parts in CSS/HTML which make this more complicated
+
+        *   The visual representation of the button
+
+        *   The element, often invisible, that defines the hit area of the button
+
+        *   The full document size element that actually receives the input from touching
+
+        I'm not sure if there's a way to make that easier. Maybe I should insert the full document size
+        element so the developer doesn't have to do that? On top of that often you'd like the visual
+        representation to change based on user input. How would I do that or maybe I shouldn't care for
+        now or make that some optional setting?!??
+
+*   N/A make controllers check for other games if the game has not yet connected?
+
+    There's an issue where sometimes a controller will be waiting for a game since
+    controllers can join first. Maybe controllers should check for other games until
+    they are sure they are connected to a running game. If the see a different game
+    they can switch to it.
+
+*   refactor client side js so no requirejs needed? (though still supported)
+*   could make hft optionally register ip:port with happyfuntimes.net
+
+    If ip address is not in one of the 'normal' class ips that are scanned by happyfuntimes
+    then it could be added. Also, happyfuntimes.net could check the ip address of hft
+    and the ip address of users and match them up since they'd all be behind the same
+    nat?
+
+    Maybe hft could check netmask, if class B then do extra stuff?
+
+*   make sync examples work. Where should they show up?
+*   add system session id. When checking ip addresses from scanner
+    merge by session id. Maybe just use system name
+*   figure out why Player23, Player24, Player25
+*   make HFT so if we can't contact HFT.net we try again every 10 seconds for 2 mins or so
+*   add a max players option to playerspawner?
+*   change samples the use name to use new name system
+*   add progress bar when scanning
+*   add easy message to unity-gamepad
 *   make unity export open export folder in finder/explorer?
 *   add "touch to start" on android (and iOS?) both sound and fullscreen can be added
 
@@ -1791,6 +1368,417 @@ Done
 Rejected
 --------
 
+*   N/A fix camera on unitycharacter example so
+    *   it works for 1 player
+    *   it doesn't swing around so much
+*   update unitydocs with UnityScript
+*   it might be a FUCK LOAD easier to make the controllers using canvas instead of HTML.
+
+    no fighting where where you want controls to appear, no trying to center a character
+    inside a div. Just draw what you want. I swear I waste 1-3 hrs per controller
+    futsuing with CSS :(
+
+*   refactor boomboom (and jumpjump?) to make the rendering forward driven.
+
+    For example in boobboom the layers choose their own offset.
+    where to draw. Rather that should be passed down.
+
+*   N/A Game service / package installer?
+
+    It might be nice to make this like many of the package installers. You could download
+    happyfuntimes then type something like
+
+        hft install someplatformgame
+
+    Which would go and install platform game from some repo just like `npm` and other
+    package managers do. Just an idea.
+
+    I could also change the relayserver to search for games.
+
+    I'm mixed on this idea. I really like the idea but there's no point unless there's
+    100s of games to install. At the same time, conversely, having it might make
+    it more likely people would write games. It might also make it super easy
+    to download gamejam games etc.
+
+*   Change powpow to use more ship colors
+*   use particles for coin
+*   use particles for boomboom death
+*   Fix collisions for jumpjujmp
+
+    for both coin and player collisions I'm just checking where they tried to go
+    I'm not checking the places in between so if the frame rate gets too slow
+    bad things happen.
+
+    Ideally I should separate the collision checking into some lib/utility
+
+*   N/A make server serve "chose another WiFi network to browse internet"
+*   make bird quack if you click him (consider random speed)
+*   should I restructure samples to wait for sounds to load?
+*   consolidate assets
+
+*   remove window everywhere?
+
+    might be a good idea to wrap js with (function(window, undefined) { to make sure
+    all references to globals are missing
+
+*   Get nice designs for games. Particularly controllers
+
+*   N/A Have better splash if no games running
+*   **Issue:** Anyone can go to the gameview.html for a game. (don't care)
+
+    Curretly the relayserver assumes a new game for the same gameId is legit. It kills
+    the old game and makes a new one. This is useful during dev as you don't have to hunt
+    down any old tab that might be running the game.
+
+    At a party that's fine since you're with friends but at a bar/museum that
+    would suck because griefers can easily grief, no hacking required.
+
+    Could make it so relayserver only lets first game per gameId in. Problems. Assumes
+    games are stable. (could probably fix with timeout which might already be in there)
+
+    It doesn't solve the issue that a griefer can start other games so if you, as the party host, go to
+    start up another game you can't if the griefer has already started one. Maybe that's okay.
+    It's just at starting time so can scream at griefer.
+
+    Another idea. Maybe you can start server with optional password. Games require password in URL
+    as in http://ipaddress/example/jumpjump/gameview.html?settings={password:"foobar"}. Since
+    the griefer doesn't know the password they can't start games.
+
+    Could also make games only served on localhost or similarly ip restricted.
+
+    Of course sadly griefers can easily break games. Maybe I should fix this? They can break games
+    by sending bogus messages. Example. `sendCmd('move', {dir: "foo"})` will end up in the code as
+
+        position += msg.foo;  // exception? ... or actually position becomes NaN :(
+
+    I could put a try/catch when I call events. Unfortunately you'd like to be able to catch
+    the exceptions in the debugger when debugging. Maybe again this should be an option in
+    starting a game as in `...?settings={trycatchevents:true}`
+
+    That wouldn't prevent griefing. See NaN above.
+
+    I'm just wondering out loud if by some luck HFT was used
+    at a museum some griefer that knew the library could easily crash the game :(  I suppose,
+    at least at the beginning, the odds that some griefer is going to come to some event with
+    his laptop or tablet and hack some custom code just to be an ahole is not so likely?
+
+*   N/A change games.html title to be ip address or instructions
+*   N/A If UI is not part of examples but a part of HFT then need to figure out which .js file should be shared (ie, moved to public/shared/scripts) or something.
+*   Make buttons on Jumpjump, PowPow full height.
+    *   add option to show buttons?
+*   Consider providing a game side library for name images/textures
+
+    The issue is a name can currently be 16 characters. That's pretty long, especially in Japanese.
+    The library would make an image of the name, optionally with background color? And format it
+    either breaking at space or scaling if too long or something.
+
+*   N/A make games.html msgs show up even when scrolled down
+*   N/A need to store LRU for games somewhere. ~/.happyfuntimes
+*   N/A In installed version
+    *   Make page shows games, tab for gallery, tab for settings
+    *   settings
+        *   allow contollers to change games (so a bar can make it so people can't change games?), only
+            the person at the computer can.
+*   N/A Main UX (/games.html)
+
+    *   Needs to have XBox/PS like UX. At a minimum
+        *   Show recently played games
+        *   Provide UI to find games
+            *   By alphabet
+            *   Search
+        *   Should be controllable from phone. (how do we handle 25 people trying to control it?)
+        *   gallery Tab/selection
+        *   Should we have a recently updated section?
+            *   For stress on servers maybe it should be like XBox/PS. Updates are only checked if
+                you launch the game?
+        *   Should have a 'new' and 'updated' feed from public db.
+
+*   N/A package.json needs
+    *   "gameId"
+    *   "apiVersion"  min version needed. Use it in template
+        * api version should look up defaults?
+    *   "platforms"  array of platforms support
+    *   remove "useControllerTemplate". Make the default but maybe override?
+    *   remove "screenshot.png". Make the default
+    *   use name for gameId? no. Name is unsafe, any char, id is safe? Or could gen safe id.
+    *   if controller needs certain features? WebGL, getMedia, etc. Can tell if will run on phone
+*   when listing mulitple HFTs running behind the same public IP address include
+    username and machine name?
+
+    hrm, that doesn't seem very secure. I wonder if it's
+    ok if I only send it to people on the same subnet? How would I know? Check the netmask?
+    The only phone needs this info. It's just some way to say.
+
+        Pick Game to Join:
+           jumpjump on sysg
+           boomboom on tami's mac
+
+    maybe machine name is good because it has less privacy issues?
+
+*   N/A stop using gameIds in certain ways.
+
+*   N/A remove adm-zip and replace with something else. Ideally something that streams
+    so the entire file doesn't have to be in memory. Maybe zipstream?
+
+*   N/A fix queuing of messages. They queue objects but should queue strings.?.
+*   N/A have server start __hft__ game.
+    *   have it mark that as not listable? (what's the point of the lists?)
+    *   make an install command
+    *   figure out what happens if disconnected
+
+*   N/A Have superhappyfuntimes check that happyfuntimes is running and request to run it. gray out install buttons
+    until it's running. Use game to run it?
+*   N/A Sanatize msgs to native-msg-box
+*   N/A Make sure superhappyfuntimes can be indexed.  enable meteor spiderable
+*   N/A look into openframewords.cc's http://ofxaddons.com/ how it watches github tags
+*   N/A remove the need for gameids?
+
+    I started with gameIds used for connecting contollers to games. Now I'm also using
+    them at install time. The problem is a I have a DB of gameId -> game but if you are
+    doing dev you might have 2 games with the same id. The one installed and one sitting
+    in your dev folder.
+
+    For connecting a game to a controller, I could make the server handle it. At startup
+    it knows, based on the folder it's serving the files from, which game they belong to
+    so it can send some made up id to each game.
+
+    That leaves the id only for the gallery. In which case I only care above apps installed
+    in the HFT games folder (non-dev). Meaning an id is a gallery<->installed game mapping.
+    But nothing else.
+
+    Actually that doesn't work because unity is not launched by the server when in dev
+    so it won't have a way for the server to give it an id.
+
+    So instead, there's 2 ways of mapping ids
+
+    1.  id to installed game. This is GameDB.getGameById
+
+        This is useful for install/uninstall
+
+    2.  id to running game. This is something the relayserver does. In that case
+        I don't care about installed ids. I only care to connect a controller to the
+        running game.
+
+    Except... :(  In the case of unity I don't know which controller to run because
+    it's by default http://localhost:port/games/<gameid>/controller.html when it really
+    and that's not enough info to map <gameid> to one real folder or another.
+
+
+*   N/A make install screen only show your OS. Link to "other versions"
+*   N/A should I switch all of the gamedb to meteor?
+
+    No, as their's no database? But I can run it through collections.
+
+*   N/A use github oauth2 authentication.
+
+    save the token in like .happyfuntimes/repoauth or something? Is it safe to save that token?
+
+    Then, subsequent commands can use the old token. If error re-auth
+
+*   N/A Can we make Unity plugin find the port? It could look in ~/.happyfuntimes/config or something.
+
+    I worry that it might not work in some other platform
+
+*   N/A add loggly or other logging both client and server. Make sure you can opt in/out.
+*   N/A make it possible to pass description to publish which becomes the "body" field.
+*   N/A Use 'unconnected' collection to handle installed games? Copy gameDB into Collection?
+*   N/A Is it possible to put meteor into hft so I can use it for local game sys?
+*   N/A games installing status needs to be per game like play/itunes because 2+ games
+    N/A could be being installed at the same time.
+*   N/A when making a package for a native game warn if EXEs are not near same date
+*   N/A move username/password prompt to func
+*   N/A install meteor browser policy
+*   N/A turn off meteor websockets and live updating
+*   N/A make "pubish-file"? that adds a specific file to a release?
+
+    basically I want someone to be able to make an executable on
+    a particular platform and then add it to the release
+
+    maybe call it "add-to-release"?
+
+*   N/A make hft notify
+
+    notifes the gallery of an update.
+
+*   N/A make 'fix' command that removes games that don't exist anymore
+*   N/A Make games.html detect features and suggest a different browser
+*   N/A Have browser check if it's the default for hft. If not suggest to make it the default for hft.
+*   N/A add option the choose browser to launch?
+*   N/A Add options to HFT
+    *   dns (see above)
+    *   system name (name to use if multiple machine)
+    *   private
+    *   phonecontrol
+*   N/A add option to hide it? ([x] show help on startup)
+*   N/A make hft-exe update Info.plist version from hft version?
+*   N/A Optionally allow games to advertise they are running.
+
+    superhappyfuntimes can show games in your area. Think
+
+        15 people playing jumpjump at Joe's Bar in Maintown, MA
+        17 people playing shootshoot at Big Burger in Anywhere, USA
+        etc..
+*   N/A Add phantomjs based tests
+*   N/A make a test game for unit tests
+*   N/A should make-release check API version?
+*   N/A maybe shft should not install ever. It should just redirect to hft.
+
+    So, clicking "install" on say powpow would redirect to `http://localhost:18679/install.html?id=powpow`
+
+    or
+
+    maybe SHFT should redirect for games so if you're running HFT then clicking a game would go
+    to `http://localhost:18689/game/powpow`. If you're not running HFT it would go to
+    `http://shft.net/game/powpow`
+
+    Just thinking out loud.
+
+
+*   N/A consider install using an per platform installer app
+
+    the installer app would be a generic app. It could either take an argument like `--path=pathToZip`
+    or it could just install itself and uninstall itself. The point would be a real installer
+    would ask for real OS level permission to run rather than my hacked msgbox.
+
+    In the case of taking an argument it would install the zip. In the case of just being a no-op
+    installer we'd just check for success or failure. On failure we wouldn't install the zip.
+    On success we'd use the current install process.
+
+*   N/A just like games, games.html and options.html should maybe be put realtime in a template?
+
+    If nothing else there are common things like handling disconnect, reconnect, and maybe
+    handling quit as well as providing a common frame.
+
+*   N/A update .travis.yml back to 0.10 once they release 0.10.32 (0.10.31 has a core dump bug)
+*   N/A get rid of meteor
+
+    could port to app engine or similar for scalabiliy. Or at least consider making it a big
+    static site that just get's rebuilt when a new game is added?
+
+*   N/A support 2 factor for publish
+    *   publish
+    *   update-exe
+*   N/A On mac make terminal visible or at least provide some kind of window/icon that users
+    can use to quit.
+
+*   N/A make UX option to turn on DNS
+
+    *   Needs to ask for sudo permission or at least some how get port 80. Maybe it could reboot?
+    *   needs to show status (trying `/etc/resolv.conf`)
+
+*   N/A make code send API version
+
+    for HTML that might be hard because we don't know the API version until after
+    most of the code as loaded. We need to know what startup code to serve
+    and we know that from the package.json
+
+    For Unity nothing happens until the game starts so we could at least check
+    and adjust? Should we complain if the package.json doesn't match? We need
+    it in the package.json so we can know before downloading if it's going
+    to work.  But, while developing you might forget? I guess it should at
+    least print a warning
+
+*   N/A Add testing using mock request and mock websockets
+
+    I think the mock websockets will be easy as I already basically have mock websockets
+    for the __hft__ game. For request there's got to be some express/request mock already
+    out there.
+
+*   N/A make shft tell you you need to upgrade hft
+*   N/A make hft-exe write over old version? Should ask? --force?
+*   N/A add purge request to manage gamedb for icon and screenshots
+*   N/A consider porting shft to Google App Engine or something else that scales with no work.
+*   N/A fix shft update-exe so username:password works
+*   N/A make --export for make-release the default
+*   N/A make option for manage to email github repo user results of registering
+*   N/A Unity plugin can run editor script that looks for HFT. If not found forwards you to shft.
+    *   Once installed can use hft newgame to setup new projects
+*   N/A Add a support field, default to github issues
+*   N/A if hft is not running, have shft save a cookie if you choose a game to install.
+
+    when hft starts it can open an iframe to shft which will read the cookie and
+    trigger and install question
+
+*   make hft newgame make a folder, ask the gametype etc.?
+*   N/A add "hft remove --missing" and "--broken" to remove missing/broken ones
+*   N/A consider using a fake inmem file system for testing, both reading and writing
+*   N/A publish unity plugin
+*   N/A fix back button on shft game page. Only center is hot.
+*   N/A make hft-publish work for html-example
+*   N/A check 1.7.0 projects tell you you need new version of HFT
+*   N/A unity plugin
+    *   make it warn you you need a new version of HFT.
+    *   Have LocalNewPlayer emit game msgs
+    *   remove namespaces from samples
+    *   add HFT->Export the exports all 3 to the correct palce
+    *   add HFT->Publish that does an export and then published? (needs git currently).
+    .   When running HFT from Unity don't bring up localhost../games.html
+    .   option to open controllers?
+*   Have LocalNewPlayer emit game msgs(JavaScript)
+*   have hft wait 2 seconds for ping from local:/games? if pinged bring to find instead of lanching tab
+*   N/A add hft set or hft set-install to set which HFT is current
+*   N/A shouldn't be able to make-package / export bad version.
+*   N/A build should do hft check?
+*   N/A build should add .meta files?
+*   N/A change alert for errors to html dialog
+*   N/A update all samples to newest api-version
+*   N/A have plugin auto update package.json to newest API version?
+*   N/A figure out option for unscrollale vs scrollable controllers
+*   N/A Make hft delete for deleting old releases
+*   N/A put categories in unity plugin
+*   N/A scroll/no scroll setting
+*   N/A zoom/no zoom setting
+*   N/A app
+
+    *   fix index to restart if no connection?
+    *   app needs a resume screen (so you can exit?).
+
+        if the app is not the front app, then next time it's the front
+        app it should have a dialog "resume? quit?" or something?
+
+    *   problem: connect to game, game exits, game restarts, controller goes
+        to index.html. Index thinks not in game because it's cleared cookie?
+    *   make hft redirect to app
+    *   when app goes to background, next launch start over or have "resume" (maybe can ping last HFT?)
+    *   make "switching games" have "search for new game"
+    *   make sure you can play sounds immediately
+    *   make sure you can play video immediately
+    *   allow URL input on timeout?
+    *   put options in settings (ios only?)
+    *   make sure --no-ask-name path works .. ??   FIX THIS!!! enter-name must happen but we can skip index?
+    *   handle can't connect to hft.net (test locally!)
+    *   check why android lag. Does it do it in chrome? If not can we turn it off? Is it related to double click
+    *   make playername send name back to controller?
+*   N/A check scroll vs no-scroll option
+*   N/A put startup options in all controllers
+*   N/A fix launching from Safari to App
+*   N/A make shft ask hft.net for port if it's not 18679
+*   N/A make sure options.files work in unity
+*   N/A need a way for game to send binary files (how about a .zip)
+    for controller so you can have image files and sounds. That sounds
+    painful. I can either expand to base64 (easy) or need to send
+    binary websocket (yuck!). I guess I can set some state in relayserver
+    that next msg is ___. Or I could 'post' it.
+
+    put files on server, send URL in socket or message `loadimage` etc..
+
+*   N/A check if HFT has page up? Go to that page.
+
+    Problem is I can't bring tab to front so if the tab is hidden the user will never
+    notice :(  Maybe I could use the Notification API to put up a notification?
+
+*   N/A add support for gameType "unity3dlibrary"
+
+    The problem is I want to be able to upload unity libraries to superhappyfuntimes
+    but not have them show up as games and also to only have a .unitypackage, no exported apps
+
+    *   make
+    *   install
+    *   download
+    *   export
+    *   run
+
+*   make osx bring browser to front after quiting unity game
 *   add happyFunTimes.name to package info because package.json name can't have spaces! UGH!!
 
     doesn't matter. Not using NPM for HFT. HFT doesn't care about spaces
