@@ -1,9 +1,8 @@
 To Do
 =====
 
-    *   make pixi example?
-    *   make cocos2d example?
-
+*   make pixi example?
+*   make cocos2d example?
 *   figure out why retry didn't work at National Videogame Arcade
 *   fix bombbomb hard to press button
 *   fix buttons in jumpjump/powpow (bigger!)
