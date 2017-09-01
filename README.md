@@ -13,7 +13,7 @@ HappyFunTimes
 
 # Make games with HTML5?
 
-*   [Making games](makking-games.md)
+*   [Making games](docs/making-games/index.md)
 
 # Docs
 
