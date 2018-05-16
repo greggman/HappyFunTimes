@@ -167,10 +167,10 @@ There's a Unity3D library if you'd like to make the game in Unity3D.
 
     Just like `NetPlayer` above we can listen for events.
 
-        client.addEventListener('score', handleScore);
+        client.addEventListener('die', handleDie);
 
-        function handleScore(data) {
-          console.log("you got " + data.points + " points");
+        function handleDie(data) {
+          console.log("you lost", data.pointsToLose, "points. Reason:", data.reason);
         }
 
     Similarly you can send events to the game
