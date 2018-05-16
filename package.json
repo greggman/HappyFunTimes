@@ -45,7 +45,7 @@
   },
   "devDependencies": {
     "bootstrap": "^4.0.0-alpha.5",
-    "electron": "1.4.5",
+    "electron": "^2.0.0",
     "eslint": "^3.10.2",
     "eslint-plugin-google-camelcase": "0.0.1",
     "eslint-plugin-one-variable-per-var": "0.0.1",
@@ -62,7 +62,7 @@
     "grunt-eslint": "^10.0.0",
     "grunt-jsdoc": "^2.1.0",
     "grunt-sass": "^1.2.1",
-    "handlebars": "^3.0.2",
+    "handlebars": "^4.0.11",
     "hanson": "^1.2.0",
     "inmemfilecache": "0.0.5",
     "jquery": "^3.1.1",
