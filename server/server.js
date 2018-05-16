@@ -40,6 +40,9 @@ class ServerHelper {
   get ports() {
     return this._ports;
   }
+  get app() {
+    return this._hftServer.app;
+  }
   close() {
     if (this._dnsServer) {
       this._dnsServer.close();

@@ -120,6 +120,7 @@ var HFTServer = function(options) {
 
   var eventEmitter = new events.EventEmitter();
   var app = express();
+  this.app = app;
 
   function send404(res, msg) {
     msg = msg || '';
@@ -296,6 +297,7 @@ var HFTServer = function(options) {
   });
 
   app.use(express.static(g.baseDir, staticOptions));
+  app.use('/happyfuntimes/dist', express.static(path.join(__dirname, '..', 'dist'), staticOptions));
   app.post(/.*/, bodyParser);
 
   var postCmdHandlers = {
