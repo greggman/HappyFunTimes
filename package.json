@@ -1,7 +1,7 @@
 {
   "name": "happyfuntimes",
   "description": "happyfuntimes massively local multiplayer electron framework",
-  "version": "0.2.2",
+  "version": "0.2.3",
   "scripts": {
     "start": "node start.js",
     "check": "grunt eslint",
@@ -41,11 +41,11 @@
     "promise": "^7.1.1",
     "rest-url": "0.0.4",
     "sprintf-js": "0.0.7",
-    "ws": "0.4.31"
+    "ws": "^5.1.1"
   },
   "devDependencies": {
     "bootstrap": "^4.0.0-alpha.5",
-    "electron": "^2.0.0",
+    "electron": "^2.0.1",
     "eslint": "^3.10.2",
     "eslint-plugin-google-camelcase": "0.0.1",
     "eslint-plugin-one-variable-per-var": "0.0.1",
