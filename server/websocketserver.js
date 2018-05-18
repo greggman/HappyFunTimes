@@ -47,6 +47,9 @@ var WSServer = function(server) {
     var heartMonitor;
 
     this.send = function(msg) {
+      if (this.client.readyState !== 1) {  // OPEN
+        return;
+      }
       var str = JSON.stringify(msg);
       try {
         this.client.send(str);
@@ -114,6 +117,9 @@ var WSServer = function(server) {
         this.close();
       }.bind(this),
       pingFn: function() {
+        if (this.client.readyState !== 1) { // open
+          return;
+        }
         try {
           this.client.send('P');
         } catch (e) {
