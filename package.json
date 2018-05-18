@@ -1,7 +1,7 @@
 {
   "name": "happyfuntimes",
   "description": "happyfuntimes massively local multiplayer electron framework",
-  "version": "0.2.4",
+  "version": "0.2.5",
   "scripts": {
     "start": "node start.js",
     "check": "grunt eslint",
