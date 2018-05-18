@@ -203,6 +203,13 @@ define([
       g_socket.on('error', handleError_.bind(this));
     }.bind(this);
 
+    this.close = function() {
+      if (g_socket) {
+        g_socket.close();
+        g_socket = undefined;
+      }
+    }
+
     var sendCmdLowLevel = function(cmd, data) {
       if (!g_socket) {
         return;

@@ -272,6 +272,14 @@ define([
       return _reloaded;
     };
 
+    this.close = function() {
+      if (_socket) {
+        _socket.close();
+        _socket = undefined;
+        _connected = false;
+      }
+    };
+
     var connect_ = function() {
       _socket = options.socket || new VirtualSocket(options);
       _sendQueue = [];
