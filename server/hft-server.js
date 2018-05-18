@@ -87,7 +87,7 @@ var HFTServer = function(options) {
     if (relayServer) {
       relayServer.setOptions({baseUrl: getBaseUrl()});
     }
-    hftSite.setup({addresses: addresses});
+    hftSite.setup({addresses: addresses, privateServer: g.privateServer});
     hftSite.inform();
     if (appleCaptivePortalHandler) {
       appleCaptivePortalHandler.setOptions({address: addresses[0]});
@@ -320,16 +320,16 @@ var HFTServer = function(options) {
   var server;
 
   var tryStartRelayServer = function(port) {
+    hftSite.setup({
+      address: getAddress(),
+      port: port,
+      privateServer: g.privateServer,
+    });
     var RelayServer = require('./relayserver.js');
     relayServer = options.relayServer || new RelayServer([server], {
       baseUrl: getBaseUrl(),
       noMessageTimout: options.inactivityTimeout,
       hftServer: this,
-    });
-    hftSite.setup({
-      address: getAddress(),
-      port: port,
-      privateServer: g.privateServer,
     });
     eventEmitter.emit('ports', [port]);
   }.bind(this);
