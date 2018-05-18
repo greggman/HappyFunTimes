@@ -282,6 +282,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	      g_socket.on('error', handleError_.bind(this));
 	    }.bind(this);
 
+	    this.close = function() {
+	      if (g_socket) {
+	        g_socket.close();
+	        g_socket = undefined;
+	      }
+	    }
+
 	    var sendCmdLowLevel = function(cmd, data) {
 	      if (!g_socket) {
 	        return;
@@ -1603,6 +1610,14 @@ return /******/ (function(modules) { // webpackBootstrap
 	     */
 	    this.isReloaded = function() {
 	      return _reloaded;
+	    };
+
+	    this.close = function() {
+	      if (_socket) {
+	        _socket.close();
+	        _socket = undefined;
+	        _connected = false;
+	      }
 	    };
 
 	    var connect_ = function() {
