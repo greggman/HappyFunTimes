@@ -1,6 +1,64 @@
 HappyFunTimes
 =============
 
+> ## **DEPECATED**
+>
+> I'm deprecating happyfuntimes. I'll keep the rendevous server running for a while
+> longer but I think it's unfortunately time to mostly depreciate this project
+>
+> i'll consider accepting PRs still if you want to fix something but otherwise just
+> fork it if you want to keep using it
+>
+> ## Issues
+>
+> There are a few major issues on why
+>
+> 1. **device orientation is no longer usable**
+>
+>    Both Safari and Chrome have made getting device orientation require HTTPS
+>    which is something HFT can't provide at the moment. It would require
+>    $$$$$$$. If a end-user friendly solution comes up maybe I'll revisit
+>
+> 2. **Browsers break stuff**
+>
+>    Every year or so a browser changes something or breaks something. Over the course
+>    of HTF browser broke fullscreen support, audio support, touch support, orientation support,
+>    and other things. It's no fun to keep up on that
+>
+> 3. **OSes break stuff**
+>
+>    For whatever reason networking that work before stops working. HFT has to do
+>    some things to find out all the ways your phone might connect to the game
+>    and that stuff seems to break every 2 years or so
+>
+> 4. **Offline Support breaks**
+>
+>    Using HFT without internet breaks every few year and will likely eventually
+>    be unfixable. Both iOS and Android ping Apple and Google respectively when you
+>    connect to WiFi to check if you're acutally on the internet. HFT tries to send
+>    them *fake* data so they believe they are, otherwise they'll stop using the WiFi
+>    and switch to mobile.
+>
+>    How they do this changes every few years so HFT has to figure out how to change its
+>    faking. It is within Apple and Google's power to make this faking impossible and
+>    I supsect they might at sometime which is scary because if they do then there is
+>    no solution (well, short of acutally providing internet access)
+>
+> 5. **More browser features require HTTPS**
+>
+>    This is really #1 and #2 repeated but more and more browser features require HTTPS
+>    and as it says above there is no way for hft to provide HTTPS at the moment.
+>
+> ## Good news
+>
+> If you don't need device orientation and you have no need for offline mode/installation mode
+> then HFT still works. Write your own controllers to keep up to date with the latest changes
+> in the browsers.
+>
+> ## Bad news
+>
+> I don't really have time to keep it running.
+
 [![Build Status](https://travis-ci.org/greggman/HappyFunTimes.svg?branch=master)](https://travis-ci.org/greggman/HappyFunTimes)
 
 # Want to play?
