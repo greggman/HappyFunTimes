@@ -33,7 +33,7 @@
   },
   "homepage": "https://github.com/greggman/HappyFunTimes#readme",
   "dependencies": {
-    "debug": "0.7.4",
+    "debug": "4.1.1",
     "express": "^4.4.1",
     "mime": "1.2.11",
     "native-dns": "^0.7.0",
