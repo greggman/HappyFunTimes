@@ -1,7 +1,7 @@
 HappyFunTimes
 =============
 
-> ## **DEPECATED**
+> ## **DEPRECATED**
 >
 > I'm deprecating happyfuntimes. I'll keep the rendevous server running for a while
 > longer but I think it's unfortunately time to mostly depreciate this project
